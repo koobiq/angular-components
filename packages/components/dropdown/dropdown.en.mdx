@@ -79,6 +79,14 @@ Search splits a multi-word query into parts and searches for them independently,
 
 <Example id="dropdown-with-filter" />
 
+### Menu at the caret
+
+`kbqDropdownTriggerOrigin` detaches the panel from the trigger element: bind an element, or a rectangle in viewport coordinates, and the panel is positioned against that. `kbqCreateCaretOrigin` from `@koobiq/components/core` builds such a rectangle out of a measurement it repeats on every reposition — here the `/` and the query typed after it, which `kbqGetTextQuery` finds and `kbqListenForCaretMoves` keeps watching — so the panel keeps up with the caret. `updatePosition()` moves a panel that is already open, and `null` anchors it back to the trigger.
+
+Keep the trigger off the editor: it answers `Enter` and `Space` itself, so it belongs on a separate element. `[kbqDropdownTriggerAutoFocus]="false"` leaves the caret in the text, and `[activeDescendantNavigation]="true"` on the panel makes the arrow keys move the highlight without taking focus — the editor then hands `ArrowUp`, `ArrowDown`, `Enter` and `Escape` over with `handleKeydown($event)`. The highlighted item is not announced yet: the panel sets no `aria-activedescendant`.
+
+<Example id="dropdown-slash-menu" />
+
 ## Horizontal alignment
 
 Use the `xPosition` property to control horizontal alignment of the dropdown panel relative to the trigger. Supported values: `'after'` (default), `'before'`, and `'center'`.

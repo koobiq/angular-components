@@ -6,6 +6,12 @@ When focusing on the field, the dictionary menu opens. Autocomplete changes as y
 
 The menu belongs to [autocomplete](en/components/autocomplete) — its width is configured there, through the `panelWidth` and `panelMinWidth` attributes of `<kbq-autocomplete>`, and is measured against the whole field rather than the input.
 
+### At the caret
+
+In a wide field the menu is easier to use next to the text being typed: set `kbqAutocompleteRelativeToCaret` on the input. The menu then opens from the caret, right below its line, and is only as wide as its options.
+
+<Example id="tag-autocomplete-relative-to-caret" />
+
 ### Search
 
 Search splits a multi-word query into parts and searches for them independently, trims leading and trailing spaces, is case-insensitive, and folds diacritics. The algorithm is described in the [Smart search guide](/en/other/search-smart).

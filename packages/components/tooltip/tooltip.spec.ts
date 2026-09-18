@@ -3,7 +3,7 @@ import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
@@ -25,7 +25,7 @@ import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
-import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqTooltipTrigger } from './tooltip.component';
+import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 // KbqPopUpTrigger default enter delay (400ms) plus a buffer for the deferred show.
@@ -1341,6 +1341,245 @@ describe('KbqTooltip', () => {
         }));
     });
 
+    describe('kbqRelativeToCaret', () => {
+        let fixture: ComponentFixture<TooltipRelativeToCaret>;
+        let component: TooltipRelativeToCaret;
+
+        /** Opens a manually triggered tooltip and hands back the spy on its position strategy. */
+        const showAndSpy = (trigger: KbqTooltipTrigger) => {
+            trigger.createOverlay();
+
+            const setOrigin = jest.spyOn(trigger['strategy'], 'setOrigin');
+
+            trigger.show();
+            tick(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            return setOrigin;
+        };
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipRelativeToCaret);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should anchor the tooltip to the caret of the host field', fakeAsync(() => {
+            const setOrigin = showAndSpy(component.fieldTooltip());
+
+            expect(setOrigin).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    x: expect.any(Number),
+                    y: expect.any(Number),
+                    width: expect.any(Number),
+                    height: expect.any(Number)
+                })
+            );
+
+            component.fieldTooltip().hide(0);
+            flush();
+        }));
+
+        it('should anchor the tooltip to the field the host wraps', fakeAsync(() => {
+            const setOrigin = showAndSpy(component.wrapperTooltip());
+
+            expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ height: expect.any(Number) }));
+
+            component.wrapperTooltip().hide(0);
+            flush();
+        }));
+
+        it('should fall back to the host element when there is no field to measure', fakeAsync(() => {
+            const host = component.plain().nativeElement;
+
+            host.getBoundingClientRect = () => ({ left: 5, top: 7, width: 40, height: 20 }) as DOMRect;
+
+            const setOrigin = showAndSpy(component.plainTooltip());
+
+            expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ x: 5, y: 7, width: 40, height: 20 }));
+
+            component.plainTooltip().hide(0);
+            flush();
+        }));
+
+        it('should measure nothing while nothing lays the tooltip out, as on the server', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+
+            trigger.createOverlay();
+            // Outside the browser the position strategy skips layout, and the server DOM has no geometry to read.
+            Object.assign(trigger['strategy'], { _platform: { isBrowser: false } });
+            Object.defineProperty(component.field().nativeElement, 'getBoundingClientRect', {
+                value: undefined,
+                configurable: true
+            });
+
+            expect(() => {
+                trigger.show();
+                tick(tooltipDefaultEnterDelayWithDefer);
+                fixture.detectChanges();
+            }).not.toThrow();
+
+            trigger.hide(0);
+            flush();
+        }));
+
+        it('should measure the caret again whenever the origin is read', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+            const setOrigin = showAndSpy(trigger);
+            const origin = setOrigin.mock.calls[0][0] as { x: number };
+            const field = component.field().nativeElement;
+
+            field.getBoundingClientRect = () => ({ left: 10, top: 100, width: 200, height: 32 }) as DOMRect;
+            flushMicrotasks();
+
+            const before = origin.x;
+
+            field.getBoundingClientRect = () => ({ left: 60, top: 100, width: 200, height: 32 }) as DOMRect;
+            flushMicrotasks();
+
+            expect(origin.x - before).toBe(50);
+
+            trigger.hide(0);
+            flush();
+        }));
+
+        it('should follow the caret while the field is edited, free to change the placement', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+
+            showAndSpy(trigger);
+
+            const updatePosition = jest.spyOn(trigger['overlayRef']!, 'updatePosition');
+            const withLockedPosition = jest.spyOn(trigger['strategy'], 'withLockedPosition');
+
+            dispatchFakeEvent(component.field().nativeElement, 'input');
+
+            expect(updatePosition).toHaveBeenCalled();
+            expect(withLockedPosition.mock.calls).toEqual([[false], [true]]);
+
+            trigger.hide(0);
+            flush();
+        }));
+
+        it('should stop following the caret once the tooltip is closed', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+
+            showAndSpy(trigger);
+
+            const updatePosition = jest.spyOn(trigger['overlayRef']!, 'updatePosition');
+
+            trigger.hide(0);
+            flush();
+            updatePosition.mockClear();
+
+            dispatchFakeEvent(component.field().nativeElement, 'input');
+
+            expect(updatePosition).not.toHaveBeenCalled();
+        }));
+
+        it('should anchor to the host element again once kbqRelativeToCaret is switched off', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+            const setOrigin = showAndSpy(trigger);
+            const origin = setOrigin.mock.calls[0][0] as { height: number };
+
+            component.field().nativeElement.getBoundingClientRect = () =>
+                ({ left: 10, top: 100, width: 200, height: 48 }) as DOMRect;
+            trigger.relativeToCaretVertical = 'line';
+            flushMicrotasks();
+
+            expect(origin.height).not.toBe(48);
+
+            trigger.relativeToCaret = false;
+            flushMicrotasks();
+
+            expect(origin.height).toBe(48);
+
+            trigger.hide(0);
+            flush();
+        }));
+
+        it('should align the arrow against the caret instead of the whole field', () => {
+            const trigger = component.fieldTooltip();
+
+            component.field().nativeElement.getBoundingClientRect = () =>
+                ({ left: 10, top: 100, width: 300, height: 32 }) as DOMRect;
+
+            expect(trigger['getAnchorSize']().width).toBe(0);
+
+            trigger.relativeToCaret = false;
+
+            expect(trigger['getAnchorSize']().width).toBe(300);
+        });
+
+        describe('kbqRelativeToCaretVertical', () => {
+            /** jsdom lays nothing out; the field box is what tells the two vertical anchors apart. */
+            const setFieldBox = (element: HTMLElement, top: number, height: number) => {
+                element.getBoundingClientRect = () =>
+                    ({ left: 10, top, width: 200, height, right: 210, bottom: top + height, x: 10, y: top }) as DOMRect;
+            };
+
+            it('should anchor to the whole single-line input by default', fakeAsync(() => {
+                setFieldBox(component.field().nativeElement, 100, 32);
+
+                const setOrigin = showAndSpy(component.fieldTooltip());
+
+                expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: 100, height: 32 }));
+
+                component.fieldTooltip().hide(0);
+                flush();
+            }));
+
+            it('should anchor to the caret line of a textarea by default', fakeAsync(() => {
+                setFieldBox(component.textarea().nativeElement, 200, 80);
+
+                const setOrigin = showAndSpy(component.wrapperTooltip());
+
+                expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ height: expect.any(Number) }));
+                expect(setOrigin).not.toHaveBeenCalledWith(expect.objectContaining({ height: 80 }));
+
+                component.wrapperTooltip().hide(0);
+                flush();
+            }));
+
+            it('should anchor to the caret line of an input when set to line', fakeAsync(() => {
+                component.fieldVertical = 'line';
+                fixture.detectChanges();
+                setFieldBox(component.field().nativeElement, 100, 32);
+
+                const setOrigin = showAndSpy(component.fieldTooltip());
+
+                expect(setOrigin).not.toHaveBeenCalledWith(expect.objectContaining({ height: 32 }));
+
+                component.fieldTooltip().hide(0);
+                flush();
+            }));
+
+            it('should anchor to the whole textarea when set to field', fakeAsync(() => {
+                component.wrapperVertical = 'field';
+                fixture.detectChanges();
+                setFieldBox(component.textarea().nativeElement, 200, 80);
+
+                const setOrigin = showAndSpy(component.wrapperTooltip());
+
+                expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: 200, height: 80 }));
+
+                component.wrapperTooltip().hide(0);
+                flush();
+            }));
+        });
+
+        it('should take precedence over kbqRelativeToPointer', fakeAsync(() => {
+            const trigger = component.fieldTooltip();
+            const applyRelativeToPointer = jest.spyOn(trigger as never, 'applyRelativeToPointer');
+
+            showAndSpy(trigger);
+
+            expect(applyRelativeToPointer).not.toHaveBeenCalled();
+
+            trigger.hide(0);
+            flush();
+        }));
+    });
+
     describe('imperative show', () => {
         let fixture: ComponentFixture<TooltipImperative>;
         let component: TooltipImperative;
@@ -1956,6 +2195,42 @@ class TooltipFalsyContext {
 class TooltipRelativeToPointer {
     readonly trigger = viewChild.required<ElementRef>('trigger');
     readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+}
+
+@Component({
+    selector: 'tooltip-relative-to-caret',
+    imports: [KbqToolTipModule],
+    template: `
+        <input
+            #field
+            [kbqRelativeToCaret]="true"
+            [kbqRelativeToCaretVertical]="fieldVertical"
+            [kbqRelativeToPointer]="true"
+            [kbqTooltip]="'CARET'"
+            [kbqTrigger]="'manual'"
+        />
+        <div
+            #wrapper
+            [kbqRelativeToCaret]="true"
+            [kbqRelativeToCaretVertical]="wrapperVertical"
+            [kbqTooltip]="'WRAPPED'"
+            [kbqTrigger]="'manual'"
+        >
+            <textarea #textarea></textarea>
+        </div>
+        <span #plain [kbqTooltip]="'PLAIN'" [kbqRelativeToCaret]="true" [kbqTrigger]="'manual'">Show</span>
+    `
+})
+class TooltipRelativeToCaret {
+    fieldVertical: KbqCaretVerticalAnchor = 'auto';
+    wrapperVertical: KbqCaretVerticalAnchor = 'auto';
+
+    readonly field = viewChild.required<ElementRef<HTMLInputElement>>('field');
+    readonly textarea = viewChild.required<ElementRef<HTMLTextAreaElement>>('textarea');
+    readonly plain = viewChild.required<ElementRef>('plain');
+    readonly fieldTooltip = viewChild.required('field', { read: KbqTooltipTrigger });
+    readonly wrapperTooltip = viewChild.required('wrapper', { read: KbqTooltipTrigger });
+    readonly plainTooltip = viewChild.required('plain', { read: KbqTooltipTrigger });
 }
 
 @Component({

@@ -29,7 +29,9 @@ import {
     E2eAutocompleteScrollbar,
     E2eAutocompleteScrollbarNoOverflow,
     E2eAutocompleteScrollClose,
-    E2eAutocompleteStates
+    E2eAutocompleteStates,
+    E2eAutocompleteTextarea,
+    E2eAutocompleteTriggers
 } from '../components/autocomplete/e2e';
 import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
 import { E2eBreadcrumbsOverflowMax, E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
@@ -203,6 +205,7 @@ import {
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabNavBar, E2eTabsScrollbarFlash, E2eTabsStates } from '../components/tabs/e2e';
 import {
+    E2eTagAutocompleteRelativeToCaret,
     E2eTagAutocompleteStates,
     E2eTagEditable,
     E2eTagInputSeparators,
@@ -227,7 +230,7 @@ import {
 import { E2eTitleOverflow } from '../components/title/e2e';
 import { E2eToastInteraction, E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleHeight, E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
-import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e2e';
+import { E2eTooltipArrowOffset, E2eTooltipRelativeToCaret, E2eTooltipStates } from '../components/tooltip/e2e';
 import { E2eTopBarStates, E2eTopBarSticky } from '../components/top-bar/e2e';
 import {
     E2eMultilineTreeSelectStates,
@@ -321,6 +324,7 @@ const components: Record<string, Type<unknown>> = {
     E2eContentPanelScrollOverflow,
     E2eAppSwitcherWithSitesStates,
     E2eTagAutocompleteStates,
+    E2eTagAutocompleteRelativeToCaret,
     E2eFilterBarStates,
     E2eFilterBarFilters,
     E2eFilterBarPanelMaxHeight,
@@ -358,6 +362,8 @@ const components: Record<string, Type<unknown>> = {
     E2eAutocompleteScrollClose,
     E2eAutocompleteScrollbar,
     E2eAutocompleteScrollbarNoOverflow,
+    E2eAutocompleteTextarea,
+    E2eAutocompleteTriggers,
     E2eCheckboxStateAndStyle,
     E2eDropdownStates,
     E2eDropdownNestedLtr,
@@ -419,6 +425,7 @@ const components: Record<string, Type<unknown>> = {
     E2ePopoverCloseOnScroll,
     E2eTooltipStates,
     E2eTooltipArrowOffset,
+    E2eTooltipRelativeToCaret,
     E2eTagListStates,
     E2eTopBarStates,
     E2eTopBarSticky,

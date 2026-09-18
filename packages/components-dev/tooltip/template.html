@@ -76,6 +76,7 @@
                         <kbq-option [value]="'button'">Button</kbq-option>
                         <kbq-option [value]="'icon'">Icon</kbq-option>
                         <kbq-option [value]="'input'">Input</kbq-option>
+                        <kbq-option [value]="'caret'">Caret</kbq-option>
                         <kbq-option [value]="'extended'">extended</kbq-option>
                     </kbq-select>
                 </kbq-form-field>
@@ -312,6 +313,45 @@
                             (kbqVisibleChange)="onTooltipVisibleChange($event)"
                         />
                     </kbq-form-field>
+                }
+                @case (ELEMENTS.CARET) {
+                    <div class="layout-column layout-gap-l" style="width: 320px">
+                        <kbq-form-field>
+                            <input
+                                #caretInput="kbqTooltip"
+                                kbqInput
+                                placeholder="Type a long value and scroll it"
+                                [kbqPlacement]="selectedPlacement"
+                                [kbqPlacementPriority]="multipleSelected"
+                                [kbqRelativeToCaret]="true"
+                                [kbqTooltip]="inputText"
+                                [kbqTooltipArrow]="hasArrow"
+                                [kbqTooltipColor]="selectedColor"
+                                [kbqTrigger]="'manual'"
+                                (blur)="caretInput.hide()"
+                                (input)="caretInput.show()"
+                                (kbqPlacementChange)="onPlacementChange($event)"
+                                (kbqVisibleChange)="onTooltipVisibleChange($event)"
+                            />
+                        </kbq-form-field>
+
+                        <kbq-form-field>
+                            <textarea
+                                #caretTextarea="kbqTooltip"
+                                kbqTextarea
+                                placeholder="Type several wrapped lines"
+                                [kbqPlacement]="selectedPlacement"
+                                [kbqPlacementPriority]="multipleSelected"
+                                [kbqRelativeToCaret]="true"
+                                [kbqTooltip]="inputText"
+                                [kbqTooltipArrow]="hasArrow"
+                                [kbqTooltipColor]="selectedColor"
+                                [kbqTrigger]="'manual'"
+                                (blur)="caretTextarea.hide()"
+                                (input)="caretTextarea.show()"
+                            ></textarea>
+                        </kbq-form-field>
+                    </div>
                 }
                 @case (ELEMENTS.ICON) {
                     <div>

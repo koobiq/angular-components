@@ -14,6 +14,41 @@ You can place auxiliary elements in the footer: [buttons](en/components/button),
 
 <Example id="autocomplete-with-footer" />
 
+### At the caret
+
+With `kbqAutocompleteRelativeToCaret`, the panel opens from the text caret instead of the field: its left edge stands at the caret, right below the caret's line, and it follows the caret while the user types. In a wide field this keeps the options next to the text. Where the caret cannot be located — in `password`, `email` and `number` fields, in right-to-left text and in an input with centred or right-aligned text — the panel opens from the field.
+
+A panel opened from the caret is only as wide as its options: `panelMinWidth` does not apply, an explicit `panelWidth` still does.
+
+### In text
+
+With `kbqAutocompleteTextMode`, the autocomplete completes the text at the caret instead of replacing the whole value — for suggestions in a textarea, commands or mentions. The form value stays the whole text. The field has to report its caret: a textarea, or an input of type `text`, `search`, `url`, `tel` or `password`.
+
+- The query is the word before the caret: letters, digits, `_` and `-`. The panel opens once the word is `kbqAutocompleteMinLength` characters long, 1 by default.
+- `(kbqAutocompleteQueryChange)` emits the query — its text and trigger — to filter the options by, and `null` once there is none. The query is read again as the user types or clicks in the field, and as the caret moves while the panel is open.
+- Choosing an option replaces the query with the option, or with what `displayWith` returns for it, and puts the caret right after it. The text after the caret stays as it is.
+
+<Example id="autocomplete-textarea" />
+
+#### Triggers
+
+`kbqAutocompleteTriggers` sets the characters that start a query, such as `/` for commands or `@` for mentions. The query then runs from the trigger to the caret. A trigger only counts at the start of a line or after a space, so `mail@host` opens nothing. The panel opens right after the trigger; set `kbqAutocompleteMinLength` to wait for a few characters. Choosing an option replaces the query together with its trigger, so the option decides whether the trigger stays in the text.
+
+<Example id="autocomplete-triggers" />
+
+#### Inline hint
+
+While the active option continues the query, the rest of the option is drawn after the caret in the placeholder color, and `Tab` or `→` accept it. The hint is drawn only when nothing follows the caret on its line and the field is inside `kbq-form-field`, and never in right-to-left, centred or right-aligned text. Turn it off with `[kbqAutocompleteInlineHint]="false"`. With `autoActiveFirstOption` turned off, the hint appears only once the user makes an option active with the arrows.
+
+#### Keyboard
+
+| Key        | Action                                                                                        |
+| ---------- | --------------------------------------------------------------------------------------------- |
+| `↑` `↓`    | Move through the options while the panel is open. With the panel closed, they move the caret. |
+| `Enter`    | Insert the active option without a line break.                                                |
+| `Tab`, `→` | Accept the inline hint. Without a hint, `Tab` moves focus as usual.                           |
+| `Esc`      | Close the panel.                                                                              |
+
 ### Panel width
 
 By default the panel sizes to its content and is never narrower than the field or than `panelMinWidth`, which is 200px. This can be changed with the `panelWidth` and `panelMinWidth` attributes:

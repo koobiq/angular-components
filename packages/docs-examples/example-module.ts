@@ -584,6 +584,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "autocomplete-search-smart-example.ts",
     "importPath": "components/autocomplete"
   },
+  "autocomplete-textarea": {
+    "packagePath": "components/autocomplete/autocomplete-textarea",
+    "title": "Autocomplete in text",
+    "componentName": "AutocompleteTextareaExample",
+    "files": [
+      "autocomplete-textarea-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "autocomplete-textarea-example",
+    "primaryFile": "autocomplete-textarea-example.ts",
+    "importPath": "components/autocomplete"
+  },
+  "autocomplete-triggers": {
+    "packagePath": "components/autocomplete/autocomplete-triggers",
+    "title": "Autocomplete with triggers",
+    "componentName": "AutocompleteTriggersExample",
+    "files": [
+      "autocomplete-triggers-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "autocomplete-triggers-example",
+    "primaryFile": "autocomplete-triggers-example.ts",
+    "importPath": "components/autocomplete"
+  },
   "autocomplete-with-footer": {
     "packagePath": "components/autocomplete/autocomplete-with-footer",
     "title": "Autocomplete with footer",
@@ -1719,6 +1743,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "dropdown-safe-area-example",
     "primaryFile": "dropdown-safe-area-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-slash-menu": {
+    "packagePath": "components/dropdown/dropdown-slash-menu",
+    "title": "Dropdown at the caret",
+    "componentName": "DropdownSlashMenuExample",
+    "files": [
+      "dropdown-slash-menu-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-slash-menu-example",
+    "primaryFile": "dropdown-slash-menu-example.ts",
     "importPath": "components/dropdown"
   },
   "dropdown-with-filter": {
@@ -4490,6 +4526,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "popover-small-example.ts",
     "importPath": "components/popover"
   },
+  "popover-text-selection": {
+    "packagePath": "components/popover/popover-text-selection",
+    "title": "Popover next to a text selection",
+    "componentName": "PopoverTextSelectionExample",
+    "files": [
+      "popover-text-selection-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "popover-text-selection-example",
+    "primaryFile": "popover-text-selection-example.ts",
+    "importPath": "components/popover"
+  },
   "popover-width": {
     "packagePath": "components/popover/popover-width",
     "title": "Popover width",
@@ -5814,6 +5862,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-overview-example.ts",
     "importPath": "components/tags"
   },
+  "tag-autocomplete-relative-to-caret": {
+    "packagePath": "components/tags/tag-autocomplete-relative-to-caret",
+    "title": "Tag autocomplete relative to caret",
+    "componentName": "TagAutocompleteRelativeToCaretExample",
+    "files": [
+      "tag-autocomplete-relative-to-caret-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tag-autocomplete-relative-to-caret-example",
+    "primaryFile": "tag-autocomplete-relative-to-caret-example.ts",
+    "importPath": "components/tags"
+  },
   "tag-autocomplete-removable": {
     "packagePath": "components/tags/tag-autocomplete-removable",
     "title": "Tag autocomplete removable",
@@ -6709,6 +6769,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-placements-example.ts",
     "importPath": "components/tooltip"
   },
+  "tooltip-relative-to-caret": {
+    "packagePath": "components/tooltip/tooltip-relative-to-caret",
+    "title": "Tooltip relative to caret",
+    "componentName": "TooltipRelativeToCaretExample",
+    "files": [
+      "tooltip-relative-to-caret-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "tooltip-relative-to-caret-example",
+    "primaryFile": "tooltip-relative-to-caret-example.ts",
+    "importPath": "components/tooltip"
+  },
   "tooltip-relative-to-pointer": {
     "packagePath": "components/tooltip/tooltip-relative-to-pointer",
     "title": "Tooltip relative to pointer",
@@ -7565,6 +7637,8 @@ export type LiveExampleId =
   | 'app-switcher-sites'
   | 'autocomplete-overview'
   | 'autocomplete-search-smart'
+  | 'autocomplete-textarea'
+  | 'autocomplete-triggers'
   | 'autocomplete-with-footer'
   | 'badge-content'
   | 'badge-list'
@@ -7657,6 +7731,7 @@ export type LiveExampleId =
   | 'dropdown-overview'
   | 'dropdown-recursive-template'
   | 'dropdown-safe-area'
+  | 'dropdown-slash-menu'
   | 'dropdown-with-filter'
   | 'dropdown-with-footer'
   | 'dropdown-x-position'
@@ -7881,6 +7956,7 @@ export type LiveExampleId =
   | 'popover-scrolling-and-layering-page'
   | 'popover-scrolling-and-layering'
   | 'popover-small'
+  | 'popover-text-selection'
   | 'popover-width'
   | 'progress-bar-indeterminate'
   | 'progress-bar-overview'
@@ -7990,6 +8066,7 @@ export type LiveExampleId =
   | 'tag-autocomplete-onpaste-off'
   | 'tag-autocomplete-option-operations'
   | 'tag-autocomplete-overview'
+  | 'tag-autocomplete-relative-to-caret'
   | 'tag-autocomplete-removable'
   | 'tag-autocomplete-search'
   | 'tag-autocomplete-with-form-control-validators'
@@ -8063,6 +8140,7 @@ export type LiveExampleId =
   | 'tooltip-offset'
   | 'tooltip-overview'
   | 'tooltip-placements'
+  | 'tooltip-relative-to-caret'
   | 'tooltip-relative-to-pointer'
   | 'tooltip-style'
   | 'tooltip-wide-width'
