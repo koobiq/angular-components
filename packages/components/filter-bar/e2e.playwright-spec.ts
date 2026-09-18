@@ -263,4 +263,75 @@ test.describe('KbqFilterBarModule', () => {
             await expect(locator).toHaveScreenshot('03-option-caption-dark.png');
         });
     });
+
+    test.describe('E2eFilterBarPipeFill', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarPipeFill');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+
+        /** Trigger and clear button of the pipe at the given index — the two halves of one control. */
+        const getHalves = (page: Page, index: number) => {
+            const pipe = getComponent(page).locator('.kbq-pipe').nth(index);
+
+            return {
+                trigger: pipe.locator('button:not(.kbq-pipe__remove-button)'),
+                clear: pipe.locator('.kbq-pipe__remove-button')
+            };
+        };
+
+        /**
+         * Closes an open panel with a click well clear of the bar. Not Escape: a keypress moves the input
+         * modality to `keyboard`, and the trigger would take the focus ring back with it.
+         */
+        const closePanel = (page: Page) => page.mouse.click(1000, 600);
+
+        const pickOption = async (page: Page, name: string) => {
+            await page.locator('.kbq-option', { hasText: name }).click();
+            await closePanel(page);
+        };
+
+        test('should fill both halves of a pipe that receives a value after initialization', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeFill');
+
+            const { trigger, clear } = getHalves(page, 1);
+
+            await expect(trigger).toHaveClass(/kbq-button_outline/);
+            await expect(clear).toHaveCount(0);
+
+            await trigger.click();
+            await pickOption(page, 'Option 2');
+
+            // The clear button exists only once the pipe holds a value, so waiting for it settles the state.
+            await expect(clear).toHaveClass(/kbq-button_filled/);
+            await expect(trigger).toHaveClass(/kbq-button_filled/);
+        });
+
+        test('should outline the trigger of a pipe cleared after initialization', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeFill');
+
+            const { trigger, clear } = getHalves(page, 0);
+
+            await expect(trigger).toHaveClass(/kbq-button_filled/);
+
+            await clear.click();
+
+            await expect(clear).toHaveCount(0);
+            await expect(trigger).toHaveClass(/kbq-button_outline/);
+        });
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeFill');
+
+            const { trigger, clear } = getHalves(page, 1);
+
+            await trigger.click();
+            await pickOption(page, 'Option 2');
+            await expect(clear).toHaveClass(/kbq-button_filled/);
+
+            const locator = getScreenshotTarget(getComponent(page));
+
+            await expect(locator).toHaveScreenshot('04-pipe-fill-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(locator).toHaveScreenshot('04-pipe-fill-dark.png');
+        });
+    });
 });

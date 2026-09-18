@@ -1,4 +1,5 @@
 import { Directive, effect, inject, input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KBQ_FILTER_BAR_HOST } from '../filter-bar.types';
@@ -20,6 +21,11 @@ export class KbqPipeState<T> {
     readonly state = input<T | null>(null, { alias: 'kbqPipeState' });
 
     constructor() {
+        // The trigger and the remove button are two buttons that have to carry one style. A pipe changes
+        // its emptiness by writing `data.value` in place, which no signal observes — `stateChanges` is the
+        // bus it fires on such a write.
+        this.pipe.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => this.updateState());
+
         // Re-derive the button style whenever the filter OR the pipe state changes (a pipe's emptiness may
         // change with either). Passing both reads into `updateState` subscribes this effect to both signals;
         // the style itself derives from `pipe.isEmpty`.

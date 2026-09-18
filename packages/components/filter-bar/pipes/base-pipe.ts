@@ -168,6 +168,14 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
                 }
             });
 
+        // After every `updateTemplates` subscription (the base one and the tree overrides), so the new
+        // `values` and `lockedValues` are in place: a template change can flip the emptiness of a pipe
+        // without touching `data.value` — the multi-select pipes derive it from those and from the
+        // selection model.
+        this.filterBar?.internalTemplatesChanges
+            .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.stateChanges.next());
+
         if (this.data.openOnReset) {
             this.filterBar?.onResetFilter.pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
                 this.open();
