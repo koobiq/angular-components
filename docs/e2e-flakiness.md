@@ -247,15 +247,26 @@ Four occurrences among the runs still in log retention, all **97 pixels** by Pla
 binary-state signature Cause 1 established — and the whole diff is where the name was cut: the
 baseline keeps `контейнер.pdf` in the tail, CI captured `-контейнер.pdf`.
 
-`KbqEllipsisCenterDirective.refresh()` derives the slice index from `textWidth / length` in a
-`setTimeout` scheduled as the row is attached, and Inter's Cyrillic subset is fetched only once a
-Cyrillic glyph is laid out — which is this row and nothing else on the route — so the measurement can
-land on the fallback face, which averages 7.19 px per character against Inter's 7.64 and buys the
-tail one extra character.
+`KbqEllipsisCenterDirective.refresh()` derives the slice index in a `setTimeout` scheduled as the row
+is attached, from two inputs that are both webfont-dependent: `textWidth / length` for the name, and
+the row's `clientWidth`, which the icon in front of it — a webfont glyph of its own — takes a share
+of.
+
+Neither can be ready in time: Inter is served as unicode-range subsets, so the Cyrillic one is
+requested only once a Cyrillic glyph is laid out, and on this route that glyph is the row itself —
+the request starts in the same frame the measurement is queued from.
+
+The gap is worth one character here: measured on macOS, a Latin-metric fallback averages 7.19 px per
+character where Inter averages 7.64, though the fallback a CI container picks is a different face
+again, so the size of the shift is a property of the machine rather than a constant.
 
 Nothing reliably takes it back: the only other trigger is the `SharedResizeObserver` subscription,
-guarded by `clientWidth !== lastMeasuredWidth`, so the correction comes only because the icon in
-front of the name is a webfont glyph too, and one `debounceTime(50)` late.
+guarded by `clientWidth !== lastMeasuredWidth`, so the correction comes only because the icon beside
+the name swaps in too and moves the row's width, one `debounceTime(50)` late.
+
+Sleeping instead is no substitute, however tempting a `waitForTimeout` looks: the correction lands
+about 60 ms after the font does, and the font lands when the network says — measured 1560 ms after
+the row appeared, under a 1.5 s stall.
 
 The spec's own gate, a tail matching `/\.pdf$/`, is satisfied by both splits, so it returns inside
 that window and `toHaveScreenshot`'s two identical frames 100 ms apart are two shots of the pre-swap
@@ -273,10 +284,11 @@ Ordering the fonts ahead of the row rather than waiting for the settled split af
 that split is reachable only as a side effect of the icon swapping in beside the name — the mirror
 image of Cause 1, where the settled state was the only reachable one.
 
-The helper loads named faces with `document.fonts.load(font, text)` rather than waiting on
-`document.fonts.status` or `document.fonts.ready`: both report the set as settled whenever nothing is
-_pending_, which includes every moment before a needed unicode-range subset has been requested at all —
-measured under the same 6 s stall, that check passes in 4 ms with the fallback split on screen.
+The helper loads every face the page declares, rather than waiting on `document.fonts.status` or
+`document.fonts.ready`: both report the set as settled whenever nothing is _pending_, which includes
+every moment before a needed unicode-range subset has been requested at all — measured under the same
+6 s stall, that check passes in 4 ms with the fallback split on screen. Naming the faces instead would
+mean naming their weights too, and the subset each route happens to render.
 
 Nothing about this is specific to `file-upload`, which is why the helper is shared: any measurement
 taken once at render time is exposed the same way.
@@ -287,8 +299,8 @@ face narrower than the real one can leave the extension outside the box — exac
 `Math.max(charWidth, textWidth / length)` guard in `refresh()` was added to prevent.
 
 **Verified:** 90/90 repeats in Docker — the whole `file-upload` spec ×5, twice — with the baselines
-untouched, and from the other side, under a 6 s font stall the fixture as it stood reproduces CI's
-received image exactly while the gated one never leaves the Inter split.
+untouched, and from the other side, under a 6 s font stall the spec as it stood reproduces CI's
+received image exactly where the helper holds the Inter split 6 times out of 6.
 
 ## Not fixed
 
