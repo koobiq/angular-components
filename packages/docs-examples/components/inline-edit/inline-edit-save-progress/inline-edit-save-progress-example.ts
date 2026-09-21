@@ -3,6 +3,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqInlineEditModule, KbqInlineEditSaveHandler } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { Observable, timer } from 'rxjs';
 
 /**
@@ -15,7 +16,8 @@ import { Observable, timer } from 'rxjs';
         ReactiveFormsModule,
         KbqButtonToggleModule,
         KbqInlineEditModule,
-        KbqInputModule
+        KbqInputModule,
+        KbqTextareaModule
     ],
     template: `
         <div class="example-delay layout-column layout-gap-xs layout-margin-bottom-l">
@@ -54,7 +56,7 @@ import { Observable, timer } from 'rxjs';
                 }
             </div>
             <kbq-form-field kbqInlineEditEditMode>
-                <input kbqInput [placeholder]="placeholder" [formControl]="descriptionControl" />
+                <textarea kbqTextarea [placeholder]="placeholder" [formControl]="descriptionControl"></textarea>
             </kbq-form-field>
         </kbq-inline-edit>
     `,
