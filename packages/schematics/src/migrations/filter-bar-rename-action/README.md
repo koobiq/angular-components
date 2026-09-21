@@ -90,13 +90,13 @@ so the rule applies that default itself rather than relying on the schema.
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:filter-bar-rename-action --project "<your project>"
+ng g @koobiq/components:filter-bar-rename-action --project PROJECT_NAME
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:filter-bar-rename-action --project "<your project>"
+nx g @koobiq/components:filter-bar-rename-action --project PROJECT_NAME
 ```
 
 ### Run locally

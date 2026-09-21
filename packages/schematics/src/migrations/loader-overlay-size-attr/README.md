@@ -10,13 +10,13 @@ This schematic provides migration for `KbqLoaderOverlay` new `size` attribute. I
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:loader-overlay-size-attr --project "<your project>"
+ng g @koobiq/components:loader-overlay-size-attr --project PROJECT_NAME
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:loader-overlay-size-attr --project "<your project>"
+nx g @koobiq/components:loader-overlay-size-attr --project PROJECT_NAME
 ```
 
 ### Run locally

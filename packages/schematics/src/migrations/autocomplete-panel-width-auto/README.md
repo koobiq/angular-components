@@ -16,13 +16,13 @@ lay out differently without any error.
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:autocomplete-panel-width-auto --project "<your project>"
+ng g @koobiq/components:autocomplete-panel-width-auto --project PROJECT_NAME
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:autocomplete-panel-width-auto --project "<your project>"
+nx g @koobiq/components:autocomplete-panel-width-auto --project PROJECT_NAME
 ```
 
 ### Run locally

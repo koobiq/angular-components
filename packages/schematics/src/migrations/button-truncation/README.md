@@ -41,19 +41,19 @@ screen by screen, neutralise it in your global styles:
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:button-truncation --project "<your project>"
+ng g @koobiq/components:button-truncation --project PROJECT_NAME
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:button-truncation --project "<your project>"
+nx g @koobiq/components:button-truncation --project PROJECT_NAME
 ```
 
 Run it without writing anything first — stylesheet findings are printed either way:
 
 ```shell
-ng g @koobiq/components:button-truncation --project "<your project>" --fix=false
+ng g @koobiq/components:button-truncation --project PROJECT_NAME --fix=false
 ```
 
 ### Run locally

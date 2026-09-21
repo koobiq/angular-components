@@ -115,10 +115,10 @@ visible in tests and screenshots:
 ng update @koobiq/components@21
 
 # or manually
-ng g @koobiq/components:button-state-and-styles --project "<your project>"
+ng g @koobiq/components:button-state-and-styles --project PROJECT_NAME
 
 # dry run — report without writing
-ng g @koobiq/components:button-state-and-styles --project "<your project>" --fix false
+ng g @koobiq/components:button-state-and-styles --project PROJECT_NAME --fix false
 ```
 
 ## Options

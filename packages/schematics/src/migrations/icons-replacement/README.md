@@ -11,31 +11,31 @@ This schematic provides migration for new icons naming attribute. It includes:
 Apply for project and log file path and icon name should be replaced
 
 ```shell
-ng g @koobiq/components:icons-replacement --project "<your project>"
+ng g @koobiq/components:icons-replacement --project PROJECT_NAME
 ```
 
 - with custom icon replacement mapping:
 
 ```shell
-ng g @koobiq/components:icons-replacement --project "<your project>" --replacement-data-path "<path-as-json>"
+ng g @koobiq/components:icons-replacement --project PROJECT_NAME --replacement-data-path PATH_TO_JSON
 ```
 
 Apply for project and replace icon name.
 
 ```shell
-ng g @koobiq/components:icons-replacement --project "<your project>" --fix=true
+ng g @koobiq/components:icons-replacement --project PROJECT_NAME --fix=true
 ```
 
 #### Usage for Nx:
 
 ```shell
-nx g @koobiq/components:icons-replacement --project "<your project>"
+nx g @koobiq/components:icons-replacement --project PROJECT_NAME
 ```
 
 - with custom icon replacement mapping:
 
 ```shell
-nx g @koobiq/components:icons-replacement --project "<your project>" --replacement-data-path "<path-as-json>"
+nx g @koobiq/components:icons-replacement --project PROJECT_NAME --replacement-data-path PATH_TO_JSON
 ```
 
 ### Run locally
