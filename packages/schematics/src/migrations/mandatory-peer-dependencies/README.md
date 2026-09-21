@@ -25,13 +25,13 @@ project that brought its own range — one that had no entry at all just receive
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:mandatory-peer-dependencies --project <your project>
+ng g @koobiq/components:mandatory-peer-dependencies --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:mandatory-peer-dependencies --project <your project>
+nx g @koobiq/components:mandatory-peer-dependencies --project "<your project>"
 ```
 
 ### Run locally

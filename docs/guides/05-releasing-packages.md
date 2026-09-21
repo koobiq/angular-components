@@ -55,7 +55,10 @@ manual run never republishes to npm. If the release already exists the run is a 
 The same thing locally, for several tags at once, as drafts to review first:
 
 ```bash
-for t in 19.8.4 19.8.5; do gh release view "$t" > /dev/null 2>&1 && continue; gh release create "$t" --verify-tag --generate-notes --title "$t" --latest=false --draft; done
+for t in 19.8.4 19.8.5; do
+    gh release view "$t" > /dev/null 2>&1 && continue
+    gh release create "$t" --verify-tag --generate-notes --title "$t" --latest=false --draft
+done
 ```
 
 Then publish them:
