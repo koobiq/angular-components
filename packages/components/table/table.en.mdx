@@ -30,4 +30,4 @@ If a table has a lot of rows, use `stickyHeader` to keep the column names visibl
 
 The pinned header is opaque, so anything the browser scrolls to the top edge of the container ends up underneath it. The table keeps its own cells and the focusable content inside them clear of the header on its own; if your scroll container holds content of your own as well, set `scroll-padding-block-start` on it to the header height.
 
-The header is painted with `--kbq-background-card`, which matches a modal, a sidepanel or a card. For a table placed directly on the page background, override `--kbq-table-sticky-header-background: var(--kbq-background-bg)`.
+The header is painted with `--kbq-table-sticky-header-background`. It takes the page background by default; on a card, a modal or a sidepanel, point it at that surface — `--kbq-table-sticky-header-background: var(--kbq-background-card)`.

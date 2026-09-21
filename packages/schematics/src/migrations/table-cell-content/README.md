@@ -25,11 +25,10 @@ CSS now:
 
 That also drops the `@koobiq/components/button` dependency from the table entry point.
 
-| Pattern                     | Manual migration                                                                    |
-| --------------------------- | ----------------------------------------------------------------------------------- |
-| `KbqTableCellContent`       | Delete it from the `imports` array; nothing replaces it                             |
-| `kbq-table-cell_has-button` | Select the cell: `:is(td, th):has(.kbq-button, .kbq-button-icon)`                   |
-| `--kbq-background-bg`       | A pinned header defaults to `--kbq-background-card`; re-pin it with the token below |
+| Pattern                     | Manual migration                                                  |
+| --------------------------- | ----------------------------------------------------------------- |
+| `KbqTableCellContent`       | Delete it from the `imports` array; nothing replaces it           |
+| `kbq-table-cell_has-button` | Select the cell: `:is(td, th):has(.kbq-button, .kbq-button-icon)` |
 
 ## What else changed
 
@@ -39,8 +38,9 @@ That also drops the `@koobiq/components/button` dependency from the table entry 
   `[disableHover]` or set `--kbq-table-states-hover-background: transparent`.
 - Every color is behind a `--kbq-table-*` token: `--kbq-table-header-text`, `--kbq-table-body-text`,
   `--kbq-table-border-color`, `--kbq-table-states-hover-background` and
-  `--kbq-table-sticky-header-background`, which defaults to `--kbq-background-card` rather than
-  `--kbq-background-bg`. The row radius is `--kbq-table-size-row-border-radius`.
+  `--kbq-table-sticky-header-background`, whose value is unchanged — the pinned header still takes
+  `--kbq-background-bg`, now through a token a consumer can point at another surface. The row radius
+  is `--kbq-table-size-row-border-radius`.
 - Cell padding and the corner radii are logical properties, and alignment goes through
   `--kbq-table-cell-text-align` (default `start`), so a table under `dir="rtl"` mirrors.
 - `<tfoot>` gets the library color and typography it was already being padded for.

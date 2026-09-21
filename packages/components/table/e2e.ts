@@ -189,10 +189,10 @@ import { KbqTableModule } from '@koobiq/components/table';
             </table>
         </div>
 
-        <!-- sticky header on a card surface -->
+        <!-- sticky header repointed at the card it sits on, which is what the token is for -->
         <div class="e2e-table-card">
             <div data-testid="e2eTableStickyHeaderOnCard" style="max-height: 120px; overflow: auto">
-                <table kbq-table stickyHeader>
+                <table kbq-table stickyHeader style="--kbq-table-sticky-header-background: var(--kbq-background-card)">
                     <thead>
                         <tr>
                             @for (th of [0, 1, 2, 3]; track $index) {
