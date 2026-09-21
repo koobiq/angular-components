@@ -1,6 +1,4 @@
-// Component tokens are opt-in in @koobiq/design-tokens v4; skeleton's live here now.
-@use '@koobiq/design-tokens/web/component-tokens-light.css';
-@use '@koobiq/design-tokens/web/component-tokens-dark.css';
+@use '@koobiq/design-tokens/web/css/components/skeleton.css';
 
 dev-app {
     max-width: 608px;
