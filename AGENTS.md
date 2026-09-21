@@ -165,7 +165,7 @@ yarn run check-peer-deps                                                # Valida
 yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix  # Auto-fix all
 ```
 
-CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `organize-imports` and `multiline-arrays` plugins — let it order imports and break arrays rather than fighting it.
+CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `organize-imports`, `multiline-arrays` and `sh` plugins — let it order imports and break arrays rather than fighting it. The `sh` plugin formats shell scripts, the Dockerfile, husky hooks, ignore files and `CODEOWNERS`; it is off for Markdown, whose shell snippets use `<placeholder>`s it would parse as redirects.
 
 ### API Management
 
