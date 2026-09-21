@@ -47,18 +47,6 @@ export const warnPatterns: WarnPattern[] = [
             'The kbq-table-cell_has-button class is no longer applied — nothing binds it. A stylesheet ' +
             'keyed on it should select the cell instead: ' +
             '`.kbq-table > :is(tbody, tfoot) > tr > :is(td, th):has(.kbq-button, .kbq-button-icon)`.'
-    },
-    {
-        anchor: '\\bstickyHeader\\b|\\bkbq-table_sticky-header\\b',
-        // A trailing hyphen would start a different token (`--kbq-background-bg-secondary`, `-tertiary`),
-        // so it is excluded rather than relying on `\b` — a hyphen is not a word character, so a boundary
-        // already sits between `bg` and `-secondary` regardless.
-        pattern: '--kbq-background-bg(?![\\w-])',
-        message:
-            'A pinned table header is painted with --kbq-table-sticky-header-background, which defaults to ' +
-            '--kbq-background-card rather than --kbq-background-bg. If this table sits directly on the page ' +
-            'background, set --kbq-table-sticky-header-background: var(--kbq-background-bg) on it — in dark ' +
-            'theme the two surfaces differ visibly.'
     }
 ];
 

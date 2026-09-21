@@ -27,8 +27,8 @@ function referencesTable(content: string): boolean {
  * Never writes: an entry in an `imports` array is deleted rather than replaced, and a stylesheet keyed
  * on the removed modifier class has to be re-pointed at the cell.
  *
- * Stylesheets are visited as well as `.ts` and `.html`, because two of the three patterns — the modifier
- * class and the sticky-header background token — only ever appear in CSS.
+ * Stylesheets are visited as well as `.ts` and `.html`, because the modifier class only ever appears in
+ * CSS.
  */
 export default function tableCellContent(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
