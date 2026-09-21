@@ -16,13 +16,13 @@ Package features:
 
 `kbq-flag` renders the markup you give it, and there are three ways to hand it over.
 
-**A projected `<img>`.** The safest form — nothing is bypassed, and the browser crops the image itself.
+**A projected `<img>`.** The recommended form — nothing is bypassed, and the browser crops the image itself.
 
 ```html
 <kbq-flag decorative><img src="…/DE.svg" alt="" /></kbq-flag>
 ```
 
-**A projected inline `<svg>`** written in the template. Angular compiles the SVG namespace directly, so nothing is stripped and nothing has to be bypassed.
+**A projected inline `<svg>`, written in the template.** Angular compiles the SVG namespace directly, so nothing is stripped and nothing has to be bypassed.
 
 ```html
 <kbq-flag decorative>
@@ -30,7 +30,7 @@ Package features:
 </kbq-flag>
 ```
 
-**The `svg` input**, for flags that arrive as a string — this is what `country-flag-icons` exports.
+**The `svg` input.** Use it for flags that arrive as a string — this is what `country-flag-icons` exports.
 
 ```ts
 import { inject } from '@angular/core';
@@ -44,7 +44,7 @@ protected readonly flag = inject(DomSanitizer).bypassSecurityTrustHtml(DE);
 <kbq-flag decorative [svg]="flag" />
 ```
 
-The bypass is not optional here: `<svg>` is not on Angular's sanitizer allowlist, so a plain string is stripped down to nothing and the flag disappears. Which is why the rule around it matters.
+The bypass is not optional here: `<svg>` is not on Angular's sanitizer allowlist, so a plain string is stripped down to nothing and the flag disappears.
 
 **Only pass `bypassSecurityTrustHtml` markup that is known at build time** — a constant imported from a flag package or from your own set. Markup that arrives over the network must never be bypassed: validate the country code, then look the flag up in the local set (see "If the package doesn't have the flag you need"). Bypassing a value that a request can influence turns the flag into a stored-XSS sink.
 
