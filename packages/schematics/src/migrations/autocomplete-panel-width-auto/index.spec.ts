@@ -154,6 +154,30 @@ describe(SCHEMATIC_NAME, () => {
         expect(updatedTree.readText(tsPath)).toContain('panelWidth="fit-content"');
     });
 
+    it('migrates an inline template in a file saved with a byte order mark', async () => {
+        const [firstProjectKey] = projects.keys();
+        const { tsPath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        appTree.overwrite(
+            tsPath,
+            '\uFEFF' +
+                "import { Component } from '@angular/core';\n" +
+                '@Component({\n' +
+                "    selector: 'app-root',\n" +
+                '    template: \'<kbq-autocomplete panelWidth="auto"></kbq-autocomplete>\'\n' +
+                '})\n' +
+                'export class App {}\n'
+        );
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.readText(tsPath)).toContain('panelWidth="fit-content"');
+    });
+
     it('migrates the whole workspace under ng update, which passes no options', async () => {
         const templatePaths = [...projects.values()].map(
             (project) => getProjectContentPaths(project, appTree).templatePath

@@ -121,7 +121,11 @@ export function readSourceFiles(tree: Tree, paths: Iterable<string>): ts.SourceF
     for (const path of paths) {
         if (path.endsWith('.d.ts')) continue;
 
-        const content = tree.read(path)?.toString();
+        // Without the BOM, as readText and the update recorder that later edit the file see it.
+        const content = tree
+            .read(path)
+            ?.toString()
+            .replace(/^\uFEFF/, '');
 
         if (content !== undefined) {
             sourceFiles.push(ts.createSourceFile(path, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS));
