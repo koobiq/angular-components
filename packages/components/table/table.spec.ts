@@ -178,20 +178,16 @@ describe('KbqTable', () => {
             expect(getStickyHeaderHeight(fixture)).toBe('');
         });
 
-        // The effect's only tracked input is `stickyHeader()`; `tHead` itself is a plain DOM read. A
-        // `MutationObserver` on the table's own child list is what notices a `<thead>` mounting later
-        // (behind `@if`, async columns, `@defer`...) and makes the effect re-read it.
-        it('should observe a thead that mounts after the table has already rendered', async () => {
-            const fixture = createComponent(TableDeferredHeader);
+        // `tHead` is a plain DOM read, so the effect sees whichever `<thead>` is in place when it first
+        // runs. A table rendered later is a new instance whose effect runs after its content, which is
+        // what makes the common `@if`/`@defer` shape work without watching the DOM for changes.
+        it('should measure the header of a table that mounts after the page has rendered', () => {
+            const fixture = createComponent(TableRenderedLate);
             const observer = TestBed.inject(SharedResizeObserver) as MockResizeObserver;
 
             expect(observer.observed).toHaveLength(0);
 
-            fixture.componentInstance.showHeader = true;
-            fixture.detectChanges();
-
-            // MutationObserver callbacks land in a microtask queued after this turn.
-            await new Promise((resolve) => setTimeout(resolve));
+            fixture.componentInstance.show = true;
             fixture.detectChanges();
 
             const head = getTable(fixture).tHead!;
@@ -246,27 +242,27 @@ class TableBindings {
 }
 
 @Component({
-    selector: 'table-deferred-header',
+    selector: 'table-rendered-late',
     imports: [KbqTableModule],
     template: `
-        <table kbq-table stickyHeader>
-            @if (showHeader) {
+        @if (show) {
+            <table kbq-table stickyHeader>
                 <thead>
                     <tr>
                         <th scope="col">Header</th>
                     </tr>
                 </thead>
-            }
-            <tbody>
-                <tr>
-                    <td>Cell</td>
-                </tr>
-            </tbody>
-        </table>
+                <tbody>
+                    <tr>
+                        <td>Cell</td>
+                    </tr>
+                </tbody>
+            </table>
+        }
     `
 })
-class TableDeferredHeader {
-    showHeader = false;
+class TableRenderedLate {
+    show = false;
 }
 
 @Component({
