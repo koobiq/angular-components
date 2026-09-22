@@ -70,6 +70,29 @@ test.describe('KbqFilterBarModule', () => {
             expect(value.scroll).toBeGreaterThan(value.client);
         });
 
+        test('shows the tooltip when the neighbour clips a part that would fit on its own', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe__text');
+            const trigger = pipe.locator(':scope > .kbq-button');
+            const container = await trigger
+                .locator('.kbq-button-wrapper')
+                .evaluate((element: HTMLElement) => element.offsetWidth);
+
+            for (const part of [pipe.locator('.kbq-pipe__name'), pipe.locator('.kbq-pipe__value')]) {
+                const widths = await getWidths(part);
+
+                // Clipped, yet its full text fits the container: only the part's own box shows the truncation.
+                expect(widths.scroll).toBeGreaterThan(widths.client);
+                expect(widths.scroll).toBeLessThan(container);
+            }
+
+            await trigger.hover();
+
+            await expect(page.locator('.kbq-tooltip')).toBeVisible();
+            await expect(page.locator('.kbq-tooltip')).toContainText('и не менее длинное значение фильтра');
+        });
+
         test('caps every pipe but the input one at --kbq-filter-bar-pipe-max-width', async ({ page }) => {
             await page.goto('/E2eFilterBarPipeTruncation');
 
