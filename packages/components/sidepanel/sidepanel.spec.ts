@@ -626,7 +626,7 @@ class ComponentForSidepanel {}
 @Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
-        <form (ngSubmit)="onSubmit()">
+        <form (submit)="onSubmit()">
             <kbq-sidepanel-body>Form content</kbq-sidepanel-body>
             <kbq-sidepanel-footer>
                 <button kbq-button kbq-sidepanel-close>Close</button>
@@ -669,6 +669,7 @@ class SidepanelFromDropdownComponent {
 const CUSTOM_TOKEN = new InjectionToken<string>('CustomToken');
 
 @Component({
+    selector: 'sidepanel-with-custom-token',
     template: '<div>Sidepanel with custom token</div>'
 })
 class SidepanelWithCustomToken {
