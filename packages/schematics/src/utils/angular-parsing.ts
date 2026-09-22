@@ -235,9 +235,12 @@ export async function transformTemplateAttributes(
                     continue;
                 }
 
+                // The author's quote is kept: inside a "…" TS literal only single quotes are valid.
+                const quote = template[migrationAttr.valueSpan.start.offset - 1] === "'" ? "'" : '"';
+
                 updatedTemplate =
                     updatedTemplate.slice(0, migrationAttr.keySpan.start.offset - offset) +
-                    `${migrationData.attrs.key.to}="${updatedAttrValue}"` +
+                    `${migrationData.attrs.key.to}=${quote}${updatedAttrValue}${quote}` +
                     updatedTemplate.slice(migrationAttr.valueSpan.end.offset + 1 - offset, updatedTemplate.length);
 
                 offset += migrationAttr.name.length - migrationData.attrs.key.to.length;

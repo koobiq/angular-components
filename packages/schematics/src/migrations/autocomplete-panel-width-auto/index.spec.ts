@@ -178,6 +178,31 @@ describe(SCHEMATIC_NAME, () => {
         expect(updatedTree.readText(tsPath)).toContain('panelWidth="fit-content"');
     });
 
+    it('keeps an inline template in a double-quoted literal valid', async () => {
+        const [firstProjectKey] = projects.keys();
+        const { tsPath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        appTree.overwrite(
+            tsPath,
+            "import { Component } from '@angular/core';\n" +
+                '@Component({\n' +
+                "    selector: 'app-root',\n" +
+                '    template: "<kbq-autocomplete panelWidth=\'auto\'></kbq-autocomplete>"\n' +
+                '})\n' +
+                'export class App {}\n'
+        );
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.readText(tsPath)).toContain(
+            'template: "<kbq-autocomplete panelWidth=\'fit-content\'></kbq-autocomplete>"'
+        );
+    });
+
     it('migrates the whole workspace under ng update, which passes no options', async () => {
         const templatePaths = [...projects.values()].map(
             (project) => getProjectContentPaths(project, appTree).templatePath
