@@ -7,6 +7,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'autocomplete-panel-width-auto';
 
 /**
@@ -151,5 +152,25 @@ describe(SCHEMATIC_NAME, () => {
         );
 
         expect(updatedTree.readText(tsPath)).toContain('panelWidth="fit-content"');
+    });
+
+    it('migrates the whole workspace under ng update, which passes no options', async () => {
+        const templatePaths = [...projects.values()].map(
+            (project) => getProjectContentPaths(project, appTree).templatePath
+        );
+
+        templatePaths.forEach((templatePath) =>
+            appTree.overwrite(templatePath, '<kbq-autocomplete panelWidth="auto"></kbq-autocomplete>')
+        );
+
+        const updatedTree = await new SchematicTestRunner('migrations', migrationsPath).runSchematic(
+            SCHEMATIC_NAME,
+            {},
+            appTree
+        );
+
+        expect(templatePaths.map((templatePath) => updatedTree.readText(templatePath))).toEqual(
+            templatePaths.map(() => '<kbq-autocomplete panelWidth="fit-content"></kbq-autocomplete>')
+        );
     });
 });
