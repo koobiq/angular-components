@@ -36,13 +36,14 @@ type Format = (typeof FORMATS)[number];
             <!-- A click on the toolbar would otherwise drop the selection the toolbar is attached to. -->
             <div
                 aria-label="Text formatting"
-                kbq-button-group
-                [kbqStyle]="'transparent'"
+                class="example-toolbar__buttons"
+                role="group"
                 (mousedown)="$event.preventDefault()"
             >
                 @for (format of formats; track format.tag) {
                     <button
                         kbq-button
+                        kbqStyle="transparent"
                         [attr.aria-label]="format.label"
                         [attr.aria-pressed]="active().includes(format.tag)"
                         [class.kbq-active]="active().includes(format.tag)"
@@ -89,6 +90,11 @@ type Format = (typeof FORMATS)[number];
         /* The panel holds a toolbar, so it never scrolls: a pixel of overflow would show a scrollbar. */
         ::ng-deep .example-toolbar .kbq-popover__content {
             overflow: hidden;
+        }
+
+        .example-toolbar__buttons {
+            display: flex;
+            padding: var(--kbq-size-xxs);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
