@@ -177,8 +177,16 @@ import { KbqTableModule } from '@koobiq/components/table';
                                 <td>Cell</td>
                             }
                             <td>
-                                @if ($first || $last) {
-                                    <button kbq-button>{{ $first ? 'Top' : 'Bottom' }}</button>
+                                <!--
+                                    "Middle" is what the scroll-margin spec focuses: it has to sit in a row
+                                    the pinned header can actually cover. A control in the first row cannot
+                                    be covered — scrolling to it means scrolling to the top, where the head
+                                    is back in normal flow.
+                                -->
+                                @if ($first || $last || $index === 3) {
+                                    <button kbq-button>
+                                        {{ $first ? 'Top' : $index === 3 ? 'Middle' : 'Bottom' }}
+                                    </button>
                                 } @else {
                                     Cell
                                 }
