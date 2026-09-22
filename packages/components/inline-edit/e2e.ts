@@ -8,6 +8,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { NEVER, throwError } from 'rxjs';
@@ -455,3 +456,36 @@ export class E2eInlineEditSelectChain {
         new FormControl<string>('High', { nonNullable: true })
     ];
 }
+
+@Component({
+    selector: 'e2e-inline-edit-interactive-content',
+    imports: [KbqInlineEditModule, KbqFormFieldModule, KbqInputModule, KbqLinkModule],
+    template: `
+        <div class="layout-column layout-gap-l" data-testid="e2eInlineEditInteractiveContentContainer">
+            <kbq-inline-edit>
+                <div kbqInlineEditViewMode>
+                    <a kbq-link href="https://example.com" data-testid="e2eInlineEditInteractiveContentLink">
+                        example.com
+                    </a>
+                </div>
+
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [value]="'https://example.com'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l',
+        'data-testid': 'e2eInlineEditInteractiveContent'
+    }
+})
+export class E2eInlineEditInteractiveContent {}

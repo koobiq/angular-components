@@ -10,9 +10,13 @@
         outline: none;
     }
 
-    // The host watches its whole subtree, so it is marked focused for the menu button too — and that
-    // button draws its own ring. Suppressed here, or a Tab onto the menu would outline both.
-    &.cdk-keyboard-focused:not(:has(.kbq-inline-edit__menu.cdk-keyboard-focused)),
+    // The host watches its whole subtree, so it is marked focused for anything inside it — the menu
+    // button, and whatever `interactiveSelectors` leaves tabbable in view mode — each of which draws a
+    // ring of its own. The row ring belongs to the component's own tab stops, the view content and the
+    // anchor, so it is suppressed once focus has moved past them into projected content. Written as a
+    // descendant combinator rather than a list of selectors to exclude: `interactiveSelectors` is a
+    // runtime input, so what is focusable in view mode is not knowable here.
+    &.cdk-keyboard-focused:not(:has(.kbq-inline-edit__view-content :focus, .kbq-inline-edit__menu-mask :focus)),
     &.kbq-inline-edit_anchor-focused {
         box-shadow: inset 0 0 0.1px 1px var(--kbq-states-line-focus-theme);
         border-color: var(--kbq-states-line-focus-theme);
