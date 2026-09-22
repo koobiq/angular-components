@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectNativeElement, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -9,7 +10,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { KbqInlineEdit } from './inline-edit';
+import { NEVER, throwError } from 'rxjs';
+import { KbqInlineEdit, KbqInlineEditSaveHandler } from './inline-edit';
 import { KbqInlineEditModule } from './module';
 
 @Component({
@@ -252,6 +254,87 @@ export class E2eInlineEditMenuButton {}
 })
 export class E2eInlineEditActionButtons {
     readonly control = new FormControl('Initial value', Validators.required);
+}
+
+@Component({
+    selector: 'e2e-inline-edit-save-states',
+    imports: [
+        FormsModule,
+        KbqInlineEditModule,
+        KbqInputModule,
+        KbqBadgeModule,
+        KbqDropdownModule,
+        KbqIconModule,
+        KbqLabel
+    ],
+    template: `
+        <div class="layout-column layout-gap-xxl layout-padding-3xs" data-testid="e2eInlineEditSaveStatesContainer">
+            <kbq-inline-edit data-testid="e2eInlineEditSaveStatesPendingRow" [saveHandler]="pendingSave">
+                <kbq-label>Label</kbq-label>
+                <div kbqInlineEditViewMode>value</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+
+            <kbq-inline-edit data-testid="e2eInlineEditSaveStatesPendingRow" [saveHandler]="pendingSave">
+                <div kbqInlineEditViewMode>value</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+
+            <kbq-inline-edit data-testid="e2eInlineEditSaveStatesFailingRow" [saveHandler]="failingSave">
+                <kbq-label>Label</kbq-label>
+                <div kbqInlineEditViewMode>value</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+
+            <kbq-inline-edit data-testid="e2eInlineEditSaveStatesFailingRow" [saveHandler]="failingSave">
+                <div class="layout-row layout-gap-xxs" kbqInlineEditViewMode>
+                    <kbq-badge>Badge</kbq-badge>
+                    <kbq-badge>Badge</kbq-badge>
+                </div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+
+            <!-- The menu carries the states that paint their own background over the failed one. -->
+            <kbq-inline-edit data-testid="e2eInlineEditSaveStatesFailingRow" [saveHandler]="failingSave">
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    <button kbq-dropdown-item>Action 1</button>
+                    <button kbq-dropdown-item>Action 2</button>
+                </kbq-dropdown>
+                <i
+                    kbqInlineEditMenu
+                    data-testid="e2eInlineEditSaveStatesMenu"
+                    kbq-icon-button="kbq-ellipsis-vertical_16"
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [color]="'contrast-fade'"
+                ></i>
+                <div kbqInlineEditViewMode>value</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [ngModel]="'value'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-column layout-gap-m',
+        style: 'max-width: 400px',
+        'data-testid': 'e2eInlineEditSaveStates'
+    }
+})
+export class E2eInlineEditSaveStates {
+    /** Never settles, so the progress state stays on screen. */
+    protected readonly pendingSave: KbqInlineEditSaveHandler = () => NEVER;
+
+    protected readonly failingSave: KbqInlineEditSaveHandler = () =>
+        throwError(() => new Error('Couldn\u2019t save the changes'));
 }
 
 const E2E_COMMENTS: string[] = [

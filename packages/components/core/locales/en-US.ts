@@ -4,6 +4,8 @@ export const enUSLocaleData = {
     a11y: {
         close: 'Close',
         save: 'Save',
+        saving: 'Saving',
+        saveFailed: 'Couldn’t save',
         cancel: 'Cancel',
         removeAll: 'Remove all',
         remove: 'Remove',

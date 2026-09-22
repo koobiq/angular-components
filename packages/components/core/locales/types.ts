@@ -19,6 +19,10 @@ export type KbqA11yLocaleConfiguration = {
     close: string;
     /** Confirm button of an inline edit. */
     save: string;
+    /** Announced while an inline edit saves a value in the background. */
+    saving: string;
+    /** Announced when a background save of an inline edit fails. */
+    saveFailed: string;
     /** Discard button of an inline edit. */
     cancel: string;
     /** Button removing every notification at once. */
