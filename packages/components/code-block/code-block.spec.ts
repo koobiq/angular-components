@@ -464,6 +464,7 @@ describe(KbqCodeBlock.name, () => {
     });
 
     it('should set fallback file content language if is invalid', async () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
 
@@ -474,6 +475,10 @@ describe(KbqCodeBlock.name, () => {
 
         expect(geCodeBlockHighlightDebugElement(debugElement).attributes['data-language']).toBe(
             TestBed.inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE)
+        );
+        expect(warn).toHaveBeenCalledWith(
+            expect.stringContaining('Unknown file language: "invalid_file_language"'),
+            expect.objectContaining({ language: 'invalid_file_language' })
         );
     });
 
@@ -572,11 +577,19 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const downloadCodeSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'downloadCode');
+        // Following the blob link is a navigation jsdom does not implement, and it reports that from a timer
+        // that fires in whichever test runs next.
+        const linkClick = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
 
-        componentInstance.canDownload = true;
-        fixture.detectChanges();
-        getDownloadButtonElement(debugElement).click();
-        expect(downloadCodeSpy).toHaveBeenCalledTimes(1);
+        try {
+            componentInstance.canDownload = true;
+            fixture.detectChanges();
+            getDownloadButtonElement(debugElement).click();
+            expect(downloadCodeSpy).toHaveBeenCalledTimes(1);
+            expect(linkClick).toHaveBeenCalledTimes(1);
+        } finally {
+            linkClick.mockRestore();
+        }
     });
 
     it('should display link button', () => {
@@ -973,6 +986,7 @@ describe(KbqCodeBlock.name, () => {
                 })
             );
 
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = createComponent(BaseCodeBlock, [
                 kbqCodeBlockHighlightJsConfigProvider({
                     core: () => Promise.resolve({ default: mockCore })
@@ -983,6 +997,10 @@ describe(KbqCodeBlock.name, () => {
 
             expect(geCodeBlockHighlightDebugElement(fixture.debugElement).attributes['data-language']).toBe(
                 TestBed.inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE)
+            );
+            expect(warn).toHaveBeenCalledWith(
+                expect.stringContaining('Unknown file language: "html"'),
+                expect.objectContaining({ language: 'html' })
             );
         });
 
