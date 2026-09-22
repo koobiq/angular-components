@@ -150,13 +150,13 @@ describe('KbqIconRegistry', () => {
             registry.addSvgIconSet(url);
             registry.addSvgIconSet(url);
 
-            registry.getNamedSvgIcon('check_16').subscribe();
+            // An icon missing from the sprite makes the registry try every registered set in turn, so a
+            // second registration of the URL would fetch it again.
+            registry.getNamedSvgIcon('missing_16').subscribe({ error: () => undefined });
 
-            // Only one HTTP request despite two addSvgIconSet calls.
-            const requests = http.match('/sprite.svg');
+            http.expectOne('/sprite.svg').flush(SPRITE_SVG);
 
-            expect(requests).toHaveLength(1);
-            requests[0].flush(SPRITE_SVG);
+            expect(http.match('/sprite.svg')).toHaveLength(0);
         });
     });
 
@@ -178,7 +178,7 @@ describe('KbqIconRegistry', () => {
     describe('getNamedSvgIcon errors', () => {
         it('errors when no icon registered', (done) => {
             registry.getNamedSvgIcon('missing').subscribe({
-                next: () => done.fail('should not emit'),
+                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
                 error: (err: Error) => {
                     expect(err.message).toContain('missing');
                     done();
