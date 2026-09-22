@@ -466,26 +466,29 @@ module.exports = tseslint.config(
 
     // Override rules for specs
     {
-        files: ['**/*.spec.ts'],
+        files: ['**/*.spec.ts', '**/*.spec-helper.ts'],
         plugins: { jest },
         rules: {
             // plugin:jest — the classes of defect this suite has actually shipped: a test with no
             // assertion at all, an assertion reachable only through a branch that may not be taken,
             // an assertion outside the test that is supposed to own it, and a focused test.
-            // A spec that delegates its assertions names the helper for what it checks; a premise guard
-            // in a hook is deliberate here, so no-standalone-expect stays off.
+            // A helper that holds a test's assertions is listed by its exact name: a wildcard also matches
+            // any call on a variable named the same way, such as `checkbox.click()`. A premise guard in a
+            // hook is deliberate here, so no-standalone-expect stays off.
             'jest/expect-expect': [
                 2,
                 {
                     assertFunctionNames: [
                         'expect',
-                        'expect*',
                         '*.expect',
-                        'check*',
-                        'assert*',
-                        'verify*',
-                        'should*',
-                        'run*Test'
+                        'checkDirection',
+                        'checkSelectedIndex',
+                        'expectCustomScrollbars',
+                        'expectFlatTreeToMatch',
+                        'runModifierKeyTest',
+                        'shouldFocusReturnButtonWith',
+                        'shouldRefocusSaveButtonWith',
+                        'shouldSelectActiveOptionAndRestoreFocus'
                     ]
                 }
             ],
