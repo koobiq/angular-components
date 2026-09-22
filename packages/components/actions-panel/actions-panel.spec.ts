@@ -7,6 +7,7 @@ import {
     Component,
     ElementRef,
     inject,
+    Injectable,
     Provider,
     TemplateRef,
     Type,
@@ -109,6 +110,7 @@ export class ActionsPanelController {
 const fakeOverlayContainerSelector = 'TEST_CUSTOM_OVERLAY_CONTAINER';
 
 /** Application-wide `OverlayContainer` replacement, marking its element so that tests can recognize it. */
+@Injectable()
 class FakeOverlayContainer extends OverlayContainer {
     override getContainerElement(): HTMLElement {
         const containerElement = super.getContainerElement();
