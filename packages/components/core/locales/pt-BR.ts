@@ -12,6 +12,8 @@ export const ptBRLocaleData = {
     a11y: {
         close: 'Fechar',
         save: 'Salvar',
+        saving: 'Salvando',
+        saveFailed: 'Não foi possível salvar',
         cancel: 'Cancelar',
         removeAll: 'Remover tudo',
         expandBreadcrumbs: 'Mostrar itens ocultos',

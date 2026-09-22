@@ -14,6 +14,9 @@ import { DevThemeToggle } from '../theme-toggle';
         <inline-edit-horizontal-list-example />
         <inline-edit-on-clean-example />
         <inline-edit-validation-example />
+        <inline-edit-save-progress-example />
+        <inline-edit-save-error-example />
+        <inline-edit-save-invalid-items-example />
         <inline-edit-custom-handler-example />
         <inline-edit-vertical-list-example />
         <inline-edit-without-label-example />

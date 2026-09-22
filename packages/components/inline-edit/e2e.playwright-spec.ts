@@ -85,6 +85,106 @@ test.describe('KbqInlineEdit', () => {
         });
     });
 
+    test.describe('E2eInlineEditSaveStates', () => {
+        const getContainer = (page: Page) => page.getByTestId('e2eInlineEditSaveStatesContainer');
+        const getRows = (page: Page) => getContainer(page).locator('.kbq-inline-edit');
+        const getPanel = (page: Page) => page.locator('.kbq-inline-edit__panel');
+
+        /**
+         * Opens each row, changes the value and saves it with Enter. The save states are only reachable through a
+         * real commit — opening the editor is what captures the value — so driving them from the fixture instead
+         * would screenshot a state no user can produce. The value has to differ: `compareWith` sends nothing for
+         * one the editor opened with. View mode holds its own markup, so the rows look the same either way.
+         */
+        const commitRows = async (page: Page, testId: string) => {
+            for (const row of await page.getByTestId(testId).all()) {
+                await row.click();
+
+                const input = getPanel(page).locator('input');
+
+                await expect(input).toBeFocused();
+                await input.fill('changed value');
+                await page.keyboard.press('Enter');
+                await expect(getPanel(page)).toBeHidden();
+            }
+        };
+
+        const commitPendingRows = (page: Page) => commitRows(page, 'e2eInlineEditSaveStatesPendingRow');
+        const commitFailingRows = (page: Page) => commitRows(page, 'e2eInlineEditSaveStatesFailingRow');
+
+        test('progress in view mode', async ({ page }) => {
+            await page.goto('/E2eInlineEditSaveStates');
+
+            await commitPendingRows(page);
+            await expect(getRows(page).first()).toHaveClass(/kbq-progress/);
+
+            const screenshotTarget = getContainer(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('08-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('08-dark.png');
+        });
+
+        test('failed save in view mode', async ({ page }) => {
+            await page.goto('/E2eInlineEditSaveStates');
+
+            await commitFailingRows(page);
+            await expect(getRows(page).last()).toHaveClass(/kbq-inline-edit_save-error/);
+
+            const screenshotTarget = getContainer(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('09-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('09-dark.png');
+        });
+
+        test('failed save keeps its background while the action menu is open', async ({ page }) => {
+            await page.goto('/E2eInlineEditSaveStates');
+
+            await commitFailingRows(page);
+
+            const rowWithMenu = getRows(page).last();
+
+            await expect(rowWithMenu).toHaveClass(/kbq-inline-edit_save-error/);
+
+            await rowWithMenu.getByTestId('e2eInlineEditSaveStatesMenu').click();
+            await expect(page.locator('.kbq-dropdown__panel')).toBeVisible();
+            // `kbq-active` is what the open-menu background keys off, and it applies only while the row itself
+            // isn't hovered — which is where it used to win over the failed one.
+            await expect(rowWithMenu.locator('.kbq-inline-edit__menu')).toHaveClass(/kbq-active/);
+            await page.mouse.move(0, 0);
+
+            const screenshotTarget = getContainer(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('10-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(screenshotTarget).toHaveScreenshot('10-dark.png');
+        });
+
+        test('failed save on hover', async ({ page }) => {
+            await page.goto('/E2eInlineEditSaveStates');
+
+            await commitFailingRows(page);
+
+            const rowWithMenu = getRows(page).last();
+
+            await expect(rowWithMenu).toHaveClass(/kbq-inline-edit_save-error/);
+            // Saving with the keyboard leaves the row focused, and the focus ring would cover the background
+            // this shot is about.
+            await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+            await expect(rowWithMenu).not.toHaveClass(/cdk-keyboard-focused/);
+            // Hover carries both the error hover background and the menu mask painted on top of it.
+            await rowWithMenu.hover();
+
+            const screenshotTarget = getContainer(page);
+
+            await expect(screenshotTarget).toHaveScreenshot('11-light.png');
+            await e2eEnableDarkTheme(page);
+            await rowWithMenu.hover();
+            await expect(screenshotTarget).toHaveScreenshot('11-dark.png');
+        });
+    });
+
     test.describe('E2eInlineEditSelectMultiline', () => {
         const getContainer = (page: Page) => page.getByTestId('e2eInlineEditSelectMultilineContainer');
         const getInlineEdit = (locator: Locator) => locator.getByTestId('e2eInlineEditSelectMultiline');

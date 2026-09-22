@@ -81,6 +81,31 @@
     }
 }
 
+/**
+ * A save the server rejected keeps the unsaved value marked until the user reacts to the notification, so the
+ * state outlives the request itself. Every state `_inline-edit-theme()` paints a background for is repeated here
+ * with the error color: each of its selectors is more specific than the plain `.kbq-inline-edit_save-error` rule,
+ * so leaving one out would drop the marking in that state.
+ */
+@mixin _inline-edit-save-error-theme {
+    &.kbq-inline-edit_view.kbq-inline-edit_save-error {
+        --kbq-inline-edit-background: var(--kbq-inline-edit-error-background);
+
+        &:not(.kbq-inline-edit_disabled) {
+            &:hover {
+                --kbq-inline-edit-background: var(--kbq-states-background-error-less-hover);
+                --kbq-mask-background: var(--kbq-states-background-error-less-hover);
+            }
+
+            &:active,
+            &:has(.kbq-inline-edit__menu.kbq-active) {
+                --kbq-inline-edit-background: var(--kbq-states-background-error-less-active);
+                --kbq-mask-background: var(--kbq-states-background-error-less-active);
+            }
+        }
+    }
+}
+
 @mixin _inline-edit-typography {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 }
@@ -97,6 +122,7 @@
     min-height: var(--kbq-inline-edit-height);
 
     @include _inline-edit-theme();
+    @include _inline-edit-save-error-theme();
     @include _inline-edit-typography();
 
     &:not(.kbq-inline-edit_with-label) {

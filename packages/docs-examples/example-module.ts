@@ -3302,6 +3302,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "inline-edit-overview-example.ts",
     "importPath": "components/inline-edit"
   },
+  "inline-edit-save-error": {
+    "packagePath": "components/inline-edit/inline-edit-save-error",
+    "title": "Inline edit save error",
+    "componentName": "InlineEditSaveErrorExample",
+    "files": [
+      "inline-edit-save-error-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-save-error-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-save-error-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-save-invalid-items": {
+    "packagePath": "components/inline-edit/inline-edit-save-invalid-items",
+    "title": "Inline edit save invalid items",
+    "componentName": "InlineEditSaveInvalidItemsExample",
+    "files": [
+      "inline-edit-save-invalid-items-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-save-invalid-items-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-save-invalid-items-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-save-progress": {
+    "packagePath": "components/inline-edit/inline-edit-save-progress",
+    "title": "Inline edit save progress",
+    "componentName": "InlineEditSaveProgressExample",
+    "files": [
+      "inline-edit-save-progress-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "inline-edit-save-progress-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-save-progress-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "inline-edit-select-basic": {
     "packagePath": "components/inline-edit/inline-edit-select-basic",
     "title": "Inline edit select basic",
@@ -8338,6 +8377,12 @@ return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-on-clean':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-overview':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-save-error':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-save-invalid-items':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-save-progress':
 return import('@koobiq/docs-examples/components/inline-edit');
   case 'inline-edit-select-basic':
 return import('@koobiq/docs-examples/components/inline-edit');
