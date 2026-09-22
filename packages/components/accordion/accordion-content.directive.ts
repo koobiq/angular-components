@@ -66,6 +66,9 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     }
 
     ngAfterContentInit(): void {
+        // The item may have been expanded before it could reach this directive, e.g. by `[expanded]="true"`.
+        this.hidden.set(!this.item.expanded);
+
         if (!this.platform.isBrowser) return;
 
         const { height, width } = this.nativeElement.getBoundingClientRect();

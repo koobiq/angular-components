@@ -90,7 +90,8 @@ export class KbqAccordionItem implements OnDestroy {
                 this.closed.emit();
             }
 
-            this.content.toggle();
+            // Unresolved while an initial input is set; the content syncs itself on init.
+            this.content?.toggle();
 
             this.accordion.saveItemState(this);
 

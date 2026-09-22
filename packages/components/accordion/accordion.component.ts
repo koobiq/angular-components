@@ -167,7 +167,8 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
                     this.selectionDispatcher.notify(this.state[key].value as unknown as string, this.id);
                 }
             });
-        } else {
+        } else if (this._defaultValue.length) {
+            // An empty default would collapse items expanded by their own `[expanded]` input.
             this.selectionDispatcher.notify(this._defaultValue as string, this.id);
         }
 
