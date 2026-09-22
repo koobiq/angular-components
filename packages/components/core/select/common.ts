@@ -257,7 +257,9 @@ export abstract class KbqAbstractSelect {
     }
 
     protected setOverlayPosition() {
-        if (!this.overlayDir.overlayRef) return;
+        // As in `reanchorPanel()`: a disposed overlay keeps its `overlayRef` but loses `hostElement`, and an
+        // expansion or selection change can still arrive once the select has closed for good.
+        if (!this.overlayDir.overlayRef?.hostElement) return;
 
         this.resetOverlay();
 
