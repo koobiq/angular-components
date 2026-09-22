@@ -2,8 +2,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    InjectionToken,
-    Signal,
     ViewEncapsulation,
     computed,
     contentChild,
@@ -15,15 +13,7 @@ import {
 } from '@angular/core';
 import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconItem } from '@koobiq/components/icon';
-
-/** The part of `kbq-empty-state` its projected slots follow. */
-export interface KbqEmptyStateContext {
-    /** Whether the empty state renders in the error color. */
-    readonly errorColor: Signal<boolean>;
-}
-
-/** Injection token a projected slot uses to follow the empty state it belongs to. */
-export const KBQ_EMPTY_STATE = new InjectionToken<KbqEmptyStateContext>('KBQ_EMPTY_STATE');
+import { KBQ_EMPTY_STATE_CONTEXT, KbqEmptyStateContext } from './empty-state-context';
 
 /**
  * Illustration slot of `kbq-empty-state`. Holds an icon, an image or any other element.
@@ -38,7 +28,7 @@ export const KBQ_EMPTY_STATE = new InjectionToken<KbqEmptyStateContext>('KBQ_EMP
     }
 })
 export class KbqEmptyStateIcon {
-    private readonly emptyState = inject(KBQ_EMPTY_STATE, { optional: true });
+    private readonly emptyState = inject(KBQ_EMPTY_STATE_CONTEXT, { optional: true });
     private readonly hostIcon = inject(KbqIconItem, { optional: true, self: true });
     private readonly wrappedIcons = contentChildren(KbqIconItem, { descendants: true });
 
@@ -135,7 +125,7 @@ export class KbqEmptyStateActions {}
     selector: 'kbq-empty-state',
     templateUrl: './empty-state.component.html',
     styleUrls: ['./empty-state.scss'],
-    providers: [{ provide: KBQ_EMPTY_STATE, useExisting: forwardRef(() => KbqEmptyState) }],
+    providers: [{ provide: KBQ_EMPTY_STATE_CONTEXT, useExisting: forwardRef(() => KbqEmptyState) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

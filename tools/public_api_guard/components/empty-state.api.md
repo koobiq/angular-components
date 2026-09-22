@@ -5,19 +5,15 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import { InjectionToken } from '@angular/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { Signal } from '@angular/core';
 
 // @public
-export const KBQ_EMPTY_STATE: InjectionToken<KbqEmptyStateContext>;
-
-// @public
 export class KbqEmptyState implements KbqEmptyStateContext {
     readonly alignTop: i0.InputSignal<boolean>;
-    protected readonly emptyStateSizeClass: Signal<string>;
+    protected readonly emptyStateSizeClass: i0.Signal<string>;
     readonly errorColor: i0.InputSignal<boolean>;
-    protected readonly icon: Signal<KbqEmptyStateIcon | undefined>;
+    protected readonly icon: i0.Signal<KbqEmptyStateIcon | undefined>;
     readonly size: i0.InputSignal<KbqDefaultSizes>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqEmptyState, "kbq-empty-state", ["kbqEmptyState"], { "errorColor": { "alias": "errorColor"; "required": false; "isSignal": true; }; "alignTop": { "alias": "alignTop"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; }, {}, ["icon"], ["[kbq-empty-state-icon]", "[kbq-empty-state-title]", "[kbq-empty-state-text]", "[kbq-empty-state-actions]"], true, never>;
