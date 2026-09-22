@@ -1,4 +1,5 @@
-﻿import { OverlayContainer } from '@angular/cdk/overlay';
+﻿import { InteractivityChecker } from '@angular/cdk/a11y';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
     InjectionToken,
@@ -393,9 +394,10 @@ describe('KbqSidepanelService', () => {
         expect(body.classList).toContain('kbq-scrollbar-viewport_native-scrollbar-hidden');
     }));
 
-    // jsdom gives every element zero geometry, so CDK's InteractivityChecker finds nothing tabbable and
-    // cdkTrapFocusAutoCapture never moves focus. Only observable in a browser — belongs in e2e.
-    it.skip('should set focus inside modal when opened by dropdown', fakeAsync(() => {
+    it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
+        // jsdom gives every element zero geometry, so the focus trap would find nothing tabbable.
+        jest.spyOn(TestBed.inject(InteractivityChecker), 'isVisible').mockReturnValue(true);
+
         const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
         const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
 
