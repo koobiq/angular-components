@@ -1,6 +1,16 @@
 ﻿import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, EventEmitter, inject, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
+import {
+    Component,
+    ErrorHandler,
+    EventEmitter,
+    inject,
+    Injectable,
+    Injector,
+    NgModule,
+    Provider,
+    Type
+} from '@angular/core';
 import {
     ComponentFixture,
     discardPeriodicTasks,
@@ -587,15 +597,19 @@ describe('KbqModal', () => {
     });
 
     describe('with dynamic injectors', () => {
-        // Nothing surfaces the failure any more: opening without the custom parent injector leaves
-        // getContentComponentRef() undefined and reports no error from open(), detectChanges() or
-        // autoDetectChanges(). Re-enable once the modal propagates the content component's creation error.
-        it.skip('should throw error if custom parent injector not provided for feature service', () => {
-            const fixture = createComponent(CustomComponent);
+        it('should report an error if custom parent injector not provided for feature service', async () => {
+            const errorHandler = { handleError: jest.fn() };
+            const fixture = createComponent(CustomComponent, [{ provide: ErrorHandler, useValue: errorHandler }]);
 
             fixture.componentInstance.modalService.open({ kbqComponent: CustomModalComponent });
+            fixture.detectChanges();
+            await fixture.whenStable();
 
-            expect(() => fixture.detectChanges()).toThrow(/NullInjectorError/);
+            // The content component is created while the application ticks the modal's own view, so the
+            // DI failure goes to the ErrorHandler rather than to the caller.
+            expect(errorHandler.handleError).toHaveBeenCalledWith(
+                expect.objectContaining({ message: expect.stringContaining('TestComponentLevelService') })
+            );
         });
 
         it('should use custom parent injector when creating dynamic component', () => {
