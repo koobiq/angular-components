@@ -11,10 +11,9 @@ import failOnConsole from 'jest-fail-on-console';
 expect.extend(toHaveNoViolations);
 
 failOnConsole({
-    silenceMessage: (message) => {
-        // https://github.com/thymikee/jest-preset-angular/issues/2194
-        return !(message === 'Error: Could not parse CSS stylesheet');
-    }
+    // jsdom reports every stylesheet it cannot parse as an error, and the message is that error's stack, so only
+    // its first line is stable: https://github.com/thymikee/jest-preset-angular/issues/2194
+    silenceMessage: (message) => message.startsWith('Error: Could not parse CSS stylesheet')
 });
 
 Object.defineProperty(global, '__jest__', { value: true });
