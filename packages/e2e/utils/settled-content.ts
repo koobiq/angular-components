@@ -8,8 +8,8 @@ import { expect, Locator } from '@playwright/test';
  * to catch. Gating on the animations themselves keeps the tolerance where it was.
  *
  * `parked` is for the transitions a fixture deliberately parks out of reach (an autofill suppression
- * measured in hours, say): anything longer than this is treated as scenery rather than as something
- * the shot is waiting on. It defaults to a minute, which no real transition reaches.
+ * measured in hours, say): anything that ends later than this, or never, is treated as scenery rather
+ * than as something the shot is waiting on. It defaults to a minute, which no real transition reaches.
  */
 export const e2eWaitForSettledContent = async (root: Locator, parked: number = 60_000): Promise<void> => {
     await expect
@@ -21,10 +21,11 @@ export const e2eWaitForSettledContent = async (root: Locator, parked: number = 6
                         .filter((animation) => animation.playState === 'running')
                         .filter((animation) => {
                             // An animation without an effect animates nothing, so it can never be the
-                            // thing a shot is waiting on.
-                            const { duration } = animation.effect?.getComputedTiming() ?? {};
+                            // thing a shot is waiting on. `endTime` counts the delay and every iteration,
+                            // and is Infinity for an animation that repeats forever.
+                            const { endTime } = animation.effect?.getComputedTiming() ?? {};
 
-                            return typeof duration === 'number' && duration < parkedAfter;
+                            return typeof endTime === 'number' && endTime < parkedAfter;
                         }).length,
                 parked
             )
