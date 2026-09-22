@@ -1,5 +1,10 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash, e2eWaitForSettledScrollbars } from '../../e2e/utils';
+import {
+    e2eEnableDarkTheme,
+    e2eExpectNoScrollbarAfterFlash,
+    e2eWaitForFonts,
+    e2eWaitForSettledScrollbars
+} from '../../e2e/utils';
 
 test.describe('KbqFileUploadModule', () => {
     test.describe('E2eFileUploadStateAndStyle', () => {
@@ -58,6 +63,20 @@ test.describe('KbqFileUploadModule', () => {
          * passes on an unsplit name sitting there whole. What the split promises is that the tail survives
          * intact, so the extension is asserted as well.
          */
+        /**
+         * The name is split from a measurement taken as the row is created, and that measurement is not
+         * repeated when a webfont swaps in unless the row's own width happens to move — so the faces go
+         * into the page first, and only then is the row asked for.
+         *
+         * Both the name's own face and the icon's matter here: the icon sits in front of the name, so its
+         * width is part of the room the name is measured against.
+         */
+        const showLongNameRows = async (page: Page) => {
+            await e2eWaitForFonts(page);
+
+            await getComponent(page).getByTestId('e2eLongNameTrigger').click();
+        };
+
         const expectNameSplitWithoutOverflow = async (item: Locator, container: Locator) => {
             // `KbqEllipsisCenterDirective` splits the text in a macrotask, so the layout only settles a frame
             // after the component itself is attached.
@@ -75,6 +94,7 @@ test.describe('KbqFileUploadModule', () => {
             page
         }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
+            await showLongNameRows(page);
 
             const item = getComponent(page).getByTestId('e2eMultipleFileUploadLongName');
 
@@ -83,18 +103,20 @@ test.describe('KbqFileUploadModule', () => {
 
         test('KbqSingleFileUploadComponent truncates a long file name without horizontal scroll', async ({ page }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
+            await showLongNameRows(page);
 
             const item = getComponent(page).getByTestId('e2eSingleFileUploadLongName');
 
             await expectNameSplitWithoutOverflow(item, item.locator('.kbq-file-item'));
 
-            // The assertions above prove the row fits and the truncation works survived.
+            // The assertions above prove the row fits and that the tail survived the split.
             // The screenshot below shows the result.
             await expect(item).toHaveScreenshot('05-light.png');
         });
 
         test('KbqMultipleFileUploadComponent re-splits the name when only the container resizes', async ({ page }) => {
             await page.goto('/E2eFileUploadStateAndStyle');
+            await showLongNameRows(page);
 
             const item = getComponent(page).getByTestId('e2eMultipleFileUploadLongName');
             const end = item.locator('.kbq-ellipsis-center_data-text-end');
