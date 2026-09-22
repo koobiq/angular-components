@@ -189,9 +189,11 @@ describe('MomentDateAdapter with KBQ_DATE_TIMEZONE override', () => {
     });
 
     it('should fall back to the host time zone when the zone is unknown', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         const adapter = createAdapter('Bad/Zone');
 
         expect(formatInstant(adapter)).toBe(moment(instant).format(dateTimeFormat));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('Unknown time zone "Bad/Zone"'));
     });
 
     it('should take precedence over the useUtc option', () => {
