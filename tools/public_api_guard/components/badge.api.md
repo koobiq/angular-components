@@ -9,12 +9,6 @@ import * as i1 from '@angular/cdk/a11y';
 import * as i2 from '@angular/cdk/platform';
 
 // @public
-export const badgeLeftIconClassName = "kbq-badge-icon_left";
-
-// @public
-export const badgeRightIconClassName = "kbq-badge-icon_right";
-
-// @public
 export class KbqBadge {
     readonly badgeColor: i0.InputSignalWithTransform<string, string | null | undefined>;
     protected readonly badgeColorClass: i0.Signal<string>;
@@ -78,12 +72,6 @@ export class KbqBadgeModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBadgeModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler], [typeof KbqBadge, typeof KbqBadgeCaption, typeof KbqBadgeCssStyler]>;
 }
-
-// @public
-export const leftIconClassName = "kbq-icon_left";
-
-// @public
-export const rightIconClassName = "kbq-icon_right";
 
 // (No @packageDocumentation comment for this package)
 

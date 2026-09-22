@@ -13,7 +13,7 @@ const exitDuration = KbqAnimationDurations.Rapid;
  * Motion is opt-out rather than unconditional: `KbqPopoverComponent` binds `[@.disabled]` to the user's
  * `prefers-reduced-motion` setting, so the same trigger renders instantly for those users.
  *
- * @docs-private
+ * @internal
  */
 export const kbqPopoverAnimations: {
     readonly popoverState: AnimationTriggerMetadata;

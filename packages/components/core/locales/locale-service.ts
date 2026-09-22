@@ -285,7 +285,7 @@ export function kbqInjectLocaleService(options?: InjectOptions): KbqLocaleServic
 /** @docs-private */
 export const KBQ_DEFAULT_PRECISION_SEPARATOR = '.';
 
-/** @docs-private */
+/** @internal */
 export function numberByParts(
     value: string,
     customConfig: Pick<KbqInputNumberLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>

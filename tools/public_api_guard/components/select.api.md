@@ -7,7 +7,6 @@
 import { ActiveDescendantKeyManager } from '@koobiq/components/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import * as _angular_cdk_overlay_module_d from '@angular/cdk/overlay-module.d';
 import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
@@ -61,6 +60,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -248,7 +248,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     protected get scrollbarMode(): KbqScrollbarMode;
     readonly scrolledToBottom: _angular_core.OutputEmitterRef<void>;
     readonly scrolledToBottomOffset: _angular_core.InputSignalWithTransform<number, unknown>;
-    scrollStrategy: _angular_cdk_overlay_module_d.ScrollStrategy;
+    scrollStrategy: ScrollStrategy;
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     readonly searchEmpty: _angular_core.Signal<KbqSelectSearchEmptyResult | undefined>;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);

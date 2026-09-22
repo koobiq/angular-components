@@ -1,6 +1,6 @@
 /**
  * Throws an exception for the case when dropdown trigger doesn't have a valid kbq-dropdown instance
- * @docs-private
+ * @internal
  */
 export function throwKbqDropdownMissingError() {
     throw Error(`kbqDropdownTriggerFor: must pass in an kbq-dropdown instance.
@@ -12,7 +12,7 @@ export function throwKbqDropdownMissingError() {
 /**
  * Throws an exception for the case when dropdown's x-position value isn't valid.
  * In other words, it doesn't match 'before' or 'after'.
- * @docs-private
+ * @internal
  */
 export function throwKbqDropdownInvalidPositionX() {
     throw Error(`xPosition value must be either 'before', 'after', or 'center'.
@@ -22,7 +22,7 @@ export function throwKbqDropdownInvalidPositionX() {
 /**
  * Throws an exception for the case when dropdown's y-position value isn't valid.
  * In other words, it doesn't match 'above' or 'below'.
- * @docs-private
+ * @internal
  */
 export function throwKbqDropdownInvalidPositionY() {
     throw Error(`yPosition value must be either 'above' or below'.
@@ -32,7 +32,7 @@ export function throwKbqDropdownInvalidPositionY() {
 /**
  * Throws an exception for the case when `kbqDropdownSearch` is applied to a form field that doesn't
  * host a `kbqInput`.
- * @docs-private
+ * @internal
  */
 export function throwKbqDropdownSearchMissingInputError() {
     throw Error(`kbqDropdownSearch: must be applied to a kbq-form-field containing an input[kbqInput].
@@ -45,7 +45,7 @@ export function throwKbqDropdownSearchMissingInputError() {
 /**
  * Throws an exception for the case when `kbqDropdownSearch`'s input isn't bound to a form control, so
  * there is no query to react to.
- * @docs-private
+ * @internal
  */
 export function throwKbqDropdownSearchMissingNgControlError() {
     throw Error(`kbqDropdownSearch: the input must be bound to a form control.

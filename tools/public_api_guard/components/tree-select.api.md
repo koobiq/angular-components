@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import * as _angular_cdk_overlay_module_d from '@angular/cdk/overlay-module.d';
 import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
@@ -48,6 +47,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -198,7 +198,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     get required(): boolean;
     set required(value: boolean);
-    scrollStrategy: _angular_cdk_overlay_module_d.ScrollStrategy;
+    scrollStrategy: ScrollStrategy;
     // (undocumented)
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     set searchMinOptionsThreshold(value: 'auto' | number | undefined);

@@ -50,13 +50,13 @@ const getKbqStepperToggleMissingControlError = (): Error => {
 
 /**
  * Timeout duration when clicking the up/down arrow
- * @docs-private
+ * @internal
  */
 export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
 
 /**
  * Interval delay when clicking the up/down arrow
- * @docs-private
+ * @internal
  */
 export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 

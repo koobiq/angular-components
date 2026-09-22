@@ -7,7 +7,6 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_platform_browser from '@angular/platform-browser';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/components/core';
@@ -66,11 +65,6 @@ export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number;
 
 // @public (undocumented)
 export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH: number;
-
-// @public
-export const kbqAppSwitcherAnimations: {
-    readonly state: AnimationTriggerMetadata;
-};
 
 // @public (undocumented)
 export interface KbqAppSwitcherApp {

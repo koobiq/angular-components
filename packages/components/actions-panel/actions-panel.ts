@@ -63,7 +63,7 @@ export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown
 /**
  * Selector for actions panel overlay.
  *
- * @docs-private
+ * @internal
  */
 export const KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR = 'kbq-actions-panel-overlay';
 

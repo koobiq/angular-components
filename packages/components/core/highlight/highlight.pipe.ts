@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { highlight } from './highlight-base';
 
-/** @docs-private */
+/** @internal */
 export const kbqHighlightMark = (text: string): string => `<mark class="kbq-highlight">${text}</mark>`;
 
 @Pipe({ name: 'mcHighlight' })

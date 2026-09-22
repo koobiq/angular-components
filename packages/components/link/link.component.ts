@@ -26,7 +26,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
-/** @docs-private */
+/** @internal */
 export const baseURLRegex = /^http(s)?:\/\//;
 
 /** Directive that styles an anchor as a link. */

@@ -33,9 +33,6 @@ import { ValidatorFn } from '@angular/forms';
 import { WritableSignal } from '@angular/core';
 
 // @public
-export function createMissingDateImplError(componentName: string, provider: string): Error;
-
-// @public
 export const defaultTimeRangeTypes: KbqTimeRangeType[];
 
 // @public

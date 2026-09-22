@@ -66,7 +66,7 @@ const SPLITTER_SIZE_PATTERN = /^([+-]?(?:\d+(?:\.\d+)?|\.\d+))(px|%)?$/i;
  * is not set or is anything else, another unit included: reading `10rem` as ten pixels would quietly hand the
  * panel a limit nobody asked for. `null` is how a panel says "take whatever is left".
  *
- * @docs-private
+ * @internal
  */
 export function resolveSplitterSize(size: KbqSplitterSize | null | undefined, total: number): number | null {
     if (size === null || size === undefined) return null;
@@ -88,7 +88,7 @@ export function resolveSplitterSize(size: KbqSplitterSize | null | undefined, to
  * mid-pass stops taking, and the next pass shares what it refused among the panels that still have room.
  * At most one pass per panel can end that way, so the loop is bounded by the panel count.
  *
- * @docs-private
+ * @internal
  */
 export function fitSplitterSizes(
     sizes: readonly number[],
@@ -213,7 +213,7 @@ export type KbqSplitterSnapPoint = { size: number; tolerance: number };
  * of them says how far its own pull reaches. Two points exactly as close as one another are settled by
  * declaration order, so a target sitting midway between them picks the same one however it got there.
  *
- * @docs-private
+ * @internal
  */
 export function snapSplitterSize(target: number, snapPoints: readonly KbqSplitterSnapPoint[]): number {
     let snapped = target;

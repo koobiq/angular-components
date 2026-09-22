@@ -22,7 +22,7 @@ export const defaultTimeRangeTypes: KbqTimeRangeType[] = [
     'range'
 ];
 
-/** @docs-private */
+/** @internal */
 export function createMissingDateImplError(componentName: string, provider: string): Error {
     return Error(
         `${componentName}: No provider found for ${provider}. You must import one of the existing ` +

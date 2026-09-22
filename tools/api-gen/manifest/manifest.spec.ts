@@ -803,6 +803,28 @@ describe('api manifest generation', () => {
             ])
         ).toMatchSnapshot();
     });
+
+    it('should filter entries marked as internal', () => {
+        const [collection] = generateManifest([
+            {
+                moduleName: 'components',
+                packagesApiInfo: [
+                    {
+                        packageName: 'actions-panel',
+                        entries: [
+                            entry({ name: 'KbqActionsPanel', entryType: EntryType.UndecoratedClass }),
+                            entry({
+                                name: 'KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR',
+                                jsdocTags: [{ name: 'internal', comment: '' }]
+                            })
+                        ]
+                    }
+                ]
+            }
+        ]);
+
+        expect(collection.packagesApiInfo[0].entries.map(({ name }) => name)).toEqual(['KbqActionsPanel']);
+    });
 });
 
 describe('getFunctionRenderable', () => {

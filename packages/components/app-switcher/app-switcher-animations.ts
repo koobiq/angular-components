@@ -5,7 +5,7 @@ import { KbqAnimationCurves, KbqAnimationDurations } from '@koobiq/components/co
  * Note: `KbqAppSwitcherComponent` registers this trigger but never binds `[@state]`, so the popup currently
  * appears without motion. Wiring it up (as the popover and tooltip templates do) must also gate the animation
  * behind `prefers-reduced-motion`, e.g. with an `[@.disabled]` host binding.
- * @docs-private
+ * @internal
  */
 export const kbqAppSwitcherAnimations: {
     readonly state: AnimationTriggerMetadata;

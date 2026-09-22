@@ -57,7 +57,7 @@ export const KBQ_DROPZONE_DATA = new InjectionToken<KbqDropzoneData>('KbqDropzon
 
 /**
  * Determines if a mouse event occurred outside the viewport boundaries.
- * @docs-private
+ * @internal
  */
 export const isOutsideViewport = ({
     event,

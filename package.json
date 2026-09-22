@@ -319,6 +319,7 @@
         "check-api": "yarn run approve-api onlyCheck",
         "check-public-api-any": "ts-node --project tools/check-public-api-any/tsconfig.json tools/check-public-api-any",
         "approve-public-api-any": "ts-node --project tools/check-public-api-any/tsconfig.json tools/check-public-api-any --approve",
+        "check-typings": "ts-node --project tools/check-typings/tsconfig.json tools/check-typings",
         "-----LINTERS-----": "----------------------------------------------------------------------------------------",
         "check-peer-deps": "ts-node --project tools/check-peer-deps/tsconfig.json tools/check-peer-deps",
         "check-npm-resolution": "ts-node --project tools/check-npm-resolution/tsconfig.json tools/check-npm-resolution",

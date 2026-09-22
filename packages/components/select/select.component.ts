@@ -2,7 +2,13 @@ import { CdkMonitorFocus, InteractivityChecker } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
+import {
+    CdkConnectedOverlay,
+    CdkOverlayOrigin,
+    ConnectedPosition,
+    OverlayContainer,
+    ScrollStrategy
+} from '@angular/cdk/overlay';
 import { Platform, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
@@ -365,7 +371,7 @@ export class KbqSelect
     panelDoneAnimatingStream = new Subject<string>();
 
     /** Strategy that will be used to handle scrolling while the select panel is open. */
-    scrollStrategy = this.scrollStrategyFactory();
+    scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
 
     /**
      * The y-offset of the overlay panel in relation to the trigger.

@@ -53,12 +53,6 @@ export class KbqMarkdownService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMarkdownService>;
 }
 
-// @public
-export const MARKDOWN_TAGS_TO_CLASS_ALIAS: string[];
-
-// @public
-export const MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS: string[];
-
 // (No @packageDocumentation comment for this package)
 
 ```

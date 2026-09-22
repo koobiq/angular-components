@@ -15,9 +15,6 @@ import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
-export function fitSplitterSizes(sizes: readonly number[], min: readonly number[], max: readonly number[], total: number): number[];
-
-// @public
 export const KBQ_SPLITTER: InjectionToken<KbqSplitterGroup>;
 
 // @public
@@ -173,12 +170,6 @@ export type KbqSplitterSnapPoint = {
 
 // @public
 export function resizeSplitterSizesAt(sizes: readonly number[], index: number, delta: number, min: readonly number[], max: readonly number[]): number[];
-
-// @public
-export function resolveSplitterSize(size: KbqSplitterSize | null | undefined, total: number): number | null;
-
-// @public
-export function snapSplitterSize(target: number, snapPoints: readonly KbqSplitterSnapPoint[]): number;
 
 // (No @packageDocumentation comment for this package)
 

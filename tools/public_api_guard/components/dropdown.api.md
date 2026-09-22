@@ -372,21 +372,6 @@ export const NESTED_PANEL_LEFT_PADDING = 8;
 // @public
 export const NESTED_PANEL_TOP_PADDING = 4;
 
-// @public
-export function throwKbqDropdownInvalidPositionX(): void;
-
-// @public
-export function throwKbqDropdownInvalidPositionY(): void;
-
-// @public
-export function throwKbqDropdownMissingError(): void;
-
-// @public
-export function throwKbqDropdownSearchMissingInputError(): void;
-
-// @public
-export function throwKbqDropdownSearchMissingNgControlError(): void;
-
 // @public @deprecated (undocumented)
 export const transformDropdown: AnimationTriggerMetadata;
 

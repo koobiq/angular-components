@@ -81,7 +81,7 @@ const ownDescribedByIds = new WeakMap<HTMLElement, string[]>();
 /**
  * Writes `aria-describedby` on the control's element, preserving the ids the consumer set themselves.
  *
- * @docs-private
+ * @internal
  */
 export function kbqSetDescribedByIds(element: HTMLElement, ids: string[]): void {
     const previouslyOwned = ownDescribedByIds.get(element) || [];
