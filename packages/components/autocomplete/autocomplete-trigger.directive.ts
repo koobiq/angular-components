@@ -103,7 +103,7 @@ export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider = {
 
 /**
  * Creates an error to be thrown when attempting to use an autocomplete trigger without a panel.
- * @docs-private
+ * @internal
  */
 export function getKbqAutocompleteMissingPanelError(): Error {
     return Error(

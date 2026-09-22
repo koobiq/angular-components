@@ -8,7 +8,6 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter } from '@koobiq/components/core';
 import { DoCheck } from '@angular/core';
@@ -259,12 +258,6 @@ export class KbqDatepicker<D> implements OnDestroy {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepicker<any>, never>;
 }
-
-// @public
-export const kbqDatepickerAnimations: {
-    readonly transformPanel: AnimationTriggerMetadata;
-    readonly fadeInCalendar: AnimationTriggerMetadata;
-};
 
 // @public
 export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {

@@ -104,7 +104,7 @@ export function updateEntries(
             return res;
         }
 
-        // base class will be added to entry info if it isn't marked as docs-private and placed in scope of package
+        // base class will be added to entry info if it is public (see `isPublic`) and placed in scope of package
         const baseClassEntry =
             classMetadata[entry.name]?.baseClass &&
             arr.find((curEntry) => curEntry.name === classMetadata[entry.name]?.baseClass);

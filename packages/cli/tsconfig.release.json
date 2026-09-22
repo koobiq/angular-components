@@ -4,6 +4,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "declaration": true,
+        "stripInternal": true,
         "sourceMap": true,
         "composite": false,
         "rootDir": "src/release",

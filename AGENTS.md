@@ -177,6 +177,7 @@ yarn run approve-api                     # Approve API changes (updates tools/pu
 yarn run approve-api components/<name>   # Approve a single entry point
 yarn run check-public-api-any            # Ratchet on `any` / `unknown` in the published type surface (CI)
 yarn run approve-public-api-any          # Record the new counts after removing `any` — the ratchet fails in both directions
+yarn run check-typings                   # Type-check the typings of every published package in dist/ with skipLibCheck off (CI)
 ```
 
 The guard reads `dist/components/<name>/index.d.ts`, so build the package first; a stale `dist/` produces a wrong golden file. Only the entry points listed in `tools/api-extractor/config.json` are guarded. Adding a JSDoc comment to a public member also changes its golden file (the `(undocumented)` marker goes away).
@@ -190,7 +191,7 @@ Every pull request runs these workflows:
 | Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`             |
 | Unit tests                        | `styles:build-all`, then every `unit:*` script                                                                                  |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                |
-| API                               | build the packages, then `check-api` and `check-public-api-any`                                                                 |
+| API                               | build the packages, then `check-typings`, `check-api` and `check-public-api-any`                                                |
 | Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build` |
 | Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label          |
 | License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                      |
@@ -203,6 +204,9 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 
 - `@koobiq/components` has an empty root barrel; consumers import from `@koobiq/components/<name>`. `core` is the shared entry point: common behaviors (`disabled`, `color`, `tabindex`, `error-state`), a11y, keycodes, datetime and formatters, forms, locales, overlay helpers (panel width and height resolvers, scroll strategies), the pop-up base classes, option and selection models, theme configuration and stores, the testing helpers, utils and validators.
 - Every component keeps a `Kbq<Name>Module` that imports and re-exports its standalone components and directives. A new directive has to be added there too, or NgModule consumers will not see it.
+- `@internal` removes a declaration from the published typings: `stripInternal` is on in the config that emits the typings of every published package (its `tsconfig.lib.json`, `packages/cli/tsconfig.release.json` for the CLI), while the JavaScript still contains it. The API tab of the docs site hides such declarations too, so they need no `@docs-private`. TypeScript strips a declaration when any comment in front of it contains the text `@internal`, `//` comments included. Moving a public member under `@internal` removes it for consumers, so it is a breaking change.
+- Entry points are compiled against each other's typings, so an `@internal` declaration may be used only inside its own entry point: using or overriding it from another one, or referencing it from a public signature, breaks the build or leaves invalid typings, which `check-typings` catches. A member has to stay in the typings when it implements an interface (`ngOnInit`, `writeValue`, `stateChanges`) or when a type requires it structurally without an `implements` clause (`KbqOption.setActiveStyles` for the CDK `ActiveDescendantKeyManager` in autocomplete). A declaration re-exported by name (`export { X } from './x'`) cannot be stripped either: the typings bundler fails on the dangling export, while `export *` is fine.
+- `@docs-private` only hides a declaration from the API tab of the docs site and keeps it in the typings. It is the tag for what consumers can reach but should not rely on, including everything the previous rule keeps out of `@internal`.
 - Published packages depend only on `tslib` at runtime; everything else is a peer dependency. `check-peer-deps` and `check-npm-resolution` guard the ranges because Yarn tolerates peer conflicts that npm rejects for consumers.
 - Supported release lines: `main` is `20.x`; `19.x` and `18.x` have their own branches and receive backports. Releases are cut by maintainers with `yarn run release:stage:commit`; the tag push publishes the packages listed under `release.packages` in the root `package.json` (see `docs/guides/05-releasing-packages.md`).
 

@@ -343,9 +343,6 @@ export class KbqModalTitle {
 }
 
 // @public
-export const MODAL_ANIMATE_DURATION = 300;
-
-// @public
 export class ModalBuilderForService {
     constructor(overlay: Overlay, options: IModalOptionsForService | undefined, injector: Injector);
     // (undocumented)

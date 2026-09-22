@@ -3,6 +3,9 @@
     "compilerOptions": {
         "outDir": "../../dist/out-tsc",
         "declaration": true,
+        // Every entry point is compiled against the typings of the others, so a declaration marked
+        // `@internal` must not be used outside its own entry point or referenced by a public signature.
+        "stripInternal": true,
         "inlineSources": true,
         "types": [],
         "paths": {

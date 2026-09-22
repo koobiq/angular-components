@@ -7,7 +7,6 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { DestroyRef } from '@angular/core';
@@ -59,11 +58,6 @@ export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     provide: InjectionToken<() => ScrollStrategy>;
     deps: (typeof ScrollDispatcher)[];
     useFactory: typeof kbqPopoverScrollStrategyFactory;
-};
-
-// @public
-export const kbqPopoverAnimations: {
-    readonly popoverState: AnimationTriggerMetadata;
 };
 
 // @public (undocumented)

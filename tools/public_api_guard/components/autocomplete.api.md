@@ -32,9 +32,6 @@ import { TemplateRef } from '@angular/core';
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 // @public
-export function getKbqAutocompleteMissingPanelError(): Error;
-
-// @public
 export const KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS: InjectionToken<KbqAutocompleteDefaultOptions>;
 
 // @public (undocumented)

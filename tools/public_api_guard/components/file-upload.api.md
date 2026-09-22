@@ -48,15 +48,6 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
 // @public
-export const isOutsideViewport: (input: {
-    event: MouseEvent;
-    innerWidth: number;
-    innerHeight: number;
-    xAxisMinThreshold: number;
-    yAxisMinThreshold: number;
-}) => boolean;
-
-// @public
 export const KBQ_DROPZONE_DATA: InjectionToken<Partial<{
     caption: string;
     size: KbqDefaultSizes;

@@ -19,7 +19,7 @@ export enum ModalSize {
 
 /**
  * Duration when perform animations (ms)
- * @docs-private
+ * @internal
  */
 export const MODAL_ANIMATE_DURATION = 300;
 

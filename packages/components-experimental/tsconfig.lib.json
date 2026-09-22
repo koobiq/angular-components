@@ -3,6 +3,7 @@
     "compilerOptions": {
         "outDir": "../../dist/out-tsc",
         "declaration": true,
+        "stripInternal": true,
         "inlineSources": true,
         "types": [],
         "paths": {

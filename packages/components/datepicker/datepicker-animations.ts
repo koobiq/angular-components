@@ -2,7 +2,7 @@ import { animate, AnimationTriggerMetadata, state, style, transition, trigger } 
 
 /**
  * Animations used by the Koobiq datepicker.
- * @docs-private
+ * @internal
  */
 export const kbqDatepickerAnimations: {
     readonly transformPanel: AnimationTriggerMetadata;

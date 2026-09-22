@@ -28,12 +28,6 @@ import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
-// @public
-export function getKbqFormFieldMissingControlError(): Error;
-
-// @public
-export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error;
-
 // @public @deprecated
 export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint> | readonly KbqPasswordHint[]) => boolean;
 
@@ -51,12 +45,6 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
     labelClass: string | string[] | Set<string>;
     contentClass: string | string[] | Set<string>;
 }>>;
-
-// @public
-export const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
-
-// @public
-export const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
 // @public
 export class KbqCleaner extends KbqIconButton implements AfterContentInit {
@@ -327,9 +315,6 @@ export class KbqReactivePasswordHint extends KbqHint {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqReactivePasswordHint, never>;
 }
-
-// @public
-export function kbqSetDescribedByIds(element: HTMLElement, ids: string[]): void;
 
 // @public
 export class KbqStepper {

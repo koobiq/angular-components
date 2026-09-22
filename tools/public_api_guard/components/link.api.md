@@ -11,9 +11,6 @@ import { OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 
 // @public
-export const baseURLRegex: RegExp;
-
-// @public
 export class KbqLink implements AfterViewInit, OnDestroy {
     constructor();
     protected readonly ariaDisabledAttribute: _angular_core.Signal<true | null>;

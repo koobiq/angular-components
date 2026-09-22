@@ -56,7 +56,7 @@ export const kbqCleanerFactoryProvider = (factory: () => KbqCleanerContext): Pro
     useFactory: factory
 });
 
-/** @docs-private */
+/** @internal */
 export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
     return Error(`You can't use kbq-cleaner with input that have type="number"`);
 }

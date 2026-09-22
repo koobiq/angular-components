@@ -33,9 +33,6 @@ export type KbqFormatKeyToProfileMappingExtended<T = any> = {
 };
 
 // @public
-export function KbqMappingMissingError(): Error;
-
-// @public
 export type KbqUserInfo = {
     firstName?: string;
     lastName?: string;

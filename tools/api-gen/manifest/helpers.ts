@@ -43,8 +43,10 @@ export function isDeveloperPreview(lookup: Map<string, DocEntry[]>, moduleName: 
     return hasDeveloperPreviewTag(entry);
 }
 
+// Declarations tagged `internal` are missing from the published typings. The Angular extractor drops such
+// members by itself, but keeps top-level entries.
 export function isPublic(entry: DocEntry) {
-    return entry.jsdocTags.every((t: JsDocTagEntry) => t.name !== 'docs-private');
+    return entry.jsdocTags.every((t: JsDocTagEntry) => t.name !== 'docs-private' && t.name !== 'internal');
 }
 
 /**

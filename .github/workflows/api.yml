@@ -16,5 +16,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/workflows/actions/setup-node
       - uses: ./.github/workflows/actions/build-packages
+      # Before check-api: marking a declaration `@internal` always changes the golden files, and a failed step
+      # would hide broken typings until the next run.
+      - run: yarn run check-typings
       - run: yarn run check-api
       - run: yarn run check-public-api-any

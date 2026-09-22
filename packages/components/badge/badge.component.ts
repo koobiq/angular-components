@@ -40,14 +40,14 @@ export enum KbqBadgeColors {
 })
 export class KbqBadgeCaption {}
 
-/** @docs-private */
+/** @internal */
 export const leftIconClassName = 'kbq-icon_left';
-/** @docs-private */
+/** @internal */
 export const rightIconClassName = 'kbq-icon_right';
 
-/** @docs-private */
+/** @internal */
 export const badgeLeftIconClassName = 'kbq-badge-icon_left';
-/** @docs-private */
+/** @internal */
 export const badgeRightIconClassName = 'kbq-badge-icon_right';
 
 /**

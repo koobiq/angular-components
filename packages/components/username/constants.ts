@@ -8,7 +8,7 @@ export const kbqDefaultFullNameFormat = 'lf.m.';
 
 /**
  * Throws an error when no profile field mapping is provided to the username pipe.
- * @docs-private
+ * @internal
  */
 export function KbqMappingMissingError() {
     return new Error('KbqUsernamePipe: profile field mapping is required but was not provided.');

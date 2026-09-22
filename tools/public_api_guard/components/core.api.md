@@ -3209,9 +3209,6 @@ export const kbqGetScrollOverflowTolerance: (element: Element) => number;
 // @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
 
-// @public
-export const kbqHighlightBackgroundMark: (text: string) => string;
-
 // @public (undocumented)
 export class KbqHighlightBackgroundPipe implements PipeTransform {
     // (undocumented)
@@ -3221,9 +3218,6 @@ export class KbqHighlightBackgroundPipe implements PipeTransform {
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqHighlightBackgroundPipe, "kbqHighlightBackground", true>;
 }
-
-// @public
-export const kbqHighlightMark: (text: string) => string;
 
 // @public (undocumented)
 export class KbqHighlightModule {
@@ -4325,8 +4319,6 @@ export const kbqSetSelectionRange: (element: HTMLInputElement, start: number, en
 
 // @public
 export class KbqShadowDomOverlayContainer extends OverlayContainer {
-    // @internal
-    protected _createContainer(): void;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqShadowDomOverlayContainer, never>;
     // (undocumented)
@@ -4828,12 +4820,6 @@ export const NUM_LOCK = 144;
 
 // @public (undocumented)
 export const NUMBER_FORMAT_REGEXP: RegExp;
-
-// @public
-export function numberByParts(value: string, customConfig: Pick<KbqInputNumberLocaleConfiguration, 'fractionSeparator' | 'groupSeparator'>): {
-    integer: string;
-    fraction: string;
-};
 
 // @public (undocumented)
 export const NUMPAD_DIVIDE = 111;

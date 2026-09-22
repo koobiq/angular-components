@@ -43,7 +43,7 @@ import { KbqReactivePasswordHint } from './reactive-password-hint';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
-/** @docs-private */
+/** @internal */
 export function getKbqFormFieldMissingControlError(): Error {
     return Error('kbq-form-field must contain a KbqFormFieldControl');
 }
