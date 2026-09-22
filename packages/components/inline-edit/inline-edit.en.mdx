@@ -138,16 +138,18 @@ After picking an option, the field returns to view mode.
 
 The field is a single tab stop.
 
-| Keys                   | Mode                      | What it does                                                         |
-| ---------------------- | ------------------------- | -------------------------------------------------------------------- |
-| `Enter`, `Space`       | View                      | Open the editor                                                      |
-| `Enter`                | Edit                      | Saves the value and returns the field to view mode                   |
-| `Escape`               | Edit                      | Closes the editor and reverts the value                              |
-| `Tab`                  | Edit                      | Off the first or last control, saves the value and closes the editor |
-| `Enter`                | Edit, inside a `textarea` | Inserts a line break                                                 |
-| `Ctrl`/`Cmd` + `Enter` | Edit, inside a `textarea` | Saves the value; the `canSaveOnEnter` input replaces this rule       |
+| Keys                   | Mode                      | What it does                                                          |
+| ---------------------- | ------------------------- | --------------------------------------------------------------------- |
+| `Enter`, `Space`       | View                      | Open the editor                                                       |
+| `Enter`                | Edit                      | Saves the value and returns the field to view mode, except on buttons |
+| `Escape`               | Edit                      | Closes the editor and reverts the value                               |
+| `Tab`                  | Edit                      | Off the first or last control, saves the value and closes the editor  |
+| `Enter`                | Edit, inside a `textarea` | Inserts a line break                                                  |
+| `Ctrl`/`Cmd` + `Enter` | Edit, inside a `textarea` | Saves the value; the `canSaveOnEnter` input replaces this rule        |
 
 A click outside saves the value and closes the editor the same way `Tab` does. Leaving edit mode returns focus to the field.
+
+A control with an `Enter` action of its own — a button, or anything with `role="button"` — runs that action instead of saving, so one keypress does not do both. A field whose `saveHandler` request is still in flight keeps its tab stop and its focus ring: unlike a disabled one it stays reachable, it just will not reopen yet.
 
 Content that handles clicks itself — a link, a tag — keeps its own behaviour instead of opening the editor. `interactiveSelectors` is the list that decides, `['a', 'kbq-tag']` by default; it replaces the list rather than extending it, so repeat the defaults you still want. Once the view holds such content, the field's own tab stop moves to a visually hidden control beside it, so both the content and the editor stay reachable.
 
@@ -160,6 +162,8 @@ The view mode is announced as a `button` carrying `aria-expanded`, so assistive 
 ```
 
 A disabled field reports `aria-disabled` and stays out of the tab order. The icon-only save and cancel buttons of `showActions` take their names from the `a11y` locale section, alongside the `edit` name above.
+
+A background save is not conveyed by color alone: the field announces it from a visually hidden `role="status"` region, wording it with the `saving` and `saveFailed` keys of the same locale section.
 
 An element carrying `kbqInlineEditMenu` is stamped `role="button"` and is not named by the library, so give it an `aria-label` of its own.
 
