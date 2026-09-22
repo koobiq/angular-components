@@ -889,6 +889,8 @@ describe('KbqDatepicker', () => {
                 it('should be in error state when form is submitted and control is invalid', () => {
                     const fixture = createComponent(DatepickerWithErrorStateMatcher, [KbqLuxonDateModule]);
 
+                    // Bind [formGroup] first: submitting an unbound FormGroupDirective throws.
+                    fixture.detectChanges();
                     getSubmitButton(fixture).click();
                     fixture.detectChanges();
 
