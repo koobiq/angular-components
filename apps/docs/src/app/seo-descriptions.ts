@@ -341,7 +341,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
     },
     "username": {
         "en": "The pattern is used when the interface refers to an internal user.",
-        "ru": "Компонент отображает информацию о пользователе в едином стиле. Надпись формируется на основе данных профиля с учётом выбранного режима отображения и настройки компактности."
+        "ru": "Компонент отображает информацию о пользователе в едином стиле и строит надпись из данных профиля, учитывая выбранный режим отображения и параметр компактности."
     },
     "validation": {
         "en": "Form-field controls display errors via ErrorStateMatcher — a small policy object that decides when to surface a control's existing errors.",
