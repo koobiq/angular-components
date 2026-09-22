@@ -63,13 +63,13 @@ in the diff.
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:list-tree-multiple-input --project PROJECT_NAME
+ng g @koobiq/components:list-tree-multiple-input --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:list-tree-multiple-input --project PROJECT_NAME
+nx g @koobiq/components:list-tree-multiple-input --project "<your project>"
 ```
 
 ### Run locally

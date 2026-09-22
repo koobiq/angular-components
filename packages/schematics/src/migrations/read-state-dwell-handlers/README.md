@@ -59,13 +59,13 @@ in both modes.
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:read-state-dwell-handlers --project PROJECT_NAME
+ng g @koobiq/components:read-state-dwell-handlers --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:read-state-dwell-handlers --project PROJECT_NAME
+nx g @koobiq/components:read-state-dwell-handlers --project "<your project>"
 ```
 
 ### Run locally

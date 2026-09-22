@@ -39,7 +39,7 @@ already-migrated file.
 ## Running it
 
 ```shell
-ng g @koobiq/components:file-upload-deprecated-outputs --project PROJECT_NAME
+ng g @koobiq/components:file-upload-deprecated-outputs --project "<your project>"
 ```
 
 Pass `--fix=false` to see what would change without writing files. `fix`

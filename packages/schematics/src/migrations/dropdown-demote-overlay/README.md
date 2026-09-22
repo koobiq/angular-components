@@ -81,13 +81,13 @@ so the rule applies that default itself rather than relying on the schema.
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:dropdown-demote-overlay --project PROJECT_NAME
+ng g @koobiq/components:dropdown-demote-overlay --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:dropdown-demote-overlay --project PROJECT_NAME
+nx g @koobiq/components:dropdown-demote-overlay --project "<your project>"
 ```
 
 ### Run locally

@@ -11,13 +11,13 @@ unchanged.
 Usage for Angular CLI:
 
 ```shell
-ng g @koobiq/components:tag-slots --project PROJECT_NAME
+ng g @koobiq/components:tag-slots --project "<your project>"
 ```
 
 Run without writing first:
 
 ```shell
-ng g @koobiq/components:tag-slots --project PROJECT_NAME --fix=false
+ng g @koobiq/components:tag-slots --project "<your project>" --fix=false
 ```
 
 #### Before

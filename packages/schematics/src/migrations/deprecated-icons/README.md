@@ -36,11 +36,11 @@ Two intentional behavior changes from earlier versions of this schematic:
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:deprecated-icons --fix=true --project PROJECT_NAME
+ng g @koobiq/components:deprecated-icons --fix=true --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:deprecated-icons --fix=true --project PROJECT_NAME
+nx g @koobiq/components:deprecated-icons --fix=true --project "<your project>"
 ```

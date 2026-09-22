@@ -126,7 +126,7 @@ A failure leaves its trace at `test-results/<test-dir>/trace.zip` — copied out
 the end of a Docker run, so that reaches it too — and the report embeds a copy. Open either:
 
 ```bash
-npx playwright show-trace test-results/TEST_DIR/trace.zip
+npx playwright show-trace "test-results/<test-dir>/trace.zip"
 npx playwright show-report # the same traces, per failed test
 ```
 

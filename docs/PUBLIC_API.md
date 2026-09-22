@@ -12,5 +12,5 @@ If you modify any part of a public API in one of the supported public packages, 
 The public API guard provides a command that updates the current status of a given package. If you add to or modify the public API in any way, you must use [yarn](https://yarnpkg.com/) to execute the command in your terminal shell of choice (a recent version of `bash` is recommended).
 
 ```shell
-yarn run approve-api COMPONENT_NAME
+yarn run approve-api "<component>"
 ```

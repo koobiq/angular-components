@@ -9,11 +9,11 @@ This schematic provides migration for css-selectors of typography. It includes:
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:css-selectors --fix=true --project PROJECT_NAME
+ng g @koobiq/components:css-selectors --fix=true --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:css-selectors --fix=true --project PROJECT_NAME
+nx g @koobiq/components:css-selectors --fix=true --project "<your project>"
 ```

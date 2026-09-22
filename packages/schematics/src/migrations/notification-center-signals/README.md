@@ -42,13 +42,13 @@ could depend on.
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:notification-center-signals --project PROJECT_NAME
+ng g @koobiq/components:notification-center-signals --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:notification-center-signals --project PROJECT_NAME
+nx g @koobiq/components:notification-center-signals --project "<your project>"
 ```
 
 ### Run locally

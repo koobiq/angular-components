@@ -70,13 +70,13 @@ every file that would change is logged instead of written, followed by the same 
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:scrollbar-deprecated-path --project PROJECT_NAME
+ng g @koobiq/components:scrollbar-deprecated-path --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:scrollbar-deprecated-path --project PROJECT_NAME
+nx g @koobiq/components:scrollbar-deprecated-path --project "<your project>"
 ```
 
 ### Run locally

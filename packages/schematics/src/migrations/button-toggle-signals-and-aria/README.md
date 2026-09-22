@@ -131,7 +131,7 @@ ng update @koobiq/components@21
 Or manually, for a project that is already on 21.0.0:
 
 ```bash
-ng g @koobiq/components:button-toggle-signals-and-aria --project PROJECT_NAME
+ng g @koobiq/components:button-toggle-signals-and-aria --project "<your project>"
 ```
 
 Add `--fix=false` to print what would change without writing anything.
