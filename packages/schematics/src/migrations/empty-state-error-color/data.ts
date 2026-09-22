@@ -10,8 +10,8 @@
  *   attribute. The illustration follows `[errorColor]` on its own now.
  * - `--kbq-empty-state-title`, `--kbq-empty-state-color`, `--kbq-empty-state-error-title`,
  *   `--kbq-empty-state-error-color` — renamed to `-title-color`, `-text-color`, `-error-title-color`
- *   and `-error-text-color`. The new name is chained from the old one, so both an override and a
- *   direct read of the old name keep resolving, but the old name is deprecated.
+ *   and `-error-text-color`. The old names are removed outright — nothing chains to them, so an
+ *   override or a `var()` read of one stops having any effect.
  * - `KbqEmptyState.size` — `@Input()` to `input()`. It was the last decorator on the component, held
  *   back because `KbqFileUploadEmptyState` assigned it from its constructor; that subclass redeclares
  *   the input with its own `big` default now, so nothing writes to it.
@@ -58,8 +58,8 @@ export const warnPatterns: WarnPattern[] = [
             '--kbq-empty-state-title-color, --kbq-empty-state-color becomes --kbq-empty-state-text-color ' +
             '(it is the text color, not the component color), --kbq-empty-state-error-title becomes ' +
             '--kbq-empty-state-error-title-color and --kbq-empty-state-error-color becomes ' +
-            '--kbq-empty-state-error-text-color. The old name still resolves — an override and a direct ' +
-            'read both keep working — but it is deprecated. Rename it.'
+            '--kbq-empty-state-error-text-color. The old names are gone, not deprecated: an override of one ' +
+            'is ignored and a var() read of one resolves to nothing, in both cases silently. Rename it.'
     },
     {
         // `size` is far too common a property name to match bare, or to rewrite: `file.size`,

@@ -14,8 +14,8 @@
         }
 
         .kbq-multiple-file-upload__empty-state {
-            --kbq-empty-state-title: var(--kbq-file-upload-multiple-default-text-block-color);
-            --kbq-empty-state-color: var(--kbq-file-upload-multiple-default-text-block-color);
+            --kbq-empty-state-title-color: var(--kbq-file-upload-multiple-default-text-block-color);
+            --kbq-empty-state-text-color: var(--kbq-file-upload-multiple-default-text-block-color);
         }
 
         .kbq-multiple-file-upload__empty-state-upload-icon {
@@ -61,8 +61,8 @@
         }
 
         .kbq-multiple-file-upload__empty-state {
-            --kbq-empty-state-title: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
-            --kbq-empty-state-color: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
+            --kbq-empty-state-title-color: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
+            --kbq-empty-state-text-color: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
         }
 
         .kbq-file-upload__dropzone-caption {
@@ -103,8 +103,8 @@
                     --kbq-file-upload-multiple-default-text-block-color
                 );
 
-                --kbq-empty-state-title: var(--kbq-file-upload-multiple-states-error-text-block-color);
-                --kbq-empty-state-color: var(--kbq-file-upload-multiple-states-error-text-block-color);
+                --kbq-empty-state-title-color: var(--kbq-file-upload-multiple-states-error-text-block-color);
+                --kbq-empty-state-text-color: var(--kbq-file-upload-multiple-states-error-text-block-color);
             }
 
             .kbq-file-upload__list-footer {

@@ -288,12 +288,21 @@ describe('KbqEmptyState', () => {
             }
         });
 
-        // Follows the pattern in toast/toast-tokens.scss: the deprecated name keeps a real default
-        // (so a consumer reading it directly still resolves, not just one overriding it), and the
-        // current name is chained from it, so overriding the deprecated name still has an effect.
-        it('should keep the deprecated theme token names as the source of the new ones', () => {
-            expect(tokens).toContain('--kbq-empty-state-title-color: var(--kbq-empty-state-title)');
-            expect(tokens).toContain('--kbq-empty-state-text-color: var(--kbq-empty-state-color)');
+        // The four theme tokens were renamed outright rather than deprecated, so the old names must
+        // be gone: leaving one behind would keep a consumer's override working by accident and
+        // hide the rename the migration reports.
+        it('should declare the theme tokens under their current names only', () => {
+            expect(tokens).toContain('--kbq-empty-state-title-color: var(--kbq-foreground-contrast)');
+            expect(tokens).toContain('--kbq-empty-state-text-color: var(--kbq-foreground-contrast-secondary)');
+
+            for (const removed of [
+                '--kbq-empty-state-title:',
+                '--kbq-empty-state-color:',
+                '--kbq-empty-state-error-title:',
+                '--kbq-empty-state-error-color:'
+            ]) {
+                expect(tokens).not.toContain(removed);
+            }
         });
     });
 });

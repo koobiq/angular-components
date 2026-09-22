@@ -62,7 +62,7 @@ One or more actions can be placed below the text: buttons, links, and pseudo-lin
 
 #### Conditional slots
 
-Each slot is matched by its own `ng-content` selector, and the component has no catch-all slot. A conditional slot therefore has to sit at the root of its `@if` block, where the selector can still see it:
+When a slot is rendered conditionally, the condition has to be top level: the `@if` wraps the slot element itself.
 
 ```html
 @if (failed()) {
@@ -70,9 +70,9 @@ Each slot is matched by its own `ng-content` selector, and the component has no 
 }
 ```
 
-Wrapping one control-flow block in another — an `@if (hasIcon())` whose only child is an `@if (wrapped()) … @else …` picking between two shapes of the illustration — puts a block, not an element, at the root. Nothing matches the selector, and the illustration is dropped from the DOM silently: no error, no warning, and `kbq-empty-state_has-icon` still on the host, because the directive is instantiated even though its element is never projected.
+Blocks nested in one another, and several elements in one block, do not work — that is how content projection behaves in Angular. Such content never reaches the DOM, with no error and no warning.
 
-Give each shape its own `@if` at the same level (`@if (hasIcon() && wrapped())`, `@if (hasIcon() && !wrapped())`) instead of nesting them.
+When there are several variants, give each its own `@if` at the same level: `@if (hasIcon() && wrapped())` and `@if (hasIcon() && !wrapped())`.
 
 ### Accessibility
 

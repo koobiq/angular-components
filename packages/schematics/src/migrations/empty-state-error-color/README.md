@@ -29,8 +29,8 @@ The tint is driven by the input now, in both shapes, so `setErrorColor()` has no
 | `--kbq-empty-state-error-title`      | theme token              | `--kbq-empty-state-error-title-color` |
 | `--kbq-empty-state-error-color`      | theme token (text color) | `--kbq-empty-state-error-text-color`  |
 
-Each new name is chained from the old one it replaces, so an override — or a direct read — of either
-name still applies. The old names are deprecated and the chain will be dropped.
+The old names are removed, not deprecated. Nothing chains to them, so an override of one is ignored
+and a `var()` read of one resolves to nothing — in both cases without an error.
 
 ## `size` and the file-upload subclass
 
