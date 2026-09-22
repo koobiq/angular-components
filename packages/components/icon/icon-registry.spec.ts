@@ -196,6 +196,17 @@ describe('KbqIconRegistry', () => {
          */
         const unsafe = (html: string) => html as unknown as SafeHtml;
 
+        // Angular's sanitizer reports in dev mode whenever it strips content, which is what these tests provoke.
+        let warn: jest.SpyInstance;
+
+        beforeEach(() => {
+            warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        });
+
+        afterEach(() => {
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('sanitizing HTML stripped some content'));
+        });
+
         it('throws when input sanitizes to empty (script-only literal)', () => {
             expect(() => registry.addSvgIconLiteral('evil', unsafe('<script>alert(1)</script>'))).toThrow(
                 /sanitized to empty string/
