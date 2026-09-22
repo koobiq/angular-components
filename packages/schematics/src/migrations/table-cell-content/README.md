@@ -1,6 +1,6 @@
 # table-cell-content
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the removal of `KbqTableCellContent` and the style-surface changes
 the table review made. It never writes to the tree.
 
