@@ -675,6 +675,73 @@ describe(KbqBreadcrumbs.name, () => {
         }));
     });
 
+    describe('inside a form', () => {
+        function createFixture(): ComponentFixture<BreadcrumbsInForm> {
+            return createComponent(BreadcrumbsInForm, [provideRouter([])], [NoopAnimationsModule]);
+        }
+
+        function query(debugElement: DebugElement, selector: string): HTMLButtonElement {
+            return debugElement.query(By.css(selector)).nativeElement;
+        }
+
+        it('should not submit the surrounding form when the expand button is clicked', () => {
+            const fixture = createFixture();
+
+            query(fixture.debugElement, '.kbq-breadcrumb__expand').click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.submitCount).toBe(0);
+        });
+
+        it('should not submit the surrounding form when a custom breadcrumb button is clicked', () => {
+            const fixture = createFixture();
+
+            query(fixture.debugElement, '.custom-breadcrumb-button').click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.submitCount).toBe(0);
+        });
+
+        it('should render breadcrumb buttons as non-submitting buttons', () => {
+            const { debugElement } = createFixture();
+
+            expect(query(debugElement, '.kbq-breadcrumb__expand').type).toBe('button');
+            expect(query(debugElement, '.custom-breadcrumb-button').type).toBe('button');
+        });
+
+        it('should override a statically set type', () => {
+            // A breadcrumb navigates, so `type="submit"` on one is a mistake rather than an intent.
+            const fixture = createFixture();
+
+            expect(query(fixture.debugElement, '.statically-typed-breadcrumb-button').type).toBe('button');
+
+            query(fixture.debugElement, '.statically-typed-breadcrumb-button').click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.submitCount).toBe(0);
+        });
+
+        it('should not set a type on breadcrumb anchors', () => {
+            const { debugElement } = createFixture();
+            // On an anchor `type` hints at the MIME type of the link target, so it stays off.
+            const anchors = debugElement.queryAll(By.css('a.kbq-breadcrumb-item'));
+
+            expect(anchors.length).toBeGreaterThan(0);
+            expect(anchors.every(({ nativeElement }) => !nativeElement.hasAttribute('type'))).toBe(true);
+        });
+
+        it('should submit the surrounding form when a button without an explicit type is clicked', () => {
+            // Control for the assertions above: a `<button>` inside a form submits it by default,
+            // so the breadcrumb buttons staying silent is `type="button"` doing its job.
+            const fixture = createFixture();
+
+            query(fixture.debugElement, '.implicit-submit').click();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.submitCount).toBe(1);
+        });
+    });
+
     describe('customization', () => {
         it('should use the custom separator template', () => {
             const fixture = createComponent(BreadcrumbsCustomization, [
@@ -940,3 +1007,55 @@ class DropdownBreadcrumbs {}
     `
 })
 class SingleBreadcrumb {}
+
+@Component({
+    imports: [
+        KbqBreadcrumbsModule,
+        KbqButtonModule
+    ],
+    template: `
+        <form (submit)="onSubmit($event)">
+            <kbq-breadcrumbs>
+                @for (item of items; track item) {
+                    <kbq-breadcrumb-item [text]="item.text" />
+                }
+
+                <kbq-breadcrumb-item>
+                    <button *kbqBreadcrumbView class="custom-breadcrumb-button" kbq-button kbqBreadcrumb>
+                        Siblings
+                    </button>
+                </kbq-breadcrumb-item>
+
+                <kbq-breadcrumb-item>
+                    <button
+                        *kbqBreadcrumbView
+                        class="statically-typed-breadcrumb-button"
+                        kbq-button
+                        kbqBreadcrumb
+                        type="submit"
+                    >
+                        Static type
+                    </button>
+                </kbq-breadcrumb-item>
+            </kbq-breadcrumbs>
+
+            <button class="implicit-submit" kbq-button>Submit</button>
+        </form>
+    `
+})
+class BreadcrumbsInForm {
+    submitCount = 0;
+    items = [
+        { text: 'Home' },
+        { text: 'Library' },
+        { text: 'Data' },
+        { text: 'Docs' },
+        { text: 'Articles' },
+        { text: 'Current' }
+    ];
+
+    onSubmit(event: Event): void {
+        event.preventDefault();
+        this.submitCount++;
+    }
+}

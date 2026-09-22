@@ -13,6 +13,7 @@ import {
     input,
     OnInit,
     Provider,
+    Renderer2,
     TemplateRef,
     viewChild,
     viewChildren,
@@ -76,6 +77,7 @@ export class KbqBreadcrumbsSeparator {
  * Directive to style and configure buttons used as breadcrumb items.
  * - Inherits focus management behavior from `RdxRovingFocusItemDirective`.
  * - Optionally injects `KbqButton` to customize its style for breadcrumb usage.
+ * - Sets `type="button"` on a `<button>` host, so a breadcrumb never submits a surrounding form.
  */
 @Directive({
     selector: '[kbq-button][kbqBreadcrumb]',
@@ -89,6 +91,17 @@ export class KbqBreadcrumbsSeparator {
 })
 export class KbqBreadcrumbButton implements OnInit {
     private readonly button = inject(KbqButton, { optional: true, self: true });
+
+    constructor() {
+        const element = kbqInjectNativeElement();
+        const renderer = inject(Renderer2);
+
+        // A breadcrumb navigates, so it must never submit a surrounding form — but a `<button>`
+        // host defaults to `type="submit"`. Anchors take no `type`.
+        if (element.nodeName === 'BUTTON') {
+            renderer.setAttribute(element, 'type', 'button');
+        }
+    }
 
     ngOnInit() {
         // Applied through the seams that yield to the consumer: writing `color`/`kbqStyle` directly marks
