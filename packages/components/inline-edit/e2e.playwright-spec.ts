@@ -379,21 +379,29 @@ test.describe('KbqInlineEdit', () => {
     test.describe('E2eInlineEditInteractiveContent', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eInlineEditInteractiveContent');
 
-        // Interactive view content is the field's first tab stop and draws its own ring, so the row must
-        // not draw a second one around it — the same rule the menu button follows, for the content the
-        // `interactiveSelectors` list keeps reachable. The anchor after it is the edit affordance, and
-        // being visually hidden it has nothing to show but the row ring.
-        test('draws the ring on the focused link, then on the row for the edit anchor', async ({ page }) => {
+        // Projected content draws a ring of its own wherever it sits, so the row must not draw a second
+        // one around it — the same rule the menu button follows. Walked across both slots a consumer can
+        // fill, the label and the view content, because the row ring is suppressed by what holds focus
+        // and not by where that element sits. The anchor last: visually hidden, it has nothing to show
+        // but the row ring.
+        test('draws the ring on the focused control, then on the row for the edit anchor', async ({ page }) => {
             await page.goto('/E2eInlineEditInteractiveContent');
 
             const field = getComponent(page).locator('kbq-inline-edit');
+            const labelIcon = page.getByTestId('e2eInlineEditInteractiveContentLabelIcon');
             const link = page.getByTestId('e2eInlineEditInteractiveContentLink');
             const anchor = field.locator('.kbq-inline-edit__focus-anchor');
 
             // Entered by keyboard: a programmatic focus() is reported as `program` and draws no ring at
             // all, which would make the check vacuous.
-            await link.focus();
+            await labelIcon.focus();
             await page.keyboard.press('Shift+Tab');
+            await page.keyboard.press('Tab');
+
+            await expect(labelIcon).toBeFocused();
+            await expect(field).toHaveClass(/cdk-keyboard-focused/);
+            await expect(field).toHaveCSS('box-shadow', 'none');
+
             await page.keyboard.press('Tab');
 
             await expect(link).toBeFocused();

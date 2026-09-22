@@ -459,10 +459,27 @@ export class E2eInlineEditSelectChain {
 
 @Component({
     selector: 'e2e-inline-edit-interactive-content',
-    imports: [KbqInlineEditModule, KbqFormFieldModule, KbqInputModule, KbqLinkModule],
+    imports: [
+        KbqInlineEditModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqLinkModule,
+        KbqIconModule,
+        KbqLabel
+    ],
     template: `
         <div class="layout-column layout-gap-l" data-testid="e2eInlineEditInteractiveContentContainer">
             <kbq-inline-edit>
+                <!-- The label holds a focusable control too, and it sits outside the view content. -->
+                <kbq-label>
+                    Link
+                    <i
+                        kbq-icon-button="kbq-circle-info_16"
+                        data-testid="e2eInlineEditInteractiveContentLabelIcon"
+                        [color]="'contrast-fade'"
+                    ></i>
+                </kbq-label>
+
                 <div kbqInlineEditViewMode>
                     <a kbq-link href="https://example.com" data-testid="e2eInlineEditInteractiveContentLink">
                         example.com
