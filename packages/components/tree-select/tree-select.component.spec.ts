@@ -1376,6 +1376,7 @@ class BasicSelectWithoutForms {
 }
 
 @Component({
+    selector: 'basic-select-without-forms-preselected',
     imports: [
         KbqTreeModule,
         KbqTreeSelectModule,
