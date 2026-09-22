@@ -9,6 +9,7 @@ export const ruRULocaleData = {
         cancel: 'Отменить',
         removeAll: 'Удалить все',
         remove: 'Удалить',
+        breadcrumbs: 'Хлебные крошки',
         expandBreadcrumbs: 'Показать скрытые элементы',
         previousMonth: 'Предыдущий месяц',
         currentDate: 'Текущая дата',

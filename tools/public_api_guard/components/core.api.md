@@ -456,6 +456,7 @@ export const enUSLocaleData: {
         cancel: string;
         removeAll: string;
         remove: string;
+        breadcrumbs: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -728,6 +729,7 @@ export const esLALocaleData: {
         cancel: string;
         removeAll: string;
         remove: string;
+        breadcrumbs: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -1266,6 +1268,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             cancel: string;
             removeAll: string;
             remove: string;
+            breadcrumbs: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1513,6 +1516,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             cancel: string;
             removeAll: string;
             remove: string;
+            breadcrumbs: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -1755,6 +1759,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             cancel: string;
             removeAll: string;
             remove: string;
+            breadcrumbs: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -2002,6 +2007,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             cancel: string;
             removeAll: string;
             remove: string;
+            breadcrumbs: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -2246,6 +2252,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             cancel: string;
             removeAll: string;
             remove: string;
+            breadcrumbs: string;
             expandBreadcrumbs: string;
             previousMonth: string;
             currentDate: string;
@@ -2583,6 +2590,7 @@ export type KbqA11yLocaleConfiguration = {
     cancel: string;
     removeAll: string;
     remove: string;
+    breadcrumbs: string;
     expandBreadcrumbs: string;
     previousMonth: string;
     currentDate: string;
@@ -5053,6 +5061,7 @@ export const ptBRLocaleData: {
         cancel: string;
         removeAll: string;
         remove: string;
+        breadcrumbs: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -5519,6 +5528,7 @@ export const ruRULocaleData: {
         cancel: string;
         removeAll: string;
         remove: string;
+        breadcrumbs: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;
@@ -5895,6 +5905,7 @@ export const tkTMLocaleData: {
         cancel: string;
         removeAll: string;
         remove: string;
+        breadcrumbs: string;
         expandBreadcrumbs: string;
         previousMonth: string;
         currentDate: string;

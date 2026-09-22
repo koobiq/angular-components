@@ -9,6 +9,7 @@ export const enUSLocaleData = {
         cancel: 'Cancel',
         removeAll: 'Remove all',
         remove: 'Remove',
+        breadcrumbs: 'Breadcrumbs',
         expandBreadcrumbs: 'Show hidden breadcrumbs',
         previousMonth: 'Previous month',
         currentDate: 'Current date',
