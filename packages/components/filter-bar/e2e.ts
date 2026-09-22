@@ -29,10 +29,10 @@ const DEV_DATA_OBJECT = {
 const E2E_LONG_VALUE = { name: 'Исходный код и развернутое приложение веб-сервиса', id: '1' };
 
 /**
- * Three truncation cases: a saved-filter name over its max width, a pipe whose name and value are both
- * too long, and a pipe with a short name next to a long value.
+ * Pipe widths: a saved-filter name over its max width, a pipe whose name and value are both too long, a
+ * removable pipe with a short name next to a long value, and an input pipe, which keeps its own width.
  *
- * All of them are projected into the default slot of a `kbq-button`, i.e. they land inside
+ * Names and values are projected into the default slot of a `kbq-button`, i.e. they land inside
  * `.kbq-button-text`: as plain inline boxes `overflow` and `text-overflow` would not apply to them at all
  * and the pipe value would spill out. Name and value are sized as two grid tracks — as flex items they
  * gave up the same share of their width, which left a three-character name at a single glyph.
@@ -73,6 +73,15 @@ export class E2eFilterBarPipeTruncation {
             values: [E2E_LONG_VALUE],
 
             cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'Input',
+            id: 'E2EInput',
+            type: KbqPipeTypes.Input,
+
+            cleanable: false,
             removable: false,
             disabled: false
         }
@@ -101,6 +110,16 @@ export class E2eFilterBarPipeTruncation {
                 id: 'E2ELongValue',
                 value: [E2E_LONG_VALUE],
                 type: KbqPipeTypes.MultiSelect,
+
+                cleanable: false,
+                removable: true,
+                disabled: false
+            },
+            {
+                name: 'Поиск',
+                id: 'E2EInput',
+                value: null,
+                type: KbqPipeTypes.Input,
 
                 cleanable: false,
                 removable: false,

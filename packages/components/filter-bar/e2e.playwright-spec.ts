@@ -70,6 +70,34 @@ test.describe('KbqFilterBarModule', () => {
             expect(value.scroll).toBeGreaterThan(value.client);
         });
 
+        test('caps every pipe but the input one at --kbq-filter-bar-pipe-max-width', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeTruncation');
+
+            const component = getComponent(page);
+
+            // Not the 320px fallback, so the check proves that the token drives the cap.
+            await component
+                .locator('kbq-filter-bar')
+                .evaluate((bar) => bar.style.setProperty('--kbq-filter-bar-pipe-max-width', '200px'));
+
+            await expect(component.locator('.kbq-pipe__multiselect .kbq-pipe-button')).toHaveCount(1);
+
+            const pipes = await component.locator('.kbq-pipe:not(.kbq-pipe__input)').all();
+
+            expect(pipes.length).toBeGreaterThan(0);
+
+            for (const pipe of pipes) {
+                const pipeBox = (await pipe.boundingBox())!;
+                // The remove button of a removable pipe has to fit inside the cap too.
+                const lastBox = (await pipe.locator(':scope > :last-child').boundingBox())!;
+
+                expect(pipeBox.width).toBeLessThanOrEqual(200);
+                expect(lastBox.x + lastBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+            }
+
+            expect((await component.locator('.kbq-pipe__input').boundingBox())!.width).toBe(240);
+        });
+
         test('truncates the saved filter name', async ({ page }) => {
             await page.goto('/E2eFilterBarPipeTruncation');
 

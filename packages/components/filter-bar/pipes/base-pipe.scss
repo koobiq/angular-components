@@ -5,14 +5,13 @@
     display: flex;
     flex-direction: row;
 
+    // Caps the whole pipe, clear and remove buttons included. The label's grid tracks have no
+    // min-content, so the trigger gives way down to its own paddings without `min-width: 0`.
+    max-width: var(--kbq-filter-bar-pipe-max-width, 320px);
     max-height: 32px;
 
     & .kbq-select .kbq-select__trigger {
         height: unset;
-    }
-
-    .kbq-button-wrapper {
-        max-width: var(--kbq-filter-bar-pipe-max-width, 320px);
     }
 
     // The button's default slot is an inline text box; a pipe puts its own row of two independently
