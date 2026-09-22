@@ -185,9 +185,11 @@ describe('LuxonDateAdapter with KBQ_DATE_TIMEZONE override', () => {
     });
 
     it('should fall back to the host time zone when the zone is unknown', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         const adapter = createAdapter('Bad/Zone');
 
         expect(formatInstant(adapter)).toBe(DateTime.fromISO(instant).toFormat(dateTimeFormat));
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('Unknown time zone "Bad/Zone"'));
     });
 
     it('should take precedence over the useUtc option', () => {
