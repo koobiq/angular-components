@@ -3,6 +3,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import {
+    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
@@ -103,7 +104,7 @@ const normalizeAccordionState = (parsed: unknown): KbqAccordionState | null => {
         { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
     ]
 })
-export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
+export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit, AfterContentChecked {
     /** @docs-private */
     protected readonly focusMonitor = inject(FocusMonitor);
     /** @docs-private */
@@ -238,9 +239,16 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
 
     private _id = `kbq-accordion-${uniqueIdCounter++}`;
 
+    /** Whether the state saving key changed and the state under the new key is still to be restored. */
+    private keyChanged = false;
+
     constructor() {
-        // The state lives under the new key now, so restore from it.
-        this.stateSaving.keyChanges.subscribe(() => this.restoreState());
+        // The state lives under the new key now, so restore from it — in `ngAfterContentChecked`: the change is
+        // reported while the view updates, before sections created in the same pass have bound their `value`.
+        this.stateSaving.keyChanges.subscribe(() => {
+            this.keyChanged = true;
+            this.changeDetectorRef.markForCheck();
+        });
 
         // Re-emit `valueChange` whenever any (current or future) item toggles its expanded state.
         // Reading `items()` inside the effect keeps the subscriptions in sync with dynamically
@@ -254,19 +262,20 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         });
 
         // Notify the selection dispatcher when the controlled `[value]` changes (the old setter's
-        // side-effect). The `undefined` sentinel keeps the mandatory first run a no-op when unbound;
-        // when bound it re-notifies the value `ngAfterContentInit` already sent (idempotent).
+        // side-effect). An unbound `value` (`undefined`, or `null` from an `async` pipe) keeps the mandatory
+        // first run a no-op. View effects run before content hooks, so when bound this notifies first and
+        // `ngAfterContentInit` re-notifies the same value (idempotent).
         effect(() => {
             const value = this.valueInput();
 
-            if (value === undefined) return;
+            if (value == null) return;
 
             untracked(() => this.notifySelection(this.valueArray()));
         });
     }
 
     ngAfterContentInit(): void {
-        this.restoreState();
+        this.restoreState(true);
 
         this.keyManager = new FocusKeyManager(this.items, this.injector).withHomeAndEnd();
 
@@ -275,6 +284,13 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         } else {
             this.keyManager.withVerticalOrientation();
         }
+    }
+
+    ngAfterContentChecked(): void {
+        if (!this.keyChanged) return;
+
+        this.keyChanged = false;
+        this.restoreState(false);
     }
 
     ngAfterViewInit(): void {
@@ -331,11 +347,14 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
         this.keyManager?.setActiveItem(item);
     }
 
-    /** Reads the persisted state and applies it. Runs while initializing, and again if the key changes. */
-    private restoreState(): void {
+    /** Reads the persisted state and applies it. Runs while initializing, and again after the key changes. */
+    private restoreState(initializing: boolean): void {
         const savedState = this.stateSaving.read(normalizeAccordionState);
+        const initialValue = this.initialValue(savedState, initializing);
 
-        this.stateSaving.applying(() => this.notifySelection(this.initialValue(savedState)));
+        if (initialValue) {
+            this.stateSaving.applying(() => this.notifySelection(initialValue));
+        }
 
         // Reconcile the store with what was applied, dropping values whose item is gone. Only when there
         // are items to reconcile against: sections that arrive later (`@if`, `@for` over an async list)
@@ -352,7 +371,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     saveState(): void {
         // Checked before the snapshot is built: `expandedValues()` walks the content query on every
         // toggle. A controlled `[value]` belongs to the application, so persisting it is pointless.
-        if (!this.stateSaving.useStateSaving() || this.valueInput() !== undefined) return;
+        if (!this.stateSaving.useStateSaving() || this.valueInput() != null) return;
 
         this.stateSaving.write(this.expandedValues());
     }
@@ -367,15 +386,31 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     }
 
     /**
-     * The values to expand on first render: a controlled `value` wins, then the persisted state, then
-     * `defaultValue`. Always an array, because only the array payload can also *close* the items that
-     * are not part of it — a scalar cannot express an empty selection at all.
+     * The values to expand when restoring: a controlled `value` wins, then the persisted state, then — only
+     * while initializing — `defaultValue`. An array, because only the array payload can also *close* the items
+     * that are not part of it — a scalar cannot express an empty selection at all.
+     *
+     * `null` when there is nothing to apply, so the items keep their current `expanded`: their own while
+     * initializing, whatever the previous key left after a key change.
      */
-    private initialValue(savedState: KbqAccordionState | null): string[] {
-        // `valueArray()` already resolves the controlled value and falls back to `defaultValue`.
-        if (this.valueInput() !== undefined || savedState === null) return this.valueArray();
+    private initialValue(savedState: KbqAccordionState | null, initializing: boolean): string[] | null {
+        if (this.valueInput() != null) return this.valueArray();
 
-        return this.isMultiple ? savedState : savedState.slice(0, 1);
+        if (savedState !== null) {
+            if (this.isMultiple) return savedState;
+
+            // The first value that still names an item, so a stale one does not collapse every section.
+            const values = this.items().map((item) => item.value());
+
+            return savedState.filter((value) => values.includes(value)).slice(0, 1);
+        }
+
+        if (!initializing) return null;
+
+        // While `value` is unbound, `valueArray()` is `defaultValue` reshaped by mode.
+        const defaultValue = this.valueArray();
+
+        return defaultValue.length ? defaultValue : null;
     }
 
     /** The values of the items that are currently expanded. */

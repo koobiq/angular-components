@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
@@ -16,12 +17,13 @@ import * as i1$1 from '@koobiq/components/icon';
 import * as i1 from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
 // @public (undocumented)
-export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit {
+export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit, AfterContentChecked {
     constructor();
     protected readonly allItems: Signal<readonly KbqAccordionItem[]>;
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -40,6 +42,8 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
     keydownHandler(event: KeyboardEvent): void;
     protected keyManager: FocusKeyManager<KbqAccordionItem>;
     readonly level: _angular_core.InputSignalWithTransform<number, unknown>;
+    // (undocumented)
+    ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -72,7 +76,7 @@ export class KbqAccordionContent {
 }
 
 // @public (undocumented)
-export class KbqAccordionContentDirective implements AfterViewInit {
+export class KbqAccordionContentDirective implements OnInit, AfterViewInit {
     constructor();
     get contentId(): string;
     // (undocumented)
@@ -84,6 +88,8 @@ export class KbqAccordionContentDirective implements AfterViewInit {
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
     // (undocumented)
     toggle(): void;
     get triggerId(): string;
@@ -105,7 +111,7 @@ export class KbqAccordionHeader {
 }
 
 // @public (undocumented)
-export class KbqAccordionItem implements OnDestroy {
+export class KbqAccordionItem implements OnInit, OnDestroy {
     constructor();
     readonly accordion: KbqAccordion;
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -129,6 +135,8 @@ export class KbqAccordionItem implements OnDestroy {
     static ngAcceptInputType_expanded: unknown;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     open(): void;
     readonly opened: _angular_core.OutputEmitterRef<void>;
     get orientation(): KbqAccordionOrientation;

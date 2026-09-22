@@ -10,6 +10,7 @@ import {
     input,
     Input,
     OnDestroy,
+    OnInit,
     output
 } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -31,7 +32,7 @@ export type KbqAccordionItemState = 'open' | 'closed';
         '[attr.data-orientation]': 'orientation'
     }
 })
-export class KbqAccordionItem implements OnDestroy {
+export class KbqAccordionItem implements OnInit, OnDestroy {
     /**
      * The accordion this item belongs to — always the nearest one, because it is injected.
      * The accordion reads it back to tell its own items apart from a nested accordion's.
@@ -67,7 +68,10 @@ export class KbqAccordionItem implements OnDestroy {
         return this.accordion.orientation();
     }
 
-    /** Whether the AccordionItem is expanded. */
+    /**
+     * Whether the AccordionItem is expanded. When the accordion initializes, its controlled `value`, the saved
+     * state and `defaultValue` take precedence over it.
+     */
     // Kept as an `@Input` accessor (not `model()`): the setter runs a synchronous side-effect
     // cascade (emits opened/closed/expandedChange, notifies the selection dispatcher, toggles the
     // content and persists state) that sibling items rely on within the same change-detection tick.
@@ -80,32 +84,16 @@ export class KbqAccordionItem implements OnDestroy {
         // Only emit events and update the internal value if the value changes.
         if (this._expanded !== expanded) {
             this._expanded = expanded;
-            this.expandedChange.emit(expanded);
 
-            if (expanded) {
-                // TODO: The 'emit' function requires a mandatory void argument
-                this.opened.emit();
-                /**
-                 * In the unique selection dispatcher, the id parameter is the id of the KbqAccordionItem,
-                 * the name value is the id of the accordion.
-                 */
-                this.expansionDispatcher.notify(this.value(), this.accordion.id);
-            } else {
-                // TODO: The 'emit' function requires a mandatory void argument
-                this.closed.emit();
-            }
-
-            this.content()?.toggle();
-
-            this.accordion.saveState();
-
-            // Ensures that the animation will run when the value is set outside of an `@Input`.
-            // This includes cases like the open, close and toggle methods.
-            this.changeDetectorRef.markForCheck();
+            // Before `ngOnInit` the accordion's inputs may still be unbound, this item may not be in its `items()`
+            // and nothing listens to the outputs yet — the static attribute is applied while the view is created.
+            if (this.initialized) this.reportExpanded();
         }
     }
 
     private _expanded = false;
+
+    private initialized = false;
 
     /**
      * The item's own `value` input. Must stay `public`: a `protected` input cannot be bound from a
@@ -197,6 +185,12 @@ export class KbqAccordionItem implements OnDestroy {
         this.openCloseAllSubscription = this.subscribeToOpenCloseAllActions();
     }
 
+    ngOnInit(): void {
+        this.initialized = true;
+
+        if (this._expanded) this.reportExpanded();
+    }
+
     ngOnDestroy() {
         this.removeUniqueSelectionListener();
         this.openCloseAllSubscription.unsubscribe();
@@ -238,6 +232,32 @@ export class KbqAccordionItem implements OnDestroy {
     enableAnimation() {
         this.content()?.enableAnimation();
         this.triggerComponent()?.enableAnimation();
+    }
+
+    /** Emits the expanded state and propagates it to the siblings, the content and the saved state. */
+    private reportExpanded(): void {
+        this.expandedChange.emit(this._expanded);
+
+        if (this._expanded) {
+            // TODO: The 'emit' function requires a mandatory void argument
+            this.opened.emit();
+            /**
+             * In the unique selection dispatcher, the id parameter is the id of the KbqAccordionItem,
+             * the name value is the id of the accordion.
+             */
+            this.expansionDispatcher.notify(this.value(), this.accordion.id);
+        } else {
+            // TODO: The 'emit' function requires a mandatory void argument
+            this.closed.emit();
+        }
+
+        this.content()?.toggle();
+
+        this.accordion.saveState();
+
+        // Ensures that the animation will run when the value is set outside of an `@Input`.
+        // This includes cases like the open, close and toggle methods.
+        this.changeDetectorRef.markForCheck();
     }
 
     private subscribeToOpenCloseAllActions(): Subscription {
