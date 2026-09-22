@@ -216,15 +216,13 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
      * @param item The index of the item to be set as active.
      */
     setActiveItem(item: any): void {
-        const previousActiveItem = this._activeItem;
-
         this.previousActiveItemIndex = this._activeItemIndex;
 
         this.updateActiveItem(item);
 
-        // Compared by identity, not by index: a list that reorders around a still-active item has not
-        // changed what is active, and an index that stays put can hold a different item.
-        if (this._activeItem !== previousActiveItem) {
+        // By index, not by identity as in the CDK: autocomplete and tree-select take any `change` while
+        // their panel is closed for keyboard navigation, and a re-rendered list keeps its index.
+        if (this._activeItemIndex !== this.previousActiveItemIndex) {
             this.change.next(this._activeItemIndex);
         }
     }

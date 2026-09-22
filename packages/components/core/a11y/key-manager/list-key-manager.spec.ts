@@ -128,7 +128,9 @@ describe('Key managers', () => {
                 subscription.unsubscribe();
             });
 
-            it('should emit if the active item changed, but not the active index', () => {
+            // Unlike the CDK: autocomplete and tree-select select the active item when `change` fires on a
+            // closed panel, so a re-rendered list must not look like navigation.
+            it('should not emit if the active item changed, but not the active index', () => {
                 const fn = jest.fn();
                 const subscription = keyManager.change.subscribe(fn);
 
@@ -136,7 +138,8 @@ describe('Key managers', () => {
                 itemList.reset([new FakeFocusable('zero'), ...itemList.toArray()]);
                 keyManager.setActiveItem(0);
 
-                expect(fn).toHaveBeenCalledTimes(1);
+                expect(keyManager.activeItem!.getLabel()).toBe('zero');
+                expect(fn).not.toHaveBeenCalled();
                 subscription.unsubscribe();
             });
 
