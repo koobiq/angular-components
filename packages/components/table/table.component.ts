@@ -3,7 +3,6 @@ import { Platform } from '@angular/cdk/platform';
 import {
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
     ElementRef,
     ViewEncapsulation,
     booleanAttribute,
@@ -69,27 +68,13 @@ export class KbqTable {
      */
     protected readonly stickyHeaderHeight = signal<number | null>(null);
 
-    /**
-     * Bumped whenever a direct child of the table is added, removed or reordered, so the effect below
-     * re-reads `tHead` — an otherwise untracked DOM property — when a `<thead>` mounts or is replaced
-     * after the table's first render (behind `@if`, async columns, `@defer`...). `<thead>` is always a
-     * direct child of `<table>`, so watching only the host's own child list, not its subtree, is enough
-     * and avoids rerunning on every row insertion inside `<tbody>`.
-     */
-    private readonly structuralChanges = signal(0);
-
     constructor() {
-        if (this.platform.isBrowser) {
-            const mutationObserver = new MutationObserver(() => this.structuralChanges.update((value) => value + 1));
-
-            mutationObserver.observe(this.elementRef.nativeElement, { childList: true });
-
-            inject(DestroyRef).onDestroy(() => mutationObserver.disconnect());
-        }
-
+        // `tHead` is a plain DOM read, so the effect sees whichever `<thead>` exists when it runs:
+        // the one projected into the table by its first render. That covers a table rendered behind
+        // `@if` or `@defer` — a new instance runs this effect after its content is in place — and a
+        // `<thead>` whose cells or height change later, which the `ResizeObserver` below reports.
+        // Swapping the `<thead>` element itself under a living table is not supported.
         effect((onCleanup) => {
-            this.structuralChanges();
-
             const head = this.stickyHeader() ? this.elementRef.nativeElement.tHead : null;
 
             if (!head || !this.platform.isBrowser) {
