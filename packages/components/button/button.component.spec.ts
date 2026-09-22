@@ -739,6 +739,9 @@ describe('Button with icon', () => {
     });
 
     it('should toggle host button class type on icon removal/reveal', (done) => {
+        // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
+
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
@@ -792,6 +795,9 @@ describe('Button with icon', () => {
     });
 
     it('should switch to kbq-button-icon via the effect when an icon is revealed while the content observer is disabled', (done) => {
+        // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
+
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
@@ -1034,6 +1040,9 @@ describe('Button without a label', () => {
     });
 
     it('should mark a button whose only content is an icon', () => {
+        // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
+
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
 
         fixture.detectChanges();
@@ -1418,9 +1427,10 @@ class DynamicHrefTestApp {
 class RouterLinkTestApp {}
 
 @Component({
+    selector: 'button-comment-case',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
-        <button kbq-button type="button">
+        <button kbq-button type="button" aria-label="Expand">
             <!-- comment-before -->
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             <!-- comment-after -->
@@ -1430,6 +1440,7 @@ class RouterLinkTestApp {}
 class KbqButtonCommentCaseTestApp {}
 
 @Component({
+    selector: 'button-html-icon-right-case',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -1441,6 +1452,7 @@ class KbqButtonCommentCaseTestApp {}
 class KbqButtonHtmlIconRightCaseTestApp {}
 
 @Component({
+    selector: 'button-html-icon-left-case',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -1452,6 +1464,7 @@ class KbqButtonHtmlIconRightCaseTestApp {}
 class KbqButtonHtmlIconLeftCaseTestApp {}
 
 @Component({
+    selector: 'button-text-icon-case',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -1464,6 +1477,7 @@ class KbqButtonHtmlIconLeftCaseTestApp {}
 class KbqButtonTextIconCaseTestApp {}
 
 @Component({
+    selector: 'button-text-icon-left-if-case',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -1479,6 +1493,7 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
 }
 
 @Component({
+    selector: 'button-text-icon-right-if-case',
     imports: [KbqButtonModule, KbqIconModule],
     template: `
         <button kbq-button type="button">
@@ -1532,7 +1547,7 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
     template: `
-        <button kbq-button type="button">
+        <button kbq-button type="button" aria-label="Expand">
             <i id="icon1" kbq-icon="kbq-chevron-down-s_16"></i>
             <i id="icon2" kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -1749,7 +1764,7 @@ class KbqButtonPrefixSuffixSlotTestApp {}
 @Component({
     imports: [KbqButtonModule, KbqIconModule],
     template: `
-        <button kbq-button type="button">
+        <button kbq-button type="button" aria-label="Play">
             <i id="icon2" kbqButtonSuffix kbq-icon="kbq-chevron-down-s_16"></i>
             <i id="icon1" kbqButtonPrefix kbq-icon="kbq-play_16"></i>
         </button>
