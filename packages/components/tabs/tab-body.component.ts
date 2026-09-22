@@ -5,6 +5,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -63,6 +64,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
 export class KbqTabBody implements OnInit, OnDestroy {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly dir = inject(Directionality, { optional: true });
+    private readonly destroyRef = inject(DestroyRef);
     /** The shifted index position of the tab body, where zero represents the active center tab. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -135,6 +137,9 @@ export class KbqTabBody implements OnInit, OnDestroy {
     }
 
     onTranslateTabStarted(e: AnimationEvent): void {
+        // Both animation callbacks still fire when the body is destroyed mid-animation.
+        if (this.destroyRef.destroyed) return;
+
         const isCentering = this.isCenterPosition(e.toState);
 
         this.beforeCentering.emit(isCentering);
@@ -145,6 +150,8 @@ export class KbqTabBody implements OnInit, OnDestroy {
     }
 
     onTranslateTabComplete(e: AnimationEvent): void {
+        if (this.destroyRef.destroyed) return;
+
         // If the transition to the center is complete, emit an event.
         if (this.isCenterPosition(e.toState) && this.isCenterPosition(this.bodyPosition)) {
             // TODO: The 'emit' function requires a mandatory void argument
