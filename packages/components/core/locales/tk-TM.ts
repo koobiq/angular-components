@@ -7,6 +7,7 @@ export const tkTMLocaleData = {
         saving: 'Ýazdyrylýar',
         saveFailed: 'Ýazdyryp bolmady',
         cancel: 'Ýatyr',
+        edit: 'Üýtget',
         removeAll: 'Ählisini aýyr',
         remove: 'Aýyr',
         breadcrumbs: 'Nawigasiýa ýoly',

@@ -82,8 +82,10 @@ import {
 import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
 import {
     E2eInlineEditActionButtons,
+    E2eInlineEditInteractiveContent,
     E2eInlineEditMenuButton,
     E2eInlineEditSaveStates,
+    E2eInlineEditSelectChain,
     E2eInlineEditSelectMultiline,
     E2eInlineEditStates,
     E2eInlineEditTruncation
@@ -473,6 +475,8 @@ const components: Record<string, Type<unknown>> = {
     E2eInlineEditActionButtons,
     E2eInlineEditSaveStates,
     E2eInlineEditSelectMultiline,
+    E2eInlineEditSelectChain,
+    E2eInlineEditInteractiveContent,
     E2eFormHorizontal,
     E2eTypographyStyles,
     E2eTreeTwoLineNode,

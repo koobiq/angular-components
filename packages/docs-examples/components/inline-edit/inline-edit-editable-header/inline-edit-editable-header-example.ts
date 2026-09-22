@@ -26,7 +26,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             </div>
             <div class="example-textarea_editable-header" kbqInlineEditEditMode>
                 <!-- defer textarea render to calc inner styles correctly -->
-                @if (inlineEdit.modeAsReadonly() === 'edit') {
+                @if (inlineEdit.mode() === 'edit') {
                     <kbq-form-field>
                         <textarea
                             kbqTextarea

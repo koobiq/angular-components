@@ -8,6 +8,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { NEVER, throwError } from 'rxjs';
@@ -236,7 +237,7 @@ export class E2eInlineEditMenuButton {}
                 <div kbqInlineEditViewMode>{{ control.value || 'empty' }}</div>
 
                 <div kbqInlineEditEditMode>
-                    @if (textareaInlineEdit.modeAsReadonly() === 'edit') {
+                    @if (textareaInlineEdit.mode() === 'edit') {
                         <kbq-form-field>
                             <textarea kbqTextarea [formControl]="control"></textarea>
                         </kbq-form-field>
@@ -407,3 +408,101 @@ export class E2eInlineEditSelectMultiline {
     protected readonly comments = E2E_COMMENTS;
     protected readonly control = new FormControl<string | null>(E2E_COMMENTS[0]);
 }
+
+@Component({
+    selector: 'e2e-inline-edit-select-chain',
+    imports: [
+        ReactiveFormsModule,
+        KbqInlineEditModule,
+        KbqFormFieldModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
+    template: `
+        <div class="layout-column layout-gap-l" data-testid="e2eInlineEditSelectChainList">
+            @for (control of controls; track $index) {
+                <kbq-inline-edit>
+                    <div kbqInlineEditViewMode>{{ control.value }}</div>
+
+                    <kbq-form-field kbqInlineEditEditMode [noBorders]="true">
+                        <kbq-select panelWidth="auto" [formControl]="control">
+                            @for (option of options; track option) {
+                                <kbq-option [value]="option">{{ option }}</kbq-option>
+                            }
+                        </kbq-select>
+                    </kbq-form-field>
+                </kbq-inline-edit>
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l',
+        'data-testid': 'e2eInlineEditSelectChain'
+    }
+})
+export class E2eInlineEditSelectChain {
+    protected readonly options = ['Low', 'Medium', 'High'];
+    protected readonly controls = [
+        new FormControl<string>('Low', { nonNullable: true }),
+        new FormControl<string>('Medium', { nonNullable: true }),
+        new FormControl<string>('High', { nonNullable: true })
+    ];
+}
+
+@Component({
+    selector: 'e2e-inline-edit-interactive-content',
+    imports: [
+        KbqInlineEditModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqLinkModule,
+        KbqIconModule,
+        KbqLabel
+    ],
+    template: `
+        <div class="layout-column layout-gap-l" data-testid="e2eInlineEditInteractiveContentContainer">
+            <kbq-inline-edit>
+                <!-- The label holds a focusable control too, and it sits outside the view content. -->
+                <kbq-label>
+                    Link
+                    <i
+                        kbq-icon-button="kbq-circle-info_16"
+                        data-testid="e2eInlineEditInteractiveContentLabelIcon"
+                        [color]="'contrast-fade'"
+                    ></i>
+                </kbq-label>
+
+                <div kbqInlineEditViewMode>
+                    <a kbq-link href="https://example.com" data-testid="e2eInlineEditInteractiveContentLink">
+                        example.com
+                    </a>
+                </div>
+
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [value]="'https://example.com'" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            width: 320px;
+            padding: 8px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l',
+        'data-testid': 'e2eInlineEditInteractiveContent'
+    }
+})
+export class E2eInlineEditInteractiveContent {}

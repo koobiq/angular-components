@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-inline-edit-a11y-and-types",
+    "title": "Koobiq components inline-edit review migration",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to inspect. If omitted, the migration runs over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        },
+        "fix": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true, applies the modeAsReadonly to mode rename. When false, prints what would change without writing."
+        }
+    }
+}

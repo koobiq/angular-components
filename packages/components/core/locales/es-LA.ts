@@ -7,6 +7,7 @@ export const esLALocaleData = {
         saving: 'Guardando',
         saveFailed: 'No se pudo guardar',
         cancel: 'Cancelar',
+        edit: 'Editar',
         removeAll: 'Eliminar todo',
         remove: 'Eliminar',
         breadcrumbs: 'Ruta de navegación',
