@@ -3,12 +3,11 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
-import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
-import filterBarSignals from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'filter-bar-signals';
 
 describe(SCHEMATIC_NAME, () => {
@@ -225,7 +224,6 @@ describe(SCHEMATIC_NAME, () => {
 
     it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
         const ts = firstTsPath();
-        const [first] = projects.keys();
 
         appTree.overwrite(
             ts,
@@ -237,9 +235,12 @@ describe(SCHEMATIC_NAME, () => {
                 '}\n'
         );
 
-        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
-        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
-        const updated = await lastValueFrom(runner.callRule(filterBarSignals({ project: first }), appTree));
+        // Run from migrations.json with no options, as `ng update` does: no schema default applies there.
+        const migrationsRunner = new SchematicTestRunner('migrations', migrationsPath);
+
+        migrationsRunner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const updated = await migrationsRunner.runSchematic(SCHEMATIC_NAME, {}, appTree);
 
         expect(updated.readText(ts)).toContain('return filterBar.filter();');
         expect(messages.join('\n')).not.toContain('would update');

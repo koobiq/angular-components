@@ -3,12 +3,11 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
-import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
-import buttonTruncation from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'button-truncation';
 
 /**
@@ -209,9 +208,10 @@ describe(SCHEMATIC_NAME, () => {
 
         appTree.overwrite(templatePath, '<button kbq-button><i kbq-icon="kbq-plus_16"></i>Text</button>');
 
-        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
-        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
-        const updated = await lastValueFrom(runner.callRule(buttonTruncation({ project: projectKey }), appTree));
+        // Run from migrations.json with no options, as `ng update` does: no schema default applies there.
+        const migrationsRunner = new SchematicTestRunner('migrations', migrationsPath);
+
+        const updated = await migrationsRunner.runSchematic(SCHEMATIC_NAME, {}, appTree);
 
         expect(updated.readText(templatePath)).toContain('<i kbqButtonPrefix kbq-icon="kbq-plus_16">');
     });

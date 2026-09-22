@@ -3,12 +3,11 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
-import { lastValueFrom } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
-import v20Upgrade from './index';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'v20-upgrade';
 
 describe(SCHEMATIC_NAME, () => {
@@ -763,9 +762,10 @@ describe(SCHEMATIC_NAME, () => {
             "import { FocusKeyManager } from '@koobiq/cdk/a11y';\n" + 'const x: any = [FocusKeyManager];\n'
         );
 
-        // Called through the rule rather than `runSchematic`: `ng update` runs the factory straight from
-        // migrations.json, which carries no schema, so the `fix` default in schema.json never applies.
-        const updated = await lastValueFrom(runner.callRule(v20Upgrade({ project: first }), appTree));
+        // Run from migrations.json with no options, as `ng update` does: no schema default applies there.
+        const migrationsRunner = new SchematicTestRunner('migrations', migrationsPath);
+
+        const updated = await migrationsRunner.runSchematic(SCHEMATIC_NAME, {}, appTree);
 
         expect(updated.readText(ts)).toContain("from '@koobiq/components/core'");
     });
