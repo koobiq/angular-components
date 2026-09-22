@@ -258,6 +258,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private widthLockSubscription = Subscription.EMPTY;
 
+    /** Waits for the exit animation to finish a close; must not outlive the trigger, or it emits once destroyed. */
+    private readonly closeAnimationSubscriptions = new Subscription();
+
     constructor() {
         const elementRef = this.elementRef;
         const dropdownItemInstance = this.dropdownItemInstance;
@@ -516,18 +519,20 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
             if (lazyContent) {
                 // Wait for the exit animation to finish before detaching the content.
-                animationSubscription
-                    .pipe(
-                        // Interrupt if the content got re-attached.
-                        takeUntil(lazyContent.attached)
-                    )
-                    .subscribe({
-                        next: () => lazyContent.detach(),
-                        // No matter whether the content got re-attached, reset the dropdown.
-                        complete: () => this.setIsOpened(false)
-                    });
+                this.closeAnimationSubscriptions.add(
+                    animationSubscription
+                        .pipe(
+                            // Interrupt if the content got re-attached.
+                            takeUntil(lazyContent.attached)
+                        )
+                        .subscribe({
+                            next: () => lazyContent.detach(),
+                            // No matter whether the content got re-attached, reset the dropdown.
+                            complete: () => this.setIsOpened(false)
+                        })
+                );
             } else {
-                animationSubscription.subscribe(() => this.setIsOpened(false));
+                this.closeAnimationSubscriptions.add(animationSubscription.subscribe(() => this.setIsOpened(false)));
             }
         } else {
             this.setIsOpened(false);
@@ -725,6 +730,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.closingActionsSubscription.unsubscribe();
         this.hoverSubscription.unsubscribe();
         this.widthLockSubscription.unsubscribe();
+        this.closeAnimationSubscriptions.unsubscribe();
     }
 
     /** Returns a stream that emits whenever an action that should close the dropdown occurs. */
