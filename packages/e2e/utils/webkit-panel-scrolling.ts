@@ -32,16 +32,19 @@ export interface E2eWebkitPanelScrollingConfig {
  * Components therefore focus with `preventScroll` and reveal the row themselves.
  *
  * These assert on scroll offsets rather than screenshots, so they need no baselines and no Docker.
+ * Call it at the top level of a spec: it switches the whole file to WebKit.
  */
 export function e2eDescribeWebkitPanelScrolling(config: E2eWebkitPanelScrollingConfig): void {
     const { name, route, open, port: portSelector, item, activeItem } = config;
+
+    test.use({ browserName: 'webkit' });
 
     test.describe(`${name} panel scrolling`, () => {
         const getPort = (page: Page): Locator => page.locator(portSelector);
 
         test.beforeEach(async ({ page }) => {
             // Installed before navigation so the focus calls the panel makes while opening are recorded too.
-            await e2eRecordOptionFocusOptions(page);
+            await e2eRecordOptionFocusOptions(page, item);
             await page.goto(route);
             await open(page);
             // The routes fit the viewport, so without this the page-scroll assertion below could never fail.

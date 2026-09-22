@@ -1,7 +1,4 @@
-import { test } from '@playwright/test';
 import { e2eDescribeWebkitPanelScrolling } from '../../e2e/utils';
-
-test.use({ browserName: 'webkit' });
 
 e2eDescribeWebkitPanelScrolling({
     name: 'KbqSelect',
