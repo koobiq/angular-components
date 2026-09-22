@@ -70,6 +70,7 @@ describe('KbqShadowDomOverlayContainer', () => {
     });
 
     it('keeps the container on document.body when the host is not inside a shadow root', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
         const host = document.createElement('div');
 
         document.body.appendChild(host);
@@ -79,6 +80,7 @@ describe('KbqShadowDomOverlayContainer', () => {
 
         expect(container.getContainerElement().getRootNode()).toBe(document);
         expect(document.body.contains(container.getContainerElement())).toBe(true);
+        expect(warn).toHaveBeenCalledWith(expect.stringContaining('did not resolve to an open shadow root'));
     });
 
     it('keeps the container on document.body when no host is provided and no root component is in a shadow root', () => {
