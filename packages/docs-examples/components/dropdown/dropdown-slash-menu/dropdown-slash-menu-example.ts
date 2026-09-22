@@ -117,7 +117,10 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
                 <button disabled kbq-dropdown-item>Nothing found</button>
             }
 
-            <kbq-dropdown-footer>Press Esc to close</kbq-dropdown-footer>
+            <kbq-dropdown-footer class="example-slash-menu__footer">
+                <span>Close menu</span>
+                <span class="example-slash-menu__hotkey">Esc</span>
+            </kbq-dropdown-footer>
         </kbq-dropdown>
     `,
     styles: `
@@ -154,6 +157,14 @@ const GROUPS: { label: string; items: { name: string; icon: string }[] }[] = [
         ::ng-deep .example-slash-menu .kbq-dropdown__content {
             max-height: 240px;
             overflow-y: auto;
+        }
+
+        .example-slash-menu__footer {
+            justify-content: space-between;
+        }
+
+        .example-slash-menu__hotkey {
+            color: var(--kbq-foreground-contrast-secondary);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
