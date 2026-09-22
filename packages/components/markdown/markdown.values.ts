@@ -23,7 +23,7 @@ export const MARKDOWN_TAGS_TO_CLASS_ALIAS = [
 ];
 
 /**
- * separating `th` and `p` to prevent it's conflict with `thead` and `pre`
+ * separating `th` and `p` to prevent its conflict with `thead` and `pre`
  *
  * @internal
  */
