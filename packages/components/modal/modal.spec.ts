@@ -23,7 +23,15 @@ import {
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { dispatchKeyboardEvent, ENTER, ruRULocaleData, TAB, ThemePalette } from '@koobiq/components/core';
+import {
+    createMouseEvent,
+    dispatchKeyboardEvent,
+    dispatchMouseEvent,
+    ENTER,
+    ruRULocaleData,
+    TAB,
+    ThemePalette
+} from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
@@ -456,6 +464,39 @@ describe('KbqModal', () => {
             fixture.detectChanges();
 
             expect(document.querySelectorAll('.kbq-modal-mask').length).toEqual(1);
+
+            discardPeriodicTasks();
+        }));
+
+        const openMaskClosableModal = (): HTMLElement => {
+            const modalRef = modalService.create({ kbqMaskClosable: true });
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            return modalRef.getElement().querySelector<HTMLElement>('.kbq-modal-wrap')!;
+        };
+
+        const clickMask = (mask: HTMLElement, button: number) => {
+            dispatchMouseEvent(mask, 'mousedown', 0, 0, createMouseEvent('mousedown', 0, 0, button));
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+        };
+
+        it('should close on a primary button click on the mask', fakeAsync(() => {
+            clickMask(openMaskClosableModal(), 0);
+
+            expect(modalService.openModals.length).toBe(0);
+
+            discardPeriodicTasks();
+        }));
+
+        // The sidepanel closes on the overlay backdrop's `click`, which the right button never fires.
+        it('should not close on a right button click on the mask', fakeAsync(() => {
+            clickMask(openMaskClosableModal(), 2);
+
+            expect(modalService.openModals.length).toBe(1);
 
             discardPeriodicTasks();
         }));

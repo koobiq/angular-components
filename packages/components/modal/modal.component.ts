@@ -472,6 +472,10 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     onClickMask($event: MouseEvent) {
+        // Only the primary button closes the modal: the sidepanel's backdrop is driven by `click`, which
+        // never fires for the right or middle button, and `mousedown` here would otherwise diverge from it.
+        if ($event.button !== 0) return;
+
         if (
             this.kbqMask &&
             this.kbqMaskClosable &&
