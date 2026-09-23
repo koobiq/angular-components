@@ -5,12 +5,15 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCaretRect, kbqCreateCaretOrigin, kbqGetSelectionRect } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
-import { fromEvent } from 'rxjs';
+import { debounceTime, fromEvent } from 'rxjs';
 
 /** `Node.TEXT_NODE`, spelled out so that the example never reads a DOM global. */
 const TEXT_NODE = 3;
 
 const EMPTY_RECT: KbqCaretRect = { x: 0, y: 0, width: 0, height: 0 };
+
+/** How long a keyboard selection has to stand still before the toolbar follows it, in milliseconds. */
+const SELECTION_SETTLE_DELAY = 200;
 
 /** Each format is the element the selected text is wrapped in. */
 const FORMATS = [
@@ -111,19 +114,43 @@ export class PopoverTextSelectionExample {
     protected readonly active = signal<string[]>([]);
     protected readonly formats = FORMATS;
 
-    constructor() {
-        fromEvent(this.document, 'selectionchange')
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.readSelection());
+    /** Whether a pointer selection is still being dragged out. */
+    private selecting = false;
 
-        // The toolbar never takes focus, so its own `Escape` handler is out of reach.
-        fromEvent<KeyboardEvent>(this.document, 'keydown')
+    constructor() {
+        // A pointer selection is only final on `pointerup`: shown on the first `selectionchange`, the toolbar
+        // would anchor to the first characters of a selection the user is still dragging out.
+        fromEvent<PointerEvent>(this.document, 'pointerdown')
             .pipe(takeUntilDestroyed())
             .subscribe((event) => {
-                if (event.key === 'Escape') {
-                    this.visible.set(false);
+                if (this.isInsideToolbar(event.target)) return;
+
+                this.selecting = true;
+                this.visible.set(false);
+            });
+
+        fromEvent<PointerEvent>(this.document, 'pointerup')
+            .pipe(takeUntilDestroyed())
+            .subscribe((event) => {
+                if (this.isInsideToolbar(event.target)) return;
+
+                this.selecting = false;
+                this.readSelection();
+            });
+
+        // A keyboard selection has no such end, so the toolbar follows it once it stops growing.
+        fromEvent(this.document, 'selectionchange')
+            .pipe(debounceTime(SELECTION_SETTLE_DELAY), takeUntilDestroyed())
+            .subscribe(() => {
+                if (!this.selecting) {
+                    this.readSelection();
                 }
             });
+
+        // The toolbar never takes focus on its own, so its `Escape` and `Tab` handlers are out of reach.
+        fromEvent<KeyboardEvent>(this.document, 'keydown')
+            .pipe(takeUntilDestroyed())
+            .subscribe((event) => this.handleKeydown(event));
     }
 
     protected toggle(format: Format): void {
@@ -157,14 +184,42 @@ export class PopoverTextSelectionExample {
         this.select(next);
 
         this.readSelection();
-        this.popover()?.updatePosition();
+        this.popover()?.updatePosition(true);
+    }
+
+    private handleKeydown(event: KeyboardEvent): void {
+        if (!this.visible()) return;
+
+        if (event.key === 'Escape') {
+            this.visible.set(false);
+        }
+
+        // The panel is in an overlay at the end of the document, so `Tab` would walk past it.
+        if (event.key === 'Tab' && !event.shiftKey && !this.isInsideToolbar(this.document.activeElement)) {
+            const button = this.document.querySelector<HTMLButtonElement>('.example-toolbar button');
+
+            if (button) {
+                event.preventDefault();
+                button.focus();
+            }
+        }
     }
 
     private readSelection(): void {
         const range = this.getRange();
+        const wasVisible = this.visible();
 
         this.visible.set(!!range);
         this.active.set(range ? FORMATS.filter(({ tag }) => this.findWrapper(range, tag)).map(({ tag }) => tag) : []);
+
+        // An open panel has to be told to move, and only a re-applied position re-reads the origin rectangle.
+        if (wasVisible && range) {
+            this.popover()?.updatePosition(true);
+        }
+    }
+
+    private isInsideToolbar(target: EventTarget | null): boolean {
+        return !!(target as HTMLElement | null)?.closest?.('.example-toolbar');
     }
 
     private measureSelection(): KbqCaretRect {

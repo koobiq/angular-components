@@ -116,6 +116,8 @@ Left unbound, the question and the button caption come from the `popoverConfirm`
 
 `[kbqPopoverAutoFocus]="false"` leaves the focus — and with it the selection — where the user left it, which is why the toolbar is operated with the pointer and `Esc` is listened for on the document. Cancel the default action of `mousedown` inside the panel: without that the first click collapses the selection the panel is anchored to.
 
+Open the panel once the selection is final — on `pointerup` for a pointer, and after a short pause for `Shift` and the arrows — or it anchors to the first characters of a selection that is still growing. While it is open, `updatePosition(true)` moves it to a selection that changed: the origin rectangle is only read on a positioning pass. The panel lives in an overlay at the end of the document, so `Tab` walks past it; the example answers the key itself and moves focus onto the first button.
+
 <Example id="popover-text-selection" />
 
 ### Opening and closing
