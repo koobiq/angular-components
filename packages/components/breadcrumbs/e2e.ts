@@ -212,3 +212,54 @@ export class E2eBreadcrumbsOverflowMax {
     readonly max = 4;
     readonly items = Array.from({ length: 5 }, (_, i) => `Item #${i}`);
 }
+
+@Component({
+    selector: 'e2e-breadcrumbs-in-form',
+    imports: [
+        KbqBreadcrumbsModule,
+        RouterLink,
+        KbqButton,
+        KbqButtonCssStyler
+    ],
+    template: `
+        <form data-testid="e2eBreadcrumbsForm" (submit)="onSubmit($event)">
+            <nav kbq-breadcrumbs [max]="max">
+                @for (breadcrumb of items; track breadcrumb) {
+                    <kbq-breadcrumb-item [text]="breadcrumb" [routerLink]="breadcrumb" />
+                }
+
+                <kbq-breadcrumb-item>
+                    <button *kbqBreadcrumbView kbq-button kbqBreadcrumb>Custom</button>
+                </kbq-breadcrumb-item>
+            </nav>
+
+            <!-- Two fields, so the browser performs implicit submission only through a default
+                 button — which no breadcrumb may become. -->
+            <input data-testid="e2eFirstField" />
+            <input data-testid="e2eSecondField" />
+        </form>
+
+        <output data-testid="e2eSubmitCount">{{ submitCount }}</output>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eBreadcrumbsInFormHost'
+    }
+})
+export class E2eBreadcrumbsInForm {
+    readonly max = 4;
+    readonly items = Array.from({ length: 5 }, (_, i) => `Item #${i}`);
+
+    submitCount = 0;
+
+    onSubmit(event: Event): void {
+        event.preventDefault();
+        this.submitCount++;
+    }
+}
