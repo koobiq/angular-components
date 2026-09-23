@@ -29,6 +29,9 @@
                 <button
                     kbq-button
                     class="kbq-code-block__actionbar__soft-wrap-button"
+                    [attr.aria-label]="
+                        softWrap() ? localeConfiguration().softWrapOffTooltip : localeConfiguration().softWrapOnTooltip
+                    "
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="

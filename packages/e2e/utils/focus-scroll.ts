@@ -6,7 +6,7 @@ type FocusScrollWindow = Window & {
 };
 
 /**
- * Records the `FocusOptions` every option-like element is focused with, so a spec can assert that a panel
+ * Records the `FocusOptions` every row matching `selector` is focused with, so a spec can assert that a panel
  * never leans on the scroll `HTMLElement.focus()` performs implicitly.
  *
  * That implicit scroll is not portable: Blink runs it synchronously, while WebKit defers it to a later
@@ -17,9 +17,9 @@ type FocusScrollWindow = Window & {
  * just the ones a spec triggers afterwards. Call before `page.goto`, then read the flags back with
  * {@link e2eReadOptionFocusOptions}.
  */
-export const e2eRecordOptionFocusOptions = async (page: Page): Promise<void> => {
+export const e2eRecordOptionFocusOptions = async (page: Page, selector: string): Promise<void> => {
     // Awaited rather than returned: `addInitScript` resolves to a Disposable — see `e2eDisableResizeObserver`.
-    await page.addInitScript(() => {
+    await page.addInitScript((rowSelector: string) => {
         const target = window as FocusScrollWindow;
 
         target.__kbqOptionFocusOptions = [];
@@ -32,13 +32,13 @@ export const e2eRecordOptionFocusOptions = async (page: Page): Promise<void> => 
         const originalFocus = HTMLElement.prototype.focus;
 
         HTMLElement.prototype.focus = function (this: HTMLElement, options?: FocusOptions) {
-            if (this.matches('.kbq-option, .kbq-tree-option, .kbq-dropdown-item')) {
+            if (this.matches(rowSelector)) {
                 (window as FocusScrollWindow).__kbqOptionFocusOptions?.push(options?.preventScroll === true);
             }
 
             return originalFocus.call(this, options);
         };
-    });
+    }, selector);
 };
 
 /** Reads back what {@link e2eRecordOptionFocusOptions} captured: one `preventScroll` flag per focus call. */

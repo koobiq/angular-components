@@ -195,12 +195,16 @@ export class KbqCodeBlockHighlight {
         this._pending.set(true);
 
         let { language } = file;
+        const isKnownLanguage = !!language && !!this.hljs!.getLanguage(language);
 
-        if (!language || !this.hljs!.getLanguage(language)) {
-            this.warn(
-                `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
-                file
-            );
+        if (!language || !isKnownLanguage) {
+            // A file without a language is plain text by design; only a language the core lacks is a mistake.
+            if (language) {
+                this.warn(
+                    `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
+                    file
+                );
+            }
 
             language = this.fallbackFileLanguage;
         }
@@ -216,7 +220,8 @@ export class KbqCodeBlockHighlight {
             this.warn('[KbqCodeBlock] File content contains illegal characters.', file);
         }
 
-        if (relevance === 0) {
+        // Plain text has no syntax to score, so its relevance is always 0 — even for the fallback itself.
+        if (relevance === 0 && isKnownLanguage && highlightedLanguage !== 'plaintext') {
             this.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
         }
 

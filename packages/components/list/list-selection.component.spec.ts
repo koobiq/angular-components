@@ -1335,6 +1335,7 @@ describe('KbqListSelection with forms', () => {
         }));
 
         it('should not let one option break the rest when the comparator cannot read its value', fakeAsync(() => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(SelectionListWithValuelessOption);
             const testComponent = fixture.componentInstance;
 
@@ -1343,6 +1344,8 @@ describe('KbqListSelection with forms', () => {
                 tick();
                 fixture.detectChanges();
             }).not.toThrow();
+            // The comparator's error is reported in dev mode rather than swallowed.
+            expect(warn).toHaveBeenCalledWith(expect.any(TypeError));
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([
                 false,

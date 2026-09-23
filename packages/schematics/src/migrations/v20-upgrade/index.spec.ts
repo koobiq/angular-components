@@ -7,6 +7,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'v20-upgrade';
 
 describe(SCHEMATIC_NAME, () => {
@@ -750,5 +751,22 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toMatch(/providers:\s*\[\s*\]/);
         // Sibling imports kept; symbol gone.
         expect(updated).toMatch(/import\s*\{[^}]*\bkbqErrorStateMatcherProvider\b[^}]*\bKbqColorDirective\b[^}]*\}/);
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { FocusKeyManager } from '@koobiq/cdk/a11y';\n" + 'const x: any = [FocusKeyManager];\n'
+        );
+
+        // Run from migrations.json with no options, as `ng update` does: no schema default applies there.
+        const migrationsRunner = new SchematicTestRunner('migrations', migrationsPath);
+
+        const updated = await migrationsRunner.runSchematic(SCHEMATIC_NAME, {}, appTree);
+
+        expect(updated.readText(ts)).toContain("from '@koobiq/components/core'");
     });
 });

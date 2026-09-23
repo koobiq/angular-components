@@ -44,7 +44,7 @@ describe('KbqProgressBar', () => {
         testComponent.mode = 'determinate';
         fixture.detectChanges();
 
-        expect(progressBarDebugElement.query(By.css('.kbq-progress-bar__line_determinate'))).toBeDefined();
+        expect(progressBarDebugElement.query(By.css('.kbq-progress-bar__line_determinate'))).not.toBeNull();
     });
 
     it('should show indeterminate line', () => {
@@ -55,14 +55,16 @@ describe('KbqProgressBar', () => {
         testComponent.mode = 'indeterminate';
         fixture.detectChanges();
 
-        expect(progressBarDebugElement.query(By.css('.kbq-progress-bar__line_indeterminate'))).toBeDefined();
+        expect(progressBarDebugElement.query(By.css('.kbq-progress-bar__line_indeterminate'))).not.toBeNull();
     });
 
     it('should show determinate line by default', () => {
         const fixture = TestBed.createComponent(TestApp);
         const progressBarDebugElement = fixture.debugElement.query(By.css('.default'));
 
-        expect(progressBarDebugElement.query(By.css('.kbq-progress-bar__line_determinate'))).toBeDefined();
+        fixture.detectChanges();
+
+        expect(progressBarDebugElement.query(By.css('.kbq-progress-bar__line_determinate'))).not.toBeNull();
     });
 
     it('should set id attribute', () => {
@@ -80,7 +82,9 @@ describe('KbqProgressBar', () => {
         const fixture = TestBed.createComponent(TestApp);
         const progressBarDebugElement = fixture.debugElement.query(By.css('.default'));
 
-        expect(progressBarDebugElement.nativeElement.getAttribute('id')).toBeDefined();
+        fixture.detectChanges();
+
+        expect(progressBarDebugElement.nativeElement.getAttribute('id')).toMatch(/^kbq-progress-bar-\d+$/);
     });
 });
 

@@ -114,13 +114,11 @@ describe('KbqTreeSelection', () => {
                 expect(nodes[0].classList).toContain('customNodeClass');
             });
 
-            // todo need recover
-            xit('with the right data', () => {
+            it('with the right data', () => {
                 expect(component.treeData.length).toBe(5);
 
                 expectFlatTreeToMatch(
                     treeElement,
-                    28,
                     [`rootNode_1`],
                     [`Pictures`],
                     [`Documents`],
@@ -160,12 +158,10 @@ describe('KbqTreeSelection', () => {
                 expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
             }));
 
-            // TODO(DS-5079): real regression under Angular 20 — copyActiveOption's
-            // `preventBlur = true / false` envelope no longer suppresses the blur that
-            // arrives via FocusMonitor microtask after the copy. Needs a fix in
-            // KbqTreeOption.blur()/focus() coordination, not a test-only adjustment.
-            // Clipboard write itself works (verified inline); only the focus retention
-            // assertion fails.
+            // DS-5079: copyActiveOption sets and clears option.preventBlur synchronously, but the blur it
+            // provokes reaches the option through FocusMonitor after the handler has returned, so the guard
+            // is already down. Deferring the clear by a microtask is not enough — the fix belongs in the
+            // blur()/focus() coordination of KbqTreeOption. The clipboard write itself works.
             it.skip('should not blur on focused option when copying', fakeAsync(() => {
                 const treeOptions = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
 
@@ -255,8 +251,7 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            // todo need recover
-            xit('should expand/collapse the node', () => {
+            it('should expand/collapse the node', () => {
                 expect(component.treeData.length).toBe(5);
 
                 expect(component.treeControl.expansionModel.selected.length).toBe(0);
@@ -265,7 +260,6 @@ describe('KbqTreeSelection', () => {
 
                 expectFlatTreeToMatch(
                     treeElement,
-                    40,
                     [`rootNode_1`],
                     [`Pictures`],
                     [`Documents`],
@@ -279,7 +273,6 @@ describe('KbqTreeSelection', () => {
                 expect(component.treeControl.expansionModel.selected.length).toBe(1);
                 expectFlatTreeToMatch(
                     treeElement,
-                    40,
                     [`rootNode_1`],
                     [`Pictures`],
                     [null, 'Sun'],
@@ -297,14 +290,13 @@ describe('KbqTreeSelection', () => {
 
                 expectFlatTreeToMatch(
                     treeElement,
-                    40,
                     [`rootNode_1`],
                     [`Pictures`],
                     [null, 'Sun'],
                     [null, 'Woods'],
                     [null, 'PhotoBoothLibrary'],
                     [`Documents`],
-                    [null, `Pictures`],
+                    [null, `react`],
                     [null, `angular`],
                     [null, `material2`],
                     [`Downloads`],
@@ -316,7 +308,6 @@ describe('KbqTreeSelection', () => {
 
                 expectFlatTreeToMatch(
                     treeElement,
-                    40,
                     [`rootNode_1`],
                     [`Pictures`],
                     [null, 'Sun'],
@@ -1160,7 +1151,7 @@ describe('KbqTreeSelection', () => {
         });
 
         // todo need recover
-        xdescribe('with when node template', () => {
+        describe('with when node template', () => {
             let fixture: ComponentFixture<WhenNodeKbqTreeApp>;
 
             beforeEach(() => {
@@ -1175,7 +1166,6 @@ describe('KbqTreeSelection', () => {
             it('with the right data', () => {
                 expectFlatTreeToMatch(
                     treeElement,
-                    40,
                     [`>>>rootNode_1`],
                     [`Pictures`],
                     [`Documents`],
@@ -2662,45 +2652,17 @@ function getNodeByText(treeElement: Element, text: string): HTMLElement {
     ) as HTMLElement;
 }
 
-function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: number = 28, ...expectedTree: any[]) {
-    const missedExpectations: string[] = [];
+/**
+ * Matches the rendered rows against `expectedTree`, one entry per row: the last element is the row's
+ * text and the entry's length is its `aria-level`.
+ */
+function expectFlatTreeToMatch(treeElement: Element, ...expectedTree: (string | null)[][]) {
+    const nodes = getNodes(treeElement);
 
-    function checkNode(node: Element, expectedNode: any[]) {
-        const actualTextContent = node.textContent!.trim();
-        const expectedTextContent = expectedNode[expectedNode.length - 1];
-
-        if (actualTextContent !== expectedTextContent) {
-            missedExpectations.push(`Expected node contents to be ${expectedTextContent} but was ${actualTextContent}`);
-        }
-    }
-
-    function checkLevel(node: Element, expectedNode: any[]) {
-        const actualLevel = (node as HTMLElement).style.paddingLeft;
-
-        if (expectedNode.length === 1) {
-            // root node can contain icon (padding = 8) and also can be without icon (padding = 32)
-            if (actualLevel !== `8px` && actualLevel !== `32px`) {
-                missedExpectations.push(`Expected node level to be 0 but was ${actualLevel}`);
-            }
-        } else {
-            const expectedLevel = `${(expectedNode.length - 1) * expectedPaddingIndent + 12}px`;
-
-            if (actualLevel !== expectedLevel) {
-                missedExpectations.push(`Expected node level to be ${expectedLevel} but was ${actualLevel}`);
-            }
-        }
-    }
-
-    getNodes(treeElement).forEach((node, index) => {
-        const expected = expectedTree ? expectedTree[index] : null;
-
-        checkLevel(node, expected);
-        checkNode(node, expected);
-    });
-
-    if (missedExpectations.length) {
-        fail(missedExpectations.join('\n'));
-    }
+    expect(nodes.map((node) => node.textContent!.trim())).toEqual(expectedTree.map((entry) => entry[entry.length - 1]));
+    expect(nodes.map((node) => node.getAttribute('aria-level'))).toEqual(
+        expectedTree.map((entry) => `${entry.length}`)
+    );
 }
 
 @Component({
@@ -3274,7 +3236,7 @@ class KbqTreeAppWithToggle {
             </kbq-tree-option>
 
             <kbq-tree-option *kbqTreeNodeDef="let node; when: isSpecial" kbqTreeNodePadding>
-                {{ node.name }}
+                >>>{{ node.name }}
             </kbq-tree-option>
         </kbq-tree-selection>
     `

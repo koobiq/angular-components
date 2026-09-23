@@ -1217,6 +1217,9 @@ describe(KbqSingleFileUploadComponent.name, () => {
         });
 
         // TODO: real-life scenario & test results with the same data are different (#DS-4300)
+        // `accept` reaches the native input's attribute only, which is what the file picker dialog reads.
+        // onFileDropped takes files[0] unconditionally, so a drop is not filtered by it at all — these two
+        // describe a filter the drop path has never had.
         xdescribe('with accepted files list', () => {
             it('should filter files via drag-n-drop with extensions', (done) => {
                 component.disabled = false;

@@ -11,10 +11,13 @@ import failOnConsole from 'jest-fail-on-console';
 expect.extend(toHaveNoViolations);
 
 failOnConsole({
-    silenceMessage: (message) => {
-        // https://github.com/thymikee/jest-preset-angular/issues/2194
-        return !(message === 'Error: Could not parse CSS stylesheet');
-    }
+    silenceMessage: (message) =>
+        // jsdom reports every stylesheet it cannot parse as an error, and the message is that error's stack, so
+        // only its first line is stable: https://github.com/thymikee/jest-preset-angular/issues/2194
+        message.startsWith('Error: Could not parse CSS stylesheet') ||
+        // Angular's dev-mode performance hint for an `@for` that tracks by identity and had to re-create every
+        // item. Specs replace their inputs with fresh literals all the time, which is exactly what triggers it.
+        message.startsWith('NG0956:')
 });
 
 Object.defineProperty(global, '__jest__', { value: true });

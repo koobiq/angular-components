@@ -9,6 +9,7 @@ import {
     input,
     OnChanges,
     OnInit,
+    Renderer2,
     SimpleChanges
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -38,6 +39,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     sidepanelRef = inject(KbqSidepanelRef, { optional: true })!;
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private sidepanelService = inject(KbqSidepanelService);
+    private readonly renderer = inject(Renderer2);
 
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
@@ -46,6 +48,12 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     readonly kbqSidepanelClose = input<any>();
 
     ngOnInit() {
+        // A button with no type submits the form it sits in, so closing a sidepanel from inside a form would
+        // submit it too. A type the author set is left alone.
+        if (!this.elementRef.nativeElement.hasAttribute('type')) {
+            this.renderer.setAttribute(this.elementRef.nativeElement, 'type', 'button');
+        }
+
         if (!this.sidepanelRef) {
             // When this directive is included in a sidepanel via TemplateRef (rather than being
             // in a Component), the SidepanelRef isn't available via injection because embedded

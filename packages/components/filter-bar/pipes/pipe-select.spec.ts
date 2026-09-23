@@ -256,7 +256,7 @@ describe('KbqPipeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        const enterSelectsAndRestoresFocus = (search: boolean) => {
+        const shouldSelectActiveOptionAndRestoreFocus = (search: boolean) => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null, search })]);
             fixture.detectChanges();
 
@@ -287,11 +287,11 @@ describe('KbqPipeSelectComponent', () => {
         };
 
         it('should select the active option with Enter and restore focus (no search)', fakeAsync(() => {
-            enterSelectsAndRestoresFocus(false);
+            shouldSelectActiveOptionAndRestoreFocus(false);
         }));
 
         it('should select the active option with Enter and restore focus (with search)', fakeAsync(() => {
-            enterSelectsAndRestoresFocus(true);
+            shouldSelectActiveOptionAndRestoreFocus(true);
         }));
     });
 

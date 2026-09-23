@@ -19,6 +19,7 @@ test.describe('KbqTitleDirective', () => {
 
         // Longer than the tooltip enterDelay (400ms), so a tooltip that should not open has had time to appear.
         // Without the wait the assertion resolves on its first poll, while the tooltip is still absent anyway.
+        // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts a tooltip never opens; there is no event to poll for
         await page.waitForTimeout(800);
         await expect(tooltip(page)).toBeHidden();
     });
@@ -56,6 +57,7 @@ test.describe('KbqTitleDirective', () => {
         await page.getByTestId('titleSubPixelClip').hover();
 
         // Longer than the tooltip enterDelay (400ms), so a tooltip that should not open has had time to appear.
+        // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts a tooltip never opens; there is no event to poll for
         await page.waitForTimeout(800);
         await expect(tooltip(page)).toBeHidden();
     });

@@ -3,4 +3,6 @@ export * from './focus-scroll';
 export * from './fonts';
 export * from './overflow-shadow';
 export * from './scrollbar';
+export * from './settled-content';
 export * from './theme';
+export * from './webkit-panel-scrolling';

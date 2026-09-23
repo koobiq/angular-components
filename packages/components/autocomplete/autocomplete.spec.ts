@@ -1072,6 +1072,10 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should reposition the panel on scroll', () => {
+            // jsdom implements no scrolling and logs every window.scroll call; the scroll this test needs is
+            // the ScrollDispatcher emission below.
+            const scroll = jest.spyOn(window, 'scroll').mockImplementation(() => {});
+
             const scrolledSubject = new Subject();
             const spacer = document.createElement('div');
             const fixture = createComponent(SimpleAutocomplete, [
@@ -1107,6 +1111,7 @@ describe('KbqAutocomplete', () => {
 
             document.body.removeChild(spacer);
             window.scroll(0, 0);
+            scroll.mockRestore();
         });
 
         it('should align panel properly when filtering in "above" position', fakeAsync(() => {

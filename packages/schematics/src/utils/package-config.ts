@@ -80,12 +80,12 @@ export async function getParsingInfo(project: string | undefined, tree: Tree) {
     const tsPaths = new Set<string>();
     const templatePaths = new Set<string>();
     const projectDefinition = await setupOptions(project, tree);
+    // `ng update` passes no options at all, so without a project the whole workspace is migrated.
+    const root = projectDefinition?.root;
 
-    if (!projectDefinition) {
-        throw new SchematicsException(messages.noProject('no project'));
-    }
+    (root ? tree.getDir(root) : tree.root).visit((filePath: string) => {
+        if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
 
-    tree.getDir(projectDefinition.root).visit((filePath: string) => {
         if (filePath.endsWith('.ts')) {
             tsPaths.add(filePath);
         }

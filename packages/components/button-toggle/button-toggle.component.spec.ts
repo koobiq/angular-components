@@ -248,7 +248,7 @@ describe('KbqButtonToggle without forms', () => {
             testComponent.isGroupDisabled = true;
             fixture.detectChanges();
 
-            buttonToggleNativeElements[0].click();
+            innerButtons[0].click();
 
             expect(buttonToggleInstances[0].checked).toBe(false);
             testComponent.isGroupDisabled = false;
@@ -565,7 +565,6 @@ describe('KbqButtonToggle without forms', () => {
         let groupDebugElement: DebugElement;
         let groupNativeElement: HTMLElement;
         let buttonToggleDebugElements: DebugElement[];
-        let buttonToggleNativeElements: HTMLElement[];
         let innerButtons: HTMLButtonElement[];
         let groupInstance: KbqButtonToggleGroup;
         let buttonToggleInstances: KbqButtonToggle[];
@@ -582,7 +581,6 @@ describe('KbqButtonToggle without forms', () => {
             groupInstance = groupDebugElement.injector.get<KbqButtonToggleGroup>(KbqButtonToggleGroup);
 
             buttonToggleDebugElements = fixture.debugElement.queryAll(By.directive(KbqButtonToggle));
-            buttonToggleNativeElements = buttonToggleDebugElements.map((debugEl) => debugEl.nativeElement);
             innerButtons = fixture.debugElement.queryAll(By.css('button')).map((debugEl) => debugEl.nativeElement);
             buttonToggleInstances = buttonToggleDebugElements.map((debugEl) => debugEl.componentInstance);
         });
@@ -591,7 +589,7 @@ describe('KbqButtonToggle without forms', () => {
             testComponent.isGroupDisabled = true;
             fixture.detectChanges();
 
-            buttonToggleNativeElements[0].click();
+            innerButtons[0].click();
             expect(buttonToggleInstances[0].checked).toBe(false);
         });
 

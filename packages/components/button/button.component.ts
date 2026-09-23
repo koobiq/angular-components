@@ -2,6 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterContentInit,
+    afterNextRender,
     AfterViewChecked,
     AfterViewInit,
     booleanAttribute,
@@ -14,6 +15,7 @@ import {
     ElementRef,
     forwardRef,
     inject,
+    Injector,
     Input,
     isDevMode,
     numberAttribute,
@@ -130,6 +132,7 @@ const maxIconsForIconButton = 2;
 })
 export class KbqButtonCssStyler implements AfterContentInit {
     private renderer = inject(Renderer2);
+    private readonly injector = inject(Injector);
 
     readonly icons = contentChildren<KbqIcon>(forwardRef(() => KbqIcon));
 
@@ -240,7 +243,9 @@ export class KbqButtonCssStyler implements AfterContentInit {
         this.leftIcon = leftIcon;
         this.rightIcon = rightIcon;
 
-        this.warnIfIconButtonHasNoAccessibleName();
+        // A label bound inside an @if block is still an empty text node here, so the button would look
+        // icon-only; judge the name once the content has rendered.
+        afterNextRender(() => this.warnIfIconButtonHasNoAccessibleName(), { injector: this.injector });
     }
 
     private updateIconClass(

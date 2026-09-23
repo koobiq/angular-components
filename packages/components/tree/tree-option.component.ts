@@ -9,6 +9,7 @@ import {
     Component,
     ContentChild,
     contentChild,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     inject,
@@ -141,6 +142,7 @@ let uniqueIdCounter: number = 0;
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
+    private readonly destroyRef = inject(DestroyRef);
     // Intersected with the rendering base because `KbqTreeNode` resolves its level and expansion state
     // through it; the option itself only ever touches the `KbqTreeOptionParent` half.
     override tree: KbqTreeOptionParent & KbqTreeBase<any>;
@@ -560,6 +562,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     emitSelectionChangeEvent(): void {
+        // The tree can still hold an option whose node was re-rendered away until it rebuilds its list.
+        if (this.destroyRef.destroyed) return;
+
         const event = new KbqTreeOptionChange(this);
 
         this.selectionChange.emit(event);

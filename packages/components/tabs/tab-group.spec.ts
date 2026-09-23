@@ -755,7 +755,7 @@ class NestedTabs {}
     selector: 'template-tabs',
     imports: [KbqTabsModule],
     template: `
-        <kbq-tab-group>
+        <kbq-tab-group [useStateSaving]="false">
             <kbq-tab label="One">Eager</kbq-tab>
             <kbq-tab label="Two">
                 <ng-template kbqTabContent>

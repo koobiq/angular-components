@@ -4,7 +4,8 @@ import {
     e2eEnableDarkTheme,
     e2eForceAutofill,
     e2eResolveCssValue,
-    e2eRunningAnimations
+    e2eRunningAnimations,
+    e2eWaitForSettledContent
 } from '../../e2e/utils';
 
 /**
@@ -784,25 +785,8 @@ test.describe('KbqFormFieldModule', () => {
              * these shots exist to catch is one pixel wide — a tolerance loose enough for the noise
              * would also be loose enough to hide it.
              */
-            const expectSettledAnimations = async (matrix: Locator) =>
-                expect
-                    .poll(() =>
-                        matrix.evaluate(
-                            (root: HTMLElement, parked) =>
-                                root
-                                    .getAnimations({ subtree: true })
-                                    .filter((animation) => animation.playState === 'running')
-                                    .filter((animation) => {
-                                        // An animation without an effect animates nothing, so it can
-                                        // never be the thing a shot is waiting on.
-                                        const { duration } = animation.effect?.getComputedTiming() ?? {};
-
-                                        return typeof duration === 'number' && duration < parked;
-                                    }).length,
-                            AUTOFILL_SUPPRESSION_DURATION
-                        )
-                    )
-                    .toBe(0);
+            const expectSettledAnimations = (matrix: Locator) =>
+                e2eWaitForSettledContent(matrix, AUTOFILL_SUPPRESSION_DURATION);
 
             /**
              * Fails loudly if the suppression has already been fast-forwarded.

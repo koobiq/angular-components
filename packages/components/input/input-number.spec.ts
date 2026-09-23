@@ -760,14 +760,14 @@ describe('KbqNumberInput', () => {
 
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const icons = stepper.queryAll(By.css('.kbq-icon'));
-            const iconDown = icons[0];
+            const iconDown = icons[1];
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
 
             fixture.detectChanges();
             flush();
 
-            expect(fixture.componentInstance.value).toBe(1);
+            expect(fixture.componentInstance.value).toBe(-1);
         }));
 
         it('should step up when max is set', fakeAsync(() => {

@@ -760,7 +760,8 @@ describe(KbqTagList.name, () => {
             });
         });
 
-        // TODO Expected pixels
+        // jsdom performs no layout, so getBoundingClientRect reports 0 for every box. Row height is
+        // covered by the screenshot baselines.
         xit('height should be 32px', () => {
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
@@ -776,6 +777,8 @@ describe(KbqTagList.name, () => {
             subscription.unsubscribe();
         });
 
+        // The form field renders <label [attr.for]="control().id"> and no aria-owns, so the label points at
+        // the kbq-tag-list host rather than at the inner input. Wiring it to the input is a form-field change.
         xit('should point the label id to the tag input', () => {
             const label = fixture.nativeElement.querySelector('label');
             const input = fixture.nativeElement.querySelector('input');
@@ -800,7 +803,8 @@ describe(KbqTagList.name, () => {
                 tags = fixture.componentInstance.tags;
             });
 
-            // todo need rethink this selection logic
+            // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
+            // tags, so neither direction of this binding is implemented.
             xit('should set the view value from the form', () => {
                 const tagList = fixture.componentInstance.tagList;
                 const array = tags.toArray();
@@ -813,7 +817,8 @@ describe(KbqTagList.name, () => {
                 expect(array[1].selected()).toBeTruthy();
             });
 
-            // todo need rethink this selection logic
+            // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
+            // tags, so neither direction of this binding is implemented.
             xit('should update the form value when the view changes', () => {
                 expect(fixture.componentInstance.control.value).toEqual(null);
 
@@ -863,7 +868,8 @@ describe(KbqTagList.name, () => {
                 expect(fixture.componentInstance.control.touched).toBe(false);
             });
 
-            // todo need rethink this selection logic
+            // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
+            // tags, so neither direction of this binding is implemented.
             xit("should set the control to dirty when the tag list's value changes in the DOM", () => {
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
 
@@ -874,24 +880,12 @@ describe(KbqTagList.name, () => {
             });
 
             // todo need rethink this selection logic
-            xit('should not set the control to dirty when the value changes programmatically', () => {
+            it('should not set the control to dirty when the value changes programmatically', () => {
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
 
                 fixture.componentInstance.control.setValue('pizza-1');
 
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
-            });
-
-            xit('should set an asterisk after the placeholder if the control is required', () => {
-                let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
-
-                expect(requiredMarker).toBeNull();
-
-                fixture.componentInstance.isRequired = true;
-                fixture.detectChanges();
-
-                requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
-                expect(requiredMarker).not.toBeNull();
             });
 
             it('should not focus the active tag when the value is set programmatically', () => {
@@ -1017,18 +1011,6 @@ describe(KbqTagList.name, () => {
             expect(fixture.componentInstance.control.dirty).toEqual(true);
         }));
 
-        xit('should set an asterisk after the placeholder if the control is required', () => {
-            let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
-
-            expect(requiredMarker).toBeNull();
-
-            fixture.componentInstance.isRequired = true;
-            fixture.detectChanges();
-
-            requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
-            expect(requiredMarker).not.toBeNull();
-        });
-
         it('should keep focus on the input after adding the first chip', fakeAsync(() => {
             const nativeInput = fixture.nativeElement.querySelector('input');
 
@@ -1092,6 +1074,9 @@ describe(KbqTagList.name, () => {
         });
     });
 
+    // Dead twice over: the fixture's only kbq-error is commented out below, and KbqTagList renders neither
+    // aria-invalid nor aria-describedby — unlike input, select, textarea and tree-select, it has no role to
+    // carry them either. Reviving this needs the a11y wiring first.
     xdescribe('error messages', () => {
         let errorTestComponent: TagListWithFormErrorMessages;
         let containerEl: HTMLElement;
