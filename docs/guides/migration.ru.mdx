@@ -68,7 +68,7 @@ npm install @koobiq/icons@9.1.0
 Чтобы обновить названия иконок в шаблонах, используйте инструмент для обновления (схематик):
 
 ```bash
-ng g @koobiq/angular-components:new-icons-pack --project <your project>
+ng g @koobiq/angular-components:new-icons-pack --project "<your project>"
 ```
 
 ### Обновление токенов (18.6.x)
@@ -80,13 +80,13 @@ ng g @koobiq/angular-components:new-icons-pack --project <your project>
 Скрипт заменит названия классов и CSS-переменных на новые и подсветит места, где нужно удалить (заменить) устаревшие цвета:
 
 ```bash
-ng g @koobiq/angular-components:css-selectors --fix=true --project <your project>
+ng g @koobiq/angular-components:css-selectors --fix=true --project "<your project>"
 ```
 
 Для ручного контроля добавьте `--fix=false`. Скрипт подсветит места, где нужно удалить (заменить) цвета и названия типографики:
 
 ```bash
-ng g @koobiq/angular-components:css-selectors --fix=false --project <your project>
+ng g @koobiq/angular-components:css-selectors --fix=false --project "<your project>"
 ```
 
 ### Обновление атрибутов (18.22.0)
@@ -101,8 +101,8 @@ ng g @koobiq/angular-components:css-selectors --fix=false --project <your projec
 Схематик автоматически заменит атрибуты:
 
 ```bash
-ng g @koobiq/angular-components:loader-overlay-size-attr --project <your project>
-ng g @koobiq/angular-components:empty-state-size-attr --project <your project>
+ng g @koobiq/angular-components:loader-overlay-size-attr --project "<your project>"
+ng g @koobiq/angular-components:empty-state-size-attr --project "<your project>"
 ```
 
 ### Обновление до Angular 20
@@ -124,7 +124,7 @@ ng update @koobiq/components@20
 Или вручную. С предпросмотром без записи — `--fix=false`:
 
 ```bash
-ng g @koobiq/components:v20-upgrade --project <your project>
+ng g @koobiq/components:v20-upgrade --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -201,7 +201,7 @@ ng update @koobiq/components@20
 Или вручную — например, если вы уже обновились на 20.2.0. С предпросмотром без записи — `--fix=false`:
 
 ```bash
-ng g @koobiq/components:filter-bar-signals --project <your project>
+ng g @koobiq/components:filter-bar-signals --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -270,7 +270,7 @@ ng update @koobiq/components@20
 Или вручную:
 
 ```bash
-ng g @koobiq/components:autocomplete-panel-width-auto --project <your project>
+ng g @koobiq/components:autocomplete-panel-width-auto --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -329,7 +329,7 @@ const w = this.select.panelWidth();
 Схематик `actions-panel-overlay-container` зарегистрирован на 21.0.0, поэтому `ng update` на эту версию запустит его сам:
 
 ```bash
-ng g @koobiq/components:actions-panel-overlay-container --project <your project>
+ng g @koobiq/components:actions-panel-overlay-container --project "<your project>"
 ```
 
 Он только сообщает о местах вызова: переписывать нечего — опция та же, изменился её смысл.
@@ -351,7 +351,7 @@ ng g @koobiq/components:actions-panel-overlay-container --project <your project>
 Схематик `splitter-deprecated-path` зарегистрирован на 21.0.0, поэтому `ng update` на эту версию запустит его сам:
 
 ```bash
-ng g @koobiq/components:splitter-deprecated-path --project <your project>
+ng g @koobiq/components:splitter-deprecated-path --project "<your project>"
 ```
 
 Он переписывает спецификатор `@koobiq/components/splitter` в `@koobiq/components/splitter/deprecated` во всех файлах `.ts`; повторный запуск ничего не портит. На новый splitter он не переводит — это отдельная ручная работа: области становятся `kbq-splitter-panel`, `direction` — `orientation`, а размеры переезжают с `min-width` и CSS `flex` на инпуты `size` и `minSize`.
@@ -377,7 +377,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:dropdown-demote-overlay --project <your project>
+ng g @koobiq/components:dropdown-demote-overlay --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -450,7 +450,7 @@ ng update @koobiq/components@21
 Или вручную — например, если вы уже обновились до 21.0.0. Посмотреть без записи — `--fix=false`:
 
 ```bash
-ng g @koobiq/components:app-switcher-signals --project <your project>
+ng g @koobiq/components:app-switcher-signals --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -526,7 +526,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:button-state-and-styles --project <your project>
+ng g @koobiq/components:button-state-and-styles --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -601,7 +601,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:button-supported-colors --project <your project>
+ng g @koobiq/components:button-supported-colors --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -677,7 +677,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:button-toggle-signals-and-aria --project <your project>
+ng g @koobiq/components:button-toggle-signals-and-aria --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -782,7 +782,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:form-field-signals --project <your project>
+ng g @koobiq/components:form-field-signals --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -891,13 +891,13 @@ ng update @koobiq/components@21
 Или вручную — например, если вы уже обновились до 21.0.0:
 
 ```bash
-ng g @koobiq/components:tag-slots --project <your project>
+ng g @koobiq/components:tag-slots --project "<your project>"
 ```
 
 Посмотреть изменения без записи можно с помощью `--fix=false`:
 
 ```bash
-ng g @koobiq/components:tag-slots --project <your project> --fix=false
+ng g @koobiq/components:tag-slots --project "<your project>" --fix=false
 ```
 
 #### Что исправляется автоматически
@@ -953,7 +953,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:scrollbar-deprecated-path --project <your project>
+ng g @koobiq/components:scrollbar-deprecated-path --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -1068,7 +1068,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:locale-configuration-providers --project <your project>
+ng g @koobiq/components:locale-configuration-providers --project "<your project>"
 ```
 
 Запустите его, даже если обновляетесь вручную: оставшийся `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }`
@@ -1110,7 +1110,7 @@ ng update @koobiq/components@21
 Либо вручную:
 
 ```bash
-ng g @koobiq/components:list-tree-multiple-input --project <your project>
+ng g @koobiq/components:list-tree-multiple-input --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -1161,7 +1161,7 @@ ng update @koobiq/components@21
 Большинство из них не переписывают код, а сообщают о местах вызова: чем заменить удалённый член или сигнальный вход — привязкой в шаблоне, другим членом или ничем — это решение, которое схематик принять не может. В каждом подразделе ниже назван закрывающий его схематик, если он есть, и указано, что именно он меняет за вас, если меняет. Чтобы получить отчёт ещё раз, запустите нужный отдельно:
 
 ```bash
-ng g @koobiq/components:<schematic-name> --project <your project>
+ng g "@koobiq/components:<schematic-name>" --project "<your project>"
 ```
 
 #### Alert
@@ -1926,7 +1926,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:file-upload-deprecated-outputs --project <your project>
+ng g @koobiq/components:file-upload-deprecated-outputs --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -2249,13 +2249,13 @@ ng update @koobiq/components@21
 Или вручную — например, если вы уже обновились до 21.0.0:
 
 ```bash
-ng g @koobiq/components:tag-list-cleaner --project <your project>
+ng g @koobiq/components:tag-list-cleaner --project "<your project>"
 ```
 
 Чтобы посмотреть изменения, не записывая их, используйте `--fix=false`:
 
 ```bash
-ng g @koobiq/components:tag-list-cleaner --project <your project> --fix=false
+ng g @koobiq/components:tag-list-cleaner --project "<your project>" --fix=false
 ```
 
 #### Что исправляется автоматически

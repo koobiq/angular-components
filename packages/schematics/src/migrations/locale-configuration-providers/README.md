@@ -102,13 +102,13 @@ so the rule applies that default itself rather than relying on the schema.
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:locale-configuration-providers --project <your project>
+ng g @koobiq/components:locale-configuration-providers --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:locale-configuration-providers --project <your project>
+nx g @koobiq/components:locale-configuration-providers --project "<your project>"
 ```
 
 ### Run locally

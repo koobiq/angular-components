@@ -72,13 +72,13 @@ every file that would change is logged instead of written, followed by the same 
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:splitter-deprecated-path --project <your project>
+ng g @koobiq/components:splitter-deprecated-path --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:splitter-deprecated-path --project <your project>
+nx g @koobiq/components:splitter-deprecated-path --project "<your project>"
 ```
 
 ### Run locally

@@ -98,5 +98,5 @@ ng update @koobiq/components@21
 Or manually:
 
 ```bash
-ng g @koobiq/components:toast-stack-and-defaults --project <your project>
+ng g @koobiq/components:toast-stack-and-defaults --project "<your project>"
 ```

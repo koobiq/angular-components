@@ -70,17 +70,17 @@ The schema definition can be found in [`schema.ts`](schema.ts).
 #### Angular CLI
 
 ```shell
-ng g @koobiq/components:new-icons-pack --fix=true --project <your project>
+ng g @koobiq/components:new-icons-pack --fix=true --project "<your project>"
 ```
 
 #### Angular CLI with custom data
 
 ```shell
 ng g @koobiq/components:new-icons-pack \
-  --custom-data-path migration.json \
-  --custom-icon-replacement-path my-replacement.json \
-  --fix=true \
-  --project <your-project>
+    --custom-data-path migration.json \
+    --custom-icon-replacement-path my-replacement.json \
+    --fix=true \
+    --project "<your-project>"
 ```
 
 `migration.json` is the shipped icon-name mapping and can be used as-is. `my-replacement.json` is a file you
@@ -90,15 +90,15 @@ write yourself, in the new bare scope-word-pair shape described above — **not*
 #### Nx
 
 ```shell
-nx g @koobiq/components:new-icons-pack --fix=true --project <your project>
+nx g @koobiq/components:new-icons-pack --fix=true --project "<your project>"
 ```
 
 #### Nx with custom data
 
 ```shell
 nx g @koobiq/components:new-icons-pack \
---custom-data-path migration.json \
---custom-icon-replacement-path my-replacement.json \
---fix=true \
---project <your-project>
+    --custom-data-path migration.json \
+    --custom-icon-replacement-path my-replacement.json \
+    --fix=true \
+    --project "<your-project>"
 ```
