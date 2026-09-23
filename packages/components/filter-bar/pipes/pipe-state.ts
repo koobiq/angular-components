@@ -35,15 +35,18 @@ export class KbqPipeState<T> implements OnInit {
 
     ngOnInit(): void {
         this.filterBar.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
+
+        // The trigger and the remove button are two buttons that have to carry one style. A pipe changes
+        // its emptiness by writing `data.value` in place, and `stateChanges` is the bus it fires on such a write.
+        this.pipe.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
     }
 
     private updateState = () => {
-        this.button.kbqStyle = KbqButtonStyles.Outline;
         this.button.color = KbqComponentColors.ContrastFade;
+        this.button.kbqStyle = KbqButtonStyles.Outline;
 
         if (!this.pipe.isEmpty) {
             this.button.kbqStyle = KbqButtonStyles.Filled;
-            this.button.color = KbqComponentColors.ContrastFade;
         }
     };
 }
