@@ -22,7 +22,8 @@ export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfigu
 
 // @public
 export class KbqBreadcrumbButton implements OnInit {
-    constructor();
+    // (undocumented)
+    protected readonly element: HTMLElement;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)

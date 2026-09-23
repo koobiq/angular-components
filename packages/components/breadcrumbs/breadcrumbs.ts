@@ -13,7 +13,6 @@ import {
     input,
     OnInit,
     Provider,
-    Renderer2,
     TemplateRef,
     viewChild,
     viewChildren,
@@ -81,7 +80,10 @@ export class KbqBreadcrumbsSeparator {
  */
 @Directive({
     selector: '[kbq-button][kbqBreadcrumb]',
-    host: { class: 'kbq-breadcrumb-item' },
+    host: {
+        class: 'kbq-breadcrumb-item',
+        '[attr.type]': 'element.nodeName === "BUTTON" ? "button" : null'
+    },
     hostDirectives: [
         {
             directive: RdxRovingFocusItemDirective,
@@ -91,17 +93,7 @@ export class KbqBreadcrumbsSeparator {
 })
 export class KbqBreadcrumbButton implements OnInit {
     private readonly button = inject(KbqButton, { optional: true, self: true });
-
-    constructor() {
-        const element = kbqInjectNativeElement();
-        const renderer = inject(Renderer2);
-
-        // A breadcrumb navigates, so it must never submit a surrounding form — but a `<button>`
-        // host defaults to `type="submit"`. Anchors take no `type`.
-        if (element.nodeName === 'BUTTON') {
-            renderer.setAttribute(element, 'type', 'button');
-        }
-    }
+    protected readonly element = kbqInjectNativeElement();
 
     ngOnInit() {
         // Applied through the seams that yield to the consumer: writing `color`/`kbqStyle` directly marks
