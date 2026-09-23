@@ -85,3 +85,23 @@ test.describe('KbqBreadcrumbsModule', () => {
         });
     });
 });
+
+test.describe('KbqBreadcrumbs inside a form', () => {
+    // A `<button>` defaults to `type="submit"`, which makes it a candidate for the form's default
+    // button — the one the browser activates on Enter in a field. Breadcrumbs navigate, so none of
+    // them may be that button. jsdom does not implement implicit submission, so this only
+    // reproduces in a real browser.
+    test('should not activate a breadcrumb on Enter in a field', async ({ page }) => {
+        await page.goto('/E2eBreadcrumbsInForm');
+
+        const form = page.getByTestId('e2eBreadcrumbsForm');
+
+        await expect(form.locator('.kbq-breadcrumb__expand')).toBeVisible();
+
+        await page.getByTestId('e2eFirstField').press('Enter');
+
+        await expect(page.locator('.kbq-dropdown__panel')).toBeHidden();
+        await expect(page.getByTestId('e2eSubmitCount')).toHaveText('0');
+        await expect(page).toHaveURL(/\/E2eBreadcrumbsInForm$/);
+    });
+});

@@ -24,7 +24,7 @@ import {
 import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, KbqDefaultSizes, kbqInjectNativeElement, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -72,10 +72,14 @@ export class KbqBreadcrumbsSeparator {
  * Directive to style and configure buttons used as breadcrumb items.
  * - Inherits focus management behavior from `RdxRovingFocusItemDirective`.
  * - Optionally injects `KbqButton` to customize its style for breadcrumb usage.
+ * - Sets `type="button"` on a `<button>` host, so a breadcrumb never submits a surrounding form.
  */
 @Directive({
     selector: '[kbq-button][kbqBreadcrumb]',
-    host: { class: 'kbq-breadcrumb-item' },
+    host: {
+        class: 'kbq-breadcrumb-item',
+        '[attr.type]': 'element.nodeName === "BUTTON" ? "button" : null'
+    },
     hostDirectives: [
         {
             directive: RdxRovingFocusItemDirective,
@@ -85,6 +89,7 @@ export class KbqBreadcrumbsSeparator {
 })
 export class KbqBreadcrumbButton implements OnInit {
     private readonly button = inject(KbqButton, { optional: true, self: true });
+    protected readonly element = kbqInjectNativeElement();
 
     ngOnInit() {
         if (this.button) {

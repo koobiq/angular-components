@@ -12,7 +12,11 @@ import {
     E2eAutocompleteStates
 } from '../components/autocomplete/e2e';
 import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
-import { E2eBreadcrumbsOverflowMax, E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
+import {
+    E2eBreadcrumbsInForm,
+    E2eBreadcrumbsOverflowMax,
+    E2eBreadcrumbsStateAndStyle
+} from '../components/breadcrumbs/e2e';
 import { E2eButtonToggleStates, E2eButtonToggleStatesStretched } from '../components/button-toggle/e2e';
 import { E2eButtonGroup, E2eButtonStateAndStyle } from '../components/button/e2e';
 import { E2eCheckboxStateAndStyle, E2eCheckboxWithTextAndCaption } from '../components/checkbox/e2e';
@@ -133,6 +137,7 @@ const components = [
     E2eToggleWithTextAndCaption,
     E2eBreadcrumbsStateAndStyle,
     E2eBreadcrumbsOverflowMax,
+    E2eBreadcrumbsInForm,
     E2eEmptyStateStateAndStyle,
     E2eCodeBlockStates,
     E2eDlStates,
