@@ -9,6 +9,7 @@ import {
     DIVIDER_TYPE_NAME,
     READ_MESSAGE,
     SIGNAL_INPUTS,
+    styleWarnPatterns,
     SUMMARY,
     templateWarnPatterns,
     WarnPattern,
@@ -19,6 +20,7 @@ import { Schema } from './schema';
 const LABEL = '[divider-signals-and-aria]';
 const TS_EXT = '.ts';
 const HTML_EXT = '.html';
+const STYLE_EXTS = ['.scss', '.css'];
 
 /** A declaration reachable as `text` within `[start, end]` of the source. */
 interface Receiver {
@@ -236,8 +238,9 @@ function reportPatterns(context: SchematicContext, filePath: string, content: st
 
 /**
  * Reports the `KbqDivider` inputs that became signals, the hand-rolled separator attributes the component
- * now renders itself. Never writes: a read becomes a call, a write becomes a binding, and whether a
- * duplicate attribute should be deleted or replaced by `decorative` is a decision.
+ * now renders itself, and the stylesheet workarounds the sizing change makes unnecessary. Never writes: a
+ * read becomes a call, a write becomes a binding, and whether a duplicate attribute should be deleted or
+ * replaced by `decorative` is a decision.
  */
 export default function dividerSignalsAndAria(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
@@ -254,8 +257,9 @@ export default function dividerSignalsAndAria(options: Schema): Rule {
 
             const isTs = filePath.endsWith(TS_EXT);
             const isHtml = filePath.endsWith(HTML_EXT);
+            const isStyle = STYLE_EXTS.some((extension) => filePath.endsWith(extension));
 
-            if (!isTs && !isHtml) return;
+            if (!isTs && !isHtml && !isStyle) return;
 
             const content = entry?.content.toString();
 
@@ -264,9 +268,9 @@ export default function dividerSignalsAndAria(options: Schema): Rule {
             consumers++;
 
             // An inline template lives in the `.ts` file, so the element patterns apply to both.
-            reported += reportPatterns(context, filePath, content, templateWarnPatterns);
-
+            if (isTs || isHtml) reported += reportPatterns(context, filePath, content, templateWarnPatterns);
             if (isTs) reported += reportMemberAccess(context, filePath, content);
+            if (isStyle) reported += reportPatterns(context, filePath, content, styleWarnPatterns);
         });
 
         // Nothing here renders a divider, so the summary would only be noise.

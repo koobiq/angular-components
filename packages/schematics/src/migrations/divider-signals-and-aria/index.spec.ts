@@ -29,7 +29,10 @@ describe(SCHEMATIC_NAME, () => {
         // (app.ts vs app.component.ts), so discover them from the tree.
         const root = `/${project.root}/src/app`;
 
-        return { ts: appTree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts` };
+        return {
+            ts: appTree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`,
+            style: `${root}/app.scss`
+        };
     }
 
     function collectLogs(): string[] {
@@ -41,12 +44,17 @@ describe(SCHEMATIC_NAME, () => {
     }
 
     /** Writes `source` as the project's component file, runs the schematic, returns everything logged. */
-    async function runWith(source: string): Promise<string> {
+    async function runWith(source: string, style?: string): Promise<string> {
         const [first] = projects.keys();
-        const { ts } = paths(projects.get(first)!);
+        const { ts, style: stylePath } = paths(projects.get(first)!);
         const messages = collectLogs();
 
         appTree.overwrite(ts, source);
+
+        if (style !== undefined) {
+            if (appTree.exists(stylePath)) appTree.overwrite(stylePath, style);
+            else appTree.create(stylePath, style);
+        }
 
         await runner.runSchematic(SCHEMATIC_NAME, { project: first } satisfies Schema, appTree);
 
@@ -136,8 +144,40 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
-    it('reports the separator semantics once per project', async () => {
-        expect(await runWith('const template = `<kbq-divider [vertical]="true" />`;\n')).toContain('role="separator"');
+    describe('stylesheets', () => {
+        it('reports a height override on a divider selector', async () => {
+            const log = await runWith(
+                'const template = `<kbq-divider [vertical]="true" />`;\n',
+                '.toolbar .kbq-divider { height: 100%; }\n'
+            );
+
+            expect(log).toContain('--kbq-divider-size-vertical-height');
+        });
+
+        it('reports an !important margin that no longer needs to be one', async () => {
+            const log = await runWith(
+                'const template = `<kbq-divider />`;\n',
+                '.toolbar .kbq-divider { margin-inline: 0 !important; }\n'
+            );
+
+            expect(log).toContain('no longer needed');
+        });
+
+        it('leaves a stylesheet that only themes the divider alone', async () => {
+            const log = await runWith(
+                'const template = `<kbq-divider />`;\n',
+                '.toolbar .kbq-divider { background: red; }\n'
+            );
+
+            expect(log).not.toContain('no longer needed');
+            expect(log).not.toContain('the override can go');
+        });
+    });
+
+    it('reports the vertical sizing change once per project', async () => {
+        expect(await runWith('const template = `<kbq-divider [vertical]="true" />`;\n')).toContain(
+            '--kbq-divider-size-vertical-height'
+        );
     });
 
     it('says nothing at all when the project does not use the divider', async () => {

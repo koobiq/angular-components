@@ -64,7 +64,7 @@
     align-items: center;
 
     & .kbq-divider.kbq-divider_vertical {
-        height: var(--kbq-size-m);
+        --kbq-divider-size-vertical-height: var(--kbq-size-m);
     }
 }
 

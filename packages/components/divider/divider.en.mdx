@@ -16,6 +16,20 @@ Add the `vertical` attribute in order to set whether or not the divider is verti
 
 <Example id="divider-vertical" />
 
+A vertical divider spans the flex or grid row it sits in, so it needs no height of its own inside a toolbar.
+For a shorter divider, or one placed outside such a row, give it a height through the
+`--kbq-divider-size-vertical-height` token. The token has no default on purpose: a divider that is not
+given a length is the one sized by its row.
+
+Setting it also hands the alignment back to the row, because a divider with a height of its own is no
+longer something to stretch. Where it sits is then the row's decision, like any other item of a fixed size.
+
+```css
+.toolbar .kbq-divider {
+    --kbq-divider-size-vertical-height: var(--kbq-size-m);
+}
+```
+
 ### Spacing
 
 Both orientations space themselves from the content around them by default. Add `[paddings]="false"` for a divider that

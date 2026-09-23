@@ -20,7 +20,9 @@
 
     .kbq-actions-panel-container__vertical-divider {
         background-color: var(--kbq-actions-panel-vertical-divider-background-color);
-        height: var(--kbq-actions-panel-vertical-divider-height) !important;
+
+        --kbq-divider-size-vertical-height: var(--kbq-actions-panel-vertical-divider-height);
+
         margin: var(--kbq-actions-panel-vertical-divider-margin);
     }
 

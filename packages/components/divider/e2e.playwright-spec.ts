@@ -15,5 +15,15 @@ test.describe('KbqDivider', () => {
             await e2eEnableDarkTheme(page);
             await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
+
+        test('vertical divider spans a centered flex row', async ({ page }) => {
+            await page.goto('/E2eDividerStateAndStyle');
+
+            const toolbar = getComponent(page).getByTestId('e2eDividerToolbar');
+            const toolbarBox = (await toolbar.boundingBox())!;
+            const dividerBox = (await toolbar.locator('kbq-divider').boundingBox())!;
+
+            expect(dividerBox.height).toBeGreaterThan(toolbarBox.height / 2);
+        });
     });
 });
