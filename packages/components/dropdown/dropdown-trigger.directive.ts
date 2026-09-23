@@ -644,7 +644,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         return this.overlayRef;
     }
 
-    /** Whether the panel should be at least as wide as its trigger. */
+    /** Whether the panel is anchored to a rectangle in viewport coordinates rather than to an element. */
     private get hasPointOrigin(): boolean {
         const origin = this.origin();
 

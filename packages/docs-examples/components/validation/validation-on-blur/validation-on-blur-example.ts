@@ -86,6 +86,7 @@ class ExampleResetTouchedOnFirstInput {
                 [formControl]="ipAddressControl"
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
+                [kbqRelativeToCaret]="true"
                 [kbqTrigger]="'manual'"
                 [kbqTooltip]="'Numbers and dots only'"
                 [kbqTooltipColor]="colors.Error"
