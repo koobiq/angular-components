@@ -61,6 +61,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridInfiniteSelectionExample);
         case 'ag-grid-loading-overlay':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridLoadingOverlayExample);
+        case 'ag-grid-long-cell-content':
+            return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridLongCellContentExample);
         case 'ag-grid-overview':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridOverviewExample);
         case 'ag-grid-quick-filter-state':

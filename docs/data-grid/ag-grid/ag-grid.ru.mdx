@@ -74,6 +74,12 @@ import { AgGridModule } from 'ag-grid-angular';
 
 <Example id="ag-grid-and-content-panel" />
 
+### Длинные списки в ячейках
+
+Длинный список можно уместить в одну строку ячейки. [Clamped list](/ru/components/clamped-list) раскрывает скрытые элементы по клику, а [Overflow items](/ru/components/overflow-items) скрывает то, что не поместилось по ширине, и это можно показать в [Popover](/ru/components/popover). Чтобы высота строки менялась вместе с содержимым, включите для колонки `autoHeight`.
+
+<Example id="ag-grid-long-cell-content" />
+
 ### Копирование выделенных строк
 
 Директива `kbqAgGridCopyByCtrlC` позволяет копировать выделенные строки в буфер обмена при помощи комбинации клавиш `Ctrl+C`.
