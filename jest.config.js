@@ -17,7 +17,7 @@ const config = {
     moduleNameMapper: {
         ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' })
     },
-    modulePathIgnorePatterns: ['dist', 'node_modules'],
+    modulePathIgnorePatterns: ['/dist/', '/node_modules/'],
     transformIgnorePatterns: ['node_modules/(?!(marked|.*\\.mjs$))'],
     testMatch: ['<rootDir>/**/*.spec.ts'],
     testTimeout: 2000

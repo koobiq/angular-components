@@ -8,6 +8,7 @@ import {
     Component,
     ContentChild,
     contentChild,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     inject,
@@ -101,6 +102,7 @@ let uniqueIdCounter: number = 0;
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private ngZone = inject(NgZone);
+    private readonly destroyRef = inject(DestroyRef);
     tree: any;
 
     readonly onFocus = new Subject<KbqTreeOptionEvent>();
@@ -425,6 +427,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     emitSelectionChangeEvent(): void {
+        // The tree can still hold an option whose node was re-rendered away until it rebuilds its list.
+        if (this.destroyRef.destroyed) return;
+
         this.onSelectionChange.emit(new KbqTreeOptionChange(this));
     }
 

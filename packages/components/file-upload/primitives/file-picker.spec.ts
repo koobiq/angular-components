@@ -467,7 +467,7 @@ describe('KbqFileList', () => {
         it('should return removed items', () => {
             const removed = directive.remove(file2);
 
-            expect(removed).toEqual([file1, file3]);
+            expect(removed).toEqual([file2]);
         });
 
         it('should not modify list if item not found', () => {

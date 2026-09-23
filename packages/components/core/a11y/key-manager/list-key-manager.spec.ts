@@ -85,11 +85,11 @@ describe('Key managers', () => {
             expect(keyManager.activeItem!.getLabel()).toBe('one');
         });
 
-        xit('should start off the activeItem as null', () => {
+        it('should start off the activeItem as null', () => {
             expect(new ListKeyManager([] as any).activeItem).toBeNull();
         });
 
-        xit('should set the activeItem to null if an invalid index is passed in', () => {
+        it('should set the activeItem to null if an invalid index is passed in', () => {
             keyManager.setActiveItem(1337);
             expect(keyManager.activeItem).toBeNull();
         });
@@ -128,7 +128,9 @@ describe('Key managers', () => {
                 subscription.unsubscribe();
             });
 
-            xit('should emit if the active item changed, but not the active index', () => {
+            // Unlike the CDK: autocomplete and tree-select select the active item when `change` fires on a
+            // closed panel, so a re-rendered list must not look like navigation.
+            it('should not emit if the active item changed, but not the active index', () => {
                 const fn = jest.fn();
                 const subscription = keyManager.change.subscribe(fn);
 
@@ -136,7 +138,8 @@ describe('Key managers', () => {
                 itemList.reset([new FakeFocusable('zero'), ...itemList.toArray()]);
                 keyManager.setActiveItem(0);
 
-                expect(fn).toHaveBeenCalledTimes(1);
+                expect(keyManager.activeItem!.getLabel()).toBe('zero');
+                expect(fn).not.toHaveBeenCalled();
                 subscription.unsubscribe();
             });
 
@@ -211,7 +214,7 @@ describe('Key managers', () => {
                     expect(keyManager.activeItemIndex).toBe(0);
 
                     keyManager.onKeydown(fakeKeyEvents.end);
-                    keyManager.setActiveItem(itemList.toArray()[2]);
+
                     expect(keyManager.activeItemIndex).toBe(itemList.length - 1);
                 });
             });
@@ -371,6 +374,10 @@ describe('Key managers', () => {
                     subscription.unsubscribe();
                 };
 
+                // onKeydown computes isModifierAllowed but consults it only for Home and End, so a
+                // modified arrow still moves the active item. Enabling these four needs every caller
+                // of onKeydown to opt back in with withAllowedModifierKeys, or shift-range selection
+                // in list, tree and select stops working.
                 xit('should not do anything for arrow keys if the alt key is held down', () => {
                     runModifierKeyTest('altKey');
                 });
@@ -590,8 +597,6 @@ describe('Key managers', () => {
                 expect(setActiveItemSpyFn).toHaveBeenCalledWith(0);
             });
 
-            // This test should pass if all items are disabled and the down arrow key got pressed.
-            // If the test setup crashes or this test times out, this test can be considered as failed.
             it('should not get into an infinite loop if all items are disabled', () => {
                 keyManager.withWrap();
                 keyManager.setActiveItem(0);
@@ -601,6 +606,9 @@ describe('Key managers', () => {
                 itemList.reset(items);
 
                 keyManager.onKeydown(fakeKeyEvents.downArrow);
+
+                // Wrapping past the end with nothing to land on has to leave the active item where it was.
+                expect(keyManager.activeItemIndex).toBe(0);
             });
 
             it('should be able to disable wrapping', () => {

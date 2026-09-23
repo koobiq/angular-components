@@ -137,19 +137,19 @@ export class KbqFileList<T> {
         this.itemsAdded.emit(items);
     }
 
-    /** Removes the first occurrence of the specified item. Returns removed items and emits event. */
+    /** Removes every occurrence of the specified item. Returns the removed items. */
     remove(item: T): T[] {
         const removed: T[] = [];
 
         this.update((current) =>
             current.filter((currentItem) => {
-                const isRemoved = currentItem !== item;
+                const isRemoved = currentItem === item;
 
                 if (isRemoved) {
                     removed.push(currentItem);
                 }
 
-                return isRemoved;
+                return !isRemoved;
             })
         );
 

@@ -7,6 +7,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'autocomplete-panel-width-auto';
 
 /**
@@ -35,10 +36,20 @@ describe(SCHEMATIC_NAME, () => {
         projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
     });
 
-    it('should run migration for specified project', async () => {
+    it('leaves a project that does not use the component untouched', async () => {
+        const snapshot = (tree: UnitTestTree) =>
+            tree.files.filter((file) => /\.(ts|html|scss)$/.test(file)).map((file) => `${file}:${tree.readText(file)}`);
+        const before = snapshot(appTree as UnitTestTree);
+
         const [firstProjectKey] = projects.keys();
 
-        await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey } satisfies Schema, appTree);
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(snapshot(updatedTree)).toEqual(before);
     });
 
     it('should run migration for external html', async () => {
@@ -118,5 +129,97 @@ describe(SCHEMATIC_NAME, () => {
         expect(updatedTree.read(templatePath)?.toString()).toBe(template);
         expect(warnSpy.mock.calls.some(([msg]) => msg.includes('500px'))).toBe(true);
         expect(warnSpy.mock.calls.some(([msg]) => msg.includes('dynamic value'))).toBe(false);
+    });
+
+    it('migrates an inline template', async () => {
+        const [firstProjectKey] = projects.keys();
+        const { tsPath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        appTree.overwrite(
+            tsPath,
+            "import { Component } from '@angular/core';\n" +
+                '@Component({\n' +
+                "    selector: 'app-root',\n" +
+                '    template: \'<kbq-autocomplete panelWidth="auto"></kbq-autocomplete>\'\n' +
+                '})\n' +
+                'export class App {}\n'
+        );
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.readText(tsPath)).toContain('panelWidth="fit-content"');
+    });
+
+    it('migrates an inline template in a file saved with a byte order mark', async () => {
+        const [firstProjectKey] = projects.keys();
+        const { tsPath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        appTree.overwrite(
+            tsPath,
+            '\uFEFF' +
+                "import { Component } from '@angular/core';\n" +
+                '@Component({\n' +
+                "    selector: 'app-root',\n" +
+                '    template: \'<kbq-autocomplete panelWidth="auto"></kbq-autocomplete>\'\n' +
+                '})\n' +
+                'export class App {}\n'
+        );
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.readText(tsPath)).toContain('panelWidth="fit-content"');
+    });
+
+    it('keeps an inline template in a double-quoted literal valid', async () => {
+        const [firstProjectKey] = projects.keys();
+        const { tsPath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        appTree.overwrite(
+            tsPath,
+            "import { Component } from '@angular/core';\n" +
+                '@Component({\n' +
+                "    selector: 'app-root',\n" +
+                '    template: "<kbq-autocomplete panelWidth=\'auto\'></kbq-autocomplete>"\n' +
+                '})\n' +
+                'export class App {}\n'
+        );
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.readText(tsPath)).toContain(
+            'template: "<kbq-autocomplete panelWidth=\'fit-content\'></kbq-autocomplete>"'
+        );
+    });
+
+    it('migrates the whole workspace under ng update, which passes no options', async () => {
+        const templatePaths = [...projects.values()].map(
+            (project) => getProjectContentPaths(project, appTree).templatePath
+        );
+
+        templatePaths.forEach((templatePath) =>
+            appTree.overwrite(templatePath, '<kbq-autocomplete panelWidth="auto"></kbq-autocomplete>')
+        );
+
+        const updatedTree = await new SchematicTestRunner('migrations', migrationsPath).runSchematic(
+            SCHEMATIC_NAME,
+            {},
+            appTree
+        );
+
+        expect(templatePaths.map((templatePath) => updatedTree.readText(templatePath))).toEqual(
+            templatePaths.map(() => '<kbq-autocomplete panelWidth="fit-content"></kbq-autocomplete>')
+        );
     });
 });
