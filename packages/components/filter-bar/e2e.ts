@@ -4,7 +4,7 @@ import { DateAdapter } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 import { KbqFilterBarModule } from './filter-bar.module';
-import { kbqBuildTree, KbqFilter, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
+import { kbqBuildTree, KbqFilter, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
 
 const DEV_DATA_OBJECT = {
     'No roles': 'value 0',
@@ -1313,4 +1313,120 @@ export class E2eFilterBarOptionCaption {
             }
         ]
     };
+}
+
+/**
+ * A cleanable pipe that starts empty, beside one that starts with a value. Both halves of a pipe — its
+ * trigger and its clear button — have to carry the same style, and that style has to follow a value
+ * chosen after initialization.
+ *
+ * Deliberately without `[filter]`: an unbound filter never moves, and neither does the `data` reference a
+ * pipe mutates in place, so nothing in the signal graph reacts to the pipe gaining or losing its value.
+ * That is the configuration the two halves used to disagree in.
+ */
+@Component({
+    selector: 'e2e-filter-bar-pipe-fill',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div class="e2e-filter-bar-pipe-fill__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates">
+                @for (pipe of pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        /* Tall enough that a click below the bar still lands inside <body>, which is where CDK listens
+           for the outside pointer events that close a select panel. */
+        :host {
+            display: block;
+            padding: 8px;
+
+            min-height: 200px;
+        }
+
+        .e2e-filter-bar-pipe-fill__target {
+            width: 600px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarPipeFill'
+    }
+})
+export class E2eFilterBarPipeFill {
+    private readonly values = [
+        { name: 'Option 1', id: '1', value: 'value1' },
+        { name: 'Option 2', id: '2', value: 'value2' },
+        { name: 'Option 3', id: '3', value: 'value3' }
+    ];
+
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Select',
+            id: 'E2ePipeFillSelect',
+            type: KbqPipeTypes.Select,
+            values: this.values,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiSelect',
+            id: 'E2ePipeFillMultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            values: this.values,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Persistent',
+            id: 'E2ePipeFillPersistent',
+            type: KbqPipeTypes.Select,
+            values: this.values,
+
+            cleanable: true,
+            removable: true,
+            disabled: false
+        }
+    ];
+
+    readonly pipes: KbqPipe[] = [
+        {
+            name: 'Select',
+            id: 'E2ePipeFillSelect',
+            type: KbqPipeTypes.Select,
+            value: this.values[0],
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiSelect',
+            id: 'E2ePipeFillMultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            value: null,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        // Cleanable AND removable: its clear button empties the pipe instead of removing it, and stays
+        // mounted afterwards, so this is the one pipe on the route that shows both halves while empty.
+        {
+            name: 'Persistent',
+            id: 'E2ePipeFillPersistent',
+            type: KbqPipeTypes.Select,
+            value: this.values[1],
+
+            cleanable: true,
+            removable: true,
+            disabled: false
+        }
+    ];
 }
