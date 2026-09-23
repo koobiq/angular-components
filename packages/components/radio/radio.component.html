@@ -1,4 +1,4 @@
-<label #label class="kbq-radio-label" [attr.for]="inputId">
+<label #label class="kbq-radio-label" [attr.for]="inputId()">
     <!--
         The wrapping label would fold everything it contains — the projected hint included — into the
         accessible name, so the name is overridden with an explicit `aria-labelledby` pointing at the
@@ -9,12 +9,12 @@
         type="radio"
         class="kbq-radio-input cdk-visually-hidden"
         [attr.aria-describedby]="hint()?.id() ?? null"
-        [attr.aria-labelledby]="labelId"
+        [attr.aria-labelledby]="labelId()"
         [attr.name]="name"
         [attr.value]="nativeValue"
         [checked]="checked"
         [disabled]="disabled"
-        [id]="inputId"
+        [id]="inputId()"
         [required]="required"
         [tabIndex]="tabIndex"
         (change)="onInputChange($event)"
@@ -27,7 +27,7 @@
         </div>
 
         <div class="kbq-radio__text-container">
-            <span class="kbq-radio__text" [id]="labelId">
+            <span class="kbq-radio__text" [id]="labelId()">
                 <ng-content />
             </span>
 
