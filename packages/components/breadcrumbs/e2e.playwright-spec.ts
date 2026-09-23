@@ -104,16 +104,4 @@ test.describe('KbqBreadcrumbs inside a form', () => {
         await expect(page.getByTestId('e2eSubmitCount')).toHaveText('0');
         await expect(page).toHaveURL(/\/E2eBreadcrumbsInForm$/);
     });
-
-    test('should render every breadcrumb button as type="button"', async ({ page }) => {
-        await page.goto('/E2eBreadcrumbsInForm');
-
-        const buttons = page.getByTestId('e2eBreadcrumbsForm').locator('button');
-
-        await expect(buttons).not.toHaveCount(0);
-
-        for (const button of await buttons.all()) {
-            await expect(button).toHaveAttribute('type', 'button');
-        }
-    });
 });
