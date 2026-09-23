@@ -3,27 +3,47 @@
 .kbq-divider {
     display: block;
     margin: 0;
+}
 
-    &.kbq-divider_horizontal {
-        min-height: var(--kbq-divider-size-horizontal-width);
-        height: var(--kbq-divider-size-horizontal-width);
+// Every default below is emitted at one class of specificity - `:where()` contributes none - so the
+// component proposes a size and an alignment rather than imposing them, and a selector of the
+// consumer's own overrides any of it without `!important`.
 
-        &.kbq-divider_paddings {
-            margin-top: var(--kbq-divider-size-horizontal-margin-vertical);
+.kbq-divider:where(.kbq-divider_horizontal) {
+    min-height: var(--kbq-divider-size-horizontal-width);
+    height: var(--kbq-divider-size-horizontal-width);
 
-            margin-bottom: var(--kbq-divider-size-horizontal-margin-vertical);
-        }
+    // The cross axis of a column is its width, and the divider's is `auto`, so it spans the line
+    // instead of shrinking to its empty content the way an `align-items` of the line's own would.
+    align-self: stretch;
+}
+
+.kbq-divider:where(.kbq-divider_vertical) {
+    min-width: var(--kbq-divider-size-vertical-width);
+    width: var(--kbq-divider-size-vertical-width);
+
+    // One token drives both declarations, so the height and the alignment cannot disagree.
+    // Unset, it falls back to `auto` and `stretch`: the divider is sized by the flex or grid line it
+    // sits in. Given a length, `height` takes it - and `align-self` is handed that same length, which
+    // is not a valid alignment. A declaration that turns invalid only once its `var()` is substituted
+    // falls back to the property's initial value, and `align-self: auto` means "follow the line's
+    // `align-items`" - which is what a divider with a height of its own should do.
+    // Leaving `stretch` there would do the opposite: flexbox never stretches an item that has a cross
+    // size of its own, so `stretch` would quietly degrade to `flex-start` and override the alignment
+    // the line asked for.
+    height: var(--kbq-divider-size-vertical-height, auto);
+    align-self: var(--kbq-divider-size-vertical-height, stretch);
+}
+
+// The margins are emitted from a single class - the orientation is matched through `:where()`, which
+// contributes no specificity - so a consumer's own class can override them without `!important`.
+.kbq-divider_paddings {
+    &:where(.kbq-divider_horizontal) {
+        margin-block: var(--kbq-divider-size-horizontal-margin-vertical);
     }
 
-    &.kbq-divider_vertical {
-        width: var(--kbq-divider-size-vertical-width);
-        height: 100%;
-
-        &.kbq-divider_paddings {
-            margin-left: var(--kbq-divider-size-vertical-margin-horizontal);
-
-            margin-right: var(--kbq-divider-size-vertical-margin-horizontal);
-        }
+    &:where(.kbq-divider_vertical) {
+        margin-inline: var(--kbq-divider-size-vertical-margin-horizontal);
     }
 }
 

@@ -32,14 +32,16 @@
     }
 
     & .kbq-filter-bar__separator {
+        // A divider with a length of its own follows the row's `align-items`, and this row does not
+        // set one - so the separator, unlike the pipes it sits between, has to centre itself.
         align-self: center;
 
-        height: var(--kbq-size-m) !important;
+        --kbq-divider-size-vertical-height: var(--kbq-size-m);
 
-        // `!important` is load-bearing: it overrides the divider's own higher-specificity
-        // `.kbq-divider_paddings` margin rule. Logical props keep the override RTL-safe.
-        margin-inline-start: calc(var(--kbq-size-s) + var(--kbq-size-xs)) !important;
-        margin-inline-end: var(--kbq-size-xs) !important;
+        // The divider's margin rule matches the orientation through `:where()` and so contributes a
+        // single class - this selector outranks it outright. Logical props keep the override RTL-safe.
+        margin-inline-start: calc(var(--kbq-size-s) + var(--kbq-size-xs));
+        margin-inline-end: var(--kbq-size-xs);
     }
 
     & .kbq-filter-bar__arrow {

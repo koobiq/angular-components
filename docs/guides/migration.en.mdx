@@ -1368,6 +1368,32 @@ Reported by `dl-attribute-coercion`, which covers static attributes and bindings
 
 `vertical` and `paddings` were accessor pairs carrying a coercion by hand. They are `input()`s with `booleanAttribute` now, so a read is a call and a write is a template binding. Both kept their names, so `[vertical]` and `[paddings]` bindings are untouched — only TypeScript that reaches the component through a reference has to change.
 
+The vertical divider was sized `height: 100%`. A percentage height resolves against a parent's _definite_ height, and a flex row has none — so the divider computed to `0` and vanished in exactly the toolbars it exists for. Every caller in this repository had discovered that independently and pinned a height locally, two of them with `!important`. It spans its flex or grid line now (`align-self: stretch`), which also survives an `align-items` that would otherwise centre it at zero height.
+
+The trade is at the other end: outside such a line — a table cell, a plain block — a vertical divider no longer takes its height from the parent. A table cell is worth calling out, because it is one of the few places a percentage height did resolve; a divider sitting in one used to work and now needs a height of its own. Give it one through `--kbq-divider-size-vertical-height`, declared on the divider itself, which is where its default lives.
+
+```css
+.toolbar .kbq-divider {
+    --kbq-divider-size-vertical-height: var(--kbq-size-m);
+}
+```
+
+A local `height` override that only existed to survive the collapse can go. So can a `!important` on margins: the `paddings` spacing is emitted from a single class, with the orientation matched through `:where()`, so it no longer outranks a consumer's own class.
+
+That cuts both ways. A margin you already set, which was quietly losing to the old three-class chain, now applies. `kbq-actions-panel` in this repository had asked for `8px` around its divider and been given the divider's `4px` for as long as the token existed; it gets `8px` now. Check your own spacing rather than assuming nothing moved.
+
+`align-self: stretch` is set for both orientations, not just the vertical one. A horizontal divider in a flex column that sets `align-items` used to shrink to its empty content — nothing to see — and now spans the column. That is the same bug seen from the other side, but it does mean a horizontal divider can become visible where it previously was not.
+
+**The token carries the alignment with it.** A flex item with a height of its own is never stretched, so a divider that keeps `align-self: stretch` alongside one would silently fall back to `flex-start` and override the alignment its row asked for. The divider reads the same token for both properties, so setting a height hands the alignment back to the row in the same stroke. There is nothing else to write:
+
+```css
+.toolbar .kbq-divider {
+    --kbq-divider-size-vertical-height: var(--kbq-size-m);
+}
+```
+
+The row is what decides where that divider sits. In a row with no `align-items` of its own, items are stretched and a divider with a height lands at the top — set `align-self` there if you want it centred, the same as you would for any other item of a definite size.
+
 The component also has separator semantics. It renders `role="separator"`, and `aria-orientation="vertical"` when `vertical` is set, so a hand-rolled `role` or `aria-orientation` on `<kbq-divider>` is now a duplicate. The new `decorative` input renders `role="presentation"` instead, for a divider that only repeats a boundary a heading, a group or the layout already conveys; a hand-rolled `aria-hidden` is still honoured and says the same thing.
 
 | Pattern                              | Manual migration                                                      |
