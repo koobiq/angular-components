@@ -4,6 +4,7 @@ import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
 import {
     E2eNativeScrollbar,
+    E2eScrollbarContentChanges,
     E2eScrollbarHover,
     E2eScrollbarMode,
     E2eScrollbarNested,
@@ -376,6 +377,7 @@ const components: Record<string, Type<unknown>> = {
     E2eScrollbarMode,
     E2eScrollbarScrollTo,
     E2eScrollbarVirtualScroll,
+    E2eScrollbarContentChanges,
     E2eScrollbarNested,
     E2eScrollbarNonScrollableOverflow,
     E2eScrollbarPadding,

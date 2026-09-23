@@ -282,11 +282,10 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_hide-line-numbers']).toBeFalsy();
     });
 
-    // The async tests in this file are plain `async` rather than `waitForAsync`: the code content is a
-    // `KbqScrollbarViewport`, whose track polls on a self-rescheduling `requestAnimationFrame`. That
-    // chain is a macrotask of the test zone — `runOutsideAngular` leaves NgZone, not the zone
-    // `waitForAsync` waits on — so it never drains and every such test times out. `fixture.whenStable()`
-    // still settles, because it tracks NgZone, and that is what these tests actually need.
+    // The async tests in this file are plain `async` rather than `waitForAsync`: highlighting flashes the
+    // scrollbar of the code content, and `waitForAsync` would wait out the hide timer that starts — 1s by
+    // default, against a 2s test timeout. `fixture.whenStable()` settles without it, because it tracks
+    // NgZone, and that is what these tests actually need.
     it('should apply lineNumbers plugin', async () => {
         const fixture = createComponent(BaseCodeBlock);
         const codeBlock = geCodeBlockDebugElement(fixture.debugElement);

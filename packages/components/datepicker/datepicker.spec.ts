@@ -1672,7 +1672,6 @@ describe('KbqDatepicker', () => {
             expect(() => {
                 fixture.componentInstance.open();
                 fixture.detectChanges();
-                // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
                 tick(MODAL_ANIMATE_DURATION);
             }).not.toThrow();
 

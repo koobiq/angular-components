@@ -433,7 +433,6 @@ describe('KbqModal', () => {
             const secondModal = modalService.create();
 
             fixture.detectChanges();
-            // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
             tick(ANIMATION_DURATION);
             fixture.detectChanges();
 
@@ -560,7 +559,6 @@ describe('KbqModal', () => {
 
                 modalRef.close();
                 fixture.detectChanges();
-                // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
                 tick(ANIMATION_DURATION);
 
                 expect(document.activeElement).toBe(buttonElement);
