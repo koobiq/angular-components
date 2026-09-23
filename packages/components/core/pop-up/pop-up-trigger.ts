@@ -485,6 +485,17 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
         }
 
         this.instance = null;
+
+        // A scroll strategy detaches the overlay without going through `hide()`, and a pop-up destroyed that
+        // way completes its visibility stream instead of emitting `false`. Without this the trigger stays
+        // `isOpen` for good, and a consumer that guards `show()` with it never opens the pop-up again.
+        // Keyed on `isOpen` rather than on `visible`: the latter mirrors the requested state, which `show()`
+        // has already set by the time it detaches a previous overlay.
+        if (this.isOpen) {
+            this.visible = false;
+            this.isOpen = false;
+            this.visibleChange.emit(false);
+        }
     };
 
     /** Create the overlay config and position strategy

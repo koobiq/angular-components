@@ -1631,6 +1631,36 @@ describe('KbqTooltip', () => {
             trigger.hide(0);
             flush();
         }));
+
+        it('should reset the open state when the overlay is detached without a hide', fakeAsync(() => {
+            const trigger = component.enabledTooltip();
+            const visibility: boolean[] = [];
+
+            trigger.visibleChange.subscribe((value) => visibility.push(value));
+
+            trigger.show(0);
+            tick();
+            fixture.detectChanges();
+
+            expect(trigger.isOpen).toBe(true);
+
+            // What the close-on-scroll strategy does: the pop-up is destroyed without `hide()` ever running.
+            trigger['overlayRef']!.detach();
+            fixture.detectChanges();
+
+            expect(trigger.isOpen).toBe(false);
+            expect(visibility).toEqual([true, false]);
+
+            trigger.show(0);
+            tick();
+            fixture.detectChanges();
+
+            expect(trigger.isOpen).toBe(true);
+            expect(overlayContainerElement.textContent).toContain('ENABLED');
+
+            trigger.hide(0);
+            flush();
+        }));
     });
 
     describe('showForMouseEvent re-anchoring', () => {
