@@ -1631,7 +1631,18 @@ The accessibility work has nothing to migrate, but it changes what a screen read
 
 `[color]` on the group is one binding for every button in it, so the error palette no longer has to be repeated per option. And the native input carries its option value, so a group inside a plain `<form>` submits that value instead of the literal `"on"` — only string-like values round-trip, and a group meant for native submission still needs an explicit `[name]`, because the generated one changes between application loads.
 
-Reported by `radio-name-and-aria`.
+**The one-way inputs are signals now.** A read of one is a call. The rewrite is scoped by receiver type, which matters more here than anywhere else in the campaign: `name`, `labelPosition` and `required` exist on both classes, and only the group's became signals.
+
+| Type             | Members                             | Read               |
+| ---------------- | ----------------------------------- | ------------------ |
+| `KbqRadioGroup`  | `name`, `labelPosition`, `required` | `group.required()` |
+| `KbqRadioButton` | `id`, `inputId`                     | `button.id()`      |
+
+So `group.required` becomes `group.required()` while `button.required` is left alone — the button's copy folds in the group's value, which is why it stayed an accessor. `id` is read-only now: bind `[id]` rather than assigning to it, and bind `null` or an empty string to keep the generated one.
+
+`KbqRadioGroup.value`, `.selected` and `.disabled` are deliberately unchanged. `ControlValueAccessor` writes the first and last, the buttons write `selected`, and `writeValue` has to resolve the checked button synchronously before the first render — none of which a read-only `input()` supports, and a `model()` carries no `transform`, which `disabled` needs to coerce an attribute.
+
+Reported by `radio-signals-and-aria`.
 
 #### Search expandable
 

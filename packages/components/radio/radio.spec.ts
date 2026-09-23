@@ -42,10 +42,10 @@ describe('KbqRadio', () => {
         });
 
         it('should set individual radio names based on the group name', () => {
-            expect(groupInstance.name).toBeTruthy();
+            expect(groupInstance.name()).toBeTruthy();
 
             for (const radio of radioInstances) {
-                expect(radio.name).toBe(groupInstance.name);
+                expect(radio.name).toBe(groupInstance.name());
             }
         });
 
@@ -402,7 +402,7 @@ describe('KbqRadio', () => {
             const group = fixture.debugElement.query(By.directive(KbqRadioGroup)).injector.get(KbqRadioGroup);
 
             expect(named.name).toBe('custom');
-            expect(inherited.name).toBe(group.name);
+            expect(inherited.name).toBe(group.name());
         });
 
         it('should re-render the native name attribute when the group name changes', () => {
@@ -614,11 +614,11 @@ describe('KbqRadio', () => {
     });
 
     /**
-     * The group's state is written from outside the template — by `ControlValueAccessor` and by the
-     * buttons writing their selection back. These pin the contract that such a write reaches the DOM
-     * under `OnPush` without a forced check of the root: they drive change detection with
-     * `ApplicationRef.tick()`, which honours the dirty flags, rather than `fixture.detectChanges()`,
-     * which checks the root view whether or not anything marked it.
+     * `disabled`, `value` and `selected` are the inputs that stayed accessors, because
+     * `ControlValueAccessor` and the buttons write them from outside the template. This pins the
+     * contract that such a write reaches the DOM under `OnPush` without a forced check of the root:
+     * it drives change detection with `ApplicationRef.tick()`, which honours the dirty flags, rather
+     * than `fixture.detectChanges()`, which checks the root view whether or not anything marked it.
      */
     describe('reactivity', () => {
         /** `TestBed` leaves a fixture detached, where `tick()` is inert. */
@@ -630,22 +630,6 @@ describe('KbqRadio', () => {
 
             return applicationRef;
         };
-
-        it('should repaint a group host binding after a programmatic write no template binding covers', () => {
-            const fixture = TestBed.createComponent(OnPushRadioGroupHost);
-            const applicationRef = attach(fixture);
-
-            const groupDebugElement = fixture.debugElement.query(By.directive(KbqRadioGroup));
-            const group: KbqRadioGroup = groupDebugElement.injector.get(KbqRadioGroup);
-            const host: HTMLElement = groupDebugElement.nativeElement;
-
-            expect(host.getAttribute('aria-required')).toBeNull();
-
-            group.required = true;
-            applicationRef.tick();
-
-            expect(host.getAttribute('aria-required')).toBe('true');
-        });
 
         it('should re-render the buttons after a programmatic write to the group', () => {
             const fixture = TestBed.createComponent(OnPushRadioGroupHost);
