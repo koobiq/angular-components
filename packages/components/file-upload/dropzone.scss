@@ -55,3 +55,10 @@
     --kbq-empty-state-size-normal-image-margin-bottom: var(--kbq-size-m);
     --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xs);
 }
+
+// Scoped to the dropzone, not to every kbq-file-upload-empty-state: inside the multiple file upload
+// the caption is the secondary foreground, and it shares a line with a link that stays secondary —
+// contrast there would split one sentence into two colors.
+.kbq-dropzone-content .kbq-empty-state.kbq-multiple-file-upload__empty-state {
+    --kbq-empty-state-text-color: var(--kbq-foreground-contrast);
+}
