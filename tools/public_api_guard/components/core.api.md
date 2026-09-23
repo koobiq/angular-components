@@ -3707,6 +3707,9 @@ export interface KbqOptionActionParent {
     };
 }
 
+// @public
+export const kbqOptionalNumberAttribute: (value: unknown) => number | undefined;
+
 // @public (undocumented)
 export abstract class KbqOptionBase {
     // (undocumented)

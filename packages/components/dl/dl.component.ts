@@ -29,27 +29,14 @@ import {
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_WINDOW,
     kbqInjectNativeElement,
-    KbqLocaleOverridesDirective
+    KbqLocaleOverridesDirective,
+    kbqOptionalNumberAttribute
 } from '@koobiq/components/core';
 import { KbqResizable, KbqResizer, KbqResizerDirection, KbqResizerSizeChangeEvent } from '@koobiq/components/resizer';
 import { debounceTime, startWith } from 'rxjs/operators';
 
 /** Supported alignment values for description list items. */
 export type KbqDlAlign = 'start' | 'center' | 'end';
-
-/**
- * Coerces an attribute value to a number, reporting `undefined` for anything that is not a finite one.
- *
- * `numberAttribute` falls back to `NaN`, which is not nullish, so it walks past every `??` and reaches
- * the layout arithmetic - a valueless width ends up rendering `NaNpx`.
- */
-const optionalNumberAttribute = (value: unknown): number | undefined => {
-    if (value == null) return undefined;
-
-    const coerced = numberAttribute(value);
-
-    return Number.isFinite(coerced) ? coerced : undefined;
-};
 
 /**
  * Coerces an attribute value to a boolean while keeping nullish apart from `false`.
@@ -145,7 +132,7 @@ export class KbqDlComponent {
      * @deprecated The name is misleading (it is a breakpoint, not a min width). Use `verticalBreakpoint` instead.
      * Will be removed in a future major release. When both are set, `minWidth` takes precedence.
      */
-    readonly minWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
+    readonly minWidth = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
 
     /** Whether the list uses the wide two-column layout. */
     readonly wide = input(false, { transform: booleanAttribute });
@@ -160,7 +147,7 @@ export class KbqDlComponent {
      */
     readonly dtWidthInput = input<number | null, unknown>(null, {
         alias: 'dtWidth',
-        transform: (value: unknown) => optionalNumberAttribute(value) ?? null
+        transform: (value: unknown) => kbqOptionalNumberAttribute(value) ?? null
     });
 
     /**
@@ -176,10 +163,10 @@ export class KbqDlComponent {
     readonly dtWidthChange = output<number | null>();
 
     /** Minimum width of the `kbq-dt` area in pixels; defaults to the rendered term width. */
-    readonly dtMinWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
+    readonly dtMinWidth = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
 
     /** Minimum width retained for the `kbq-dd` area in pixels; defaults to the rendered term width. */
-    readonly ddMinWidth = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
+    readonly ddMinWidth = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
 
     /** Accessible name of the column resize separator; falls back to the localized default when omitted. */
     readonly resizerAriaLabel = input<string | undefined>(undefined);

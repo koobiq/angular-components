@@ -15,48 +15,37 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { DOCUMENT } from '@angular/common';
 import {
+    afterNextRender,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     Directive,
-    ElementRef,
-    InjectionToken,
-    NgZone,
-    OnDestroy,
-    Provider,
-    Renderer2,
-    ViewContainerRef,
-    afterNextRender,
-    booleanAttribute,
     effect,
+    ElementRef,
     forwardRef,
     inject,
+    InjectionToken,
     input,
-    numberAttribute,
+    NgZone,
+    OnDestroy,
     output,
-    untracked
+    Provider,
+    Renderer2,
+    untracked,
+    ViewContainerRef
 } from '@angular/core';
 import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
+    defaultOffsetY,
     DOWN_ARROW,
     ENTER,
     ESCAPE,
+    hasModifierKey,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_WINDOW,
     KbqCaretRect,
-    KbqOption,
-    KbqOptionSelectionChange,
-    KbqResolvedPanelWidth,
-    KbqSiblingPopup,
-    KbqTextMirror,
-    KbqTextQuery,
-    KeyboardNavigationHandler,
-    RIGHT_ARROW,
-    TAB,
-    UP_ARROW,
-    defaultOffsetY,
-    hasModifierKey,
     kbqCreateCaretOrigin,
     kbqCreateTextMirror,
     kbqGetCaretRect,
@@ -64,12 +53,23 @@ import {
     kbqGetTextQuery,
     kbqIsTextLaidOutFromStart,
     kbqListenForCaretMoves,
+    KbqOption,
+    kbqOptionalNumberAttribute,
+    KbqOptionSelectionChange,
     kbqRepositionScrollStrategyFactory,
+    KbqResolvedPanelWidth,
     kbqResolvePanelWidth,
-    kbqSiblingPopupProvider
+    KbqSiblingPopup,
+    kbqSiblingPopupProvider,
+    KbqTextMirror,
+    KbqTextQuery,
+    KeyboardNavigationHandler,
+    RIGHT_ARROW,
+    TAB,
+    UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
-import { Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf } from 'rxjs';
+import { defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import { KbqAutocomplete } from './autocomplete.component';
@@ -120,13 +120,6 @@ export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider = {
 
 /** Class of the layer that draws the inline hint over the field. */
 const INLINE_HINT_CLASS = 'kbq-autocomplete-inline-hint';
-
-const optionalNumberAttribute = (value: unknown): number | undefined => {
-    const parsed = value == null || value === '' ? NaN : numberAttribute(value);
-
-    // NaN is not nullish: it would walk past every `??` meant to apply the default.
-    return Number.isFinite(parsed) ? parsed : undefined;
-};
 
 /**
  * `type` of the fields whose native role, `textbox` or `searchbox`, supports `aria-autocomplete` and
@@ -293,7 +286,7 @@ export class KbqAutocompleteTrigger
     /** Shortest query that opens the panel in text mode. Defaults to `1` for a word and to `0` after a trigger. */
     readonly queryMinLength = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'kbqAutocompleteMinLength',
-        transform: optionalNumberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /**

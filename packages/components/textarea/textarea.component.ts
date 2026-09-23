@@ -12,7 +12,6 @@ import {
     Input,
     input,
     NgZone,
-    numberAttribute,
     OnChanges,
     OnDestroy,
     OnInit,
@@ -26,22 +25,14 @@ import {
     ErrorStateMatcher,
     KBQ_PARENT_ANIMATION_COMPONENT,
     KBQ_WINDOW,
-    kbqInjectAutofilled
+    kbqInjectAutofilled,
+    kbqOptionalNumberAttribute
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
 import { asapScheduler, observeOn, Subject } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
-
-/** Coerces an optional numeric input, keeping `undefined` distinguishable from `0`. */
-const optionalNumberAttribute = (value: unknown): number | undefined => {
-    const parsed = numberAttribute(value);
-
-    // `numberAttribute` falls back to NaN, and NaN is not nullish: it would walk past every `??` below
-    // and end up in `coerceCssPixelValue`, which yields `NaNpx` and is dropped by the CSSOM.
-    return Number.isFinite(parsed) ? parsed : undefined;
-};
 
 @Directive({
     selector: 'textarea[kbqTextarea]',
@@ -87,7 +78,7 @@ export class KbqTextarea
     private readonly window = inject(KBQ_WINDOW);
 
     /** Maximum number of lines to which the textarea will grow. Unlimited when unset. */
-    readonly maxRows = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
+    readonly maxRows = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
 
     /** An object used to control when error messages are shown. */
     // Stays a plain member: `KbqFormFieldControl` declares it as one, and the form field reads it
@@ -165,7 +156,7 @@ export class KbqTextarea
     @Input() placeholder: string;
 
     /** Distance from the last line to the bottom border. Defaults to a single line height. */
-    readonly freeRowsHeight = input<number | undefined, unknown>(undefined, { transform: optionalNumberAttribute });
+    readonly freeRowsHeight = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
 
     /**
      * Implemented as part of KbqFormFieldControl.
