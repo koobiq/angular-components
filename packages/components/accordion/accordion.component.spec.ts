@@ -31,6 +31,7 @@ describe('KbqAccordion', () => {
                 AccordionVariants,
                 AccordionDefaultValue,
                 AccordionValue,
+                AccordionExpanded,
                 AccordionDisabled,
                 AccordionDisabledItem,
                 AccordionType,
@@ -140,6 +141,35 @@ describe('KbqAccordion', () => {
                 fixture.detectChanges();
                 expect(items[1].nativeElement.getAttribute('data-state')).toBe('open');
                 expect(itemsContent[1].nativeElement.getAttribute('data-state')).toBe('open');
+            });
+        });
+
+        describe('expanded', () => {
+            it('should open the item with initial [expanded]="true"', () => {
+                fixture = TestBed.createComponent(AccordionExpanded);
+
+                expect(() => fixture.detectChanges()).not.toThrow();
+
+                const items = fixture.debugElement.queryAll(By.directive(KbqAccordionItem));
+                const triggers = fixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+                const itemsContent = fixture.debugElement.queryAll(By.directive(KbqAccordionContent));
+
+                expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
+                expect(triggers[0].nativeElement.getAttribute('aria-expanded')).toBe('true');
+                expect(itemsContent[0].nativeElement.hasAttribute('hidden')).toBe(false);
+                expect(items[1].nativeElement.getAttribute('data-state')).toBe('closed');
+                expect(itemsContent[1].nativeElement.hasAttribute('hidden')).toBe(true);
+            });
+
+            it('should show the content of an initially expanded item with [type]="multiple"', () => {
+                fixture = TestBed.createComponent(AccordionExpanded);
+                fixture.debugElement.componentInstance.type = 'multiple';
+                fixture.detectChanges();
+
+                const itemsContent = fixture.debugElement.queryAll(By.directive(KbqAccordionContent));
+
+                expect(itemsContent[0].nativeElement.hasAttribute('hidden')).toBe(false);
+                expect(itemsContent[1].nativeElement.hasAttribute('hidden')).toBe(true);
             });
         });
 
@@ -879,6 +909,30 @@ class AccordionDefaultValue {
 })
 class AccordionValue {
     value: string;
+}
+
+@Component({
+    selector: 'accordion-expanded',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [type]="type">
+            <kbq-accordion-item [expanded]="true">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionExpanded {
+    type: KbqAccordionType = 'single';
 }
 
 @Component({
