@@ -25,6 +25,110 @@ const DEV_DATA_OBJECT = {
     }
 };
 
+/** One option, long enough to overflow the pipe on its own. */
+const E2E_LONG_VALUE = { name: 'Исходный код и развернутое приложение веб-сервиса', id: '1' };
+
+/**
+ * Pipe widths: a saved-filter name over its max width, a pipe whose name and value are both too long, a
+ * removable pipe with a short name next to a long value, and an input pipe, which keeps its own width.
+ *
+ * Names and values are projected into the default slot of a `kbq-button`, i.e. they land inside
+ * `.kbq-button-text`: as plain inline boxes `overflow` and `text-overflow` would not apply to them at all
+ * and the pipe value would spill out. Name and value are sized as two grid tracks — as flex items they
+ * gave up the same share of their width, which left a three-character name at a single glyph.
+ */
+@Component({
+    selector: 'e2e-filter-bar-pipe-truncation',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                <kbq-filters [filters]="[filter]" />
+
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarPipeTruncation'
+    }
+})
+export class E2eFilterBarPipeTruncation {
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Text',
+            type: KbqPipeTypes.Text,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiSelect',
+            id: 'E2ELongValue',
+            type: KbqPipeTypes.MultiSelect,
+            values: [E2E_LONG_VALUE],
+
+            cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'Input',
+            id: 'E2EInput',
+            type: KbqPipeTypes.Input,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: 'Очень длинное название сохранённого фильтра',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: true,
+        pipes: [
+            {
+                name: 'Очень длинное название фильтра',
+                value: 'и не менее длинное значение фильтра',
+                type: KbqPipeTypes.Text,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            // A name far under the old 20-character threshold, in a pipe type that never carried
+            // `kbqPipeMinWidth`: this is the combination that used to collapse to one glyph.
+            {
+                name: 'Тип',
+                id: 'E2ELongValue',
+                value: [E2E_LONG_VALUE],
+                type: KbqPipeTypes.MultiSelect,
+
+                cleanable: false,
+                removable: true,
+                disabled: false
+            },
+            {
+                name: 'Поиск',
+                id: 'E2EInput',
+                value: null,
+                type: KbqPipeTypes.Input,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}
+
 @Component({
     selector: 'e2e-filter-bar-filters',
     imports: [KbqFilterBarModule],

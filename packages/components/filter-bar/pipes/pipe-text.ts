@@ -8,7 +8,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 
@@ -24,8 +24,7 @@ import { KbqPipeState } from './pipe-state';
         KbqPipeButton,
         ReactiveFormsModule,
         KbqTitleModule,
-        KbqPipeState,
-        KbqPipeMinWidth
+        KbqPipeState
     ],
     templateUrl: 'pipe-text.html',
     styleUrls: ['base-pipe.scss'],
