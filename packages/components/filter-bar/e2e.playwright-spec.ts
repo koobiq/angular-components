@@ -26,13 +26,13 @@ test.describe('KbqFilterBarModule', () => {
         test('truncates the pipe name and value independently', async ({ page }) => {
             await page.goto('/E2eFilterBarPipeTruncation');
 
-            const pipe = getComponent(page).locator('.kbq-pipe').first();
+            const pipe = getComponent(page).locator('.kbq-pipe__text');
             const value = pipe.locator('.kbq-pipe__value');
 
             for (const part of [pipe.locator('.kbq-pipe__name'), value]) {
                 const widths = await getWidths(part);
 
-                // Both parts must stay block-level flex items inside `.kbq-button-text`, otherwise
+                // Both parts must stay block-level items of the grid inside `.kbq-button-text`, otherwise
                 // their own ellipsis does not apply and a single one eats the whole width budget.
                 expect(widths.client).toBeGreaterThan(0);
                 expect(widths.scroll).toBeGreaterThan(widths.client);
@@ -42,6 +42,83 @@ test.describe('KbqFilterBarModule', () => {
             const valueBox = (await value.boundingBox())!;
 
             expect(valueBox.x + valueBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+        });
+
+        test('splits the width evenly when both parts are too long', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe__text');
+            const name = await getWidths(pipe.locator('.kbq-pipe__name'));
+            const value = await getWidths(pipe.locator('.kbq-pipe__value'));
+
+            // Two shrinkable `max-content` tracks get an equal share of what is left; the value's 4px
+            // inline margin is the only asymmetry. As flex items each kept the same *percentage* of its
+            // own text instead, which is what starved the shorter part.
+            expect(Math.abs(name.client - value.client)).toBeLessThanOrEqual(8);
+        });
+
+        test('keeps a short name at full width next to a long value', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe__multiselect');
+            const name = await getWidths(pipe.locator('.kbq-pipe__name'));
+            const value = await getWidths(pipe.locator('.kbq-pipe__value'));
+
+            // The name asks for less than its share, so it keeps all of it and the value takes the rest.
+            expect(name.client).toBeGreaterThan(0);
+            expect(name.scroll).toBeLessThanOrEqual(name.client);
+            expect(value.scroll).toBeGreaterThan(value.client);
+        });
+
+        test('shows the tooltip when the neighbour clips a part that would fit on its own', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeTruncation');
+
+            const pipe = getComponent(page).locator('.kbq-pipe__text');
+            const trigger = pipe.locator(':scope > .kbq-button');
+            const container = await trigger
+                .locator('.kbq-button-wrapper')
+                .evaluate((element: HTMLElement) => element.offsetWidth);
+
+            for (const part of [pipe.locator('.kbq-pipe__name'), pipe.locator('.kbq-pipe__value')]) {
+                const widths = await getWidths(part);
+
+                // Clipped, yet its full text fits the container: only the part's own box shows the truncation.
+                expect(widths.scroll).toBeGreaterThan(widths.client);
+                expect(widths.scroll).toBeLessThan(container);
+            }
+
+            await trigger.hover();
+
+            await expect(page.locator('.kbq-tooltip')).toBeVisible();
+            await expect(page.locator('.kbq-tooltip')).toContainText('и не менее длинное значение фильтра');
+        });
+
+        test('caps every pipe but the input one at --kbq-filter-bar-pipe-max-width', async ({ page }) => {
+            await page.goto('/E2eFilterBarPipeTruncation');
+
+            const component = getComponent(page);
+
+            // Not the 320px fallback, so the check proves that the token drives the cap.
+            await component
+                .locator('kbq-filter-bar')
+                .evaluate((bar) => bar.style.setProperty('--kbq-filter-bar-pipe-max-width', '200px'));
+
+            await expect(component.locator('.kbq-pipe__multiselect .kbq-pipe-button')).toHaveCount(1);
+
+            const pipes = await component.locator('.kbq-pipe:not(.kbq-pipe__input)').all();
+
+            expect(pipes.length).toBeGreaterThan(0);
+
+            for (const pipe of pipes) {
+                const pipeBox = (await pipe.boundingBox())!;
+                // The remove button of a removable pipe has to fit inside the cap too.
+                const lastBox = (await pipe.locator(':scope > :last-child').boundingBox())!;
+
+                expect(pipeBox.width).toBeLessThanOrEqual(200);
+                expect(lastBox.x + lastBox.width).toBeLessThanOrEqual(pipeBox.x + pipeBox.width + 1);
+            }
+
+            expect((await component.locator('.kbq-pipe__input').boundingBox())!.width).toBe(240);
         });
 
         test('truncates the saved filter name', async ({ page }) => {

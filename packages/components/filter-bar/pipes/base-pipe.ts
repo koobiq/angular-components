@@ -283,6 +283,13 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     abstract open(): void;
 }
 
+/**
+ * Keeps a pipe part at its natural width while its text is shorter than `maxSymbolsForFitContent`.
+ *
+ * @deprecated A pipe lays its name and value out as two shrinkable grid tracks, which already keeps a
+ * short part intact; on a grid item this `min-width` only pushes the part past its track, where it is
+ * clipped without an ellipsis. Will be removed in the next major.
+ */
 @Directive({
     selector: '[kbqPipeMinWidth]',
     host: {

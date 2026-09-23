@@ -35,6 +35,23 @@ test.describe('KbqTitleDirective', () => {
         await expect(tooltip(page)).toBeVisible();
     });
 
+    test('should show the tooltip when a sibling clips a text element that would fit on its own', async ({ page }) => {
+        const host = page.getByTestId('titleSiblingClip');
+        const widths = await host.locator('.sibling-clip__value').evaluate((element) => ({
+            scroll: element.scrollWidth,
+            client: element.clientWidth,
+            parent: element.parentElement!.offsetWidth
+        }));
+
+        // The value's full text fits the container, so only its own clipping reveals the truncation.
+        expect(widths.scroll).toBeLessThan(widths.parent);
+        expect(widths.scroll).toBeGreaterThan(widths.client);
+
+        await host.hover();
+
+        await expect(tooltip(page)).toBeVisible();
+    });
+
     test('should ignore a sub-pixel clip that text-overflow: clip makes invisible', async ({ page }) => {
         await page.getByTestId('titleSubPixelClip').hover();
 

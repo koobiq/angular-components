@@ -971,6 +971,37 @@ describe('KbqTitleDirective', () => {
             expect(directive.isOverflown).toBe(false);
         });
 
+        it('should be overflown when a sibling clips a child whose text would fit the parent', () => {
+            const { debugElement } = createComponent(MultiChildTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const parentEl = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
+
+            // A filter-bar pipe at its max width: the 255px value fits the 296px parent on its own, but the
+            // name keeps 55px of it, so the value's own box is 237px wide.
+            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(296);
+            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(255);
+            jest.spyOn(valueEl, 'clientWidth', 'get').mockReturnValue(237);
+
+            expect(directive.isOverflown).toBe(true);
+        });
+
+        it('should not be overflown when every child shows its whole text', () => {
+            const { debugElement } = createComponent(MultiChildTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const parentEl = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+            const nameEl = debugElement.query(By.css('.child-name')).nativeElement;
+            const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
+
+            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(296);
+            jest.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(55);
+            jest.spyOn(nameEl, 'clientWidth', 'get').mockReturnValue(55);
+            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(237);
+            jest.spyOn(valueEl, 'clientWidth', 'get').mockReturnValue(237);
+
+            expect(directive.isOverflown).toBe(false);
+        });
+
         it('should NOT report a sub-pixel clip on a child without ellipsis', () => {
             const { debugElement } = createComponent(MultiChildTitleComponent);
             const directive = getTitleDirective(debugElement);
