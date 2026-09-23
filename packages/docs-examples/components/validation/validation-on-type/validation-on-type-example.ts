@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -21,7 +21,6 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
             <kbq-form-field>
                 <kbq-label>Folder name</kbq-label>
                 <input
-                    #tooltip="kbqTooltip"
                     formControlName="folderName"
                     kbqInput
                     [kbqEnterDelay]="10"
@@ -30,6 +29,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
                     [kbqTrigger]="'manual'"
                     [kbqTooltip]="'Letters and numbers'"
                     [kbqTooltipColor]="colors.Error"
+                    (blur)="onBlur()"
                     (input)="onInput($event)"
                 />
 
@@ -51,7 +51,7 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
     }
 })
 export class ValidationOnTypeExample {
-    @ViewChild('tooltip', { static: false }) tooltip: KbqTooltipTrigger;
+    protected readonly tooltip = viewChild(KbqTooltipTrigger);
 
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly colors = KbqComponentColors;
@@ -60,19 +60,24 @@ export class ValidationOnTypeExample {
         folderName: new FormControl('')
     });
 
-    onInput(event: Event): void {
-        const regex = /^[0-9a-zA-Zа-яА-ЯёЁйЙ]+$/g;
+    protected onInput(event: Event): void {
+        if (!(event.target instanceof HTMLInputElement)) return;
 
-        if (event.target instanceof HTMLInputElement && event.target.value && !regex.test(event.target.value)) {
-            const newValue = event.target.value.replace(restSymbolsRegex, '');
+        const { value } = event.target;
+        const allowedValue = value.replace(restSymbolsRegex, '');
 
-            this.checkOnFlyForm.controls.folderName.setValue(newValue);
+        // A valid character leaves nothing to filter out, so the hint goes as soon as one is typed.
+        if (allowedValue === value) {
+            this.tooltip()?.hide();
 
-            if (!this.tooltip.isOpen) {
-                this.tooltip.show();
-
-                setTimeout(() => this.tooltip.hide(), 3000);
-            }
+            return;
         }
+
+        this.checkOnFlyForm.controls.folderName.setValue(allowedValue);
+        this.tooltip()?.show();
+    }
+
+    protected onBlur(): void {
+        this.tooltip()?.hide();
     }
 }
