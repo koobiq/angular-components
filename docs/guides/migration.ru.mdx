@@ -1712,6 +1712,8 @@ bootstrapApplication(App, {
 | `overlayRef.backdropElement!`                                | Без затемнения там `null`; выбирайте затемнение при открытии сайдпанели                |
 | `.kbq-sidepanel-overlay` в стилях                            | Класс больше не проставляется; помечайте панель через `overlayPanelClass`              |
 | `host: { class: 'layout-column flex' }` у содержимого панели | Удалите — пакет сам стилизует хост портала                                             |
+| `closeDirective.sidepanelResult = …`                         | Теперь входной сигнал: привяжите `kbq-sidepanel-close="…"` в шаблоне                   |
+| Чтение `closeDirective.sidepanelResult`                      | `sidepanelResult()`                                                                    |
 
 **`KbqSidepanelModule` больше не подменяет `FocusTrapFactory` на всё приложение.** Модуль объявлял `{ provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }` — неограниченную подмену сервиса CDK с `providedIn: 'root'`: импорт модуля сайдпанели менял реализацию ловушки фокуса у каждого компонента приложения, который её использует, — модального окна, дропдауна, поповера. Теперь подмена ограничена контейнером сайдпанели. Если приложение на неё полагалось, добавьте провайдер в свою конфигурацию.
 

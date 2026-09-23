@@ -65,6 +65,17 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: SIDEPANEL_TYPE,
+        // Matched as a property access: `sidepanelResult` is an ordinary enough name for a host to own one.
+        pattern: '\\.\\s*sidepanelResult\\b',
+        message:
+            'KbqSidepanelClose.sidepanelResult is an input signal now, aliased kbq-sidepanel-close as before. ' +
+            'Reading it takes a call — sidepanelResult() — and it can no longer be assigned: bind the value in ' +
+            'the template, <button kbq-sidepanel-close="value"> or [kbqSidepanelClose]="value". The directive ' +
+            'no longer implements OnChanges, and the two spellings are read through one computed, with the ' +
+            'camel-case one winning if a template binds both.'
+    },
+    {
+        anchor: SIDEPANEL_TYPE,
         pattern: '\\boverlayRef\\s*\\.\\s*backdropElement\\b',
         message:
             'Reaching for KbqSidepanelRef.overlayRef.backdropElement to hide a backdrop throws on any panel ' +

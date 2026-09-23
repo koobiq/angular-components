@@ -1704,6 +1704,8 @@ Reported by `select-signal-inputs`.
 | `overlayRef.backdropElement!`                                | `null` without a backdrop; decide the backdrop when you open the sidepanel |
 | `.kbq-sidepanel-overlay` in a stylesheet                     | The class is no longer stamped; tag the pane with `overlayPanelClass`      |
 | `host: { class: 'layout-column flex' }` on sidepanel content | Delete it — the package styles the portal host now                         |
+| `closeDirective.sidepanelResult = …`                         | An input signal now: bind `kbq-sidepanel-close="…"` in the template        |
+| `closeDirective.sidepanelResult` read                        | `sidepanelResult()`                                                        |
 
 **`KbqSidepanelModule` no longer swaps `FocusTrapFactory` application-wide.** The module provided `{ provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }`, an unscoped override of a `providedIn: 'root'` CDK service: importing the sidepanel module changed the focus-trap implementation of every trapping component in the application — modal, dropdown, popover. The override is scoped to the sidepanel container now. Add the provider to your own application config if you were depending on it.
 

@@ -25,11 +25,9 @@ import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqOverflowShadowState } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
-import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
@@ -77,18 +75,14 @@ export class KbqSidepanelBody {
 }
 
 // @public
-export class KbqSidepanelClose implements OnChanges {
+export class KbqSidepanelClose {
     constructor();
-    // (undocumented)
     readonly kbqSidepanelClose: i0.InputSignal<any>;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
     readonly sidepanelRef: KbqSidepanelRef<any, any>;
+    readonly sidepanelResult: i0.InputSignal<any>;
     // (undocumented)
-    sidepanelResult: any;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[kbqSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; }; "kbqSidepanelClose": { "alias": "kbqSidepanelClose"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelClose, "button[kbq-sidepanel-close], button[kbqSidepanelClose]", never, { "sidepanelResult": { "alias": "kbq-sidepanel-close"; "required": false; "isSignal": true; }; "kbqSidepanelClose": { "alias": "kbqSidepanelClose"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelClose, never>;
 }

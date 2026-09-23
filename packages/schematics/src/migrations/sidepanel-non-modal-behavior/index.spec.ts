@@ -107,6 +107,23 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('no longer added to the overlay host element');
     });
 
+    it('reports a write to the close result that is an input signal now', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqSidepanelClose } from '@koobiq/components/sidepanel';\n" +
+                'declare const close: KbqSidepanelClose;\n' +
+                "close.sidepanelResult = 'saved';\n"
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('is an input signal now');
+    });
+
     it('does not mistake the sidepanel design token for the removed class', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

@@ -1,16 +1,4 @@
-import {
-    booleanAttribute,
-    Component,
-    Directive,
-    effect,
-    ElementRef,
-    inject,
-    Input,
-    input,
-    OnChanges,
-    Renderer2,
-    SimpleChanges
-} from '@angular/core';
+import { booleanAttribute, Component, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -30,10 +18,11 @@ import { KbqSidepanelRef } from './sidepanel-ref';
     selector: 'button[kbq-sidepanel-close], button[kbqSidepanelClose]',
     host: {
         class: 'kbq-sidepanel-close',
-        '(click)': 'sidepanelRef.close(sidepanelResult)'
+        // The camel-case spelling wins when a template binds both, as it did before.
+        '(click)': 'sidepanelRef.close(kbqSidepanelClose() ?? sidepanelResult())'
     }
 })
-export class KbqSidepanelClose implements OnChanges {
+export class KbqSidepanelClose {
     // `CdkPortalOutlet.attachTemplatePortal()` forwards the portal injector to the embedded view, so the
     // ref is reachable from a `<ng-template>` sidepanel as well as from a component one.
     readonly sidepanelRef = inject(KbqSidepanelRef);
@@ -41,10 +30,10 @@ export class KbqSidepanelClose implements OnChanges {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input('kbq-sidepanel-close') sidepanelResult: any;
+    /** Value handed to `KbqSidepanelRef.close()`, under the hyphenated spelling of the selector. */
+    readonly sidepanelResult = input<any>(undefined, { alias: 'kbq-sidepanel-close' });
 
+    /** The same value, under the camel-case spelling. */
     readonly kbqSidepanelClose = input<any>();
 
     constructor() {
@@ -53,14 +42,6 @@ export class KbqSidepanelClose implements OnChanges {
         // the time a directive is constructed, so this needs no lifecycle hook.
         if (!this.elementRef.nativeElement.hasAttribute('type')) {
             this.renderer.setAttribute(this.elementRef.nativeElement, 'type', 'button');
-        }
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        const proxiedChange = changes.kbqSidepanelClose || changes.sidepanelResult;
-
-        if (proxiedChange) {
-            this.sidepanelResult = proxiedChange.currentValue;
         }
     }
 }

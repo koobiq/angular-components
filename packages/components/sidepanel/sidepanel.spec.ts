@@ -390,6 +390,35 @@ describe('KbqSidepanelService', () => {
         expect(submitSpy).not.toHaveBeenCalled();
     }));
 
+    describe('close result', () => {
+        const closeWith = (buttonId: string) => {
+            const sidepanelRef = sidepanelService.open(SidepanelWithCloseResults);
+            const result = jest.fn();
+
+            sidepanelRef.afterClosed().subscribe(result);
+            rootComponentFixture.detectChanges();
+            flush();
+
+            overlayContainerElement.querySelector<HTMLButtonElement>(`#${buttonId}`)!.click();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            return result;
+        };
+
+        it('should hand the value bound to kbq-sidepanel-close to close()', fakeAsync(() => {
+            expect(closeWith('hyphenated')).toHaveBeenCalledWith('hyphenated');
+        }));
+
+        it('should hand the value bound to kbqSidepanelClose to close()', fakeAsync(() => {
+            expect(closeWith('camel')).toHaveBeenCalledWith('camel-case');
+        }));
+
+        it('should prefer the camel-case spelling when a template binds both', fakeAsync(() => {
+            expect(closeWith('both')).toHaveBeenCalledWith('winner');
+        }));
+    });
+
     it('renders the custom scrollbar on the body', fakeAsync(() => {
         sidepanelService.open(SidepanelWithFormComponent);
 
@@ -1122,6 +1151,19 @@ class SidepanelWithFormComponent {
 }
 
 @Component({
+    imports: [KbqSidepanelModule, KbqButtonModule],
+    template: `
+        <kbq-sidepanel-body>Body</kbq-sidepanel-body>
+        <kbq-sidepanel-footer>
+            <button id="hyphenated" kbq-button kbq-sidepanel-close="hyphenated">Hyphenated</button>
+            <button id="camel" kbq-button [kbqSidepanelClose]="'camel-case'">Camel case</button>
+            <button id="both" kbq-button kbq-sidepanel-close="loser" [kbqSidepanelClose]="'winner'">Both</button>
+        </kbq-sidepanel-footer>
+    `
+})
+class SidepanelWithCloseResults {}
+
+@Component({
     selector: 'kbq-sidepanel-from-dropdown',
     imports: [
         KbqDropdownModule
@@ -1202,6 +1244,7 @@ const TEST_COMPONENTS = [
     SidepanelWithCustomToken,
     SidepanelWithFormComponent,
     SidepanelWithFocusInitial,
+    SidepanelWithCloseResults,
     SidepanelWithLateHeader,
     SidepanelTrigger,
     ComponentWithTemplateForSidepanel,
