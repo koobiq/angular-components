@@ -54,6 +54,8 @@ describe('KbqAccordion', () => {
                 AccordionVariants,
                 AccordionDefaultValue,
                 AccordionValue,
+                AccordionExpanded,
+                AccordionExpandedAttribute,
                 AccordionDisabled,
                 AccordionDisabledItem,
                 AccordionType,
@@ -203,6 +205,58 @@ describe('KbqAccordion', () => {
                 const accordion = fixture.debugElement.query(By.directive(KbqAccordion)).injector.get(KbqAccordion);
 
                 expect(accordion.value()).toBe('');
+            });
+        });
+
+        describe('expanded', () => {
+            /** The `data-state` of every item, the `aria-expanded` of its trigger and whether its content is hidden. */
+            const sectionStates = (expandedFixture: ComponentFixture<unknown>) => {
+                const triggers = expandedFixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+                const contents = expandedFixture.debugElement.queryAll(By.directive(KbqAccordionContent));
+
+                return expandedFixture.debugElement.queryAll(By.directive(KbqAccordionItem)).map((item, index) => ({
+                    state: item.nativeElement.getAttribute('data-state'),
+                    ariaExpanded: triggers[index].nativeElement.getAttribute('aria-expanded'),
+                    hidden: contents[index].nativeElement.hasAttribute('hidden')
+                }));
+            };
+
+            const open = { state: 'open', ariaExpanded: 'true', hidden: false };
+            const closed = { state: 'closed', ariaExpanded: 'false', hidden: true };
+
+            it.each<KbqAccordionType>(['single', 'multiple'])(
+                'should keep an item expanded by [expanded]="true" in %s mode',
+                (type) => {
+                    const expandedFixture = TestBed.createComponent(AccordionExpanded);
+
+                    expandedFixture.componentInstance.type = type;
+                    expandedFixture.detectChanges();
+
+                    expect(sectionStates(expandedFixture)).toEqual([open, closed]);
+                }
+            );
+
+            // The static attribute is applied while the view is created, before a bound `[type]` is, so the mode
+            // must still decide how many of the sections stay expanded.
+            it.each<[KbqAccordionType, object[]]>([
+                ['single', [open, closed]],
+                ['multiple', [open, open]]
+            ])('should keep the sections expanded by the static expanded attribute in %s mode', (type, expected) => {
+                const expandedFixture = TestBed.createComponent(AccordionExpandedAttribute);
+
+                expandedFixture.componentInstance.type = type;
+                expandedFixture.detectChanges();
+
+                expect(sectionStates(expandedFixture)).toEqual(expected);
+            });
+
+            it('should emit opened for the sections expanded by the static expanded attribute', () => {
+                const expandedFixture = TestBed.createComponent(AccordionExpandedAttribute);
+
+                expandedFixture.componentInstance.type = 'multiple';
+                expandedFixture.detectChanges();
+
+                expect(expandedFixture.componentInstance.openedCount).toBe(2);
             });
         });
 
@@ -1657,6 +1711,55 @@ class AccordionDefaultValue {
 })
 class AccordionValue {
     value: string;
+}
+
+@Component({
+    selector: 'accordion-expanded',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [type]="type">
+            <kbq-accordion-item [expanded]="true">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionExpanded {
+    type: KbqAccordionType = 'single';
+}
+
+@Component({
+    selector: 'accordion-expanded-attribute',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [type]="type">
+            <kbq-accordion-item expanded (opened)="openedCount = openedCount + 1">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item expanded (opened)="openedCount = openedCount + 1">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionExpandedAttribute {
+    type: KbqAccordionType = 'single';
+    openedCount = 0;
 }
 
 @Component({

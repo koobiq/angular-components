@@ -191,6 +191,12 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
 
     private state: KbqAccordionState | null = null;
 
+    /**
+     * Whether the saved state has been read. An item reports a static `[expanded]` from its own `ngOnInit`,
+     * which runs before `ngAfterContentInit`, and writing then would replace the saved state before it is read.
+     */
+    private stateRestored = false;
+
     constructor() {
         // Re-emit `valueChange` whenever any (current or future) item toggles its expanded state.
         // Reading `items()` inside the effect keeps the subscriptions in sync with dynamically
@@ -229,6 +235,8 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
             this.state = this.stateStore.getState(this.stateStorageKey);
         }
 
+        this.stateRestored = true;
+
         if (this.valueInput() !== undefined) {
             this.selectionDispatcher.notify(this.value() as unknown as string, this.id);
         } else if (this.useStateSaving() && this.hasSavedState) {
@@ -242,7 +250,8 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
                     this.id
                 );
             }
-        } else {
+        } else if (this.defaultValueArray().length) {
+            // Without a `defaultValue` the items keep their own `[expanded]`: an empty payload would close them all.
             this.selectionDispatcher.notify(this.defaultValueArray() as unknown as string, this.id);
         }
 
@@ -319,7 +328,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit 
      * @docs-private
      */
     saveItemState(item: KbqAccordionItem, force: boolean = true): void {
-        if (!this.useStateSaving()) return;
+        if (!this.useStateSaving() || !this.stateRestored) return;
         if (!force && this.state?.[item.id]) return;
 
         this.state = this.state ?? {};
