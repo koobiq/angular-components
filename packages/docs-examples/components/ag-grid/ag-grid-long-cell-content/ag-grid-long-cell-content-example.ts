@@ -196,6 +196,57 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
     }
 }
 
+const EXAMPLE_EVENTS: ExampleRowData[] = [
+    {
+        event: 'Подбор пароля',
+        hosts: ['srv-01', 'srv-02', 'srv-03', 'srv-04', 'srv-05', 'srv-06', 'srv-07'],
+        techniques: ['T1110', 'T1110.001', 'T1110.003', 'T1110.004', 'T1078', 'T1021.004'],
+        status: 'В работе'
+    },
+    {
+        event: 'Сканирование портов',
+        hosts: ['gw-01'],
+        techniques: ['T1046'],
+        status: 'Закрыто'
+    },
+    {
+        event: 'Обнаружено вредоносное ПО',
+        hosts: ['ws-12', 'ws-15', 'ws-21'],
+        techniques: ['T1566.001', 'T1204.002', 'T1027'],
+        status: 'Закрыто'
+    },
+    {
+        event: 'Обфусцированный скрипт',
+        hosts: ['ws-03', 'ws-04'],
+        techniques: ['T1059.001', 'T1027.010', 'T1140'],
+        status: 'В работе'
+    },
+    {
+        event: 'Утечка данных',
+        hosts: ['db-01', 'db-02', 'db-03', 'db-04', 'db-05', 'db-06', 'db-07', 'db-08', 'db-09'],
+        techniques: ['T1567.002', 'T1048', 'T1030', 'T1041', 'T1020'],
+        status: 'Новое'
+    },
+    {
+        event: 'DNS-туннелирование',
+        hosts: ['dns-01', 'dns-02'],
+        techniques: ['T1071.004', 'T1572'],
+        status: 'Новое'
+    },
+    {
+        event: 'Повышение привилегий',
+        hosts: ['ws-01', 'ws-02', 'ws-05', 'ws-06', 'ws-08', 'ws-09'],
+        techniques: ['T1098', 'T1078.002', 'T1078.003', 'T1021.002'],
+        status: 'В работе'
+    },
+    {
+        event: 'Фишинговое письмо',
+        hosts: ['mail-01', 'mail-02', 'mail-03', 'mail-04'],
+        techniques: ['T1566.002', 'T1598.003', 'T1056.003', 'T1583.001'],
+        status: 'Закрыто'
+    }
+];
+
 /**
  * @title AG Grid with overflow items
  */
@@ -233,7 +284,7 @@ export class AgGridLongCellContentExample {
         },
         {
             field: 'techniques',
-            headerName: 'Техники (Overflow items)',
+            headerName: 'Техники',
             width: 240,
             minWidth: 140,
             sortable: false,
@@ -248,54 +299,10 @@ export class AgGridLongCellContentExample {
         }
     ];
 
-    protected readonly rowData: ExampleRowData[] = [
-        {
-            event: 'Подбор пароля',
-            hosts: ['srv-01', 'srv-02', 'srv-03', 'srv-04', 'srv-05', 'srv-06', 'srv-07'],
-            techniques: ['T1110', 'T1110.001', 'T1110.003', 'T1110.004', 'T1078', 'T1021.004'],
-            status: 'В работе'
-        },
-        {
-            event: 'Сканирование портов',
-            hosts: ['gw-01'],
-            techniques: ['T1046'],
-            status: 'Закрыто'
-        },
-        {
-            event: 'Обнаружено вредоносное ПО',
-            hosts: ['ws-12', 'ws-15', 'ws-21'],
-            techniques: ['T1566.001', 'T1204.002', 'T1027'],
-            status: 'Закрыто'
-        },
-        {
-            event: 'Обфусцированный скрипт',
-            hosts: ['ws-03', 'ws-04'],
-            techniques: ['T1059.001', 'T1027.010', 'T1140'],
-            status: 'В работе'
-        },
-        {
-            event: 'Утечка данных',
-            hosts: ['db-01', 'db-02', 'db-03', 'db-04', 'db-05', 'db-06', 'db-07', 'db-08', 'db-09'],
-            techniques: ['T1567.002', 'T1048', 'T1030', 'T1041', 'T1020'],
-            status: 'Новое'
-        },
-        {
-            event: 'DNS-туннелирование',
-            hosts: ['dns-01', 'dns-02'],
-            techniques: ['T1071.004', 'T1572'],
-            status: 'Новое'
-        },
-        {
-            event: 'Повышение привилегий',
-            hosts: ['ws-01', 'ws-02', 'ws-05', 'ws-06', 'ws-08', 'ws-09'],
-            techniques: ['T1098', 'T1078.002', 'T1078.003', 'T1021.002'],
-            status: 'В работе'
-        },
-        {
-            event: 'Фишинговое письмо',
-            hosts: ['mail-01', 'mail-02', 'mail-03', 'mail-04'],
-            techniques: ['T1566.002', 'T1598.003', 'T1056.003', 'T1583.001'],
-            status: 'Закрыто'
-        }
-    ];
+    // Repeats of the events above, enough rows to scroll and to see the grid recalculate the cells it renders.
+    protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => {
+        const event = EXAMPLE_EVENTS[index % EXAMPLE_EVENTS.length];
+
+        return { ...event, event: `${event.event} ${index + 1}` };
+    });
 }
