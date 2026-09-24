@@ -351,7 +351,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "ag-grid-long-cell-content": {
     "packagePath": "components/ag-grid/ag-grid-long-cell-content",
-    "title": "AG Grid with clamped list and overflow items",
+    "title": "AG Grid with overflow items",
     "componentName": "AgGridLongCellContentExample",
     "files": [
       "ag-grid-long-cell-content-example.ts"

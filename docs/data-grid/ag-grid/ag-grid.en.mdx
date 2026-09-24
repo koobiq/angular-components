@@ -76,7 +76,7 @@ The [Content panel](/en/components/content-panel) component shows a quick previe
 
 ### Long lists in cells
 
-A long list can fit into a single line of a cell. [Clamped list](/en/components/clamped-list) expands the hidden items on click, while [Overflow items](/en/components/overflow-items) hides what does not fit the width, so it can be shown in a [Popover](/en/components/popover). To let the row height follow the content, enable `autoHeight` for the column.
+A long list can fit into a single line of a cell: [Overflow items](/en/components/overflow-items) hides what does not fit the width and recalculates that whenever the column is resized. The hidden items can be expanded in the cell itself or shown as a full list in a [Popover](/en/components/popover). To let the row height follow the content, enable `autoHeight` for the column.
 
 <Example id="ag-grid-long-cell-content" />
 

@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqClampedList, KbqClampedListTrigger } from '@koobiq/components/clamped-text';
-import { kbqLocaleIDProvider, kbqLocaleServiceProvider, PopUpSizes } from '@koobiq/components/core';
+import { PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
 import { KbqLink } from '@koobiq/components/link';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqPopoverModule } from '@koobiq/components/popover';
@@ -17,6 +16,7 @@ type ExampleRowData = {
     event: string;
     hosts: string[];
     techniques: string[];
+    status: string;
 };
 
 type ExampleTechnique = {
@@ -36,30 +36,26 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
 };
 
 @Component({
-    selector: 'example-clamped-list-cell-renderer',
-    imports: [KbqClampedList, KbqClampedListTrigger, KbqBadgeModule, KbqLink],
+    selector: 'example-overflow-badges-cell-renderer',
+    imports: [KbqOverflowItems, KbqOverflowItem, KbqOverflowItemsResult, KbqBadgeModule, KbqLink],
     template: `
-        <div
-            #clampedList="kbqClampedList"
-            kbqClampedList
-            class="example-clamped-list"
-            collapsedVisibleCount="2"
-            hiddenThreshold="2"
-            [items]="hosts()"
-        >
-            @for (host of clampedList.visibleItems(); track host) {
-                <kbq-badge>{{ host }}</kbq-badge>
-            }
-            @if (clampedList.hasToggle()) {
-                <a kbq-link pseudo noUnderline role="button" kbqClampedListTrigger>
-                    @if (clampedList.isCollapsed()) {
-                        {{ clampedList.exceededItemCount() }} {{ clampedList.localeConfiguration().moreText }}
-                    } @else {
-                        {{ clampedList.localeConfiguration().closeText }}
-                    }
+        @if (collapsed()) {
+            <div #overflow="kbqOverflowItems" kbqOverflowItems wrap="wrap" class="example-hosts example-hosts_one-row">
+                @for (host of hosts(); track host) {
+                    <kbq-badge class="layout-margin-right-xxs" [kbqOverflowItem]="host">{{ host }}</kbq-badge>
+                }
+                <a kbq-link pseudo noUnderline role="button" kbqOverflowItemsResult (click)="collapsed.set(false)">
+                    {{ overflow.hiddenItemIDs().size }} еще
                 </a>
-            }
-        </div>
+            </div>
+        } @else {
+            <div class="example-hosts">
+                @for (host of hosts(); track host) {
+                    <kbq-badge class="layout-margin-right-xxs">{{ host }}</kbq-badge>
+                }
+            </div>
+            <a kbq-link pseudo noUnderline role="button" (click)="collapsed.set(true)">Свернуть</a>
+        }
     `,
     styles: `
         :host {
@@ -67,30 +63,39 @@ const onCellEnter = (cell: HTMLElement, destroyRef: DestroyRef, callback: (event
             padding-block: var(--kbq-size-xs);
         }
 
-        .example-clamped-list {
+        .example-hosts {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: var(--kbq-size-xxs);
+            row-gap: var(--kbq-size-xxs);
         }
 
-        .kbq-clamped-list__trigger {
-            margin-top: 0;
-            align-self: center;
+        /* One row of badges: the directive hides what does not fit into it and shows the trigger instead. */
+        .example-hosts_one-row {
+            max-height: var(--kbq-size-xxl);
+        }
+
+        .kbq-overflow-items-result {
+            white-space: nowrap;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleClampedListCellRenderer implements ICellRendererAngularComp {
-    private readonly clampedList = viewChild.required(KbqClampedList);
+export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularComp {
+    // Only the collapsed cell has the directive, hence the optional query.
+    private readonly overflowItems = viewChild(KbqOverflowItems);
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly hosts = signal<string[]>([]);
+    protected readonly collapsed = signal(true);
 
     agInit(params: ICellRendererParams<ExampleRowData, string[]>): void {
         this.hosts.set(params.value ?? []);
-        onCellEnter(params.eGridCell, this.destroyRef, (event) => {
-            if (this.clampedList().hasToggle()) this.clampedList().toggle(event);
+        onCellEnter(params.eGridCell, this.destroyRef, () => {
+            // A collapsed cell with everything already visible has nothing to expand.
+            if (this.collapsed() && !this.overflowItems()?.hiddenItemIDs().size) return;
+
+            this.collapsed.update((state) => !state);
         });
     }
 
@@ -124,17 +129,20 @@ export class ExampleClampedListCellRenderer implements ICellRendererAngularComp 
                 role="button"
                 kbqOverflowItemsResult
                 kbqPopover
-                [kbqPopoverContent]="hiddenTechniquesContent"
+                [kbqPopoverContent]="allTechniquesContent"
                 [kbqPopoverSize]="popUpSizes.Small"
+                [kbqPopoverPlacement]="popUpPlacements.BottomRight"
+                [kbqPopoverPlacementPriority]="popoverPlacementPriority"
+                [kbqPopoverArrow]="false"
                 [(kbqPopoverVisible)]="popoverVisible"
             >
-                All {{ overflow.hiddenItemIDs().size }}
+                Все {{ techniques().length }}
             </a>
         </div>
 
-        <ng-template #hiddenTechniquesContent>
-            <div class="example-hidden-techniques">
-                @for (technique of hiddenTechniques(); track technique.id) {
+        <ng-template #allTechniquesContent>
+            <div class="example-all-techniques">
+                @for (technique of techniques(); track technique.id) {
                     <a kbq-link target="_blank" [href]="technique.url">{{ technique.id }}</a>
                 }
             </div>
@@ -147,7 +155,7 @@ export class ExampleClampedListCellRenderer implements ICellRendererAngularComp 
             line-height: var(--kbq-typography-text-normal-line-height);
         }
 
-        .example-hidden-techniques {
+        .example-all-techniques {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -161,18 +169,16 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
     private readonly destroyRef = inject(DestroyRef);
 
     protected readonly popUpSizes = PopUpSizes;
+    protected readonly popUpPlacements = PopUpPlacements;
+    // Right edge of the panel follows the trigger: under it, and above when there is no room below.
+    protected readonly popoverPlacementPriority = [PopUpPlacements.BottomRight, PopUpPlacements.TopRight];
     protected readonly popoverVisible = signal(false);
     protected readonly techniques = signal<ExampleTechnique[]>([]);
-    protected readonly hiddenTechniques = computed(() => {
-        const hiddenIDs = this.overflowItems().hiddenItemIDs();
-
-        return this.techniques().filter(({ id }) => hiddenIDs.has(id));
-    });
 
     agInit(params: ICellRendererParams<ExampleRowData, string[]>): void {
         this.setTechniques(params.value);
         onCellEnter(params.eGridCell, this.destroyRef, () => {
-            if (this.hiddenTechniques().length) this.popoverVisible.set(true);
+            if (this.overflowItems().hiddenItemIDs().size) this.popoverVisible.set(true);
         });
     }
 
@@ -191,7 +197,7 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
 }
 
 /**
- * @title AG Grid with clamped list and overflow items
+ * @title AG Grid with overflow items
  */
 @Component({
     selector: 'ag-grid-long-cell-content-example',
@@ -205,78 +211,91 @@ export class ExampleOverflowLinksCellRenderer implements ICellRendererAngularCom
             [rowData]="rowData"
         />
     `,
-    providers: [kbqLocaleIDProvider('en-US'), kbqLocaleServiceProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridLongCellContentExample {
     protected readonly columnDefs: ColDef<ExampleRowData>[] = [
         {
             field: 'event',
-            headerName: 'Event',
+            headerName: 'Событие',
             flex: 1,
             minWidth: 150
         },
         {
             field: 'hosts',
-            headerName: 'Hosts (Clamped list)',
+            headerName: 'Узлы',
             width: 220,
             minWidth: 220,
             sortable: false,
             valueFormatter: ({ value }) => value.join(', '),
-            cellRenderer: ExampleClampedListCellRenderer,
+            cellRenderer: ExampleOverflowBadgesCellRenderer,
             autoHeight: true
         },
         {
             field: 'techniques',
-            headerName: 'Techniques (Overflow items)',
+            headerName: 'Техники (Overflow items)',
             width: 240,
             minWidth: 240,
             sortable: false,
             valueFormatter: ({ value }) => value.join(', '),
             cellRenderer: ExampleOverflowLinksCellRenderer
+        },
+        {
+            field: 'status',
+            headerName: 'Статус',
+            flex: 1,
+            minWidth: 120
         }
     ];
 
     protected readonly rowData: ExampleRowData[] = [
         {
-            event: 'Brute force attack',
+            event: 'Подбор пароля',
             hosts: ['srv-01', 'srv-02', 'srv-03', 'srv-04', 'srv-05', 'srv-06', 'srv-07'],
-            techniques: ['T1110', 'T1110.001', 'T1110.003', 'T1110.004', 'T1078', 'T1021.004']
+            techniques: ['T1110', 'T1110.001', 'T1110.003', 'T1110.004', 'T1078', 'T1021.004'],
+            status: 'В работе'
         },
         {
-            event: 'Port scanning',
+            event: 'Сканирование портов',
             hosts: ['gw-01'],
-            techniques: ['T1046']
+            techniques: ['T1046'],
+            status: 'Закрыто'
         },
         {
-            event: 'Malware detected',
+            event: 'Обнаружено вредоносное ПО',
             hosts: ['ws-12', 'ws-15', 'ws-21'],
-            techniques: ['T1566.001', 'T1204.002', 'T1027']
+            techniques: ['T1566.001', 'T1204.002', 'T1027'],
+            status: 'Закрыто'
         },
         {
-            event: 'Obfuscated script',
+            event: 'Обфусцированный скрипт',
             hosts: ['ws-03', 'ws-04'],
-            techniques: ['T1059.001', 'T1027.010', 'T1140']
+            techniques: ['T1059.001', 'T1027.010', 'T1140'],
+            status: 'В работе'
         },
         {
-            event: 'Data exfiltration',
+            event: 'Утечка данных',
             hosts: ['db-01', 'db-02', 'db-03', 'db-04', 'db-05', 'db-06', 'db-07', 'db-08', 'db-09'],
-            techniques: ['T1567.002', 'T1048', 'T1030', 'T1041', 'T1020']
+            techniques: ['T1567.002', 'T1048', 'T1030', 'T1041', 'T1020'],
+            status: 'Новое'
         },
         {
-            event: 'DNS tunneling',
+            event: 'DNS-туннелирование',
             hosts: ['dns-01', 'dns-02'],
-            techniques: ['T1071.004', 'T1572']
+            techniques: ['T1071.004', 'T1572'],
+            status: 'Новое'
         },
         {
-            event: 'Privilege escalation',
+            event: 'Повышение привилегий',
             hosts: ['ws-01', 'ws-02', 'ws-05', 'ws-06', 'ws-08', 'ws-09'],
-            techniques: ['T1098', 'T1078.002', 'T1078.003', 'T1021.002']
+            techniques: ['T1098', 'T1078.002', 'T1078.003', 'T1021.002'],
+            status: 'В работе'
         },
         {
-            event: 'Phishing email',
+            event: 'Фишинговое письмо',
             hosts: ['mail-01', 'mail-02', 'mail-03', 'mail-04'],
-            techniques: ['T1566.002', 'T1598.003', 'T1056.003', 'T1583.001']
+            techniques: ['T1566.002', 'T1598.003', 'T1056.003', 'T1583.001'],
+            status: 'Закрыто'
         }
     ];
 }
