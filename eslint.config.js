@@ -485,6 +485,7 @@ module.exports = tseslint.config(
                         'checkSelectedIndex',
                         'expectCustomScrollbars',
                         'expectFlatTreeToMatch',
+                        'expectPipeStyle',
                         'runModifierKeyTest',
                         'shouldFocusReturnButtonWith',
                         'shouldRefocusSaveButtonWith',

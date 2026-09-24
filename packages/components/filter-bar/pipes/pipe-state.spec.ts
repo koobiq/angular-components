@@ -137,7 +137,7 @@ describe('KbqPipeState', () => {
     };
 
     /** Asserts the style of every half, and how many there were — `forEach` over an empty array asserts nothing. */
-    const expectStyle = (style: 'filled' | 'outline', halves: HTMLElement[], count: number) => {
+    const expectPipeStyle = (style: 'filled' | 'outline', halves: HTMLElement[], count: number) => {
         expect(halves.length).toBe(count);
         halves.forEach((half) => {
             expect(Array.from(half.classList)).toContain(`kbq-button_${style}`);
@@ -148,13 +148,13 @@ describe('KbqPipeState', () => {
     it('should fill both halves once an empty cleanable pipe receives a value', fakeAsync(() => {
         render([selectPipe({ value: null, cleanable: true })]);
 
-        expectStyle('outline', halvesOf(), 1);
+        expectPipeStyle('outline', halvesOf(), 1);
 
         selectPipeComponent().onSelect(SELECT_VALUES[0]);
         flush();
         fixture.detectChanges();
 
-        expectStyle('filled', halvesOf(), 2);
+        expectPipeStyle('filled', halvesOf(), 2);
     }));
 
     it('should outline both halves once a pipe is cleared by its own clear button', () => {
@@ -163,11 +163,11 @@ describe('KbqPipeState', () => {
         // visible while the value goes away.
         render([selectPipe({ value: SELECT_VALUES[0], cleanable: true, removable: true })]);
 
-        expectStyle('filled', halvesOf(), 2);
+        expectPipeStyle('filled', halvesOf(), 2);
 
         clickRemoveButton();
 
-        expectStyle('outline', halvesOf(), 2);
+        expectPipeStyle('outline', halvesOf(), 2);
     });
 
     it('should outline the trigger left behind by a cleared cleanable pipe', () => {
@@ -175,13 +175,13 @@ describe('KbqPipeState', () => {
 
         clickRemoveButton();
 
-        expectStyle('outline', halvesOf(), 1);
+        expectPipeStyle('outline', halvesOf(), 1);
     });
 
     it('should outline a pipe the templates turn empty', () => {
         render([multiSelectPipe({ value: [SELECT_VALUES[0]], cleanable: true, removable: true })]);
 
-        expectStyle('filled', halvesOf(), 2);
+        expectPipeStyle('filled', halvesOf(), 2);
 
         // Locking the only selected option makes the pipe read as empty without touching `data.value`.
         fixture.componentInstance.pipeTemplates = [
@@ -191,7 +191,7 @@ describe('KbqPipeState', () => {
         fixture.detectChanges();
 
         expect(multiSelectPipeComponent().isEmpty).toBe(true);
-        expectStyle('outline', halvesOf(), 2);
+        expectPipeStyle('outline', halvesOf(), 2);
     });
 
     it('should fill a pipe the templates turn non-empty', () => {
@@ -200,14 +200,14 @@ describe('KbqPipeState', () => {
             [selectTemplate(), multiSelectTemplate({ lockedValues: [SELECT_VALUES[0]] })]
         );
 
-        expectStyle('outline', halvesOf(), 2);
+        expectPipeStyle('outline', halvesOf(), 2);
 
         // Releasing the lock leaves the same `data.value` holding a freely chosen option.
         fixture.componentInstance.pipeTemplates = [selectTemplate(), multiSelectTemplate()];
         fixture.detectChanges();
 
         expect(multiSelectPipeComponent().isEmpty).toBe(false);
-        expectStyle('filled', halvesOf(), 2);
+        expectPipeStyle('filled', halvesOf(), 2);
     });
 
     it('should follow a value mutated outside the pipe once the change is announced', () => {
@@ -219,6 +219,6 @@ describe('KbqPipeState', () => {
         pipe.stateChanges.next();
         fixture.detectChanges();
 
-        expectStyle('filled', halvesOf(), 2);
+        expectPipeStyle('filled', halvesOf(), 2);
     });
 });
