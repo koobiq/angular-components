@@ -23,6 +23,7 @@ import {
     KbqSidepanelRef,
     KbqSidepanelService
 } from './index';
+import { KbqSidepanelAnimationState } from './sidepanel-animations';
 
 describe('KbqSidepanelService', () => {
     let sidepanelService: KbqSidepanelService;
@@ -151,6 +152,41 @@ describe('KbqSidepanelService', () => {
         flush();
 
         expect(overlayContainerElement.querySelectorAll('kbq-sidepanel-container').length).toBe(0);
+    }));
+
+    it('should keep the order of the opened sidepanels while closing them as a group', fakeAsync(() => {
+        const refs = [1, 2, 3].map(() => sidepanelService.open(SimpleSidepanelExample));
+        const ids = refs.map(({ id }) => id);
+
+        let orderWhenClosingStarted: string[] = [];
+
+        // The topmost sidepanel is the first one closed, so nothing has been removed from the list yet.
+        refs[refs.length - 1].beforeClosed().subscribe(() => {
+            orderWhenClosingStarted = sidepanelService.openedSidepanels.map(({ id }) => id);
+        });
+
+        sidepanelService.closeAll();
+        rootComponentFixture.detectChanges();
+        flush();
+
+        expect(orderWhenClosingStarted).toEqual(ids);
+    }));
+
+    it('should not animate a closing sidepanel back into view when closing a group', fakeAsync(() => {
+        const refs = [1, 2, 3].map(() => sidepanelService.open(SimpleSidepanelExample));
+        const spies = refs.map((ref) => jest.spyOn(ref.containerInstance, 'setAnimationState'));
+
+        sidepanelService.closeAll();
+        rootComponentFixture.detectChanges();
+        flush();
+
+        spies.forEach((spy) => {
+            const states = spy.mock.calls.map(([state]) => state);
+            const hiddenAt = states.indexOf(KbqSidepanelAnimationState.Hidden);
+
+            expect(hiddenAt).toBeGreaterThan(-1);
+            expect(states.slice(hiddenAt + 1)).toEqual([]);
+        });
     }));
 
     it('should set the proper animation states', () => {
