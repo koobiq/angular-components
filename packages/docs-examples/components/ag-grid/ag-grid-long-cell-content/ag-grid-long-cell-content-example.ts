@@ -225,7 +225,7 @@ export class AgGridLongCellContentExample {
             field: 'hosts',
             headerName: 'Узлы',
             width: 220,
-            minWidth: 220,
+            minWidth: 140,
             sortable: false,
             valueFormatter: ({ value }) => value.join(', '),
             cellRenderer: ExampleOverflowBadgesCellRenderer,
@@ -235,7 +235,7 @@ export class AgGridLongCellContentExample {
             field: 'techniques',
             headerName: 'Техники (Overflow items)',
             width: 240,
-            minWidth: 240,
+            minWidth: 140,
             sortable: false,
             valueFormatter: ({ value }) => value.join(', '),
             cellRenderer: ExampleOverflowLinksCellRenderer
