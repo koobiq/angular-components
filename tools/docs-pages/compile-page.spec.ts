@@ -76,6 +76,22 @@ describe(compilePage.name, () => {
         expect(readStaticText(nodes)).toBe(text);
     });
 
+    // `[innerHTML]` shows the character references of a template as they are, and `&ngsp;` is no entity at all.
+    it('compiles into HTML, which escapes the text for HTML alone', () => {
+        const { template } = compilePage('`{{ value }}` _and_ `@for`: "a" & [b](/b "{{ b }}")', {
+            path: 'KbqAlert',
+            examples: {},
+            url: null,
+            output: 'html'
+        });
+
+        expect(template).toBe(
+            '<p class="kbq-markdown__p"><code class="kbq-markdown__code">{{ value }}</code> <em>and</em> ' +
+                '<code class="kbq-markdown__code">@for</code>: &#34;a&#34; &#38; ' +
+                `<a class="${LINK_CLASS}" href="/b" title="{{ b }}">b</a></p>`
+        );
+    });
+
     it('renders the items of a tight list without paragraphs', () => {
         expect(compile('- one\n- two').template).toBe(
             '<ul class="kbq-markdown__ul"><li class="kbq-markdown__li">one</li><li class="kbq-markdown__li">two</li></ul>'

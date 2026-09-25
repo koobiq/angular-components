@@ -166,6 +166,18 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "not released yet",
     "ru": "ещё не выпущена",
   },
+  "navbarGitHub": {
+    "en": "GitHub repository",
+    "ru": "Репозиторий на GitHub",
+  },
+  "navbarMenu": {
+    "en": "Menu",
+    "ru": "Меню",
+  },
+  "navbarTelegram": {
+    "en": "Koobiq on Telegram",
+    "ru": "Koobiq в Telegram",
+  },
   "nothingFound": {
     "en": "Nothing found",
     "ru": "Ничего не найдено",
@@ -217,6 +229,10 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
   "themeLight": {
     "en": "Light",
     "ru": "Светлая",
+  },
+  "themeSwitcher": {
+    "en": "Color theme",
+    "ru": "Тема оформления",
   },
   "themeSystem": {
     "en": "Same as system",

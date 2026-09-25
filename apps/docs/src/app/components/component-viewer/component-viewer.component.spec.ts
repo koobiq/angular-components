@@ -4,9 +4,15 @@ import { ActivatedRoute, provideRouter, Router, UrlSegment } from '@angular/rout
 import { BehaviorSubject, map, of } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
+import { DOCS_API_PAGES } from '../../services/page-resolver';
 import { DocsStructureCategoryId, DocsStructureItemId } from '../../structure';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
-import { DocsComponentPageComponent, DocsComponentViewerComponent } from './component-viewer.component';
+import { DocsApiEntryPoint } from '../api-page/api-page.types';
+import {
+    DocsComponentApiPageComponent,
+    DocsComponentPageComponent,
+    DocsComponentViewerComponent
+} from './component-viewer.component';
 
 const segments = (...paths: string[]): UrlSegment[] => paths.map((path) => new UrlSegment(path, {}));
 
@@ -83,6 +89,36 @@ describe(DocsComponentViewerComponent.name, () => {
     });
 });
 
+// The router waits for the page of a tab, so it starts loading while the pointer or the focus is on the link.
+describe('prefetching the page of a tab', () => {
+    it.each(['mouseenter', 'focus'])('loads the API of the item on %s of its tab', (type) => {
+        const load = jest.fn(() => new Promise<never>(() => undefined));
+
+        TestBed.configureTestingModule({
+            imports: [DocsComponentViewerComponent],
+            providers: [
+                provideRouter([]),
+                provideDocsLocale(DocsLocale.En),
+                {
+                    provide: ActivatedRoute,
+                    useValue: { url: of(segments(DocsStructureCategoryId.Components, DocsStructureItemId.Alert)) }
+                },
+                { provide: DOCS_API_PAGES, useValue: { [DocsStructureItemId.Alert]: load } }
+            ]
+        });
+
+        const fixture = TestBed.createComponent(DocsComponentViewerComponent);
+
+        fixture.detectChanges();
+
+        const tabs: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbqTabLink]'));
+
+        tabs.find((tab) => tab.textContent?.trim() === 'API')!.dispatchEvent(new Event(type));
+
+        expect(load).toHaveBeenCalledTimes(1);
+    });
+});
+
 /** Stands in for a page compiled from MDX. */
 @Component({
     selector: 'docs-compiled-page',
@@ -128,6 +164,54 @@ describe(DocsComponentPageComponent.name, () => {
 
     it('scrolls the anchors into position once the page has rendered', () => {
         createPage();
+
+        expect(setScrollPosition).toHaveBeenCalledTimes(1);
+    });
+});
+
+const ALERT_API: DocsApiEntryPoint = {
+    path: '@koobiq/components/alert',
+    entries: [{ name: 'KbqAlert', kind: 'component', signature: 'class KbqAlert {}' }]
+};
+
+describe(DocsComponentApiPageComponent.name, () => {
+    let setScrollPosition: jest.SpyInstance;
+
+    /** The tab reads the API from `data`; the anchors it renders read `fragment`. */
+    const createPage = (): ComponentFixture<DocsComponentApiPageComponent> => {
+        TestBed.configureTestingModule({
+            imports: [DocsComponentApiPageComponent],
+            providers: [
+                provideRouter([]),
+                provideDocsLocale(DocsLocale.En),
+                { provide: ActivatedRoute, useValue: { fragment: of(null), data: of({ page: ALERT_API }) } }
+            ]
+        });
+
+        const fixture = TestBed.createComponent(DocsComponentApiPageComponent);
+
+        fixture.detectChanges();
+
+        return fixture;
+    };
+
+    beforeEach(() => {
+        setScrollPosition = jest.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation();
+    });
+
+    afterEach(() => setScrollPosition.mockRestore());
+
+    it('renders the API as the article, followed by the improvement callout', () => {
+        const article: HTMLElement = createPage().nativeElement.querySelector('.docs-component-viewer__article');
+
+        expect(article.firstElementChild?.matches('docs-api-page')).toBe(true);
+        expect(article.querySelector('#KbqAlert')).not.toBeNull();
+        expect(article.querySelector('.kbq-callout')).not.toBeNull();
+    });
+
+    // A signature is a code block, and the page is stable once highlight.js has loaded to highlight it.
+    it('scrolls the anchors into position once the entries have rendered', async () => {
+        await createPage().whenStable();
 
         expect(setScrollPosition).toHaveBeenCalledTimes(1);
     });

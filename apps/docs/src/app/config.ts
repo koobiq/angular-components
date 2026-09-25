@@ -17,7 +17,7 @@ import { DOCS_COMPILED_API_PAGES } from '@koobiq/docs-pages-api';
 import { DOCS_ROUTES } from './routes';
 import { docsProvideAnalytics } from './services/analytics';
 import { docsReloadOnChunkLoadError } from './services/chunk-load-error';
-import { DOCS_PAGES, docsMergePages } from './services/page-resolver';
+import { DOCS_API_PAGES, DOCS_PAGES } from './services/page-resolver';
 import { docsProvidePreferences } from './services/preferences';
 import { DocsTitleStrategy } from './services/title-strategy';
 
@@ -40,7 +40,8 @@ export const appConfig: ApplicationConfig = {
         // `KbqLocaleServiceModule`, and this config already binds the locale service above.
         importProvidersFrom(LuxonDateModule, KbqFormattersModule),
         provideRouter(DOCS_ROUTES, withNavigationErrorHandler(docsReloadOnChunkLoadError)),
-        { provide: DOCS_PAGES, useValue: docsMergePages(DOCS_COMPILED_PAGES, DOCS_COMPILED_API_PAGES) },
+        { provide: DOCS_PAGES, useValue: DOCS_COMPILED_PAGES },
+        { provide: DOCS_API_PAGES, useValue: DOCS_COMPILED_API_PAGES },
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),
         provideAnimations(),

@@ -153,10 +153,11 @@ export interface MemberEntry {
     /** The class or interface the member is declared in, when it is inherited from one. */
     inheritedFrom?: string;
     /**
-     * Set when the member is a binding of a host directive the class forwards: the directive, and the public
-     * names of its input and output that the class exposes, under the member's own aliases.
+     * Set when the member is a binding of a host directive the class forwards: the directive, unless the docs
+     * leave it out, and the public names of its input and output that the class exposes, under the member's own
+     * aliases.
      */
-    forwardedFrom?: { directive: string; input?: string; output?: string };
+    forwardedFrom?: { directive?: string; input?: string; output?: string };
 }
 
 /** Sub-entry for an enum member. */

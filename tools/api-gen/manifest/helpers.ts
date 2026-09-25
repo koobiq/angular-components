@@ -20,6 +20,18 @@ export function isPublic(entry: { jsdocTags: JsDocTagEntry[] }) {
     return entry.jsdocTags.every((t: JsDocTagEntry) => t.name !== 'docs-private' && t.name !== 'internal');
 }
 
+/**
+ * A binding forwarded from a directive the docs leave out stays in them, as the host's own: the name of the
+ * directive would point at nothing.
+ */
+export function withoutHiddenDirective(member: MemberEntry, hidden: Set<string>): MemberEntry {
+    const { forwardedFrom } = member;
+
+    if (!forwardedFrom?.directive || !hidden.has(forwardedFrom.directive)) return member;
+
+    return { ...member, forwardedFrom: { ...forwardedFrom, directive: undefined } };
+}
+
 /** Members every class has, or a framework calls — documenting them would tell a consumer nothing. */
 const FRAMEWORK_MEMBERS = new Set([
     'ngAfterContentChecked',

@@ -258,13 +258,9 @@
     }
 }
 
-// A page too large for one Angular view is rendered in parts (see `tools/api-gen`), which read as one list.
-.docs-api__part {
+.docs-api__text,
+.docs-api__call {
     display: block;
-
-    & + .docs-api__part {
-        margin-top: var(--kbq-size-5xl);
-    }
 }
 
 .docs-api__entry + .docs-api__entry {

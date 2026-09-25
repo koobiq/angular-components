@@ -63,7 +63,10 @@ export interface DeclarationSourceMetadata {
 /** Read from the source of a class or an interface, next to what Angular's extractor reports for it. */
 export interface ClassEntryMetadata {
     decorators: string[];
-    /** Every name in the `extends` clause — an interface can extend several. */
+    /**
+     * Every name in the `extends` clause — an interface can extend several. A utility type such as
+     * `Omit<KbqPipe, 'value'>` stands for the type it narrows, where the members come from.
+     */
     bases: string[];
     hostDirectives: HostDirectiveMetadata[];
     /** Every member the declaration itself declares, by name. */

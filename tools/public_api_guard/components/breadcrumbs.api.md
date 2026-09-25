@@ -125,7 +125,7 @@ export class KbqBreadcrumbView {
 // @public
 export type KbqRovingFocusOrientation = 'horizontal' | 'vertical';
 
-// @public (undocumented)
+// @public
 export class RdxRovingFocusGroupDirective {
     readonly currentTabStopId: _angular_core.WritableSignal<string | null>;
     // (undocumented)
@@ -138,7 +138,6 @@ export class RdxRovingFocusGroupDirective {
     getFocusableItemsCount(): number;
     handleBlur(): void;
     handleFocus(event: FocusEvent): void;
-    // (undocumented)
     readonly loop: _angular_core.InputSignalWithTransform<boolean, unknown>;
     onItemFocus(tabStopId: string): void;
     onItemShiftTab(): void;
@@ -155,13 +154,12 @@ export class RdxRovingFocusGroupDirective {
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<RdxRovingFocusGroupDirective, never>;
 }
 
-// @public (undocumented)
+// @public
 export class RdxRovingFocusItemDirective implements OnDestroy {
     constructor();
     readonly active: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly allowShiftKey: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
     readonly focusable: _angular_core.InputSignalWithTransform<boolean, unknown>;
     handleKeydown(event: KeyboardEvent): void;
     handleMouseDown(event: MouseEvent): void;

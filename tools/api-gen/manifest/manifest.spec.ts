@@ -1,13 +1,4 @@
-import {
-    ClassEntry,
-    DocEntry,
-    EntryType,
-    FunctionEntry,
-    MemberEntry,
-    MemberTags,
-    MemberType
-} from '../rendering/entities';
-import { getFunctionRenderable } from '../rendering/transforms/function-transforms';
+import { ClassEntry, DocEntry, EntryType, MemberEntry, MemberTags, MemberType } from '../rendering/entities';
 import { generateManifest } from './';
 
 describe('api manifest generation', () => {
@@ -874,6 +865,52 @@ describe('api manifest generation', () => {
             expect(memberNames(false)).toEqual(['trigger']);
         });
 
+        // The badge beside the binding would name a directive the docs leave out.
+        it('should keep a binding forwarded from a hidden directive, but not the name of that directive', () => {
+            const [collection] = generateManifest([
+                {
+                    moduleName: 'components',
+                    packagesApiInfo: [
+                        {
+                            packageName: 'breadcrumbs',
+                            entries: [
+                                entry({
+                                    name: 'RdxRovingFocusItemDirective',
+                                    entryType: EntryType.Directive,
+                                    jsdocTags: [{ name: 'docs-private', comment: '' }]
+                                }),
+                                {
+                                    ...entry({ name: 'KbqBreadcrumbButton', entryType: EntryType.Directive }),
+                                    members: [
+                                        {
+                                            ...member('focusable', [MemberTags.Input]),
+                                            forwardedFrom: {
+                                                directive: 'RdxRovingFocusItemDirective',
+                                                input: 'focusable'
+                                            }
+                                        },
+                                        {
+                                            ...member('localeOverrides', [MemberTags.Input]),
+                                            forwardedFrom: {
+                                                directive: 'KbqLocaleOverridesDirective',
+                                                input: 'kbqLocaleOverrides'
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]);
+            const [button] = collection.packagesApiInfo[0].entries as unknown as ClassEntry[];
+
+            expect(button.members.map(({ name, forwardedFrom }) => [name, forwardedFrom])).toEqual([
+                ['focusable', { input: 'focusable' }],
+                ['localeOverrides', { directive: 'KbqLocaleOverridesDirective', input: 'kbqLocaleOverrides' }]
+            ]);
+        });
+
         it('should keep protected members of an abstract class, which exists to be extended', () => {
             expect(memberNames(true)).toEqual(['trigger', 'prefix']);
         });
@@ -927,108 +964,6 @@ describe('api manifest generation', () => {
                 (collection.packagesApiInfo[0].entries[0] as unknown as ClassEntry).members.map(({ name }) => name)
             ).toEqual(['shouldReveal', 'constructor']);
         });
-    });
-});
-
-describe('getFunctionRenderable', () => {
-    const baseFunction: FunctionEntry = {
-        name: 'testFn',
-        entryType: EntryType.Function,
-        description: '',
-        rawComment: '',
-        jsdocTags: [],
-        generics: [],
-        isNewType: false,
-        params: [],
-        returnType: ''
-    };
-
-    it('should use params and returnType directly when present on entry', () => {
-        const fn: FunctionEntry = {
-            ...baseFunction,
-            params: [{ name: 'event', type: 'KeyboardEvent', isOptional: false, isRestParam: false, description: '' }],
-            returnType: 'boolean'
-        };
-
-        const renderable = getFunctionRenderable(fn);
-
-        expect(renderable.params).toHaveLength(1);
-        expect(renderable.params[0].name).toBe('event');
-        expect(renderable.params[0].type).toBe('KeyboardEvent');
-        expect(renderable.returnType).toBe('boolean');
-    });
-
-    it('should normalize params and returnType from signatures[0] when not on entry directly', () => {
-        const fn = {
-            ...baseFunction,
-            params: undefined,
-            returnType: undefined,
-            signatures: [
-                {
-                    ...baseFunction,
-                    params: [
-                        {
-                            name: 'event',
-                            type: 'KeyboardEvent',
-                            isOptional: false,
-                            isRestParam: false,
-                            description: ''
-                        },
-                        {
-                            name: 'modifiers',
-                            type: 'ModifierKey[]',
-                            isOptional: false,
-                            isRestParam: true,
-                            description: ''
-                        }
-                    ],
-                    returnType: 'boolean'
-                }
-            ]
-        } as unknown as FunctionEntry;
-
-        const renderable = getFunctionRenderable(fn);
-
-        expect(renderable.params).toHaveLength(2);
-        expect(renderable.params[0].name).toBe('event');
-        expect(renderable.params[1].name).toBe('modifiers');
-        expect(renderable.params[1].isRestParam).toBe(true);
-        expect(renderable.returnType).toBe('boolean');
-    });
-
-    it('should fall back to empty params array when neither entry nor signatures provide them', () => {
-        const fn = {
-            ...baseFunction,
-            params: undefined,
-            returnType: undefined
-        } as unknown as FunctionEntry;
-
-        const renderable = getFunctionRenderable(fn);
-
-        expect(renderable.params).toEqual([]);
-        expect(renderable.returnType).toBe('');
-    });
-
-    it('should prefer direct params over signatures when both are present', () => {
-        const fn = {
-            ...baseFunction,
-            params: [{ name: 'direct', type: 'string', isOptional: false, isRestParam: false, description: '' }],
-            returnType: 'void',
-            signatures: [
-                {
-                    ...baseFunction,
-                    params: [
-                        { name: 'fromSig', type: 'number', isOptional: false, isRestParam: false, description: '' }
-                    ],
-                    returnType: 'boolean'
-                }
-            ]
-        } as unknown as FunctionEntry;
-
-        const renderable = getFunctionRenderable(fn);
-
-        expect(renderable.params[0].name).toBe('direct');
-        expect(renderable.returnType).toBe('void');
     });
 });
 

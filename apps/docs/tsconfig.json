@@ -9,7 +9,8 @@
             "@koobiq/angular-luxon-adapter/*": ["../../packages/angular-luxon-adapter/*"],
             "@koobiq/docs-examples": ["../../packages/docs-examples"],
             "@koobiq/docs-examples/*": ["../../packages/docs-examples/*"],
-            "@koobiq/docs-pages": ["../../dist/docs-pages/index.ts"]
+            "@koobiq/docs-pages": ["../../dist/docs-pages/index.ts"],
+            "@koobiq/docs-pages-api": ["../../dist/docs-pages-api/index.ts"]
         }
     }
 }

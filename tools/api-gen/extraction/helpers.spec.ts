@@ -237,6 +237,19 @@ describe('reading members from source', () => {
             'KbqColorDirective'
         ]);
     });
+
+    // The members an inherited-from badge names the origin of come from `KbqPipe`, not from `Omit`.
+    it('reads the type a utility type narrows as the base', () => {
+        expect(
+            readSourceFile('packages/components/filter-bar/filter-bar.types.ts').classes.KbqPipeTemplate.bases
+        ).toEqual(['KbqPipe']);
+    });
+
+    it('reads a base no utility type wraps as written', () => {
+        expect(readSourceFile('packages/components/file-upload/file-upload.ts').classes.KbqFile.bases).toEqual([
+            'File'
+        ]);
+    });
 });
 
 describe('member source metadata', () => {

@@ -1,0 +1,82 @@
+@if (importFiles().length) {
+    <kbq-code-block class="docs-code-block docs-api__import" filled [files]="importFiles()" />
+}
+
+@for (entry of entryPoint().entries; track entry.name) {
+    <section class="docs-api__entry">
+        <div class="docs-api__entry-header">
+            <h3 class="docs-header-link kbq-markdown__h3 docs-api__entry-name" [id]="entry.name">{{ entry.name }}</h3>
+            <kbq-badge [badgeColor]="getKindColor(entry.kind)">{{ entry.kind }}</kbq-badge>
+            @if (entry.deprecated) {
+                <kbq-badge badgeColor="fade-warning">Deprecated</kbq-badge>
+            }
+        </div>
+
+        @if (entry.deprecated?.reason; as reason) {
+            <docs-api-text class="docs-api__deprecated-note" [blocks]="reason" />
+        }
+
+        @if (entry.description) {
+            <docs-api-text class="docs-api__entry-description" [blocks]="entry.description" />
+        }
+
+        @for (example of entry.examples; track $index) {
+            <div class="docs-api__note-title">Example</div>
+            <docs-api-text [blocks]="example" />
+        }
+
+        <kbq-code-block
+            class="docs-code-block"
+            filled
+            lineNumbers
+            [files]="[{ content: entry.signature, language: 'typescript' }]"
+        />
+
+        @if (entry.params || entry.returns) {
+            <docs-api-call [params]="entry.params" [returns]="entry.returns" />
+        }
+
+        @if (entry.members) {
+            <dl class="docs-api__members">
+                @for (member of entry.members; track member.id) {
+                    <div class="docs-api__member" [id]="member.id">
+                        <dt>
+                            <code class="docs-api__term-name">{{ member.name }}</code>
+                            @if (member.type) {
+                                <code class="docs-api__term-type">{{ member.type }}</code>
+                            }
+                            <!-- Not an error colour: a required input is something to notice, not something that went wrong. -->
+                            @if (member.required) {
+                                <kbq-badge compact badgeColor="fade-theme">required</kbq-badge>
+                            }
+                            @if (member.deprecated) {
+                                <kbq-badge compact badgeColor="fade-warning">Deprecated</kbq-badge>
+                            }
+                            @if (member.origin) {
+                                <kbq-badge compact badgeColor="fade-contrast">from {{ member.origin }}</kbq-badge>
+                            }
+                        </dt>
+                        <dd>
+                            @if (member.description) {
+                                <docs-api-text [blocks]="member.description" />
+                            }
+
+                            @if (member.deprecated?.reason; as reason) {
+                                <docs-api-text class="docs-api__deprecated-note" [blocks]="reason" />
+                            }
+
+                            @for (example of member.examples; track $index) {
+                                <div class="docs-api__note-title">Example</div>
+                                <docs-api-text [blocks]="example" />
+                            }
+
+                            @if (member.params || member.returns) {
+                                <docs-api-call [params]="member.params" [returns]="member.returns" />
+                            }
+                        </dd>
+                    </div>
+                }
+            </dl>
+        }
+    </section>
+}

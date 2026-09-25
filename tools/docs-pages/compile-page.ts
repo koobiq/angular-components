@@ -25,7 +25,7 @@ export const renderCodeBlockElement = (index: number): string =>
 
 /** An MDX page compiled into the parts of an Angular component. */
 export interface CompiledPage {
-    /** Angular template of the page. */
+    /** Angular template of the page, or HTML with `output: 'html'`. */
     template: string;
     /** Fenced code blocks: the template binds them by index, so code never becomes template text. */
     codeBlocks: CompiledCodeBlock[];
@@ -62,6 +62,12 @@ export interface CompilePageOptions {
      * repeat its ids.
      */
     headingDepth?: number;
+    /**
+     * `html` compiles into HTML for `[innerHTML]` rather than into a template: the text is escaped for HTML alone.
+     * HTML cannot render a component, so a block of code is left to the caller, which finds it among the blocks
+     * `layout` receives, and its file in `codeBlocks`.
+     */
+    output?: 'template' | 'html';
 }
 
 type JsxElement = MdxJsxFlowElement | MdxJsxTextElement;
@@ -138,11 +144,8 @@ const getElementClass = (tag: string): string | null => {
 const escapeTemplateText = (text: string): string =>
     text.replace(/[&<>"{}@]/g, (char) => `&#${char.charCodeAt(0)};`).replace(/(&#123;|&#125;)(?=\1)/g, '$1<!---->');
 
-/**
- * Text for the template. Angular drops a text node of whitespace alone, which would join the elements around
- * it (`` `a` _and_ `b` `` would read "aandb"); `&ngsp;` is the space it keeps.
- */
-const renderText = (text: string): string => (/^\s+$/.test(text) ? '&ngsp;' : escapeTemplateText(text));
+/** Escapes text for HTML. */
+const escapeHtml = (text: string): string => text.replace(/[&<>"]/g, (char) => `&#${char.charCodeAt(0)};`);
 
 /** Text the reader sees in a node: MDX comments are for the tools and stay out of it. */
 const getVisibleText = (node: Nodes): string => {
@@ -166,9 +169,18 @@ const isComment = (expression: string): boolean => /^\s*\/\*(?:[^*]|\*(?!\/))*\*
 /** Compiles the MDX source of a documentation page. Throws on anything the site cannot render yet. */
 export function compilePage(
     source: string,
-    { path, examples, url, layout, headingDepth }: CompilePageOptions
+    { path, examples, url, layout, headingDepth, output = 'template' }: CompilePageOptions
 ): CompiledPage {
     const page: CompiledPage = { template: '', codeBlocks: [], examples: [], browserExamples: [] };
+
+    const isTemplate = output === 'template';
+    const escapeText = isTemplate ? escapeTemplateText : escapeHtml;
+
+    /**
+     * Angular drops a text node of whitespace alone, which would join the elements around it
+     * (`` `a` _and_ `b` `` would read "aandb"); `&ngsp;` is the space it keeps.
+     */
+    const renderText = (text: string): string => (isTemplate && /^\s+$/.test(text) ? '&ngsp;' : escapeText(text));
 
     const lines = source.split('\n');
 
@@ -209,11 +221,11 @@ export function compilePage(
 
     const renderAttribute = (node: Nodes, name: string, value: string | null): string => {
         // Angular interpolates `{{ }}` in an attribute, and an attribute has no room for the comment that stops it.
-        if (value !== null && /\{\{|\}\}/.test(value)) {
+        if (isTemplate && value !== null && /\{\{|\}\}/.test(value)) {
             return fail(node, `the ${name} attribute cannot contain "{{" or "}}"`);
         }
 
-        return value === null ? ` ${name}` : ` ${name}="${escapeTemplateText(value)}"`;
+        return value === null ? ` ${name}` : ` ${name}="${escapeText(value)}"`;
     };
 
     // With a base href of `/`, a bare `#size` would lead to the start page.
@@ -303,7 +315,7 @@ export function compilePage(
 
         if (!pageExamples.includes(example)) pageExamples.push(example);
 
-        return `<docs-live-example-viewer example="${escapeTemplateText(id)}" [component]="examples.${example.componentName}" />`;
+        return `<docs-live-example-viewer example="${escapeText(id)}" [component]="examples.${example.componentName}" />`;
     };
 
     /** An HTML element written in the page, with the classes of the documentation typography. */
@@ -399,9 +411,7 @@ export function compilePage(
                 }
 
                 const tag = `h${node.depth}`;
-                const id = LINKED_HEADING_DEPTHS.includes(node.depth)
-                    ? ` id="${escapeTemplateText(takeHeadingId(node))}"`
-                    : '';
+                const id = LINKED_HEADING_DEPTHS.includes(node.depth) ? ` id="${escapeText(takeHeadingId(node))}"` : '';
 
                 return `<${tag}${id} class="docs-header-link ${CLASS_PREFIX}__${tag}">${renderChildren(node, { ...context, inParagraph: true })}</${tag}>`;
             }

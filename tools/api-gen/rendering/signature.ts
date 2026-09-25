@@ -23,7 +23,8 @@ import { normalizeFunctionFields } from './transforms/normalize-function-fields'
  * Builds the signature block of an API entry — the code a reader sees first on the API tab and the one
  * `llms-full.txt` carries. It is written the way the source declares the entry, not the way the compiler
  * resolves it: `input<boolean>(false)` rather than `InputSignalWithTransform<boolean, unknown>`, with the
- * selector and the forwarded host-directive inputs in the decorator, where a template author looks for them.
+ * selector in the decorator, where a template author looks for it. Host directives are left out: the list under
+ * the signature shows the bindings they forward, each with the directive it comes from.
  */
 
 const INDENT = '    ';
@@ -127,7 +128,7 @@ const isConstructor = (member: MemberEntry): boolean =>
     member.name === 'constructor' && member.memberType === MemberType.Method;
 
 /** An optional member or parameter already says it may be missing; `| undefined` repeats it. */
-const withoutUndefined = (type: string): string => type.replace(/\s*\|\s*undefined$/, '');
+export const withoutUndefined = (type: string): string => type.replace(/\s*\|\s*undefined$/, '');
 
 /**
  * Scans `text` from `start` and returns the index of the bracket that closes the one at `start`, skipping
@@ -330,11 +331,14 @@ export function orderMembers(members: MemberEntry[]): MemberEntry[] {
 }
 
 /**
- * Whether a member has more to say than its line in the signature, which lists every member: a description,
- * the reason it is deprecated, an example or, for a method, a documented parameter or return value. The list
- * under the signature and `llms-full.txt` take the same members by it.
+ * Whether a member has more to say than its line in the signature, which lists every member the class declares:
+ * a description, the reason it is deprecated, an example or, for a method, a documented parameter or return
+ * value. The signature has no line for a binding forwarded from a host directive, which therefore always counts.
+ * The list under the signature and `llms-full.txt` take the same members by it.
  */
 export function hasMemberDetails(member: MemberEntry): boolean {
+    if (member.forwardedFrom) return true;
+
     const { description, jsdocTags, params, returnDescription } = normalizeFunctionFields(
         member as Partial<FunctionEntry>
     );
@@ -525,69 +529,6 @@ function renderDecorator(name: string, properties: string[]): string[] {
     ];
 }
 
-/**
- * `hostDirectives` as the host declares it, restricted to the inputs and outputs it forwards — the part a
- * template binds.
- */
-function renderHostDirectives(members: MemberEntry[]): string | undefined {
-    const byDirective = new Map<string, { inputs: string[]; outputs: string[] }>();
-    const mapping = (own: string, exposed: string): string => quote(own === exposed ? own : `${own}: ${exposed}`);
-
-    // Merged first: a getter and its setter forward one input.
-    for (const member of mergeAccessors(members)) {
-        const { forwardedFrom, inputAlias, outputAlias } = member as PropertyEntry;
-
-        if (!forwardedFrom) continue;
-
-        const bindings = byDirective.get(forwardedFrom.directive) ?? { inputs: [], outputs: [] };
-
-        if (forwardedFrom.input) bindings.inputs.push(mapping(forwardedFrom.input, inputAlias ?? member.name));
-
-        if (forwardedFrom.output) bindings.outputs.push(mapping(forwardedFrom.output, outputAlias ?? member.name));
-
-        byDirective.set(forwardedFrom.directive, bindings);
-    }
-
-    if (!byDirective.size) return undefined;
-
-    // Each object sits two levels deep: in the decorator's argument, then in the `hostDirectives` array; its
-    // properties one level deeper still.
-    const depth = INDENT.repeat(2);
-    const renderList = (name: string, items: string[]): string => {
-        const inline = `${name}: [${items.join(', ')}]`;
-
-        if (depth.length + INDENT.length + inline.length <= MAX_LINE_LENGTH) return inline;
-
-        return [
-            `${name}: [`,
-            ...items.map((item, index) => `${INDENT}${item}${index < items.length - 1 ? ',' : ''}`),
-            ']'
-        ].join('\n');
-    };
-    const directives = [...byDirective].map(([directive, { inputs, outputs }]) => {
-        const properties = [
-            `directive: ${directive}`,
-            ...(inputs.length ? [renderList('inputs', inputs)] : []),
-            ...(outputs.length ? [renderList('outputs', outputs)] : [])
-        ];
-        const inline = `{ ${properties.join(', ')} }`;
-
-        if (!inline.includes('\n') && depth.length + inline.length <= MAX_LINE_LENGTH) return `${INDENT}${inline}`;
-
-        return [
-            '{',
-            ...properties.flatMap((property, index) =>
-                `${property}${index < properties.length - 1 ? ',' : ''}`.split('\n').map((line) => INDENT + line)
-            ),
-            '}'
-        ]
-            .map((line) => INDENT + line)
-            .join('\n');
-    });
-
-    return `hostDirectives: [\n${directives.join(',\n')}\n]`;
-}
-
 function renderClassDecorator(entry: ClassEntry): string[] {
     switch (entry.entryType) {
         case EntryType.Component:
@@ -598,8 +539,7 @@ function renderClassDecorator(entry: ClassEntry): string[] {
                 entry.entryType === EntryType.Component ? 'Component' : 'Directive',
                 [
                     selector && `selector: ${quote(selector.replace(/\s+/g, ' ').trim())}`,
-                    exportAs?.length && `exportAs: ${quote(exportAs.join(', '))}`,
-                    renderHostDirectives(entry.members)
+                    exportAs?.length && `exportAs: ${quote(exportAs.join(', '))}`
                 ].filter((property): property is string => !!property)
             );
         }

@@ -3,7 +3,7 @@ import { CanMatchFn, Route, Routes, UrlMatcher, UrlSegment } from '@angular/rout
 import { docsIsExamplePagePath } from './constants/example-page';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
-import { docsPageResolver } from './services/page-resolver';
+import { docsApiPageResolver, docsPageResolver } from './services/page-resolver';
 import {
     DocsStructureCategoryId,
     DocsStructureItemId,
@@ -36,6 +36,8 @@ const loadComponentViewer = () =>
     import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentViewerComponent);
 const loadComponentPage = () =>
     import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentPageComponent);
+const loadComponentApiPage = () =>
+    import('./components/component-viewer/component-viewer.component').then((m) => m.DocsComponentApiPageComponent);
 const loadMigrationGuide = () =>
     import('./components/migration-guide/docs-migration-guide').then((m) => m.DocsMigrationGuide);
 const loadTokensOverview = () =>
@@ -44,18 +46,21 @@ const loadTypographyTable = () =>
     import('./components/design-tokens-viewers/typography-overview').then((m) => m.DocsTypographyTable);
 
 /**
- * Routes of the given tabs of a structure item, which opens on its overview. Every tab renders a page the
- * resolver looks up by id/tab/locale — Overview and Examples compiled from MDX (`tools/docs-pages`), Api
- * compiled from JsDoc (`tools/api-gen`); the route does not need to know which.
+ * Routes of the given tabs of a structure item, which opens on its overview. Overview and Examples render the
+ * page `tools/docs-pages` compiles from MDX; Api renders the data `tools/api-gen` extracts from JSDoc.
  */
 const itemTabRoutes = (tabs: DocsStructureItemTab[], loadPage: Route['loadComponent'] = loadComponentPage): Routes => [
     { path: '', redirectTo: DocsStructureItemTab.Overview, pathMatch: 'full' },
-    ...tabs.map((tab): Route => ({
-        path: tab,
-        loadComponent: loadPage,
-        resolve: { page: docsPageResolver },
-        pathMatch: 'full'
-    })),
+    ...tabs.map((tab): Route => {
+        const isApi = tab === DocsStructureItemTab.Api;
+
+        return {
+            path: tab,
+            loadComponent: isApi ? loadComponentApiPage : loadPage,
+            resolve: { page: isApi ? docsApiPageResolver : docsPageResolver },
+            pathMatch: 'full'
+        };
+    }),
     { path: '**', redirectTo: DocsStructureItemTab.Overview }
 ];
 

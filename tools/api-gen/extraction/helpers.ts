@@ -343,11 +343,31 @@ const readIndexSignatures = (
         .filter((element) => ts.isIndexSignatureDeclaration(element))
         .map((element) => `${typeText(element, sourceFile)!.replace(/[;,]\s*$/, '')};`);
 
-/** The names in an `extends` clause, as written. */
+/** Utility types that only narrow the type their first argument names, which the members come from. */
+const NARROWING_TYPES = new Set(['Omit', 'Pick', 'Partial', 'Required', 'Readonly']);
+
+/** A base named in an `extends` clause, the utility types around it unwrapped: `Omit<KbqPipe, 'value'>` is `KbqPipe`. */
+function readBaseName(
+    name: string,
+    typeArguments: readonly ts.TypeNode[] | undefined,
+    sourceFile: ts.SourceFile
+): string {
+    const [narrowed] = typeArguments ?? [];
+
+    if (!NARROWING_TYPES.has(name) || !narrowed || !ts.isTypeReferenceNode(narrowed)) return name;
+
+    return readBaseName(narrowed.typeName.getText(sourceFile), narrowed.typeArguments, sourceFile);
+}
+
+/** The names in an `extends` clause, as written, but for the utility types `readBaseName` sees through. */
 function readBases(clauses: ts.NodeArray<ts.HeritageClause> | undefined, sourceFile: ts.SourceFile): string[] {
     return (clauses ?? [])
         .filter(({ token }) => token === ts.SyntaxKind.ExtendsKeyword)
-        .flatMap(({ types }) => types.map(({ expression }) => expression.getText(sourceFile)));
+        .flatMap(({ types }) =>
+            types.map(({ expression, typeArguments }) =>
+                readBaseName(expression.getText(sourceFile), typeArguments, sourceFile)
+            )
+        );
 }
 
 function readClass(node: ts.ClassDeclaration, sourceFile: ts.SourceFile): ClassEntryMetadata {

@@ -129,7 +129,8 @@ describe('renderEntrySignature', () => {
         );
     });
 
-    it('puts the inputs a host directive forwards into the decorator, not the class body', () => {
+    // The list under the signature shows them, each with the directive it comes from.
+    it('leaves the bindings a host directive forwards out of the signature', () => {
         expect(
             renderEntrySignature(
                 directive({
@@ -156,15 +157,7 @@ describe('renderEntrySignature', () => {
             )
         ).toBe(
             [
-                '@Component({',
-                "    selector: 'kbq-dl',",
-                '    hostDirectives: [',
-                '        {',
-                '            directive: KbqLocaleOverridesDirective,',
-                "            inputs: ['kbqLocaleOverrides: localeOverrides']",
-                '        }',
-                '    ]',
-                '})',
+                "@Component({ selector: 'kbq-dl' })",
                 'class KbqDl {',
                 '    readonly wide = input<boolean>(false);',
                 '}'
@@ -303,55 +296,6 @@ describe('renderEntrySignature', () => {
                 })
             )
         ).toBe(['interface KbqFilterBarHost {', '    readonly filter: ModelSignal<KbqFilter | null>;', '}'].join('\n'));
-    });
-
-    it('forwards an accessor input once, and lists the outputs a host forwards', () => {
-        const forwarded = (patch: Partial<PropertyEntry>): PropertyEntry =>
-            property({ forwardedFrom: { directive: 'KbqTooltipTrigger', input: 'kbqVisible' }, ...patch });
-
-        expect(
-            renderEntrySignature(
-                directive({
-                    name: 'KbqNavbarItem',
-                    entryType: EntryType.Component,
-                    selector: 'kbq-navbar-item',
-                    exportAs: undefined,
-                    implements: [],
-                    members: [
-                        forwarded({
-                            name: 'kbqVisible',
-                            memberType: MemberType.Getter,
-                            memberTags: [MemberTags.Input]
-                        }),
-                        forwarded({
-                            name: 'kbqVisible',
-                            memberType: MemberType.Setter,
-                            memberTags: [MemberTags.Input]
-                        }),
-                        forwarded({
-                            name: 'kbqVisibleChange',
-                            memberTags: [MemberTags.Output],
-                            outputAlias: 'kbqVisibleChange',
-                            forwardedFrom: { directive: 'KbqTooltipTrigger', output: 'kbqVisibleChange' }
-                        })
-                    ]
-                })
-            )
-        ).toBe(
-            [
-                '@Component({',
-                "    selector: 'kbq-navbar-item',",
-                '    hostDirectives: [',
-                '        {',
-                '            directive: KbqTooltipTrigger,',
-                "            inputs: ['kbqVisible'],",
-                "            outputs: ['kbqVisibleChange']",
-                '        }',
-                '    ]',
-                '})',
-                'class KbqNavbarItem {}'
-            ].join('\n')
-        );
     });
 
     it('writes an optional method, an index signature and a constructor the way the source does', () => {
@@ -676,6 +620,15 @@ describe('member presentation', () => {
         ).toBe(true);
         // A method may be documented by its parameters alone.
         expect(hasMemberDetails(transform)).toBe(true);
+        // The signature has no line for a binding a host directive forwards.
+        expect(
+            hasMemberDetails(
+                property({
+                    name: 'focusable',
+                    forwardedFrom: { directive: 'RdxRovingFocusItemDirective', input: 'focusable' }
+                })
+            )
+        ).toBe(true);
     });
 
     it('orders entries by kind, then by name', () => {

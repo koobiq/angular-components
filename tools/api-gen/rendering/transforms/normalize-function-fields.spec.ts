@@ -26,4 +26,52 @@ describe('normalizeFunctionFields', () => {
 
         expect(normalizeFunctionFields(constructor).params?.map(({ name }) => name)).toEqual(['control']);
     });
+
+    describe('params and return type', () => {
+        const param = (name: string, type: string) => ({
+            name,
+            type,
+            description: '',
+            isOptional: false,
+            isRestParam: false
+        });
+
+        const read = (entry: object) => {
+            const { params, returnType } = normalizeFunctionFields(entry as Partial<FunctionEntry>);
+
+            return { params: params?.map(({ name }) => name), returnType };
+        };
+
+        it('reads them from the entry itself', () => {
+            expect(read({ params: [param('event', 'KeyboardEvent')], returnType: 'boolean' })).toEqual({
+                params: ['event'],
+                returnType: 'boolean'
+            });
+        });
+
+        it('reads them from the first signature of a function the extractor returns with its overloads', () => {
+            const signature = {
+                params: [param('event', 'KeyboardEvent'), param('keys', 'string[]')],
+                returnType: 'boolean'
+            };
+
+            expect(read({ signatures: [signature], implementation: null })).toEqual({
+                params: ['event', 'keys'],
+                returnType: 'boolean'
+            });
+        });
+
+        it('prefers the entry itself to its signatures', () => {
+            const signature = { params: [param('fromSignature', 'number')], returnType: 'boolean' };
+
+            expect(read({ params: [param('direct', 'string')], returnType: 'void', signatures: [signature] })).toEqual({
+                params: ['direct'],
+                returnType: 'void'
+            });
+        });
+
+        it('falls back to no params and an empty return type', () => {
+            expect(read({})).toEqual({ params: [], returnType: '' });
+        });
+    });
 });
