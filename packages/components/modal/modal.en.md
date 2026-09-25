@@ -41,6 +41,8 @@ A dialog may open from a user action. The system can also block the user with a 
 - Clicking outside the modal window. By default, modal windows do not close this way. However, closing by clicking outside the window can be useful when there is no risk of data loss and the system is not awaiting user input (for example, when there are no terminal buttons in the window).
 - The Esc key (equivalent to the "Cancel" button)
 
+The dialog closes on a left mouse button click only: the right and middle buttons open the browser's context menu or trigger its own actions and leave the window alone. The [side panel](/en/components/sidepanel) behaves the same way.
+
 Do not close a modal window automatically by timeout, as the user may not have had time to read the information inside.
 
 Sometimes the system cannot allow the user to return to interacting with the page. Even in this situation, the modal window should not be a dead end in the use case — action options must be provided. For example, if the system shows a window about an expired session, returning to the page in the background is not possible — but a link to the login page should be offered.
