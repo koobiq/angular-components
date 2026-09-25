@@ -8,6 +8,8 @@ By default, text in cells wraps to a new line:
 
 ### Borders
 
+Use `border` to draw a line under every row.
+
 In most cases, borders should be avoided, but sometimes they help support the layout when a table has gaps due to cell content varying between long and short text.
 
 Borders are also useful in tables with complex structures — for example, when rows are grouped or some cells are merged vertically.
@@ -25,3 +27,13 @@ Use `disableHover` to remove the background color change on row hover. This is u
 If a table has a lot of rows, use `stickyHeader` to keep the column names visible while you scroll down. This way you always see what each column means, even after scrolling.
 
 <Example id="table-sticky-header" />
+
+The pinned header is opaque and covers the top of the scroll area. When focus moves to a control above the visible part, the browser scrolls it to that top edge — under the header.
+
+The table accounts for the header height on its own cells and the controls inside them. If the scroll container holds other content as well, set `scroll-padding-block-start` on the container to the header height.
+
+The header color comes from `--kbq-table-sticky-header-background`. It defaults to the page background. For a table on a card, in a modal or in a sidepanel, point the token at that surface:
+
+```scss
+--kbq-table-sticky-header-background: var(--kbq-background-card);
+```

@@ -11,7 +11,7 @@ import { DateTime } from 'luxon';
     selector: 'table-sticky-header-example',
     imports: [KbqTableModule, KbqLuxonDateModule, KbqRelativeShortDatePipe],
     template: `
-        <div style="max-height: 240px; overflow: auto">
+        <div style="max-height: 240px; overflow: auto;">
             <table kbq-table stickyHeader style="width: 100%">
                 <thead>
                     <tr>
