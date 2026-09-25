@@ -283,9 +283,8 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
 
+    // TODO: mark as `required` once `codeFiles` is removed.
     /**
-     * @TODO Mark as `required`, after removing `codeFiles`
-     *
      * Files to display. `codeFiles` fills in while `files` is empty: the deprecated attribute used to
      * write into the same field, and which of the two won depended on the order in the template.
      */

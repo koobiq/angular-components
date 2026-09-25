@@ -1,22 +1,10 @@
 import { ConstantEntry } from '../entities';
 import { ConstantEntryRenderable } from '../entities/renderables';
-import { addRenderableCodeToc } from './code-transforms';
-import {
-    addHtmlAdditionalLinks,
-    addHtmlDescription,
-    addHtmlJsDocTagComments,
-    addHtmlUsageNotes,
-    setEntryFlags
-} from './jsdoc-transforms';
-import { addModuleName } from './module-name';
+import { addHtmlDescription, addHtmlJsDocTagComments, addHtmlUsageNotes, setEntryFlags } from './jsdoc-transforms';
 
 /** Given an unprocessed constant entry, get the fully renderable constant entry. */
-export function getConstantRenderable(classEntry: ConstantEntry, moduleName: string): ConstantEntryRenderable {
+export function getConstantRenderable(entry: ConstantEntry): ConstantEntryRenderable {
     return setEntryFlags(
-        addRenderableCodeToc(
-            addHtmlAdditionalLinks(
-                addHtmlUsageNotes(addHtmlJsDocTagComments(addHtmlDescription(addModuleName(classEntry, moduleName))))
-            )
-        )
+        addHtmlUsageNotes(addHtmlJsDocTagComments(addHtmlDescription(entry, entry.name), entry.name), entry.name)
     );
 }

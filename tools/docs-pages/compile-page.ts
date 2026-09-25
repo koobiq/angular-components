@@ -16,8 +16,12 @@ import { canRenderExampleOnServer } from '../../packages/docs-examples/server-re
 /** File of a `kbq-code-block`, as the compiled page binds it. */
 export interface CompiledCodeBlock {
     content: string;
-    language?: string;
+    language: string;
 }
+
+/** The element a fenced code block compiles to, bound to the page's `codeBlocks` field by its index. */
+export const renderCodeBlockElement = (index: number): string =>
+    `<kbq-code-block class="docs-code-block" filled [files]="[codeBlocks[${index}]]" />`;
 
 /** An MDX page compiled into the parts of an Angular component. */
 export interface CompiledPage {
@@ -52,6 +56,12 @@ export interface CompilePageOptions {
      * says, such as the migration guide. By default, one block per line.
      */
     layout?: (blocks: CompiledBlock[]) => string;
+    /**
+     * Renders every heading at this depth and without an anchor: for text that sits under a heading of the page
+     * it is compiled into, such as the JSDoc of an API entry, and would otherwise break the page's outline and
+     * repeat its ids.
+     */
+    headingDepth?: number;
 }
 
 type JsxElement = MdxJsxFlowElement | MdxJsxTextElement;
@@ -154,7 +164,10 @@ const LINKED_HEADING_DEPTHS = [2, 3, 4, 5];
 const isComment = (expression: string): boolean => /^\s*\/\*(?:[^*]|\*(?!\/))*\*\/\s*$/.test(expression);
 
 /** Compiles the MDX source of a documentation page. Throws on anything the site cannot render yet. */
-export function compilePage(source: string, { path, examples, url, layout }: CompilePageOptions): CompiledPage {
+export function compilePage(
+    source: string,
+    { path, examples, url, layout, headingDepth }: CompilePageOptions
+): CompiledPage {
     const page: CompiledPage = { template: '', codeBlocks: [], examples: [], browserExamples: [] };
 
     const lines = source.split('\n');
@@ -379,6 +392,12 @@ export function compilePage(source: string, { path, examples, url, layout }: Com
             case 'paragraph':
                 return renderParagraph(node, context);
             case 'heading': {
+                if (headingDepth) {
+                    const nestedTag = `h${headingDepth}`;
+
+                    return `<${nestedTag} class="${CLASS_PREFIX}__${nestedTag}">${renderChildren(node, { ...context, inParagraph: true })}</${nestedTag}>`;
+                }
+
                 const tag = `h${node.depth}`;
                 const id = LINKED_HEADING_DEPTHS.includes(node.depth)
                     ? ` id="${escapeTemplateText(takeHeadingId(node))}"`
@@ -434,10 +453,10 @@ export function compilePage(source: string, { path, examples, url, layout }: Com
                 return `<table class="${CLASS_PREFIX}__table"><thead class="${CLASS_PREFIX}__thead">${renderTableRow(head, 'th', align, context)}</thead>${body}</table>`;
             }
             case 'code': {
-                const codeBlock = node.lang ? { content: node.value, language: node.lang } : { content: node.value };
-                const index = page.codeBlocks.push(codeBlock) - 1;
+                // `kbq-code-block` falls back to plain text by itself, but warns about every file without a language.
+                const index = page.codeBlocks.push({ content: node.value, language: node.lang ?? 'plaintext' }) - 1;
 
-                return `<pre class="kbq-docs-pre"><kbq-code-block filled [files]="[codeBlocks[${index}]]" /></pre>`;
+                return renderCodeBlockElement(index);
             }
             case 'mdxJsxFlowElement':
                 if (node.name === 'Example') return renderExample(node);

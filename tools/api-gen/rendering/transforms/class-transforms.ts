@@ -1,26 +1,15 @@
 import { ClassEntry } from '../entities';
 import { ClassEntryRenderable } from '../entities/renderables';
-import { addRenderableCodeToc } from './code-transforms';
-import {
-    addHtmlAdditionalLinks,
-    addHtmlDescription,
-    addHtmlJsDocTagComments,
-    addHtmlUsageNotes,
-    setEntryFlags
-} from './jsdoc-transforms';
-import { addRenderableGroupMembers } from './member-transforms';
-import { addModuleName } from './module-name';
+import { addHtmlDescription, addHtmlJsDocTagComments, addHtmlUsageNotes, setEntryFlags } from './jsdoc-transforms';
+import { addRenderableMembers } from './member-transforms';
 
 /** Given an unprocessed class entry, get the fully renderable class entry. */
-export function getClassRenderable(classEntry: ClassEntry, moduleName: string): ClassEntryRenderable {
+export function getClassRenderable(classEntry: ClassEntry): ClassEntryRenderable {
     return setEntryFlags(
-        addRenderableCodeToc(
-            addRenderableGroupMembers(
-                addHtmlAdditionalLinks(
-                    addHtmlUsageNotes(
-                        addHtmlJsDocTagComments(addHtmlDescription(addModuleName(classEntry, moduleName)))
-                    )
-                )
+        addRenderableMembers(
+            addHtmlUsageNotes(
+                addHtmlJsDocTagComments(addHtmlDescription(classEntry, classEntry.name), classEntry.name),
+                classEntry.name
             )
         )
     );

@@ -1,24 +1,11 @@
 import { EntryType } from './entities';
-import { isClassEntry, isDeprecatedEntry } from './entities/categorization';
-import { ClassEntryRenderable, DocEntryRenderable } from './entities/renderables';
+import { isDeprecatedEntry } from './entities/categorization';
+import { DocEntryRenderable } from './entities/renderables';
+import { compareEntries } from './signature';
+import { EntryPointContext } from './templates';
 
-export const isClass = (renderable: DocEntryRenderable) => {
-    return (
-        isClassEntry(renderable) &&
-        renderable.entryType === EntryType.UndecoratedClass &&
-        !(renderable as ClassEntryRenderable).isService
-    );
-};
-
-export const isDirective = (renderable: DocEntryRenderable): boolean => {
-    return renderable.entryType === EntryType.Component || renderable.entryType === EntryType.Directive;
-};
-
-export function findBestPrimaryExport(docs: DocEntryRenderable[]): DocEntryRenderable | null {
-    // Usually the first doc that is not deprecated is used, but in case there are
-    // only deprecated doc, the last deprecated doc is used. We don't want to always
-    // skip deprecated docs as they could be still needed for documentation of a
-    // deprecated entry-point.
+/** The first module that is not deprecated — the one to import; none when every one of them is. */
+function findBestPrimaryExport(docs: DocEntryRenderable[]): DocEntryRenderable | null {
     for (const doc of docs) {
         if (!isDeprecatedEntry(doc)) {
             return doc;
@@ -28,24 +15,21 @@ export function findBestPrimaryExport(docs: DocEntryRenderable[]): DocEntryRende
     return null;
 }
 
-export function entryPointGrouper(renderables: DocEntryRenderable[], moduleName: string, packageName: string) {
-    const packageDisplayName = 'Koobiq';
-    const moduleImportPath = `@koobiq/${moduleName}/${packageName}`;
+/**
+ * The page of one entry point: one flat list of entries, ordered by kind and then by name, and the import
+ * of its `NgModule`. The module itself is not listed — it only re-exports what the page already shows.
+ */
+export function getEntryPointContext(
+    renderables: DocEntryRenderable[],
+    moduleName: string,
+    packageName: string
+): EntryPointContext {
     const exportedNgModules = renderables.filter((renderable) => renderable.entryType === EntryType.NgModule);
     const ngModuleExport = packageName === 'core' ? null : findBestPrimaryExport(exportedNgModules);
 
     return {
         primaryExportName: ngModuleExport?.name || '',
-        displayName: packageName,
-        moduleImportPath,
-        packageDisplayName,
-        exportedNgModules,
-        directives: renderables.filter(isDirective),
-        classes: renderables.filter(isClass),
-        interfaces: renderables.filter((renderable) => renderable.entryType === EntryType.Interface),
-        typeAliases: renderables.filter((renderable) => renderable.entryType === EntryType.TypeAlias),
-        constants: renderables.filter((renderable) => renderable.entryType === EntryType.Constant),
-        functions: renderables.filter((renderable) => renderable.entryType === EntryType.Function),
-        services: renderables.filter((renderable) => isClassEntry(renderable) && renderable.isService)
+        moduleImportPath: `@koobiq/${moduleName}/${packageName}`,
+        entries: renderables.filter((renderable) => renderable.entryType !== EntryType.NgModule).sort(compareEntries)
     };
 }

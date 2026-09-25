@@ -1,14 +1,9 @@
 @use '../dist/components/markdown/markdown';
 @use '../dist/components/table/table';
 
-.kbq-docs-table {
-    .kbq-docs-table__name {
-        width: 50%;
-    }
-
-    .kbq-docs-table__description {
-        width: 50%;
-    }
+// A code block of a compiled page, MDX or API: set apart from the text around it like a paragraph is.
+.docs-code-block {
+    margin: var(--kbq-size-l) 0;
 }
 
 .kbq-docs-element-last-child-margin-bottom-0 {

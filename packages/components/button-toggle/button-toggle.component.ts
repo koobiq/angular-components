@@ -253,12 +253,16 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
     private reportedValue: unknown;
 
     /**
-     * The method to be called in order to update ngModel.
-     * Now `ngModel` binding is not supported in multiple selection mode.
+     * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     * `ngModel` binding is not supported in multiple selection mode.
+     * @docs-private
      */
     controlValueAccessorChangeFn: (value: any) => void = () => {};
 
-    /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onTouched: () => void = () => {};
 
     ngOnInit() {

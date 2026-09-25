@@ -167,6 +167,8 @@ yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix  # Auto-f
 
 CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `organize-imports` and `multiline-arrays` plugins — let it order imports and break arrays rather than fighting it.
 
+ESLint also checks the JSDoc of `packages/components` with `eslint-plugin-jsdoc`. TypeScript reads a `@word` that starts a line as a tag and keeps the text after it in that tag, so an unknown tag, a block `@link` (write a Markdown link or `{@link Name}`), `@property` or `@todo` takes that text out of the generated docs.
+
 ### API Management
 
 After making changes to the package's public API, you must update the API snapshot files:
@@ -177,6 +179,8 @@ yarn run approve-api                     # Approve API changes (updates tools/pu
 yarn run approve-api components/<name>   # Approve a single entry point
 yarn run check-public-api-any            # Ratchet on `any` / `unknown` in the published type surface (CI)
 yarn run approve-public-api-any          # Record the new counts after removing `any` — the ratchet fails in both directions
+yarn run check-api-docs                  # Ratchet on public members with no description, read from the `docs:api-gen` manifest (CI)
+yarn run approve-api-docs                # Record the new counts after adding descriptions — the ratchet fails in both directions
 yarn run check-typings                   # Type-check the typings of every published package in dist/ with skipLibCheck off (CI)
 ```
 
@@ -191,7 +195,7 @@ Every pull request runs these workflows:
 | Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`             |
 | Unit tests                        | `styles:build-all`, then every `unit:*` script                                                                                  |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                |
-| API                               | build the packages, then `check-typings`, `check-api` and `check-public-api-any`                                                |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen` and `check-api-docs`              |
 | Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build` |
 | Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label          |
 | License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                      |
@@ -233,11 +237,11 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 
 ### Documentation pipeline
 
-- Page content is MDX next to the code: `<name>.{en,ru}.mdx` (overview), `examples.<name>.{en,ru}.mdx` (examples tab), `docs/guides/*.{en,ru}.mdx` and `docs/data-grid/**`. Every page exists in both languages — update both. `build:docs-content` compiles the pages with `tools/docs-pages` into Angular components under `dist/docs-pages`, which the app imports as `@koobiq/docs-pages` and `docsPageResolver` picks per route, so the pages are prerendered with their live examples. It also regenerates the SEO descriptions and runs `docs:api-gen` (`tools/api-gen`), whose HTML the API tab still fetches at runtime.
-- A live example is `<Example id="alert-overview" />`, with the key from `example-module.ts`. The build fails, with the position in the file, on what `tools/docs-pages/compile-page.ts` cannot turn into Angular: an unknown example, imports and `{expressions}`, HTML outside its short list of elements (write the rest in Markdown). MDX syntax applies: comments are `{/* */}`, `<br />` needs the slash, a literal `{` or `<` is escaped with a backslash. Every overview or examples tab that `structure.ts` routes to needs a page. `docs:start:dev` rebuilds the pages on save.
+- Page content is MDX next to the code: `<name>.{en,ru}.mdx` (overview), `examples.<name>.{en,ru}.mdx` (examples tab), `docs/guides/*.{en,ru}.mdx` and `docs/data-grid/**`. Every page exists in both languages — update both. `build:docs-content` compiles the pages with `tools/docs-pages` into Angular components under `dist/docs-pages`, which the app imports as `@koobiq/docs-pages` and `docsPageResolver` picks per route, so the pages are prerendered with their live examples. It also regenerates the SEO descriptions and runs `docs:api-gen` (`tools/api-gen`), which compiles the public API of every entry point into the same kind of page under `dist/docs-pages-api` (`@koobiq/docs-pages-api`) — per entry its signature as the source declares it and the members with a description — and writes the manifest `check-api-docs` and `llms-full.txt` read to `dist/docs-content/api-manifest`.
+- A live example is `<Example id="alert-overview" />`, with the key from `example-module.ts`. The build fails, with the position in the file, on what `tools/docs-pages/compile-page.ts` cannot turn into Angular: an unknown example, imports and `{expressions}`, HTML outside its short list of elements (write the rest in Markdown). MDX syntax applies: comments are `{/* */}`, `<br />` needs the slash, a literal `{` or `<` is escaped with a backslash. The JSDoc of the public API goes through the same compiler in `docs:api-gen`, whose errors name the declaration: the same rules apply there, `{@link Name}` becomes inline code, and an `@example` without a fence of its own is taken as TypeScript. Every overview or examples tab that `structure.ts` routes to needs a page. `docs:start:dev` rebuilds the pages on save.
 - `apps/docs/src/app/structure.ts` is the single source of the navigation (`hasApi`, `hasExamples`, `isNew` with an expiry date); the routes, the sitemap, the prerender route list and `llms.txt` are all derived from it.
 - Examples live in `packages/docs-examples/components/<name>/<example-name>/<example-name>-example.ts` with a `/** @title ... */` JSDoc, selector `<example-name>-example` and class `<ExampleName>Example`, registered in that folder's `index.ts` NgModule. After adding or renaming one, run `yarn run build:docs-examples-module` to regenerate the committed `packages/docs-examples/example-module.ts` and `packages/docs-examples/loader/index.ts` (the `@koobiq/docs-examples/loader` entry point, kept apart so the pages that show examples do not load it).
-- Committed generated files — never hand-edit: `packages/docs-examples/example-module.ts`, `packages/docs-examples/loader/index.ts`, `tools/public_api_guard/**`, `tools/check-public-api-any/baseline.json`, `apps/docs/src/llms.txt`, `apps/docs/src/llms-full.txt`, `apps/docs/src/sitemap.xml`, `apps/docs/src/prerender-routes.txt`, `apps/docs/src/app/seo-descriptions.ts`, `apps/docs/src/assets/versions.json`. The docs metadata files are refreshed by the release scripts (`release:extract-docs-meta`); leave them alone in feature branches.
+- Committed generated files — never hand-edit: `packages/docs-examples/example-module.ts`, `packages/docs-examples/loader/index.ts`, `tools/public_api_guard/**`, `tools/check-public-api-any/baseline.json`, `tools/check-api-docs/baseline.json`, `apps/docs/src/llms.txt`, `apps/docs/src/llms-full.txt`, `apps/docs/src/sitemap.xml`, `apps/docs/src/prerender-routes.txt`, `apps/docs/src/app/seo-descriptions.ts`, `apps/docs/src/assets/versions.json`. The docs metadata files are refreshed by the release scripts (`release:extract-docs-meta`); leave them alone in feature branches.
 
 ### Schematics
 

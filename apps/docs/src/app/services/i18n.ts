@@ -96,7 +96,6 @@ export const DOCS_TRANSLATIONS = {
     iconKeywords: { ru: 'Ключевые слова', en: 'Key words' },
 
     // example / live-example viewers
-    loadingDocument: { ru: 'Загрузка документа...', en: 'Loading document...' },
     showExampleCode: { ru: 'Показать код', en: 'Show code' },
     hideExampleCode: { ru: 'Скрыть код', en: 'Hide code' },
     resetState: { ru: 'Сбросить состояние', en: 'Reset state' },

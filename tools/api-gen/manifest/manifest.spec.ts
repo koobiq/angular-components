@@ -1,4 +1,12 @@
-import { DocEntry, EntryType, FunctionEntry } from '../rendering/entities';
+import {
+    ClassEntry,
+    DocEntry,
+    EntryType,
+    FunctionEntry,
+    MemberEntry,
+    MemberTags,
+    MemberType
+} from '../rendering/entities';
 import { getFunctionRenderable } from '../rendering/transforms/function-transforms';
 import { generateManifest } from './';
 
@@ -825,6 +833,101 @@ describe('api manifest generation', () => {
 
         expect(collection.packagesApiInfo[0].entries.map(({ name }) => name)).toEqual(['KbqActionsPanel']);
     });
+
+    describe('members', () => {
+        const member = (name: string, memberTags: MemberTags[] = []): MemberEntry => ({
+            name,
+            memberTags,
+            memberType: MemberType.Property,
+            description: '',
+            jsdocTags: []
+        });
+
+        const memberNames = (isAbstract: boolean): string[] => {
+            const [collection] = generateManifest([
+                {
+                    moduleName: 'components',
+                    packagesApiInfo: [
+                        {
+                            packageName: 'popover',
+                            entries: [
+                                {
+                                    ...entry({ name: 'KbqPopUp', entryType: EntryType.Directive }),
+                                    isAbstract,
+                                    members: [
+                                        member('trigger'),
+                                        member('prefix', [MemberTags.Protected]),
+                                        member('ngOnDestroy'),
+                                        member('writeValue')
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]);
+
+            return (collection.packagesApiInfo[0].entries[0] as unknown as ClassEntry).members.map(({ name }) => name);
+        };
+
+        it('should leave out lifecycle hooks, form-control callbacks and protected members', () => {
+            expect(memberNames(false)).toEqual(['trigger']);
+        });
+
+        it('should keep protected members of an abstract class, which exists to be extended', () => {
+            expect(memberNames(true)).toEqual(['trigger', 'prefix']);
+        });
+
+        // Outside a template, a documented protected member is there for a subclass to override, and a class
+        // created with `new` is created with its constructor.
+        it('should keep a documented protected member and the constructor of a plain class', () => {
+            const constructor = {
+                ...member('constructor'),
+                memberType: MemberType.Method,
+                signatures: [],
+                implementation: {
+                    params: [
+                        {
+                            name: 'own',
+                            type: 'ErrorStateMatcher',
+                            description: '',
+                            isOptional: false,
+                            isRestParam: false
+                        }
+                    ],
+                    returnType: 'ShowOnCrossFieldErrorStateMatcher'
+                }
+            } as unknown as MemberEntry;
+            const [collection] = generateManifest([
+                {
+                    moduleName: 'components',
+                    packagesApiInfo: [
+                        {
+                            packageName: 'core',
+                            entries: [
+                                {
+                                    ...entry({
+                                        name: 'ShowOnCrossFieldErrorStateMatcher',
+                                        entryType: EntryType.UndecoratedClass
+                                    }),
+                                    isAbstract: false,
+                                    members: [
+                                        { ...member('shouldReveal', [MemberTags.Protected]), description: 'The rule.' },
+                                        member('matcher', [MemberTags.Protected]),
+                                        constructor
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]);
+
+            expect(
+                (collection.packagesApiInfo[0].entries[0] as unknown as ClassEntry).members.map(({ name }) => name)
+            ).toEqual(['shouldReveal', 'constructor']);
+        });
+    });
 });
 
 describe('getFunctionRenderable', () => {
@@ -847,7 +950,7 @@ describe('getFunctionRenderable', () => {
             returnType: 'boolean'
         };
 
-        const renderable = getFunctionRenderable(fn, 'components');
+        const renderable = getFunctionRenderable(fn);
 
         expect(renderable.params).toHaveLength(1);
         expect(renderable.params[0].name).toBe('event');
@@ -884,7 +987,7 @@ describe('getFunctionRenderable', () => {
             ]
         } as unknown as FunctionEntry;
 
-        const renderable = getFunctionRenderable(fn, 'components');
+        const renderable = getFunctionRenderable(fn);
 
         expect(renderable.params).toHaveLength(2);
         expect(renderable.params[0].name).toBe('event');
@@ -900,7 +1003,7 @@ describe('getFunctionRenderable', () => {
             returnType: undefined
         } as unknown as FunctionEntry;
 
-        const renderable = getFunctionRenderable(fn, 'components');
+        const renderable = getFunctionRenderable(fn);
 
         expect(renderable.params).toEqual([]);
         expect(renderable.returnType).toBe('');
@@ -922,7 +1025,7 @@ describe('getFunctionRenderable', () => {
             ]
         } as unknown as FunctionEntry;
 
-        const renderable = getFunctionRenderable(fn, 'components');
+        const renderable = getFunctionRenderable(fn);
 
         expect(renderable.params[0].name).toBe('direct');
         expect(renderable.returnType).toBe('void');

@@ -1,12 +1,50 @@
 import { NgtscProgram } from '@angular/compiler-cli';
 import { basename, join } from 'path';
 import ts from 'typescript';
-import { DocEntry } from '../rendering/entities';
-import { ClassEntryMetadata, EntryCollection, ModuleInfo, PackageMetadata } from '../types';
+import { ConstantEntry, DocEntry, EntryType } from '../rendering/entities';
+import { ClassEntryMetadata, DeclarationSourceMetadata, EntryCollection, ModuleInfo, PackageMetadata } from '../types';
 import { src } from '../utils';
-import { entryHandler, prepareMergedMetadata, updateEntries } from './helpers';
+import { prepareMergedMetadata, readSourceFile, updateEntries } from './helpers';
 
 const BASE_PATH = process.env.BASE_PATH ?? 'packages';
+
+const mergeRecords = <T>(records: Record<string, T>[]): Record<string, T> => Object.assign({}, ...records);
+
+function findVariableDeclaration(sourceFile: ts.SourceFile, name: string): ts.VariableDeclaration | undefined {
+    return sourceFile.statements
+        .filter(ts.isVariableStatement)
+        .flatMap(({ declarationList }) => [...declarationList.declarations])
+        .find((declaration) => ts.isIdentifier(declaration.name) && ts.idText(declaration.name) === name);
+}
+
+/**
+ * The type of a constant without an annotation, in full. Angular's extractor prints it with `typeToString`,
+ * which cuts a long object type short — `{ a11y: {...; ... 8 more ...; }; ... 14 more ...; }` — where the
+ * typings, and so the signature, write every property out.
+ */
+function withFullConstantTypes(entries: DocEntry[], program: NgtscProgram): DocEntry[] {
+    const tsProgram = program.getTsProgram();
+    const checker = tsProgram.getTypeChecker();
+    const printer = ts.createPrinter({ removeComments: true });
+
+    return entries.map((entry) => {
+        const { type, source } = entry as ConstantEntry & { source?: { filePath: string } };
+
+        if (entry.entryType !== EntryType.Constant || !type?.includes('...') || !source) return entry;
+
+        const sourceFile = tsProgram.getSourceFile(join(process.cwd(), source.filePath));
+        const declaration = sourceFile && findVariableDeclaration(sourceFile, entry.name);
+        const typeNode =
+            declaration &&
+            checker.typeToTypeNode(
+                checker.getTypeAtLocation(declaration.name),
+                declaration,
+                ts.NodeBuilderFlags.NoTruncation | ts.NodeBuilderFlags.MultilineObjectLiterals
+            );
+
+        return typeNode ? { ...entry, type: printer.printNode(ts.EmitHint.Unspecified, typeNode, sourceFile) } : entry;
+    });
+}
 
 const getMetadataFrom = (moduleName: string, packageName: string): PackageMetadata => {
     const entryPointPath = `${moduleName}/${packageName}`;
@@ -50,7 +88,10 @@ export function extractApiToJson(packages: ModuleInfo[]) {
         module: ts.ModuleKind.ESNext,
         experimentalDecorators: true,
         composite: true,
-        emitDecoratorMetadata: true
+        emitDecoratorMetadata: true,
+        // Without it the checker drops `null` and `undefined` from every union it prints, and a type such as
+        // `boolean | null` — where `null` means "decide automatically" — reads as a plain `boolean`.
+        strictNullChecks: true
     };
 
     // Create a compiler host and program
@@ -64,20 +105,36 @@ export function extractApiToJson(packages: ModuleInfo[]) {
     // every package has been extracted.
     const extracted = Object.entries(modules).map(([moduleName, packageMetadataList]) => ({
         moduleName,
-        packages: packageMetadataList.map(({ resolvedPath, packageName }) => ({
-            packageName,
-            classesMetadata: src(join('packages', moduleName, packageName, '!(spec|index|public-api).ts')).reduce<
-                Record<string, ClassEntryMetadata>
-            >((res, currentPath: string) => ({ ...res, ...entryHandler(currentPath) }), {}),
-            entries: program.getApiDocumentation(resolvedPath, new Set<string>([])).entries as DocEntry[]
-        }))
+        packages: packageMetadataList.map(({ resolvedPath, packageName }) => {
+            // Nested directories too: `core` keeps its classes in subdirectories, and a host directive or a base
+            // class found nowhere cannot contribute its inputs or members to the classes using it.
+            const sources = src(
+                join('packages', moduleName, packageName, '**', '!(*.spec|*.playwright-spec|e2e|index|public-api).ts')
+            ).map(readSourceFile);
+
+            return {
+                packageName,
+                classesMetadata: mergeRecords(sources.map(({ classes }) => classes)),
+                declarations: mergeRecords(sources.map(({ declarations }) => declarations)),
+                entries: withFullConstantTypes(
+                    program.getApiDocumentation(resolvedPath, new Set<string>([])).entries as DocEntry[],
+                    program
+                )
+            };
+        })
     }));
 
     const entriesByName: Record<string, DocEntry> = {};
+    const metadataByName: Record<string, ClassEntryMetadata> = {};
+    const declarationsByName: Record<string, DeclarationSourceMetadata> = {};
 
     for (const { packages } of extracted) {
-        for (const { entries } of packages) {
+        for (const { entries, classesMetadata, declarations } of packages) {
             for (const entry of entries) entriesByName[entry.name] ??= entry;
+
+            for (const [name, metadata] of Object.entries(classesMetadata)) metadataByName[name] ??= metadata;
+
+            for (const [name, declaration] of Object.entries(declarations)) declarationsByName[name] ??= declaration;
         }
     }
 
@@ -85,9 +142,13 @@ export function extractApiToJson(packages: ModuleInfo[]) {
         ({ moduleName, packages }) =>
             ({
                 moduleName,
-                packagesApiInfo: packages.map(({ packageName, entries, classesMetadata }) => ({
+                packagesApiInfo: packages.map(({ packageName, entries, classesMetadata, declarations }) => ({
                     packageName,
-                    entries: updateEntries(entries, classesMetadata, entriesByName)
+                    // A package's own declarations first: an unexported helper elsewhere may share an exported name.
+                    entries: updateEntries(entries, classesMetadata, entriesByName, metadataByName, {
+                        ...declarationsByName,
+                        ...declarations
+                    })
                 }))
             }) as EntryCollection
     );

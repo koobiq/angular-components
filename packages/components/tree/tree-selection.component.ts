@@ -1164,14 +1164,20 @@ export class KbqTreeSelection
         }
     }
 
-    /** `View -> model callback called when value changes` */
+    /**
+     * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onChange: (value: any) => void = () => {};
 
     registerOnChange(fn: (value: any) => void): void {
         this.onChange = fn;
     }
 
-    /** `View -> model callback called when select has been touched` */
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onTouched = () => {};
 
     registerOnTouched(fn: () => void): void {

@@ -1,9 +1,5 @@
 @use '../dist/components/core/styles/common/tokens';
 
-.kbq-docs-pre {
-    position: relative;
-}
-
 .docs-component-navbar {
     & .docs-component-navbar__links {
         display: flex;
@@ -13,67 +9,6 @@
             padding: var(--kbq-size-s) var(--kbq-size-m);
         }
     }
-}
-
-.docs-api_method-name {
-    margin-bottom: var(--kbq-size-xxs);
-}
-
-.docs-api__section {
-    border-width: 1px;
-    border-style: solid;
-    border-radius: var(--kbq-size-m);
-    padding: var(--kbq-size-xxs) var(--kbq-size-xl) var(--kbq-size-xl);
-    margin-bottom: var(--kbq-size-l);
-
-    & .docs-api__property-header,
-    & .docs-api__method-header {
-        margin: var(--kbq-size-m) 0;
-    }
-
-    & .kbq-docs-table {
-        padding-bottom: var(--kbq-size-m);
-
-        & .kbq-docs-table__name,
-        & .kbq-docs-table__description {
-            padding: var(--kbq-size-s) 0;
-        }
-
-        & > tbody > tr td {
-            padding: var(--kbq-size-s) 0;
-        }
-
-        & > tbody > tr:last-child td {
-            border-bottom: none;
-        }
-    }
-
-    & .kbq-docs-table + .docs-api_method-name {
-        margin-top: var(--kbq-size-xl);
-    }
-
-    & .docs-api_method-name + .docs-api_method-name {
-        margin-top: var(--kbq-size-xxl);
-    }
-
-    & .kbq-markdown__pre {
-        margin-bottom: var(--kbq-size-m);
-    }
-
-    &.docs-api__section_method > .docs-api_method-name {
-        padding-top: var(--kbq-size-m);
-    }
-}
-
-.docs-api__class-selector-name,
-.docs-api__class-export-name {
-    padding: var(--kbq-size-xxs) var(--kbq-size-s);
-    border-radius: var(--kbq-size-s);
-}
-
-.docs-api__class-name {
-    margin-top: var(--kbq-size-m);
-    margin-bottom: var(--kbq-size-m);
 }
 
 // A tab only hosts `docs-component-viewer-wrapper`, which lays the article out.
@@ -113,25 +48,14 @@
         margin-top: var(--kbq-size-3xl);
     }
 
-    & .docs-api__section + .docs-header-link,
     & .kbq-markdown__table + .docs-header-link,
     & .kbq-markdown__ul + .docs-header-link,
     & .kbq-markdown__p + .docs-header-link {
         margin-top: var(--kbq-size-xxl);
     }
 
-    & .docs-header-link:first-child:not(div[class*='docs-api__']) {
+    & .docs-header-link:first-child {
         margin-top: 0;
-    }
-
-    & .docs-import {
-        margin-top: 0;
-    }
-
-    & .docs-api__section_method .docs-api_method-name {
-        padding: 0;
-        margin-top: var(--kbq-size-m);
-        margin-bottom: var(--kbq-size-m);
     }
 }
 
@@ -264,45 +188,9 @@
     background: var(--kbq-background-bg);
 }
 
-.docs-api__section {
-    border-color: var(--kbq-background-contrast-fade);
-}
-
-.docs-api__section_directive .docs-api_method-name {
-    color: var(--kbq-line-warning) !important;
-}
-
-.docs-api__input-marker {
-    color: var(--kbq-line-success) !important;
-}
-
-.docs-api__output-marker {
-    color: var(--kbq-foreground-theme) !important;
-}
-
-.kbq-docs-table {
-    & .kbq-markdown__code {
-        background: transparent !important;
-    }
-
-    &.kbq-table > tbody > tr:hover {
-        background: none;
-    }
-}
-
 // header
 .docs-component-name {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact-strong);
-}
-
-.docs-api__class-name {
-    font-family: var(--kbq-font-family-mono);
-    font-size: 20px;
-    line-height: 28px;
-    letter-spacing: normal;
-    font-weight: 700;
-    text-transform: none;
-    font-feature-settings: initial;
 }
 
 .docs-component-overview {
@@ -320,7 +208,6 @@
     }
 
     // second level
-    & .docs-api__section_method .docs-api_method-name,
     & .docs-header-link.kbq-markdown__h4 {
         font-family: var(--kbq-font-family-base);
         font-size: 20px;
@@ -353,19 +240,119 @@
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 }
 
-.docs-api__class-selector-name,
-.docs-api__input-marker,
-.docs-api__output-marker,
-.docs-api_property-name {
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
-}
-
-.docs-api_method-name {
-    @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big-strong);
-}
-
+// The API tab: one section per entry — its name and kind, its description, its signature, and the
+// members worth explaining as a description list below the signature.
 .docs-api {
-    .kbq-markdown__code {
+    // Inline code from JSDoc. The markdown styles keep it on one line, so a long span would push the page
+    // wider than its column; it is cut off with an ellipsis instead.
+    .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code) {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
+
+        display: inline-block;
+        box-sizing: border-box;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        // An inline block that clips sits on its bottom edge, not on the text baseline, so it is aligned by it.
+        vertical-align: bottom;
     }
+}
+
+// A page too large for one Angular view is rendered in parts (see `tools/api-gen`), which read as one list.
+.docs-api__part {
+    display: block;
+
+    & + .docs-api__part {
+        margin-top: var(--kbq-size-5xl);
+    }
+}
+
+.docs-api__entry + .docs-api__entry {
+    margin-top: var(--kbq-size-5xl);
+}
+
+.docs-code-block.docs-api__import {
+    margin: 0 0 var(--kbq-size-3xl);
+}
+
+.docs-api__entry-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kbq-size-s) var(--kbq-size-m);
+    margin-bottom: var(--kbq-size-m);
+}
+
+// As specific as the overview's heading rules, and after them: their margins, kept on the heading inside
+// this row, would push the name off the centre line the badge beside it is aligned to.
+.docs-component-overview .docs-header-link.docs-api__entry-name {
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-family: var(--kbq-font-family-mono);
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 700;
+    font-feature-settings: initial;
+}
+
+.docs-api__members,
+.docs-api__params {
+    margin: 0;
+}
+
+.docs-api__member {
+    padding: var(--kbq-size-m) 0;
+    border-top: 1px solid var(--kbq-line-contrast-less);
+
+    & > dd {
+        margin: var(--kbq-size-xs) 0 0;
+    }
+}
+
+.docs-api__members > .docs-api__member:first-child {
+    border-top: none;
+}
+
+.docs-api__member > dt,
+.docs-api__param > dt {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kbq-size-xs) var(--kbq-size-s);
+}
+
+.docs-api__term-name {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big-strong);
+
+    overflow-wrap: anywhere;
+}
+
+.docs-api__term-type {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-normal);
+
+    color: var(--kbq-foreground-contrast-secondary);
+    overflow-wrap: anywhere;
+}
+
+.docs-api__note-title {
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+
+    margin: var(--kbq-size-m) 0 var(--kbq-size-xs);
+}
+
+.docs-api__param {
+    padding-left: var(--kbq-size-m);
+    border-left: 2px solid var(--kbq-line-contrast-less);
+
+    & + .docs-api__param {
+        margin-top: var(--kbq-size-s);
+    }
+
+    & > dd {
+        margin: var(--kbq-size-xxs) 0 0;
+    }
+}
+
+.docs-api__deprecated-note {
+    margin-top: var(--kbq-size-s);
 }

@@ -114,10 +114,6 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Suggestions for improvement",
     "ru": "Предложения по улучшению",
   },
-  "loadingDocument": {
-    "en": "Loading document...",
-    "ru": "Загрузка документа...",
-  },
   "migrationCommandsTitle": {
     "en": "Update commands",
     "ru": "Команды обновления",

@@ -1,5 +1,3 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router, UrlSegment } from '@angular/router';
@@ -8,11 +6,7 @@ import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsStructureCategoryId, DocsStructureItemId } from '../../structure';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
-import {
-    DocsComponentApiComponent,
-    DocsComponentPageComponent,
-    DocsComponentViewerComponent
-} from './component-viewer.component';
+import { DocsComponentPageComponent, DocsComponentViewerComponent } from './component-viewer.component';
 
 const segments = (...paths: string[]): UrlSegment[] => paths.map((path) => new UrlSegment(path, {}));
 
@@ -132,31 +126,9 @@ describe(DocsComponentPageComponent.name, () => {
         expect(article.querySelector('.kbq-callout')).not.toBeNull();
     });
 
-    // A compiled page renders with the route; the API document reports through `contentRendered` instead.
     it('scrolls the anchors into position once the page has rendered', () => {
         createPage();
 
         expect(setScrollPosition).toHaveBeenCalledTimes(1);
-    });
-});
-
-describe(DocsComponentApiComponent.name, () => {
-    it('loads the API document of the item the parent route shows', () => {
-        const url = of(segments(DocsStructureCategoryId.Components, DocsStructureItemId.Alert));
-
-        TestBed.configureTestingModule({
-            imports: [DocsComponentApiComponent],
-            providers: [
-                provideRouter([]),
-                provideDocsLocale(DocsLocale.En),
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                { provide: ActivatedRoute, useValue: { fragment: of(null), parent: { url } } }
-            ]
-        });
-
-        TestBed.createComponent(DocsComponentApiComponent).detectChanges();
-
-        TestBed.inject(HttpTestingController).expectOne('docs-content/api-docs/components-alert.html');
     });
 });

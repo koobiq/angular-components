@@ -29,7 +29,6 @@ import {
 } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
 import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
-import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import { DocsComponentViewerWrapperComponent } from './component-viewer-wrapper';
 
@@ -139,40 +138,4 @@ export class DocsComponentPageComponent {
             this.wrapper().scrollToSelectedContentSection();
         });
     }
-}
-
-/** The API tab: the HTML document `tools/api-gen` generates for the structure item of the parent route. */
-@Component({
-    selector: 'docs-component-api',
-    imports: [DocsComponentViewerWrapperComponent, DocsLiveExampleComponent],
-    template: `
-        <docs-component-viewer-wrapper>
-            <ng-container ngProjectAs="[docs-article]">
-                @if (documentUrl(); as documentUrl) {
-                    <docs-live-example
-                        [documentUrl]="documentUrl"
-                        (contentRendered)="wrapper().scrollToSelectedContentSection()"
-                        (contentRenderFailed)="wrapper().scrollToSelectedContentSection()"
-                    />
-                }
-            </ng-container>
-        </docs-component-viewer-wrapper>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: {
-        class: 'docs-component-tab'
-    }
-})
-export class DocsComponentApiComponent {
-    protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
-
-    protected readonly documentUrl = toSignal(
-        inject(ActivatedRoute).parent!.url.pipe(
-            map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
-                docsGetItemById(<DocsStructureItemId>id, <DocsStructureCategoryId>categoryId)
-            ),
-            map((item) => (item ? `docs-content/api-docs/components-${item.apiId}.html` : null))
-        ),
-        { initialValue: null }
-    );
 }

@@ -1,147 +1,57 @@
-import { marked } from 'marked';
 import { JsDocTagEntry } from '../entities';
-import { isDeprecatedEntry, isDeveloperPreview } from '../entities/categorization';
-import { LinkEntryRenderable } from '../entities/renderables';
+import { isDeprecatedEntry } from '../entities/categorization';
 import {
-    HasAdditionalLinks,
     HasDeprecatedFlag,
     HasDescription,
-    HasDeveloperPreviewFlag,
     HasHtmlDescription,
     HasHtmlUsageNotes,
     HasJsDocTags,
-    HasModuleName,
     HasRenderableJsDocTags
 } from '../entities/traits';
-import { getLinkToModule } from './url-transforms';
+import { exampleAsMarkdown } from './example-markdown';
+import { renderJsDocMarkdown } from './render-jsdoc-markdown';
 
-export const JS_DOC_USAGE_NOTES_TAG = 'usageNotes';
-export const JS_DOC_SEE_TAG = 'see';
-export const JS_DOC_DESCRIPTION_TAG = 'description';
+const JS_DOC_USAGE_NOTES_TAG = 'usageNotes';
+const JS_DOC_DESCRIPTION_TAG = 'description';
+const JS_DOC_EXAMPLE_TAG = 'example';
 
-/** Given an entity with a description, gets the entity augmented with an `htmlDescription`. */
-export function addHtmlDescription<T extends HasDescription>(entry: T): T & HasHtmlDescription {
-    const firstParagraphRule = /(.*?)(?:\n\n|$)/s;
+const asMarkdown = (tag: JsDocTagEntry): string =>
+    tag.name === JS_DOC_EXAMPLE_TAG ? exampleAsMarkdown(tag.comment) : tag.comment;
 
-    let jsDocDescription = '';
+/**
+ * Given an entity with a description, gets the entity augmented with an `htmlDescription`.
+ *
+ * @param context Identifies the entity in a Markdown compile error, e.g. `KbqSelect` or `KbqSelect.multiple`.
+ */
+export function addHtmlDescription<T extends HasDescription>(entry: T, context: string): T & HasHtmlDescription {
+    const described = (entry as Partial<HasJsDocTags>).jsdocTags?.find(({ name }) => name === JS_DOC_DESCRIPTION_TAG);
 
-    if ('jsdocTags' in entry) {
-        jsDocDescription =
-            (entry.jsdocTags as JsDocTagEntry[]).find((tag) => tag.name === JS_DOC_DESCRIPTION_TAG)?.comment ?? '';
-    }
-
-    const description = entry.description ? entry.description : jsDocDescription;
-    const shortTextMatch = description.match(firstParagraphRule);
-    const htmlDescription = getHtmlForJsDocText(description).trim();
-    const shortHtmlDescription = getHtmlForJsDocText(shortTextMatch ? shortTextMatch[0] : '').trim();
-
-    return {
-        ...entry,
-        htmlDescription,
-        shortHtmlDescription
-    };
+    return { ...entry, htmlDescription: renderJsDocMarkdown(entry.description || described?.comment || '', context) };
 }
 
 /**
  * Given an entity with JsDoc tags, gets the entity with JsDocTagRenderable entries that
  * have been augmented with an `htmlComment`.
  */
-export function addHtmlJsDocTagComments<T extends HasJsDocTags>(entry: T): T & HasRenderableJsDocTags {
+export function addHtmlJsDocTagComments<T extends HasJsDocTags>(entry: T, context: string): T & HasRenderableJsDocTags {
     return {
         ...entry,
         jsdocTags: entry.jsdocTags.map((tag) => ({
             ...tag,
-            htmlComment: getHtmlForJsDocText(tag.comment)
+            htmlComment: renderJsDocMarkdown(asMarkdown(tag), `${context} @${tag.name}`)
         }))
     };
 }
 
-/** Given an entity with `See also` links. */
-export function addHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(entry: T): T & HasAdditionalLinks {
-    return {
-        ...entry,
-        additionalLinks: getHtmlAdditionalLinks(entry)
-    };
-}
-
-export function addHtmlUsageNotes<T extends HasJsDocTags>(entry: T): T & HasHtmlUsageNotes {
+export function addHtmlUsageNotes<T extends HasJsDocTags>(entry: T, context: string): T & HasHtmlUsageNotes {
     const usageNotesTag = entry.jsdocTags.find((tag) => tag.name === JS_DOC_USAGE_NOTES_TAG);
-    const htmlUsageNotes = usageNotesTag
-        ? (marked.parse(
-              convertJsDocExampleToHtmlExample(wrapExampleHtmlElementsWithCode(usageNotesTag.comment))
-          ) as string)
-        : '';
 
     return {
         ...entry,
-        htmlUsageNotes
+        htmlUsageNotes: usageNotesTag ? renderJsDocMarkdown(usageNotesTag.comment, `${context} @usageNotes`) : ''
     };
 }
 
-/** Given a markdown JsDoc text, gets the rendered HTML. */
-export function getHtmlForJsDocText(text: string): string {
-    return marked.parse(wrapExampleHtmlElementsWithCode(text)) as string;
-}
-
-export function setEntryFlags<T extends HasJsDocTags>(entry: T): T & HasDeprecatedFlag & HasDeveloperPreviewFlag {
-    return {
-        ...entry,
-        isDeprecated: isDeprecatedEntry(entry),
-        isDeveloperPreview: isDeveloperPreview(entry)
-    };
-}
-
-function getHtmlAdditionalLinks<T extends HasJsDocTags & HasModuleName>(entry: T): LinkEntryRenderable[] {
-    const markdownLinkRule = /\[([^\]]+)\]\(([^)]+)\)/;
-    // Some links are written in the following format: {@link Route }
-    const apiLinkRule = /\{\s*@link\s+([^}]+)\s*\}/;
-
-    const seeAlsoLinks = entry.jsdocTags
-        .filter((tag) => tag.name === JS_DOC_SEE_TAG)
-        .map((tag) => tag.comment)
-        .map((comment) => {
-            const markdownLinkMatch = comment.match(markdownLinkRule);
-
-            if (markdownLinkMatch) {
-                return {
-                    label: markdownLinkMatch[1],
-                    url: markdownLinkMatch[2]
-                };
-            }
-
-            const linkMatch = comment.match(apiLinkRule);
-
-            if (linkMatch) {
-                return {
-                    label: linkMatch[1].trim(),
-                    url: `${getLinkToModule(entry.moduleName)}/${linkMatch[1].trim()}`
-                };
-            }
-
-            return undefined;
-        })
-        .filter((link): link is LinkEntryRenderable => !!link)
-        .map((link) => {
-            // link.url = rewriteLinks(link.url);
-            return link;
-        });
-
-    return seeAlsoLinks;
-}
-
-/**
- * Some descriptions in the text contain HTML elements like `input` or `img`,
- * we should wrap such elements using `code`.
- * Otherwise DocViewer will try to render those elements.
- */
-function wrapExampleHtmlElementsWithCode(text: string) {
-    return text.replaceAll(`'<input>'`, `<code><input></code>`).replaceAll(`'<img>'`, `<code><img></code>`);
-}
-
-function convertJsDocExampleToHtmlExample(text: string): string {
-    const codeExampleAtRule = /{@example (\S+) region=(['"])([^'"]+)\2\s*}/g;
-
-    return text.replaceAll(codeExampleAtRule, (_, path, _separator, region) => {
-        return `<code-example path="${path}" region="${region}" />`;
-    });
+export function setEntryFlags<T extends HasJsDocTags>(entry: T): T & HasDeprecatedFlag {
+    return { ...entry, isDeprecated: isDeprecatedEntry(entry) };
 }

@@ -18,7 +18,7 @@ import { KbqIcon } from './icon.component';
 export class KbqIconItem extends KbqIcon {
     override name = 'KbqIconItem';
 
-    /** Name of an icon within a @koobiq/icons. */
+    /** Name of an icon within a `@koobiq/icons`. */
     // Kept as @Input() to stay compatible with KbqIcon.iconName (also @Input()).
     // Migrate together with the rest of the KbqIcon hierarchy in a follow-up.
     @Input({ alias: 'kbq-icon-item' }) override iconName: string;

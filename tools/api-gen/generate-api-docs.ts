@@ -1,7 +1,6 @@
-import chalk from 'chalk';
 import { extractApiToJson } from './extraction';
 import { generateManifest } from './manifest';
-import { generateApiToHtml } from './rendering';
+import { generateApiPages } from './rendering';
 import { ModuleInfo } from './types';
 
 const modules: ModuleInfo[] = [
@@ -14,15 +13,12 @@ const modules: ModuleInfo[] = [
     }
 ];
 
-export const generateApiDocs = () => {
-    const taskId = 'api-docs-koobiq';
-
-    console.log(`Starting ${chalk.blue(taskId)}...`);
+const generateApiDocs = () => {
     const data = extractApiToJson(modules);
     const filteredData = generateManifest(data);
+    const pageCount = generateApiPages(filteredData);
 
-    generateApiToHtml(filteredData);
-    console.log(chalk.green(`Finished ${chalk.bold.green(taskId)}!`));
+    console.log(`Generated ${pageCount} API pages into dist/docs-pages-api`);
 };
 
 try {

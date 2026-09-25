@@ -14,6 +14,23 @@ export type DocsPages = Partial<Record<string, Partial<Record<string, Partial<Re
 export const DOCS_PAGES = new InjectionToken<DocsPages>('DOCS_PAGES');
 
 /**
+ * Combines the pages `tools/docs-pages` compiles from MDX with the pages `tools/api-gen` compiles from
+ * JsDoc — two independent generators contributing different tabs of the same structure item (`overview`/
+ * `examples` from one, `api` from the other), so a shallow merge per item id is enough.
+ */
+export function docsMergePages(...sources: DocsPages[]): DocsPages {
+    const result: DocsPages = {};
+
+    for (const source of sources) {
+        for (const [id, tabs] of Object.entries(source)) {
+            result[id] = { ...result[id], ...tabs };
+        }
+    }
+
+    return result;
+}
+
+/**
  * Resolves the component compiled from the MDX source of the page. A tab without a page, such as the examples
  * tab of an item that has no examples, redirects to the 404 page. A resolver because `loadComponent` cannot see
  * the route parameters; the router waits for it on the server too, so the prerendered page carries its content.

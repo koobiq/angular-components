@@ -667,6 +667,10 @@ export class KbqDatepickerInput<D>
         }
     }
 
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onTouched = () => {};
 
     ngAfterContentInit() {

@@ -14,44 +14,40 @@ import { getEnumRenderable } from './transforms/enum-transforms';
 import { getFunctionRenderable } from './transforms/function-transforms';
 import { getInterfaceRenderable } from './transforms/interface-transforms';
 import {
-    addHtmlAdditionalLinks,
     addHtmlDescription,
     addHtmlJsDocTagComments,
     addHtmlUsageNotes,
     setEntryFlags
 } from './transforms/jsdoc-transforms';
-import { addModuleName } from './transforms/module-name';
 import { getTypeAliasRenderable } from './transforms/type-alias-transforms';
 
-export function getRenderable(entry: DocEntry, moduleName: string): DocEntryRenderable {
+export function getRenderable(entry: DocEntry): DocEntryRenderable {
     if (isClassEntry(entry)) {
-        return getClassRenderable(entry, moduleName);
+        return getClassRenderable(entry);
     }
 
     if (isConstantEntry(entry)) {
-        return getConstantRenderable(entry, moduleName);
+        return getConstantRenderable(entry);
     }
 
     if (isEnumEntry(entry)) {
-        return getEnumRenderable(entry, moduleName);
+        return getEnumRenderable(entry);
     }
 
     if (isInterfaceEntry(entry)) {
-        return getInterfaceRenderable(entry, moduleName);
+        return getInterfaceRenderable(entry);
     }
 
     if (isFunctionEntry(entry)) {
-        return getFunctionRenderable(entry, moduleName);
+        return getFunctionRenderable(entry);
     }
 
     if (isTypeAliasEntry(entry)) {
-        return getTypeAliasRenderable(entry, moduleName);
+        return getTypeAliasRenderable(entry);
     }
 
     // Fallback to an uncategorised renderable.
     return setEntryFlags(
-        addHtmlAdditionalLinks(
-            addHtmlDescription(addHtmlUsageNotes(addHtmlJsDocTagComments(addModuleName(entry, moduleName))))
-        )
+        addHtmlDescription(addHtmlUsageNotes(addHtmlJsDocTagComments(entry, entry.name), entry.name), entry.name)
     );
 }

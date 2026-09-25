@@ -21,3 +21,5 @@ jobs:
       - run: yarn run check-typings
       - run: yarn run check-api
       - run: yarn run check-public-api-any
+      - run: yarn run docs:api-gen
+      - run: yarn run check-api-docs
