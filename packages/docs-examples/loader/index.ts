@@ -423,6 +423,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/flag').then((m) => m.FlagAspectRatioExample);
         case 'flag-circle':
             return import('@koobiq/docs-examples/components/flag').then((m) => m.FlagCircleExample);
+        case 'flag-custom-ratio':
+            return import('@koobiq/docs-examples/components/flag').then((m) => m.FlagCustomRatioExample);
         case 'flag-fallback':
             return import('@koobiq/docs-examples/components/flag').then((m) => m.FlagFallbackExample);
         case 'flag-language':

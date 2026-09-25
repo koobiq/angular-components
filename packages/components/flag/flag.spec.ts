@@ -1,7 +1,11 @@
 import { Component, inject, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
+import { axe } from 'jest-axe';
 import { KbqFlag } from './flag';
+
+/** An axe audit runs on real timers and needs more than the repo-wide 2s default. */
+const AXE_TIMEOUT = 15000;
 
 const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component] }).compileComponents();
@@ -31,11 +35,11 @@ describe(KbqFlag.name, () => {
         expect(flag.querySelector('img')).toBeTruthy();
     });
 
-    it('should render an inline svg projected via innerHTML as a direct child', () => {
+    it('should render the svg input into a slot of its own', () => {
         @Component({
             imports: [KbqFlag],
             template: `
-                <kbq-flag [innerHTML]="svg" />
+                <kbq-flag [svg]="svg" />
             `
         })
         class TestComponent {
@@ -45,7 +49,39 @@ describe(KbqFlag.name, () => {
 
         const flag = getFlag(createComponent(TestComponent));
 
-        expect(flag.querySelector(':scope > svg')).toBeTruthy();
+        expect(flag.querySelector('.kbq-flag__svg > svg')).toBeTruthy();
+    });
+
+    it('should keep projected content when the svg input is set', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag [svg]="svg"><img src="AL.svg" alt="" /></kbq-flag>
+            `
+        })
+        class TestComponent {
+            private readonly sanitizer = inject(DomSanitizer);
+            readonly svg = this.sanitizer.bypassSecurityTrustHtml('<svg data-testid="flag-svg"></svg>');
+        }
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.querySelector('img')).toBeTruthy();
+        expect(flag.querySelector('svg')).toBeTruthy();
+    });
+
+    it('should not render the svg slot when the input is unset', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.querySelector('.kbq-flag__svg')).toBeNull();
     });
 
     it('should apply the inset shadow by default', () => {
@@ -76,7 +112,37 @@ describe(KbqFlag.name, () => {
         expect(flag.classList).not.toContain('kbq-flag_shadow-inset');
     });
 
-    it('should apply the shape modifier class', () => {
+    it('should not apply a shape modifier class for the default rectangle shape', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.classList).not.toContain('kbq-flag_square');
+        expect(flag.classList).not.toContain('kbq-flag_circle');
+    });
+
+    it('should apply the square shape modifier class', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag shape="square" />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.classList).toContain('kbq-flag_square');
+        expect(flag.classList).not.toContain('kbq-flag_circle');
+    });
+
+    it('should apply the circle shape modifier class', () => {
         @Component({
             imports: [KbqFlag],
             template: `
@@ -91,6 +157,58 @@ describe(KbqFlag.name, () => {
         expect(flag.classList).not.toContain('kbq-flag_square');
     });
 
+    it('should set the aspect ratio token from the input', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag aspectRatio="4 / 3" />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.style.getPropertyValue('--kbq-flag-aspect-ratio')).toBe('4 / 3');
+    });
+
+    it('should leave the aspect ratio to the stylesheet when the input is unset', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag shape="square" />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        // No inline declaration at all, so the token keeps cascading — including the 1 / 1 the square
+        // and circle modifiers set, and any consumer rule that redefines it.
+        expect(flag.style.getPropertyValue('--kbq-flag-aspect-ratio')).toBe('');
+    });
+
+    it('should drop the inline aspect ratio when the input is cleared', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag [aspectRatio]="ratio" />
+            `
+        })
+        class TestComponent {
+            ratio: string | undefined = '4 / 3';
+        }
+
+        const fixture = createComponent(TestComponent);
+        const flag = getFlag(fixture);
+
+        expect(flag.style.getPropertyValue('--kbq-flag-aspect-ratio')).toBe('4 / 3');
+
+        fixture.componentInstance.ratio = undefined;
+        fixture.detectChanges();
+
+        expect(flag.style.getPropertyValue('--kbq-flag-aspect-ratio')).toBe('');
+    });
+
     it('should apply the empty placeholder class', () => {
         @Component({
             imports: [KbqFlag],
@@ -103,6 +221,20 @@ describe(KbqFlag.name, () => {
         const flag = getFlag(createComponent(TestComponent));
 
         expect(flag.classList).toContain('kbq-flag_empty');
+    });
+
+    it('should not apply the empty placeholder class by default', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.classList).not.toContain('kbq-flag_empty');
     });
 
     describe('accessibility', () => {
@@ -138,7 +270,7 @@ describe(KbqFlag.name, () => {
             expect(flag.hasAttribute('aria-label')).toBe(false);
         });
 
-        it('should not set role/aria when neither labelled nor decorative', () => {
+        it('should hide the flag from assistive tech when it has no accessible name', () => {
             @Component({
                 imports: [KbqFlag],
                 template: `
@@ -149,9 +281,50 @@ describe(KbqFlag.name, () => {
 
             const flag = getFlag(createComponent(TestComponent));
 
+            expect(flag.getAttribute('aria-hidden')).toBe('true');
             expect(flag.hasAttribute('role')).toBe(false);
             expect(flag.hasAttribute('aria-label')).toBe(false);
-            expect(flag.hasAttribute('aria-hidden')).toBe(false);
+        });
+
+        it(
+            'should pass axe in each of the three documented shapes',
+            async () => {
+                @Component({
+                    imports: [KbqFlag],
+                    template: `
+                        <kbq-flag label="Germany"><img src="DE.svg" alt="" /></kbq-flag>
+                        <kbq-flag decorative><img src="DE.svg" alt="" /></kbq-flag>
+                        Germany
+                        <kbq-flag><img src="DE.svg" alt="" /></kbq-flag>
+                    `
+                })
+                class TestComponent {}
+
+                const fixture = createComponent(TestComponent);
+
+                document.body.appendChild(fixture.nativeElement);
+
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+
+                fixture.nativeElement.remove();
+            },
+            AXE_TIMEOUT
+        );
+
+        it('should treat an empty label as no accessible name', () => {
+            @Component({
+                imports: [KbqFlag],
+                template: `
+                    <kbq-flag label="" />
+                `
+            })
+            class TestComponent {}
+
+            const flag = getFlag(createComponent(TestComponent));
+
+            expect(flag.getAttribute('aria-hidden')).toBe('true');
+            expect(flag.hasAttribute('role')).toBe(false);
+            expect(flag.hasAttribute('aria-label')).toBe(false);
         });
     });
 });

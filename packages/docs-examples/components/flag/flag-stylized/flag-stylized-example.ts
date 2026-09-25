@@ -10,7 +10,7 @@ import { BR } from 'country-flag-icons/string/3x2';
     selector: 'flag-stylized-example',
     imports: [KbqFlag],
     template: `
-        <kbq-flag class="example-stylized-flag" shadow="none" label="Brazil" [innerHTML]="BR" />
+        <kbq-flag class="example-stylized-flag" shadow="none" label="Brazil" [svg]="BR" />
     `,
     styles: `
         .example-stylized-flag {
