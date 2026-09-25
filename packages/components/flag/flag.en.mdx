@@ -54,9 +54,15 @@ Do not bind `[innerHTML]` on `<kbq-flag>` itself. The host element is where proj
 
 ### Rectangle
 
-This is the primary format — use it in most scenarios: inline with text, lists, selects. Flags with a different ratio (e.g. 4:3) are supported by overriding the `--kbq-flag-aspect-ratio` CSS variable. The variable is declared at zero specificity, so a plain class rule is enough to override it — no `!important`, no extra selectors.
+This is the primary format — use it in most scenarios: inline with text, lists, selects. A flag with a different ratio (e.g. 4:3) takes the `aspectRatio` input, which accepts any CSS `aspect-ratio` value:
+
+```html
+<kbq-flag decorative aspectRatio="4 / 3" [svg]="flag" />
+```
 
 <Example id="flag-custom-ratio" />
+
+The input wins over the ratio the shape implies, so `shape="square"` together with an `aspectRatio` is no longer square. It also wins over the `--kbq-flag-aspect-ratio` CSS variable, which is still the way to set one ratio for a whole group of flags at once: the variable is declared at zero specificity, so a plain class rule redefines it — no `!important`, no extra selectors.
 
 Whatever ratio the box is given, the flag is cropped to it — the same way for a projected `<img>` and for an inline `<svg>`. Pick a source close to the target ratio so the crop stays small.
 

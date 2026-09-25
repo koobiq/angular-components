@@ -1474,7 +1474,7 @@ Three changes with nothing to migrate:
 
 **An inline `<svg>` is cropped instead of letterboxed.** `object-fit: cover` is inert on an inline `<svg>`, which is not a replaced element, so a source whose ratio differed from the shape rendered inside transparent bands — most visibly in `square` and `circle`. The same flag passed as an `<img>` always cropped, and the two render identically now.
 
-**The flag tokens are declared at zero specificity, and `--kbq-flag-empty-background` is an opaque neutral instead of the translucent `disabled` state.** An override that used to lose to `.kbq-flag` on source order now wins, so a redundant `!important` can go. The `empty` placeholder no longer takes on the hue of the surface behind it.
+**The flag tokens are declared at zero specificity, and `--kbq-flag-empty-background` is an opaque neutral instead of the translucent `disabled` state.** An override that used to lose to `.kbq-flag` on source order now wins, so a redundant `!important` can go. The `empty` placeholder no longer takes on the hue of the surface behind it. One flag's proportions no longer need a class at all: the new `aspectRatio` input takes a CSS `aspect-ratio` value directly, and the variable stays the way to set one ratio for a whole group.
 
 Handled by `flag-inner-html`: the binding is rewritten for you, the rest is reported.
 
