@@ -75,6 +75,11 @@ export class KbqAccordionItem implements OnDestroy {
         // Only emit events and update the internal value if the value changes.
         if (this._expanded !== expanded) {
             this._expanded = expanded;
+
+            // First: a handler below may run change detection, and the content pins its height before
+            // `data-state` flips. Unresolved while an initial input is set; the content syncs itself on init.
+            this.content?.toggle();
+
             this.expandedChange.emit(expanded);
 
             if (expanded) {
@@ -89,9 +94,6 @@ export class KbqAccordionItem implements OnDestroy {
             } else {
                 this.closed.emit();
             }
-
-            // Unresolved while an initial input is set; the content syncs itself on init.
-            this.content?.toggle();
 
             this.accordion.saveItemState(this);
 
