@@ -143,11 +143,11 @@ The field is a single tab stop.
 | `Enter`, `Space`       | View                      | Open the editor                                                       |
 | `Enter`                | Edit                      | Saves the value and returns the field to view mode, except on buttons |
 | `Escape`               | Edit                      | Closes the editor and reverts the value                               |
-| `Tab`                  | Edit                      | Off the first or last control, saves the value and closes the editor  |
+| `Tab`                  | Edit                      | Off the first or last control, saves the value and leaves the field   |
 | `Enter`                | Edit, inside a `textarea` | Inserts a line break                                                  |
 | `Ctrl`/`Cmd` + `Enter` | Edit, inside a `textarea` | Saves the value; the `canSaveOnEnter` input replaces this rule        |
 
-A click outside saves the value and closes the editor the same way `Tab` does. Leaving edit mode returns focus to the field.
+A click outside saves the value and closes the editor the same way `Tab` does. Leaving edit mode returns focus to the field — except on `Tab`, which hands it to the tab stop next to the field, in the direction of travel. When that tab stop belongs to another inline edit, its editor opens, so a column of fields can be filled in one pass; when there is none, the field takes focus back.
 
 A control with an `Enter` action of its own — a button, or anything with `role="button"` — runs that action instead of saving, so one keypress does not do both. A field whose `saveHandler` request is still in flight keeps its tab stop and its focus ring: unlike a disabled one it stays reachable, it just will not reopen yet.
 

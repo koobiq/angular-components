@@ -73,6 +73,12 @@ import { KbqInlineEditModule } from './module';
             </kbq-inline-edit>
         </div>
 
+        <!--
+            Tabbable by its attributes and unfocusable in fact, which is what the tab-stop walk of the
+            last field has to step over. Hidden rather than absent so it draws nothing in the screenshots.
+        -->
+        <button kbq-button style="display: none" data-testid="e2eInlineEditHiddenControl">hidden</button>
+
         <ng-template #view let-control>
             @if (!control.value) {
                 <span kbqInlineEditPlaceholder>placeholder</span>
