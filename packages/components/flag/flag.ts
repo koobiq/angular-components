@@ -30,6 +30,7 @@ import { KbqFlagShadow, KbqFlagShape } from './flag.types';
         '[class.kbq-flag_circle]': "shape() === 'circle'",
         '[class.kbq-flag_shadow-inset]': "shadow() === 'inset'",
         '[class.kbq-flag_empty]': 'empty()',
+        '[style.--kbq-flag-aspect-ratio]': 'aspectRatio()',
         '[attr.role]': "decorative() ? null : (label() ? 'img' : null)",
         '[attr.aria-label]': 'decorative() ? null : (label() || null)',
         '[attr.aria-hidden]': "decorative() || !label() ? 'true' : null"
@@ -43,6 +44,17 @@ export class KbqFlag {
      * @default rectangle
      */
     readonly shape = input<KbqFlagShape>('rectangle');
+    /**
+     * Proportions of the flag box, as a CSS `aspect-ratio` value (`4 / 3`, `1.5`). Set it for a source
+     * whose proportions differ from the shape — the flag is cropped to the box either way.
+     *
+     * It overrides the ratio the shape implies, so `shape="square"` with an `aspectRatio` is no longer
+     * square. Left unset, the ratio comes from the `--kbq-flag-aspect-ratio` token, which a plain class
+     * rule can still redefine for a whole group of flags at once.
+     *
+     * @default 3 / 2 — or 1 / 1 for `square` and `circle`
+     */
+    readonly aspectRatio = input<string>();
     /**
      * Inset hairline that keeps the flag distinct from the background. Its color adapts to the theme.
      * @default inset

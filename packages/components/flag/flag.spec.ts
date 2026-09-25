@@ -157,6 +157,58 @@ describe(KbqFlag.name, () => {
         expect(flag.classList).not.toContain('kbq-flag_square');
     });
 
+    it('should set the aspect ratio token from the input', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag aspectRatio="4 / 3" />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        expect(flag.style.getPropertyValue('--kbq-flag-aspect-ratio')).toBe('4 / 3');
+    });
+
+    it('should leave the aspect ratio to the stylesheet when the input is unset', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag shape="square" />
+            `
+        })
+        class TestComponent {}
+
+        const flag = getFlag(createComponent(TestComponent));
+
+        // No inline declaration at all, so the token keeps cascading — including the 1 / 1 the square
+        // and circle modifiers set, and any consumer rule that redefines it.
+        expect(flag.style.getPropertyValue('--kbq-flag-aspect-ratio')).toBe('');
+    });
+
+    it('should drop the inline aspect ratio when the input is cleared', () => {
+        @Component({
+            imports: [KbqFlag],
+            template: `
+                <kbq-flag [aspectRatio]="ratio" />
+            `
+        })
+        class TestComponent {
+            ratio: string | undefined = '4 / 3';
+        }
+
+        const fixture = createComponent(TestComponent);
+        const flag = getFlag(fixture);
+
+        expect(flag.style.getPropertyValue('--kbq-flag-aspect-ratio')).toBe('4 / 3');
+
+        fixture.componentInstance.ratio = undefined;
+        fixture.detectChanges();
+
+        expect(flag.style.getPropertyValue('--kbq-flag-aspect-ratio')).toBe('');
+    });
+
     it('should apply the empty placeholder class', () => {
         @Component({
             imports: [KbqFlag],

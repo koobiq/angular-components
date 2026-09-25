@@ -34,6 +34,10 @@ const sampleFlag = `<svg viewBox="0 0 22 16" xmlns="http://www.w3.org/2000/svg">
         </div>
         <div>
             <kbq-flag decorative class="e2e-flag-ratio" [svg]="flag" />
+            <!-- The aspectRatio input must land on exactly the same box as the class override left of it. -->
+            <kbq-flag decorative aspectRatio="4 / 3" [svg]="flag" />
+            <!-- An explicit ratio outranks the 1:1 that the square shape would otherwise impose. -->
+            <kbq-flag decorative shape="square" aspectRatio="4 / 3" [svg]="flag" />
             <kbq-flag decorative class="e2e-flag-radius" [svg]="flag" />
         </div>
         <p class="e2e-flag-inline">

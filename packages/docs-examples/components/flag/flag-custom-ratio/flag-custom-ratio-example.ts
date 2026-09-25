@@ -15,26 +15,17 @@ import { CA } from 'country-flag-icons/string/3x2';
             <span class="kbq-text-compact">3:2 — default</span>
         </div>
         <div class="layout-column layout-align-center-center layout-gap-s">
-            <kbq-flag decorative class="example-flag-4x3" [svg]="flag" />
+            <kbq-flag decorative aspectRatio="4 / 3" [svg]="flag" />
             <span class="kbq-text-compact">4:3</span>
         </div>
         <div class="layout-column layout-align-center-center layout-gap-s">
-            <kbq-flag decorative class="example-flag-1x1" [svg]="flag" />
+            <kbq-flag decorative aspectRatio="1 / 1" [svg]="flag" />
             <span class="kbq-text-compact">1:1</span>
         </div>
     `,
     styles: `
         .kbq-flag {
             font-size: 48px;
-        }
-
-        /* The token is declared at zero specificity, so a plain class rule overrides it. */
-        .example-flag-4x3 {
-            --kbq-flag-aspect-ratio: 4 / 3;
-        }
-
-        .example-flag-1x1 {
-            --kbq-flag-aspect-ratio: 1 / 1;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
