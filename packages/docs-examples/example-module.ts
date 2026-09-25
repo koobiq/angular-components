@@ -342,6 +342,22 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-loading-overlay-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-long-cell-content": {
+    "packagePath": "components/ag-grid/ag-grid-long-cell-content",
+    "title": "AG Grid with overflow items",
+    "componentName": "AgGridLongCellContentExample",
+    "files": [
+      "ag-grid-long-cell-content-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-long-cell-content-example",
+    "additionalComponents": [
+      "ExampleOverflowBadgesCellRenderer",
+      "ExampleOverflowLinksCellRenderer"
+    ],
+    "primaryFile": "ag-grid-long-cell-content-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-overview": {
     "packagePath": "components/ag-grid/ag-grid-overview",
     "title": "AG Grid overview",
@@ -7933,6 +7949,8 @@ return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-infinite-selection':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-loading-overlay':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-long-cell-content':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'ag-grid-overview':
 return import('@koobiq/docs-examples/components/ag-grid');

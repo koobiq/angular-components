@@ -9,6 +9,7 @@ import {
     AgGridFilterStateExample,
     AgGridInfiniteSelectionExample,
     AgGridLoadingOverlayExample,
+    AgGridLongCellContentExample,
     AgGridOverviewExample,
     AgGridQuickFilterStateExample,
     AgGridRowActionsExample,
@@ -41,7 +42,8 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridLoadingOverlayExample,
         AgGridSkeletonCellRendererExample,
         AgGridInfiniteSelectionExample,
-        AgGridAndActionsPanelExample
+        AgGridAndActionsPanelExample,
+        AgGridLongCellContentExample
     ],
     template: `
         <ag-grid-column-menu-example />
@@ -79,6 +81,8 @@ import { DevThemeToggle } from '../theme-toggle';
         <ag-grid-row-actions-example />
         <hr />
         <ag-grid-and-actions-panel-example />
+        <hr />
+        <ag-grid-long-cell-content-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

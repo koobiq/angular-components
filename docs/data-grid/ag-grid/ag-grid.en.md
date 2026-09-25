@@ -68,6 +68,12 @@ The [Actions panel](/en/components/actions-panel) component allows you to perfor
 
 <!-- example(ag-grid-and-actions-panel) -->
 
+### Long lists in cells
+
+A long list can fit into a single line of a cell: [Overflow items](/en/components/overflow-items) hides what does not fit the width and recalculates that whenever the column is resized. The hidden items can be expanded in the cell itself or shown as a full list in a [Popover](/en/components/popover). To let the row height follow the content, enable `autoHeight` for the column.
+
+<!-- example(ag-grid-long-cell-content) -->
+
 ### Copying selected rows
 
 The `kbqAgGridCopyByCtrlC` directive allows you to copy selected rows to the clipboard using the `Ctrl+C` keyboard shortcut.
