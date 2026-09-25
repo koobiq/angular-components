@@ -7,7 +7,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import {
     AutocompleteOverviewExample,
-    AutocompleteSearchSmartExample
+    AutocompleteSearchSmartExample,
+    AutocompleteTextareaExample,
+    AutocompleteTriggersExample
 } from 'packages/docs-examples/components/autocomplete';
 import { AutocompleteWithFooterExample } from 'packages/docs-examples/components/autocomplete/autocomplete-with-footer/autocomplete-with-footer-example';
 import { Observable } from 'rxjs';
@@ -16,8 +18,18 @@ import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [AutocompleteWithFooterExample, AutocompleteOverviewExample, AutocompleteSearchSmartExample],
+    imports: [
+        AutocompleteTextareaExample,
+        AutocompleteTriggersExample,
+        AutocompleteWithFooterExample,
+        AutocompleteOverviewExample,
+        AutocompleteSearchSmartExample
+    ],
     template: `
+        <autocomplete-textarea-example />
+        <hr />
+        <autocomplete-triggers-example />
+        <hr />
         <autocomplete-with-footer-example />
         <hr />
         <autocomplete-overview-example />

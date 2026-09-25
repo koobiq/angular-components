@@ -46,6 +46,15 @@ describe('pruneIsNewBadges', () => {
         expect(result).toBe(item('id: DocsStructureItemId.Flag,', 'hasApi: true'));
     });
 
+    it('removes an expired isUpdated entry the same way', () => {
+        const source = item('id: DocsStructureItemId.Tooltip,', 'hasApi: true,', "isUpdated: expiresAt('2026-08-03')");
+
+        const { source: result, pruned } = pruneIsNewBadges(source, now);
+
+        expect(result).toBe(item('id: DocsStructureItemId.Tooltip,', 'hasApi: true'));
+        expect(pruned).toEqual([{ date: '2026-08-03', line: 4 }]);
+    });
+
     it('leaves an unparseable date in place for the structure spec to report', () => {
         const source = item("isNew: expiresAt('2026-13-45'),", 'hasApi: true');
 

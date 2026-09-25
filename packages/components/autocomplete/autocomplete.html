@@ -2,7 +2,13 @@
     <div class="kbq-autocomplete-panel" [id]="id" [class]="classList()" [style.max-width.px]="panelMaxWidth()">
         <div #panel kbqScrollbarViewport class="kbq-autocomplete-panel__content">
             <!-- Keep the injected scrollbar outside the listbox's permitted option/group children. -->
-            <div role="listbox" class="kbq-autocomplete-panel__listbox">
+            <div
+                role="listbox"
+                class="kbq-autocomplete-panel__listbox"
+                [id]="listboxId"
+                [attr.aria-labelledby]="listboxName().labelledby"
+                [attr.aria-label]="listboxName().label"
+            >
                 <ng-content />
             </div>
         </div>

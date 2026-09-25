@@ -41,6 +41,8 @@
 
                 @if (node.isNew) {
                     <kbq-badge badgeColor="fade-theme" [compact]="true" [outline]="true">New</kbq-badge>
+                } @else if (node.isUpdated) {
+                    <kbq-badge badgeColor="fade-success" [compact]="true" [outline]="true">Updated</kbq-badge>
                 }
             </a>
         </kbq-tree-option>

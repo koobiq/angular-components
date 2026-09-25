@@ -10,6 +10,7 @@ import { TooltipDisabledForComponentExample } from './tooltip-disabled-for-compo
 import { TooltipDynamicExample } from './tooltip-dynamic/tooltip-dynamic-example';
 import { TooltipHideWithTimeoutExample } from './tooltip-hide-with-timeout/tooltip-hide-with-timeout-example';
 import { TooltipInteractiveExample } from './tooltip-interactive/tooltip-interactive-example';
+import { TooltipRelativeToCaretExample } from './tooltip-relative-to-caret/tooltip-relative-to-caret-example';
 import { TooltipRelativeToPointerExample } from './tooltip-relative-to-pointer/tooltip-relative-to-pointer-example';
 import { TooltipStyleExample } from './tooltip-style/tooltip-style-example';
 import { TooltipWideWidthExample } from './tooltip-wide-width/tooltip-wide-width-example';
@@ -26,6 +27,7 @@ export {
     TooltipOffsetExample,
     TooltipOverviewExample,
     TooltipPlacementsExample,
+    TooltipRelativeToCaretExample,
     TooltipRelativeToPointerExample,
     TooltipStyleExample,
     TooltipWideWidthExample,
@@ -40,6 +42,7 @@ const EXAMPLES = [
     TooltipPlacementsExample,
     TooltipStyleExample,
     TooltipRelativeToPointerExample,
+    TooltipRelativeToCaretExample,
     TooltipHideWithTimeoutExample,
     TooltipDynamicExample,
     TooltipWidthExample,

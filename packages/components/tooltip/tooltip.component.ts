@@ -34,6 +34,7 @@ import {
     ESCAPE,
     KBQ_PARENT_POPUP,
     KBQ_SIBLING_POPUP,
+    KbqCaretRect,
     KbqComponentColors,
     KbqEnumValues,
     KbqParentPopup,
@@ -41,15 +42,28 @@ import {
     KbqPopUpPlacementValues,
     KbqPopUpTrigger,
     KbqSiblingPopup,
+    KbqTextAnchor,
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    kbqCreateCaretOrigin,
+    kbqGetSelectionRect,
+    kbqListenForCaretMoves
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
 import { kbqTooltipAnimations } from './tooltip.animations';
+
+/**
+ * What the tooltip is vertically anchored to when it is positioned relative to the caret:
+ *
+ * - `'line'` — the line of text the caret is on.
+ * - `'field'` — the whole field, so the tooltip never covers it; horizontally it still follows the caret.
+ * - `'auto'` — `'field'` for a single-line `<input>`, `'line'` for everything else.
+ */
+export type KbqCaretVerticalAnchor = 'auto' | 'line' | 'field';
 
 export enum TooltipModifier {
     Default = 'default',
@@ -215,6 +229,9 @@ const TOOLTIP_PANEL_CLASS = 'kbq-tooltip-panel';
 /** Panel class that makes the tooltip pane transparent to pointer events. */
 const IGNORE_POINTER_EVENTS_PANEL_CLASS = 'cdk-overlay-pane_ignore-pointer-events';
 
+/** Elements a caret can be located in, and therefore anchored to. */
+const EDITABLE_SELECTOR = 'input, textarea, [contenteditable=""], [contenteditable="true"]';
+
 export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy', {
     providedIn: 'root',
     factory: () => kbqTooltipScrollStrategyFactory(inject(Overlay))
@@ -366,6 +383,20 @@ export class KbqTooltipTrigger
     //  Class of this input is manually instantiated. This is discouraged and prevents
     //  migration.
     @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
+
+    /**
+     * Positions the tooltip relative to the text caret of the field it is attached to, following it while the
+     * user types, moves the caret and scrolls the field. Anchors to the selection whenever there is one.
+     *
+     * Every placement is available, unlike with `kbqRelativeToPointer`: the caret is anchored as a rectangle,
+     * so the usual fallback placements keep the tooltip on screen. Wins when both inputs are enabled.
+     *
+     * The field is the host element itself when it is editable, otherwise the first editable it wraps.
+     */
+    @Input({ alias: 'kbqRelativeToCaret', transform: booleanAttribute }) relativeToCaret: boolean = false;
+
+    /** What the tooltip is vertically anchored to while `kbqRelativeToCaret` is enabled. */
+    @Input('kbqRelativeToCaretVertical') relativeToCaretVertical: KbqCaretVerticalAnchor = 'auto';
 
     /** Input (`kbqPlacementPriority`) that sets the ordered fallback placements; reflects the current `placementPriority`. */
     // TODO: Skipped for migration because:
@@ -790,7 +821,9 @@ export class KbqTooltipTrigger
 
         super.show(delay);
 
-        if (this.relativeToPointer) {
+        if (this.relativeToCaret) {
+            this.applyRelativeToCaret();
+        } else if (this.relativeToPointer) {
             this.applyRelativeToPointer();
         }
     }
@@ -958,11 +991,17 @@ export class KbqTooltipTrigger
         overlayRef
             .attachments()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.listenForEscape());
+            .subscribe(() => {
+                this.listenForEscape();
+                this.startTrackingCaret();
+            });
         overlayRef
             .detachments()
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.stopListeningForEscape());
+            .subscribe(() => {
+                this.stopListeningForEscape();
+                this.stopTrackingCaret();
+            });
 
         return overlayRef;
     }
@@ -1067,6 +1106,99 @@ export class KbqTooltipTrigger
      */
     private get describesHostText(): boolean {
         return typeof this.content === 'string' && this.content.trim() === this.getNativeElement().textContent?.trim();
+    }
+
+    /** Teardown of the listeners following the caret, or `null` while the tooltip is not tracking one. */
+    private stopCaretListeners: (() => void) | null = null;
+
+    /**
+     * Field whose caret the tooltip is anchored to: the host element when it is editable itself — which is
+     * how the validation hints are written — otherwise the first editable element it wraps.
+     */
+    private getCaretAnchor(): KbqTextAnchor | null {
+        const host = this.getNativeElement();
+
+        return host.matches(EDITABLE_SELECTOR) ? host : host.querySelector<HTMLElement>(EDITABLE_SELECTOR);
+    }
+
+    /**
+     * Origin that stays on the caret of the field while `kbqRelativeToCaret` is enabled, and on the host element
+     * otherwise — so switching the input off while the tooltip is open does not leave it on the caret.
+     */
+    private readonly caretOrigin = kbqCreateCaretOrigin(() => this.measureCaretAnchor());
+
+    /**
+     * Anchors the overlay to the caret of the field.
+     * @docs-private
+     */
+    protected applyRelativeToCaret() {
+        this.strategy?.setOrigin(this.caretOrigin);
+    }
+
+    /** @docs-private */
+    protected getAnchorSize(): { width: number; height: number } {
+        return this.relativeToCaret ? this.caretOrigin : super.getAnchorSize();
+    }
+
+    /**
+     * Rectangle the tooltip is anchored to: the caret or selection of the field — spanning the whole field
+     * vertically when it anchors to the field — or the host element's box when the caret cannot be located or
+     * `kbqRelativeToCaret` is off.
+     */
+    private measureCaretAnchor(): KbqCaretRect {
+        const anchor = this.relativeToCaret ? this.getCaretAnchor() : null;
+        const rect = anchor && kbqGetSelectionRect(anchor);
+
+        if (!anchor || !rect) {
+            const { left, top, width, height } = this.getNativeElement().getBoundingClientRect();
+
+            return { x: left, y: top, width, height };
+        }
+
+        if (!this.anchorsToField(anchor)) return rect;
+
+        const { top, height } = anchor.getBoundingClientRect();
+
+        return { x: rect.x, width: rect.width, y: top, height };
+    }
+
+    /** Whether the tooltip takes its vertical position from the whole field rather than the caret's line. */
+    private anchorsToField(anchor: KbqTextAnchor): boolean {
+        const vertical = this.relativeToCaretVertical;
+
+        return vertical === 'field' || (vertical !== 'line' && anchor.tagName === 'INPUT');
+    }
+
+    /** Follows the caret for as long as the overlay is attached, outside the zone and at most once per attach. */
+    private startTrackingCaret(): void {
+        if (this.stopCaretListeners || !this.relativeToCaret) return;
+
+        const anchor = this.getCaretAnchor();
+
+        if (!anchor) return;
+
+        this.ngZone.runOutsideAngular(() => {
+            this.stopCaretListeners = kbqListenForCaretMoves(this.renderer, anchor, () => this.repositionAtCaret());
+        });
+    }
+
+    private stopTrackingCaret(): void {
+        this.stopCaretListeners?.();
+        this.stopCaretListeners = null;
+    }
+
+    /**
+     * Picks the placement again for where the caret is now. The position strategy is locked so that an element-anchored
+     * pop-up does not jump when its content changes, and a locked strategy only re-applies the placement chosen on
+     * opening; a caret walking to the edge of the screen has to be free to flip the tooltip, so the lock is lifted for
+     * this pass.
+     */
+    private repositionAtCaret(): void {
+        if (!this.overlayRef) return;
+
+        this.strategy.withLockedPosition(false);
+        this.overlayRef.updatePosition();
+        this.strategy.withLockedPosition(true);
     }
 
     /** @docs-private */

@@ -31,6 +31,7 @@ import { DurationUnit } from '@koobiq/date-adapter';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
+import { FlexibleConnectedPositionStrategyOrigin } from '@angular/cdk/overlay';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { FormatterDurationTemplate } from '@koobiq/date-formatter';
@@ -2799,6 +2800,14 @@ export interface KbqBaseFileUploadLocaleConfiguration {
 }
 
 // @public
+export interface KbqCaretRect {
+    height: number;
+    width: number;
+    x: number;
+    y: number;
+}
+
+// @public
 export class KbqCheckable implements ControlValueAccessor {
     // (undocumented)
     readonly checked: i0.ModelSignal<boolean>;
@@ -2905,6 +2914,12 @@ export enum KbqComponentColors {
 export interface KbqConnectedOverlayOriginProvider {
     getConnectedOverlayOrigin(): ElementRef | undefined;
 }
+
+// @public
+export const kbqCreateCaretOrigin: (measure: () => KbqCaretRect) => Readonly<KbqCaretRect>;
+
+// @public
+export const kbqCreateTextMirror: (field: HTMLInputElement | HTMLTextAreaElement, className: string) => KbqTextMirror;
 
 // @public (undocumented)
 export class KbqDataSizePipe implements PipeTransform {
@@ -3206,13 +3221,25 @@ export class KbqFormsModule {
 }
 
 // @public
+export const kbqGetCaretRect: (element: KbqTextAnchor) => KbqCaretRect | null;
+
+// @public
 export const kbqGetElementHeight: (element: Element) => number;
+
+// @public
+export const kbqGetOverlayOriginSize: (origin: KbqOverlayOrigin) => Pick<KbqCaretRect, "width" | "height">;
 
 // @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
 export const kbqGetScrollOverflowTolerance: (element: Element) => number;
+
+// @public
+export const kbqGetSelectionRect: (element: KbqTextAnchor) => KbqCaretRect | null;
+
+// @public
+export const kbqGetTextQuery: (value: string, caret: number, input?: KbqTextQueryOptions) => KbqTextQuery | null;
 
 // @public
 export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
@@ -3292,6 +3319,12 @@ export type KbqInputNumberLocaleConfiguration = {
 } & KbqNumberFormatOptions;
 
 // @public
+export const kbqIsElementOrigin: (origin: KbqOverlayOrigin) => boolean;
+
+// @public
+export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => boolean;
+
+// @public
 export class KbqLine {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line], [mcLine]", never, {}, {}, never, never, true, never>;
@@ -3303,6 +3336,9 @@ export class KbqLine {
 export class KbqLineSetter {
     constructor(_lines: QueryList<KbqLine>, _element: ElementRef);
 }
+
+// @public
+export const kbqListenForCaretMoves: (renderer: Renderer2, element: HTMLElement, callback: () => void) => (() => void);
 
 // @public
 export const kbqLocaleConfigurationOverrideProvider: <K extends KbqLocaleSection>(section: K, configuration: KbqDeepPartial<KbqLocaleData[K]>) => Provider;
@@ -3671,6 +3707,9 @@ export interface KbqOptionActionParent {
     };
 }
 
+// @public
+export const kbqOptionalNumberAttribute: (value: unknown) => number | undefined;
+
 // @public (undocumented)
 export abstract class KbqOptionBase {
     // (undocumented)
@@ -3770,6 +3809,9 @@ export class KbqOverflowShadowTop {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowTop, never>;
 }
+
+// @public
+export type KbqOverlayOrigin = ElementRef<HTMLElement> | HTMLElement | CdkOverlayOrigin | KbqCaretRect;
 
 // @public
 export type KbqPanelMaxHeight = number | null;
@@ -3908,11 +3950,16 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected externalNativeElement: HTMLElement;
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
+    protected getAnchorSize(): {
+        width: number;
+        height: number;
+    };
     getMouseLeaveListener(): () => void;
     getNativeElement(): HTMLElement;
     abstract getOverlayHandleComponentType(): Type<T>;
     protected getPrioritizedPositions(): ConnectionPositionPair[];
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[];
+    protected getResolvedOrigin(): FlexibleConnectedPositionStrategyOrigin;
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
     protected readonly hostView: ViewContainerRef;
@@ -3931,6 +3978,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected readonly ngZone: NgZone;
     onPositionChange: ($event: ConnectedOverlayPositionChange) => void;
     get openedChange(): Observable<boolean>;
+    protected origin: KbqOverlayOrigin | null;
     protected abstract originSelector: string;
     protected readonly overlay: Overlay;
     protected abstract overlayConfig: OverlayConfig;
@@ -3953,6 +4001,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     triggerName: string;
     abstract updateClassMap(newPlacement?: string): void;
     abstract updateData(): void;
+    updateOrigin(origin: KbqOverlayOrigin | null): void;
     updatePlacement(value: KbqPopUpPlacementValues): void;
     updatePlacementPriority(value: any): void;
     updatePosition(reapplyPosition?: boolean): void;
@@ -4163,6 +4212,9 @@ export interface KbqResolvedPanelWidth {
     // (undocumented)
     width: number | string;
 }
+
+// @public
+export const kbqResolveOverlayOrigin: (origin: KbqOverlayOrigin) => FlexibleConnectedPositionStrategyOrigin;
 
 // @public
 export function kbqResolvePanelMaxHeightToken(panelMaxHeight: KbqPanelMaxHeight | undefined): string | null;
@@ -4447,6 +4499,30 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqTableNumberPipe, "kbqTableNumber", true>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqTableNumberPipe>;
+}
+
+// @public
+export type KbqTextAnchor = HTMLInputElement | HTMLTextAreaElement | HTMLElement;
+
+// @public
+export interface KbqTextMirror {
+    destroy(): void;
+    hide(): void;
+    update(before: string, hint: string, after: string): boolean;
+}
+
+// @public
+export interface KbqTextQuery {
+    end: number;
+    start: number;
+    text: string;
+    trigger: string | null;
+}
+
+// @public
+export interface KbqTextQueryOptions {
+    minLength?: number;
+    triggers?: readonly string[];
 }
 
 // @public @deprecated (undocumented)

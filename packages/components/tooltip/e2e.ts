@@ -1,4 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, TemplateRef, viewChild } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTooltipComponent, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
@@ -37,6 +40,60 @@ import { KbqToolTipModule } from './tooltip.module';
     }
 })
 export class E2eTooltipArrowOffset {}
+
+@Component({
+    selector: 'e2e-tooltip-relative-to-caret',
+    imports: [
+        KbqToolTipModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqTextareaModule
+    ],
+    template: `
+        <div class="e2e-tooltip-caret" data-testid="e2eScreenshotTarget">
+            <kbq-form-field>
+                <input
+                    #inputTooltip="kbqTooltip"
+                    data-testid="e2eTooltipCaretInput"
+                    kbqInput
+                    [kbqPlacement]="'top'"
+                    [kbqRelativeToCaret]="true"
+                    [kbqTooltip]="'caret'"
+                    [kbqTrigger]="'manual'"
+                    (input)="inputTooltip.show(0)"
+                />
+            </kbq-form-field>
+
+            <kbq-form-field>
+                <textarea
+                    #textareaTooltip="kbqTooltip"
+                    data-testid="e2eTooltipCaretTextarea"
+                    kbqTextarea
+                    [canGrow]="false"
+                    [kbqPlacement]="'top'"
+                    [kbqRelativeToCaret]="true"
+                    [kbqTooltip]="'caret'"
+                    [kbqTrigger]="'manual'"
+                    (input)="textareaTooltip.show(0)"
+                ></textarea>
+            </kbq-form-field>
+        </div>
+    `,
+    styles: `
+        .e2e-tooltip-caret {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-3xl);
+            width: 480px;
+            padding: var(--kbq-size-5xl) var(--kbq-size-l) var(--kbq-size-l);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTooltipRelativeToCaret'
+    }
+})
+export class E2eTooltipRelativeToCaret {}
 
 @Component({
     selector: 'e2e-tooltip-states',

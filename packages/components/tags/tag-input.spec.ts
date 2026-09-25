@@ -31,6 +31,7 @@ import {
     TAB
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import { KbqTagsModule } from './index';
 import { KbqTagInput, KbqTagInputEvent, kbqTagsDefaultOptionsProvider } from './tag-input';
@@ -218,9 +219,11 @@ class TestTagInputSeparators {
                     <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
                 }
                 <input
-                    [kbqTagInputFor]="tagList"
+                    placeholder="Tag"
                     [kbqAutocomplete]="autocomplete"
+                    [kbqAutocompleteRelativeToCaret]="relativeToCaret()"
                     [kbqTagInputAddOnBlur]="true"
+                    [kbqTagInputFor]="tagList"
                     (kbqTagInputTokenEnd)="add($event)"
                 />
             </kbq-tag-list>
@@ -234,6 +237,7 @@ class TestTagInputSeparators {
     `
 })
 class TestTagInputWithAutocomplete {
+    readonly relativeToCaret = signal(false);
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly options = ['HIPS alert', 'Phishing'];
     readonly tags: string[] = [];
@@ -712,6 +716,26 @@ describe(KbqTagInput.name, () => {
                 overlayContainer.ngOnDestroy();
             });
 
+            it('opens the panel from the caret of the input inside the tag list', fakeAsync(() => {
+                componentInstance.relativeToCaret.set(true);
+                fixture.detectChanges();
+
+                dispatchFakeEvent(inputElement, 'focusin');
+                fixture.detectChanges();
+                tick();
+
+                const trigger = fixture.debugElement
+                    .query(By.directive(KbqAutocompleteTrigger))
+                    .injector.get(KbqAutocompleteTrigger);
+
+                expect(trigger['positionStrategy']._origin).toEqual(
+                    expect.objectContaining({ x: expect.any(Number), width: 0, height: expect.any(Number) })
+                );
+                expect((overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(
+                    ''
+                );
+            }));
+
             it('adds only the selected option, not the typed text, when an option is picked from the panel', fakeAsync(() => {
                 dispatchFakeEvent(inputElement, 'focusin');
                 fixture.detectChanges();
@@ -750,6 +774,27 @@ describe(KbqTagInput.name, () => {
 
                 expect(componentInstance.tags).toEqual(['custom text']);
             }));
+        });
+
+        describe('accessibility with a real autocomplete panel', () => {
+            it('should have no axe violations while the panel is closed', async () => {
+                const fixture = createComponent(TestTagInputWithAutocomplete);
+
+                expect(getInputElement(fixture).getAttribute('role')).toBe('combobox');
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            });
+
+            it('should have no axe violations while the panel is open with an active option', async () => {
+                const fixture = createComponent(TestTagInputWithAutocomplete);
+                const inputElement = getInputElement(fixture);
+
+                dispatchFakeEvent(inputElement, 'focusin');
+                await fixture.whenStable();
+
+                expect(inputElement.getAttribute('aria-expanded')).toBe('true');
+                expect(inputElement.hasAttribute('aria-activedescendant')).toBe(true);
+                expect(await axe(fixture.nativeElement)).toHaveNoViolations();
+            });
         });
     });
 

@@ -48,7 +48,8 @@ class TreeNode {
         public children: TreeNode[] | null,
         public name: Record<DocsLocale, string>,
         public type: TreeNodeType,
-        public isNew: boolean = false
+        public isNew: boolean = false,
+        public isUpdated: boolean = false
     ) {}
 }
 
@@ -61,6 +62,7 @@ class TreeFlatNode {
     parent: TreeFlatNode | null;
     type: TreeNodeType;
     isNew: boolean;
+    isUpdated: boolean;
 }
 
 function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
@@ -70,7 +72,9 @@ function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
         data.push(
             new TreeNode(
                 id,
-                items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item, item.isNew)),
+                items.map(
+                    (item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item, item.isNew, item.isUpdated)
+                ),
                 name,
                 TreeNodeType.Category
             )
@@ -240,6 +244,7 @@ export class DocsSidenav extends DocsLocaleState implements AfterViewInit {
         flatNode.level = level;
         flatNode.expandable = !!node.children;
         flatNode.isNew = node.isNew;
+        flatNode.isUpdated = node.isUpdated;
 
         return flatNode;
     };

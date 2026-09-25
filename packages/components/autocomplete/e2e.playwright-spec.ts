@@ -247,4 +247,108 @@ test.describe('KbqAutocompleteModule', () => {
             await expect(panel).toBeHidden();
         });
     });
+
+    test.describe('E2eAutocompleteTextarea', () => {
+        const getTextarea = (page: Page) => page.getByTestId('e2eAutocompleteTextField');
+        const getPanel = (page: Page) => page.locator('.kbq-autocomplete-panel');
+        const getHint = (page: Page) => page.locator('.kbq-autocomplete-inline-hint__hint');
+
+        test('opens the panel at the caret and inserts the option into the text', async ({ page }) => {
+            await page.goto('/E2eAutocompleteTextarea');
+
+            const textarea = getTextarea(page);
+
+            await textarea.click();
+            await textarea.pressSequentially('Suspicious fire');
+
+            await expect(getPanel(page)).toBeVisible();
+            await expect(getHint(page)).toHaveText('wall');
+
+            // The hint is drawn right after the caret, so it is where the caret is: the panel's left edge has to
+            // match it, and the panel has to open right under the hint's line.
+            const hint = (await getHint(page).boundingBox())!;
+            const panel = (await getPanel(page).boundingBox())!;
+
+            expect(Math.abs(panel.x - hint.x)).toBeLessThanOrEqual(2);
+            expect(panel.y - (hint.y + hint.height)).toBeGreaterThanOrEqual(0);
+            expect(panel.y - (hint.y + hint.height)).toBeLessThanOrEqual(8);
+
+            await textarea.press('Tab');
+
+            await expect(textarea).toHaveValue('Suspicious firewall');
+            await expect(textarea).toBeFocused();
+            await expect(getPanel(page)).toBeHidden();
+        });
+
+        test('replaces only the word before the caret', async ({ page }) => {
+            await page.goto('/E2eAutocompleteTextarea');
+
+            const textarea = getTextarea(page);
+
+            await textarea.click();
+            await textarea.pressSequentially('scan now');
+
+            // Back to right after "scan", where a word is typed and completed in the middle of the text.
+            for (let i = 0; i < ' now'.length; i++) {
+                await textarea.press('ArrowLeft');
+            }
+
+            await textarea.pressSequentially(' vul');
+            await expect(getPanel(page)).toBeVisible();
+            await textarea.press('Enter');
+
+            await expect(textarea).toHaveValue('scan vulnerability now');
+        });
+
+        test('states', async ({ page }) => {
+            await page.goto('/E2eAutocompleteTextarea');
+
+            const textarea = getTextarea(page);
+
+            await textarea.click();
+            await textarea.pressSequentially('First line of the report\nthre');
+            await expect(getHint(page)).toHaveText('at');
+
+            const target = page.getByTestId('e2eAutocompleteTextarea').getByTestId('e2eScreenshotTarget');
+
+            await expect(target).toHaveScreenshot('03-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(target).toHaveScreenshot('03-dark.png');
+        });
+    });
+
+    test.describe('E2eAutocompleteTriggers', () => {
+        const getTextarea = (page: Page) => page.getByTestId('e2eAutocompleteTextField');
+        const getOptions = (page: Page) => page.locator('.kbq-autocomplete-panel kbq-option');
+
+        test('opens the options of the trigger and replaces the query together with it', async ({ page }) => {
+            await page.goto('/E2eAutocompleteTriggers');
+
+            const textarea = getTextarea(page);
+
+            await textarea.click();
+            await textarea.pressSequentially('Checked by @');
+            await expect(getOptions(page)).toHaveText(['@alice', '@bob']);
+
+            await textarea.pressSequentially('b');
+            await expect(getOptions(page)).toHaveText(['@bob']);
+            await textarea.press('Enter');
+
+            await expect(textarea).toHaveValue('Checked by @bob');
+
+            await textarea.pressSequentially(' /');
+            await expect(getOptions(page)).toHaveText(['/closed', '/escalate']);
+        });
+
+        test('does not open for a trigger inside a word', async ({ page }) => {
+            await page.goto('/E2eAutocompleteTriggers');
+
+            const textarea = getTextarea(page);
+
+            await textarea.click();
+            await textarea.pressSequentially('mail@host');
+
+            await expect(page.locator('.kbq-autocomplete-panel')).toBeHidden();
+        });
+    });
 });

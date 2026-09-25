@@ -1,8 +1,11 @@
 import { Overlay } from '@angular/cdk/overlay';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KBQ_AUTOCOMPLETE_SCROLL_STRATEGY, KbqAutocompleteModule } from '@koobiq/components/autocomplete';
+import { KbqTextQuery } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 @Component({
     selector: 'e2e-autocomplete-states',
@@ -246,4 +249,112 @@ export class E2eAutocompleteScrollbar {
 })
 export class E2eAutocompleteScrollbarNoOverflow {
     protected readonly options = ['Option 1', 'Option 2', 'Option 3'];
+}
+
+const E2E_TEXT_OPTIONS = ['firewall', 'firmware', 'threat', 'threat hunting', 'vulnerability'];
+
+@Component({
+    selector: 'e2e-autocomplete-textarea',
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule,
+        KbqAutocompleteModule
+    ],
+    template: `
+        <div class="e2e-autocomplete-text" data-testid="e2eScreenshotTarget">
+            <kbq-form-field>
+                <kbq-label>Description</kbq-label>
+                <textarea
+                    data-testid="e2eAutocompleteTextField"
+                    kbqTextarea
+                    [canGrow]="false"
+                    [kbqAutocomplete]="autocomplete"
+                    [kbqAutocompleteRelativeToCaret]="true"
+                    [kbqAutocompleteTextMode]="true"
+                    (kbqAutocompleteQueryChange)="query.set($event?.text ?? null)"
+                ></textarea>
+            </kbq-form-field>
+
+            <kbq-autocomplete #autocomplete="kbqAutocomplete" [autoActiveFirstOption]="true">
+                @for (option of filteredOptions(); track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-autocomplete>
+        </div>
+    `,
+    styles: `
+        .e2e-autocomplete-text {
+            width: 480px;
+            height: 260px;
+            padding: var(--kbq-size-xxs);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eAutocompleteTextarea'
+    }
+})
+export class E2eAutocompleteTextarea {
+    protected readonly query = signal<string | null>(null);
+    protected readonly filteredOptions = computed(() => {
+        const text = this.query()?.toLowerCase();
+
+        return text ? E2E_TEXT_OPTIONS.filter((option) => option.startsWith(text)) : [];
+    });
+}
+
+@Component({
+    selector: 'e2e-autocomplete-triggers',
+    imports: [
+        KbqFormFieldModule,
+        KbqTextareaModule,
+        KbqAutocompleteModule
+    ],
+    template: `
+        <div class="e2e-autocomplete-text">
+            <kbq-form-field>
+                <kbq-label>Comment</kbq-label>
+                <textarea
+                    data-testid="e2eAutocompleteTextField"
+                    kbqTextarea
+                    [canGrow]="false"
+                    [kbqAutocomplete]="autocomplete"
+                    [kbqAutocompleteRelativeToCaret]="true"
+                    [kbqAutocompleteTextMode]="true"
+                    [kbqAutocompleteTriggers]="triggers"
+                    (kbqAutocompleteQueryChange)="query.set($event)"
+                ></textarea>
+            </kbq-form-field>
+
+            <kbq-autocomplete #autocomplete="kbqAutocomplete" [autoActiveFirstOption]="true">
+                @for (option of filteredOptions(); track option) {
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
+                }
+            </kbq-autocomplete>
+        </div>
+    `,
+    styles: `
+        .e2e-autocomplete-text {
+            width: 480px;
+            height: 260px;
+            padding: var(--kbq-size-xxs);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eAutocompleteTriggers'
+    }
+})
+export class E2eAutocompleteTriggers {
+    protected readonly triggers = ['/', '@'];
+    protected readonly query = signal<KbqTextQuery | null>(null);
+    protected readonly filteredOptions = computed(() => {
+        const query = this.query();
+
+        if (!query) return [];
+
+        const options = query.trigger === '@' ? ['@alice', '@bob'] : ['/closed', '/escalate'];
+
+        return options.filter((option) => option.slice(1).startsWith(query.text.toLowerCase()));
+    });
 }

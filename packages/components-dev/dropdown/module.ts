@@ -19,6 +19,7 @@ import {
     DropdownOverviewExample,
     DropdownRecursiveTemplateExample,
     DropdownSafeAreaExample,
+    DropdownSlashMenuExample,
     DropdownWithFilterExample,
     DropdownWithFooterExample,
     DropdownXPositionExample
@@ -39,11 +40,15 @@ import { DevThemeToggle } from '../theme-toggle';
         DropdownOpenByArrowDownExample,
         DropdownRecursiveTemplateExample,
         DropdownSafeAreaExample,
+        DropdownSlashMenuExample,
         DropdownWithFilterExample,
         DropdownWithFooterExample,
         DropdownXPositionExample
     ],
     template: `
+        <dropdown-slash-menu-example />
+        <hr />
+
         <dropdown-with-footer-example />
         <hr />
 

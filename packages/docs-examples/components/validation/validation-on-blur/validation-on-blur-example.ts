@@ -86,9 +86,11 @@ class ExampleResetTouchedOnFirstInput {
                 [formControl]="ipAddressControl"
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
+                [kbqRelativeToCaret]="true"
                 [kbqTrigger]="'manual'"
                 [kbqTooltip]="'Numbers and dots only'"
                 [kbqTooltipColor]="colors.Error"
+                (blur)="onBlur()"
                 (input)="onInput($event)"
             />
 
@@ -112,25 +114,24 @@ export class ValidationOnBlurExample {
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly colors = KbqComponentColors;
 
-    onInput(event: Event): void {
-        const allowedSymbolsRegex = /^[0-9.]+$/g;
+    protected onInput(event: Event): void {
+        if (!(event.target instanceof HTMLInputElement)) return;
 
-        if (
-            event.target instanceof HTMLInputElement &&
-            event.target.value &&
-            !allowedSymbolsRegex.test(event.target.value)
-        ) {
-            const newValue = event.target.value.replace(restSymbolsRegex, '');
+        const { value } = event.target;
+        const allowedValue = value.replace(restSymbolsRegex, '');
 
-            this.ipAddressControl.setValue(newValue);
+        // A valid character leaves nothing to filter out, so the hint goes as soon as one is typed.
+        if (allowedValue === value) {
+            this.tooltip()?.hide();
 
-            const tooltip = this.tooltip();
-
-            if (tooltip && !tooltip.isOpen) {
-                tooltip.show();
-
-                setTimeout(() => tooltip.hide(), 3000);
-            }
+            return;
         }
+
+        this.ipAddressControl.setValue(allowedValue);
+        this.tooltip()?.show();
+    }
+
+    protected onBlur(): void {
+        this.tooltip()?.hide();
     }
 }
