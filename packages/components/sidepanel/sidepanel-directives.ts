@@ -1,4 +1,14 @@
-import { booleanAttribute, Component, Directive, effect, ElementRef, inject, input, Renderer2 } from '@angular/core';
+import {
+    afterNextRender,
+    booleanAttribute,
+    Component,
+    Directive,
+    effect,
+    ElementRef,
+    inject,
+    input,
+    Renderer2
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -37,12 +47,14 @@ export class KbqSidepanelClose {
     readonly kbqSidepanelClose = input<any>();
 
     constructor() {
-        // A button with no type submits the form it sits in, so closing a sidepanel from inside a form would
-        // submit it too. A type the author set is left alone. The element carries its static attributes by
-        // the time a directive is constructed, so this needs no lifecycle hook.
-        if (!this.elementRef.nativeElement.hasAttribute('type')) {
-            this.renderer.setAttribute(this.elementRef.nativeElement, 'type', 'button');
-        }
+        afterNextRender(() => {
+            // A button with no type submits the form it sits in, so closing a sidepanel from inside a form would
+            // submit it too. A type the author set is left alone. The element carries its static attributes by
+            // the time a directive is constructed, so this needs no lifecycle hook.
+            if (!this.elementRef.nativeElement.hasAttribute('type')) {
+                this.renderer.setAttribute(this.elementRef.nativeElement, 'type', 'button');
+            }
+        });
     }
 }
 
