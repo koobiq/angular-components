@@ -42,17 +42,15 @@ When configuring kbqRelativeToPointer="true", the tooltip is positioned relative
 
 <Example id="tooltip-relative-to-pointer" />
 
-#### Near the Caret
+#### Near the Text Cursor
 
-When configuring kbqRelativeToCaret="true", the tooltip is positioned relative to the text caret of the field it is attached to, and follows it while the user types, moves the caret and scrolls the field. While text is selected, the tooltip is anchored to the selection.
-
-Unlike kbqRelativeToPointer, every position is available: the caret is anchored as a rectangle, so the usual fallback positions apply.
-
-The field is the element the tooltip is attached to when that element is an `input`, a `textarea` or a `contenteditable`; otherwise it is the first such element inside. Fields that render something other than their value (`password` and the like) or do not report the caret (`email`, `number`), right-to-left text and inputs with centred or right-aligned text fall back to the field itself.
-
-Vertically, the tooltip follows `kbqRelativeToCaretVertical`: `field` keeps it above or below the whole field, `line` places it at the line the caret is on. The default, `auto`, uses `field` for a single-line `input`, so the tooltip never covers the field, and `line` for a `textarea` and `contenteditable`, so it stays next to the text. Horizontally, the tooltip follows the caret in every mode.
+The tooltip can open next to the text cursor in an editable field. Its position updates as the user types, moves the cursor or scrolls the field. When text is selected, the tooltip anchors to the selection.
 
 <Example id="tooltip-relative-to-caret" />
+
+Set `kbqRelativeToCaret="true"` to enable this mode. Use `kbqRelativeToCaretVertical` to control the tooltip's vertical position: `field` places it above or below the whole field, while `line` places it next to the line containing the text cursor. By default, `auto` uses `field` for a single-line `input` and `line` for a `textarea` and `contenteditable`. Horizontally, the tooltip follows the text cursor in both modes. All tooltip placements remain available.
+
+If the browser cannot determine the text cursor's position, the tooltip anchors to the field. This may happen with `password`, `email` and `number` inputs, right-to-left text, or centered and right-aligned text. When the tooltip is attached to a container, it uses the first editable element inside it.
 
 ### Offset
 
