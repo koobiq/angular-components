@@ -115,6 +115,7 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
                 <a
                     kbq-link
                     target="_blank"
+                    rel="noopener noreferrer"
                     [kbqOverflowItem]="technique.id"
                     [href]="technique.url"
                     [class.layout-margin-right-s]="!$last"
@@ -143,7 +144,7 @@ export class ExampleOverflowBadgesCellRenderer implements ICellRendererAngularCo
         <ng-template #allTechniquesContent>
             <div class="example-all-techniques">
                 @for (technique of techniques(); track technique.id) {
-                    <a kbq-link target="_blank" [href]="technique.url">{{ technique.id }}</a>
+                    <a kbq-link target="_blank" rel="noopener noreferrer" [href]="technique.url">{{ technique.id }}</a>
                 }
             </div>
         </ng-template>
@@ -278,7 +279,7 @@ export class AgGridLongCellContentExample {
             width: 220,
             minWidth: 140,
             sortable: false,
-            valueFormatter: ({ value }) => value.join(', '),
+            valueFormatter: ({ value }) => value?.join(', ') ?? '',
             cellRenderer: ExampleOverflowBadgesCellRenderer,
             autoHeight: true
         },
@@ -288,7 +289,7 @@ export class AgGridLongCellContentExample {
             width: 240,
             minWidth: 140,
             sortable: false,
-            valueFormatter: ({ value }) => value.join(', '),
+            valueFormatter: ({ value }) => value?.join(', ') ?? '',
             cellRenderer: ExampleOverflowLinksCellRenderer
         },
         {
