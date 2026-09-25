@@ -1,15 +1,18 @@
 import {
     afterNextRender,
-    AfterRenderRef,
     AfterViewInit,
     Directive,
+    DoCheck,
     inject,
+    Injector,
     Renderer2,
     RendererStyleFlags2,
     signal
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqAccordionItem } from './accordion-item';
+
+const CONTENT_HEIGHT = '--kbq-accordion-content-height';
 
 @Directive({
     selector: '[kbqAccordionContent]',
@@ -28,12 +31,14 @@ import { KbqAccordionItem } from './accordion-item';
         '[attr.data-disabled]': 'item.disabled',
         '[attr.data-orientation]': 'item.orientation',
 
-        '(transitionend)': 'toggle()'
+        '(transitionend)': 'onTransitionEnd($event)',
+        '(transitioncancel)': 'onTransitionEnd($event)'
     },
     exportAs: 'kbqAccordionContent'
 })
-export class KbqAccordionContentDirective implements AfterViewInit {
+export class KbqAccordionContentDirective implements DoCheck, AfterViewInit {
     private readonly renderer: Renderer2 = inject(Renderer2);
+    private readonly injector = inject(Injector);
 
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
@@ -54,21 +59,24 @@ export class KbqAccordionContentDirective implements AfterViewInit {
     protected readonly hidden = signal<boolean>(true);
 
     private savedTransition: string;
-    private readonly afterRenderRef?: AfterRenderRef;
 
-    /** Whether the first browser render has happened, i.e. whether the content can be measured. */
+    /** Whether the first browser render has happened; until then a toggle only sets the initial state. */
     private rendered = false;
 
     constructor() {
         // `afterNextRender` never runs on the server, so no platform check is needed here.
-        this.afterRenderRef = afterNextRender(() => {
+        afterNextRender(() => {
             this.rendered = true;
 
-            this.updateHeight();
             this.enableAnimation();
-
-            this.afterRenderRef?.destroy();
         });
+    }
+
+    ngDoCheck(): void {
+        // The item cannot reach content declared in a child component's template to toggle it.
+        if (this.hidden() === this.item.expanded) {
+            this.toggle();
+        }
     }
 
     ngAfterViewInit(): void {
@@ -76,14 +84,22 @@ export class KbqAccordionContentDirective implements AfterViewInit {
     }
 
     toggle() {
-        // Re-measure while the content is still collapsed. Its natural height depends on the width
-        // it is finally laid out at, and that width is not known at first render when the accordion
-        // lives in a container sized afterwards (sidepanel, overlay, responsive layout).
-        if (this.rendered && this.item.expanded && this.hidden()) {
-            this.updateHeight();
+        if (this.rendered) {
+            this.pinHeight();
         }
 
         this.hidden.set(!this.item.expanded);
+    }
+
+    /** @docs-private */
+    protected onTransitionEnd(event: TransitionEvent): void {
+        // Transitions of the projected content and of pseudo-elements bubble up here as well.
+        if (event.target !== this.nativeElement || event.propertyName !== 'height' || event.pseudoElement) return;
+
+        // The transition that ended or was cancelled may already be replaced by one that still needs the pin.
+        if (!this.isHeightTransitionRunning()) {
+            this.releaseHeight();
+        }
     }
 
     disableAnimation() {
@@ -97,19 +113,70 @@ export class KbqAccordionContentDirective implements AfterViewInit {
     }
 
     /**
-     * Publishes the natural height of the projected content as `--kbq-accordion-content-height`,
-     * which the open state animates towards.
+     * Pins the height the transition runs between: the natural height of the content when expanding,
+     * the current one when collapsing. The pin is released once the transition ends, so expanded
+     * content keeps `height: auto` and follows its own size — its container can be laid out later
+     * (a content panel, an overlay) or resized, and nested items can toggle.
      *
-     * `scrollHeight` is used rather than `getBoundingClientRect()`: the host is `overflow: hidden`
-     * and collapsed to `height: 0` while closed, so its box reports `0`, whereas `scrollHeight`
-     * still reports the height of the content it clips.
+     * `scrollHeight` reports the natural height even while the `overflow: hidden` host is collapsed.
      */
-    private updateHeight(): void {
-        this.renderer.setStyle(
-            this.nativeElement,
-            '--kbq-accordion-content-height',
-            `${this.nativeElement.scrollHeight}px`,
-            RendererStyleFlags2.DashCase
-        );
+    private pinHeight(): void {
+        const element = this.nativeElement;
+
+        // No transition would release the pin.
+        if (element.style.transition === 'none') {
+            this.releaseHeight();
+
+            return;
+        }
+
+        const expanded = this.item.expanded;
+        const current = element.offsetHeight;
+        const target = expanded ? element.scrollHeight : 0;
+
+        // Nothing to animate: no box yet (e.g. in a closed content panel), or already there.
+        if (current === target) {
+            this.releaseHeight();
+
+            return;
+        }
+
+        this.setHeight(expanded ? target : current);
+
+        // A collapse starts from `auto`, which does not transition: commit the pinned height before
+        // `data-state` flips.
+        if (!expanded) {
+            element.getBoundingClientRect();
+        }
+
+        afterNextRender(() => this.settleHeight(), { injector: this.injector });
+    }
+
+    /** Checks the pin once `data-state` has flipped. */
+    private settleHeight(): void {
+        const running = this.isHeightTransitionRunning();
+
+        if (running === false) {
+            // Transitions are off (a stylesheet, reduced motion), so no `transitionend` will release the pin.
+            this.releaseHeight();
+        } else if (this.item.expanded) {
+            // Content rendered by the flip itself (`@if`, `@defer`) was not there to measure: retarget.
+            this.setHeight(this.nativeElement.scrollHeight);
+        }
+    }
+
+    /** Whether a height transition runs on the host; `undefined` without the Web Animations API. */
+    private isHeightTransitionRunning(): boolean | undefined {
+        return this.nativeElement
+            .getAnimations?.()
+            .some((animation) => (animation as CSSTransition).transitionProperty === 'height');
+    }
+
+    private setHeight(height: number): void {
+        this.renderer.setStyle(this.nativeElement, CONTENT_HEIGHT, `${height}px`, RendererStyleFlags2.DashCase);
+    }
+
+    private releaseHeight(): void {
+        this.renderer.removeStyle(this.nativeElement, CONTENT_HEIGHT, RendererStyleFlags2.DashCase);
     }
 }

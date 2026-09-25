@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
-import { E2eAccordionStates } from '../components/accordion/e2e';
+import { E2eAccordionContentPanel, E2eAccordionStates } from '../components/accordion/e2e';
 import { E2eActionsPanelWithOverlayContainer } from '../components/actions-panel/e2e';
 import { E2eAlertStateAndStyle } from '../components/alert/e2e';
 import { E2eAppSwitcherStates, E2eAppSwitcherWithSitesStates } from '../components/app-switcher/e2e';
@@ -182,6 +182,7 @@ const components = [
     E2eClampedTextStateAndStyle,
     E2eClampedTextStates,
     E2eAccordionStates,
+    E2eAccordionContentPanel,
     E2eTextareaStates,
     E2eTextareaGrowBehavior,
     E2eTextareaGrowMaxRows,
