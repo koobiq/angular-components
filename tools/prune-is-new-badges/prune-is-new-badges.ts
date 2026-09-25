@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
 
-/** A single `isNew: expiresAt('…')` entry that was dropped from the source. */
+/** A single `isNew: expiresAt('…')` or `isUpdated: expiresAt('…')` entry that was dropped from the source. */
 export interface PrunedIsNewBadge {
     /** The ISO date the removed entry carried. */
     date: string;
@@ -20,10 +20,10 @@ export interface PruneIsNewBadgesResult {
  * `                    isNew: expiresAt('2026-10-07')`. Matching the line rather than parsing the
  * module keeps the rewrite lossless: everything else in the file is copied through untouched.
  */
-const isNewLine = /^\s*isNew: expiresAt\('([^']*)'\),?\s*$/;
+const badgeLine = /^\s*(?:isNew|isUpdated): expiresAt\('([^']*)'\),?\s*$/;
 
 /**
- * Removes every `isNew: expiresAt(...)` entry whose date has already passed.
+ * Removes every `isNew: expiresAt(...)` and `isUpdated: expiresAt(...)` entry whose date has already passed.
  *
  * Mirrors the predicate `expiresAt` itself uses, so an entry is dropped exactly when the badge it
  * gates has stopped rendering. Unparseable dates are left in place — `structure.spec` is what
@@ -38,7 +38,7 @@ export const pruneIsNewBadges = (source: string, now: DateTime): PruneIsNewBadge
     const pruned: PrunedIsNewBadge[] = [];
 
     lines.forEach((line, index) => {
-        const date = isNewLine.exec(line)?.[1];
+        const date = badgeLine.exec(line)?.[1];
         const expiry = date === undefined ? undefined : DateTime.fromISO(date);
 
         if (!date || !expiry?.isValid || expiry.diff(now, 'days').days > 0) {
