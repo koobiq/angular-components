@@ -9,6 +9,7 @@ import { AgGridExternalFilterStateExample } from './ag-grid-external-filter-stat
 import { AgGridFilterStateExample } from './ag-grid-filter-state/ag-grid-filter-state-example';
 import { AgGridInfiniteSelectionExample } from './ag-grid-infinite-selection/ag-grid-infinite-selection-example';
 import { AgGridLoadingOverlayExample } from './ag-grid-loading-overlay/ag-grid-loading-overlay-example';
+import { AgGridLongCellContentExample } from './ag-grid-long-cell-content/ag-grid-long-cell-content-example';
 import { AgGridOverviewExample } from './ag-grid-overview/ag-grid-overview-example';
 import { AgGridQuickFilterStateExample } from './ag-grid-quick-filter-state/ag-grid-quick-filter-state-example';
 import { AgGridRowActionsExample } from './ag-grid-row-actions/ag-grid-row-actions-example';
@@ -30,6 +31,7 @@ export {
     AgGridFilterStateExample,
     AgGridInfiniteSelectionExample,
     AgGridLoadingOverlayExample,
+    AgGridLongCellContentExample,
     AgGridOverviewExample,
     AgGridQuickFilterStateExample,
     AgGridRowActionsExample,
@@ -60,7 +62,8 @@ const EXAMPLES = [
     AgGridSkeletonCellRendererExample,
     AgGridInfiniteSelectionExample,
     AgGridAndActionsPanelExample,
-    AgGridAndContentPanelExample
+    AgGridAndContentPanelExample,
+    AgGridLongCellContentExample
 ];
 
 @NgModule({

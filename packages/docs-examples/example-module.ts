@@ -349,6 +349,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-loading-overlay-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-long-cell-content": {
+    "packagePath": "components/ag-grid/ag-grid-long-cell-content",
+    "title": "AG Grid with overflow items",
+    "componentName": "AgGridLongCellContentExample",
+    "files": [
+      "ag-grid-long-cell-content-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-long-cell-content-example",
+    "primaryFile": "ag-grid-long-cell-content-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-overview": {
     "packagePath": "components/ag-grid/ag-grid-overview",
     "title": "AG Grid overview",
@@ -7654,6 +7666,7 @@ export type LiveExampleId =
   | 'ag-grid-filter-state'
   | 'ag-grid-infinite-selection'
   | 'ag-grid-loading-overlay'
+  | 'ag-grid-long-cell-content'
   | 'ag-grid-overview'
   | 'ag-grid-quick-filter-state'
   | 'ag-grid-row-actions'
