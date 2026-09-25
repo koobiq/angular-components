@@ -4,7 +4,7 @@ import { DateAdapter } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 import { KbqFilterBarModule } from './filter-bar.module';
-import { kbqBuildTree, KbqFilter, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
+import { kbqBuildTree, KbqFilter, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
 
 const DEV_DATA_OBJECT = {
     'No roles': 'value 0',
@@ -25,12 +25,17 @@ const DEV_DATA_OBJECT = {
     }
 };
 
+/** One option, long enough to overflow the pipe on its own. */
+const E2E_LONG_VALUE = { name: 'Исходный код и развернутое приложение веб-сервиса', id: '1' };
+
 /**
- * A saved-filter name and a pipe whose name and value are all longer than their max width.
+ * Pipe widths: a saved-filter name over its max width, a pipe whose name and value are both too long, a
+ * removable pipe with a short name next to a long value, and an input pipe, which keeps its own width.
  *
- * All three are projected into the default slot of a `kbq-button`, i.e. they land inside
- * `.kbq-button-text`, and depend on being flex items to truncate on their own: as plain inline boxes
- * `overflow` and `text-overflow` would not apply to them at all and the pipe value would spill out.
+ * Names and values are projected into the default slot of a `kbq-button`, i.e. they land inside
+ * `.kbq-button-text`: as plain inline boxes `overflow` and `text-overflow` would not apply to them at all
+ * and the pipe value would spill out. Name and value are sized as two grid tracks — as flex items they
+ * gave up the same share of their width, which left a three-character name at a single glyph.
  */
 @Component({
     selector: 'e2e-filter-bar-pipe-truncation',
@@ -60,6 +65,25 @@ export class E2eFilterBarPipeTruncation {
             cleanable: false,
             removable: false,
             disabled: false
+        },
+        {
+            name: 'MultiSelect',
+            id: 'E2ELongValue',
+            type: KbqPipeTypes.MultiSelect,
+            values: [E2E_LONG_VALUE],
+
+            cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'Input',
+            id: 'E2EInput',
+            type: KbqPipeTypes.Input,
+
+            cleanable: false,
+            removable: false,
+            disabled: false
         }
     ];
 
@@ -74,6 +98,28 @@ export class E2eFilterBarPipeTruncation {
                 name: 'Очень длинное название фильтра',
                 value: 'и не менее длинное значение фильтра',
                 type: KbqPipeTypes.Text,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            // A name far under the old 20-character threshold, in a pipe type that never carried
+            // `kbqPipeMinWidth`: this is the combination that used to collapse to one glyph.
+            {
+                name: 'Тип',
+                id: 'E2ELongValue',
+                value: [E2E_LONG_VALUE],
+                type: KbqPipeTypes.MultiSelect,
+
+                cleanable: false,
+                removable: true,
+                disabled: false
+            },
+            {
+                name: 'Поиск',
+                id: 'E2EInput',
+                value: null,
+                type: KbqPipeTypes.Input,
 
                 cleanable: false,
                 removable: false,
@@ -1267,4 +1313,120 @@ export class E2eFilterBarOptionCaption {
             }
         ]
     };
+}
+
+/**
+ * A cleanable pipe that starts empty, beside one that starts with a value. Both halves of a pipe — its
+ * trigger and its clear button — have to carry the same style, and that style has to follow a value
+ * chosen after initialization.
+ *
+ * Deliberately without `[filter]`: an unbound filter never moves, and neither does the `data` reference a
+ * pipe mutates in place, so nothing in the signal graph reacts to the pipe gaining or losing its value.
+ * That is the configuration the two halves used to disagree in.
+ */
+@Component({
+    selector: 'e2e-filter-bar-pipe-fill',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div class="e2e-filter-bar-pipe-fill__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates">
+                @for (pipe of pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        /* Tall enough that a click below the bar still lands inside <body>, which is where CDK listens
+           for the outside pointer events that close a select panel. */
+        :host {
+            display: block;
+            padding: 8px;
+
+            min-height: 200px;
+        }
+
+        .e2e-filter-bar-pipe-fill__target {
+            width: 600px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarPipeFill'
+    }
+})
+export class E2eFilterBarPipeFill {
+    private readonly values = [
+        { name: 'Option 1', id: '1', value: 'value1' },
+        { name: 'Option 2', id: '2', value: 'value2' },
+        { name: 'Option 3', id: '3', value: 'value3' }
+    ];
+
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Select',
+            id: 'E2ePipeFillSelect',
+            type: KbqPipeTypes.Select,
+            values: this.values,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiSelect',
+            id: 'E2ePipeFillMultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            values: this.values,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Persistent',
+            id: 'E2ePipeFillPersistent',
+            type: KbqPipeTypes.Select,
+            values: this.values,
+
+            cleanable: true,
+            removable: true,
+            disabled: false
+        }
+    ];
+
+    readonly pipes: KbqPipe[] = [
+        {
+            name: 'Select',
+            id: 'E2ePipeFillSelect',
+            type: KbqPipeTypes.Select,
+            value: this.values[0],
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiSelect',
+            id: 'E2ePipeFillMultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            value: null,
+
+            cleanable: true,
+            removable: false,
+            disabled: false
+        },
+        // Cleanable AND removable: its clear button empties the pipe instead of removing it, and stays
+        // mounted afterwards, so this is the one pipe on the route that shows both halves while empty.
+        {
+            name: 'Persistent',
+            id: 'E2ePipeFillPersistent',
+            type: KbqPipeTypes.Select,
+            value: this.values[1],
+
+            cleanable: true,
+            removable: true,
+            disabled: false
+        }
+    ];
 }

@@ -1,6 +1,16 @@
 ﻿import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, EventEmitter, inject, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
+import {
+    Component,
+    ErrorHandler,
+    EventEmitter,
+    inject,
+    Injectable,
+    Injector,
+    NgModule,
+    Provider,
+    Type
+} from '@angular/core';
 import {
     ComponentFixture,
     discardPeriodicTasks,
@@ -587,17 +597,21 @@ describe('KbqModal', () => {
     });
 
     describe('with dynamic injectors', () => {
-        it('should throw error if custom parent injector not provided for feature service', () => {
-            const fixture = createComponent(CustomComponent);
+        it('should report an error if custom parent injector not provided for feature service', async () => {
+            const errorHandler = { handleError: jest.fn() };
+            const fixture = createComponent(CustomComponent, [{ provide: ErrorHandler, useValue: errorHandler }]);
 
-            try {
-                fixture.componentInstance.modalService.open({
-                    kbqComponent: CustomModalComponent
-                });
-            } catch (error) {
-                expect(error.message.includes('NullInjectorError')).toBeTruthy();
-            }
+            fixture.componentInstance.modalService.open({ kbqComponent: CustomModalComponent });
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            // The content component is created while the application ticks the modal's own view, so the
+            // DI failure goes to the ErrorHandler rather than to the caller.
+            expect(errorHandler.handleError).toHaveBeenCalledWith(
+                expect.objectContaining({ message: expect.stringContaining('TestComponentLevelService') })
+            );
         });
+
         it('should use custom parent injector when creating dynamic component', () => {
             const customInjectionTokenProvider: Provider = { provide: 'CUSTOM-TOKEN', useValue: 'CUSTOM-TOKEN-VALUE' };
             const fixture = createComponent(CustomComponent);

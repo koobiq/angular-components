@@ -32,7 +32,11 @@ import {
     E2eAutocompleteStates
 } from '../components/autocomplete/e2e';
 import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
-import { E2eBreadcrumbsOverflowMax, E2eBreadcrumbsStateAndStyle } from '../components/breadcrumbs/e2e';
+import {
+    E2eBreadcrumbsInForm,
+    E2eBreadcrumbsOverflowMax,
+    E2eBreadcrumbsStateAndStyle
+} from '../components/breadcrumbs/e2e';
 import {
     E2eButtonToggleStates,
     E2eButtonToggleStatesStretched,
@@ -69,6 +73,7 @@ import {
     E2eFilterBarFilters,
     E2eFilterBarOptionCaption,
     E2eFilterBarPanelMaxHeight,
+    E2eFilterBarPipeFill,
     E2eFilterBarPipeTruncation,
     E2eFilterBarStates
 } from '../components/filter-bar/e2e';
@@ -296,6 +301,7 @@ const components: Record<string, Type<unknown>> = {
     E2eToggleHeight,
     E2eBreadcrumbsStateAndStyle,
     E2eBreadcrumbsOverflowMax,
+    E2eBreadcrumbsInForm,
     E2eEmptyStateStateAndStyle,
     E2eCodeBlockStates,
     E2eCodeBlockScrollbarFlash,
@@ -329,6 +335,7 @@ const components: Record<string, Type<unknown>> = {
     E2eFilterBarPanelMaxHeight,
     E2eFilterBarPipeTruncation,
     E2eFilterBarOptionCaption,
+    E2eFilterBarPipeFill,
     E2eFlagStyles,
     E2eTimepickerStates,
     E2eIconStateAndStyle,

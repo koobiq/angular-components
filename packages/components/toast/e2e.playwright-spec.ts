@@ -53,6 +53,7 @@ test.describe('KbqToastModule', () => {
             await getToast(page).hover();
 
             // Twice the requested duration: without the pause the toast would be long gone.
+            // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts the toast outlives its own duration while hovered
             await page.waitForTimeout(4500);
 
             await expect(getToast(page)).toBeVisible();

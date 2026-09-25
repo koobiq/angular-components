@@ -10,13 +10,13 @@ This schematic provides migration for `KbqEmptyState` new `size` attribute. It i
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:empty-state-size-attr --project <your project>
+ng g @koobiq/components:empty-state-size-attr --project "<your project>"
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:empty-state-size-attr --project <your project>
+nx g @koobiq/components:empty-state-size-attr --project "<your project>"
 ```
 
 ### Run locally

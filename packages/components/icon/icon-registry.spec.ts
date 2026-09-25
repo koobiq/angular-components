@@ -75,8 +75,11 @@ describe('KbqIconRegistry', () => {
             registry.addSvgIconLiteralInNamespace('brand', 'logo', sanitizer.bypassSecurityTrustHtml(ICON_SVG));
 
             registry.getNamedSvgIcon('logo', 'other').subscribe({
-                next: () => done.fail('should not emit'),
-                error: () => done()
+                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
+                error: (error) => {
+                    expect(error).toBeInstanceOf(Error);
+                    done();
+                }
             });
         });
     });
@@ -103,7 +106,10 @@ describe('KbqIconRegistry', () => {
             registry.getNamedSvgIcon('check').subscribe();
             registry.getNamedSvgIcon('check').subscribe();
 
-            http.expectOne('/icons/check.svg').flush(ICON_SVG);
+            const requests = http.match('/icons/check.svg');
+
+            expect(requests).toHaveLength(1);
+            requests[0].flush(ICON_SVG);
         });
     });
 
@@ -128,8 +134,11 @@ describe('KbqIconRegistry', () => {
             registry.addSvgIconSet(url);
 
             registry.getNamedSvgIcon('nonexistent_16').subscribe({
-                next: () => done.fail('should not emit'),
-                error: () => done()
+                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
+                error: (error) => {
+                    expect(error).toBeInstanceOf(Error);
+                    done();
+                }
             });
 
             http.expectOne('/sprite.svg').flush(SPRITE_SVG);
@@ -141,10 +150,13 @@ describe('KbqIconRegistry', () => {
             registry.addSvgIconSet(url);
             registry.addSvgIconSet(url);
 
-            registry.getNamedSvgIcon('check_16').subscribe();
+            // An icon missing from the sprite makes the registry try every registered set in turn, so a
+            // second registration of the URL would fetch it again.
+            registry.getNamedSvgIcon('missing_16').subscribe({ error: () => undefined });
 
-            // Only one HTTP request despite two addSvgIconSet calls.
             http.expectOne('/sprite.svg').flush(SPRITE_SVG);
+
+            expect(http.match('/sprite.svg')).toHaveLength(0);
         });
     });
 
@@ -166,7 +178,7 @@ describe('KbqIconRegistry', () => {
     describe('getNamedSvgIcon errors', () => {
         it('errors when no icon registered', (done) => {
             registry.getNamedSvgIcon('missing').subscribe({
-                next: () => done.fail('should not emit'),
+                next: (svg) => done(new Error(`expected no emission, got ${svg.nodeName}`)),
                 error: (err: Error) => {
                     expect(err.message).toContain('missing');
                     done();
@@ -183,6 +195,17 @@ describe('KbqIconRegistry', () => {
          * (e.g. a dynamic value that loses its type at runtime).
          */
         const unsafe = (html: string) => html as unknown as SafeHtml;
+
+        // Angular's sanitizer reports in dev mode whenever it strips content, which is what these tests provoke.
+        let warn: jest.SpyInstance;
+
+        beforeEach(() => {
+            warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        });
+
+        afterEach(() => {
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('sanitizing HTML stripped some content'));
+        });
 
         it('throws when input sanitizes to empty (script-only literal)', () => {
             expect(() => registry.addSvgIconLiteral('evil', unsafe('<script>alert(1)</script>'))).toThrow(

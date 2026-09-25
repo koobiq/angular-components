@@ -15,7 +15,7 @@ test.describe('KbqSidepanel', () => {
         const getTestTable = (locator: Locator) => locator.getByTestId('e2eSidepanelTable');
         const getSidepanelContainer = (page: Page) => page.locator('.kbq-sidepanel-container').first();
         const clickButton = (locator: Locator, id: string) => locator.getByTestId(id).click();
-        const testSidepanelType = async (page: Page, type: string, screenshotName: string, tracks: number) => {
+        const expectSidepanelType = async (page: Page, type: string, screenshotName: string, tracks: number) => {
             await clickButton(getTestTable(getComponent(page)), type);
             await expect(getSidepanelContainer(page)).toBeVisible();
             // The body flashes its track on open, and `toBeVisible` resolves while that is still running.
@@ -28,13 +28,13 @@ test.describe('KbqSidepanel', () => {
             test('medium', async ({ page }) => {
                 await page.setViewportSize({ width: 640, height: 300 });
                 await page.goto('/E2eSidepanelStateAndStyle');
-                await testSidepanelType(page, 'e2eSidepanelMedium', '01-light.png', 1);
+                await expectSidepanelType(page, 'e2eSidepanelMedium', '01-light.png', 1);
             });
 
             test('large', async ({ page }) => {
                 await page.setViewportSize({ width: 960, height: 300 });
                 await page.goto('/E2eSidepanelStateAndStyle');
-                await testSidepanelType(page, 'e2eSidepanelLarge', '02-light.png', 1);
+                await expectSidepanelType(page, 'e2eSidepanelLarge', '02-light.png', 1);
             });
         });
 
@@ -42,7 +42,7 @@ test.describe('KbqSidepanel', () => {
             test('right-left', async ({ page }) => {
                 await page.setViewportSize({ width: 805, height: 400 });
                 await page.goto('/E2eSidepanelStateAndStyle');
-                await testSidepanelType(page, 'e2eSidepanelRightLeft', '03-light.png', 2);
+                await expectSidepanelType(page, 'e2eSidepanelRightLeft', '03-light.png', 2);
             });
         });
 

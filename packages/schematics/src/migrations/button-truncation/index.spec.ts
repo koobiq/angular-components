@@ -7,6 +7,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'button-truncation';
 
 /**
@@ -54,8 +55,18 @@ describe(SCHEMATIC_NAME, () => {
         [projectKey] = projects.keys();
     });
 
-    it('should run migration for specified project', async () => {
-        await runner.runSchematic(SCHEMATIC_NAME, { project: projectKey, fix: true } satisfies Schema, appTree);
+    it('leaves a project that does not use the component untouched', async () => {
+        const snapshot = (tree: UnitTestTree) =>
+            tree.files.filter((file) => /\.(ts|html|scss)$/.test(file)).map((file) => `${file}:${tree.readText(file)}`);
+        const before = snapshot(appTree as UnitTestTree);
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: projectKey, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(snapshot(updatedTree)).toEqual(before);
     });
 
     describe('marker slots', () => {
@@ -190,5 +201,18 @@ describe(SCHEMATIC_NAME, () => {
             expect(warnings).toContain('max-width: 100%');
             expect(warnings).toContain('max-width: none');
         });
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const { templatePath } = getProjectContentPaths(projects.get(projectKey)!, appTree);
+
+        appTree.overwrite(templatePath, '<button kbq-button><i kbq-icon="kbq-plus_16"></i>Text</button>');
+
+        // Run from migrations.json with no options, as `ng update` does: no schema default applies there.
+        const migrationsRunner = new SchematicTestRunner('migrations', migrationsPath);
+
+        const updated = await migrationsRunner.runSchematic(SCHEMATIC_NAME, {}, appTree);
+
+        expect(updated.readText(templatePath)).toContain('<i kbqButtonPrefix kbq-icon="kbq-plus_16">');
     });
 });

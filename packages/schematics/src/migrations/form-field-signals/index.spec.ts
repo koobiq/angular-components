@@ -7,6 +7,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'form-field-signals';
 
 describe(SCHEMATIC_NAME, () => {
@@ -377,5 +378,29 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(updated).toBe(source);
         expect(messages.join('\n')).toContain('would update');
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFormField } from '@koobiq/components/form-field';\n" +
+                'class Demo {\n' +
+                '    read(formField: KbqFormField) {\n' +
+                '        return formField.cleaner;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        // Run from migrations.json with no options, as `ng update` does: no schema default applies there.
+        const migrationsRunner = new SchematicTestRunner('migrations', migrationsPath);
+
+        migrationsRunner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const updated = await migrationsRunner.runSchematic(SCHEMATIC_NAME, {}, appTree);
+
+        expect(updated.readText(ts)).toContain('return formField.cleaner();');
+        expect(messages.join('\n')).not.toContain('would update');
     });
 });

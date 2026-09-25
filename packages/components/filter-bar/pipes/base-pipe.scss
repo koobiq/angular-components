@@ -5,35 +5,33 @@
     display: flex;
     flex-direction: row;
 
+    // Caps the whole pipe, clear and remove buttons included. The label's grid tracks have no
+    // min-content, so the trigger gives way down to its own paddings without `min-width: 0`.
+    max-width: var(--kbq-filter-bar-pipe-max-width, 320px);
     max-height: 32px;
 
     & .kbq-select .kbq-select__trigger {
         height: unset;
     }
 
-    .kbq-button-wrapper {
-        max-width: var(--kbq-filter-bar-pipe-max-width, 320px);
-    }
-
-    // The button's default slot is an inline text box; a pipe puts its own flex row of two
-    // independently truncated parts (name + value) in there, so it opts back into flex.
+    // The button's default slot is an inline text box; a pipe puts its own row of two independently
+    // truncated parts (name + value) in there, as two shrinkable tracks: as flex items they would give
+    // up the same percentage, which wipes out a short name long before a long value becomes unreadable.
     // Qualified with `.kbq-button` on purpose: the base rule is `.kbq-button .kbq-button-text`, so a
     // two-class selector would only win on source order, which differs between app bundles.
     .kbq-button .kbq-button-text {
-        display: flex;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(0, max-content);
         align-items: center;
     }
 
     .kbq-pipe__name {
         @include common.kbq-truncate-line();
-
-        flex: 1 1 auto;
     }
 
     .kbq-pipe__value {
         @include common.kbq-truncate-line();
-
-        flex: 1 1 auto;
 
         &:not(.kbq-pipe__value_empty) {
             margin-inline-start: 4px;

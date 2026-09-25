@@ -280,7 +280,10 @@ function warnStyles(context: SchematicContext, filePath: string, content: string
 
 export default function buttonTruncation(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
-        const { project, fix } = options;
+        const { project } = options;
+        // `ng update` invokes migrations with no options at all, and migrations.json declares no schema, so the
+        // schema default never reaches us — applying the fix is the intended behaviour there.
+        const fix = options.fix ?? true;
         const projectDefinition = await setupOptions(project, tree);
         const root = projectDefinition?.root ?? '';
         const rootDir = root ? tree.getDir(root as Path) : tree.root;

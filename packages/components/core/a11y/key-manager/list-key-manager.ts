@@ -47,7 +47,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         return this._activeItem;
     }
 
-    private _activeItem: T;
+    private _activeItem: T | null = null;
 
     private wrap: boolean = false;
     private letterKeyStream = new Subject<string>();
@@ -220,6 +220,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
         this.updateActiveItem(item);
 
+        // By index, not by identity as in the CDK: autocomplete and tree-select take any `change` while
+        // their panel is closed for keyboard navigation, and a re-rendered list keeps its index.
         if (this._activeItemIndex !== this.previousActiveItemIndex) {
             this.change.next(this._activeItemIndex);
         }
@@ -378,9 +380,11 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
     updateActiveItem(item: any): void {
         const itemArray = this._items.toArray();
         const index = typeof item === 'number' ? item : itemArray.indexOf(item);
+        const activeItem = itemArray[index];
 
+        // Explicitly against null/undefined: any other falsy value is a legitimate item.
+        this._activeItem = activeItem ?? null;
         this._activeItemIndex = index;
-        this._activeItem = itemArray[index];
     }
 
     /**

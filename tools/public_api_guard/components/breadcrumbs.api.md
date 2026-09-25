@@ -23,6 +23,8 @@ export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfigu
 // @public
 export class KbqBreadcrumbButton implements OnInit {
     // (undocumented)
+    protected readonly element: HTMLElement;
+    // (undocumented)
     ngOnInit(): void;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqBreadcrumbButton, "[kbq-button][kbqBreadcrumb]", never, {}, {}, never, never, true, [{ directive: typeof RdxRovingFocusItemDirective; inputs: { "focusable": "focusable"; }; outputs: {}; }]>;

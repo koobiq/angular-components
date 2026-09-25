@@ -1,5 +1,6 @@
 .kbq-filter-bar {
-    /* Maximum width of a pipe / filters trigger before its label truncates. */
+    /* Maximum width of a whole pipe, clear and remove buttons included, and of the filters trigger.
+       The input pipe keeps its own width. */
     --kbq-filter-bar-pipe-max-width: 320px;
     /* Fixed width of the input pipe's field. Unlike the other pipes it never shrink-wraps its
        content, so this is a width rather than a max-width. */

@@ -37,6 +37,13 @@ import { KbqTitleDirective } from './title.directive';
                 <span #kbqTitleText>A value long enough to be clipped by the container</span>
             </div>
         </div>
+
+        <div data-testid="titleSiblingClip" kbq-title>
+            <div #kbqTitleContainer class="sibling-clip">
+                <span #kbqTitleText class="sibling-clip__part">Current status</span>
+                <span #kbqTitleText class="sibling-clip__part sibling-clip__value">Fits on its own</span>
+            </div>
+        </div>
     `,
     styles: `
         :host {
@@ -87,6 +94,19 @@ import { KbqTitleDirective } from './title.directive';
         .multiple-text {
             display: flex;
             gap: 4px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sibling-clip {
+            display: flex;
+            gap: 4px;
+            width: 120px;
+        }
+
+        .sibling-clip__part {
+            min-width: 0;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;

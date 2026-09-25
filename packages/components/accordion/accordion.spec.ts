@@ -52,6 +52,10 @@ describe('KbqAccordion', () => {
                 AccordionVariants,
                 AccordionDefaultValue,
                 AccordionValue,
+                AccordionExpanded,
+                AccordionExpandedAttribute,
+                AccordionKeyedSections,
+                AccordionLateSection,
                 AccordionDisabled,
                 AccordionDisabledItem,
                 AccordionType,
@@ -202,6 +206,58 @@ describe('KbqAccordion', () => {
                 const accordion = fixture.debugElement.query(By.directive(KbqAccordion)).injector.get(KbqAccordion);
 
                 expect(accordion.value()).toBe('');
+            });
+        });
+
+        describe('expanded', () => {
+            /** The `data-state` of every item, the `aria-expanded` of its trigger and whether its content is hidden. */
+            const sectionStates = (expandedFixture: ComponentFixture<unknown>) => {
+                const triggers = expandedFixture.debugElement.queryAll(By.directive(KbqAccordionTrigger));
+                const contents = expandedFixture.debugElement.queryAll(By.directive(KbqAccordionContent));
+
+                return expandedFixture.debugElement.queryAll(By.directive(KbqAccordionItem)).map((item, index) => ({
+                    state: item.nativeElement.getAttribute('data-state'),
+                    ariaExpanded: triggers[index].nativeElement.getAttribute('aria-expanded'),
+                    hidden: contents[index].nativeElement.hasAttribute('hidden')
+                }));
+            };
+
+            const open = { state: 'open', ariaExpanded: 'true', hidden: false };
+            const closed = { state: 'closed', ariaExpanded: 'false', hidden: true };
+
+            it.each<KbqAccordionType>(['single', 'multiple'])(
+                'should keep an item expanded by [expanded]="true" in %s mode',
+                (type) => {
+                    const expandedFixture = TestBed.createComponent(AccordionExpanded);
+
+                    expandedFixture.componentInstance.type = type;
+                    expandedFixture.detectChanges();
+
+                    expect(sectionStates(expandedFixture)).toEqual([open, closed]);
+                }
+            );
+
+            // The static attribute is applied while the view is created, before a bound `[type]` is, so the mode
+            // must still decide how many of the sections stay expanded.
+            it.each<[KbqAccordionType, object[]]>([
+                ['single', [open, closed]],
+                ['multiple', [open, open]]
+            ])('should keep the sections expanded by the static expanded attribute in %s mode', (type, expected) => {
+                const expandedFixture = TestBed.createComponent(AccordionExpandedAttribute);
+
+                expandedFixture.componentInstance.type = type;
+                expandedFixture.detectChanges();
+
+                expect(sectionStates(expandedFixture)).toEqual(expected);
+            });
+
+            it('should emit opened for the sections expanded by the static expanded attribute', () => {
+                const expandedFixture = TestBed.createComponent(AccordionExpandedAttribute);
+
+                expandedFixture.componentInstance.type = 'multiple';
+                expandedFixture.detectChanges();
+
+                expect(expandedFixture.componentInstance.openedCount).toBe(2);
             });
         });
 
@@ -1546,6 +1602,135 @@ describe('KbqAccordion', () => {
             expect(store.getState('accordion-key')).toEqual(['item-2']);
         });
 
+        // `[expanded]` is the weakest source of the initial state: a controlled value, a saved state and a
+        // `defaultValue` each override it, the first two even when they expand nothing.
+        it('lets an empty saved state collapse a template-driven expansion', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', []);
+
+            const stateSavingFixture = createStateSaving(store, (component) => (component.expandedFirst = true));
+
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'closed']);
+        });
+
+        it('lets an empty controlled value collapse a template-driven expansion', () => {
+            const stateSavingFixture = createStateSaving(new InMemoryStateStore(), (component) => {
+                component.expandedFirst = true;
+                component.value = [];
+            });
+
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'closed']);
+        });
+
+        it('lets defaultValue override a template-driven expansion when nothing is persisted', () => {
+            const stateSavingFixture = createStateSaving(new InMemoryStateStore(), (component) => {
+                component.expandedFirst = true;
+                component.defaultValue = 'item-2';
+            });
+
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'open']);
+        });
+
+        // As with the other components that persist, a key with nothing saved leaves the sections as they are:
+        // `defaultValue` describes the first render, not every key.
+        it('keeps the current expansion when the new key has nothing saved', () => {
+            const stateSavingFixture = createStateSaving(
+                new InMemoryStateStore(),
+                (component) => (component.defaultValue = 'item-2')
+            );
+
+            stateSavingFixture.debugElement.queryAll(By.directive(KbqAccordionTrigger))[0].nativeElement.click();
+            stateSavingFixture.detectChanges();
+
+            stateSavingFixture.componentInstance.stateSavingKey = 'another-key';
+            stateSavingFixture.detectChanges();
+
+            expect(itemStates(stateSavingFixture)).toEqual(['open', 'closed']);
+        });
+
+        it('restores the state saved under the new key', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('another-key', ['item-2']);
+
+            const stateSavingFixture = createStateSaving(store);
+
+            stateSavingFixture.componentInstance.stateSavingKey = 'another-key';
+            stateSavingFixture.detectChanges();
+
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'open']);
+        });
+
+        // The key and the sections change in the same pass: the change is reported before the new sections bind
+        // their `value`, so restoring right away would match nothing and reconcile the saved state away.
+        it('restores the new key once the sections replacing the old ones are bound', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('entity-2', ['c']);
+            TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+            const keyedFixture = TestBed.createComponent(AccordionKeyedSections);
+
+            keyedFixture.detectChanges();
+            keyedFixture.componentInstance.key = 'entity-2';
+            keyedFixture.componentInstance.sections = ['c', 'd'];
+            keyedFixture.detectChanges();
+
+            expect(itemStates(keyedFixture)).toEqual(['open', 'closed']);
+            expect(store.getState('entity-2')).toEqual(['c']);
+        });
+
+        // A section rendered later with the static attribute is created before it belongs to the accordion, so
+        // it reports its expansion once it does — otherwise the snapshot saved meanwhile leaves it out.
+        it('persists a section rendered expanded after initialization', () => {
+            const store = new InMemoryStateStore();
+
+            TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: store });
+
+            const lateFixture = TestBed.createComponent(AccordionLateSection);
+
+            lateFixture.detectChanges();
+            lateFixture.debugElement.queryAll(By.directive(KbqAccordionTrigger))[0].nativeElement.click();
+            lateFixture.detectChanges();
+
+            lateFixture.componentInstance.showLate = true;
+            lateFixture.detectChanges();
+
+            expect(itemStates(lateFixture)).toEqual(['closed', 'open']);
+            expect(store.getState('late-key')).toEqual(['late']);
+        });
+
+        // A state written in `multiple` mode can hold several values; in `single` mode a stale first one must not
+        // collapse every section and then be reconciled into an empty state.
+        it('restores the first saved value that still names a section in single mode', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', ['removed-item', 'item-2']);
+
+            const stateSavingFixture = createStateSaving(store);
+
+            expect(itemStates(stateSavingFixture)).toEqual(['closed', 'open']);
+            expect(store.getState('accordion-key')).toEqual(['item-2']);
+        });
+
+        // An `async` pipe binds `null` until its first value, which leaves the accordion as uncontrolled as
+        // `undefined` does: the saved state applies and changes persist.
+        it('treats a null value as unbound', () => {
+            const store = new InMemoryStateStore();
+
+            store.setState('accordion-key', ['item-1']);
+
+            const stateSavingFixture = createStateSaving(store, (component) => (component.value = null as never));
+
+            expect(itemStates(stateSavingFixture)).toEqual(['open', 'closed']);
+
+            stateSavingFixture.debugElement.queryAll(By.directive(KbqAccordionTrigger))[1].nativeElement.click();
+            stateSavingFixture.detectChanges();
+
+            expect(store.getState('accordion-key')).toEqual(['item-2']);
+        });
+
         // The sections may arrive after initialization; reconciling against an empty item set here would
         // erase the saved values before the sections that own them exist.
         it('keeps the saved state when the sections are not rendered yet', () => {
@@ -1897,6 +2082,55 @@ class AccordionValue {
 }
 
 @Component({
+    selector: 'accordion-expanded',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [type]="type">
+            <kbq-accordion-item [expanded]="true">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionExpanded {
+    type: KbqAccordionType = 'single';
+}
+
+@Component({
+    selector: 'accordion-expanded-attribute',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [type]="type">
+            <kbq-accordion-item expanded (opened)="openedCount = openedCount + 1">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            <kbq-accordion-item expanded (opened)="openedCount = openedCount + 1">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 2</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 2</kbq-accordion-content>
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionExpandedAttribute {
+    type: KbqAccordionType = 'single';
+    openedCount = 0;
+}
+
+@Component({
     selector: 'accordion-disabled',
     imports: [KbqAccordionModule],
     template: `
@@ -2231,6 +2465,53 @@ class AccordionStateSaving {
     `
 })
 class AccordionValuelessItems {}
+
+@Component({
+    selector: 'accordion-keyed-sections',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [stateSavingKey]="key">
+            @for (section of sections; track section) {
+                <kbq-accordion-item [value]="section">
+                    <kbq-accordion-header>
+                        <button kbq-accordion-trigger type="button">{{ section }}</button>
+                    </kbq-accordion-header>
+                    <kbq-accordion-content>{{ section }}</kbq-accordion-content>
+                </kbq-accordion-item>
+            }
+        </kbq-accordion>
+    `
+})
+class AccordionKeyedSections {
+    key = 'entity-1';
+    sections = ['a', 'b'];
+}
+
+@Component({
+    selector: 'accordion-late-section',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion [stateSavingKey]="'late-key'">
+            <kbq-accordion-item [value]="'item-1'">
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item 1</button>
+                </kbq-accordion-header>
+                <kbq-accordion-content>Content 1</kbq-accordion-content>
+            </kbq-accordion-item>
+            @if (showLate) {
+                <kbq-accordion-item expanded [value]="'late'">
+                    <kbq-accordion-header>
+                        <button kbq-accordion-trigger type="button">Late</button>
+                    </kbq-accordion-header>
+                    <kbq-accordion-content>Late content</kbq-accordion-content>
+                </kbq-accordion-item>
+            }
+        </kbq-accordion>
+    `
+})
+class AccordionLateSection {
+    showLate = false;
+}
 
 // The action buttons are deliberately icon-only (empty, named solely by `aria-label`), matching what
 // the docs ship: a button with its own visible text would keep the axe checks passing even if the

@@ -737,6 +737,7 @@ test.describe('KbqSelectModule', () => {
             await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(400);
             // The reposition is throttled, and this test asserts the panel stayed put — so it has to give the
             // move a chance to happen rather than read before it could.
+            // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts the panel does not move; the reposition has to be given its chance
             await page.waitForTimeout(200);
 
             const pane = await paneBox(page);

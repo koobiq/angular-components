@@ -11,7 +11,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTreeModule, kbqTreeSelectAllValue, KbqTreeSelection } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
-import { getId, KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { getId, KbqBasePipe } from './base-pipe';
 import { KbqMultiSelectPipeState } from './multi-select-pipe-state';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
@@ -25,7 +25,6 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
         KbqPipeState,
         KbqPipeButton,
         KbqTitleModule,
-        KbqPipeMinWidth,
         KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,

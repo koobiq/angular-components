@@ -19,6 +19,7 @@ test.describe('KbqTitleDirective', () => {
 
         // Longer than the tooltip enterDelay (400ms), so a tooltip that should not open has had time to appear.
         // Without the wait the assertion resolves on its first poll, while the tooltip is still absent anyway.
+        // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts a tooltip never opens; there is no event to poll for
         await page.waitForTimeout(800);
         await expect(tooltip(page)).toBeHidden();
     });
@@ -35,10 +36,28 @@ test.describe('KbqTitleDirective', () => {
         await expect(tooltip(page)).toBeVisible();
     });
 
+    test('should show the tooltip when a sibling clips a text element that would fit on its own', async ({ page }) => {
+        const host = page.getByTestId('titleSiblingClip');
+        const widths = await host.locator('.sibling-clip__value').evaluate((element) => ({
+            scroll: element.scrollWidth,
+            client: element.clientWidth,
+            parent: element.parentElement!.offsetWidth
+        }));
+
+        // The value's full text fits the container, so only its own clipping reveals the truncation.
+        expect(widths.scroll).toBeLessThan(widths.parent);
+        expect(widths.scroll).toBeGreaterThan(widths.client);
+
+        await host.hover();
+
+        await expect(tooltip(page)).toBeVisible();
+    });
+
     test('should ignore a sub-pixel clip that text-overflow: clip makes invisible', async ({ page }) => {
         await page.getByTestId('titleSubPixelClip').hover();
 
         // Longer than the tooltip enterDelay (400ms), so a tooltip that should not open has had time to appear.
+        // eslint-disable-next-line playwright/no-wait-for-timeout -- asserts a tooltip never opens; there is no event to poll for
         await page.waitForTimeout(800);
         await expect(tooltip(page)).toBeHidden();
     });

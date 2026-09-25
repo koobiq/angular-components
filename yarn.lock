@@ -6708,6 +6708,57 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@reteps/dockerfmt-darwin-arm64@npm:0.5.4":
+  version: 0.5.4
+  resolution: "@reteps/dockerfmt-darwin-arm64@npm:0.5.4"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@reteps/dockerfmt-darwin-x64@npm:0.5.4":
+  version: 0.5.4
+  resolution: "@reteps/dockerfmt-darwin-x64@npm:0.5.4"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@reteps/dockerfmt-linux-arm64@npm:0.5.4":
+  version: 0.5.4
+  resolution: "@reteps/dockerfmt-linux-arm64@npm:0.5.4"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@reteps/dockerfmt-linux-x64@npm:0.5.4":
+  version: 0.5.4
+  resolution: "@reteps/dockerfmt-linux-x64@npm:0.5.4"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@reteps/dockerfmt@npm:^0.5.4":
+  version: 0.5.4
+  resolution: "@reteps/dockerfmt@npm:0.5.4"
+  dependencies:
+    "@reteps/dockerfmt-darwin-arm64": "npm:0.5.4"
+    "@reteps/dockerfmt-darwin-x64": "npm:0.5.4"
+    "@reteps/dockerfmt-linux-arm64": "npm:0.5.4"
+    "@reteps/dockerfmt-linux-x64": "npm:0.5.4"
+  dependenciesMeta:
+    "@reteps/dockerfmt-darwin-arm64":
+      optional: true
+    "@reteps/dockerfmt-darwin-x64":
+      optional: true
+    "@reteps/dockerfmt-linux-arm64":
+      optional: true
+    "@reteps/dockerfmt-linux-x64":
+      optional: true
+  bin:
+    dockerfmt: dist/launcher.js
+  checksum: 10c0/b6f3037042d258bd3b84d53f879cffb0286fe245f41da54508870866b9bf2c97bb1a2e15c6f29a610ed70ce43ffb1d6e7281002325cd9b01a08aeb3f391ba12a
+  languageName: node
+  linkType: hard
+
 "@rollup/plugin-commonjs@npm:^29.0.3":
   version: 29.0.3
   resolution: "@rollup/plugin-commonjs@npm:29.0.3"
@@ -11661,6 +11712,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eslint-plugin-jest@npm:^29.16.6":
+  version: 29.16.6
+  resolution: "eslint-plugin-jest@npm:29.16.6"
+  dependencies:
+    "@typescript-eslint/utils": "npm:^8.0.0"
+  peerDependencies:
+    "@typescript-eslint/eslint-plugin": ^8.0.0
+    eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
+    jest: "*"
+    typescript: ">=4.8.4 <8.0.0"
+  peerDependenciesMeta:
+    "@typescript-eslint/eslint-plugin":
+      optional: true
+    jest:
+      optional: true
+    typescript:
+      optional: true
+  checksum: 10c0/c483057f6b7c6500c6208eb965b61fe3a81dbd86123dd1a129584ed8c490336275a8815196922c20bd4895761a7d5b993f7b37869c69d57594b522fe318def8d
+  languageName: node
+  linkType: hard
+
 "eslint-plugin-jsdoc@npm:^63.3.3":
   version: 63.3.3
   resolution: "eslint-plugin-jsdoc@npm:63.3.3"
@@ -11682,6 +11754,17 @@ __metadata:
   peerDependencies:
     eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
   checksum: 10c0/cf137600ecde40dafd65f82f0b425fb92c36f31da807990f2645a745e497ecd07c468b9eab0848c7acecf3fb4d22a6af3a65a76f001dfd496cf7fc2d4a26913c
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-playwright@npm:^2.12.0":
+  version: 2.12.0
+  resolution: "eslint-plugin-playwright@npm:2.12.0"
+  dependencies:
+    globals: "npm:^17.3.0"
+  peerDependencies:
+    eslint: ">=8.40.0"
+  checksum: 10c0/de01daaffc6f39f9758f51b955edadb79fe68ef8a3d6dce7f4775508034309af1a5664fd55dfbf3d513cb84ff528e6880011e3c5f6c7d284071fcd09a70a0ea8
   languageName: node
   linkType: hard
 
@@ -12816,6 +12899,13 @@ __metadata:
   version: 16.5.0
   resolution: "globals@npm:16.5.0"
   checksum: 10c0/615241dae7851c8012f5aa0223005b1ed6607713d6813de0741768bd4ddc39353117648f1a7086b4b0fa45eae733f1c0a0fe369aa4e543bb63f8de8990178ea9
+  languageName: node
+  linkType: hard
+
+"globals@npm:^17.3.0":
+  version: 17.12.0
+  resolution: "globals@npm:17.12.0"
+  checksum: 10c0/8325cf8818c848871d17c32974c2c74e9c5f09c1b0e04421886f64f21e77c3e95f3ba25586743895a73acd860ada151132481d87d44a1f12993ae7758a694d03
   languageName: node
   linkType: hard
 
@@ -14931,7 +15021,9 @@ __metadata:
     eslint: "npm:^9.0.0"
     eslint-config-prettier: "npm:^10.1.8"
     eslint-plugin-file-progress: "npm:^3.0.2"
+    eslint-plugin-jest: "npm:^29.16.6"
     eslint-plugin-jsdoc: "npm:^63.3.3"
+    eslint-plugin-playwright: "npm:^2.12.0"
     eslint-plugin-prettier: "npm:^5.5.6"
     eslint-plugin-promise: "npm:^7.3.0"
     eslint-plugin-rxjs-x: "npm:^1.0.6"
@@ -14965,6 +15057,7 @@ __metadata:
     prettier: "npm:^3.9.6"
     prettier-plugin-multiline-arrays: "npm:^4.1.11"
     prettier-plugin-organize-imports: "npm:^4.3.0"
+    prettier-plugin-sh: "npm:^0.19.0"
     remark-gfm: "npm:^4.0.1"
     remark-mdx: "npm:^3.1.1"
     remark-parse: "npm:^11.0.0"
@@ -17790,6 +17883,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"prettier-plugin-sh@npm:^0.19.0":
+  version: 0.19.0
+  resolution: "prettier-plugin-sh@npm:0.19.0"
+  dependencies:
+    "@reteps/dockerfmt": "npm:^0.5.4"
+    sh-syntax: "npm:^0.6.0"
+  peerDependencies:
+    prettier: ^3.6.0
+  checksum: 10c0/47a152ea7049743d8080749eaeebc05ade1c224e27537b03aa1cb7d6680b28f5bd6d6539f4289fc724f52ea7baed22a4b027e8f7cd6ec28a60c24d9eaae7a79b
+  languageName: node
+  linkType: hard
+
 "prettier@npm:^3.9.6":
   version: 3.9.6
   resolution: "prettier@npm:3.9.6"
@@ -19122,6 +19227,13 @@ __metadata:
   version: 1.2.0
   resolution: "setprototypeof@npm:1.2.0"
   checksum: 10c0/68733173026766fa0d9ecaeb07f0483f4c2dc70ca376b3b7c40b7cda909f94b0918f6c5ad5ce27a9160bdfb475efaa9d5e705a11d8eaae18f9835d20976028bc
+  languageName: node
+  linkType: hard
+
+"sh-syntax@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "sh-syntax@npm:0.6.0"
+  checksum: 10c0/495c660a23c67725cdee077b423ca974521ae580302ee62eda9309c84f6cf31722560cdf55bbea5ca98ba7dd7ac352d59f3eed61612d42b1f8a41cfc7673ba9f
   languageName: node
   linkType: hard
 

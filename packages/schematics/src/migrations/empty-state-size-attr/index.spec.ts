@@ -36,10 +36,20 @@ describe(SCHEMATIC_NAME, () => {
         projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
     });
 
-    it('should run migration for specified project', async () => {
+    it('leaves a project that does not use the component untouched', async () => {
+        const snapshot = (tree: UnitTestTree) =>
+            tree.files.filter((file) => /\.(ts|html|scss)$/.test(file)).map((file) => `${file}:${tree.readText(file)}`);
+        const before = snapshot(appTree as UnitTestTree);
+
         const [firstProjectKey] = projects.keys();
 
-        await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey } satisfies Schema, appTree);
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(snapshot(updatedTree)).toEqual(before);
     });
 
     it('should run migration for external html', async () => {
@@ -82,5 +92,28 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(templateBeforeUpdate).toBe(updatedTree.read(templatePath)?.toString());
         expect(warnSpy.mock.calls.some(([msg]) => msg.includes(templatePath))).toBe(true);
+    });
+
+    it('migrates an inline template', async () => {
+        const [firstProjectKey] = projects.keys();
+        const { tsPath } = getProjectContentPaths(projects.get(firstProjectKey)!, appTree);
+
+        appTree.overwrite(
+            tsPath,
+            "import { Component } from '@angular/core';\n" +
+                '@Component({\n' +
+                "    selector: 'app-root',\n" +
+                '    template: \'<kbq-empty-state [big]="false"></kbq-empty-state>\'\n' +
+                '})\n' +
+                'export class App {}\n'
+        );
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(updatedTree.readText(tsPath)).toContain('size="compact"');
     });
 });

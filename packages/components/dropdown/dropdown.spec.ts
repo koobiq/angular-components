@@ -422,12 +422,6 @@ describe('KbqDropdown', () => {
         expect(boundingBox.getAttribute('dir')).toEqual('rtl');
     });
 
-    // TODO: re-enable when the trigger disposes its overlay on close (currently the overlay is
-    // created once in createOverlay() and the direction set in getOverlayConfig() never updates).
-    it.skip('should update the panel direction if the trigger direction changes', () => {
-        // Intentionally left empty — see TODO above.
-    });
-
     it('should transfer any custom classes from the host to the overlay', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
 

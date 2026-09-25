@@ -24,6 +24,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DELETE,
     KBQ_LOCALE_SERVICE,
+    KbqDefaultSizes,
     KbqPartialLocaleData,
     TAB,
     createFakeEvent,
@@ -38,7 +39,7 @@ import {
 } from '@koobiq/components/core';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { KbqDropzoneData, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
+import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
 import { KbqFileItem, KbqFileUploadAddStrategy, KbqFileUploadAddStrategyValues } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { kbqFileUploadLocaleConfigurationProvider } from './file-upload.tokens';
@@ -1216,6 +1217,9 @@ describe(KbqSingleFileUploadComponent.name, () => {
         });
 
         // TODO: real-life scenario & test results with the same data are different (#DS-4300)
+        // `accept` reaches the native input's attribute only, which is what the file picker dialog reads.
+        // onFileDropped takes files[0] unconditionally, so a drop is not filtered by it at all — these two
+        // describe a filter the drop path has never had.
         xdescribe('with accepted files list', () => {
             it('should filter files via drag-n-drop with extensions', (done) => {
                 component.disabled = false;
@@ -1738,6 +1742,51 @@ describe('KbqLocalDropzone', () => {
         });
     });
 });
+
+describe(KbqFileUploadEmptyState.name, () => {
+    const classListOf = (fixture: ComponentFixture<unknown>): DOMTokenList =>
+        fixture.debugElement.query(By.directive(KbqFileUploadEmptyState)).nativeElement.classList;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [FileUploadEmptyStateWithSize] }).compileComponents();
+    });
+
+    // `size` was a plain @Input the constructor could assign, and this subclass assigned 'big' to it
+    // right after super(). An input() cannot be written, so the subclass redeclares the input with
+    // its own default instead — the size it renders at without a binding has to stay 'big'.
+    it('should default to the big size', () => {
+        const fixture = TestBed.createComponent(FileUploadEmptyStateWithSize);
+
+        fixture.detectChanges();
+
+        expect(classListOf(fixture)).toContain('kbq-empty-state_big');
+    });
+
+    it('should let a bound size override the default', () => {
+        const fixture = TestBed.createComponent(FileUploadEmptyStateWithSize);
+
+        fixture.componentInstance.size.set('compact');
+        fixture.detectChanges();
+
+        expect(classListOf(fixture)).toContain('kbq-empty-state_compact');
+        expect(classListOf(fixture)).not.toContain('kbq-empty-state_big');
+    });
+});
+
+@Component({
+    selector: 'file-upload-empty-state-with-size',
+    imports: [KbqFileUploadEmptyState],
+    template: `
+        @if (size(); as size) {
+            <kbq-file-upload-empty-state [size]="size" [title]="'Title'" />
+        } @else {
+            <kbq-file-upload-empty-state [title]="'Title'" />
+        }
+    `
+})
+class FileUploadEmptyStateWithSize {
+    readonly size = signal<KbqDefaultSizes | null>(null);
+}
 
 @Component({
     selector: 'basic-single-file-upload',

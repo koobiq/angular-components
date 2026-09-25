@@ -168,6 +168,20 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
                 }
             });
 
+        // Registered after every `updateTemplates` subscription — the base one, the tree overrides and
+        // `KbqPipeDateBase`, which subscribes before its `super` call — so the new `values` and
+        // `lockedValues` are in place. A template change can flip the emptiness of a pipe without touching
+        // `data.value`: the multi-select pipes derive it from those and from the selection model.
+        // Restricted to emissions that carry this pipe's own template, so an unrelated one does not
+        // announce a state change that did not happen.
+        this.filterBar?.internalTemplatesChanges
+            .pipe(
+                skip(1),
+                filter((templates) => !!templates?.some((template) => getId(template) === getId(this.data))),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => this.stateChanges.next());
+
         if (this.data.openOnReset) {
             this.filterBar?.onResetFilter.pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
                 this.open();
@@ -283,6 +297,13 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     abstract open(): void;
 }
 
+/**
+ * Keeps a pipe part at its natural width while its text is shorter than `maxSymbolsForFitContent`.
+ *
+ * @deprecated A pipe lays its name and value out as two shrinkable grid tracks, which already keeps a
+ * short part intact; on a grid item this `min-width` only pushes the part past its track, where it is
+ * clipped without an ellipsis. Will be removed in the next major.
+ */
 @Directive({
     selector: '[kbqPipeMinWidth]',
     host: {

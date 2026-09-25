@@ -35,7 +35,7 @@ child=$!
 wait "$child"
 status=$?
 
-while kill -0 "$child" 2>/dev/null; do
+while kill -0 "$child" 2> /dev/null; do
     wait "$child"
     status=$?
 done

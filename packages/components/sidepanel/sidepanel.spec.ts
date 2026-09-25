@@ -1,4 +1,5 @@
-﻿import { OverlayContainer } from '@angular/cdk/overlay';
+﻿import { InteractivityChecker } from '@angular/cdk/a11y';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
     InjectionToken,
@@ -394,7 +395,9 @@ describe('KbqSidepanelService', () => {
     }));
 
     it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
-        const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
+        // jsdom gives every element zero geometry, so the focus trap would find nothing tabbable.
+        jest.spyOn(TestBed.inject(InteractivityChecker), 'isVisible').mockReturnValue(true);
+
         const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
         const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
 
@@ -415,9 +418,10 @@ describe('KbqSidepanelService', () => {
         fixtureComponent.detectChanges();
         tick(1000);
 
-        expect(activeElement).not.toBe(buttonElement);
-        expect(activeElement).not.toBe(dropdownItems[0]);
-        expect(activeElement).toBeTruthy();
+        const sidepanelElement = overlayContainerElement.querySelector('.kbq-sidepanel-container');
+
+        expect(sidepanelElement).not.toBeNull();
+        expect(sidepanelElement!.contains(document.activeElement)).toBe(true);
 
         flush();
     }));
@@ -624,7 +628,7 @@ class ComponentForSidepanel {}
 @Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
-        <form (ngSubmit)="onSubmit()">
+        <form (submit)="onSubmit()">
             <kbq-sidepanel-body>Form content</kbq-sidepanel-body>
             <kbq-sidepanel-footer>
                 <button kbq-button kbq-sidepanel-close>Close</button>
@@ -667,6 +671,7 @@ class SidepanelFromDropdownComponent {
 const CUSTOM_TOKEN = new InjectionToken<string>('CustomToken');
 
 @Component({
+    selector: 'sidepanel-with-custom-token',
     template: '<div>Sidepanel with custom token</div>'
 })
 class SidepanelWithCustomToken {

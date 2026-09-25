@@ -235,12 +235,12 @@ export class KbqFileUploadContext {
 
 // @public
 export class KbqFileUploadEmptyState extends KbqEmptyState {
-    constructor();
     caption: _angular_core.InputSignal<string | TemplateRef<any> | undefined>;
     protected isTemplateRef(value: string | TemplateRef<any>): value is TemplateRef<any>;
+    readonly size: _angular_core.InputSignal<KbqDefaultSizes>;
     title: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFileUploadEmptyState, "kbq-file-upload-empty-state", never, { "title": { "alias": "title"; "required": false; "isSignal": true; }; "caption": { "alias": "caption"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFileUploadEmptyState, "kbq-file-upload-empty-state", never, { "title": { "alias": "title"; "required": false; "isSignal": true; }; "caption": { "alias": "caption"; "required": false; "isSignal": true; }; "size": { "alias": "size"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFileUploadEmptyState, never>;
 }

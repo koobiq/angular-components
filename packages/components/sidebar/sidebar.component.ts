@@ -7,6 +7,7 @@ import {
     ChangeDetectorRef,
     Component,
     contentChild,
+    DestroyRef,
     Directive,
     ElementRef,
     inject,
@@ -113,6 +114,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     protected readonly document = inject<Document>(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
     private readonly isBrowser = inject(Platform).isBrowser;
 
     /**
@@ -294,6 +296,9 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
      * @docs-private
      */
     onAnimationDone() {
+        // The animation still reports done when the sidebar is destroyed before it finishes.
+        if (this.destroyRef.destroyed) return;
+
         this.internalState = this._opened;
 
         this.stateChanged.emit(this._opened);

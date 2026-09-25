@@ -72,15 +72,15 @@ A new component touches more than its directory: the alias in `tsconfig.json`, t
 ### Build
 
 ```bash
-yarn run build:components               # Build main components library
-yarn run build:components-experimental  # Build experimental components
-yarn run build:angular-luxon-adapter    # Build Luxon date adapter
-yarn run build:angular-moment-adapter   # Build Moment date adapter
-yarn run build:cli                      # Build release management CLI
-yarn run build:schematics               # Build Angular CLI schematics
-yarn run styles:build-all               # Compile all SCSS into dist/scss-compiled and the prebuilt themes into dist/components/prebuilt-themes
-yarn run docs                           # Build every package, generate docs content and examples, then serve the docs site
-yarn run docs:build                     # Build docs app for production (prerendered)
+yarn run build:components              # Build main components library
+yarn run build:components-experimental # Build experimental components
+yarn run build:angular-luxon-adapter   # Build Luxon date adapter
+yarn run build:angular-moment-adapter  # Build Moment date adapter
+yarn run build:cli                     # Build release management CLI
+yarn run build:schematics              # Build Angular CLI schematics
+yarn run styles:build-all              # Compile all SCSS into dist/scss-compiled and the prebuilt themes into dist/components/prebuilt-themes
+yarn run docs                          # Build every package, generate docs content and examples, then serve the docs site
+yarn run docs:build                    # Build docs app for production (prerendered)
 ```
 
 Libraries are built by the custom `@koobiq/builders:packager` builder around ng-packagr. It replaces the `{{VERSION}}` and `{{NG_VERSION}}` placeholders in the package manifests and in `packages/components/core/version.ts`; `{{NG_VERSION}}` comes from `requiredAngularVersion` in the root `package.json`. Never hardcode a version in those files.
@@ -90,11 +90,11 @@ The docs app resolves `@koobiq/*` from `dist/` (see `apps/docs/tsconfig.app.json
 ### Development
 
 ```bash
-yarn run dev:<COMPONENT_NAME>      # Start dev server for specific component on http://localhost:3003 (e.g., yarn run dev:button)
-yarn run dev:all                   # Every component in one app
-yarn run dev:e2e                   # The e2e app on http://localhost:4200 with navigation and source maps
-yarn run serve:e2e                 # Build dev-e2e in its production configuration and serve dist/e2e — what Playwright starts (builds once; restart it after a change)
-yarn run ssr:dev                   # SSR dev app; `ssr:build` is what CI runs to prove the library renders on the server
+yarn run "dev:<COMPONENT_NAME>" # Start dev server for specific component on http://localhost:3003 (e.g., yarn run dev:button)
+yarn run dev:all                # Every component in one app
+yarn run dev:e2e                # The e2e app on http://localhost:4200 with navigation and source maps
+yarn run serve:e2e              # Build dev-e2e in its production configuration and serve dist/e2e — what Playwright starts (builds once; restart it after a change)
+yarn run ssr:dev                # SSR dev app; `ssr:build` is what CI runs to prove the library renders on the server
 ```
 
 A dev app lives in `packages/components-dev/<name>/` (`main.ts`, `module.ts`, `template.html`, `styles.scss`) and usually embeds the component's docs examples module and its `e2e.ts` scenarios.
@@ -108,30 +108,30 @@ There are two types of test files per component:
 
 ```bash
 # Unit tests (Jest)
-yarn run styles:build-all          # CI does this before the unit suites; do the same before a full local run
-yarn run unit:all                  # Every suite in one Jest process at --maxWorkers=100%
-yarn run unit:components           # Run component unit tests
+yarn run styles:build-all # CI does this before the unit suites; do the same before a full local run
+yarn run unit:all         # Every suite in one Jest process at --maxWorkers=100%
+yarn run unit:components  # Run component unit tests
 yarn run unit:components-experimental
 yarn run unit:angular-luxon-adapter
 yarn run unit:angular-moment-adapter
-yarn run unit:schematics           # Run schematics tests
+yarn run unit:schematics # Run schematics tests
 yarn run unit:cli
-yarn run unit:koobiq-docs          # Docs app specs
-yarn run unit:tools                # Specs under tools/
-npx jest <TEST_PATH_PATTERN>       # Run specific Jest tests (e.g., npx jest packages/components/button/button.component.spec.ts)
-npx jest <TEST_PATH_PATTERN> -t "<test name pattern>"
+yarn run unit:koobiq-docs      # Docs app specs
+yarn run unit:tools            # Specs under tools/
+npx jest "<TEST_PATH_PATTERN>" # Run specific Jest tests (e.g., npx jest packages/components/button/button.component.spec.ts)
+npx jest "<TEST_PATH_PATTERN>" -t "<test name pattern>"
 
 # E2E tests (Playwright)
-yarn run e2e:setup                      # Install Playwright browsers (run once)
-yarn run e2e:components                 # Run all component E2E tests
-yarn run e2e:docs                       # Run the docs site smoke suite (needs `yarn run docs:build` first)
-npx playwright test <TEST_PATH_PATTERN> # Run specific E2E tests (e.g., npx playwright test packages/components/button/e2e.playwright-spec.ts)
-yarn run check-e2e-types                # Type-check the Playwright specs (part of the lint gate)
+yarn run e2e:setup                        # Install Playwright browsers (run once)
+yarn run e2e:components                   # Run all component E2E tests
+yarn run e2e:docs                         # Run the docs site smoke suite (needs `yarn run docs:build` first)
+npx playwright test "<TEST_PATH_PATTERN>" # Run specific E2E tests (e.g., npx playwright test packages/components/button/e2e.playwright-spec.ts)
+yarn run check-e2e-types                  # Type-check the Playwright specs (part of the lint gate)
 
 # Screenshots differ across operating systems — always use Docker for anything visual:
-yarn run e2e:docker                     # Run E2E tests in Docker (matches CI)
-yarn run e2e:docker:update-snapshots    # Run E2E tests in Docker and update the baselines
-yarn run e2e:docker yarn playwright test packages/components/select -g "single select"   # One spec inside the container
+yarn run e2e:docker                                                                    # Run E2E tests in Docker (matches CI)
+yarn run e2e:docker:update-snapshots                                                   # Run E2E tests in Docker and update the baselines
+yarn run e2e:docker yarn playwright test packages/components/select -g "single select" # One spec inside the container
 ```
 
 The committed baselines under `__screenshots__` are compared with `threshold: 0` and have no
@@ -157,15 +157,15 @@ Playwright specifics (`playwright.config.ts`, `docs/guides/06-testing.md`): the 
 ### Linting
 
 ```bash
-yarn run eslint                                                         # Lint TypeScript/HTML
-yarn run stylelint                                                      # Lint SCSS
-yarn run prettier                                                       # Check formatting
-yarn run cspell                                                         # Spell-check Markdown (dictionaries in tools/cspell-locales/{en,ru}.json)
-yarn run check-peer-deps                                                # Validate peerDependencies of the published packages
-yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix  # Auto-fix all
+yarn run eslint                                                        # Lint TypeScript/HTML
+yarn run stylelint                                                     # Lint SCSS
+yarn run prettier                                                      # Check formatting
+yarn run cspell                                                        # Spell-check Markdown (dictionaries in tools/cspell-locales/{en,ru}.json)
+yarn run check-peer-deps                                               # Validate peerDependencies of the published packages
+yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix # Auto-fix all
 ```
 
-CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `organize-imports` and `multiline-arrays` plugins — let it order imports and break arrays rather than fighting it.
+CI runs ESLint and stylelint with `--max-warnings=0`, so a warning fails the build. Formatting is prettier with 120 columns, 4-space indent, single quotes and no trailing commas, plus the `organize-imports`, `multiline-arrays` and `sh` plugins — let it order imports and break arrays rather than fighting it. The `sh` plugin formats shell scripts, the Dockerfile, husky hooks, ignore files and the shell snippets in Markdown. Quote placeholders in those snippets (`--project "<your project>"`): unquoted, `<` and `>` are redirects, and the plugin either rewrites the command or silently skips the block.
 
 ESLint also checks the JSDoc of `packages/components` with `eslint-plugin-jsdoc`. TypeScript reads a `@word` that starts a line as a tag and keeps the text after it in that tag, so an unknown tag, a block `@link` (write a Markdown link or `{@link Name}`), `@property` or `@todo` takes that text out of the generated docs.
 
@@ -176,7 +176,7 @@ After making changes to the package's public API, you must update the API snapsh
 ```bash
 yarn run check-api                       # Verify public API hasn't changed unexpectedly (CI)
 yarn run approve-api                     # Approve API changes (updates tools/public_api_guard/**/*.api.md files)
-yarn run approve-api components/<name>   # Approve a single entry point
+yarn run approve-api "components/<name>" # Approve a single entry point
 yarn run check-public-api-any            # Ratchet on `any` / `unknown` in the published type surface (CI)
 yarn run approve-public-api-any          # Record the new counts after removing `any` — the ratchet fails in both directions
 yarn run check-api-docs                  # Ratchet on public members with no description, read from the `docs:api-gen` manifest (CI)

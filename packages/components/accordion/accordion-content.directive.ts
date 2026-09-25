@@ -5,6 +5,7 @@ import {
     AfterViewInit,
     Directive,
     inject,
+    OnInit,
     Renderer2,
     RendererStyleFlags2,
     signal
@@ -33,7 +34,7 @@ import { KbqAccordionItem } from './accordion-item';
     },
     exportAs: 'kbqAccordionContent'
 })
-export class KbqAccordionContentDirective implements AfterViewInit {
+export class KbqAccordionContentDirective implements OnInit, AfterViewInit {
     private readonly renderer: Renderer2 = inject(Renderer2);
     private readonly platform = inject(Platform);
 
@@ -71,6 +72,12 @@ export class KbqAccordionContentDirective implements AfterViewInit {
 
             this.afterRenderRef?.destroy();
         });
+    }
+
+    ngOnInit(): void {
+        // Content the item's `toggle()` cannot have reached yet: created after the item initialized (inside
+        // `@if` or `@defer`), or outside the item's own template.
+        this.toggle();
     }
 
     ngAfterViewInit(): void {

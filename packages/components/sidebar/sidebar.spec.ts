@@ -1,5 +1,5 @@
 import { Component, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
@@ -72,21 +72,20 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.position()).toBe(SidebarPositions.Right);
         });
 
-        xit('should fire change event', () => {
+        it('should fire change event', fakeAsync(() => {
             const changeSpy = jest.fn();
 
             sidebarComponent.stateChanged.subscribe(changeSpy);
 
             expect(sidebarComponent.opened).toBeTruthy();
 
-            // sidebarComponent.stateChanged.emit(true);
             sidebarComponent.toggle();
             fixture.detectChanges();
+            flush();
 
             expect(sidebarComponent.opened).toBeFalsy();
-
-            expect(changeSpy).toHaveBeenCalled();
-        });
+            expect(changeSpy).toHaveBeenCalledWith(false);
+        }));
 
         it('should toggle on `BracketLeft` keypress', () => {
             const toggleSpy = jest.spyOn(sidebarComponent, 'toggle');

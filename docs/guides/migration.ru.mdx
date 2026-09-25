@@ -68,7 +68,7 @@ npm install @koobiq/icons@9.1.0
 Чтобы обновить названия иконок в шаблонах, используйте инструмент для обновления (схематик):
 
 ```bash
-ng g @koobiq/angular-components:new-icons-pack --project <your project>
+ng g @koobiq/angular-components:new-icons-pack --project "<your project>"
 ```
 
 ### Обновление токенов (18.6.x)
@@ -80,13 +80,13 @@ ng g @koobiq/angular-components:new-icons-pack --project <your project>
 Скрипт заменит названия классов и CSS-переменных на новые и подсветит места, где нужно удалить (заменить) устаревшие цвета:
 
 ```bash
-ng g @koobiq/angular-components:css-selectors --fix=true --project <your project>
+ng g @koobiq/angular-components:css-selectors --fix=true --project "<your project>"
 ```
 
 Для ручного контроля добавьте `--fix=false`. Скрипт подсветит места, где нужно удалить (заменить) цвета и названия типографики:
 
 ```bash
-ng g @koobiq/angular-components:css-selectors --fix=false --project <your project>
+ng g @koobiq/angular-components:css-selectors --fix=false --project "<your project>"
 ```
 
 ### Обновление атрибутов (18.22.0)
@@ -101,8 +101,8 @@ ng g @koobiq/angular-components:css-selectors --fix=false --project <your projec
 Схематик автоматически заменит атрибуты:
 
 ```bash
-ng g @koobiq/angular-components:loader-overlay-size-attr --project <your project>
-ng g @koobiq/angular-components:empty-state-size-attr --project <your project>
+ng g @koobiq/angular-components:loader-overlay-size-attr --project "<your project>"
+ng g @koobiq/angular-components:empty-state-size-attr --project "<your project>"
 ```
 
 ### Обновление до Angular 20
@@ -124,7 +124,7 @@ ng update @koobiq/components@20
 Или вручную. С предпросмотром без записи — `--fix=false`:
 
 ```bash
-ng g @koobiq/components:v20-upgrade --project <your project>
+ng g @koobiq/components:v20-upgrade --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -201,7 +201,7 @@ ng update @koobiq/components@20
 Или вручную — например, если вы уже обновились на 20.2.0. С предпросмотром без записи — `--fix=false`:
 
 ```bash
-ng g @koobiq/components:filter-bar-signals --project <your project>
+ng g @koobiq/components:filter-bar-signals --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -270,7 +270,7 @@ ng update @koobiq/components@20
 Или вручную:
 
 ```bash
-ng g @koobiq/components:autocomplete-panel-width-auto --project <your project>
+ng g @koobiq/components:autocomplete-panel-width-auto --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -329,7 +329,7 @@ const w = this.select.panelWidth();
 Схематик `actions-panel-overlay-container` зарегистрирован на 21.0.0, поэтому `ng update` на эту версию запустит его сам:
 
 ```bash
-ng g @koobiq/components:actions-panel-overlay-container --project <your project>
+ng g @koobiq/components:actions-panel-overlay-container --project "<your project>"
 ```
 
 Он только сообщает о местах вызова: переписывать нечего — опция та же, изменился её смысл.
@@ -351,7 +351,7 @@ ng g @koobiq/components:actions-panel-overlay-container --project <your project>
 Схематик `splitter-deprecated-path` зарегистрирован на 21.0.0, поэтому `ng update` на эту версию запустит его сам:
 
 ```bash
-ng g @koobiq/components:splitter-deprecated-path --project <your project>
+ng g @koobiq/components:splitter-deprecated-path --project "<your project>"
 ```
 
 Он переписывает спецификатор `@koobiq/components/splitter` в `@koobiq/components/splitter/deprecated` во всех файлах `.ts`; повторный запуск ничего не портит. На новый splitter он не переводит — это отдельная ручная работа: области становятся `kbq-splitter-panel`, `direction` — `orientation`, а размеры переезжают с `min-width` и CSS `flex` на инпуты `size` и `minSize`.
@@ -377,7 +377,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:dropdown-demote-overlay --project <your project>
+ng g @koobiq/components:dropdown-demote-overlay --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -450,7 +450,7 @@ ng update @koobiq/components@21
 Или вручную — например, если вы уже обновились до 21.0.0. Посмотреть без записи — `--fix=false`:
 
 ```bash
-ng g @koobiq/components:app-switcher-signals --project <your project>
+ng g @koobiq/components:app-switcher-signals --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -526,7 +526,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:button-state-and-styles --project <your project>
+ng g @koobiq/components:button-state-and-styles --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -601,7 +601,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:button-supported-colors --project <your project>
+ng g @koobiq/components:button-supported-colors --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -677,7 +677,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:button-toggle-signals-and-aria --project <your project>
+ng g @koobiq/components:button-toggle-signals-and-aria --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -782,7 +782,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:form-field-signals --project <your project>
+ng g @koobiq/components:form-field-signals --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -891,13 +891,13 @@ ng update @koobiq/components@21
 Или вручную — например, если вы уже обновились до 21.0.0:
 
 ```bash
-ng g @koobiq/components:tag-slots --project <your project>
+ng g @koobiq/components:tag-slots --project "<your project>"
 ```
 
 Посмотреть изменения без записи можно с помощью `--fix=false`:
 
 ```bash
-ng g @koobiq/components:tag-slots --project <your project> --fix=false
+ng g @koobiq/components:tag-slots --project "<your project>" --fix=false
 ```
 
 #### Что исправляется автоматически
@@ -953,7 +953,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:scrollbar-deprecated-path --project <your project>
+ng g @koobiq/components:scrollbar-deprecated-path --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -1068,7 +1068,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:locale-configuration-providers --project <your project>
+ng g @koobiq/components:locale-configuration-providers --project "<your project>"
 ```
 
 Запустите его, даже если обновляетесь вручную: оставшийся `{ provide: KBQ_<X>_CONFIGURATION, useValue: … }`
@@ -1110,7 +1110,7 @@ ng update @koobiq/components@21
 Либо вручную:
 
 ```bash
-ng g @koobiq/components:list-tree-multiple-input --project <your project>
+ng g @koobiq/components:list-tree-multiple-input --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -1161,7 +1161,7 @@ ng update @koobiq/components@21
 Большинство из них не переписывают код, а сообщают о местах вызова: чем заменить удалённый член или сигнальный вход — привязкой в шаблоне, другим членом или ничем — это решение, которое схематик принять не может. В каждом подразделе ниже назван закрывающий его схематик, если он есть, и указано, что именно он меняет за вас, если меняет. Чтобы получить отчёт ещё раз, запустите нужный отдельно:
 
 ```bash
-ng g @koobiq/components:<schematic-name> --project <your project>
+ng g "@koobiq/components:<schematic-name>" --project "<your project>"
 ```
 
 #### Alert
@@ -1433,6 +1433,42 @@ readonly wide = input(false);                              // без транс�
 `ListKeyManagerOption.disabled` теперь принимает `boolean | Signal<boolean>`. Свой элемент списка, который читает `item.disabled` как обычное свойство, на сигнальном элементе сломается: сигнал — это функция, поэтому все элементы читаются как отключённые. Пропуск отключённых стрелками и поиск по первым буквам перестанут работать, и никакой ошибки при этом не будет.
 
 Закрывается схематиком `dropdown-signals`; строки в двух первых таблицах — ручные шаги.
+
+#### Empty state
+
+`errorColor` добирался до иллюстрации императивно: `ngAfterContentInit()` читал вход один раз и вызывал `KbqEmptyStateIcon.setErrorColor()`, который присваивал `color = 'error'` внедренному `kbq-icon-item`. Из-за этого подкраска:
+
+- оставалась после возврата `[errorColor]` в `false` — красная иконка над черным текстом;
+- пропускала значение, переключенное в `true` после инициализации;
+- не доходила до иконки, обернутой слотом: `inject(KbqIconItem)` находит иконку на собственном хост-элементе, но не во вложенных.
+
+Обернутую разметку используют два примера самого компонента. Цвета заголовка и текста были реактивными всегда: их задают классы хоста.
+
+Теперь иллюстрация следует за `[errorColor]` в обеих формах разметки и в обе стороны, поэтому метод больше никто не вызывает.
+
+| Элемент API                          | Что было                                        | Что стало                    |
+| ------------------------------------ | ----------------------------------------------- | ---------------------------- |
+| `KbqEmptyStateIcon.setErrorColor()`  | публичный, вызывался один раз при инициализации | удален                       |
+| `KbqEmptyState.ngAfterContentInit()` | публичный хук жизненного цикла                  | удален                       |
+| `KbqEmptyState.icon`                 | публичный `@ContentChild` с типом `\| null`     | `protected` `contentChild()` |
+| `KbqEmptyState.size`                 | `@Input()`, в него можно было писать            | `input()`                    |
+
+| Что было                  | Что делать вручную                                                      |
+| ------------------------- | ----------------------------------------------------------------------- |
+| `.setErrorColor()`        | Привязать `[errorColor]` на `<kbq-empty-state>` и убрать вызов          |
+| `.icon` у `KbqEmptyState` | Стал `protected`: это запрос, питавший класс `kbq-empty-state_has-icon` |
+| `emptyState.size`         | `emptyState.size()`                                                     |
+| `emptyState.size = 'big'` | Привязать `[size]="'big'"`: у `input()` нет сеттера                     |
+
+**`size` оставался последним декоратором в компоненте из-за подкласса в file-upload.** `KbqFileUploadEmptyState` наследует `KbqEmptyState` и присваивал `this.size = 'big'` сразу после `super()`, а `input()` такого присваивания не принимает. Теперь подкласс объявляет этот вход заново, со своим значением по умолчанию: `override readonly size = input<KbqDefaultSizes>('big')`. Поэтому `<kbq-file-upload-empty-state>` без привязки по-прежнему рисуется размером `big`, а привязка `[size]` перекрывает его. Для тех, кто выводит этот компонент, не меняется ничего: чтение `size` у `KbqEmptyState` стало вызовом, присваивание исчезло.
+
+Схематик сопоставляет не само свойство, а то, у чего его читают: `size` — слишком частое имя, чтобы переписывать его вслепую, ведь `file.size` и `blob.size` встречаются в тех же файлах. Он отмечает чтение вида `emptyState.size`, но пропускает чтение через переменную с другим именем — об этом сказано в его итоговой сводке.
+
+**Четыре токена темы переименованы.** `--kbq-empty-state-title` и `--kbq-empty-state-color` читаются как токен размера и цвет компонента, хотя это цвет заголовка и цвет _текста_; пара для ошибки повторяла ту же форму. Теперь это `--kbq-empty-state-title-color`, `--kbq-empty-state-text-color`, `--kbq-empty-state-error-title-color` и `--kbq-empty-state-error-text-color`. Старые имена удалены, а не объявлены устаревшими: переопределение такого имени игнорируется, а чтение через `var()` ни во что не разрешается — и то и другое молча. Внутри библиотеки переименование затронуло `multiple-file-upload.component.scss`, который задавал цвета заголовка и текста заглушки для обычного состояния, disabled и ошибки.
+
+Два исправления, для которых мигрировать нечего. `empty-state.scss` подключает свой слой токенов сам, а не полагается на вторую запись в `styleUrls`, поэтому все, что переиспользует этот файл через границу пакета, получает пользовательские свойства вместе с правилами, которые их читают; раньше при таком повторном использовании забирались только правила, и каждый `max-width` в них разрешался в `none`. В библиотеке такое повторное использование одно: `KbqFileUploadEmptyState` указывает `../empty-state/empty-state.scss` в своих `styleUrls`. Его подпись наследовала цвет текста страницы, потому что объявление ни во что не разрешалось, — и с приходом слоя токенов она стала бы вторичной. Поэтому `dropzone.scss` закрепляет `--kbq-empty-state-text-color` за `var(--kbq-foreground-contrast)`, и dropzone рисуется как прежде. И заголовок размечен настоящим заголовком по всей библиотеке — он несет типографику `subheading` при `size="normal"` и `headline` при `size="big"`, так что `<h2 kbq-empty-state-title>` — это то, о чем просит компонент; отступ браузера обнулен, поэтому верстка не меняется. Заглушке, которая появляется на уже прочитанной странице, по-прежнему нужен `role="status"` на хосте — или `role="alert"` для состояния ошибки: своего `role` компонент не проставляет.
+
+Сообщает `empty-state-error-color`.
 
 #### Inline edit
 
@@ -1883,7 +1919,7 @@ class MyToast extends KbqToastComponent {
 
 Ревью типизировало публичную поверхность и убрало члены, которые существовали только ради шаблона.
 
-| Член                                                                                            | Было              | Стало                           |
+| Элемент API                                                                                     | Было              | Стало                           |
 | ----------------------------------------------------------------------------------------------- | ----------------- | ------------------------------- |
 | `valueChange`                                                                                   | объявленный выход | удалён                          |
 | `getPanelClasses()`, `getPanelTheme()`, `isRtl()`, `transformOrigin`                            | public            | удалены                         |
@@ -1926,7 +1962,7 @@ ng update @koobiq/components@21
 Или вручную:
 
 ```bash
-ng g @koobiq/components:file-upload-deprecated-outputs --project <your project>
+ng g @koobiq/components:file-upload-deprecated-outputs --project "<your project>"
 ```
 
 #### Что исправляется автоматически
@@ -2249,13 +2285,13 @@ ng update @koobiq/components@21
 Или вручную — например, если вы уже обновились до 21.0.0:
 
 ```bash
-ng g @koobiq/components:tag-list-cleaner --project <your project>
+ng g @koobiq/components:tag-list-cleaner --project "<your project>"
 ```
 
 Чтобы посмотреть изменения, не записывая их, используйте `--fix=false`:
 
 ```bash
-ng g @koobiq/components:tag-list-cleaner --project <your project> --fix=false
+ng g @koobiq/components:tag-list-cleaner --project "<your project>" --fix=false
 ```
 
 #### Что исправляется автоматически

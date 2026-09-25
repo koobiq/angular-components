@@ -37,14 +37,20 @@ describe(SCHEMATIC_NAME, () => {
         projects = workspace.projects as unknown as workspaces.ProjectDefinitionCollection;
     });
 
-    it('should run migration for specified project', async () => {
+    it('leaves a project that does not use the component untouched', async () => {
+        const snapshot = (tree: UnitTestTree) =>
+            tree.files.filter((file) => /\.(ts|html|scss)$/.test(file)).map((file) => `${file}:${tree.readText(file)}`);
+        const before = snapshot(appTree as UnitTestTree);
+
         const [firstProjectKey] = projects.keys();
 
-        await runner.runSchematic(
+        const updatedTree = await runner.runSchematic(
             SCHEMATIC_NAME,
             { project: firstProjectKey, fix: true, allowed: [] } satisfies Schema,
             appTree
         );
+
+        expect(snapshot(updatedTree)).toEqual(before);
     });
 
     it('should run migration for external html', async () => {

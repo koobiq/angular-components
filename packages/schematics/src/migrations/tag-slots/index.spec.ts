@@ -48,8 +48,18 @@ describe(SCHEMATIC_NAME, () => {
         [projectKey] = projects.keys();
     });
 
-    it('should run for a specified project', async () => {
-        await runner.runSchematic(SCHEMATIC_NAME, { project: projectKey, fix: true } satisfies Schema, appTree);
+    it('leaves a project that does not use the component untouched', async () => {
+        const snapshot = (tree: UnitTestTree) =>
+            tree.files.filter((file) => /\.(ts|html|scss)$/.test(file)).map((file) => `${file}:${tree.readText(file)}`);
+        const before = snapshot(appTree as UnitTestTree);
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: projectKey, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(snapshot(updatedTree)).toEqual(before);
     });
 
     it('should mark every legacy tag icon as prefix regardless of source order', async () => {

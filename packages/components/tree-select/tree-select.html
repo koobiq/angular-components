@@ -28,7 +28,7 @@
                                 [class.kbq-select__multiline-match-list]="multiline()"
                             >
                                 @if (!customTagTemplateRef()) {
-                                    @for (option of triggerValues; track option.value) {
+                                    @for (option of triggerValues; track $index) {
                                         <kbq-tag
                                             [color]="colorForState()"
                                             [disabled]="option.disabled || disabled"
@@ -52,7 +52,7 @@
                                         </kbq-tag>
                                     }
                                 } @else {
-                                    @for (option of triggerValues; track option.value) {
+                                    @for (option of triggerValues; track $index) {
                                         <ng-container
                                             [ngTemplateOutlet]="customTagTemplateRef()"
                                             [ngTemplateOutletContext]="{ $implicit: option, select: this }"

@@ -31,7 +31,8 @@ import { debounceTime, skip, throttleTime } from 'rxjs';
  * By default, the tooltip content is the trimmed `textContent` of the host. Provide explicit content
  * with `[kbq-title]="stringOrTemplateRef"`. For nested markup, mark the measured container with the
  * `#kbqTitleContainer` template reference and the text element(s) with `#kbqTitleText`; several
- * `#kbqTitleText` elements are supported and the tooltip is shown when any of them overflows.
+ * `#kbqTitleText` elements are supported and the tooltip is shown when any of them overflows the container
+ * or is clipped by its siblings.
  *
  * Host components that provide `KBQ_TITLE_TEXT_REF` (e.g. `KbqOption`) supply the text and parent
  * elements automatically, so the directive works without explicit template references.
@@ -101,10 +102,15 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     /**
      * Whether the host content is clipped and therefore needs a tooltip. Returns `true` if any measured
      * text element overflows the parent — covering multiple `#kbqTitleText` elements, the sub-pixel
-     * special case, and both horizontal and vertical overflow.
+     * special case, and both horizontal and vertical overflow — or, with several text elements, if one of
+     * them clips its own content.
      */
     get isOverflown(): boolean {
-        return this.childElements.some((element) => this.isElementOverflown(element));
+        const elements = this.childElements;
+
+        return elements.some(
+            (element) => this.isElementOverflown(element) || (elements.length > 1 && this.isClippedInOwnBox(element))
+        );
     }
 
     /**
@@ -318,6 +324,15 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
         }
 
         return offsetWidth < element.scrollWidth || isVerticalOverflown;
+    }
+
+    /**
+     * Whether a text element is narrower than its own text. Text elements that share the parent can take width
+     * from each other, so one is clipped while its full text would still fit the parent — which the parent
+     * comparison above cannot see. An inline element reports a zero `clientWidth` and never clips.
+     * @docs-private */
+    private isClippedInOwnBox(element: HTMLElement): boolean {
+        return element.clientWidth > 0 && element.scrollWidth > element.clientWidth;
     }
 
     /**

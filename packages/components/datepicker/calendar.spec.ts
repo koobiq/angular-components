@@ -165,8 +165,7 @@ describe('KbqCalendar', () => {
             expect(adapter.getDate(calendarInstance.activeDate)).toEqual(1);
         });
 
-        // todo после изменений в хедере календаря нужно поправить
-        xit('should not go back past min date', () => {
+        it('should not go back past min date', () => {
             testComponent.startAt = adapter.createDate(2016, 1, 1);
             fixture.detectChanges();
 

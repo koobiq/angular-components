@@ -1801,7 +1801,7 @@ class KbqTooltipWithTemplateRefContent {
     imports: [KbqToolTipModule, KbqButtonModule, KbqIconModule, KbqLinkModule],
     template: `
         <div #buttonTooltip="kbqTooltip" kbqTooltip="kbq-button" [forDisabledComponent]="button">
-            <button #button kbq-button [disabled]="disableState">
+            <button #button kbq-button aria-label="Create" [disabled]="disableState">
                 <i kbq-icon="kbq-plus_16"></i>
             </button>
         </div>

@@ -181,12 +181,11 @@ describe('reading members from source', () => {
 
     it('reads the default of a decorated input', () => {
         expect(
-            readSourceFile('packages/components/empty-state/empty-state.component.ts').classes.KbqEmptyState.members
-                .size
+            readSourceFile('packages/components/tabs/tab-group.component.ts').classes.KbqTabGroup.members.headerPosition
         ).toEqual({
-            declaredType: 'KbqDefaultSizes',
-            defaultValue: "'normal'",
-            binding: { input: 'size', required: false }
+            declaredType: 'KbqTabHeaderPosition',
+            defaultValue: "'above'",
+            binding: { input: 'headerPosition', required: false }
         });
     });
 

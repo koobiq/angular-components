@@ -7,6 +7,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
+const migrationsPath = path.join(__dirname, '../../migrations.json');
 const SCHEMATIC_NAME = 'alert-signals';
 
 describe(SCHEMATIC_NAME, () => {
@@ -213,5 +214,29 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(updated).toBe(source);
         expect(messages.join('\n')).toContain('would update');
+    });
+
+    it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqAlert } from '@koobiq/components/alert';\n" +
+                'class Demo {\n' +
+                '    read(alert: KbqAlert) {\n' +
+                '        return alert.compact;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        // Run from migrations.json with no options, as `ng update` does: no schema default applies there.
+        const migrationsRunner = new SchematicTestRunner('migrations', migrationsPath);
+
+        migrationsRunner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const updated = await migrationsRunner.runSchematic(SCHEMATIC_NAME, {}, appTree);
+
+        expect(updated.readText(ts)).toContain('return alert.compact();');
+        expect(messages.join('\n')).not.toContain('would update');
     });
 });
