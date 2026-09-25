@@ -1,11 +1,19 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, EventEmitter, inject, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, inject as testingInject, tick } from '@angular/core/testing';
+import {
+    ComponentFixture,
+    discardPeriodicTasks,
+    fakeAsync,
+    flush,
+    TestBed,
+    inject as testingInject,
+    tick
+} from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, TAB } from '@koobiq/cdk/keycodes';
-import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
+import { createMouseEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -391,6 +399,39 @@ describe('KbqModal', () => {
             fixture.detectChanges();
 
             expect(document.querySelectorAll('.kbq-modal-mask').length).toEqual(1);
+        }));
+
+        const openMaskClosableModal = (): HTMLElement => {
+            const modalRef = modalService.create({ kbqMaskClosable: true });
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            return modalRef.getElement().querySelector<HTMLElement>('.kbq-modal-wrap')!;
+        };
+
+        const clickMask = (mask: HTMLElement, button: number) => {
+            dispatchMouseEvent(mask, 'mousedown', 0, 0, createMouseEvent('mousedown', 0, 0, button));
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+        };
+
+        it('should close on a primary button click on the mask', fakeAsync(() => {
+            clickMask(openMaskClosableModal(), 0);
+
+            expect(modalService.openModals.length).toBe(0);
+
+            discardPeriodicTasks();
+        }));
+
+        // The sidepanel closes on the overlay backdrop's `click`, which the right button never fires.
+        it('should not close on a right button click on the mask', fakeAsync(() => {
+            clickMask(openMaskClosableModal(), 2);
+
+            expect(modalService.openModals.length).toBe(1);
+
+            discardPeriodicTasks();
         }));
 
         it('should process kbqPreventFocusRestoring flag set to true', fakeAsync(() => {
