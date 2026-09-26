@@ -1,0 +1,63 @@
+Koobiq ships a skill for AI coding agents, so that Claude Code, Codex, Copilot, Cursor and other agents build interfaces from Koobiq components instead of guessing.
+
+With the skill, an agent imports from the right entry points, styles with design tokens and follows the patterns of the documentation examples.
+
+### What ships with the package
+
+`@koobiq/components` contains two things for agents, generated from this documentation for every release:
+
+- `skills/koobiq-angular` - the skill itself: rules, a map of all components and short guides on choosing between similar components, theming, forms, icons, localization and server-side rendering. It follows the open [Agent Skills](https://agentskills.io) format.
+- `agent-docs` - references for the installed version: the overview of every component with the full code of its examples, its inputs, outputs and design tokens, the guides and the list of migrations. Agents read them in place, from `node_modules`, so they always match the version your project uses.
+
+Both are plain files inside the package: setting them up sends nothing over the network.
+
+### Setting up
+
+In an Angular CLI project, run the schematic and choose your agents:
+
+```bash
+ng generate @koobiq/components:agent-skills
+```
+
+Or pass the agents directly:
+
+```bash
+ng generate @koobiq/components:agent-skills --agents=claude-code,codex
+```
+
+`ng add @koobiq/components` asks the same question during installation. Nothing is set up unless you choose an agent.
+
+The schematic:
+
+- copies the skill to `.claude/skills/koobiq-angular` for Claude Code and to `.agents/skills/koobiq-angular` for the other agents;
+- adds a short block of rules to `AGENTS.md`, and to a `CLAUDE.md` that does not import `AGENTS.md`. Agents load these files with every request, so they turn to the skill even when they would not pick it on their own. The block sits between the `<!-- koobiq:agent-rules:start -->` and `<!-- koobiq:agent-rules:end -->` markers, and text outside them is never changed. Pass `--instructions=false` to skip it.
+
+Commit these files: the whole team and the agents in CI then work with the same setup.
+
+#### Without Angular CLI
+
+Copy the `node_modules/@koobiq/components/skills/koobiq-angular` folder into the skills folder of your agent, or install it with the [skills](https://github.com/vercel-labs/skills) command-line tool:
+
+```bash
+npx skills add ./node_modules/@koobiq/components/skills/koobiq-angular
+```
+
+The same tool installs the skill of the latest release straight from this site, which suits a project that does not depend on `@koobiq/components` yet:
+
+```bash
+npx skills add https://koobiq.io
+```
+
+### Updating
+
+The skill belongs to the version of the package. After updating `@koobiq/components`, run the schematic again: it replaces the files it installed, keeps the ones you changed and lists them in the output. Add `--force` to replace those too. `ng update @koobiq/components` refreshes an installed skill on its own when you move to a new major version.
+
+The references in `node_modules/@koobiq/components/agent-docs` need no updating: they come with the package.
+
+### When the agent finds a gap
+
+The skill asks the agent to say so explicitly when no Koobiq component fits the task, or when it had to override component styles or hard-code a value. Such reports help the design system grow: [open an issue](https://github.com/koobiq/angular-components/issues) with the task and what the agent did instead.
+
+### Documentation for agents that read the web
+
+The references from `agent-docs` are published on this site as Markdown, one file per page: for example, [agent-docs/components/button.md](https://koobiq.io/agent-docs/components/button.md), with an index in [agent-docs/README.md](https://koobiq.io/agent-docs/README.md). The documentation is also available in the llms.txt format: [llms.txt](https://koobiq.io/llms.txt) lists the pages and [llms-full.txt](https://koobiq.io/llms-full.txt) holds their full text.

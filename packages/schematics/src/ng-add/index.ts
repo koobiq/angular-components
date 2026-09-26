@@ -15,6 +15,7 @@ import { firstValueFrom } from 'rxjs';
 // guaranteed to line up between two different compiler versions (they didn't: `CallExpression` is
 // 213 in this repo's `typescript` and 214 in the compiler `@schematics/angular` 20.3.34 bundles).
 import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
+import { installAgentSkill, isAgentSkillTarget, readPackagedSkill } from '../utils/agent-skills';
 import { setKoobiqThemeBodyClass } from '../utils/html-config';
 import { logMessage } from '../utils/messages';
 import { addPackageToPackageJson, getPackageVersionFromPackageJson } from '../utils/package-config';
@@ -341,6 +342,19 @@ export default function ngAdd(options: Schema): Rule {
         }
 
         logMessage(context.logger, messages.fontsSuggestion());
+
+        // Only on an explicit choice: the skill and its rules land in files the application's team owns.
+        const agents = (options.agents ?? []).filter(isAgentSkillTarget);
+
+        if (agents.length > 0) {
+            const skill = readPackagedSkill();
+
+            if (skill) {
+                providerRules.push(installAgentSkill({ agents, instructions: true, force: false }, skill));
+            } else {
+                logMessage(context.logger, messages.noAgentSkill());
+            }
+        }
 
         return chain(providerRules);
     };

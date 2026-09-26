@@ -71,3 +71,10 @@ export function fontsSuggestion(): string[] {
         'See https://koobiq.io/en/main/typography for installation options (Fontsource or Google Fonts CDN).'
     ];
 }
+
+export function noAgentSkill(): string[] {
+    return [
+        'This build of @koobiq/components does not ship the koobiq-angular agent skill, so no agent was set up.',
+        'See https://koobiq.io/en/main/ai-agents/overview for other ways to get it.'
+    ];
+}

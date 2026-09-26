@@ -9,6 +9,11 @@
                 "install"
             ]
         },
+        "agent-skills": {
+            "description": "Sets up the koobiq-angular agent skill of the installed version for Claude Code, Codex, Copilot, Cursor, Gemini CLI and other agents that read .agents/skills, and adds a managed block of rules that points agents to it to AGENTS.md. Running it again updates the skill and keeps the files you changed.",
+            "factory": "./agent-skills/index",
+            "schema": "./agent-skills/schema.json"
+        },
         "new-icons-pack": {
             "description": "Updates prefixes and names of changed/removed icons",
             "factory": "./migrations/new-icons-pack/index",

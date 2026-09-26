@@ -19,6 +19,7 @@
         "docsearch",
         "EBUSY",
         "ERESOLVE",
+        "evals",
         "fiedset",
         "frontends",
         "GHSA",

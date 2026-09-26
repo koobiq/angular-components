@@ -31,6 +31,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: tabs, sidebar and content-panel remember what the user changed, on by default.
 - **21.0.0**: the filter bar remembers the selected filter and its edits, on by default.
 - **21.0.0**: the tag list cleaner removes the tags itself and leaves the disabled ones in place.
+- **21.0.0**: the agent skill for AI coding agents is refreshed where it was installed.
 
 ### Upgrade to 18.5.3
 
@@ -2324,6 +2325,24 @@ removed is printed for every file, because a handler may have done more than cle
 - **A disabled tag no longer renders `kbqTagRemove`.** This one has no schematic: the control is hidden
   and the `Delete` key already refused, so nothing about the removal protocol changed — but a test or a
   stylesheet that expected the icon on a disabled tag needs updating.
+
+### Agent skill refresh (21.0.0)
+
+If you set up the Koobiq skill for AI coding agents with `ng generate @koobiq/components:agent-skills` or during `ng add`, the update brings it to 21.0.0 as well: the copies in `.claude/skills/koobiq-angular` and `.agents/skills/koobiq-angular`, and the managed block of rules in `AGENTS.md` and `CLAUDE.md`. See [AI agents](/en/main/ai-agents/overview).
+
+#### Running the migration
+
+The `agent-skills-refresh` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@21
+```
+
+A workspace that never installed the skill is not touched. Files of the skill you changed are kept and listed in the output: merge the new version into them by hand, or replace them:
+
+```bash
+ng g @koobiq/components:agent-skills --agents=claude-code --force
+```
 
 ### After the migration
 

@@ -1,3 +1,5 @@
+import { AgentSkillTarget } from '../utils/agent-skills';
+
 export interface Schema {
     /**
      * Name of the project where Koobiq library should be installed
@@ -13,4 +15,9 @@ export interface Schema {
      * Whether to add `provideAnimations()` automatically. Defaults to true.
      */
     animations?: boolean;
+
+    /**
+     * Coding agents to set the koobiq-angular skill up for. None by default.
+     */
+    agents?: AgentSkillTarget[];
 }

@@ -1,0 +1,16 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        // The generator reuses the MDX parser of tools/docs-pages, which needs NodeNext resolution for the
+        // "exports" maps of the ESM-only unified packages (see tools/docs-pages/tsconfig.json).
+        "module": "nodenext",
+        "moduleResolution": "nodenext"
+    },
+    "ts-node": {
+        "transpileOnly": true,
+        "compilerOptions": {
+            "types": ["node"],
+            "module": "nodenext"
+        }
+    }
+}

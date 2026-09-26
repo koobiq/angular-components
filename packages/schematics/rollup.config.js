@@ -41,6 +41,10 @@ module.exports = [
         },
         input: {
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
+            'agent-skills/index': path.join(__dirname, 'src/agent-skills/index.ts'),
+            // Shared by ng-add, agent-skills and a migration: a stable name keeps it out of an unnamed chunk, and it
+            // finds the packaged skill relative to its own location (`schematics/utils` -> `skills/`).
+            'utils/agent-skills': path.join(__dirname, 'src/utils/agent-skills.ts'),
             'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
             'utils/messages': path.join(__dirname, 'src/utils/messages.ts'),
             'utils/typescript': path.join(__dirname, 'src/utils/typescript.ts'),

@@ -31,6 +31,28 @@
             "default": true,
             "description": "Adds provideAnimations(), required by components that animate (dropdown, select, tooltip, toast, datepicker).",
             "x-prompt": "Set up Angular animations automatically (adds `provideAnimations()`)?"
+        },
+        "agents": {
+            "type": "array",
+            "default": [],
+            "description": "AI coding agents to set the koobiq-angular skill up for (none by default). Writes .claude/skills or .agents/skills and a short managed block in AGENTS.md; see `ng generate @koobiq/components:agent-skills`.",
+            "items": {
+                "type": "string",
+                "enum": ["claude-code", "codex", "copilot", "cursor", "gemini", "other"]
+            },
+            "x-prompt": {
+                "message": "Set up the Koobiq skill for AI coding agents? (select none to skip)",
+                "type": "list",
+                "multiselect": true,
+                "items": [
+                    { "value": "claude-code", "label": "Claude Code (.claude/skills)" },
+                    { "value": "codex", "label": "OpenAI Codex (.agents/skills)" },
+                    { "value": "copilot", "label": "GitHub Copilot in VS Code (.agents/skills)" },
+                    { "value": "cursor", "label": "Cursor (.agents/skills)" },
+                    { "value": "gemini", "label": "Gemini CLI (.agents/skills)" },
+                    { "value": "other", "label": "Another agent that reads .agents/skills" }
+                ]
+            }
         }
     }
 }

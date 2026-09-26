@@ -35,6 +35,7 @@ packages/
 ├── angular-luxon-adapter/     # Luxon date adapter
 ├── angular-moment-adapter/    # Moment date adapter
 ├── schematics/                # ng-add and ng-update migrations, shipped inside @koobiq/components
+├── agent-skills/              # koobiq-angular agent skill for consumers (hand-written core + evals), shipped inside @koobiq/components
 └── cli/                       # Release management CLI (@koobiq/cli)
 apps/docs/                     # Documentation site (koobiq.io): Angular SSR + prerender
 tools/                         # Build, lint, docs and release tooling; tools/public_api_guard holds the API golden files
@@ -65,7 +66,7 @@ packages/components/<component-name>/
 
 Cross-entry-point imports go through the `@koobiq/components/<name>` alias mapped in the root `tsconfig.json`, never through relative paths into another component's directory. A nested entry point such as `scrollbar/deprecated` carries its own `ng-package.json` and alias.
 
-A new component touches more than its directory: the alias in `tsconfig.json`, the API guard list in `tools/api-extractor/config.json`, a `dev-<name>` project in `angular.json` plus a `dev:<name>` script in `package.json`, the route list in `packages/e2e/routes.ts`, the docs navigation in `apps/docs/src/app/structure.ts`, and an examples folder under `packages/docs-examples/components/<name>/`. The commit scope needs nothing: the enum is built from the directory names.
+A new component touches more than its directory: the alias in `tsconfig.json`, the API guard list in `tools/api-extractor/config.json`, a `dev-<name>` project in `angular.json` plus a `dev:<name>` script in `package.json`, the route list in `packages/e2e/routes.ts`, the docs navigation in `apps/docs/src/app/structure.ts`, and an examples folder under `packages/docs-examples/components/<name>/`. The commit scope needs nothing: the enum is built from the directory names. The consumer agent skill picks the component up from `structure.ts` on its own; when it competes with an existing component, add it to `packages/agent-skills/koobiq-angular/references/selection.md`.
 
 ## Common Commands
 
@@ -78,6 +79,7 @@ yarn run build:angular-luxon-adapter   # Build Luxon date adapter
 yarn run build:angular-moment-adapter  # Build Moment date adapter
 yarn run build:cli                     # Build release management CLI
 yarn run build:schematics              # Build Angular CLI schematics
+yarn run build:agent-skills            # Generate the consumer agent skill and agent-docs into dist/components (after build:components)
 yarn run styles:build-all              # Compile all SCSS into dist/scss-compiled and the prebuilt themes into dist/components/prebuilt-themes
 yarn run docs                          # Build every package, generate docs content and examples, then serve the docs site
 yarn run docs:build                    # Build docs app for production (prerendered)
@@ -177,6 +179,8 @@ yarn run approve-api                     # Approve API changes (updates tools/pu
 yarn run approve-api "components/<name>" # Approve a single entry point
 yarn run check-public-api-any            # Ratchet on `any` / `unknown` in the published type surface (CI)
 yarn run approve-public-api-any          # Record the new counts after removing `any` — the ratchet fails in both directions
+yarn run check-agent-skills              # Verify the consumer agent skill against the sources (CI; needs build:agent-skills)
+yarn run approve-agent-skills            # Record that the skill's references were re-read after the API they cover changed
 yarn run check-typings                   # Type-check the typings of every published package in dist/ with skipLibCheck off (CI)
 ```
 
@@ -191,7 +195,7 @@ Every pull request runs these workflows:
 | Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`             |
 | Unit tests                        | `styles:build-all`, then every `unit:*` script                                                                                  |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                |
-| API                               | build the packages, then `check-typings`, `check-api` and `check-public-api-any`                                                |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any` and `check-agent-skills`                          |
 | Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build` |
 | Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label          |
 | License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                      |
@@ -233,7 +237,7 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 
 ### Documentation pipeline
 
-- Page content is MDX next to the code: `<name>.{en,ru}.mdx` (overview), `examples.<name>.{en,ru}.mdx` (examples tab), `docs/guides/*.{en,ru}.mdx` and `docs/data-grid/**`. Every page exists in both languages — update both. `build:docs-content` compiles the pages with `tools/docs-pages` into Angular components under `dist/docs-pages`, which the app imports as `@koobiq/docs-pages` and `docsPageResolver` picks per route, so the pages are prerendered with their live examples. It also regenerates the SEO descriptions and runs `docs:api-gen` (`tools/api-gen`), whose HTML the API tab still fetches at runtime.
+- Page content is MDX next to the code: `<name>.{en,ru}.mdx` (overview), `examples.<name>.{en,ru}.mdx` (examples tab), `docs/guides/*.{en,ru}.mdx` and `docs/data-grid/**`. Every page exists in both languages — update both. `build:docs-content` compiles the pages with `tools/docs-pages` into Angular components under `dist/docs-pages`, which the app imports as `@koobiq/docs-pages` and `docsPageResolver` picks per route, so the pages are prerendered with their live examples. It also regenerates the SEO descriptions and runs `docs:api-gen` (`tools/api-gen`), whose HTML the API tab still fetches at runtime. The same pages, examples and API reports feed the consumer agent skill (`tools/agent-skills`, see `packages/agent-skills/README.md`), so a docs change reaches consumers' agents with the next release.
 - A live example is `<Example id="alert-overview" />`, with the key from `example-module.ts`. The build fails, with the position in the file, on what `tools/docs-pages/compile-page.ts` cannot turn into Angular: an unknown example, imports and `{expressions}`, HTML outside its short list of elements (write the rest in Markdown). MDX syntax applies: comments are `{/* */}`, `<br />` needs the slash, a literal `{` or `<` is escaped with a backslash. Every overview or examples tab that `structure.ts` routes to needs a page. `docs:start:dev` rebuilds the pages on save.
 - `apps/docs/src/app/structure.ts` is the single source of the navigation (`hasApi`, `hasExamples`, `isNew` with an expiry date); the routes, the sitemap, the prerender route list and `llms.txt` are all derived from it.
 - Examples live in `packages/docs-examples/components/<name>/<example-name>/<example-name>-example.ts` with a `/** @title ... */` JSDoc, selector `<example-name>-example` and class `<ExampleName>Example`, registered in that folder's `index.ts` NgModule. After adding or renaming one, run `yarn run build:docs-examples-module` to regenerate the committed `packages/docs-examples/example-module.ts` and `packages/docs-examples/loader/index.ts` (the `@koobiq/docs-examples/loader` entry point, kept apart so the pages that show examples do not load it).

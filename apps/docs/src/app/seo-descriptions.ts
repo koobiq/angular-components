@@ -15,6 +15,10 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "en": "AG Grid is designed for working with large tables. The component supports sorting, virtual scrolling, resizing, and reordering of columns. It is based on the library ag-grid-angular.",
         "ru": "AG grid предназначен для работы с большими таблицами. Компонент поддерживает сортировку, виртуальную прокрутку, изменение ширины и порядка колонок. Основан на библиотеке ag-grid-angular."
     },
+    "ai-agents": {
+        "en": "Koobiq ships a skill for AI coding agents, so that Claude Code, Codex, Copilot, Cursor and other agents build interfaces from Koobiq components instead of guessing.",
+        "ru": "Koobiq поставляет навык для AI-агентов, чтобы Claude Code, Codex, Copilot, Cursor и другие агенты собирали интерфейсы из компонентов Koobiq, а не угадывали."
+    },
     "alert": {
         "en": "Shows important information on a page. Can contain a hint, signal a status change, or indicate a problem.",
         "ru": "Показывает важную информацию на странице. Может содержать подсказку, сигнализировать об изменении статуса или наличии проблемы."

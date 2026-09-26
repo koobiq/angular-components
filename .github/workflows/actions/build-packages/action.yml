@@ -24,3 +24,7 @@ runs:
     - name: Build @koobiq/schematics
       shell: bash
       run: yarn run build:schematics
+    # After build:components, which empties dist/components: the skill and its references ship inside that package.
+    - name: Build the agent skill of @koobiq/components
+      shell: bash
+      run: yarn run build:agent-skills

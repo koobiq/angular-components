@@ -89,6 +89,16 @@
                                 "glob": "llms-full.txt",
                                 "input": "apps/docs/src",
                                 "output": "/"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "dist/agent-skills-site/.well-known",
+                                "output": "/.well-known"
+                            },
+                            {
+                                "glob": "**/*.md",
+                                "input": "dist/components/agent-docs",
+                                "output": "/agent-docs"
                             }
                         ],
                         "stylePreprocessorOptions": {

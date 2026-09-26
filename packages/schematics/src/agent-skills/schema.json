@@ -1,0 +1,39 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-agent-skills",
+    "title": "Koobiq components agent skill",
+    "type": "object",
+    "properties": {
+        "agents": {
+            "type": "array",
+            "description": "Coding agents to set the koobiq-angular skill up for. Claude Code reads .claude/skills; the other agents share .agents/skills.",
+            "items": {
+                "type": "string",
+                "enum": ["claude-code", "codex", "copilot", "cursor", "gemini", "other"]
+            },
+            "x-prompt": {
+                "message": "Which AI coding agents should get the Koobiq skill?",
+                "type": "list",
+                "multiselect": true,
+                "items": [
+                    { "value": "claude-code", "label": "Claude Code (.claude/skills)" },
+                    { "value": "codex", "label": "OpenAI Codex (.agents/skills)" },
+                    { "value": "copilot", "label": "GitHub Copilot in VS Code (.agents/skills)" },
+                    { "value": "cursor", "label": "Cursor (.agents/skills)" },
+                    { "value": "gemini", "label": "Gemini CLI (.agents/skills)" },
+                    { "value": "other", "label": "Another agent that reads .agents/skills" }
+                ]
+            }
+        },
+        "instructions": {
+            "type": "boolean",
+            "default": true,
+            "description": "Adds a short block of rules that points agents to the skill to AGENTS.md (and to a CLAUDE.md that does not import AGENTS.md). Only the text between its markers is ever replaced."
+        },
+        "force": {
+            "type": "boolean",
+            "default": false,
+            "description": "Replaces the files of an installed skill even if you changed them."
+        }
+    }
+}

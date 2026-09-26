@@ -48,17 +48,21 @@ const init = async () => {
     const distCLIPath = resolvePath('../../../dist/components');
     const schematicsPath = join(distCLIPath, 'schematics');
     const ngAddPath = join(schematicsPath, 'ng-add');
+    const agentSkillsPath = join(schematicsPath, 'agent-skills');
     const utilsPath = join(schematicsPath, 'utils');
 
     // Ensure directories exist
     await ensureDirectoryExistence(distCLIPath);
     await ensureDirectoryExistence(schematicsPath);
     await ensureDirectoryExistence(ngAddPath);
+    await ensureDirectoryExistence(agentSkillsPath);
     await ensureDirectoryExistence(utilsPath);
 
     // Copy files
     await copyFileWrapper(resolvePath('../dist/ng-add/index.js'), join(ngAddPath, 'index.js'));
     await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), join(ngAddPath, 'schema.json'));
+    await copyFileWrapper(resolvePath('../dist/agent-skills/index.js'), join(agentSkillsPath, 'index.js'));
+    await copyFileWrapper(resolvePath('../src/agent-skills/schema.json'), join(agentSkillsPath, 'schema.json'));
     await copyFileWrapper(resolvePath('../src/collection.json'), join(schematicsPath, 'collection.json'));
     await copyFileWrapper(resolvePath('../src/migrations.json'), join(schematicsPath, 'migrations.json'));
 

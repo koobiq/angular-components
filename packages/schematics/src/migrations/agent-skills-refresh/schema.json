@@ -1,0 +1,7 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-agent-skills-refresh",
+    "title": "Koobiq components agent skill refresh",
+    "type": "object",
+    "properties": {}
+}

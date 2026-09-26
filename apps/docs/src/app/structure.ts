@@ -10,6 +10,7 @@ export enum DocsStructureItemId {
     Typography = 'typography',
     DesignTokens = 'design-tokens',
     Schematics = 'schematics',
+    AiAgents = 'ai-agents',
     Migration = 'migration',
     SearchSmart = 'search-smart',
     // Components
@@ -272,6 +273,18 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'schematics',
                     hasApi: false,
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.AiAgents,
+                    name: {
+                        ru: 'AI-агенты',
+                        en: 'AI agents'
+                    },
+                    svgPreview: '',
+                    isGuide: true,
+                    hasApi: false,
+                    hasExamples: false,
+                    isNew: expiresAt('2026-12-01')
                 },
 
                 {

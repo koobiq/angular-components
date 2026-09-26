@@ -30,6 +30,7 @@ const config = {
                 'cli',
                 'experimental',
                 'schematics',
+                'agent-skills',
                 'dev',
                 'e2e',
                 'examples',
