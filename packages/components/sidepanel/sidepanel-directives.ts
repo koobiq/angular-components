@@ -1,16 +1,13 @@
 import {
+    afterNextRender,
     booleanAttribute,
     Component,
     Directive,
     effect,
     ElementRef,
     inject,
-    Input,
     input,
-    OnChanges,
-    OnInit,
-    Renderer2,
-    SimpleChanges
+    Renderer2
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -23,7 +20,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqSidepanelRef } from './sidepanel-ref';
-import { KbqSidepanelService } from './sidepanel.service';
 
 /**
  * Button that will close the current sidepanel.
@@ -32,47 +28,33 @@ import { KbqSidepanelService } from './sidepanel.service';
     selector: 'button[kbq-sidepanel-close], button[kbqSidepanelClose]',
     host: {
         class: 'kbq-sidepanel-close',
-        '(click)': 'sidepanelRef.close(sidepanelResult)'
+        // The camel-case spelling wins when a template binds both, as it did before.
+        '(click)': 'sidepanelRef.close(kbqSidepanelClose() ?? sidepanelResult())'
     }
 })
-export class KbqSidepanelClose implements OnInit, OnChanges {
-    sidepanelRef = inject(KbqSidepanelRef, { optional: true })!;
-    private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private sidepanelService = inject(KbqSidepanelService);
+export class KbqSidepanelClose {
+    // `CdkPortalOutlet.attachTemplatePortal()` forwards the portal injector to the embedded view, so the
+    // ref is reachable from a `<ng-template>` sidepanel as well as from a component one.
+    readonly sidepanelRef = inject(KbqSidepanelRef);
+
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input('kbq-sidepanel-close') sidepanelResult: any;
+    /** Value handed to `KbqSidepanelRef.close()`, under the hyphenated spelling of the selector. */
+    readonly sidepanelResult = input<any>(undefined, { alias: 'kbq-sidepanel-close' });
 
+    /** The same value, under the camel-case spelling. */
     readonly kbqSidepanelClose = input<any>();
 
-    ngOnInit() {
-        // A button with no type submits the form it sits in, so closing a sidepanel from inside a form would
-        // submit it too. A type the author set is left alone.
-        if (!this.elementRef.nativeElement.hasAttribute('type')) {
-            this.renderer.setAttribute(this.elementRef.nativeElement, 'type', 'button');
-        }
-
-        if (!this.sidepanelRef) {
-            // When this directive is included in a sidepanel via TemplateRef (rather than being
-            // in a Component), the SidepanelRef isn't available via injection because embedded
-            // views cannot be given a custom injector. Instead, we look up the SidepanelRef by
-            // ID.
-            // This must occur in `onInit`, as the ID binding for the sidepanel container won't
-            // be resolved at constructor time. We use setTimeout by same reason.
-            setTimeout(() => {
-                this.sidepanelRef = getClosestSidepanel(this.elementRef, this.sidepanelService.openedSidepanels)!;
-            });
-        }
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        const proxiedChange = changes.kbqSidepanelClose || changes.sidepanelResult;
-
-        if (proxiedChange) {
-            this.sidepanelResult = proxiedChange.currentValue;
-        }
+    constructor() {
+        afterNextRender(() => {
+            // A button with no type submits the form it sits in, so closing a sidepanel from inside a form would
+            // submit it too. A type the author set is left alone. The element carries its static attributes by
+            // the time a directive is constructed, so this needs no lifecycle hook.
+            if (!this.elementRef.nativeElement.hasAttribute('type')) {
+                this.renderer.setAttribute(this.elementRef.nativeElement, 'type', 'button');
+            }
+        });
     }
 }
 
@@ -88,7 +70,7 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
         KbqTitleDirective
     ],
     template: `
-        <div class="kbq-sidepanel-title" kbq-title>
+        <div class="kbq-sidepanel-title" kbq-title [attr.id]="titleId">
             <ng-content />
         </div>
 
@@ -129,6 +111,13 @@ export class KbqSidepanelHeader {
 
     /** @docs-private */
     protected sidepanelRef = inject(KbqSidepanelRef);
+
+    /** Id of the title element, which is what names the sidepanel to assistive technology. */
+    protected readonly titleId = `${this.sidepanelRef.id}-title`;
+
+    constructor() {
+        this.sidepanelRef.containerInstance.setAriaLabelledBy(this.titleId);
+    }
 }
 
 /**
@@ -181,18 +170,3 @@ export class KbqSidepanelFooter {
     }
 })
 export class KbqSidepanelActions {}
-
-/**
- * Finds the closest KbqSidepanelRef to an element by looking at the DOM.
- * @param element Element relative to which to look for a sidepanel.
- * @param openSidepanels References to the currently-open sidepanels.
- */
-function getClosestSidepanel(element: ElementRef<HTMLElement>, openSidepanels: KbqSidepanelRef[]) {
-    let parent: HTMLElement | null = element.nativeElement.parentElement;
-
-    while (parent && !parent.classList.contains('kbq-sidepanel-container')) {
-        parent = parent.parentElement;
-    }
-
-    return parent ? openSidepanels.find((sidepanel) => sidepanel.id === parent!.id) : null;
-}
