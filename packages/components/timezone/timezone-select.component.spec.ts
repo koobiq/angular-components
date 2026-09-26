@@ -941,7 +941,6 @@ describe('KbqTimezoneSelect', () => {
         it('should display tooltip when option text wraps beyond the visible rows count', fakeAsync(() => {
             trigger.click();
             fixture.detectChanges();
-            // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
             tick(500);
 
             const optionInstances = fixture.componentInstance.options();

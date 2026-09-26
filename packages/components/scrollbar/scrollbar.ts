@@ -1,6 +1,7 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceCssPixelValue } from '@angular/cdk/coercion';
+import { MutationObserverFactory } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { _CdkPrivateStyleLoader } from '@angular/cdk/private';
 import {
@@ -9,6 +10,7 @@ import {
     ScrollDispatcher,
     type ExtendedScrollToOptions
 } from '@angular/cdk/scrolling';
+import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     ApplicationRef,
@@ -21,6 +23,7 @@ import {
     effect,
     EnvironmentInjector,
     inject,
+    Injectable,
     InjectionToken,
     Injector,
     input,
@@ -35,20 +38,23 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
 import {
     asyncScheduler,
+    audit,
     concat,
     distinctUntilChanged,
+    EMPTY,
     filter,
     fromEvent,
     map,
     merge,
+    NEVER,
     Observable,
     of,
+    share,
     startWith,
     Subject,
     switchMap,
     take,
     takeUntil,
-    throttleTime,
     timer,
     type MonoTypeOperatorFunction,
     type SchedulerAction,
@@ -56,25 +62,31 @@ import {
     type Subscription
 } from 'rxjs';
 
-function animationFrame(): Observable<number> {
+/**
+ * The next animation frame, requested on subscription and only then, so an idle page schedules none.
+ *
+ * One frame per subscriber rather than a shared one: a frame that is already being delivered cannot be
+ * joined, so whatever asks for a frame from inside one gets the next.
+ */
+function nextAnimationFrame(): Observable<void> {
     const window = inject(KBQ_WINDOW);
     const ngZone = inject(NgZone);
 
-    return new Observable<number>((subscriber) => {
-        if (typeof window.requestAnimationFrame === 'undefined') {
-            return undefined;
-        }
+    if (typeof window.requestAnimationFrame === 'undefined') {
+        return NEVER;
+    }
 
-        // Rescheduling must remain outside Angular to avoid keeping NgZone unstable indefinitely.
-        return ngZone.runOutsideAngular(() => {
-            let frameId = window.requestAnimationFrame(function loop(timestamp) {
-                subscriber.next(timestamp);
-                frameId = window.requestAnimationFrame(loop);
+    return new Observable<void>((subscriber) =>
+        // Outside Angular, so waiting for a frame does not keep NgZone unstable.
+        ngZone.runOutsideAngular(() => {
+            const frameId = window.requestAnimationFrame(() => {
+                subscriber.next();
+                subscriber.complete();
             });
 
             return () => window.cancelAnimationFrame(frameId);
-        });
-    });
+        })
+    );
 }
 
 function zoneFree<T>(): MonoTypeOperatorFunction<T> {
@@ -190,8 +202,6 @@ export function kbqNativeScrollbarOptionsProvider(options: Partial<KbqNativeScro
 
 type Orientation = 'horizontal' | 'vertical';
 
-const TRACK_THROTTLE_TIME = 300;
-
 /**
  * Computed `overflow` values that rule out user scrolling. `visible` belongs here as much as the other
  * two: it only computes to `auto` when the other axis scrolls, so a box left at the initial value on
@@ -199,6 +209,8 @@ const TRACK_THROTTLE_TIME = 300;
  * values so an unreadable computed style leaves the scrollbar alone instead of erasing it.
  */
 const NON_SCROLLABLE_OVERFLOW: readonly string[] = ['clip', 'hidden', 'visible'];
+
+const TRACK_TAG = 'kbq-scrollbar-track';
 
 /** Based on --kbq-scrollbar-thumb-min-size */
 const MIN_THUMB_SIZE = 32;
@@ -460,6 +472,160 @@ export class KbqScrollbarViewport {
     }
 }
 
+/**
+ * Emits, at most once a frame, whenever the viewport's scrollable size may have changed.
+ *
+ * Nothing fires when `scrollHeight` itself changes, and polling it would keep an otherwise idle page
+ * rendering for as long as the viewport exists. What changes that size does fire something: the viewport
+ * or a box directly inside its content resizes; the DOM inside changes — nodes, text or attributes; an
+ * image or a font loads; a transition or an animation ends.
+ *
+ * What still escapes — a style applied from outside the viewport that grows only the content of an
+ * inline element, a transform reaching past the content — is caught once the viewport is hovered or
+ * focused, and the track also re-measures whenever the viewport scrolls, which it only does once there
+ * is something to scroll.
+ */
+@Injectable()
+class KbqScrollbarContentObserver {
+    private readonly viewport = inject(KbqScrollbarViewport);
+    private readonly viewportElement = this.viewport.getNativeElement();
+    private readonly document = inject(DOCUMENT);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly mutationObserverFactory = inject(MutationObserverFactory);
+    private readonly nextFrame = nextAnimationFrame();
+
+    readonly changes: Observable<void> = merge(
+        this.resizeObserver.observe(this.viewportElement),
+        this.domChanges(),
+        this.document.fonts ? fromEvent(this.document.fonts, 'loadingdone') : EMPTY,
+        // `load` does not bubble, so it is caught on its way down. The other two end a change that a
+        // mutation only started: content transitioning open, an element animating in.
+        merge(
+            ...['load', 'transitionend', 'animationend'].map((type) =>
+                fromEvent<Event>(this.viewportElement, type, { capture: true })
+            )
+        ).pipe(filter(({ target }) => !this.isInsideTrack(target as Node))),
+        fromEvent(this.viewportElement, 'pointerenter'),
+        fromEvent(this.viewportElement, 'focusin'),
+        this.viewport.flashes
+    ).pipe(
+        // Ahead of the audit, which holds the last value until the frame — and no frame comes while the tab
+        // is hidden, so a batch of removed nodes would stay reachable all that time.
+        map(() => undefined),
+        startWith(undefined),
+        audit(() => this.nextFrame),
+        zoneFree(),
+        share()
+    );
+
+    // Mutations inside the viewport and resizes of the boxes directly inside its content, as one stream.
+    private domChanges(): Observable<void> {
+        return new Observable<void>((subscriber) => {
+            const notify = () => subscriber.next();
+            const boxes = new Set<Element>();
+            // An observer of its own rather than CDK's SharedResizeObserver, which filters every batch once per
+            // observed element — quadratic for a list whose rows sit directly in the viewport.
+            const resizeObserver = typeof ResizeObserver === 'undefined' ? null : new ResizeObserver(notify);
+
+            const syncBoxes = () => {
+                const current = new Set(this.getContentBoxes());
+
+                boxes.forEach((box) => {
+                    if (!current.has(box)) {
+                        resizeObserver?.unobserve(box);
+                        boxes.delete(box);
+                    }
+                });
+
+                current.forEach((box) => {
+                    if (!boxes.has(box)) {
+                        // The border box, so that a padding or border change counts as the resize it is.
+                        resizeObserver?.observe(box, { box: 'border-box' });
+                        boxes.add(box);
+                    }
+                });
+            };
+
+            // Not CDK's ContentObserver: it emits inside NgZone, and every emission would then cost the whole
+            // application a change detection pass — usually a second one, right after the render that mutated.
+            const mutationObserver = this.mutationObserverFactory.create((records) => {
+                const relevant = records.filter((record) => this.affectsContent(record));
+
+                if (!relevant.length) {
+                    return;
+                }
+
+                const root = this.getContentRoot();
+
+                if (
+                    relevant.some(
+                        ({ type, target }) =>
+                            type === 'childList' && (target === root || target === this.viewportElement)
+                    )
+                ) {
+                    syncBoxes();
+                }
+
+                notify();
+            });
+
+            // Attributes too: a class, style or `hidden` toggle inside an inline element grows the content
+            // without resizing any box watched here, and it is how the viewport's own `overflow` changes.
+            mutationObserver?.observe(this.viewportElement, {
+                attributes: true,
+                childList: true,
+                characterData: true,
+                subtree: true
+            });
+            syncBoxes();
+
+            return () => {
+                mutationObserver?.disconnect();
+                resizeObserver?.disconnect();
+            };
+        });
+    }
+
+    // `kbq-scrollbar` keeps its content in a wrapper held at the viewport's full height, which never grows
+    // with what it holds, so the boxes that do are its children.
+    private getContentRoot(): Element {
+        return this.viewportElement.querySelector(':scope > .kbq-scrollbar__content') ?? this.viewportElement;
+    }
+
+    private getContentBoxes(): Element[] {
+        return Array.from(this.getContentRoot().children).filter((child) => child.localName !== TRACK_TAG);
+    }
+
+    // Skips what cannot change the scrollable size: tracks redrawing their bars, and Angular moving the
+    // comment anchors of `@if` and `@for` — the same comment-only records CDK's ContentObserver skips.
+    private affectsContent({ type, target, addedNodes, removedNodes }: MutationRecord): boolean {
+        if (target.nodeType === Node.COMMENT_NODE || this.isInsideTrack(target)) {
+            return false;
+        }
+
+        if (type !== 'childList') {
+            return true;
+        }
+
+        return [...Array.from(addedNodes), ...Array.from(removedNodes)].some(
+            (node) => node.nodeType !== Node.COMMENT_NODE && !this.isInsideTrack(node)
+        );
+    }
+
+    // This viewport's track or a nested viewport's: tracks move their thumbs on every scroll and never
+    // change the size of the content around them. Recognised by structure, not by the element this
+    // observer happens to be provided on.
+    private isInsideTrack(node: Node | null): boolean {
+        for (let current = node; current && current !== this.viewportElement; current = current.parentNode) {
+            if ((current as Element).localName === TRACK_TAG) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
 @Directive({
     selector: '[kbqScrollbarThumb]',
     host: {
@@ -477,6 +643,7 @@ class KbqScrollbarThumb {
     protected readonly viewportElement = this.viewport.getNativeElement();
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly style = this.nativeElement.style;
+    private readonly contentChanges = inject(KbqScrollbarContentObserver).changes;
 
     readonly orientation = input.required<Orientation>();
 
@@ -515,7 +682,7 @@ class KbqScrollbarThumb {
                 this.viewportElement.style.scrollBehavior = '';
             });
 
-        merge(animationFrame().pipe(throttleTime(100, zoneFreeScheduler())), this.viewport.scrollChanges)
+        merge(this.contentChanges, this.viewport.scrollChanges)
             .pipe(
                 zoneFree(),
                 map(() => this.getDimension()),
@@ -625,7 +792,7 @@ class KbqScrollbarThumb {
 }
 
 @Component({
-    selector: 'kbq-scrollbar-track',
+    selector: TRACK_TAG,
     imports: [KbqScrollbarThumb],
     template: `
         @if (visibility()[0]) {
@@ -652,6 +819,8 @@ class KbqScrollbarThumb {
         }
     `,
     styleUrl: './scrollbar-track.scss',
+    // Shared by the track and both of its thumbs, so the viewport is observed once.
+    providers: [KbqScrollbarContentObserver],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-scrollbar-track',
@@ -670,9 +839,10 @@ class KbqScrollbarTrack {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly scheduler = zoneFreeScheduler();
 
+    // Scrolling re-measures too: a viewport that scrolls has something to scroll, whatever the observers
+    // missed on the way there.
     protected readonly visibility = toSignal<ScrollbarVisibility>(
-        animationFrame().pipe(
-            throttleTime(TRACK_THROTTLE_TIME, zoneFreeScheduler()),
+        merge(inject(KbqScrollbarContentObserver).changes, this.viewport.scrollChanges).pipe(
             map(() => this.scrollbars),
             startWith([false, false] as const),
             distinctUntilChanged((a, b) => a[0] === b[0] && a[1] === b[1]),

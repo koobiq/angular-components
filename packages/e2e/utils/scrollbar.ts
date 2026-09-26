@@ -41,10 +41,10 @@ export const e2eWaitForSettledScrollbars = async (root: Page | Locator, expected
  * and no thumb.
  *
  * Pass `settledSibling` — an overflowing viewport on the same page — when the check runs right after
- * load. A track reports no bars for its first frame plus one throttle window whatever its content is,
- * so an empty track asserted before any tick has run passes on the pre-computation window rather than
- * on the behaviour. A sibling shares the page's frame loop, so its bars appearing prove a tick has been
- * through.
+ * load. A track reports no bars until its first measurement, which waits for the next animation frame,
+ * so an empty track asserted before that frame passes on the pre-measurement window rather than on the
+ * behaviour. Tracks created together are measured in the same frame, so a sibling's bars appearing prove
+ * that frame has been through.
  *
  * The track's `kbq-scrollbar-track_revealed` class is deliberately not asserted: it lasts only
  * `hideDelay` after a flash, and nothing re-arms it.

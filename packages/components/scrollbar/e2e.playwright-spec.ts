@@ -1,5 +1,5 @@
 import { expect, Locator, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from 'packages/e2e/utils';
+import { e2eEnableDarkTheme, e2eExpectNoScrollbarAfterFlash } from 'packages/e2e/utils';
 
 test.describe('KbqScrollbar', () => {
     test.describe('E2eScrollbarStateAndStyle', () => {
@@ -388,9 +388,9 @@ test.describe('KbqScrollbar', () => {
             // Scroll to the bottom of the initial 20 items (20 * 32px = 640px content, 200px viewport).
             await viewport.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
 
-            // The thumb's own top/height are updated via a separately throttled RAF stream, not
-            // synchronously with the scroll event — wait for it to actually catch up before sampling,
-            // or `before` can be captured mid-flight and make the assertions below flaky.
+            // `scrollTo` fires its scroll event, and so moves the thumb, on a later frame rather than within
+            // this task — wait for it to catch up before sampling, or `before` can be captured mid-flight
+            // and make the assertions below flaky.
             await expect.poll(async () => (await thumbMetrics(page)).top).toBeGreaterThan(0);
 
             const before = await thumbMetrics(page);
@@ -441,6 +441,137 @@ test.describe('KbqScrollbar', () => {
             // `getViewFraction`) — not the multi-pixel overhang a wrong compensation formula produces.
             expect(thumbRect.bottom).toBeLessThanOrEqual(barRect.bottom + 1);
         });
+    });
+
+    // Content that changes after the viewport was measured, with nothing scrolled or hovered: the bar has to
+    // follow on its own. `always` mode and a pointer kept away mean no interaction can re-measure on the
+    // viewport's behalf and hide a change nobody reported.
+    test.describe('E2eScrollbarContentChanges', () => {
+        const getBar = (page: Page, testId: string) =>
+            page.getByTestId(testId).locator('.kbq-scrollbar-track__bar_vertical');
+        const getThumbHeight = (page: Page, testId: string) =>
+            getBar(page, testId)
+                .locator('.kbq-scrollbar-track__thumb')
+                .evaluate((el) => el.getBoundingClientRect().height);
+        const trigger = (page: Page, action: string) => page.getByTestId(`e2eScrollbarContentChanges${action}`).click();
+
+        test.beforeEach(async ({ page }) => {
+            await page.goto('/E2eScrollbarContentChanges');
+            await page.mouse.move(0, 0);
+        });
+
+        for (const [host, testId] of [
+            ['kbq-scrollbar', 'e2eScrollbarContentChangesComponent'],
+            ['kbqScrollbarViewport', 'e2eScrollbarContentChangesDirective']
+        ]) {
+            test.describe(host, () => {
+                test.beforeEach(async ({ page }) => {
+                    await e2eExpectNoScrollbarAfterFlash(page.getByTestId(testId));
+                });
+
+                test('shows a bar once content is inserted deep inside', async ({ page }) => {
+                    await trigger(page, 'Add');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                });
+
+                test('hides the bar once that content is destroyed', async ({ page }) => {
+                    await trigger(page, 'Add');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+
+                    await trigger(page, 'Remove');
+                    await expect(getBar(page, testId)).toHaveCount(0);
+                });
+
+                test('shows a bar once an image inside finishes loading', async ({ page }) => {
+                    await trigger(page, 'Image');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                });
+
+                test('shows a bar once a style outside the viewport enlarges the content', async ({ page }) => {
+                    await trigger(page, 'Enlarge');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                });
+
+                test('shows a bar once a text node grows', async ({ page }) => {
+                    await trigger(page, 'Text');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                });
+
+                // Inserted after the first measurement, then grown by an attribute the mutation observer does
+                // not watch: only a resize observer attached to the new box can notice.
+                test('shows a bar once a box inserted after the first measurement grows on its own', async ({
+                    page
+                }) => {
+                    await trigger(page, 'Block');
+                    await expect(page.getByTestId(testId).locator('.e2e-block')).toHaveCount(1);
+                    await expect(getBar(page, testId)).toHaveCount(0);
+
+                    await trigger(page, 'BlockImage');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                });
+
+                test('shows a bar once an image inside an inline element finishes loading', async ({ page }) => {
+                    await trigger(page, 'InlineImage');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                });
+
+                test('shows a bar once an attribute grows the content of an inline element', async ({ page }) => {
+                    await trigger(page, 'InlineGrow');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                });
+
+                test('shows a horizontal bar once a style widens the content', async ({ page }) => {
+                    await trigger(page, 'Widen');
+                    await expect(page.getByTestId(testId).locator('.kbq-scrollbar-track__bar_horizontal')).toHaveCount(
+                        1
+                    );
+                });
+
+                // A transform grows the scrollable size without resizing a box or touching the DOM inside, so
+                // nothing reports it; scrolling, which only works once there is something to scroll, has to.
+                test('shows a bar once the viewport is scrolled after a change nothing reported', async ({ page }) => {
+                    await trigger(page, 'Shift');
+                    await page.getByTestId(testId).evaluate((el) => el.scrollTo({ top: 40 }));
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                });
+
+                test('shrinks the thumb as more content arrives', async ({ page }) => {
+                    await trigger(page, 'Add');
+                    await expect(getBar(page, testId)).toHaveCount(1);
+                    // Two samples apart rather than one: the thumb may still be catching up with the first add.
+                    await expect.poll(() => getThumbHeight(page, testId)).toBeGreaterThan(0);
+
+                    const before = await getThumbHeight(page, testId);
+
+                    await trigger(page, 'Add');
+                    await expect.poll(() => getThumbHeight(page, testId)).toBeLessThan(before);
+                });
+            });
+        }
+
+        test('kbqScrollbarViewport: follows its own overflow being locked and unlocked', async ({ page }) => {
+            const testId = 'e2eScrollbarContentChangesDirective';
+
+            await trigger(page, 'Add');
+            await expect(getBar(page, testId)).toHaveCount(1);
+
+            await trigger(page, 'Lock');
+            await expect(getBar(page, testId)).toHaveCount(0);
+
+            await trigger(page, 'Unlock');
+            await expect(getBar(page, testId)).toHaveCount(1);
+        });
+
+        for (const [host, testId] of [
+            ['kbq-scrollbar', 'e2eScrollbarContentChangesComponentText'],
+            ['kbqScrollbarViewport', 'e2eScrollbarContentChangesDirectiveText']
+        ]) {
+            test(`${host}: shows a bar once a bare text node grows`, async ({ page }) => {
+                await e2eExpectNoScrollbarAfterFlash(page.getByTestId(testId));
+                await trigger(page, 'Text');
+                await expect(getBar(page, testId)).toHaveCount(1);
+            });
+        }
     });
 
     test.describe('E2eScrollbarNested', () => {
