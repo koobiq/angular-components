@@ -1196,10 +1196,16 @@ export class KbqTreeSelect
         }
     }
 
-    /** `View -> model callback called when value changes` */
+    /**
+     * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onChange: (value: any) => void = () => {};
 
-    /** `View -> model callback called when select has been touched` */
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onTouched = () => {};
 
     /** Host click handler. A custom matcher that opts out of the default handlers takes it over. */

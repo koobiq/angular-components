@@ -28,8 +28,10 @@ import {
     DocsStructureItemTab
 } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
+import { DocsPagePrefetch } from '../../services/page-resolver';
 import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
-import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
+import { DocsApiPage } from '../api-page/api-page';
+import { DocsApiEntryPoint } from '../api-page/api-page.types';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import { DocsComponentViewerWrapperComponent } from './component-viewer-wrapper';
 
@@ -74,6 +76,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
     private readonly modalService = inject(KbqModalService);
     private readonly docStates = inject(DocsDocStates);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly pagePrefetch = inject(DocsPagePrefetch);
 
     constructor() {
         super();
@@ -102,6 +105,11 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
             });
 
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
+    }
+
+    /** Loads the page of a tab while the pointer is over its link or the focus is on it. */
+    protected prefetchTab(tab: DocsStructureItemTab): void {
+        if (this.structureItem) this.pagePrefetch.prefetch(this.structureItem.id, tab, this.locale());
     }
 
     /** Link to the item's source directory on GitHub, or `null` when the item has no known path. */
@@ -141,21 +149,13 @@ export class DocsComponentPageComponent {
     }
 }
 
-/** The API tab: the HTML document `tools/api-gen` generates for the structure item of the parent route. */
+/** The API tab: the API of the entry point `docsApiPageResolver` loaded for the route. */
 @Component({
-    selector: 'docs-component-api',
-    imports: [DocsComponentViewerWrapperComponent, DocsLiveExampleComponent],
+    selector: 'docs-component-api-page',
+    imports: [DocsComponentViewerWrapperComponent, DocsApiPage],
     template: `
         <docs-component-viewer-wrapper>
-            <ng-container ngProjectAs="[docs-article]">
-                @if (documentUrl(); as documentUrl) {
-                    <docs-live-example
-                        [documentUrl]="documentUrl"
-                        (contentRendered)="wrapper().scrollToSelectedContentSection()"
-                        (contentRenderFailed)="wrapper().scrollToSelectedContentSection()"
-                    />
-                }
-            </ng-container>
+            <docs-api-page ngProjectAs="[docs-article]" [entryPoint]="entryPoint()" />
         </docs-component-viewer-wrapper>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -163,16 +163,19 @@ export class DocsComponentPageComponent {
         class: 'docs-component-tab'
     }
 })
-export class DocsComponentApiComponent {
-    protected readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
+export class DocsComponentApiPageComponent {
+    private readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
 
-    protected readonly documentUrl = toSignal(
-        inject(ActivatedRoute).parent!.url.pipe(
-            map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
-                docsGetItemById(<DocsStructureItemId>id, <DocsStructureCategoryId>categoryId)
-            ),
-            map((item) => (item ? `docs-content/api-docs/components-${item.apiId}.html` : null))
-        ),
-        { initialValue: null }
+    protected readonly entryPoint = toSignal(
+        inject(ActivatedRoute).data.pipe(map(({ page }): DocsApiEntryPoint => page)),
+        { requireSync: true }
     );
+
+    constructor() {
+        // The entries render with the route, so their headings are in place once the view is.
+        afterRenderEffect(() => {
+            this.entryPoint();
+            this.wrapper().scrollToSelectedContentSection();
+        });
+    }
 }

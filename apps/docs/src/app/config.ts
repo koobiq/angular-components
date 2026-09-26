@@ -13,10 +13,11 @@ import {
 } from '@koobiq/components/core';
 import { kbqIconsResolverProvider } from '@koobiq/components/icon';
 import { DOCS_COMPILED_PAGES } from '@koobiq/docs-pages';
+import { DOCS_COMPILED_API_PAGES } from '@koobiq/docs-pages-api';
 import { DOCS_ROUTES } from './routes';
 import { docsProvideAnalytics } from './services/analytics';
 import { docsReloadOnChunkLoadError } from './services/chunk-load-error';
-import { DOCS_PAGES } from './services/page-resolver';
+import { DOCS_API_PAGES, DOCS_PAGES } from './services/page-resolver';
 import { docsProvidePreferences } from './services/preferences';
 import { DocsTitleStrategy } from './services/title-strategy';
 
@@ -40,6 +41,7 @@ export const appConfig: ApplicationConfig = {
         importProvidersFrom(LuxonDateModule, KbqFormattersModule),
         provideRouter(DOCS_ROUTES, withNavigationErrorHandler(docsReloadOnChunkLoadError)),
         { provide: DOCS_PAGES, useValue: DOCS_COMPILED_PAGES },
+        { provide: DOCS_API_PAGES, useValue: DOCS_COMPILED_API_PAGES },
         provideHttpClient(withFetch()),
         provideClientHydration(withEventReplay()),
         provideAnimations(),

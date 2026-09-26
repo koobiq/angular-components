@@ -2,7 +2,6 @@
  * Compiles the MDX pages of the documentation site into Angular components under `dist/docs-pages`,
  * which the docs app imports as `@koobiq/docs-pages`. With `--watch`, recompiles on every change.
  */
-import chalk from 'chalk';
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, watch, writeFileSync } from 'fs';
 import { globSync } from 'glob';
 import { dirname, join } from 'path';
@@ -54,9 +53,7 @@ const generate = (): void => {
         pagesByKey.set(key, path);
 
         if (!source.url) {
-            console.warn(
-                chalk.yellow(`${path}: apps/docs/src/app/structure.ts has no item "${source.id}", no route renders it`)
-            );
+            console.warn(`${path}: apps/docs/src/app/structure.ts has no item "${source.id}", no route renders it`);
         }
 
         const page = compilePage(readFileSync(path, 'utf8'), {
@@ -88,7 +85,7 @@ const generate = (): void => {
 
     syncOutput(files);
 
-    console.log(chalk.green(`Compiled ${pages.length} MDX pages into ${OUTPUT_DIR}`));
+    console.log(`Compiled ${pages.length} MDX pages into ${OUTPUT_DIR}`);
 };
 
 const run = (): boolean => {
@@ -97,7 +94,7 @@ const run = (): boolean => {
 
         return true;
     } catch (error) {
-        console.error(chalk.red(error instanceof Error ? error.message : error));
+        console.error(error instanceof Error ? error.message : error);
 
         return false;
     }

@@ -204,7 +204,7 @@ export class FileValidators {
 }
 
 /**
- * Type helper describing accepted file types, referring to:
- * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file#unique_file_type_specifiers
+ * Type helper describing accepted file types, referring to
+ * [unique file type specifiers](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file#unique_file_type_specifiers).
  */
 export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];

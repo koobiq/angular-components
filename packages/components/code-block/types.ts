@@ -1,7 +1,6 @@
 /**
- * Context provided to the tab link template.
- * @property $implicit - Code block file for the current tab.
- * @property fallbackFileName - Displayed when the file has no explicit name.
+ * Context provided to the tab link template: `$implicit` is the code block file for the current tab, and
+ * `fallbackFileName` is displayed when the file has no explicit name.
  */
 export type KbqTabLinkTemplateContext = { $implicit: KbqCodeBlockFile; fallbackFileName: string };
 
@@ -22,8 +21,7 @@ export type KbqCodeBlockFile = {
      * File language, requires for correct syntax highlighting.
      * If not provided or invalid, will be set to `KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE`.
      *
-     * List of supported languages:
-     * @link https://highlightjs.readthedocs.io/en/stable/supported-languages.html
+     * See the [list of supported languages](https://highlightjs.readthedocs.io/en/stable/supported-languages.html).
      */
     language?: string;
 

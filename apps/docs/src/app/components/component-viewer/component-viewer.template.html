@@ -8,16 +8,34 @@
         @if (!structureItem.isGuide) {
             <div class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s">
                 <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
-                    <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Overview">
+                    <a
+                        kbqTabLink
+                        routerLinkActive="kbq-selected"
+                        [routerLink]="structureItemTab.Overview"
+                        (focus)="prefetchTab(structureItemTab.Overview)"
+                        (mouseenter)="prefetchTab(structureItemTab.Overview)"
+                    >
                         {{ t('overviewTab') }}
                     </a>
                     @if (structureItem.hasApi) {
-                        <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Api">
+                        <a
+                            kbqTabLink
+                            routerLinkActive="kbq-selected"
+                            [routerLink]="structureItemTab.Api"
+                            (focus)="prefetchTab(structureItemTab.Api)"
+                            (mouseenter)="prefetchTab(structureItemTab.Api)"
+                        >
                             {{ t('apiTab') }}
                         </a>
                     }
                     @if (structureItem.hasExamples) {
-                        <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="structureItemTab.Examples">
+                        <a
+                            kbqTabLink
+                            routerLinkActive="kbq-selected"
+                            [routerLink]="structureItemTab.Examples"
+                            (focus)="prefetchTab(structureItemTab.Examples)"
+                            (mouseenter)="prefetchTab(structureItemTab.Examples)"
+                        >
                             {{ t('examplesTab') }}
                         </a>
                     }

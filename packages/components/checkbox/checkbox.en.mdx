@@ -21,10 +21,10 @@ The indeterminate state is applied using the boolean attribute `[indeterminate]`
 When the user clicks on a `kbq-checkbox`, the default behavior toggles the `checked` value and sets `indeterminate` to `false`.
 This behavior can be configured by <a href="https://angular.io/guide/dependency-injection" target="_blank">providing a new value</a> for `KBQ_CHECKBOX_CLICK_ACTION` on the checkbox.
 
-```
+```ts
 providers: [
     { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'check' }
-]
+];
 ```
 
 Possible values: noop, check, check-indeterminate

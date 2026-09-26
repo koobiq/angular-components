@@ -346,6 +346,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         if (!isFocused) this.onTouched();
     }
 
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onTouched = () => {};
 
     onKeyDown(event: KeyboardEvent) {

@@ -1,9 +1,20 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        // Rollup bundles this tool to ESM; "bundler" resolution is what lets TypeScript read
-        // the "exports" maps of chalk 5+ and glob 9+.
-        "moduleResolution": "bundler",
+        // NodeNext resolution is required to read the "exports" maps of the ESM-only packages
+        // (@angular/compiler-cli, the unified ones). The emitted format is still CommonJS because the
+        // repository's package.json has no "type": "module", and Node loads them through require(esm).
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
         "types": ["node", "jest"]
+    },
+    // The root config forces module to CommonJS for ts-node, which conflicts with NodeNext
+    // resolution (TS5110). Repeat the block here with a matching module setting.
+    "ts-node": {
+        "transpileOnly": true,
+        "compilerOptions": {
+            "types": ["node"],
+            "module": "nodenext"
+        }
     }
 }

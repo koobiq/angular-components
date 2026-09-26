@@ -310,6 +310,17 @@ test.describe('docs app', () => {
         expect(errors).toEqual([]);
     });
 
+    // The API tab renders data rather than a compiled page, and its JSDoc goes into the page as `[innerHTML]`.
+    test('hydrates the API tab without errors', async ({ page }) => {
+        const errors = collectErrors(page);
+
+        await page.goto('/en/components/select/api');
+        await waitForHydration(page);
+
+        await expect(page.locator('#KbqSelect-panelClass .kbq-markdown__p')).toBeVisible();
+        expect(errors).toEqual([]);
+    });
+
     // AG Grid does not support server-side rendering: the prerendered page leaves its examples to the browser.
     test('renders the examples that cannot render on the server once the page is hydrated', async ({ page }) => {
         const errors = collectErrors(page);
@@ -364,6 +375,17 @@ test.describe('prerendered pages compiled from MDX', () => {
  * ships complete, the page shows none of it until a start is picked, the filter narrows it once
  * hydrated, the range can never run backwards, and a filtered URL reproduces itself on reload.
  */
+test.describe('prerendered API tab', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('carries the entries and their JSDoc in the initial HTML', async ({ page }) => {
+        await page.goto('/en/components/select/api');
+
+        await expect(page.locator('h3#KbqSelect')).toHaveText('KbqSelect');
+        await expect(page.locator('#KbqSelect-panelClass .kbq-markdown__p')).toBeVisible();
+    });
+});
+
 test.describe('migration guide filter', () => {
     const MIGRATION_URL = '/en/main/migration/overview';
 

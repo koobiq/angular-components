@@ -12,6 +12,11 @@ import {
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
 import { focusFirst, generateId, getFocusIntent, wrapArray } from './utils';
 
+/**
+ * An item of the roving focus of `KbqBreadcrumbs`. `KbqBreadcrumbButton` applies it itself, as a host directive.
+ *
+ * @docs-private
+ */
 @Directive({
     selector: '[rdxRovingFocusItem]',
     host: {
@@ -29,6 +34,10 @@ export class RdxRovingFocusItemDirective implements OnDestroy {
     private readonly ngZone = inject(NgZone);
     protected readonly parent = inject(RdxRovingFocusGroupDirective);
 
+    /**
+     * Whether the item takes part in the roving focus. The arrow keys skip an item that does not, and a click
+     * does not focus it.
+     */
     readonly focusable = input<boolean, unknown>(true, { transform: booleanAttribute });
     /**
      * Whether the item is the one focus returns to when the group is re-entered. Defaults to `false`, so

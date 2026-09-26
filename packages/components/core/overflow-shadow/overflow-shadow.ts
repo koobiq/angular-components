@@ -146,7 +146,7 @@ export class KbqOverflowShadowContainer implements OnInit {
 export class KbqOverflowShadowTop {
     /**
      * Reference to the container directive. May be `undefined` if the container has not
-     * been rendered yet (e.g. the indicator lives in one @if block and the container in
+     * been rendered yet (e.g. the indicator lives in one `@if` block and the container in
      * another).
      */
     readonly ref = input<KbqOverflowShadowContainer | undefined>(undefined, { alias: 'kbqOverflowShadowTop' });

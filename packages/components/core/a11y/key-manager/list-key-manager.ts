@@ -145,8 +145,8 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
 
     /**
      * Turns on typeahead mode which allows users to set the active item by typing.
-     * @param searchLetterIndex letter index for incremental search, if is -1 search is disabled
      * @param debounceInterval Time to wait after the last keystroke before setting the active item.
+     * @param searchLetterIndex letter index for incremental search, if is -1 search is disabled
      */
     withTypeAhead(debounceInterval: number = 200, searchLetterIndex: number = 0): this {
         if (this._items.length && this._items.some((item) => typeof item.getLabel !== 'function')) {

@@ -244,7 +244,6 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     }): void;
     // (undocumented)
     readonly onSelectAll: _angular_core.OutputEmitterRef<KbqListSelectAllEvent<KbqListOption<T>>>;
-    // (undocumented)
     onTouched: () => void;
     // (undocumented)
     get optionBlurChanges(): Observable<KbqOptionEvent<T>>;

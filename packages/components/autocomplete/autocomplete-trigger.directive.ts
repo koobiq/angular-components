@@ -422,10 +422,16 @@ export class KbqAutocompleteTrigger
         this.closeKeyEventStream.complete();
     }
 
-    /** `View -> model callback called when value changes` */
+    /**
+     * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onChange: (value: any) => void = () => {};
 
-    /** `View -> model callback called when autocomplete has been touched` */
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onTouched: () => void = () => {};
 
     /** Opens the autocomplete suggestion panel. */

@@ -8,6 +8,18 @@ import {
     DocsStructureItemId,
     DocsStructureItemTab
 } from '../apps/docs/src/app/structure';
+import { ClassEntry, DocEntry, EntryType, FunctionEntry, MemberType } from './api-gen/rendering/entities';
+import {
+    compareEntries,
+    getEntryKind,
+    getMemberDisplayName,
+    getMemberDisplayType,
+    hasMemberDetails,
+    orderMembers,
+    renderEntrySignature
+} from './api-gen/rendering/signature';
+import { exampleAsMarkdown } from './api-gen/rendering/transforms/example-markdown';
+import { normalizeFunctionFields } from './api-gen/rendering/transforms/normalize-function-fields';
 import { DOCS_PAGE_SOURCES, parsePageSource } from './docs-pages/sources';
 
 const isFileExists = (relativePath: string): boolean => {
@@ -19,6 +31,111 @@ const isFileExists = (relativePath: string): boolean => {
 };
 
 const readFileContent = (relativePath: string): string => readFileSync(join(process.cwd(), relativePath), 'utf-8');
+
+/**
+ * A function or method's description often lives under `signatures[0]` rather than on the entry itself. It is
+ * Markdown, kept as written: joined into one line, a code block or a list in it would stop being one.
+ */
+const describe = (node: { description?: string; signatures?: { description?: string }[] }): string =>
+    (node.description || node.signatures?.[0]?.description || '').trim();
+
+/** The reason an entry or a member is deprecated — the page says it with a badge, the text has to spell it out. */
+const describeDeprecation = ({ jsdocTags }: { jsdocTags?: { name: string; comment: string }[] }): string => {
+    const reason = jsdocTags?.find(({ name }) => name === 'deprecated')?.comment.trim();
+
+    return reason ? `Deprecated: ${reason}` : '';
+};
+
+/** Inline code that holds a backtick too: `` (`.${string}`)[] `` needs a longer fence than one backtick. */
+const inlineCode = (text: string): string => {
+    const code = text.replace(/\s*\n\s*/g, ' ');
+    const fence = '`'.repeat(Math.max(0, ...(code.match(/`+/g) ?? []).map(({ length }) => length)) + 1);
+    const padding = /^`|`$/.test(code) ? ' ' : '';
+
+    return `${fence}${padding}${code}${padding}${fence}`;
+};
+
+/** A list item: the text's first line after the head, the rest indented to stay inside the item. */
+const listItem = (indent: string, head: string, text: string): string[] => {
+    const [first, ...rest] = text.split('\n');
+
+    return [
+        `${indent}- ${head}${first ? ` — ${first}` : ''}`,
+        ...rest.map((line) => (line.trim() ? `${indent}  ${line}` : ''))
+    ];
+};
+
+/** Documented parameters and the return value of a function or method, as nested list items. */
+const renderCallDetails = (entry: DocEntry, indent: string): string[] => {
+    const { params, returnType, returnDescription } = normalizeFunctionFields(entry as FunctionEntry);
+
+    return [
+        ...(params ?? [])
+            .filter((param) => describe(param))
+            .flatMap((param) =>
+                listItem(indent, `${inlineCode(param.name)}: ${inlineCode(param.type)}`, describe(param))
+            ),
+        ...(returnDescription?.trim()
+            ? listItem(indent, `returns ${inlineCode(returnType)}`, returnDescription.trim())
+            : [])
+    ];
+};
+
+/** An entry's or a member's `@example` blocks as Markdown, each indented to sit under what it belongs to. */
+const renderExamples = (node: { jsdocTags?: { name: string; comment: string }[] }, indent: string): string[] =>
+    (node.jsdocTags ?? [])
+        .filter(({ name, comment }) => name === 'example' && comment.trim())
+        .flatMap(({ comment }) => [
+            '',
+            ...exampleAsMarkdown(comment.trim())
+                .split('\n')
+                .map((line) => indent + line)
+        ]);
+
+/**
+ * Renders an entry point's manifest (`tools/api-gen`'s doc model, already stripped of `@docs-private`/
+ * `@internal`) the way its `/api` page shows it: per entry its kind, description and signature, then the
+ * members worth explaining — the same signature builder, so the page and `llms-full.txt` cannot drift.
+ */
+const renderManifestAsMarkdown = (entries: DocEntry[]): string =>
+    entries
+        .filter((entry) => entry.entryType !== EntryType.NgModule)
+        .sort(compareEntries)
+        .map((entry) => {
+            const lines = [`##### ${entry.name} (${getEntryKind(entry)})`];
+
+            for (const text of [describeDeprecation(entry), describe(entry)]) {
+                if (text) lines.push('', text);
+            }
+
+            lines.push(...renderExamples(entry, ''), '', '```ts', renderEntrySignature(entry), '```');
+
+            const members = orderMembers((entry as ClassEntry).members ?? []).filter(hasMemberDetails);
+            const details = [
+                ...members.flatMap((member) => {
+                    const type = getMemberDisplayType(member);
+                    const summary = [describe(member), describeDeprecation(member)].filter(Boolean).join('\n\n');
+
+                    return [
+                        ...listItem(
+                            '',
+                            `${inlineCode(getMemberDisplayName(member))}${type ? `: ${inlineCode(type)}` : ''}`,
+                            summary
+                        ),
+                        ...(member.memberType === MemberType.Method
+                            ? renderCallDetails(member as unknown as DocEntry, '  ')
+                            : []),
+                        ...renderExamples(member, '  ')
+                    ];
+                }),
+                ...(entry.entryType === EntryType.Function ? renderCallDetails(entry, '') : [])
+            ];
+
+            if (details.length) lines.push('', ...details);
+
+            return lines.join('\n');
+        })
+        .join('\n\n');
 
 const FILE_NAME = 'llms.txt';
 const FILE_NAME_FULL = 'llms-full.txt';
@@ -145,9 +262,16 @@ try {
 
                     if (isFileExists(apiPath)) {
                         content += `- [api](${GITHUB_RAW_CONTENT_URL}/${apiPath})\n`;
+                    }
 
+                    // Not `tools/public_api_guard` — that guards breaking changes and never carries prose
+                    // descriptions. `dist/docs-content/api-manifest` is `tools/api-gen`'s doc model, the
+                    // input to the same `/api` page; a release runs `docs:api-gen` before this script.
+                    const manifestPath = `dist/docs-content/api-manifest/components-${item.apiId}.json`;
+
+                    if (isFileExists(manifestPath)) {
                         contentFull += `#### api\n\n`;
-                        contentFull += `${readFileContent(apiPath)}\n`;
+                        contentFull += `${renderManifestAsMarkdown(JSON.parse(readFileContent(manifestPath)))}\n`;
                     }
                 }
 

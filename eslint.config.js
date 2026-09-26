@@ -9,6 +9,7 @@ const promise = require('eslint-plugin-promise');
 // eslint-plugin-rxjs-x ships as transpiled ESM (the plugin object lives under `.default`)
 const rxjs = require('eslint-plugin-rxjs-x').default;
 const comments = require('@eslint-community/eslint-plugin-eslint-comments/configs');
+const jsdoc = require('eslint-plugin-jsdoc');
 // eslint-plugin-file-progress ships as ESM since v2 (the plugin object lives under `.default`)
 const progress = require('eslint-plugin-file-progress').default;
 const prettierRecommended = require('eslint-plugin-prettier/recommended');
@@ -142,8 +143,6 @@ module.exports = tseslint.config(
             '.claude',
             // ignore build tokens
             'apps/docs/src/styles/koobiq/default-theme/',
-            // ignore nunjuck templates
-            'tools/api-gen/rendering/templates/**',
             // ignore index.html
             '**/index.html',
             // ignore mocks
@@ -461,6 +460,37 @@ module.exports = tseslint.config(
                 1,
                 ...noRestrictedGlobalsOptionsForSSR
             ]
+        }
+    },
+
+    // JSDoc of packages/components, which the docs site and llms-full.txt are generated from. TypeScript takes
+    // any `@word` that starts a line for a tag and hides the text after it in that tag, so a tag the docs do not
+    // show loses that text without an error anywhere.
+    {
+        files: ['packages/components/**/*.ts'],
+        ignores: ['**/*.spec.ts', '**/*.playwright-spec.ts', '**/e2e.ts'],
+        plugins: {
+            jsdoc
+        },
+        settings: {
+            jsdoc: {
+                mode: 'typescript',
+                tagNamePreference: {
+                    property: {
+                        message: 'The docs do not show `@property`: describe the property in a comment of its own.'
+                    },
+                    todo: { message: 'Write a `// TODO` comment: the docs do not show `@todo`, nor the text after it.' }
+                }
+            }
+        },
+        rules: {
+            // plugin:jsdoc
+            // an unknown tag, a block `@link` among them: only `{@link}` is inline
+            'jsdoc/check-tag-names': [1, { definedTags: ['docs-private'] }],
+            // `/*` with a tag in it: meant as JSDoc, but TypeScript does not read it
+            'jsdoc/no-bad-blocks': 1,
+            // a `@param` naming no parameter documents nothing
+            'jsdoc/check-param-names': [1, { checkDestructured: false, disableMissingParamChecks: true }]
         }
     },
 

@@ -1,58 +1,75 @@
-import { DocEntry, JsDocTagEntry } from '../rendering/entities';
-
-/* Add mapping to use nunjucks rendering */
+import {
+    ClassEntry,
+    DocEntry,
+    EntryType,
+    FunctionEntry,
+    JsDocTagEntry,
+    MemberEntry,
+    MemberTags
+} from '../rendering/entities';
+import { normalizeFunctionFields } from '../rendering/transforms/normalize-function-fields';
 
 /** Gets a unique lookup key for an API */
 export function getApiLookupKey(moduleName: string, name: string) {
     return `${moduleName}/${name}`;
 }
 
-/** Gets whether the given entry has the "@deprecated" JsDoc tag. */
-export function hasDeprecatedTag(entry: DocEntry) {
-    return entry.jsdocTags.some((t: JsDocTagEntry) => t.name === 'deprecated');
-}
-
-/** Gets whether the given entry has the "@developerPreview" JsDoc tag. */
-export function hasDeveloperPreviewTag(entry: DocEntry) {
-    return entry.jsdocTags.some((t: JsDocTagEntry) => t.name === 'developerPreview');
-}
-
-/** Gets whether the given entry is deprecated in the manifest. */
-export function isDeprecated(lookup: Map<string, DocEntry[]>, moduleName: string, entry: DocEntry): boolean {
-    const entriesWithSameName = lookup.get(getApiLookupKey(moduleName, entry.name));
-
-    // If there are multiple entries with the same name in the same module, only mark them as
-    // deprecated if *all* of the entries with the same name are deprecated (e.g. function overloads).
-    if (entriesWithSameName && entriesWithSameName.length > 1) {
-        return entriesWithSameName.every((entry) => hasDeprecatedTag(entry));
-    }
-
-    return hasDeprecatedTag(entry);
-}
-
-/** Gets whether the given entry is hasDeveloperPreviewTag in the manifest. */
-export function isDeveloperPreview(lookup: Map<string, DocEntry[]>, moduleName: string, entry: DocEntry): boolean {
-    const entriesWithSameName = lookup.get(getApiLookupKey(moduleName, entry.name));
-
-    // If there are multiple entries with the same name in the same module, only mark them as
-    // developer preview if *all* of the entries with the same name are hasDeveloperPreviewTag (e.g. function overloads).
-    if (entriesWithSameName && entriesWithSameName.length > 1) {
-        return entriesWithSameName.every((entry) => hasDeveloperPreviewTag(entry));
-    }
-
-    return hasDeveloperPreviewTag(entry);
-}
-
 // Declarations tagged `internal` are missing from the published typings. The Angular extractor drops such
 // members by itself, but keeps top-level entries.
-export function isPublic(entry: DocEntry) {
+export function isPublic(entry: { jsdocTags: JsDocTagEntry[] }) {
     return entry.jsdocTags.every((t: JsDocTagEntry) => t.name !== 'docs-private' && t.name !== 'internal');
 }
 
 /**
- * Computes an URL that refers to the given API document in the docs. Note that this logic
- * needs to be kept in sync with the routes
+ * A binding forwarded from a directive the docs leave out stays in them, as the host's own: the name of the
+ * directive would point at nothing.
  */
-export function computeApiDocumentUrl(moduleName: string, packageName: string, entry: DocEntry): string {
-    return `${moduleName}/${packageName}/api#${entry.name}`;
+export function withoutHiddenDirective(member: MemberEntry, hidden: Set<string>): MemberEntry {
+    const { forwardedFrom } = member;
+
+    if (!forwardedFrom?.directive || !hidden.has(forwardedFrom.directive)) return member;
+
+    return { ...member, forwardedFrom: { ...forwardedFrom, directive: undefined } };
+}
+
+/** Members every class has, or a framework calls — documenting them would tell a consumer nothing. */
+const FRAMEWORK_MEMBERS = new Set([
+    'ngAfterContentChecked',
+    'ngAfterContentInit',
+    'ngAfterViewChecked',
+    'ngAfterViewInit',
+    'ngDoCheck',
+    'ngOnChanges',
+    'ngOnDestroy',
+    'ngOnInit',
+
+    // ControlValueAccessor methods
+    'writeValue',
+    'registerOnChange',
+    'registerOnTouched',
+    'setDisabledState',
+
+    // tabIndex exists on all elements, no need to document it
+    'tabIndex'
+]);
+
+/**
+ * Whether a member of `entry` belongs in the docs. A `protected` member is there for the class's own template
+ * or host bindings (see AGENTS.md), or for its internals, so it is left out — unless the class is abstract and
+ * exists to be extended, or, outside a component or directive, its author documents it for a subclass.
+ */
+export function isDocumentedMember(entry: DocEntry, member: MemberEntry): boolean {
+    const { isAbstract, isService } = entry as ClassEntry;
+    const isTemplated = entry.entryType === EntryType.Component || entry.entryType === EntryType.Directive;
+    const { description, params } = normalizeFunctionFields(member as Partial<FunctionEntry>);
+
+    if (!isPublic(member) || FRAMEWORK_MEMBERS.has(member.name)) return false;
+
+    // Angular creates a component, directive, pipe or service itself, passing what DI injects: nobody else
+    // calls its constructor. A plain class is created with `new`, and its parameters are what to pass.
+    if (member.name === 'constructor') {
+        return !isTemplated && entry.entryType !== EntryType.Pipe && !isService && !!params?.length;
+    }
+
+    return !member.memberTags.includes(MemberTags.Protected) || !!isAbstract || (!isTemplated && !!description?.trim());
 }
