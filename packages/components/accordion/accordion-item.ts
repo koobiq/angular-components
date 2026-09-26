@@ -236,6 +236,9 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
 
     /** Emits the expanded state and propagates it to the siblings, the content and the saved state. */
     private reportExpanded(): void {
+        // First: a handler below may run change detection, and the content pins its height before `data-state` flips.
+        this.content()?.toggle();
+
         this.expandedChange.emit(this._expanded);
 
         if (this._expanded) {
@@ -250,8 +253,6 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
             // TODO: The 'emit' function requires a mandatory void argument
             this.closed.emit();
         }
-
-        this.content()?.toggle();
 
         this.accordion.saveState();
 

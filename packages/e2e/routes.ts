@@ -16,7 +16,7 @@ import {
     E2eScrollbarViewportBoundId,
     E2eScrollbarVirtualScroll
 } from 'packages/components/scrollbar/e2e';
-import { E2eAccordionStates } from '../components/accordion/e2e';
+import { E2eAccordionContentPanel, E2eAccordionStates } from '../components/accordion/e2e';
 import {
     E2eActionsPanelGlobalOverlayContainer,
     E2eActionsPanelWithOverlayContainer
@@ -325,6 +325,7 @@ const components: Record<string, Type<unknown>> = {
     E2eClampedTextStateAndStyle,
     E2eClampedTextStates,
     E2eAccordionStates,
+    E2eAccordionContentPanel,
     E2eTextareaStates,
     E2eTextareaGrowBehavior,
     E2eTextareaGrowMaxRows,
