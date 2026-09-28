@@ -2,7 +2,7 @@ import { Dir } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkScrollable, ScrollDispatcher, ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     createMouseEvent,
@@ -20,6 +20,9 @@ import {
     kbqScrollbarOptionsProvider,
     KbqScrollbarViewport
 } from './scrollbar';
+
+// The scrollbar measures on the next animation frame, which fakeAsync runs as a 16 ms timer.
+const tickFrame = (): void => tick(16);
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers });
@@ -358,6 +361,17 @@ describe(KbqScrollbar.name, () => {
         const getViewportEl = (fixture: ComponentFixture<TestScrollbarTrackVisibility>): HTMLElement =>
             fixture.componentInstance.scrollbar().nativeElement;
 
+        // waitForAsync waits for every pending task, not only those inside NgZone. A scrollbar that kept polling
+        // would leave a frame queued for as long as it lived, and this test would time out; fakeAsync would not
+        // notice, since it does not track pending animation frames.
+        it('lets waitForAsync settle once it has measured', waitForAsync(async () => {
+            const fixture = createComponent(TestScrollbarTrackVisibility);
+
+            await fixture.whenStable();
+
+            expect(fixture.nativeElement.querySelector('kbq-scrollbar-track')).not.toBeNull();
+        }));
+
         it('shows only the vertical bar when content overflows vertically only', fakeAsync(() => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
@@ -368,13 +382,11 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 100
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).not.toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).toBeNull();
-
-            discardPeriodicTasks();
         }));
 
         it('shows only the horizontal bar when content overflows horizontally only', fakeAsync(() => {
@@ -387,13 +399,11 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 500
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).not.toBeNull();
-
-            discardPeriodicTasks();
         }));
 
         it('marks both bars _has-horizontal/_has-vertical when both axes overflow', fakeAsync(() => {
@@ -406,13 +416,11 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 500
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_has-horizontal')).not.toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_has-vertical')).not.toBeNull();
-
-            discardPeriodicTasks();
         }));
 
         it('shows no bars when content does not overflow, even in "always" mode', fakeAsync(() => {
@@ -425,13 +433,11 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 100
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__thumb')).toBeNull();
-
-            discardPeriodicTasks();
         }));
 
         it('paints no bar for an axis the browser refuses to scroll, however much it overflows', fakeAsync(() => {
@@ -453,13 +459,11 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 200
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).toBeNull();
-
-            discardPeriodicTasks();
         }));
 
         it('paints no bar for a box left at the initial overflow, which is not a scroll container', fakeAsync(() => {
@@ -478,12 +482,10 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 200
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
-
-            discardPeriodicTasks();
         }));
 
         it('keeps the bar on the axis that is still scrollable when only the other one is hidden', fakeAsync(() => {
@@ -500,13 +502,11 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 200
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).not.toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).toBeNull();
-
-            discardPeriodicTasks();
         }));
 
         it('flashScrollIndicators paints no bar when the content cannot overflow', fakeAsync(() => {
@@ -531,7 +531,7 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 100
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             fixture.componentInstance.scrollbar().flashScrollIndicators();
@@ -540,8 +540,6 @@ describe(KbqScrollbar.name, () => {
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__thumb')).toBeNull();
-
-            discardPeriodicTasks();
         }));
 
         it('mirrors the viewport clientHeight into block-size/margin-block-end, one pixel short', fakeAsync(() => {
@@ -556,8 +554,6 @@ describe(KbqScrollbar.name, () => {
 
             expect(trackEl.style.blockSize).toBe('49px');
             expect(trackEl.style.marginBlockEnd).toBe('-49px');
-
-            discardPeriodicTasks();
         }));
 
         it('keeps the track layout-neutral on a zero-sized viewport instead of leaving a positive end margin', fakeAsync(() => {
@@ -578,8 +574,6 @@ describe(KbqScrollbar.name, () => {
             expect(trackEl.style.minInlineSize).toBe('0px');
             expect(trackEl.style.maxInlineSize).toBe('0px');
             expect(trackEl.style.marginInlineEnd).toBe('0px');
-
-            discardPeriodicTasks();
         }));
 
         it('writes no inline geometry until the ResizeObserver emits', fakeAsync(() => {
@@ -596,8 +590,6 @@ describe(KbqScrollbar.name, () => {
             expect(trackEl.style.maxInlineSize).toBe('');
             expect(trackEl.style.marginBlockEnd).toBe('');
             expect(trackEl.style.marginInlineEnd).toBe('');
-
-            discardPeriodicTasks();
         }));
 
         it('lifts the track over the viewport start padding on both axes so it spans the padding box, flush and without shifting content', fakeAsync(() => {
@@ -628,8 +620,6 @@ describe(KbqScrollbar.name, () => {
             expect(trackEl.style.marginInlineStart).toBe('-6px');
             expect(trackEl.style.insetInlineStart).toBe('-6px');
             expect(trackEl.style.marginInlineEnd).toBe('-23px');
-
-            discardPeriodicTasks();
         }));
 
         it('toggles kbq-scrollbar-track_revealed while scrolling and clears it after scrolling stops', fakeAsync(() => {
@@ -645,8 +635,6 @@ describe(KbqScrollbar.name, () => {
             tick(1000);
             fixture.detectChanges();
             expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
-
-            discardPeriodicTasks();
         }));
 
         it('flashScrollIndicators() reveals the track and clears it after hideDelay, without any scroll', fakeAsync(() => {
@@ -663,8 +651,6 @@ describe(KbqScrollbar.name, () => {
             tick(1000);
             fixture.detectChanges();
             expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
-
-            discardPeriodicTasks();
         }));
 
         it('is inserted as the first child of the scrollable element', () => {
@@ -700,7 +686,7 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 100
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             return {
@@ -719,8 +705,6 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).not.toHaveBeenCalled();
-
-            discardPeriodicTasks();
         }));
 
         it('leaves a click untouched when no gesture started on the bar', fakeAsync(() => {
@@ -730,8 +714,6 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-
-            discardPeriodicTasks();
         }));
 
         it('swallows only the gesture’s own click; a later unrelated click reaches the host', fakeAsync(() => {
@@ -744,8 +726,6 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-
-            discardPeriodicTasks();
         }));
 
         it('arms on the gesture mouseup no matter how long the drag lasts', fakeAsync(() => {
@@ -758,8 +738,6 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).not.toHaveBeenCalled();
-
-            discardPeriodicTasks();
         }));
 
         it('does not swallow a click when the gesture produced no mouseup (released off-window)', fakeAsync(() => {
@@ -770,8 +748,6 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-
-            discardPeriodicTasks();
         }));
 
         it('drops the suppressor after mouseup when no click follows it', fakeAsync(() => {
@@ -785,8 +761,6 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-
-            discardPeriodicTasks();
         }));
 
         it('drops the armed suppressor when the track is destroyed mid-gesture', fakeAsync(() => {
@@ -801,8 +775,6 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-
-            discardPeriodicTasks();
         }));
     });
 
@@ -833,7 +805,7 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 300
             });
 
-            tick(300);
+            tickFrame();
             fixture.detectChanges();
 
             const bar = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
@@ -858,8 +830,6 @@ describe(KbqScrollbar.name, () => {
             expect(thumb.style.top).not.toBe('');
             expect(thumb.style.height).not.toBe('');
             expect(thumb.style.insetInlineStart).toBe('');
-
-            discardPeriodicTasks();
         }));
 
         it('applies insetInlineStart/width to a horizontal thumb, not top/height (orientation forwarding)', fakeAsync(() => {
@@ -872,8 +842,6 @@ describe(KbqScrollbar.name, () => {
             expect(thumb.style.insetInlineStart).not.toBe('');
             expect(thumb.style.width).not.toBe('');
             expect(thumb.style.top).toBe('');
-
-            discardPeriodicTasks();
         }));
 
         it('drags the vertical thumb to update the viewport scrollTop, not scrollLeft', fakeAsync(() => {
@@ -893,8 +861,6 @@ describe(KbqScrollbar.name, () => {
 
             expect(viewport.scrollTop).toBe(100);
             expect(viewport.scrollLeft).toBe(0);
-
-            discardPeriodicTasks();
         }));
 
         it('jumps to the click position when clicking the track, not the thumb', fakeAsync(() => {
@@ -908,8 +874,6 @@ describe(KbqScrollbar.name, () => {
             tick();
 
             expect(viewport.scrollTop).toBe(100);
-
-            discardPeriodicTasks();
         }));
 
         // Clicking the middle of the track lands in the middle of the scroll range whatever the thumb
@@ -927,8 +891,6 @@ describe(KbqScrollbar.name, () => {
                 tick();
 
                 expect(viewport.scrollTop).toBe(100);
-
-                discardPeriodicTasks();
             })
         );
 
@@ -950,8 +912,6 @@ describe(KbqScrollbar.name, () => {
                 tick();
 
                 expect(viewport.scrollTop).toBe(100);
-
-                discardPeriodicTasks();
             })
         );
 
@@ -972,8 +932,6 @@ describe(KbqScrollbar.name, () => {
 
             expect(viewport.scrollLeft).toBe(100);
             expect(viewport.scrollTop).toBe(0);
-
-            discardPeriodicTasks();
         }));
 
         it('negates the horizontal offset in RTL when clicking the track', fakeAsync(() => {
@@ -998,8 +956,6 @@ describe(KbqScrollbar.name, () => {
             // Mirrors the LTR "jumps to the click position" test's +100, negated: RTL measures the
             // click offset from the track's right edge instead of its left.
             expect(viewport.scrollLeft).toBe(-100);
-
-            discardPeriodicTasks();
         }));
 
         it('centers the thumb under the pointer when clicking the horizontal track', fakeAsync(() => {
@@ -1013,8 +969,6 @@ describe(KbqScrollbar.name, () => {
             tick();
 
             expect(viewport.scrollLeft).toBe(100);
-
-            discardPeriodicTasks();
         }));
 
         it('centers the thumb under the pointer when clicking the horizontal track in RTL', fakeAsync(() => {
@@ -1039,8 +993,6 @@ describe(KbqScrollbar.name, () => {
             // Half the thumb is added back towards the track's right edge, mirroring the LTR case:
             // subtracting it instead would overshoot to -150.
             expect(viewport.scrollLeft).toBe(-100);
-
-            discardPeriodicTasks();
         }));
 
         it('detects RTL from a bare dir="rtl" ancestor without CDK Dir/BidiModule', fakeAsync(() => {
@@ -1065,8 +1017,6 @@ describe(KbqScrollbar.name, () => {
             tick();
 
             expect(viewport.scrollLeft).toBe(-100);
-
-            discardPeriodicTasks();
         }));
 
         it('reserves top-offset room for the CSS-enforced min thumb size on very long content', fakeAsync(() => {
@@ -1081,8 +1031,6 @@ describe(KbqScrollbar.name, () => {
             viewport.dispatchEvent(new Event('scroll'));
 
             expect(parseFloat(thumb.style.top)).toBeCloseTo(62, 5);
-
-            discardPeriodicTasks();
         }));
 
         describe('ARIA', () => {
@@ -1091,8 +1039,6 @@ describe(KbqScrollbar.name, () => {
                 const { thumb } = getThumbElements(fixture, 'vertical');
 
                 expect(thumb.getAttribute('role')).toBe('scrollbar');
-
-                discardPeriodicTasks();
             }));
 
             it.each<['vertical' | 'horizontal']>([['vertical'], ['horizontal']])(
@@ -1102,8 +1048,6 @@ describe(KbqScrollbar.name, () => {
                     const { thumb } = getThumbElements(fixture, orientation);
 
                     expect(thumb.getAttribute('aria-orientation')).toBe(orientation);
-
-                    discardPeriodicTasks();
                 })
             );
 
@@ -1113,8 +1057,6 @@ describe(KbqScrollbar.name, () => {
 
                 expect(viewport.id).not.toBe('');
                 expect(thumb.getAttribute('aria-controls')).toBe(viewport.id);
-
-                discardPeriodicTasks();
             }));
 
             it('sets a fixed 0/100 aria-valuemin/aria-valuemax percentage range', fakeAsync(() => {
@@ -1123,8 +1065,6 @@ describe(KbqScrollbar.name, () => {
 
                 expect(thumb.getAttribute('aria-valuemin')).toBe('0');
                 expect(thumb.getAttribute('aria-valuemax')).toBe('100');
-
-                discardPeriodicTasks();
             }));
 
             it('sets aria-valuenow when the thumb is created', fakeAsync(() => {
@@ -1132,8 +1072,6 @@ describe(KbqScrollbar.name, () => {
                 const { thumb } = getThumbElements(fixture, 'vertical');
 
                 expect(thumb.getAttribute('aria-valuenow')).not.toBeNull();
-
-                discardPeriodicTasks();
             }));
 
             it('reflects the scrolled percentage in aria-valuenow', fakeAsync(() => {
@@ -1151,8 +1089,6 @@ describe(KbqScrollbar.name, () => {
                 setMetrics(viewport, { scrollTop: 200, scrollHeight: 300, clientHeight: 100 });
                 viewport.dispatchEvent(new Event('scroll'));
                 expect(thumb.getAttribute('aria-valuenow')).toBe('100');
-
-                discardPeriodicTasks();
             }));
 
             it('defaults aria-valuenow to 0 rather than NaN when there is nothing to scroll', fakeAsync(() => {
@@ -1163,8 +1099,6 @@ describe(KbqScrollbar.name, () => {
                 viewport.dispatchEvent(new Event('scroll'));
 
                 expect(thumb.getAttribute('aria-valuenow')).toBe('0');
-
-                discardPeriodicTasks();
             }));
         });
     });

@@ -515,7 +515,6 @@ describe('KbqDropdown', () => {
         dispatchMouseEvent(triggerEl, 'touchstart');
         triggerEl.click();
         fixture.detectChanges();
-        // The scrollbar's animation-frame loop prevents `flush()` from draining the queue.
         tick(500);
 
         const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
