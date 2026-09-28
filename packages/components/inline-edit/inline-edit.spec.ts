@@ -1274,8 +1274,7 @@ describe('KbqInlineEdit', () => {
             const fixture = setup(TestWithSurroundingControls);
             const input = openEditor(fixture);
 
-            // The panel is an overlay at the end of the body, so leaving the move to the browser would
-            // restart the sequence at the top of the document instead.
+            // Left to the browser, a Tab from the detached panel would restart the sequence at the top.
             const tabEvent = dispatchTab(input);
 
             fixture.detectChanges();
@@ -1301,8 +1300,7 @@ describe('KbqInlineEdit', () => {
             const { debugElement } = fixture;
             const middle = getNamedButton(debugElement, 'middle');
 
-            // `isTabbable` reads attributes only, so a hidden control passes it and then takes no focus.
-            // jsdom focuses one happily, hence the stub — a real `display: none` needs the browser.
+            // A hidden control passes `isTabbable` and then takes no focus; jsdom focuses one happily, hence the stub.
             jest.spyOn(middle, 'focus').mockImplementation(() => {});
 
             const input = openEditor(fixture);
@@ -1320,8 +1318,7 @@ describe('KbqInlineEdit', () => {
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
             const input = openEditor(fixture);
 
-            // Stands in for a select stepping through its own footer: it moves the focus and prevents the
-            // default, and the key still reaches the panel because it does not stop propagation.
+            // Stands in for a select stepping through its own footer: moves the focus and prevents the default.
             input.addEventListener('keydown', (event) => {
                 event.preventDefault();
                 getNamedButton(debugElement, 'after').focus();
@@ -1342,8 +1339,7 @@ describe('KbqInlineEdit', () => {
 
             expect(document.activeElement).toBe(input);
 
-            // A select closing its panel prevents the default and focuses itself again: the key has not
-            // been spent on a focus move, so it still takes the user out of the field.
+            // A select closing its panel keeps the focus, so the key was not spent and still leaves the field.
             input.addEventListener('keydown', (event) => event.preventDefault());
 
             dispatchTab(input);
@@ -1360,8 +1356,7 @@ describe('KbqInlineEdit', () => {
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
-            // Opened by pointer, then left with the key: the chain goes around the path that consumes
-            // the origin, so nothing but this reset keeps it out of the next session.
+            // Opened by pointer, left with the key: the chain skips the path that would consume the origin.
             dispatchTab(openEditor(fixture));
             fixture.detectChanges();
             tick();
@@ -1389,8 +1384,7 @@ describe('KbqInlineEdit', () => {
 
             const control = getOverlayElement()!.querySelector<HTMLTextAreaElement>('textarea')!;
 
-            // The select path cannot prevent the default, so it runs after the browser has already moved
-            // focus out of the panel — which is the state this reproduces.
+            // Reproduces the select path, which runs after the browser has already moved focus out of the panel.
             control.blur();
 
             expect(document.activeElement).not.toBe(control);
@@ -1418,8 +1412,7 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
             tick();
 
-            // Nothing was saved, so the editor stays open — and focus has to stay in it rather than being
-            // left wherever the browser would have moved it.
+            // Nothing was saved, so the editor stays open and the focus stays in it.
             expect(tabEvent.defaultPrevented).toBe(true);
             expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
             expect(document.activeElement).toBe(control);
@@ -2192,8 +2185,7 @@ describe('KbqInlineEdit', () => {
         }));
 
         it('should close edit mode on tab out without waiting for the request', fakeAsync(() => {
-            // The editor closes with the key, not with the response: focus reaches the next field the same
-            // way it does after a synchronous save, long before the request settles.
+            // The editor closes with the key, not with the response, long before the request settles.
             const fixture = setup(TestWithSaveHandlerList);
             const { componentInstance } = fixture;
             const [first] = fixture.debugElement.queryAll(By.directive(KbqInlineEdit));

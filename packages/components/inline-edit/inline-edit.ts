@@ -843,9 +843,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     }
 
     /**
-     * Tab out of the panel's first or last tabbable control saves and moves on to the tab stop next to
-     * the field. The boundary is resolved against the panel itself, so the overlay holds no extra tab
-     * stops of its own.
+     * Tab off the panel's first or last tabbable control saves and moves to the tab stop next to the field.
      * @docs-private
      */
     protected onPanelTab(event: Event, panel: HTMLElement, backwards: boolean): void {
@@ -856,16 +854,10 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         if (!boundary || boundary !== event.target) return;
 
-        // A control that answers Tab by moving focus itself — a select stepping through its own footer —
-        // has spent the key already, and the key still reaches this handler because it prevents the
-        // default without stopping propagation. Saving and closing here would pull the editor out from
-        // under that move. A control that only prevented the default and kept the focus, a select
-        // closing its panel, is still leaving the field with this key.
+        // A control that moved the focus itself has spent the key; one that only prevented the default has not.
         if (event.defaultPrevented && this.document.activeElement !== boundary) return;
 
-        // The browser would move focus itself once this handler returns, but the panel — an overlay at the
-        // end of the body — is detached before that happens, and a sequence that starts from a detached
-        // element restarts at the top of the document. So the move is made here instead.
+        // The panel detaches before the browser resolves the key, and Tab from a detached element restarts at the top.
         event.preventDefault();
 
         this.saveAndFocusAdjacentTabStop(event, backwards);
@@ -885,12 +877,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         this.save($event);
     }
 
-    /**
-     * A single-value select renders its options in an overlay of its own, so focus leaves this panel
-     * entirely and the panel's `(keydown.tab)` can never fire. The select also closes on Tab, which
-     * destroys focus instead of moving it — so the key is caught here, on the document, and torn down
-     * with the panel.
-     */
+    /** A select's options sit in an overlay of their own, so the panel's `(keydown.tab)` never fires. */
     private watchTabOutsideThePanel(): void {
         const select = this.selectRef();
 
@@ -933,21 +920,14 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         return this.interactivityChecker.isTabbable(element) && !this.interactivityChecker.isDisabled(element);
     }
 
-    /**
-     * Hands focus to the tab stop next to the field and reports what took it, or `null` when nothing
-     * did. Every candidate is offered the focus rather than tested for visibility: `isTabbable` reads
-     * attributes only, so a hidden control — a collapsed panel's button, a control in an `inert`
-     * subtree — passes it and then silently refuses `focus()`, which would leave focus on `<body>`,
-     * the one outcome this move exists to prevent.
-     */
+    /** Offers focus to each next tab stop in turn: `isTabbable` passes hidden controls that then refuse it. */
     private focusAdjacentTabStop(backwards: boolean): HTMLElement | null {
         let candidate = this.findAdjacentTabStop(backwards, this.elementRef.nativeElement);
 
         while (candidate) {
             this.focusMonitor.focusVia(candidate, 'keyboard');
 
-            // `contains` rather than an equality check: a candidate is free to hand the focus to a
-            // control of its own, and that still counts as the key having landed.
+            // `contains` rather than equality: a candidate may hand the focus to a control of its own.
             if (candidate.contains(this.document.activeElement)) return candidate;
 
             candidate = this.findAdjacentTabStop(backwards, candidate);
@@ -956,13 +936,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         return null;
     }
 
-    /**
-     * The tab stop next to `from` in the given direction, found by walking the document out of the
-     * host. The panel's own position says nothing about it — the overlay sits at the end of the body —
-     * and collecting every tabbable element of the page would make each Tab pay for the whole document.
-     * The walk reads tab order as document order, which holds for every page that leaves `tabindex`
-     * at `0` and `-1`.
-     */
+    /** The tab stop next to `from` in document order, walked out of the host rather than collected page-wide. */
     private findAdjacentTabStop(backwards: boolean, from: Node): HTMLElement | null {
         const host = this.elementRef.nativeElement;
         const overlayElement = this.overlayDir()?.overlayRef?.overlayElement;
@@ -973,16 +947,13 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         const step = (): Node | null => (backwards ? walker.previousNode() : walker.nextNode());
 
         for (let node = step(); node; node = step()) {
-            // CDK's checker and `focusVia` are typed for `HTMLElement`; an SVG tab stop answers both
-            // the same way, so the walk keeps it rather than dropping it on its interface.
+            // CDK's checker and `focusVia` are typed for `HTMLElement`; an SVG tab stop answers both the same.
             const element = node as HTMLElement;
 
-            // Forwards the walk descends into the field itself; backwards it climbs through its ancestors,
-            // and a tab stop among those is exactly where Shift+Tab belongs, so only the subtree is skipped.
+            // Only the subtree: backwards the walk climbs the ancestors, where a tab stop is where Shift+Tab belongs.
             if (host.contains(element) || overlayElement?.contains(element) || !this.isTabStop(element)) continue;
 
-            // An overlay of something else — another field's panel, a dialog — is not part of the sequence
-            // this field is leaving, unless the field itself lives in one.
+            // Another overlay — a neighbour's panel, a dialog — is not part of the sequence this field is leaving.
             const overlayContainer = element.closest('.cdk-overlay-container');
 
             if (overlayContainer && !overlayContainer.contains(host)) continue;
@@ -1017,20 +988,12 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         });
     }
 
-    /**
-     * Focuses the tab stop of view mode: the anchor beside interactive content, the view content
-     * otherwise. Read at call time rather than held across the destroy — the focus anchor is a different
-     * node on every return to view mode, and the one captured on the way in is already detached.
-     */
+    /** Focuses the tab stop of view mode, resolved at call time: the focus anchor is a new node on every return. */
     private focusViewTabStop(origin: FocusOrigin): void {
         this.focusMonitor.focusVia(this.focusAnchor()?.nativeElement ?? this.viewContent().nativeElement, origin);
     }
 
-    /**
-     * Brings focus back into the editor a rejected value keeps open. `onPanelTab` prevents the default
-     * and leaves focus on the control the user was in, so this only has work to do on the select path,
-     * which runs a task after the browser has already moved focus out of a panel that was closing.
-     */
+    /** Brings focus back into the editor a rejected value keeps open; only the select path can lose it. */
     private focusRejectedEditor(): void {
         const panel = this.overlayDir()?.overlayRef?.overlayElement;
 
@@ -1055,16 +1018,11 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         return !!match && this.elementRef.nativeElement.contains(match);
     }
 
-    /**
-     * Saves and hands focus to the tab stop next to the field, opening it when that tab stop belongs to
-     * a neighbouring inline edit. A value the editor rejects keeps it open and keeps the focus in it
-     * instead: the field is not left behind with the key.
-     */
+    /** Saves and hands focus to the tab stop next to the field, opening it when it belongs to another inline edit. */
     private saveAndFocusAdjacentTabStop(event: Event, backwards: boolean): void {
         this.chainingToNextInlineEdit = true;
 
-        // A handler of the application's that throws must not leave the flag set: `restoreFocus()` reads
-        // it, and a stuck one would drop focus on `<body>` on every later close of this field.
+        // A throwing handler of the application's must not leave the flag set: `restoreFocus()` reads it.
         try {
             this.save(event);
         } finally {
@@ -1077,28 +1035,23 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             return;
         }
 
-        // `restoreFocus()` is what normally consumes it, and the chain goes around that path — left
-        // behind, the origin of this editing session would decide the focus style of the next one.
+        // The chain goes around `restoreFocus()`, which normally consumes it, and into the next session.
         this.editModeOrigin = null;
 
-        // Deferred until the panel is detached and view mode is rendered: until then the field's own tab
-        // stop — the fallback — is either missing or still the overlay's.
+        // Deferred until view mode is rendered: until then the field's own tab stop — the fallback — is missing.
         setTimeout(() => {
             if (!this.elementRef.nativeElement.isConnected) return;
 
             const target = this.focusAdjacentTabStop(backwards);
 
-            // Nothing took the focus: the field is the last tab stop of the page, or everything past it
-            // is hidden. Taking its own focus back beats leaving it on `<body>`, where the next Tab
-            // would start the sequence over from the top.
+            // Nothing took the focus: taking it back beats leaving it on `<body>`, where the next Tab starts over.
             if (!target) {
                 this.focusViewTabStop('keyboard');
 
                 return;
             }
 
-            // The tab stop of an interactive view is the hidden anchor beside the content, so the
-            // neighbour is resolved from the closest host element rather than from the tab stop itself.
+            // An interactive view's tab stop is the anchor beside it, so the neighbour comes from the host element.
             const host = target.closest<HTMLElement>(`.${baseClass}`);
             const next = host ? inlineEditRegistry.get(host) : undefined;
 
