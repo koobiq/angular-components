@@ -239,12 +239,20 @@
         @include kbq-typography-level-to-styles-css-variables(typography, mono-normal-strong);
     }
 
+    .kbq-mono-normal-medium {
+        @include kbq-typography-level-to-styles-css-variables(typography, mono-normal-medium);
+    }
+
     .kbq-mono-compact {
         @include kbq-typography-level-to-styles-css-variables(typography, mono-compact);
     }
 
     .kbq-mono-compact-strong {
         @include kbq-typography-level-to-styles-css-variables(typography, mono-compact-strong);
+    }
+
+    .kbq-mono-codeblock {
+        @include kbq-typography-level-to-styles-css-variables(typography, mono-codeblock);
     }
 
     .kbq-tabular-big {
