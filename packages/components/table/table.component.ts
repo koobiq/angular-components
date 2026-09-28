@@ -1,14 +1,23 @@
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { Platform } from '@angular/cdk/platform';
 import {
     ChangeDetectionStrategy,
     Component,
-    Directive,
+    ElementRef,
     ViewEncapsulation,
     booleanAttribute,
-    contentChild,
-    input
+    effect,
+    inject,
+    input,
+    signal
 } from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
+import { kbqGetElementHeight } from '@koobiq/components/core';
 
+/**
+ * A styling layer over a native `<table>`: it applies the library's spacing, typography and colors and
+ * leaves the semantics to the platform. Sorting, resizing and virtual scrolling are out of scope — only
+ * standard HTML table capabilities are available.
+ */
 @Component({
     selector: 'table[kbq-table]',
     template: '<ng-content />',
@@ -19,22 +28,66 @@ import { KbqButton } from '@koobiq/components/button';
         class: 'kbq-table',
         '[class.kbq-table_bordered]': 'border()',
         '[class.kbq-table_disable-hover]': 'disableHover()',
-        '[class.kbq-table_sticky-header]': 'stickyHeader()'
+        '[class.kbq-table_sticky-header]': 'stickyHeader()',
+        '[style.--kbq-table-size-sticky-header-height.px]': 'stickyHeaderHeight()'
     },
     exportAs: 'kbqTable'
 })
 export class KbqTable {
-    readonly border = input(false, { transform: booleanAttribute });
-    readonly disableHover = input(false, { transform: booleanAttribute });
-    readonly stickyHeader = input(false, { transform: booleanAttribute });
-}
+    private readonly elementRef = inject<ElementRef<HTMLTableElement>>(ElementRef);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly platform = inject(Platform);
 
-@Directive({
-    selector: 'kbq-table td',
-    host: {
-        '[class.kbq-table-cell_has-button]': '!!button()'
+    /**
+     * Whether a line is drawn under every body row. Toggles the `kbq-table_bordered` class.
+     *
+     * @default false
+     */
+    readonly border = input(false, { transform: booleanAttribute });
+
+    /**
+     * Whether the background change on row hover is suppressed. Toggles the `kbq-table_disable-hover`
+     * class. Use it when rows are not interactive and the highlight would be misleading.
+     *
+     * @default false
+     */
+    readonly disableHover = input(false, { transform: booleanAttribute });
+
+    /**
+     * Whether the header stays visible while the table scrolls. Toggles the `kbq-table_sticky-header`
+     * class.
+     *
+     * @default false
+     */
+    readonly stickyHeader = input(false, { transform: booleanAttribute });
+
+    /**
+     * Measured height of the pinned header, published as `--kbq-table-size-sticky-header-height`. Body
+     * cells and the focusable content inside them use it as `scroll-margin-block-start`, so scrolling a
+     * control into view does not leave it under the header (WCAG 2.2 SC 2.4.11).
+     */
+    protected readonly stickyHeaderHeight = signal<number | null>(null);
+
+    constructor() {
+        // `tHead` is a plain DOM read, so the effect sees whichever `<thead>` exists when it runs:
+        // the one projected into the table by its first render. That covers a table rendered behind
+        // `@if` or `@defer` — a new instance runs this effect after its content is in place — and a
+        // `<thead>` whose cells or height change later, which the `ResizeObserver` below reports.
+        // Swapping the `<thead>` element itself under a living table is not supported.
+        effect((onCleanup) => {
+            const head = this.stickyHeader() ? this.elementRef.nativeElement.tHead : null;
+
+            if (!head || !this.platform.isBrowser) {
+                this.stickyHeaderHeight.set(null);
+
+                return;
+            }
+
+            const subscription = this.resizeObserver
+                .observe(head)
+                .subscribe(() => this.stickyHeaderHeight.set(kbqGetElementHeight(head)));
+
+            onCleanup(() => subscription.unsubscribe());
+        });
     }
-})
-export class KbqTableCellContent {
-    readonly button = contentChild(KbqButton);
 }

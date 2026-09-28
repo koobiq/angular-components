@@ -12,6 +12,7 @@
         "behaviour",
         "bento",
         "codeowners",
+        "combinators",
         "commitlint",
         "cvedetails",
         "datepicker",

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 
 /**
@@ -14,47 +13,31 @@ import { KbqTableModule } from '@koobiq/components/table';
         <table kbq-table style="margin-bottom: 32px">
             <thead>
                 <tr>
-                    <th>Клиент</th>
-                    <th>Значение</th>
-                    <th>Зарегистрирован</th>
+                    <th>Client</th>
+                    <th>Event</th>
+                    <th>Registered</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>КВАРЦ Групп</td>
-                    <td>Identity Theft</td>
-                    <td>8 июля, 14:31</td>
-                </tr>
-                <tr>
-                    <td>Верхнетагильская ГРЭС</td>
-                    <td>DDoS</td>
-                    <td>4 дек, 16:11</td>
-                </tr>
-                <tr>
-                    <td>КВАРЦ Групп</td>
-                    <td>HIPS Alert</td>
-                    <td>4 дек, 16:11</td>
-                </tr>
-                <tr>
-                    <td>ТГК-11</td>
-                    <td>Spam Attack</td>
-                    <td>4 дек, 16:11</td>
-                </tr>
-                <tr>
-                    <td>Верхнетагильская ГРЭС</td>
-                    <td>Vulnerability Exploitation</td>
-                    <td>4 дек, 16:11</td>
-                </tr>
-                <tr>
-                    <td>КВАРЦ Групп</td>
-                    <td>Complex Attack</td>
-                    <td>4 дек, 16:11</td>
-                </tr>
+                @for (row of rows; track $index) {
+                    <tr>
+                        <td>{{ row.client }}</td>
+                        <td>{{ row.event }}</td>
+                        <td>{{ row.registered }}</td>
+                    </tr>
+                }
             </tbody>
         </table>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableOverviewExample {
-    protected readonly colors = KbqComponentColors;
+    protected readonly rows = [
+        { client: 'Company 1', event: 'Identity Theft', registered: '8 Jul, 14:31' },
+        { client: 'Company 2', event: 'DDoS', registered: '4 Dec, 16:11' },
+        { client: 'Company 1', event: 'HIPS Alert', registered: '4 Dec, 16:11' },
+        { client: 'Company 3', event: 'Spam Attack', registered: '4 Dec, 16:11' },
+        { client: 'Company 2', event: 'Vulnerability Exploitation', registered: '4 Dec, 16:11' },
+        { client: 'Company 1', event: 'Complex Attack', registered: '4 Dec, 16:11' }
+    ];
 }

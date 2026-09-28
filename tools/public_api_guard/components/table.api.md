@@ -5,42 +5,28 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/a11y';
-import * as i2 from '@angular/cdk/platform';
-import { KbqButton } from '@koobiq/components/button';
 
-// @public (undocumented)
+// @public
 export class KbqTable {
-    // (undocumented)
+    constructor();
     readonly border: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
     readonly disableHover: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
     readonly stickyHeader: i0.InputSignalWithTransform<boolean, unknown>;
+    protected readonly stickyHeaderHeight: i0.WritableSignal<number | null>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTable, "table[kbq-table]", ["kbqTable"], { "border": { "alias": "border"; "required": false; "isSignal": true; }; "disableHover": { "alias": "disableHover"; "required": false; "isSignal": true; }; "stickyHeader": { "alias": "stickyHeader"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTable, never>;
 }
 
-// @public (undocumented)
-export class KbqTableCellContent {
-    // (undocumented)
-    readonly button: i0.Signal<KbqButton | undefined>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTableCellContent, "kbq-table td", never, {}, {}, ["button"], never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableCellContent, never>;
-}
-
-// @public (undocumented)
+// @public
 export class KbqTableModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTableModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, never, [typeof i1.A11yModule, typeof i2.PlatformModule, typeof KbqTable, typeof KbqTableCellContent], [typeof KbqTable, typeof KbqTableCellContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTableModule, never, [typeof KbqTable], [typeof KbqTable]>;
 }
 
 // (No @packageDocumentation comment for this package)
