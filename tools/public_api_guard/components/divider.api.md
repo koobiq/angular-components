@@ -9,10 +9,11 @@ import * as i0 from '@angular/core';
 // @public
 export class KbqDivider {
     readonly decorative: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly length: i0.InputSignalWithTransform<number | null, unknown>;
     readonly paddings: i0.InputSignalWithTransform<boolean, unknown>;
     readonly vertical: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDivider, "kbq-divider", never, { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "paddings": { "alias": "paddings"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDivider, "kbq-divider", never, { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "paddings": { "alias": "paddings"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "length": { "alias": "length"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDivider, never>;
 }

@@ -16,6 +16,16 @@ Add the `vertical` attribute in order to set whether or not the divider is verti
 
 <Example id="divider-vertical" />
 
+### Length
+
+A divider takes its length from the layout around it, which is what one spanning a container wants. Give it a `length`
+in pixels where it has to be shorter than its surroundings — between the buttons of a toolbar, say. The value applies
+along the line: it is the height of a vertical divider and the width of a horizontal one.
+
+```html
+<kbq-divider length="16" [vertical]="true" />
+```
+
 ### Spacing
 
 Both orientations space themselves from the content around them by default. Add `[paddings]="false"` for a divider that

@@ -1377,6 +1377,8 @@ The component also has separator semantics. It renders `role="separator"`, and `
 | `<kbq-divider role="…">`             | Drop it; the component renders `role="separator"`                     |
 | `<kbq-divider aria-orientation="…">` | Drop it; it follows `vertical`                                        |
 
+A new `length` input sets the divider's own size in pixels — its height when vertical, its width otherwise. It replaces reaching for a `height` in CSS to shorten a divider, which is what every caller in this repository had been doing.
+
 A comparison such as `divider.vertical === true` is the case worth hunting for. It keeps compiling and quietly compares against the signal itself, so it is always `false` and nothing complains.
 
 Reported by `divider-signals-and-aria`, which resolves a member access against the receiver's declared type — so a `vertical` on something that is not a `KbqDivider` is left alone, and a receiver whose type is only inferred is not recognised.

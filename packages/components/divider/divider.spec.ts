@@ -56,6 +56,37 @@ describe('KbqDivider', () => {
         });
     });
 
+    describe('length', () => {
+        it('should leave both axes to the layout by default', () => {
+            const divider = dividerOf(createFixture(DefaultDivider));
+
+            expect(divider.style.height).toBe('');
+            expect(divider.style.width).toBe('');
+        });
+
+        it('should size a vertical divider along its height', () => {
+            const divider = dividerOf(createFixture(ShortVerticalDivider));
+
+            expect(divider.style.height).toBe('16px');
+            expect(divider.style.width).toBe('');
+        });
+
+        it('should size a horizontal divider along its width', () => {
+            const divider = dividerOf(createFixture(ShortHorizontalDivider));
+
+            expect(divider.style.width).toBe('16px');
+            expect(divider.style.height).toBe('');
+        });
+
+        it('should ignore a value that is not a number', () => {
+            expect(dividerOf(createFixture(UnparsableLengthDivider)).style.height).toBe('');
+        });
+
+        it('should keep an explicit zero', () => {
+            expect(dividerOf(createFixture(ZeroLengthDivider)).style.height).toBe('0px');
+        });
+    });
+
     describe('a11y', () => {
         it('should expose a horizontal separator by default', () => {
             const divider = dividerOf(createFixture(DefaultDivider));
@@ -164,3 +195,35 @@ class DecorativeVerticalDivider {}
     `
 })
 class HiddenDivider {}
+
+@Component({
+    imports: [KbqDivider],
+    template: `
+        <kbq-divider length="16" [vertical]="true" />
+    `
+})
+class ShortVerticalDivider {}
+
+@Component({
+    imports: [KbqDivider],
+    template: `
+        <kbq-divider length="16" />
+    `
+})
+class ShortHorizontalDivider {}
+
+@Component({
+    imports: [KbqDivider],
+    template: `
+        <kbq-divider length="tall" [vertical]="true" />
+    `
+})
+class UnparsableLengthDivider {}
+
+@Component({
+    imports: [KbqDivider],
+    template: `
+        <kbq-divider [length]="0" [vertical]="true" />
+    `
+})
+class ZeroLengthDivider {}
