@@ -10,7 +10,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
         KbqDividerModule
     ],
     template: `
-        <kbq-divider style="margin: 20px; height: 50px" [vertical]="true" />
+        <kbq-divider style="margin: 20px" length="50" [vertical]="true" />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
