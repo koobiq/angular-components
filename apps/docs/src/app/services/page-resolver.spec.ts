@@ -24,7 +24,7 @@ class DocsCompiledPage {}
 
 const pages: DocsPages = { alert: { overview: { en: () => Promise.resolve({ default: DocsCompiledPage }) } } };
 
-const ALERT_API: DocsApiEntryPoint = { path: '@koobiq/components/alert', entries: [] };
+const ALERT_API: DocsApiEntryPoint = { path: '@koobiq/components/alert', groups: [] };
 
 const apiPages: DocsApiEntryPoints = { alert: () => Promise.resolve({ default: ALERT_API }) };
 

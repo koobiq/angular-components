@@ -24,7 +24,7 @@ import { normalizeFunctionFields } from './transforms/normalize-function-fields'
  * `llms-full.txt` carries. It is written the way the source declares the entry, not the way the compiler
  * resolves it: `input<boolean>(false)` rather than `InputSignalWithTransform<boolean, unknown>`, with the
  * selector in the decorator, where a template author looks for it. Host directives are left out: the list under
- * the signature shows the bindings they forward, each with the directive it comes from.
+ * the signature shows the bindings they forward.
  */
 
 const INDENT = '    ';
@@ -95,31 +95,59 @@ export function getEntryKind(entry: DocEntry): string {
     }
 }
 
-/** The kinds in the order the API tab lists entries: what a template uses first, plain types last. */
-const KIND_ORDER = [
-    'component',
-    'directive',
-    'pipe',
-    'service',
-    'class',
-    'abstract class',
-    'function',
-    'interface',
-    'type',
-    'enum',
-    'const',
-    'NgModule'
+/** Entries of the kinds a reader looks for together, which the API tab lists under a heading of their own. */
+export interface EntryGroup {
+    /** The id of the heading. The hyphen keeps it apart from the name of any entry, which is an identifier. */
+    id: string;
+    title: string;
+    kinds: readonly string[];
+}
+
+/**
+ * The groups in the order the API tab lists them: what a template uses first, plain types last. The kinds a template
+ * uses apart stay apart — a component is an element of its own, a directive an attribute of another — while those that
+ * differ in how they are declared share a group. An NgModule, which the tab does not list, is in none of them.
+ */
+export const ENTRY_GROUPS: readonly EntryGroup[] = [
+    { id: 'api-components', title: 'Components', kinds: ['component'] },
+    { id: 'api-directives', title: 'Directives', kinds: ['directive'] },
+    { id: 'api-pipes', title: 'Pipes', kinds: ['pipe'] },
+    { id: 'api-services', title: 'Services', kinds: ['service'] },
+    { id: 'api-classes', title: 'Classes', kinds: ['class', 'abstract class'] },
+    { id: 'api-functions', title: 'Functions', kinds: ['function'] },
+    { id: 'api-types', title: 'Types', kinds: ['interface', 'type'] },
+    { id: 'api-enums', title: 'Enums', kinds: ['enum'] },
+    { id: 'api-constants', title: 'Constants', kinds: ['const'] }
 ];
 
-/** Orders entries by kind (components and directives together), then by name. */
+const getEntryGroup = (entry: DocEntry): EntryGroup | undefined => {
+    const kind = getEntryKind(entry);
+
+    return ENTRY_GROUPS.find(({ kinds }) => kinds.includes(kind));
+};
+
+/** Orders entries by group, then by name; an entry in no group comes last. */
 export function compareEntries(a: DocEntry, b: DocEntry): number {
     const rank = (entry: DocEntry): number => {
-        const kind = getEntryKind(entry);
+        const group = getEntryGroup(entry);
 
-        return kind === 'directive' ? KIND_ORDER.indexOf('component') : KIND_ORDER.indexOf(kind);
+        return group ? ENTRY_GROUPS.indexOf(group) : ENTRY_GROUPS.length;
     };
 
     return rank(a) - rank(b) || a.name.localeCompare(b.name);
+}
+
+/**
+ * The entries in their groups, ordered, without the groups that have none and without the entries in no group — an
+ * NgModule. The API tab and `llms-full.txt` list them so.
+ */
+export function groupEntries(entries: DocEntry[]): { group: EntryGroup; entries: DocEntry[] }[] {
+    const sorted = [...entries].sort(compareEntries);
+
+    return ENTRY_GROUPS.map((group) => ({
+        group,
+        entries: sorted.filter((entry) => getEntryGroup(entry) === group)
+    })).filter(({ entries: grouped }) => grouped.length);
 }
 
 const isOptional = (member: { memberTags: MemberTags[] }): boolean => member.memberTags.includes(MemberTags.Optional);
@@ -230,49 +258,92 @@ function getDeclaredType(member: PropertyEntry): string {
 
 /**
  * The type a reader of the member list needs: the value an input takes, the payload an output emits, the
- * value a property holds, what a method returns. Nothing for a method returning `void`.
+ * value a property holds, what a method returns, `void` included. Nothing for a constructor.
  */
 export function getMemberDisplayType(member: MemberEntry): string {
     const property = member as PropertyEntry;
     const role = getMemberRole(member);
 
     if (role === 'method') {
-        const returnType = getSignatures(member as unknown as FunctionEntry)[0]?.returnType ?? '';
-
-        return returnType === 'void' || isConstructor(member) ? '' : returnType;
+        return isConstructor(member) ? '' : (getSignatures(member as unknown as FunctionEntry)[0]?.returnType ?? '');
     }
 
     if (member.memberType === MemberType.EnumItem) return (member as EnumMemberEntry).value ?? '';
 
     const signalType = getSignalApi(property) ? getSignalValueType(property) : undefined;
 
-    if (signalType) return signalType === 'void' ? '' : signalType;
+    if (signalType) return signalType;
 
     if (role === 'output') {
         const payload = typeArgumentsOf(getDeclaredType(property), ['EventEmitter', 'Observable', 'Subject'])?.[0];
 
-        return payload === 'void' ? '' : (payload ?? getDeclaredType(property));
+        return payload ?? getDeclaredType(property);
     }
 
     return getDeclaredType(property);
 }
 
-/** How a template writes the member: `[value]`, `(changed)`, `[(opened)]`; a method as `open()`. */
-export function getMemberDisplayName(member: MemberEntry): string {
+/** What a member is to a template: an input, an output, or a model, which a template binds both ways. */
+export type MemberBinding = 'input' | 'output' | 'model';
+
+/** How a template binds the member; nothing for a member it does not bind. */
+export function getMemberBinding(member: MemberEntry): MemberBinding | undefined {
     const { inputAlias, outputAlias } = member as PropertyEntry;
-    const input = inputAlias ?? member.name;
+
+    switch (getMemberRole(member)) {
+        case 'input':
+            return member.memberTags.includes(MemberTags.Output) && outputAlias === `${inputAlias ?? member.name}Change`
+                ? 'model'
+                : 'input';
+        case 'output':
+            return 'output';
+        default:
+            return undefined;
+    }
+}
+
+/**
+ * Whether an object may leave the member out: an optional field or method. A binding is not marked so — any
+ * input a template may leave unbound is optional to it — and is marked `required` otherwise.
+ */
+export function isOptionalMember(member: MemberEntry): boolean {
+    return isOptional(member) && !getMemberBinding(member);
+}
+
+/** The name a template binds the member by, which is the alias of a binding; a method as `open()`. */
+export function getMemberName(member: MemberEntry): string {
+    const { inputAlias, outputAlias } = member as PropertyEntry;
 
     switch (getMemberRole(member)) {
         case 'method':
-            return `${member.name}${isOptional(member) ? '?' : ''}()`;
+            return `${member.name}()`;
         case 'input':
-            return member.memberTags.includes(MemberTags.Output) && outputAlias === `${input}Change`
-                ? `[(${input})]`
-                : `[${input}]`;
+            return inputAlias ?? member.name;
         case 'output':
-            return `(${outputAlias ?? member.name})`;
+            return outputAlias ?? member.name;
         default:
-            return `${member.name}${isOptional(member) ? '?' : ''}`;
+            return member.name;
+    }
+}
+
+/**
+ * How a template writes the member: `[value]`, `(changed)`, `[(opened)]`; a method as `open()`, and an optional
+ * one the way its declaration marks it, as `label?` or `keys?()`.
+ */
+export function getMemberDisplayName(member: MemberEntry): string {
+    const name = getMemberName(member);
+
+    switch (getMemberBinding(member)) {
+        case 'input':
+            return `[${name}]`;
+        case 'model':
+            return `[(${name})]`;
+        case 'output':
+            return `(${name})`;
+        default:
+            if (!isOptional(member)) return name;
+
+            return getMemberRole(member) === 'method' ? `${member.name}?()` : `${member.name}?`;
     }
 }
 
@@ -328,6 +399,20 @@ export function orderMembers(members: MemberEntry[]): MemberEntry[] {
                 a.index - b.index
         )
         .map(({ member }) => member);
+}
+
+/**
+ * The members, each followed by the fields of the object literal type it is declared with, which the signature
+ * nests under it and a reader addresses by their path: `indent.vertical`.
+ */
+export function flattenMembers(members: MemberEntry[]): MemberEntry[] {
+    return members.flatMap((member) => [
+        member,
+        ...flattenMembers((member as PropertyEntry).members ?? []).map((field) => ({
+            ...field,
+            name: `${member.name}.${field.name}`
+        }))
+    ]);
 }
 
 /**
@@ -469,6 +554,15 @@ function renderMemberCode(member: MemberEntry): string[] {
     // `output()` it cannot bind, and it is still an `output()`, not the type argument it carries.
     if (api) return renderSignalMember(property, api);
 
+    // An object literal type is laid out field by field, as the source writes it, without the comments.
+    if (property.members?.length) {
+        return [
+            `${renderModifiers(member)}${member.name}${isOptional(member) ? '?' : ''}: {`,
+            ...renderBody(property.members),
+            '};'
+        ];
+    }
+
     const type = getDeclaredType(property);
     const decorator =
         role === 'input'
@@ -592,9 +686,13 @@ export function renderEntrySignature(entry: DocEntry): string {
         case EntryType.Enum:
             return renderEnum(entry as DocEntry & { members: EnumMemberEntry[] });
         case EntryType.TypeAlias: {
-            const alias = entry as ConstantEntry & { generics?: GenericEntry[] };
+            const alias = entry as ConstantEntry & { generics?: GenericEntry[]; members?: MemberEntry[] };
+            const head = `type ${alias.name}${renderGenerics(alias.generics)} =`;
 
-            return `type ${alias.name}${renderGenerics(alias.generics)} = ${alias.type};`;
+            // An object literal, written out the way an interface is: the list below the signature has the comments.
+            if (alias.members?.length) return [`${head} {`, ...renderBody(alias.members), '};'].join('\n');
+
+            return `${head} ${alias.type};`;
         }
         case EntryType.Constant: {
             const { declaredType, declaredFunctionType, type } = entry as ConstantEntry;

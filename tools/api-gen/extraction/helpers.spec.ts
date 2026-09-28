@@ -1,3 +1,6 @@
+import { mkdtempSync, rmSync, writeFileSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 import {
     ClassEntry,
     DocEntry,
@@ -238,7 +241,7 @@ describe('reading members from source', () => {
         ]);
     });
 
-    // The members an inherited-from badge names the origin of come from `KbqPipe`, not from `Omit`.
+    // The inherited members come from `KbqPipe`, whose source gives their declared types, not from `Omit`.
     it('reads the type a utility type narrows as the base', () => {
         expect(
             readSourceFile('packages/components/filter-bar/filter-bar.types.ts').classes.KbqPipeTemplate.bases
@@ -690,5 +693,113 @@ describe('reading exported constants and functions from source', () => {
             ],
             returnType: 'KbqLocaleService | null'
         });
+    });
+});
+
+describe('reading object literal types from source', () => {
+    it('reads the fields of a type alias naming an object literal, as the members of an interface', () => {
+        const { members } = readSourceFile('packages/components/breadcrumbs/breadcrumbs.types.ts').declarations
+            .KbqBreadcrumbsConfiguration;
+
+        expect(
+            members?.map(({ name, type, memberType, memberTags }) => ({ name, type, memberType, memberTags }))
+        ).toEqual([
+            { name: 'max', type: 'number | null', memberType: MemberType.Property, memberTags: [] },
+            { name: 'size', type: 'KbqDefaultSizes', memberType: MemberType.Property, memberTags: [] },
+            { name: 'firstItemNegativeMargin', type: 'boolean', memberType: MemberType.Property, memberTags: [] },
+            { name: 'wrapMode', type: 'KbqBreadcrumbsWrapMode', memberType: MemberType.Property, memberTags: [] }
+        ]);
+        expect(members?.map(({ description }) => description)).toEqual([
+            'Specifies the maximum number of breadcrumb items to display.\n- If a number is provided, only that many items will be shown.\n- If `null`, no limit is applied, and all breadcrumb items are displayed.',
+            '',
+            'Determines if a negative margin should be applied to the first breadcrumb item.',
+            'Manages breadcrumb items when space is limited:\n- `auto`: Adjusts based on space and item count.\n- `wrap`: Moves items to the next line if needed.\n- `none`: Prevents wrapping, allowing overflow.'
+        ]);
+    });
+
+    it('marks an optional field', () => {
+        const { members } = readSourceFile('packages/components/actions-panel/actions-panel.ts').declarations
+            .KbqActionsPanelTemplateContext;
+
+        expect(members?.map(({ name, memberTags }) => [name, memberTags])).toEqual([
+            ['$implicit', [MemberTags.Optional]],
+            ['data', [MemberTags.Optional]],
+            ['actionsPanelRef', []]
+        ]);
+    });
+
+    it('reads the fields nested in a field, and the type of that field without their comments', () => {
+        const { indent } = readSourceFile('packages/components/toast/toast.type.ts').classes.KbqToastConfig.members;
+
+        expect(indent.declaredType).toBe('{ vertical: number; horizontal: number; }');
+        expect(indent.members?.map(({ name, type, description }) => ({ name, type, description }))).toEqual([
+            { name: 'vertical', type: 'number', description: 'Vertical spacing from the top or bottom of the screen.' },
+            {
+                name: 'horizontal',
+                type: 'number',
+                description: 'Horizontal spacing from the left or right of the screen.'
+            }
+        ]);
+    });
+
+    it('leaves out a field the docs leave out, nested or not', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'api-gen-'));
+        const file = join(dir, 'config.ts');
+
+        writeFileSync(
+            file,
+            [
+                'export type KbqConfig = {',
+                '    size: string;',
+                '    /** @docs-private */',
+                '    token: string;',
+                '    indent: {',
+                '        vertical: number;',
+                '        /** @internal */',
+                '        cache: number;',
+                '    };',
+                '};'
+            ].join('\n')
+        );
+
+        try {
+            const { members } = readSourceFile(file).declarations.KbqConfig;
+
+            expect(members?.map(({ name, members: fields }) => [name, fields?.map(({ name }) => name)])).toEqual([
+                ['size', undefined],
+                ['indent', ['vertical']]
+            ]);
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
+    });
+
+    it('leaves a literal with more than named fields in it to the text of its type', () => {
+        const { unitSystems } = readSourceFile('packages/components/core/formatters/filesize/config.ts').classes
+            .KbqSizeUnitsLocaleConfiguration.members;
+
+        expect(unitSystems).toEqual({
+            declaredType: '{ [KbqMeasurementSystem.SI]: KbqUnitSystem; [KbqMeasurementSystem.IEC]: KbqUnitSystem; }'
+        });
+    });
+
+    it('gives a type alias the fields read from its source', () => {
+        const members: PropertyEntry[] = [
+            {
+                name: 'size',
+                memberType: MemberType.Property,
+                memberTags: [],
+                type: 'string',
+                description: '',
+                jsdocTags: []
+            }
+        ];
+        const alias = {
+            name: 'KbqConfig',
+            entryType: EntryType.TypeAlias,
+            type: '{ size: string; }'
+        } as unknown as DocEntry;
+
+        expect(updateEntries([alias], {}, {}, {}, { KbqConfig: { members } })).toEqual([{ ...alias, members }]);
     });
 });

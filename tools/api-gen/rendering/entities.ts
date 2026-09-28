@@ -153,11 +153,10 @@ export interface MemberEntry {
     /** The class or interface the member is declared in, when it is inherited from one. */
     inheritedFrom?: string;
     /**
-     * Set when the member is a binding of a host directive the class forwards: the directive, unless the docs
-     * leave it out, and the public names of its input and output that the class exposes, under the member's own
-     * aliases.
+     * Set when the member is a binding of a host directive the class forwards: the directive, and the public
+     * names of its input and output that the class exposes, under the member's own aliases.
      */
-    forwardedFrom?: { directive?: string; input?: string; output?: string };
+    forwardedFrom?: { directive: string; input?: string; output?: string };
 }
 
 /** Sub-entry for an enum member. */
@@ -172,6 +171,11 @@ export interface PropertyEntry extends MemberEntry {
     inputAlias?: string;
     outputAlias?: string;
     isRequiredInput?: boolean;
+    /**
+     * The fields of the object literal type the property is declared with, `indent: { vertical: number }`, read
+     * from the source: the extractor does not look into the type of a field.
+     */
+    members?: PropertyEntry[];
 }
 
 /** Sub-entry for a class method. */

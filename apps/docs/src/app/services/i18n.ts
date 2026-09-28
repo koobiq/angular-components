@@ -156,6 +156,10 @@ export const DOCS_TRANSLATION_TEMPLATES = {
     seoItemDescription: {
         ru: (name: string) => `Документация по ${name} в дизайн-системе Koobiq для Angular.`,
         en: (name: string) => `${name} documentation for the Koobiq Angular design system.`
+    },
+    apiCopyLink: {
+        ru: (name: string) => `Скопировать ссылку на ${name}`,
+        en: (name: string) => `Copy link to ${name}`
     }
 } satisfies Record<string, Record<DocsLocale, (value: string) => string>>;
 

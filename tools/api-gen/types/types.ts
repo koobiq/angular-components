@@ -1,4 +1,4 @@
-import { DeclaredFunctionType, DocEntry, MemberEntry } from '../rendering/entities';
+import { DeclaredFunctionType, DocEntry, MemberEntry, PropertyEntry } from '../rendering/entities';
 
 export type PackageMetadata = { resolvedPath: string; tsCompilerPath: string; packageName: string };
 
@@ -42,7 +42,8 @@ export interface DeclaredCallable {
 }
 
 /** What the source says about a member that the compiler's resolved entry does not. */
-export interface MemberSourceMetadata extends Pick<MemberEntry, 'signalApi' | 'declaredType' | 'defaultValue'> {
+export interface MemberSourceMetadata
+    extends Pick<MemberEntry, 'signalApi' | 'declaredType' | 'defaultValue'>, Pick<PropertyEntry, 'members'> {
     /**
      * Angular's extractor marks the inputs and outputs a class declares itself, not the ones it inherits
      * from a base directive, so an inherited binding is only known from here.
@@ -51,13 +52,21 @@ export interface MemberSourceMetadata extends Pick<MemberEntry, 'signalApi' | 'd
     callable?: DeclaredCallable;
 }
 
-/** What the source says about an exported constant or function that the compiler's resolved entry does not. */
+/**
+ * What the source says about an exported constant, function or type alias that the compiler's resolved entry
+ * does not.
+ */
 export interface DeclarationSourceMetadata {
     declaredType?: string;
     declaredFunctionType?: DeclaredFunctionType;
     callable?: DeclaredCallable;
     /** The constant this one is another name for: `export const newName = oldName;`. */
     aliasOf?: string;
+    /**
+     * The fields of the object literal a type alias names, as the members of an interface: the extractor
+     * reports such an alias as the text of its type.
+     */
+    members?: PropertyEntry[];
 }
 
 /** Read from the source of a class or an interface, next to what Angular's extractor reports for it. */

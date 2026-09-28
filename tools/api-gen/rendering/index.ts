@@ -1,10 +1,10 @@
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import type { DocsApiEntryPoint } from '../../../apps/docs/src/app/components/api-page/api-page.types';
-import { docsGetItems } from '../../../apps/docs/src/app/structure';
+import { docsGetItems, DocsStructureItemTab } from '../../../apps/docs/src/app/structure';
 import { EntryCollection } from '../types';
-import { DocEntry } from './entities';
-import { getApiEntryPoint } from './entry-point';
+import { DocEntry, EntryType } from './entities';
+import { ApiEntryPage, getApiEntryPoint } from './entry-point';
 
 // A sibling of `dist/docs-pages`, not a subdirectory of it: `tools/docs-pages`'s own generator recursively
 // deletes anything under its output root that its latest run did not just write, which would otherwise
@@ -55,6 +55,43 @@ function emitRegistry(modules: Map<string, string>): string {
 }
 
 /**
+ * Where each entry the API tabs document is, by its name, for a type naming it to link there. An entry point shown by
+ * several structure items is linked to the one named after it: `clamped-text` rather than `clamped-list`, or else the
+ * first. An NgModule has no section: the tab leaves it out.
+ */
+function getEntryPages(entryCollections: EntryCollection<DocEntry>[]): Map<string, ApiEntryPage> {
+    const pagesByApiId = new Map<string, string>();
+
+    for (const { hasApi, apiId, id, categoryId } of docsGetItems()) {
+        if (hasApi && apiId && (!pagesByApiId.has(apiId) || id === apiId)) {
+            pagesByApiId.set(apiId, `${categoryId}/${id}/${DocsStructureItemTab.Api}`);
+        }
+    }
+
+    const entryPages = new Map<string, ApiEntryPage>();
+
+    for (const { moduleName, packagesApiInfo } of entryCollections) {
+        for (const { packageName, entries } of packagesApiInfo) {
+            const page = pagesByApiId.get(packageName);
+
+            if (!page) continue;
+
+            for (const { name, entryType } of entries) {
+                if (entryType !== EntryType.NgModule && !entryPages.has(name)) {
+                    entryPages.set(name, {
+                        entryPoint: `@koobiq/${moduleName}/${packageName}`,
+                        page,
+                        ...((entryType === EntryType.Constant || entryType === EntryType.Function) && { isValue: true })
+                    });
+                }
+            }
+        }
+    }
+
+    return entryPages;
+}
+
+/**
  * Writes the API of each entry point as the data its `/api` tab renders, with a registry that loads it by the
  * structure item, and persists each entry point's manifest as JSON: the input `tools/check-api-docs` and
  * `tools/generate-llms-txt.ts` read.
@@ -63,6 +100,7 @@ export function generateApiPages(entryCollections: EntryCollection<DocEntry>[]):
     const files: Record<string, string> = {};
     const modules = new Map<string, string>();
     const manifests = new Set<string>();
+    const entryPages = getEntryPages(entryCollections);
 
     mkdirSync(MANIFEST_DIR, { recursive: true });
 
@@ -70,7 +108,7 @@ export function generateApiPages(entryCollections: EntryCollection<DocEntry>[]):
         for (const { packageName, entries } of packagesApiInfo) {
             const name = `${moduleName}-${packageName}`;
 
-            files[`${name}.api.ts`] = emitEntryPoint(getApiEntryPoint(entries, moduleName, packageName));
+            files[`${name}.api.ts`] = emitEntryPoint(getApiEntryPoint(entries, moduleName, packageName, entryPages));
             modules.set(packageName, `${name}.api`);
 
             writeFileSync(join(MANIFEST_DIR, `${name}.json`), JSON.stringify(entries, null, 4));

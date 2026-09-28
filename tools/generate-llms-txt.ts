@@ -10,10 +10,11 @@ import {
 } from '../apps/docs/src/app/structure';
 import { ClassEntry, DocEntry, EntryType, FunctionEntry, MemberType } from './api-gen/rendering/entities';
 import {
-    compareEntries,
+    flattenMembers,
     getEntryKind,
     getMemberDisplayName,
     getMemberDisplayType,
+    groupEntries,
     hasMemberDetails,
     orderMembers,
     renderEntrySignature
@@ -92,50 +93,58 @@ const renderExamples = (node: { jsdocTags?: { name: string; comment: string }[] 
                 .map((line) => indent + line)
         ]);
 
+/** One entry under a heading of the given level: its kind, description and signature, then the members worth explaining. */
+const renderEntryAsMarkdown = (entry: DocEntry, heading: string): string => {
+    const lines = [`${heading} ${entry.name} (${getEntryKind(entry)})`];
+
+    for (const text of [describeDeprecation(entry), describe(entry)]) {
+        if (text) lines.push('', text);
+    }
+
+    lines.push(...renderExamples(entry, ''), '', '```ts', renderEntrySignature(entry), '```');
+
+    const members = flattenMembers(orderMembers((entry as ClassEntry).members ?? [])).filter(hasMemberDetails);
+    const details = [
+        ...members.flatMap((member) => {
+            const type = getMemberDisplayType(member);
+            const summary = [describe(member), describeDeprecation(member)].filter(Boolean).join('\n\n');
+
+            return [
+                ...listItem(
+                    '',
+                    `${inlineCode(getMemberDisplayName(member))}${type ? `: ${inlineCode(type)}` : ''}`,
+                    summary
+                ),
+                ...(member.memberType === MemberType.Method
+                    ? renderCallDetails(member as unknown as DocEntry, '  ')
+                    : []),
+                ...renderExamples(member, '  ')
+            ];
+        }),
+        ...(entry.entryType === EntryType.Function ? renderCallDetails(entry, '') : [])
+    ];
+
+    if (details.length) lines.push('', ...details);
+
+    return lines.join('\n');
+};
+
 /**
  * Renders an entry point's manifest (`tools/api-gen`'s doc model, already stripped of `@docs-private`/
- * `@internal`) the way its `/api` page shows it: per entry its kind, description and signature, then the
- * members worth explaining — the same signature builder, so the page and `llms-full.txt` cannot drift.
+ * `@internal`) the way its `/api` page shows it — the same groups, headed where there are several, and the same
+ * signature builder — so the page and `llms-full.txt` cannot drift.
  */
-const renderManifestAsMarkdown = (entries: DocEntry[]): string =>
-    entries
-        .filter((entry) => entry.entryType !== EntryType.NgModule)
-        .sort(compareEntries)
-        .map((entry) => {
-            const lines = [`##### ${entry.name} (${getEntryKind(entry)})`];
+const renderManifestAsMarkdown = (entries: DocEntry[]): string => {
+    const groups = groupEntries(entries);
+    const isGrouped = groups.length > 1;
 
-            for (const text of [describeDeprecation(entry), describe(entry)]) {
-                if (text) lines.push('', text);
-            }
-
-            lines.push(...renderExamples(entry, ''), '', '```ts', renderEntrySignature(entry), '```');
-
-            const members = orderMembers((entry as ClassEntry).members ?? []).filter(hasMemberDetails);
-            const details = [
-                ...members.flatMap((member) => {
-                    const type = getMemberDisplayType(member);
-                    const summary = [describe(member), describeDeprecation(member)].filter(Boolean).join('\n\n');
-
-                    return [
-                        ...listItem(
-                            '',
-                            `${inlineCode(getMemberDisplayName(member))}${type ? `: ${inlineCode(type)}` : ''}`,
-                            summary
-                        ),
-                        ...(member.memberType === MemberType.Method
-                            ? renderCallDetails(member as unknown as DocEntry, '  ')
-                            : []),
-                        ...renderExamples(member, '  ')
-                    ];
-                }),
-                ...(entry.entryType === EntryType.Function ? renderCallDetails(entry, '') : [])
-            ];
-
-            if (details.length) lines.push('', ...details);
-
-            return lines.join('\n');
-        })
+    return groups
+        .map(({ group, entries: grouped }) => [
+                ...(isGrouped ? [`##### ${group.title}`] : []),
+                ...grouped.map((entry) => renderEntryAsMarkdown(entry, isGrouped ? '######' : '#####'))
+            ].join('\n\n'))
         .join('\n\n');
+};
 
 const FILE_NAME = 'llms.txt';
 const FILE_NAME_FULL = 'llms-full.txt';

@@ -15,7 +15,7 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { DocEntry, EntryType, MemberEntry } from '../api-gen/rendering/entities';
-import { orderMembers } from '../api-gen/rendering/signature';
+import { flattenMembers, orderMembers } from '../api-gen/rendering/signature';
 import { normalizeFunctionFields } from '../api-gen/rendering/transforms/normalize-function-fields';
 
 const projectRoot = join(__dirname, '..', '..');
@@ -28,9 +28,10 @@ const hasDescription = (entry: { description?: string }): boolean => !!entry.des
 
 /**
  * Counts the entries and members the API tab shows with an empty description, taken the way it takes them:
- * without the `NgModule`, which it does not list, and with a getter and its setter as one member, described
- * when either of them is. `normalizeFunctionFields` applies the same `signatures[0]` fallback the render
- * layer does — a function or method's description often lives there, not on the entry itself.
+ * without the `NgModule`, which it does not list, with a getter and its setter as one member, described
+ * when either of them is, and with each field of an object literal type as a member of its own.
+ * `normalizeFunctionFields` applies the same `signatures[0]` fallback the render layer does — a function or
+ * method's description often lives there, not on the entry itself.
  */
 function countUndocumented(entries: DocEntry[]): number {
     let count = 0;
@@ -42,7 +43,7 @@ function countUndocumented(entries: DocEntry[]): number {
 
         if (!hasDescription(entry)) count++;
 
-        for (const member of orderMembers((entry as { members?: MemberEntry[] }).members ?? [])) {
+        for (const member of flattenMembers(orderMembers((entry as { members?: MemberEntry[] }).members ?? []))) {
             if (!hasDescription(normalizeFunctionFields(member))) count++;
         }
     }

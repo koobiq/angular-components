@@ -1,4 +1,4 @@
-import { NgComponentOutlet } from '@angular/common';
+import { DOCUMENT, NgComponentOutlet } from '@angular/common';
 import {
     afterRenderEffect,
     ChangeDetectionStrategy,
@@ -27,6 +27,7 @@ import {
     DocsStructureItemId,
     DocsStructureItemTab
 } from 'src/app/structure';
+import { DOCS_API_MEMBER_PARAM } from '../../constants/api-page';
 import { DocsDocStates } from '../../services/doc-states';
 import { DocsPagePrefetch } from '../../services/page-resolver';
 import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
@@ -155,7 +156,7 @@ export class DocsComponentPageComponent {
     imports: [DocsComponentViewerWrapperComponent, DocsApiPage],
     template: `
         <docs-component-viewer-wrapper>
-            <docs-api-page ngProjectAs="[docs-article]" [entryPoint]="entryPoint()" />
+            <docs-api-page ngProjectAs="[docs-article]" [entryPoint]="entryPoint()" [selectedMember]="member()" />
         </docs-component-viewer-wrapper>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -165,9 +166,16 @@ export class DocsComponentPageComponent {
 })
 export class DocsComponentApiPageComponent {
     private readonly wrapper = viewChild.required(DocsComponentViewerWrapperComponent);
+    private readonly route = inject(ActivatedRoute);
+    private readonly document = inject(DOCUMENT);
 
-    protected readonly entryPoint = toSignal(
-        inject(ActivatedRoute).data.pipe(map(({ page }): DocsApiEntryPoint => page)),
+    protected readonly entryPoint = toSignal(this.route.data.pipe(map(({ page }): DocsApiEntryPoint => page)), {
+        requireSync: true
+    });
+
+    /** The id of the member a link points at, such as `KbqSelect-multiple`. */
+    protected readonly member = toSignal(
+        this.route.queryParamMap.pipe(map((params) => params.get(DOCS_API_MEMBER_PARAM))),
         { requireSync: true }
     );
 
@@ -176,6 +184,16 @@ export class DocsComponentApiPageComponent {
         afterRenderEffect(() => {
             this.entryPoint();
             this.wrapper().scrollToSelectedContentSection();
+        });
+
+        // Registered after the anchors, which scroll a page whose URL names no heading back to its top.
+        afterRenderEffect(() => {
+            this.entryPoint();
+
+            const member = this.member();
+            const target = member && this.document.getElementById(member);
+
+            if (target) this.wrapper().scrollToElement(target);
         });
     }
 }

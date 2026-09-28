@@ -865,52 +865,6 @@ describe('api manifest generation', () => {
             expect(memberNames(false)).toEqual(['trigger']);
         });
 
-        // The badge beside the binding would name a directive the docs leave out.
-        it('should keep a binding forwarded from a hidden directive, but not the name of that directive', () => {
-            const [collection] = generateManifest([
-                {
-                    moduleName: 'components',
-                    packagesApiInfo: [
-                        {
-                            packageName: 'breadcrumbs',
-                            entries: [
-                                entry({
-                                    name: 'RdxRovingFocusItemDirective',
-                                    entryType: EntryType.Directive,
-                                    jsdocTags: [{ name: 'docs-private', comment: '' }]
-                                }),
-                                {
-                                    ...entry({ name: 'KbqBreadcrumbButton', entryType: EntryType.Directive }),
-                                    members: [
-                                        {
-                                            ...member('focusable', [MemberTags.Input]),
-                                            forwardedFrom: {
-                                                directive: 'RdxRovingFocusItemDirective',
-                                                input: 'focusable'
-                                            }
-                                        },
-                                        {
-                                            ...member('localeOverrides', [MemberTags.Input]),
-                                            forwardedFrom: {
-                                                directive: 'KbqLocaleOverridesDirective',
-                                                input: 'kbqLocaleOverrides'
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]);
-            const [button] = collection.packagesApiInfo[0].entries as unknown as ClassEntry[];
-
-            expect(button.members.map(({ name, forwardedFrom }) => [name, forwardedFrom])).toEqual([
-                ['focusable', { input: 'focusable' }],
-                ['localeOverrides', { directive: 'KbqLocaleOverridesDirective', input: 'kbqLocaleOverrides' }]
-            ]);
-        });
-
         it('should keep protected members of an abstract class, which exists to be extended', () => {
             expect(memberNames(true)).toEqual(['trigger', 'prefix']);
         });

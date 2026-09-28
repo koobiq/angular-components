@@ -35,9 +35,52 @@ const isSignalApi = (callee: string): callee is SignalApi => SIGNAL_APIS.include
 const defined = <T extends object>(object: T): Partial<T> =>
     Object.fromEntries(Object.entries(object).filter(([, value]) => value !== undefined)) as Partial<T>;
 
-/** A type as the source writes it, on one line: a signature is read line by line, member by member. */
-const typeText = (node: ts.Node | undefined, sourceFile: ts.SourceFile): string | undefined =>
-    node?.getText(sourceFile).replace(/\s*\n\s*/g, ' ');
+const printer = ts.createPrinter({ removeComments: true });
+
+/**
+ * A type as the source writes it, on one line and without the comments in it: a signature is read line by line,
+ * member by member, and the JSDoc of a field in an object literal type is shown with that field.
+ */
+function typeText(node: ts.Node | undefined, sourceFile: ts.SourceFile): string | undefined {
+    if (!node) return undefined;
+
+    const text = node.getText(sourceFile);
+    // Printed anew only when it has a comment to leave out: the printer lays out what it prints its own way.
+    const uncommented = /\/[/*]/.test(text) ? printer.printNode(ts.EmitHint.Unspecified, node, sourceFile) : text;
+
+    return uncommented.replace(/\s*\n\s*/g, ' ');
+}
+
+/** The decorator names Angular's extractor escapes in a comment, so that `@Input` in the text is not read as a tag. */
+const ANGULAR_DECORATOR =
+    /@(?=(Injectable|Component|Directive|Pipe|NgModule|Input|Output|HostBinding|HostListener|Inject|Optional|Self|Host|SkipSelf|ViewChild|ViewChildren|ContentChild|ContentChildren))/g;
+
+const ESCAPED_AT = '_NG_AT_';
+
+/**
+ * The description and the tags of a declaration, read the way Angular's extractor reads them for the members it
+ * reports — the comment parsed again on its own, the decorator names in it escaped — so that a field it does not
+ * report reads the same.
+ */
+function readJsDoc(node: ts.Node, sourceFile: ts.SourceFile): Pick<MemberEntry, 'description' | 'jsdocTags'> {
+    const comment = ts.getJSDocCommentsAndTags(node).find(ts.isJSDoc)?.getFullText(sourceFile) ?? '';
+    const [escaped] = ts.createSourceFile(
+        'jsdoc.ts',
+        `${comment.replace(ANGULAR_DECORATOR, ESCAPED_AT)}class X {}`,
+        ts.ScriptTarget.Latest,
+        true
+    ).statements;
+    const unescape = (text: string | undefined): string => (text ?? '').split(ESCAPED_AT).join('@');
+    const description = ts.getJSDocCommentsAndTags(escaped).find(ts.isJSDoc)?.comment;
+
+    return {
+        description: unescape(typeof description === 'string' ? description : ts.getTextOfJSDocComment(description)),
+        jsdocTags: ts.getJSDocTags(escaped).map((tag) => ({
+            name: tag.tagName.getText(),
+            comment: unescape(ts.getTextOfJSDocComment(tag.comment))
+        }))
+    };
+}
 
 /** The initializer of an object-literal property, addressed by name. */
 function findProperty(object: ts.ObjectLiteralExpression, name: string): ts.Expression | undefined {
@@ -246,6 +289,38 @@ function readConstantType(
     return defined({ declaredType: readConstructedType(initializer, sourceFile) });
 }
 
+/**
+ * The fields of an object literal type as members, the way the extractor reports those of an interface, each with
+ * the fields of its own object literal type, and without the ones the docs leave out. Nothing for a literal holding
+ * more than named fields — a method, an index or a call signature — which is left to be read as the text of the type.
+ */
+function readLiteralMembers(literal: ts.TypeLiteralNode, sourceFile: ts.SourceFile): PropertyEntry[] | undefined {
+    const fields = literal.members.filter(ts.isPropertySignature);
+
+    if (!fields.length || fields.length < literal.members.length || !fields.every(readMemberName)) return undefined;
+
+    return fields
+        .map((field) => ({
+            name: readMemberName(field)!,
+            memberType: MemberType.Property,
+            memberTags: [
+                ...(field.modifiers?.some(({ kind }) => kind === ts.SyntaxKind.ReadonlyKeyword)
+                    ? [MemberTags.Readonly]
+                    : []),
+                ...(field.questionToken ? [MemberTags.Optional] : [])
+            ],
+            // As written, which is what a reader is shown of a reported member too: the compiler's resolved type is not.
+            type: typeText(field.type, sourceFile) ?? 'any',
+            ...readJsDoc(field, sourceFile),
+            ...defined({ members: readFields(field.type, sourceFile) })
+        }))
+        .filter(isPublic);
+}
+
+/** The fields of `node`, when it is an object literal type. */
+const readFields = (node: ts.TypeNode | undefined, sourceFile: ts.SourceFile): PropertyEntry[] | undefined =>
+    node && ts.isTypeLiteralNode(node) ? readLiteralMembers(node, sourceFile) : undefined;
+
 /** What the source says about one member that the compiler's resolved entry does not. */
 function readMemberSource(
     element: ts.ClassElement | ts.TypeElement,
@@ -255,7 +330,8 @@ function readMemberSource(
     if (ts.isGetAccessorDeclaration(element) || ts.isPropertySignature(element)) {
         return defined({
             declaredType: typeText(element.type, sourceFile),
-            binding: ts.isGetAccessorDeclaration(element) ? readDecoratorBinding(element, name) : undefined
+            binding: ts.isGetAccessorDeclaration(element) ? readDecoratorBinding(element, name) : undefined,
+            members: ts.isPropertySignature(element) ? readFields(element.type, sourceFile) : undefined
         });
     }
 
@@ -658,6 +734,14 @@ export function updateEntries(
             return res;
         }
 
+        // The extractor reports a type alias as the text of its type. One naming an object literal is an interface
+        // to a reader, and its fields are listed the way the members of an interface are.
+        if (entry.entryType === EntryType.TypeAlias) {
+            res.push({ ...entry, ...defined({ members: declaration?.members }) });
+
+            return res;
+        }
+
         // A function, a constant or an interface has none of what is added below, and grafting `members`,
         // `isService` onto it produced a second, class-shaped copy of the same entry.
         if (!isClassEntry(entry)) {
@@ -686,14 +770,15 @@ export function updateEntries(
 /**
  * Reads what Angular's extractor does not report from one source file: per class and interface, its
  * decorators, bases, host directives and the declared form of every member; per exported constant and
- * function, its declared type or signatures.
+ * function, its declared type or signatures; per type alias of an object literal, its fields.
  */
 export function readSourceFile(entrySrc: string): {
     classes: Record<string, ClassEntryMetadata>;
     declarations: Record<string, DeclarationSourceMetadata>;
 } {
     const fileContent = fs.readFileSync(entrySrc, 'utf8');
-    const sourceFile = ts.createSourceFile(entrySrc, fileContent, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
+    // With the parent nodes set: TypeScript finds the JSDoc of a node by walking up from it.
+    const sourceFile = ts.createSourceFile(entrySrc, fileContent, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const classes: Record<string, ClassEntryMetadata> = {};
     const declarations: Record<string, DeclarationSourceMetadata> = {};
     const functions = new Map<string, ts.FunctionDeclaration[]>();
@@ -719,12 +804,20 @@ export function readSourceFile(entrySrc: string): {
             functions.set(ts.idText(node.name), [...(functions.get(ts.idText(node.name)) ?? []), node]);
         }
 
+        // A type and a value may share a name, so what is read of one keeps what was read of the other.
+        if (ts.isTypeAliasDeclaration(node)) {
+            const members = readFields(node.type, sourceFile);
+
+            if (members) declarations[ts.idText(node.name)] = { ...declarations[ts.idText(node.name)], members };
+        }
+
         if (ts.isVariableStatement(node)) {
             for (const declaration of node.declarationList.declarations) {
                 if (ts.isIdentifier(declaration.name)) {
                     const initializer = declaration.initializer && unwrapExpression(declaration.initializer);
 
                     declarations[ts.idText(declaration.name)] = {
+                        ...declarations[ts.idText(declaration.name)],
                         ...readConstantType(declaration, sourceFile),
                         ...defined({
                             aliasOf: initializer && ts.isIdentifier(initializer) ? ts.idText(initializer) : undefined
@@ -735,7 +828,9 @@ export function readSourceFile(entrySrc: string): {
         }
     });
 
-    for (const [name, overloads] of functions) declarations[name] = { callable: readCallable(overloads, sourceFile) };
+    for (const [name, overloads] of functions) {
+        declarations[name] = { ...declarations[name], callable: readCallable(overloads, sourceFile) };
+    }
 
     return { classes, declarations };
 }

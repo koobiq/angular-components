@@ -6,8 +6,10 @@
         <a
             kbq-title
             class="docs-anchors__link"
+            queryParamsHandling="merge"
             [fragment]="anchor.href"
             [kbqPlacement]="popUpPlacements.Left"
+            [queryParams]="queryParams"
             [routerLink]="this.pathName"
             (click)="scrollIntoView(anchor)"
         >

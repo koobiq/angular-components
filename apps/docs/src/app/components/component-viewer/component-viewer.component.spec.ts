@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, convertToParamMap, Params, provideRouter, Router, UrlSegment } from '@angular/router';
 import { BehaviorSubject, map, of } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
@@ -171,20 +171,48 @@ describe(DocsComponentPageComponent.name, () => {
 
 const ALERT_API: DocsApiEntryPoint = {
     path: '@koobiq/components/alert',
-    entries: [{ name: 'KbqAlert', kind: 'component', signature: 'class KbqAlert {}' }]
+    groups: [
+        {
+            id: 'api-components',
+            title: 'Components',
+            entries: [
+                {
+                    name: 'KbqAlert',
+                    kind: 'component',
+                    signature: 'class KbqAlert {}',
+                    members: [
+                        {
+                            id: 'KbqAlert-title',
+                            name: '[title]',
+                            type: [{ text: 'string' }],
+                            description: [{ type: 'html', html: '<p class="kbq-markdown__p">The title.</p>' }]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 };
 
 describe(DocsComponentApiPageComponent.name, () => {
     let setScrollPosition: jest.SpyInstance;
+    let scrollToElement: jest.SpyInstance;
 
-    /** The tab reads the API from `data`; the anchors it renders read `fragment`. */
-    const createPage = (): ComponentFixture<DocsComponentApiPageComponent> => {
+    /** The tab reads the API from `data` and the member a link points at from the query; the anchors read `fragment`. */
+    const createPage = (queryParams: Params = {}): ComponentFixture<DocsComponentApiPageComponent> => {
         TestBed.configureTestingModule({
             imports: [DocsComponentApiPageComponent],
             providers: [
                 provideRouter([]),
                 provideDocsLocale(DocsLocale.En),
-                { provide: ActivatedRoute, useValue: { fragment: of(null), data: of({ page: ALERT_API }) } }
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        fragment: of(null),
+                        data: of({ page: ALERT_API }),
+                        queryParamMap: of(convertToParamMap(queryParams))
+                    }
+                }
             ]
         });
 
@@ -197,9 +225,13 @@ describe(DocsComponentApiPageComponent.name, () => {
 
     beforeEach(() => {
         setScrollPosition = jest.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation();
+        scrollToElement = jest.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation();
     });
 
-    afterEach(() => setScrollPosition.mockRestore());
+    afterEach(() => {
+        setScrollPosition.mockRestore();
+        scrollToElement.mockRestore();
+    });
 
     it('renders the API as the article, followed by the improvement callout', () => {
         const article: HTMLElement = createPage().nativeElement.querySelector('.docs-component-viewer__article');
@@ -214,5 +246,17 @@ describe(DocsComponentApiPageComponent.name, () => {
         await createPage().whenStable();
 
         expect(setScrollPosition).toHaveBeenCalledTimes(1);
+        expect(scrollToElement).not.toHaveBeenCalled();
+    });
+
+    it('scrolls to the member a link points at, and highlights it', async () => {
+        const fixture = createPage({ member: 'KbqAlert-title' });
+
+        await fixture.whenStable();
+
+        const member: HTMLElement = fixture.nativeElement.querySelector('#KbqAlert-title');
+
+        expect(scrollToElement).toHaveBeenCalledWith(member);
+        expect(member.classList).toContain('docs-api__member_selected');
     });
 });

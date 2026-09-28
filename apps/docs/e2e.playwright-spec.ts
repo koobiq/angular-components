@@ -321,6 +321,20 @@ test.describe('docs app', () => {
         expect(errors).toEqual([]);
     });
 
+    test('scrolls to the member a link points at and highlights it', async ({ page }) => {
+        await page.goto('/en/components/select/api?member=KbqSelect-panelClass');
+        await waitForHydration(page);
+
+        await expect(page.locator('#KbqSelect-panelClass')).toHaveClass(/docs-api__member_selected/);
+        await expect(page.locator('#KbqSelect-panelClass')).toBeInViewport();
+
+        await page.locator('#KbqSelect-backdropClass .docs-api__link').click();
+
+        await expect(page).toHaveURL(/\/en\/components\/select\/api\?member=KbqSelect-backdropClass$/);
+        await expect(page.locator('#KbqSelect-backdropClass')).toHaveClass(/docs-api__member_selected/);
+        await expect(page.locator('#KbqSelect-panelClass')).not.toHaveClass(/docs-api__member_selected/);
+    });
+
     // AG Grid does not support server-side rendering: the prerendered page leaves its examples to the browser.
     test('renders the examples that cannot render on the server once the page is hydrated', async ({ page }) => {
         const errors = collectErrors(page);
@@ -369,23 +383,24 @@ test.describe('prerendered pages compiled from MDX', () => {
     });
 });
 
-/**
- * The migration guide is the one page whose content is filtered after it loads, so several
- * properties have to hold together and only the prerendered build shows them at once: the document
- * ships complete, the page shows none of it until a start is picked, the filter narrows it once
- * hydrated, the range can never run backwards, and a filtered URL reproduces itself on reload.
- */
 test.describe('prerendered API tab', () => {
     test.use({ javaScriptEnabled: false });
 
     test('carries the entries and their JSDoc in the initial HTML', async ({ page }) => {
         await page.goto('/en/components/select/api');
 
-        await expect(page.locator('h3#KbqSelect')).toHaveText('KbqSelect');
+        await expect(page.locator('h3#api-components')).toHaveText('Components');
+        await expect(page.locator('h4#KbqSelect')).toHaveText('KbqSelect');
         await expect(page.locator('#KbqSelect-panelClass .kbq-markdown__p')).toBeVisible();
     });
 });
 
+/**
+ * The migration guide is the one page whose content is filtered after it loads, so several
+ * properties have to hold together and only the prerendered build shows them at once: the document
+ * ships complete, the page shows none of it until a start is picked, the filter narrows it once
+ * hydrated, the range can never run backwards, and a filtered URL reproduces itself on reload.
+ */
 test.describe('migration guide filter', () => {
     const MIGRATION_URL = '/en/main/migration/overview';
 

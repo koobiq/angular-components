@@ -263,8 +263,22 @@
     display: block;
 }
 
-.docs-api__entry + .docs-api__entry {
+.docs-api__entry + .docs-api__entry,
+.docs-api__group + .docs-api__group {
     margin-top: var(--kbq-size-5xl);
+}
+
+// The heading of a group and the link to it, on one line. The space above a group is the one between groups.
+.docs-api__group-header {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-size-s);
+    margin-bottom: var(--kbq-size-xxl);
+}
+
+// As specific as the overview's heading rules, and after them: the header around the heading spaces it.
+.docs-component-overview .docs-header-link.docs-api__group-name {
+    margin: 0;
 }
 
 .docs-code-block.docs-api__import {
@@ -296,17 +310,47 @@
     margin: 0;
 }
 
+// A member is a card: its name, badges and type in the header, and what it has to say in the body below.
+.docs-api__members {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-l);
+}
+
 .docs-api__member {
-    padding: var(--kbq-size-m) 0;
-    border-top: 1px solid var(--kbq-line-contrast-less);
+    overflow: hidden;
+    border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+    border-radius: var(--kbq-size-border-radius);
+    // A link to a member scrolls it to the top of the page; the gap keeps its border in sight.
+    scroll-margin-top: var(--kbq-size-l);
+
+    & > dt {
+        padding: var(--kbq-size-m) var(--kbq-size-l);
+        background: var(--kbq-background-card);
+    }
 
     & > dd {
-        margin: var(--kbq-size-xs) 0 0;
+        margin: 0;
+        padding: var(--kbq-size-m) var(--kbq-size-l);
+        border-top: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+        background: var(--kbq-background-bg-secondary);
+    }
+
+    // The padding of the body spaces its text, not the margins around the first and last pieces of it.
+    & > dd > :first-child,
+    & > dd > .docs-api__call:first-child > :first-child {
+        margin-top: 0;
+    }
+
+    & > dd .docs-api__text > :last-child > :last-child {
+        margin-bottom: 0;
     }
 }
 
-.docs-api__members > .docs-api__member:first-child {
-    border-top: none;
+// The member a link points at, as the link scrolls it into view.
+.docs-api__member_selected {
+    border-color: var(--kbq-line-theme);
+    box-shadow: 0 0 0 var(--kbq-size-border-width) var(--kbq-line-theme);
 }
 
 .docs-api__member > dt,
@@ -317,10 +361,63 @@
     gap: var(--kbq-size-xs) var(--kbq-size-s);
 }
 
+// The type of a member sits at the far end of the header, set like inline code, on the line of the name: it takes the
+// room the name and the badges leave, up to its own width, and what does not fit is cut off with an ellipsis. With no
+// basis of its own it never moves to a line apart; the header breaks only where the name and the badges alone
+// overflow it, on a phone.
+.docs-api__member > dt > .docs-api__term-type {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: max-content;
+    margin-inline-start: auto;
+    padding: var(--kbq-markdown-code-size-inline-padding);
+    border-radius: var(--kbq-markdown-code-size-border-radius);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--kbq-markdown-code-text);
+    background: var(--kbq-markdown-code-background);
+}
+
+.docs-api__link {
+    display: inline-flex;
+    border-radius: var(--kbq-size-xxs);
+
+    &:hover .kbq-icon {
+        color: var(--kbq-states-icon-contrast-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--kbq-states-line-focus-theme);
+        outline-offset: 1px;
+    }
+}
+
+// Where there is a pointer, a link shows while it is over its heading or card; a touch screen has no hover to wait for.
+@media (hover: hover) {
+    .docs-api__link {
+        opacity: 0;
+    }
+
+    .docs-api__group-header:hover .docs-api__link,
+    .docs-api__entry-header:hover .docs-api__link,
+    .docs-api__member:hover .docs-api__link,
+    .docs-api__member_selected .docs-api__link,
+    .docs-api__link:focus-visible {
+        opacity: 1;
+    }
+}
+
 .docs-api__term-name {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big-strong);
 
     overflow-wrap: anywhere;
+}
+
+// Struck through the way an editor marks a deprecated symbol; the badge beside it says so in words.
+.docs-api__entry_deprecated > .docs-api__entry-header > .docs-api__entry-name,
+.docs-api__member_deprecated > dt > .docs-api__term-name {
+    text-decoration-line: line-through;
 }
 
 .docs-api__term-type {
@@ -328,6 +425,21 @@
 
     color: var(--kbq-foreground-contrast-secondary);
     overflow-wrap: anywhere;
+}
+
+// The name of an entry in a type, linked to its section, keeps the font of the type. `.docs-api` is in the selector
+// for weight: `koobiq-typography()` sets the one of `.kbq-link` inside `.docs`, where two class names would only tie.
+.docs-api .docs-api__term-type .kbq-link {
+    font: inherit;
+    letter-spacing: inherit;
+
+    // The theme takes the outline off a focused `.kbq-link` and gives it back through the class the link directive
+    // sets on keyboard focus; these links are plain anchors.
+    &:focus-visible {
+        outline-style: solid;
+        outline-width: var(--kbq-link-size-state-focused-outline-width);
+        outline-color: var(--kbq-link-state-focused-outline);
+    }
 }
 
 .docs-api__note-title {

@@ -12,9 +12,14 @@ import {
 } from './entities';
 import {
     compareEntries,
+    flattenMembers,
+    getMemberBinding,
     getMemberDisplayName,
     getMemberDisplayType,
+    getMemberName,
+    groupEntries,
     hasMemberDetails,
+    isOptionalMember,
     orderMembers,
     renderEntrySignature
 } from './signature';
@@ -129,7 +134,7 @@ describe('renderEntrySignature', () => {
         );
     });
 
-    // The list under the signature shows them, each with the directive it comes from.
+    // The list under the signature shows them.
     it('leaves the bindings a host directive forwards out of the signature', () => {
         expect(
             renderEntrySignature(
@@ -453,6 +458,43 @@ describe('renderEntrySignature', () => {
         ).toBe(["@Injectable({ providedIn: 'root' })", 'class KbqMeasureScrollbarService {}'].join('\n'));
     });
 
+    // The text the extractor gives the alias keeps the comments of the fields, which the list below the signature shows.
+    it('writes a type alias of an object literal field by field, a field of an object literal type nested', () => {
+        expect(
+            renderEntrySignature({
+                name: 'KbqToastConfig',
+                entryType: EntryType.TypeAlias,
+                type: '{ /** Where the stack is. */ position: string; indent?: { vertical: number; readonly horizontal: number; }; }',
+                generics: [{ name: 'T', constraint: undefined, default: 'unknown' }],
+                description: '',
+                rawComment: '',
+                jsdocTags: [],
+                members: [
+                    property({ name: 'position', type: 'string', description: 'Where the stack is.' }),
+                    property({
+                        name: 'indent',
+                        memberTags: [MemberTags.Optional],
+                        type: '{ vertical: number; readonly horizontal: number; }',
+                        members: [
+                            property({ name: 'vertical', type: 'number' }),
+                            property({ name: 'horizontal', memberTags: [MemberTags.Readonly], type: 'number' })
+                        ]
+                    })
+                ]
+            } as DocEntry)
+        ).toBe(
+            [
+                'type KbqToastConfig<T = unknown> = {',
+                '    position: string;',
+                '    indent?: {',
+                '        vertical: number;',
+                '        readonly horizontal: number;',
+                '    };',
+                '};'
+            ].join('\n')
+        );
+    });
+
     it('writes the other kinds of entries', () => {
         const entry = (patch: Record<string, unknown>): DocEntry =>
             ({ description: '', rawComment: '', jsdocTags: [], ...patch }) as unknown as DocEntry;
@@ -536,21 +578,66 @@ describe('renderEntrySignature', () => {
 });
 
 describe('member presentation', () => {
+    const members = [
+        property({ name: 'dropdown', memberTags: [MemberTags.Input], inputAlias: 'kbqDropdownTriggerFor' }),
+        property({
+            name: 'restoreFocus',
+            memberTags: [MemberTags.Input, MemberTags.Output],
+            inputAlias: 'kbqRestoreFocus',
+            outputAlias: 'kbqRestoreFocusChange'
+        }),
+        property({ name: 'closed', memberTags: [MemberTags.Output], outputAlias: 'closed' }),
+        property({ name: 'label', memberTags: [MemberTags.Optional] }),
+        method('open', [], 'void')
+    ];
+
     it('names a member the way a template writes it', () => {
+        expect(members.map(getMemberDisplayName)).toEqual([
+            '[kbqDropdownTriggerFor]',
+            '[(kbqRestoreFocus)]',
+            '(closed)',
+            'label?',
+            'open()'
+        ]);
+    });
+
+    it('names a member by the name a template binds it by, and tells how it binds', () => {
+        expect(members.map((member) => [getMemberName(member), getMemberBinding(member)])).toEqual([
+            ['kbqDropdownTriggerFor', 'input'],
+            ['kbqRestoreFocus', 'model'],
+            ['closed', 'output'],
+            ['label', undefined],
+            ['open()', undefined]
+        ]);
+    });
+
+    // An input a template may leave unbound is optional to it however it is declared; `required` marks the rest.
+    it('marks a field or a method an object may leave out as optional, and no binding', () => {
         expect(
             [
-                property({ name: 'dropdown', memberTags: [MemberTags.Input], inputAlias: 'kbqDropdownTriggerFor' }),
-                property({
-                    name: 'restoreFocus',
-                    memberTags: [MemberTags.Input, MemberTags.Output],
-                    inputAlias: 'kbqRestoreFocus',
-                    outputAlias: 'kbqRestoreFocusChange'
-                }),
-                property({ name: 'closed', memberTags: [MemberTags.Output], outputAlias: 'closed' }),
-                property({ name: 'label', memberTags: [MemberTags.Optional] }),
-                method('open', [], 'void')
-            ].map(getMemberDisplayName)
-        ).toEqual(['[kbqDropdownTriggerFor]', '[(kbqRestoreFocus)]', '(closed)', 'label?', 'open()']);
+                ...members,
+                method('keys', [], 'string[]', { memberTags: [MemberTags.Optional] }),
+                property({ name: 'value', memberTags: [MemberTags.Input, MemberTags.Optional] })
+            ].map(isOptionalMember)
+        ).toEqual([false, false, false, true, false, true, false]);
+    });
+
+    it('follows a member with the fields of its object literal type, named by their path', () => {
+        const indent = property({
+            name: 'indent',
+            members: [
+                property({ name: 'vertical' }),
+                property({ name: 'offset', members: [property({ name: 'top' })] })
+            ]
+        });
+
+        expect(flattenMembers([indent, property({ name: 'position' })]).map(({ name }) => name)).toEqual([
+            'indent',
+            'indent.vertical',
+            'indent.offset',
+            'indent.offset.top',
+            'position'
+        ]);
     });
 
     it('shows the value a binding carries rather than its signal wrapper', () => {
@@ -570,15 +657,17 @@ describe('member presentation', () => {
                 property({ memberTags: [MemberTags.Output], type: 'EventEmitter<KbqTabChangeEvent>' }),
                 property({ type: 'Signal<readonly KbqDropdownItem[]>' }),
                 method('isNested', [], 'boolean'),
-                method('open', [], 'void')
+                method('open', [], 'void'),
+                method('constructor', [['control', 'NgControl']], 'KbqInput')
             ].map(getMemberDisplayType)
         ).toEqual([
             'boolean',
             '(event: FocusEvent) => boolean',
-            '',
+            'void',
             'KbqTabChangeEvent',
             'Signal<readonly KbqDropdownItem[]>',
             'boolean',
+            'void',
             ''
         ]);
     });
@@ -629,6 +718,24 @@ describe('member presentation', () => {
                 })
             )
         ).toBe(true);
+    });
+
+    it('groups entries a reader looks for together, each group by name, leaving out the empty ones and a module', () => {
+        const entry = (name: string, entryType: EntryType, patch: Record<string, unknown> = {}): DocEntry =>
+            ({ name, entryType, description: '', rawComment: '', jsdocTags: [], ...patch }) as DocEntry;
+
+        expect(
+            groupEntries([
+                entry('KbqStyle', EntryType.TypeAlias),
+                entry('KbqConfig', EntryType.Interface),
+                entry('KbqBase', EntryType.UndecoratedClass, { isAbstract: true }),
+                entry('KbqAdapter', EntryType.UndecoratedClass),
+                entry('KbqModule', EntryType.NgModule)
+            ]).map(({ group, entries }) => [group.title, entries.map(({ name }) => name)])
+        ).toEqual([
+            ['Classes', ['KbqAdapter', 'KbqBase']],
+            ['Types', ['KbqConfig', 'KbqStyle']]
+        ]);
     });
 
     it('orders entries by kind, then by name', () => {

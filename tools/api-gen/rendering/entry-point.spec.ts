@@ -1,5 +1,5 @@
 import { ClassEntry, DocEntry, EntryType, MemberEntry, MemberTags, MemberType, PropertyEntry } from './entities';
-import { getApiEntryPoint } from './entry-point';
+import { ApiEntryPage, getApiEntryPoint, linkType } from './entry-point';
 
 const entry = (patch: Partial<DocEntry> & Record<string, unknown>): DocEntry =>
     ({ name: '', entryType: EntryType.Constant, description: '', rawComment: '', jsdocTags: [], ...patch }) as DocEntry;
@@ -34,11 +34,12 @@ const param = (name: string, type: string, description = '', isOptional = false)
 
 const paragraph = (html: string) => ({ type: 'html', html: `<p class="kbq-markdown__p">${html}</p>` });
 
-const getEntries = (entries: DocEntry[]) => getApiEntryPoint(entries, 'components', 'alert').entries;
+const getEntries = (entries: DocEntry[]) =>
+    getApiEntryPoint(entries, 'components', 'alert').groups.flatMap((group) => group.entries);
 
 describe(getApiEntryPoint.name, () => {
-    it('lists the entries by kind and then by name, below the import of the module', () => {
-        const { path, primaryExport, entries } = getApiEntryPoint(
+    it('lists the entries in their groups, each by name, below the import of the module', () => {
+        const { path, primaryExport, groups } = getApiEntryPoint(
             [
                 entry({ name: 'KBQ_ALERT', type: 'string' }),
                 classEntry({
@@ -48,16 +49,31 @@ describe(getApiEntryPoint.name, () => {
                 }),
                 classEntry({ name: 'KbqAlertModule', entryType: EntryType.NgModule }),
                 classEntry({ name: 'KbqAlertConfig', entryType: EntryType.Interface }),
+                entry({ name: 'KbqAlertStyle', entryType: EntryType.TypeAlias, type: "'error' | 'warning'" }),
+                classEntry({ name: 'KbqAlertCloseButton', entryType: EntryType.Directive, selector: '', exportAs: [] }),
                 classEntry({ name: 'KbqAlert', entryType: EntryType.Component, selector: 'kbq-alert', exportAs: [] })
             ],
             'components',
             'alert'
         );
 
-        expect({ path, primaryExport, entries: entries.map(({ kind, name }) => `${kind} ${name}`) }).toEqual({
+        expect({
+            path,
+            primaryExport,
+            groups: groups.map(({ id, title, entries }) => [
+                id,
+                title,
+                entries.map(({ kind, name }) => `${kind} ${name}`)
+            ])
+        }).toEqual({
             path: '@koobiq/components/alert',
             primaryExport: 'KbqAlertModule',
-            entries: ['component KbqAlert', 'interface KbqAlertConfig', 'const KBQ_ALERT']
+            groups: [
+                ['api-components', 'Components', ['component KbqAlert']],
+                ['api-directives', 'Directives', ['directive KbqAlertCloseButton']],
+                ['api-types', 'Types', ['interface KbqAlertConfig', 'type KbqAlertStyle']],
+                ['api-constants', 'Constants', ['const KBQ_ALERT']]
+            ]
         });
     });
 
@@ -103,7 +119,7 @@ describe(getApiEntryPoint.name, () => {
         expect(constant.deprecated).toEqual({});
     });
 
-    it('lists the members worth explaining, the way a template writes them', () => {
+    it('lists the members worth explaining, by the names a template binds them by and how it binds them', () => {
         const open = {
             name: 'open',
             memberType: MemberType.Method,
@@ -151,31 +167,72 @@ describe(getApiEntryPoint.name, () => {
         expect(alert.members).toEqual([
             {
                 id: 'KbqAlert-title',
-                name: '[title]',
-                type: 'string',
+                name: 'title',
+                binding: 'input',
+                type: [{ text: 'string' }],
                 required: true,
                 description: [paragraph('The title.')]
             },
             {
                 id: 'KbqAlert-color',
-                name: '[color]',
-                type: 'string',
-                origin: 'KbqColorDirective',
+                name: 'color',
+                binding: 'input',
+                type: [{ text: 'string' }],
                 description: [paragraph('The color.')]
             },
             {
                 id: 'KbqAlert-open',
                 name: 'open()',
-                type: 'boolean',
+                type: [{ text: 'boolean' }],
                 description: [paragraph('Opens the panel.')],
-                params: [{ name: 'delay?', type: 'number', description: [paragraph('The delay.')] }],
-                returns: { type: 'boolean', description: [paragraph('Whether it opened.')] }
+                params: [{ name: 'delay?', type: [{ text: 'number' }], description: [paragraph('The delay.')] }],
+                returns: { type: [{ text: 'boolean' }], description: [paragraph('Whether it opened.')] }
             }
         ]);
     });
 
-    // The signature has no line for them, and a binding of a directive the docs leave out comes without its name.
-    it('lists every binding a host directive forwards, with the directive when the docs name it', () => {
+    it('lists the fields of a type alias naming an object literal, a nested one by its path, the optional ones marked', () => {
+        const [config] = getEntries([
+            entry({
+                name: 'KbqToastConfig',
+                entryType: EntryType.TypeAlias,
+                type: '{ position: string; duration?: number; indent: { vertical: number; }; }',
+                members: [
+                    property({ name: 'position', type: 'string' }),
+                    property({
+                        name: 'duration',
+                        memberTags: [MemberTags.Optional],
+                        type: 'number',
+                        description: 'How long it stays.'
+                    }),
+                    property({
+                        name: 'indent',
+                        type: '{ vertical: number; }',
+                        members: [property({ name: 'vertical', type: 'number', description: 'The spacing.' })]
+                    })
+                ]
+            })
+        ]);
+
+        expect(config.members).toEqual([
+            {
+                id: 'KbqToastConfig-duration',
+                name: 'duration',
+                type: [{ text: 'number' }],
+                optional: true,
+                description: [paragraph('How long it stays.')]
+            },
+            {
+                id: 'KbqToastConfig-indent.vertical',
+                name: 'indent.vertical',
+                type: [{ text: 'number' }],
+                description: [paragraph('The spacing.')]
+            }
+        ]);
+    });
+
+    // The signature has no line for them.
+    it('lists every binding a host directive forwards, described or not', () => {
         const [button] = getEntries([
             classEntry({
                 name: 'KbqBreadcrumbButton',
@@ -187,7 +244,7 @@ describe(getApiEntryPoint.name, () => {
                         name: 'focusable',
                         memberTags: [MemberTags.Input],
                         type: 'boolean',
-                        forwardedFrom: { input: 'focusable' }
+                        forwardedFrom: { directive: 'RdxRovingFocusItemDirective', input: 'focusable' }
                     }),
                     property({
                         name: 'localeOverrides',
@@ -203,12 +260,12 @@ describe(getApiEntryPoint.name, () => {
             "@Directive({ selector: '[kbq-button][kbqBreadcrumb]' })\nclass KbqBreadcrumbButton {}"
         );
         expect(button.members).toEqual([
-            { id: 'KbqBreadcrumbButton-focusable', name: '[focusable]', type: 'boolean' },
+            { id: 'KbqBreadcrumbButton-focusable', name: 'focusable', binding: 'input', type: [{ text: 'boolean' }] },
             {
                 id: 'KbqBreadcrumbButton-localeOverrides',
-                name: '[localeOverrides]',
-                type: 'KbqLocaleOverrides',
-                origin: 'KbqLocaleOverridesDirective'
+                name: 'localeOverrides',
+                binding: 'input',
+                type: [{ text: 'KbqLocaleOverrides' }]
             }
         ]);
     });
@@ -238,8 +295,80 @@ describe(getApiEntryPoint.name, () => {
             kind: 'function',
             description: [paragraph('Formats a value.')],
             signature: 'function kbqFormat(value: number, unit: string): string;',
-            params: [{ name: 'value', type: 'number', description: [paragraph('The value.')] }],
-            returns: { type: 'string', description: [paragraph('The text.')] }
+            params: [{ name: 'value', type: [{ text: 'number' }], description: [paragraph('The value.')] }],
+            returns: { type: [{ text: 'string' }], description: [paragraph('The text.')] }
         });
+    });
+});
+
+describe(linkType.name, () => {
+    const pages = new Map<string, ApiEntryPage>([
+        [
+            'KbqActionsPanelRef',
+            { entryPoint: '@koobiq/components/actions-panel', page: 'components/actions-panel/api' }
+        ],
+        [
+            'KbqActionsPanelConfig',
+            { entryPoint: '@koobiq/components/actions-panel', page: 'components/actions-panel/api' }
+        ],
+        ['KbqOption', { entryPoint: '@koobiq/components/core', page: 'components/core/api' }],
+        ['T', { entryPoint: '@koobiq/components/core', page: 'components/core/api', isValue: true }]
+    ]);
+    const links = { pages, entryPoint: '@koobiq/components/actions-panel', self: 'KbqActionsPanelConfig' };
+
+    it('links an entry of the entry point on the tab itself, and an entry of another one on its tab', () => {
+        expect(linkType('KbqActionsPanelRef<T, KbqOption | null>', links)).toEqual([
+            { text: 'KbqActionsPanelRef', link: {} },
+            { text: '<T, ' },
+            { text: 'KbqOption', link: { page: 'components/core/api' } },
+            { text: ' | null>' }
+        ]);
+    });
+
+    it('links a name spread into a tuple, which is no member access', () => {
+        expect(linkType('[...KbqOption[]]', links)).toEqual([
+            { text: '[...' },
+            { text: 'KbqOption', link: { page: 'components/core/api' } },
+            { text: '[]]' }
+        ]);
+    });
+
+    it('leaves a type naming no documented entry as one piece of text', () => {
+        expect(linkType('number | null', links)).toEqual([{ text: 'number | null' }]);
+    });
+
+    it('links a constant only where a type query names it, not a type parameter of its name', () => {
+        expect(linkType('Map<T, typeof T>', links)).toEqual([
+            { text: 'Map<T, typeof ' },
+            { text: 'T', link: { page: 'components/core/api' } },
+            { text: '>' }
+        ]);
+    });
+
+    it('links no name in a string, after a dot, of a field or a parameter, or of the entry the type is in', () => {
+        const type = "{ KbqOption: 'KbqOption'; ref: Foo.KbqOption } | ((KbqOption?: string) => KbqActionsPanelConfig)";
+
+        expect(linkType(type, links)).toEqual([{ text: type }]);
+    });
+
+    it('links the types the tab shows', () => {
+        const [panel] = getApiEntryPoint(
+            [
+                classEntry({
+                    name: 'KbqActionsPanel',
+                    members: [
+                        property({ name: 'ref', type: 'KbqActionsPanelRef<T, R>', description: 'The opened panel.' })
+                    ]
+                })
+            ],
+            'components',
+            'actions-panel',
+            pages
+        ).groups[0].entries;
+
+        expect(panel.members?.[0].type).toEqual([
+            { text: 'KbqActionsPanelRef', link: {} },
+            { text: '<T, R>' }
+        ]);
     });
 });
