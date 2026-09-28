@@ -7,6 +7,7 @@ Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](http
 | Font           | Weight | Style  |
 | -------------- | ------ | ------ |
 | JetBrains Mono | 400    | Normal |
+| JetBrains Mono | 600    | Normal |
 | JetBrains Mono | 700    | Normal |
 | Inter          | 400    | Normal |
 | Inter          | 400    | Italic |
@@ -38,6 +39,7 @@ Then you add the following code inside your global styles:
 
 // JetBrains Mono
 @import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
 ```
 
@@ -54,5 +56,5 @@ Add the following code inside your `<head>` tag:
     rel="stylesheet"
 />
 <!-- JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
 ```
