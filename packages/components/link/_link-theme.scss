@@ -1,6 +1,32 @@
+@use 'sass:string';
+
 @use '../core/styles/common/tokens' as *;
 
 @use './link-tokens';
+
+// Unquoted, so that the joiner reaches the CSS as an escape rather than as an invisible character
+$_kbq-link-word-joiner: string.unquote('"\\2060"');
+
+// The width of a 16px icon less half a pixel: Chromium lays out a line that ends in negative letter-spacing a
+// fraction wider than the max-content size it reports, so the full width would push the last word to the next
+// line in a shrink-to-fit container.
+$_kbq-link-trailing-icon-reserve: 15.5px;
+
+// The gap after the text. Before an icon it is part of the reserve instead of a margin: Firefox does not always
+// keep a margin together with the last word, and the icon could wrap alone again.
+@mixin _kbq-link-text-end-gap($gap) {
+    &:not(:last-child) {
+        margin-right: $gap;
+    }
+
+    &:has(+ .kbq-icon) {
+        margin-right: 0;
+
+        &::after {
+            padding-inline-end: calc($gap + $_kbq-link-trailing-icon-reserve);
+        }
+    }
+}
 
 @mixin kbq-link-geometry() {
     display: inline;
@@ -38,6 +64,21 @@
                 line-height: 0;
             }
         }
+
+        // A line may break right before an icon, as before any inline-block, and neither a no-break character
+        // nor white-space stops that in every engine. So the text reserves room for the icon after its last
+        // word, glued to it by a word joiner kept out of the accessible name, and the icon moves back into that
+        // room: the last word and the icon fit on the line together or wrap together.
+        .kbq-link__text:has(+ .kbq-icon) {
+            &::after {
+                content: $_kbq-link-word-joiner;
+                content: $_kbq-link-word-joiner / '';
+            }
+
+            + .kbq-icon {
+                margin-inline-start: -$_kbq-link-trailing-icon-reserve;
+            }
+        }
     }
 
     &.kbq-text-with-icon .kbq-link__text {
@@ -45,9 +86,7 @@
             margin-left: var(--kbq-link-size-normal-content-padding);
         }
 
-        &:not(:last-child) {
-            margin-right: var(--kbq-link-size-normal-content-padding);
-        }
+        @include _kbq-link-text-end-gap(var(--kbq-link-size-normal-content-padding));
     }
 
     &.kbq-link_compact {
@@ -65,9 +104,7 @@
                     margin-left: var(--kbq-link-size-compact-content-padding);
                 }
 
-                &:not(:last-child) {
-                    margin-right: var(--kbq-link-size-compact-content-padding);
-                }
+                @include _kbq-link-text-end-gap(var(--kbq-link-size-compact-content-padding));
             }
         }
     }
@@ -78,20 +115,18 @@
                 margin-left: var(--kbq-link-size-big-content-padding);
             }
 
-            &:not(:last-child) {
-                margin-right: var(--kbq-link-size-big-content-padding);
-            }
+            @include _kbq-link-text-end-gap(var(--kbq-link-size-big-content-padding));
         }
     }
 
     &.kbq-text-with-icon.kbq-link_external {
-        .kbq-link__text:not(:last-child) {
-            margin-right: 1px;
+        .kbq-link__text {
+            @include _kbq-link-text-end-gap(1px);
         }
 
         &.kbq-link_compact {
-            .kbq-link__text:not(:last-child) {
-                margin-right: 0;
+            .kbq-link__text {
+                @include _kbq-link-text-end-gap(0px);
             }
 
             .kbq-icon {
@@ -100,8 +135,8 @@
         }
 
         &.kbq-link_big {
-            .kbq-link__text:not(:last-child) {
-                margin-right: 2px;
+            .kbq-link__text {
+                @include _kbq-link-text-end-gap(2px);
             }
         }
     }
