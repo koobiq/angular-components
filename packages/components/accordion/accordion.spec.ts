@@ -73,7 +73,8 @@ describe('KbqAccordion', () => {
                 AccordionValuelessItems,
                 AccordionInteractiveContent,
                 AccordionNestedInTrigger,
-                AccordionNested
+                AccordionNested,
+                AccordionContentInChild
             ]
         }).compileComponents();
     });
@@ -1068,6 +1069,20 @@ describe('KbqAccordion', () => {
 
             expect(accordionContentDebugElement.nativeElement.hasAttribute('hidden')).toBe(false);
         });
+
+        it('should follow the item when declared in a child component', () => {
+            fixture = TestBed.createComponent(AccordionContentInChild);
+            fixture.detectChanges();
+
+            const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
+            const content = fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement as HTMLElement;
+
+            trigger.nativeElement.click();
+            fixture.detectChanges();
+
+            expect(content.hasAttribute('hidden')).toBe(false);
+            expect(content.hasAttribute('inert')).toBe(false);
+        });
     });
 
     describe('ARIA attributes', () => {
@@ -1404,37 +1419,194 @@ describe('KbqAccordion', () => {
     });
 
     describe('content height', () => {
-        /** Stubs `scrollHeight`, which jsdom always reports as `0`. */
-        const stubNaturalHeight = (element: HTMLElement, height: () => number) =>
-            Object.defineProperty(element, 'scrollHeight', { configurable: true, get: height });
+        /** jsdom has no `TransitionEvent`. */
+        const dispatchTransition = (
+            target: Element,
+            init: Partial<Pick<TransitionEvent, 'propertyName' | 'pseudoElement'>> = {},
+            type = 'transitionend'
+        ) => {
+            target.dispatchEvent(
+                Object.assign(new Event(type, { bubbles: true }), {
+                    propertyName: 'height',
+                    pseudoElement: '',
+                    ...init
+                })
+            );
+        };
 
-        it('re-measures the content on every expand, so a resized container is not clipped', () => {
+        /** jsdom has no Web Animations API either. */
+        const stubRunningTransitions = (content: HTMLElement, ...properties: string[]) => {
+            content.getAnimations = () =>
+                properties.map((transitionProperty) => ({ transitionProperty }) as unknown as CSSTransition);
+        };
+
+        const getPinnedHeight = (content: HTMLElement) =>
+            content.style.getPropertyValue('--kbq-accordion-content-height');
+
+        /** Renders a collapsed item and stubs the content heights jsdom does not compute: current and natural. */
+        const setup = ({ natural }: { natural: number }) => {
             fixture = TestBed.createComponent(TestApp);
             fixture.detectChanges();
 
             const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
             const content = fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement as HTMLElement;
+            const layout = { current: 0, natural };
 
-            let naturalHeight = 40;
+            Object.defineProperty(content, 'offsetHeight', { configurable: true, get: () => layout.current });
+            Object.defineProperty(content, 'scrollHeight', { configurable: true, get: () => layout.natural });
 
-            stubNaturalHeight(content, () => naturalHeight);
+            return { item, content, layout };
+        };
+
+        it('leaves an item expanded on init at its natural height', () => {
+            fixture = TestBed.createComponent(AccordionDefaultValue);
+            fixture.debugElement.componentInstance.defaultValue = 'item-1';
+            fixture.detectChanges();
+
+            const content = fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement as HTMLElement;
+
+            expect(content.getAttribute('data-state')).toBe('open');
+            // Nothing measured before the content had a box, e.g. while in a closed content panel.
+            expect(getPinnedHeight(content)).toBe('');
+        });
+
+        it('pins the natural height while expanding and releases it when the transition ends', () => {
+            const { item, content } = setup({ natural: 40 });
 
             item.expanded = true;
             fixture.detectChanges();
 
-            expect(content.style.getPropertyValue('--kbq-accordion-content-height')).toBe('40px');
+            expect(getPinnedHeight(content)).toBe('40px');
 
+            dispatchTransition(content);
+
+            expect(getPinnedHeight(content)).toBe('');
+        });
+
+        it('keeps the pin through transitions of the projected content, other properties and pseudo-elements', () => {
+            const { item, content } = setup({ natural: 40 });
+
+            item.expanded = true;
+            fixture.detectChanges();
+
+            dispatchTransition(content.querySelector('.kbq-accordion-content__body') as HTMLElement);
+            dispatchTransition(content, { propertyName: 'color' });
+            dispatchTransition(content, { pseudoElement: '::before' });
+
+            expect(getPinnedHeight(content)).toBe('40px');
+        });
+
+        it('keeps the pin while another height transition still runs', () => {
+            const { item, content } = setup({ natural: 40 });
+
+            stubRunningTransitions(content, 'height');
+            item.expanded = true;
+            fixture.detectChanges();
+
+            // A reversal cancels the running transition, and a collapse may end just after an expand started.
+            dispatchTransition(content, {}, 'transitioncancel');
+            dispatchTransition(content);
+
+            expect(getPinnedHeight(content)).toBe('40px');
+        });
+
+        it('releases the pin when the transition is cancelled', () => {
+            const { item, content } = setup({ natural: 40 });
+
+            item.expanded = true;
+            fixture.detectChanges();
+            // E.g. a content panel closing detaches the content mid-transition.
+            dispatchTransition(content, {}, 'transitioncancel');
+
+            expect(getPinnedHeight(content)).toBe('');
+        });
+
+        it('releases the pin when the state change starts no transition', () => {
+            const { item, content } = setup({ natural: 40 });
+
+            // Transitions switched off by a stylesheet or by reduced motion.
+            stubRunningTransitions(content);
+            item.expanded = true;
+            fixture.detectChanges();
+
+            expect(getPinnedHeight(content)).toBe('');
+        });
+
+        it('retargets the expand to content rendered by the state change', () => {
+            const { item, content, layout } = setup({ natural: 8 });
+
+            item.expanded = true;
+            // Content shown only once the item is open (`@if`, `@defer`) renders in the change detection below.
+            layout.natural = 200;
+            fixture.detectChanges();
+
+            expect(getPinnedHeight(content)).toBe('200px');
+        });
+
+        it('pins the height before the item reports the change', () => {
+            const { item, content } = setup({ natural: 40 });
+            const pinnedOnChange: string[] = [];
+
+            // A handler may run change detection, which flips `data-state`.
+            item.expandedChange.subscribe(() => pinnedOnChange.push(getPinnedHeight(content)));
+            item.expanded = true;
+
+            expect(pinnedOnChange).toEqual(['40px']);
+        });
+
+        it('pins the current height to collapse from', () => {
+            const { item, content, layout } = setup({ natural: 40 });
+
+            item.expanded = true;
+            fixture.detectChanges();
+            dispatchTransition(content);
+
+            // The content has grown since it expanded, e.g. its container got narrower.
+            layout.current = 56;
             item.expanded = false;
             fixture.detectChanges();
 
-            // The accordion is laid out at a narrower width than at first render (sidepanel, overlay,
-            // responsive container), so the same content now wraps onto more lines.
-            naturalHeight = 80;
+            expect(getPinnedHeight(content)).toBe('56px');
+        });
+
+        it('re-reads the natural height on every expand', () => {
+            const { item, content, layout } = setup({ natural: 40 });
+
+            item.expanded = true;
+            fixture.detectChanges();
+            dispatchTransition(content);
+
+            layout.current = 40;
+            item.expanded = false;
+            fixture.detectChanges();
+            dispatchTransition(content);
+
+            // The container got narrower meanwhile, so the same content wraps onto more lines.
+            layout.current = 0;
+            layout.natural = 80;
+            item.expanded = true;
+            fixture.detectChanges();
+
+            expect(getPinnedHeight(content)).toBe('80px');
+        });
+
+        it('does not pin a height for content without a box, e.g. inside a closed content panel', () => {
+            const { item, content } = setup({ natural: 0 });
 
             item.expanded = true;
             fixture.detectChanges();
 
-            expect(content.style.getPropertyValue('--kbq-accordion-content-height')).toBe('80px');
+            expect(getPinnedHeight(content)).toBe('');
+        });
+
+        it('does not pin a height while the animation is disabled', () => {
+            const { item, content } = setup({ natural: 40 });
+
+            item.disableAnimation();
+            item.expanded = true;
+            fixture.detectChanges();
+
+            expect(getPinnedHeight(content)).toBe('');
         });
     });
 
@@ -2609,3 +2781,26 @@ class AccordionNested {
     `
 })
 class AccordionNestedInTrigger {}
+
+@Component({
+    selector: 'section-body',
+    imports: [KbqAccordionModule],
+    template: '<kbq-accordion-content>Content</kbq-accordion-content>'
+})
+class SectionBody {}
+
+@Component({
+    selector: 'accordion-content-in-child',
+    imports: [KbqAccordionModule, SectionBody],
+    template: `
+        <kbq-accordion>
+            <kbq-accordion-item>
+                <kbq-accordion-header>
+                    <button kbq-accordion-trigger type="button">Item</button>
+                </kbq-accordion-header>
+                <section-body />
+            </kbq-accordion-item>
+        </kbq-accordion>
+    `
+})
+class AccordionContentInChild {}
