@@ -33,7 +33,7 @@ type Country = { code: string; name: string; svg: SafeHtml };
                 kbqPrefix
                 decorative
                 class="example-flag-prefix layout-margin-left-s layout-margin-right-s"
-                [innerHTML]="control.value?.svg"
+                [svg]="control.value?.svg"
             />
             <kbq-select
                 placeholder="Select a country"
@@ -43,7 +43,7 @@ type Country = { code: string; name: string; svg: SafeHtml };
             >
                 @for (country of countries; track country) {
                     <kbq-option [value]="country">
-                        <kbq-flag decorative class="example-flag-option" [innerHTML]="country.svg" />
+                        <kbq-flag decorative class="example-flag-option" [svg]="country.svg" />
                         {{ country.name }}
                     </kbq-option>
                 }
@@ -56,7 +56,7 @@ type Country = { code: string; name: string; svg: SafeHtml };
             --kbq-form-field-size-addon-width: 18px;
         }
 
-        /* Match the prefix flag to the flag shown inside the options (21×14). */
+        /* Match the prefix flag to the flag shown inside the options (18×12 at the default 3:2). */
         .example-flag-prefix,
         .example-flag-option {
             height: 12px;

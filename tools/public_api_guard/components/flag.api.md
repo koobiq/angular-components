@@ -5,21 +5,24 @@
 ```ts
 
 import * as _angular_core from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
 
 // @public
 export class KbqFlag {
+    readonly aspectRatio: _angular_core.InputSignal<string | undefined>;
     readonly decorative: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly empty: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly label: _angular_core.InputSignal<string | undefined>;
     readonly shadow: _angular_core.InputSignal<KbqFlagShadow>;
     readonly shape: _angular_core.InputSignal<KbqFlagShape>;
+    readonly svg: _angular_core.InputSignal<string | SafeHtml | undefined>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFlag, "kbq-flag", ["kbqFlag"], { "shape": { "alias": "shape"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFlag, "kbq-flag", ["kbqFlag"], { "shape": { "alias": "shape"; "required": false; "isSignal": true; }; "aspectRatio": { "alias": "aspectRatio"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "svg": { "alias": "svg"; "required": false; "isSignal": true; }; "decorative": { "alias": "decorative"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFlag, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqFlagModule {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFlagModule, never>;
