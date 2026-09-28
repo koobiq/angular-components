@@ -843,8 +843,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     }
 
     /**
-     * Tab out of the panel's first or last tabbable control saves and moves on to the next inline edit.
-     * The boundary is resolved against the panel itself, so the overlay holds no extra tab stops of its own.
+     * Tab off the panel's first or last tabbable control saves and moves to the tab stop next to the field.
      * @docs-private
      */
     protected onPanelTab(event: Event, panel: HTMLElement, backwards: boolean): void {
@@ -855,7 +854,13 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         if (!boundary || boundary !== event.target) return;
 
-        this.saveAndFocusNextInlineEdit(event);
+        // A control that moved the focus itself has spent the key; one that only prevented the default has not.
+        if (event.defaultPrevented && this.document.activeElement !== boundary) return;
+
+        // The panel detaches before the browser resolves the key, and Tab from a detached element restarts at the top.
+        event.preventDefault();
+
+        this.saveAndFocusAdjacentTabStop(event, backwards);
     }
 
     /**
@@ -872,12 +877,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         this.save($event);
     }
 
-    /**
-     * A single-value select renders its options in an overlay of its own, so focus leaves this panel
-     * entirely and the panel's `(keydown.tab)` can never fire. The select also `preventDefault()`s Tab
-     * and closes, which destroys focus instead of moving it — so the key is caught here, on the
-     * document, and torn down with the panel.
-     */
+    /** A select's options sit in an overlay of their own, so the panel's `(keydown.tab)` never fires. */
     private watchTabOutsideThePanel(): void {
         const select = this.selectRef();
 
@@ -898,7 +898,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             setTimeout(() => {
                 if (select.panelOpen || !this.isEditMode()) return;
 
-                this.ngZone.run(() => this.saveAndFocusInlineEditInDocumentOrder(event, backwards));
+                this.ngZone.run(() => this.saveAndFocusAdjacentTabStop(event, backwards));
             });
         };
 
@@ -912,32 +912,56 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             .subscribe(() => this.document.removeEventListener('keydown', onKeydown, { capture: true }));
     }
 
-    /**
-     * The Tab-chain fallback for a control that swallowed the key: `document.activeElement` is `<body>`
-     * by the time this runs, so the neighbour is resolved by document order instead. Every other path
-     * goes through {@link saveAndFocusNextInlineEdit}, which follows the focus the browser actually moved.
-     */
-    private saveAndFocusInlineEditInDocumentOrder(event: Event, backwards: boolean): void {
-        this.chainingToNextInlineEdit = true;
-        this.save(event);
-        this.chainingToNextInlineEdit = false;
-
-        if (this.isInvalid()) return;
-
-        const hosts = Array.from(this.document.querySelectorAll<HTMLElement>(`.${baseClass}`));
-        const neighbour = hosts[hosts.indexOf(this.elementRef.nativeElement) + (backwards ? -1 : 1)];
-        const next = neighbour ? inlineEditRegistry.get(neighbour) : undefined;
-
-        if (!next || next === this || next.disabled() || next.mode() !== 'view') return;
-
-        next.editModeOrigin = 'keyboard';
-        next.toggleMode();
+    private getTabbableElements(panel: Element): HTMLElement[] {
+        return Array.from(panel.querySelectorAll<HTMLElement>('*')).filter((element) => this.isTabStop(element));
     }
 
-    private getTabbableElements(panel: Element): HTMLElement[] {
-        return Array.from(panel.querySelectorAll<HTMLElement>('*')).filter(
-            (element) => this.interactivityChecker.isTabbable(element) && !this.interactivityChecker.isDisabled(element)
-        );
+    private isTabStop(element: HTMLElement): boolean {
+        return this.interactivityChecker.isTabbable(element) && !this.interactivityChecker.isDisabled(element);
+    }
+
+    /** Offers focus to each next tab stop in turn: `isTabbable` passes hidden controls that then refuse it. */
+    private focusAdjacentTabStop(backwards: boolean): HTMLElement | null {
+        let candidate = this.findAdjacentTabStop(backwards, this.elementRef.nativeElement);
+
+        while (candidate) {
+            this.focusMonitor.focusVia(candidate, 'keyboard');
+
+            // `contains` rather than equality: a candidate may hand the focus to a control of its own.
+            if (candidate.contains(this.document.activeElement)) return candidate;
+
+            candidate = this.findAdjacentTabStop(backwards, candidate);
+        }
+
+        return null;
+    }
+
+    /** The tab stop next to `from` in document order, walked out of the host rather than collected page-wide. */
+    private findAdjacentTabStop(backwards: boolean, from: Node): HTMLElement | null {
+        const host = this.elementRef.nativeElement;
+        const overlayElement = this.overlayDir()?.overlayRef?.overlayElement;
+        const walker = this.document.createTreeWalker(this.document.body, NodeFilter.SHOW_ELEMENT);
+
+        walker.currentNode = from;
+
+        const step = (): Node | null => (backwards ? walker.previousNode() : walker.nextNode());
+
+        for (let node = step(); node; node = step()) {
+            // CDK's checker and `focusVia` are typed for `HTMLElement`; an SVG tab stop answers both the same.
+            const element = node as HTMLElement;
+
+            // Only the subtree: backwards the walk climbs the ancestors, where a tab stop is where Shift+Tab belongs.
+            if (host.contains(element) || overlayElement?.contains(element) || !this.isTabStop(element)) continue;
+
+            // Another overlay — a neighbour's panel, a dialog — is not part of the sequence this field is leaving.
+            const overlayContainer = element.closest('.cdk-overlay-container');
+
+            if (overlayContainer && !overlayContainer.contains(host)) continue;
+
+            return element;
+        }
+
+        return null;
     }
 
     /**
@@ -960,12 +984,22 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         setTimeout(() => {
             if (!this.elementRef.nativeElement.isConnected) return;
 
-            // Read here rather than held across the destroy: the focus anchor is a different node on every
-            // return to view mode, and the one captured on the way in is already detached.
-            const target = this.focusAnchor()?.nativeElement ?? this.viewContent().nativeElement;
-
-            this.focusMonitor.focusVia(target, origin ?? 'program');
+            this.focusViewTabStop(origin ?? 'program');
         });
+    }
+
+    /** Focuses the tab stop of view mode, resolved at call time: the focus anchor is a new node on every return. */
+    private focusViewTabStop(origin: FocusOrigin): void {
+        this.focusMonitor.focusVia(this.focusAnchor()?.nativeElement ?? this.viewContent().nativeElement, origin);
+    }
+
+    /** Brings focus back into the editor a rejected value keeps open; only the select path can lose it. */
+    private focusRejectedEditor(): void {
+        const panel = this.overlayDir()?.overlayRef?.overlayElement;
+
+        if (!panel || panel.contains(this.document.activeElement)) return;
+
+        this.getTabbableElements(panel).at(0)?.focus();
     }
 
     private detectInteractiveContent(viewContent: HTMLElement, selectors: string[]): void {
@@ -984,21 +1018,43 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         return !!match && this.elementRef.nativeElement.contains(match);
     }
 
-    private saveAndFocusNextInlineEdit(event: Event): void {
+    /** Saves and hands focus to the tab stop next to the field, opening it when it belongs to another inline edit. */
+    private saveAndFocusAdjacentTabStop(event: Event, backwards: boolean): void {
         this.chainingToNextInlineEdit = true;
-        this.save(event);
-        this.chainingToNextInlineEdit = false;
 
-        if (this.isInvalid()) return;
+        // A throwing handler of the application's must not leave the flag set: `restoreFocus()` reads it.
+        try {
+            this.save(event);
+        } finally {
+            this.chainingToNextInlineEdit = false;
+        }
 
+        if (this.isInvalid()) {
+            this.focusRejectedEditor();
+
+            return;
+        }
+
+        // The chain goes around `restoreFocus()`, which normally consumes it, and into the next session.
+        this.editModeOrigin = null;
+
+        // Deferred until view mode is rendered: until then the field's own tab stop — the fallback — is missing.
         setTimeout(() => {
-            const host = isElement(this.document.activeElement)
-                ? this.document.activeElement.closest<HTMLElement>(`.${baseClass}`)
-                : null;
+            if (!this.elementRef.nativeElement.isConnected) return;
+
+            const target = this.focusAdjacentTabStop(backwards);
+
+            // Nothing took the focus: taking it back beats leaving it on `<body>`, where the next Tab starts over.
+            if (!target) {
+                this.focusViewTabStop('keyboard');
+
+                return;
+            }
+
+            // An interactive view's tab stop is the anchor beside it, so the neighbour comes from the host element.
+            const host = target.closest<HTMLElement>(`.${baseClass}`);
             const next = host ? inlineEditRegistry.get(host) : undefined;
 
-            // Focus lands on the host for an interactive view, and on the focus anchor otherwise, so the
-            // neighbour is resolved from the closest host element rather than from the focused node itself.
             if (!next || next === this || next.disabled() || next.mode() !== 'view') return;
 
             // Tab got us here, so the neighbour has to restore a keyboard focus on the way out — without

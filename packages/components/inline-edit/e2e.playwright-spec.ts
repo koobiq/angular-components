@@ -76,8 +76,60 @@ test.describe('KbqInlineEdit', () => {
                 await expect(getViewContent(field)).toBeFocused();
             });
 
-            // Tab out of the panel's last control saves and opens the neighbour. The chain resolves the
-            // neighbour from where the browser actually moved focus, so only a real Tab exercises it.
+            // Where focus ends up is the browser's own business, so these three are only meaningful here.
+            test('moves focus to the control next to the field', async ({ page }) => {
+                await page.goto('/E2eInlineEditStates');
+
+                const field = getField(page, 0);
+
+                await getViewContent(field).click();
+                await expect(getPanelInput(page)).toBeFocused();
+
+                await page.keyboard.press('Shift+Tab');
+
+                await expect(field).toHaveClass(/kbq-inline-edit_view/);
+                await expect(getComponent(page).getByTestId('e2eInlineEditFocusTrigger')).toBeFocused();
+            });
+
+            // Opened without focus of its own, the panel leaves the browser nothing to continue the sequence from.
+            test('chains from an editor opened without focus of its own', async ({ page }) => {
+                await page.goto('/E2eInlineEditStates');
+
+                await getViewContent(getField(page, 1)).dispatchEvent('click');
+                await expect(getPanelInput(page)).toBeFocused();
+
+                await page.keyboard.press('Tab');
+
+                await expect(getField(page, 1)).toHaveClass(/kbq-inline-edit_view/);
+                await expect(getField(page, 2)).toHaveClass(/kbq-inline-edit_edit/);
+            });
+
+            // The only thing past the last field is a `display: none` button, which reports as a tab stop.
+            test('takes focus back when nothing focusable follows the field', async ({ page }) => {
+                await page.goto('/E2eInlineEditStates');
+
+                const field = getField(page, 3);
+                const panel = page.locator('.kbq-inline-edit__panel');
+
+                // Opened without focus of its own, so the focus trap has nothing to restore.
+                await getViewContent(field).dispatchEvent('click');
+                await expect(getPanelInput(page)).toBeFocused();
+
+                // Stepped through the action buttons of the last field: a blind press would pass on an early close.
+                await page.keyboard.press('Tab');
+                await expect(panel.getByRole('button').first()).toBeFocused();
+
+                await page.keyboard.press('Tab');
+                await expect(panel.getByRole('button').last()).toBeFocused();
+                await expect(field).toHaveClass(/kbq-inline-edit_edit/);
+
+                await page.keyboard.press('Tab');
+
+                await expect(field).toHaveClass(/kbq-inline-edit_view/);
+                await expect(getViewContent(field)).toBeFocused();
+            });
+
+            // The chain resolves the neighbour from the tab stop it moves focus to, so only a real Tab does it.
             test('chains to the next field on Tab out of the panel', async ({ page }) => {
                 await page.goto('/E2eInlineEditStates');
 
@@ -297,6 +349,8 @@ test.describe('KbqInlineEdit', () => {
         const getField = (page: Page, index: number) =>
             page.getByTestId('e2eInlineEditSelectChainList').locator('kbq-inline-edit').nth(index);
         const getViewContent = (field: Locator) => field.locator('.kbq-inline-edit__view-content');
+        // The settled state to wait for is the options panel, not the class: a Tab before it opens is lost.
+        const getSelectPanel = (page: Page) => page.locator('.kbq-select__panel');
 
         // The select puts its options in an overlay of its own and swallows Tab, so neither the panel's
         // own handler nor the focus the chain normally follows survives. Covered end to end because
@@ -310,6 +364,7 @@ test.describe('KbqInlineEdit', () => {
             await getViewContent(field).focus();
             await page.keyboard.press('Enter');
             await expect(field).toHaveClass(/kbq-inline-edit_edit/);
+            await expect(getSelectPanel(page)).toBeVisible();
 
             await page.keyboard.press('Tab');
 
@@ -323,6 +378,7 @@ test.describe('KbqInlineEdit', () => {
             await getViewContent(getField(page, 1)).focus();
             await page.keyboard.press('Enter');
             await expect(getField(page, 1)).toHaveClass(/kbq-inline-edit_edit/);
+            await expect(getSelectPanel(page)).toBeVisible();
 
             await page.keyboard.press('Shift+Tab');
 
