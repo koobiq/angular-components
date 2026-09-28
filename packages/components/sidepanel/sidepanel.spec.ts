@@ -33,6 +33,7 @@ import {
     KbqSidepanelService,
     KbqSidepanelSize
 } from './index';
+import { KbqSidepanelAnimationState } from './sidepanel-animations';
 
 /** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
 const axeTimeout = 15000;
@@ -743,6 +744,25 @@ describe('KbqSidepanelService', () => {
             flush();
 
             expect(sidepanelService.openedSidepanels.length).toBe(0);
+        }));
+
+        it('should not animate a closing sidepanel back into view when closing all sidepanels', fakeAsync(() => {
+            const refs = [1, 2, 3].map(() => sidepanelService.open(SimpleSidepanelExample));
+            const spies = refs.map((ref) => jest.spyOn(ref.containerInstance, 'setAnimationState'));
+
+            sidepanelService.closeAll();
+            rootComponentFixture.detectChanges();
+            flush();
+
+            // Nothing may follow `hidden`: the exit animation is what disposes the overlay, so a panel
+            // put back on screen mid-close never goes away.
+            spies.forEach((spy) => {
+                const states = spy.mock.calls.map(([state]) => state);
+                const hiddenAt = states.indexOf(KbqSidepanelAnimationState.Hidden);
+
+                expect(hiddenAt).toBeGreaterThan(-1);
+                expect(states.slice(hiddenAt + 1)).toEqual([]);
+            });
         }));
 
         it('should drop the indent of the panel above when the one underneath closes', fakeAsync(() => {
