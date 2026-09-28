@@ -25,6 +25,7 @@ Each token category (typography, colors, palette/semantic, sizes, shadows) has a
 - **Color grouping** — tokens are grouped by type, with nested grouping by interactive state where applicable. Sections without a header are sorted to appear first.
 - **Palette/semantic deduplication** — tokens that share the same reference are collapsed so each unique value appears only once.
 - **Typography sorting** — typography tokens are deduplicated by type (one entry per style), then sorted in descending order by font-size value so the largest sizes appear first.
+- **Typography levels without a class** — the typography table names a global `kbq-<level>` class for each level, so the filter in `sdConfig.js` leaves out the levels that `kbq-base-typography()` has no class for. Remove a level from that list once it gets a class.
 
 ## Usage
 

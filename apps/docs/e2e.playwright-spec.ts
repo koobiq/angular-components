@@ -331,6 +331,55 @@ test.describe('docs app', () => {
         await expect(cell).toHaveAttribute('role', 'button');
         await expect(cell).toHaveAttribute('tabindex', '0');
     });
+
+    // The table is generated from the typography tokens, while the classes it names are written by hand in
+    // `kbq-base-typography()`: a level without a class leaves its sample in the inherited font.
+    test('renders every sample of the typography table in the level its class names', async ({ page }) => {
+        await page.goto('/en/main/design-tokens/typography');
+        await waitForHydration(page);
+
+        const rows = page.locator('docs-typography-table tbody tr');
+
+        await expect(rows.first()).toBeVisible();
+
+        const mismatches = await rows.evaluateAll((elements: HTMLTableRowElement[]) =>
+            elements.flatMap((row) => {
+                const sample = row.cells[0].firstElementChild!;
+                const className = row.cells[1].textContent!.trim();
+                const level = className.replace(/^kbq-/, '');
+                const properties = [
+                    'font-family',
+                    'font-size',
+                    'font-style',
+                    'font-weight',
+                    'line-height',
+                    'letter-spacing',
+                    'text-transform',
+                    'font-feature-settings'
+                ];
+                // A probe styled straight from the level's custom properties, so that both sides go through the
+                // same serialization of computed values (quotes and aliases in font-family, keyword weights).
+                const probe = document.createElement('div');
+
+                properties.forEach((property) =>
+                    probe.style.setProperty(property, `var(--kbq-typography-${level}-${property})`)
+                );
+                sample.after(probe);
+
+                const actual = getComputedStyle(sample);
+                const expected = getComputedStyle(probe);
+                const differences = properties.filter(
+                    (property) => actual.getPropertyValue(property) !== expected.getPropertyValue(property)
+                );
+
+                probe.remove();
+
+                return differences.length ? [`${className}: ${differences.join(', ')}`] : [];
+            })
+        );
+
+        expect(mismatches).toEqual([]);
+    });
 });
 
 test.describe('prerendered pages compiled from MDX', () => {
