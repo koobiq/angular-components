@@ -51,8 +51,6 @@ export class KbqFlag {
      * It overrides the ratio the shape implies, so `shape="square"` with an `aspectRatio` is no longer
      * square. Left unset, the ratio comes from the `--kbq-flag-aspect-ratio` token, which a plain class
      * rule can still redefine for a whole group of flags at once.
-     *
-     * @default 3 / 2 — or 1 / 1 for `square` and `circle`
      */
     readonly aspectRatio = input<string>();
     /**
