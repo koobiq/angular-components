@@ -5,14 +5,11 @@
 ```ts
 
 import * as i0 from '@angular/core';
-import { OnDestroy } from '@angular/core';
 
 // @public
-export class KbqSkeleton implements OnDestroy {
+export class KbqSkeleton {
     constructor();
     readonly enabled: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)

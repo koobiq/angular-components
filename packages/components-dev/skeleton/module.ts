@@ -1,14 +1,34 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
-    SkeletonDirectiveExample,
+    SkeletonAlertExample,
+    SkeletonBadgeExample,
+    SkeletonButtonExample,
+    SkeletonDlExample,
     SkeletonInSidepanelExample,
-    SkeletonOverviewExample
+    SkeletonListExample,
+    SkeletonOverviewExample,
+    SkeletonTableExample,
+    SkeletonTagExample,
+    SkeletonTreeExample,
+    SkeletonTypographyExample
 } from 'packages/docs-examples/components/skeleton';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'dev-examples',
-    imports: [SkeletonOverviewExample, SkeletonInSidepanelExample, SkeletonDirectiveExample],
+    imports: [
+        SkeletonOverviewExample,
+        SkeletonInSidepanelExample,
+        SkeletonButtonExample,
+        SkeletonBadgeExample,
+        SkeletonTagExample,
+        SkeletonAlertExample,
+        SkeletonDlExample,
+        SkeletonTableExample,
+        SkeletonTypographyExample,
+        SkeletonListExample,
+        SkeletonTreeExample
+    ],
     template: `
         <skeleton-overview-example />
         <hr />
@@ -16,7 +36,31 @@ import { DevThemeToggle } from '../theme-toggle';
         <skeleton-in-sidepanel-example />
         <hr />
 
-        <skeleton-directive-example />
+        <skeleton-button-example />
+        <hr />
+
+        <skeleton-badge-example />
+        <hr />
+
+        <skeleton-tag-example />
+        <hr />
+
+        <skeleton-alert-example />
+        <hr />
+
+        <skeleton-dl-example />
+        <hr />
+
+        <skeleton-table-example />
+        <hr />
+
+        <skeleton-typography-example />
+        <hr />
+
+        <skeleton-list-example />
+        <hr />
+
+        <skeleton-tree-example />
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
