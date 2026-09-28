@@ -22,3 +22,4 @@ jobs:
           yarn run eslint --max-warnings=0
           yarn run check-peer-deps
           yarn run check-e2e-types
+          yarn run check-tokens-data

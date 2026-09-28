@@ -2,15 +2,16 @@ A Style Dictionary based build tool that reads design token sources from `@koobi
 
 ## Directory structure
 
-| File            | Purpose                                                                           |
-| --------------- | --------------------------------------------------------------------------------- |
-| `index.js`      | Entry point — registers custom SD extensions and runs the build                   |
-| `sdConfig.js`   | SD platform config — token sources, output destinations, and per-category filters |
-| `config.js`     | Shared path constants and auto-generated file header                              |
-| `transforms.js` | Custom transforms and the `kbq/css-extended` transform group                      |
-| `formats.js`    | Custom formatters that produce TypeScript output per token category               |
-| `templates.js`  | Token-mapping helpers used by the formatters                                      |
-| `utils.js`      | Shared utilities (capitalize, grouping, section sorting)                          |
+| File            | Purpose                                                                                  |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| `index.js`      | Entry point — registers custom SD extensions and runs the build                          |
+| `check.js`      | CI guard — rebuilds into a temporary directory and diffs it against the committed output |
+| `sdConfig.js`   | SD platform config — token sources, output destinations, and per-category filters        |
+| `config.js`     | Shared path constants and auto-generated file header                                     |
+| `transforms.js` | Custom transforms and the `kbq/css-extended` transform group                             |
+| `formats.js`    | Custom formatters that produce TypeScript output per token category                      |
+| `templates.js`  | Token-mapping helpers used by the formatters                                             |
+| `utils.js`      | Shared utilities (capitalize, grouping, section sorting)                                 |
 
 ## Custom transforms
 
@@ -39,3 +40,18 @@ Or use the predefined script:
 ```bash
 yarn run build:tokens:data
 ```
+
+The output is committed, and no docs build regenerates it, so the Linters workflow runs
+
+```bash
+yarn run check-tokens-data
+```
+
+on every pull request. It builds into `dist/tokens-docs-check/` and compares the result with the
+committed files byte for byte — the generated directory is in `.prettierignore`, so the bytes are
+comparable as written. When it fails, run `build:tokens:data` and commit the result; the fresh
+output is left in `dist/tokens-docs-check/` for comparison.
+
+The check is on content rather than on the version of `@koobiq/design-tokens`: the data also goes
+stale when the formatters change, when a local build of the tokens is linked in, or when the same
+version resolves differently.
