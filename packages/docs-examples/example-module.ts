@@ -5386,16 +5386,52 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidepanel-with-dynamic-config-update-example.ts",
     "importPath": "components/sidepanel"
   },
-  "skeleton-directive": {
-    "packagePath": "components/skeleton/skeleton-directive",
-    "title": "Skeleton directive",
-    "componentName": "SkeletonDirectiveExample",
+  "skeleton-alert": {
+    "packagePath": "components/skeleton/skeleton-alert",
+    "title": "Skeleton with alerts",
+    "componentName": "SkeletonAlertExample",
     "files": [
-      "skeleton-directive-example.ts"
+      "skeleton-alert-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "skeleton-directive-example",
-    "primaryFile": "skeleton-directive-example.ts",
+    "selector": "skeleton-alert-example",
+    "primaryFile": "skeleton-alert-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-badge": {
+    "packagePath": "components/skeleton/skeleton-badge",
+    "title": "Skeleton with badges",
+    "componentName": "SkeletonBadgeExample",
+    "files": [
+      "skeleton-badge-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-badge-example",
+    "primaryFile": "skeleton-badge-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-button": {
+    "packagePath": "components/skeleton/skeleton-button",
+    "title": "Skeleton with buttons",
+    "componentName": "SkeletonButtonExample",
+    "files": [
+      "skeleton-button-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-button-example",
+    "primaryFile": "skeleton-button-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-dl": {
+    "packagePath": "components/skeleton/skeleton-dl",
+    "title": "Skeleton with description list",
+    "componentName": "SkeletonDlExample",
+    "files": [
+      "skeleton-dl-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-dl-example",
+    "primaryFile": "skeleton-dl-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-in-sidepanel": {
@@ -5410,6 +5446,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "skeleton-in-sidepanel-example.ts",
     "importPath": "components/skeleton"
   },
+  "skeleton-list": {
+    "packagePath": "components/skeleton/skeleton-list",
+    "title": "Skeleton with list",
+    "componentName": "SkeletonListExample",
+    "files": [
+      "skeleton-list-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-list-example",
+    "primaryFile": "skeleton-list-example.ts",
+    "importPath": "components/skeleton"
+  },
   "skeleton-overview": {
     "packagePath": "components/skeleton/skeleton-overview",
     "title": "Skeleton overview",
@@ -5420,6 +5468,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "skeleton-overview-example",
     "primaryFile": "skeleton-overview-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-table": {
+    "packagePath": "components/skeleton/skeleton-table",
+    "title": "Skeleton with table",
+    "componentName": "SkeletonTableExample",
+    "files": [
+      "skeleton-table-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-table-example",
+    "primaryFile": "skeleton-table-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-tag": {
+    "packagePath": "components/skeleton/skeleton-tag",
+    "title": "Skeleton with tags",
+    "componentName": "SkeletonTagExample",
+    "files": [
+      "skeleton-tag-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-tag-example",
+    "primaryFile": "skeleton-tag-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-tree": {
+    "packagePath": "components/skeleton/skeleton-tree",
+    "title": "Skeleton with tree",
+    "componentName": "SkeletonTreeExample",
+    "files": [
+      "skeleton-tree-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-tree-example",
+    "primaryFile": "skeleton-tree-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-typography": {
+    "packagePath": "components/skeleton/skeleton-typography",
+    "title": "Skeleton with typography",
+    "componentName": "SkeletonTypographyExample",
+    "files": [
+      "skeleton-typography-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-typography-example",
+    "primaryFile": "skeleton-typography-example.ts",
     "importPath": "components/skeleton"
   },
   "split-button-content": {
@@ -8113,9 +8209,17 @@ export type LiveExampleId =
   | 'sidepanel-state-saving'
   | 'sidepanel-with-custom-injector'
   | 'sidepanel-with-dynamic-config-update'
-  | 'skeleton-directive'
+  | 'skeleton-alert'
+  | 'skeleton-badge'
+  | 'skeleton-button'
+  | 'skeleton-dl'
   | 'skeleton-in-sidepanel'
+  | 'skeleton-list'
   | 'skeleton-overview'
+  | 'skeleton-table'
+  | 'skeleton-tag'
+  | 'skeleton-tree'
+  | 'skeleton-typography'
   | 'split-button-content'
   | 'split-button-disabled-state'
   | 'split-button-menu-width'

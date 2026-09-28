@@ -1,0 +1,19 @@
+:where(.kbq-skeleton) {
+    --kbq-skeleton-min-height: var(--kbq-size-l);
+    --kbq-skeleton-border-radius: var(--kbq-size-xxs);
+    --kbq-skeleton-animation-duration: 1200ms;
+    --kbq-skeleton-wave-width: 100px;
+}
+
+// The filter paints the host as a flat black shape; only the alpha of `fill` and of the wave colors is used,
+// as mask layers that thin that shape out. Declared on the theme and inherited, like the wave colors, so that the
+// nearest theme wins: a `.kbq-dark .kbq-skeleton` rule would also match inside a light section of a dark page.
+:where(:root, .kbq-light) {
+    --kbq-skeleton-filter: contrast(0) brightness(0);
+    --kbq-skeleton-fill: var(--kbq-semantic-contrast-a1, var(--kbq-palette-grey-0-a8));
+}
+
+:where(.kbq-dark) {
+    --kbq-skeleton-filter: contrast(0) brightness(0) invert(1);
+    --kbq-skeleton-fill: var(--kbq-semantic-dark-contrast-a2, var(--kbq-palette-grey-100-a8));
+}

@@ -879,12 +879,28 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelWithCustomInjectorExample);
         case 'sidepanel-with-dynamic-config-update':
             return import('@koobiq/docs-examples/components/sidepanel').then((m) => m.SidepanelWithDynamicConfigUpdateExample);
-        case 'skeleton-directive':
-            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonDirectiveExample);
+        case 'skeleton-alert':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonAlertExample);
+        case 'skeleton-badge':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonBadgeExample);
+        case 'skeleton-button':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonButtonExample);
+        case 'skeleton-dl':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonDlExample);
         case 'skeleton-in-sidepanel':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonInSidepanelExample);
+        case 'skeleton-list':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonListExample);
         case 'skeleton-overview':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonOverviewExample);
+        case 'skeleton-table':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTableExample);
+        case 'skeleton-tag':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTagExample);
+        case 'skeleton-tree':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTreeExample);
+        case 'skeleton-typography':
+            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTypographyExample);
         case 'split-button-content':
             return import('@koobiq/docs-examples/components/split-button').then((m) => m.SplitButtonContentExample);
         case 'split-button-disabled-state':
