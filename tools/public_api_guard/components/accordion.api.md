@@ -8,6 +8,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
@@ -80,7 +81,7 @@ export class KbqAccordionContent {
 }
 
 // @public (undocumented)
-export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
+export class KbqAccordionContentDirective implements AfterContentInit, DoCheck, AfterViewInit {
     constructor();
     get contentId(): string;
     // (undocumented)
@@ -94,6 +95,9 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngDoCheck(): void;
+    protected onTransitionEnd(event: TransitionEvent): void;
     // (undocumented)
     toggle(): void;
     get triggerId(): string;
