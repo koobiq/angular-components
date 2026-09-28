@@ -42,6 +42,7 @@
 
 .docs-welcome__category-item-preview {
     max-width: 100%;
+    height: auto;
 }
 
 .docs-welcome__category-item-title {
@@ -60,6 +61,8 @@
 
     .docs-welcome__category-item {
         width: calc(50% - var(--kbq-size-l) / 2);
+        // The desktop min-height fits a 140px-high preview; here the preview shrinks with the card.
+        min-height: 0;
     }
 }
 
