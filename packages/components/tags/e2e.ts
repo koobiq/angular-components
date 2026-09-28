@@ -354,6 +354,61 @@ export class E2eTagInputStates {}
 })
 export class E2eTagAutocompleteStates {}
 
+@Component({
+    selector: 'e2e-tag-autocomplete-relative-to-caret',
+    imports: [
+        KbqTagsModule,
+        KbqAutocompleteModule,
+        KbqIconModule,
+        KbqInputModule
+    ],
+    template: `
+        <div class="e2e-tag-autocomplete-caret" data-testid="e2eScreenshotTarget">
+            <kbq-form-field data-testid="e2eTagAutocompleteField">
+                <kbq-tag-list #tagList="kbqTagList">
+                    @for (tag of tags; track tag) {
+                        <kbq-tag>
+                            {{ tag }}
+                            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+                        </kbq-tag>
+                    }
+
+                    <input
+                        data-testid="e2eTagAutocompleteInput"
+                        kbqInput
+                        placeholder="New tag"
+                        [kbqAutocomplete]="autocomplete"
+                        [kbqAutocompleteRelativeToCaret]="true"
+                        [kbqTagInputFor]="tagList"
+                    />
+                </kbq-tag-list>
+
+                <kbq-autocomplete #autocomplete="kbqAutocomplete">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                </kbq-autocomplete>
+            </kbq-form-field>
+        </div>
+    `,
+    styles: `
+        .e2e-tag-autocomplete-caret {
+            width: 480px;
+            height: 220px;
+            padding: var(--kbq-size-xs);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eTagAutocompleteRelativeToCaret'
+    }
+})
+export class E2eTagAutocompleteRelativeToCaret {
+    // Few enough for the caret to stay clear of the right edge, where the panel would not fit into the shot.
+    protected readonly tags = ['TheHacker', 'ClamAV'];
+    protected readonly options = ['Acronis', 'AegisLab', 'AhnLab-V3'];
+}
+
 /**
  * Demonstrates `KbqTagSeparator.appliesTo` scoping: `Enter` creates a tag both while typing and
  * on paste, while a keyless whitespace separator (`/\s+/`) only splits pasted text — typing a

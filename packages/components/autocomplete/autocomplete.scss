@@ -52,4 +52,10 @@
     }
 }
 
+// Layout, typography and the transparent text around the hint are set inline by `kbqCreateTextMirror`, since they
+// follow the field; only the look of the hint itself lives here.
+.kbq-autocomplete-inline-hint__hint {
+    color: var(--kbq-form-field-default-placeholder);
+}
+
 @include kbq-autocomplete-theme();

@@ -22,8 +22,6 @@ import {
 export class SidepanelSizesExample {
     private sidepanelService = inject(KbqSidepanelService);
 
-    size = KbqSidepanelPosition.Right;
-
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 
     arrayLength = 40;

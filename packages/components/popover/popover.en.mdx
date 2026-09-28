@@ -110,6 +110,18 @@ Both strings are optional and can be set per trigger:
 
 Left unbound, the question and the button caption come from the `popoverConfirm` section of the active locale, so an application that switched its locale gets the translated wording without configuring anything. To override the wording for a whole application — or for any part of it — provide `KBQ_POPOVER_CONFIRM_TEXT` and `KBQ_POPOVER_CONFIRM_BUTTON_TEXT`: an input beats the provider, and the provider beats the locale.
 
+#### Opening next to a text selection
+
+A popover can open next to selected text. It stays next to the selection while the page scrolls, and the selection stays in place when an action is chosen.
+
+<Example id="popover-text-selection" />
+
+`kbqPopoverOrigin` accepts an element or a rectangle in viewport coordinates. `kbqCreateCaretOrigin` creates a dynamic origin for the selection, and `kbqGetSelectionRect` measures its position inside the element. `updatePosition(true)` moves an open popover to a changed selection. `null` anchors it back to the trigger.
+
+`[kbqPopoverAutoFocus]="false"` leaves the focus and selection where they were. Cancel the default `mousedown` action inside the popover so the first click does not collapse the selection. The `Escape` key is handled on the document.
+
+The popover opens once the selection is final: after `pointerup` for pointer selection and after a short pause for keyboard selection. Otherwise, it anchors to the first characters of a selection that is still growing. The popover lives in an overlay at the end of the document, so `Tab` walks past it; when needed, handle `Tab` separately and move focus to the first popover element.
+
 ### Opening and closing
 
 By default the popover opens on a click and on `Enter`/`Space`, and closes on a click outside it, on `Esc`, or through the close button. Other triggers are selected with `kbqTrigger`: `hover`, `focus`, `manual`, or a comma-separated combination of them.

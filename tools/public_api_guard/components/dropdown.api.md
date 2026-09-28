@@ -19,6 +19,7 @@ import { IFocusableOption } from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqOverlayOrigin } from '@koobiq/components/core';
 import { KbqPanelMaxWidth } from '@koobiq/components/core';
 import { KbqPanelMinWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
@@ -77,6 +78,7 @@ export const KBQ_DROPDOWN_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestroy {
     constructor();
     activateSafeArea(owner: KbqDropdownItem, origin: KbqPoint, getPanelRect: () => DOMRect, onExit: () => void): void;
+    readonly activeDescendantNavigation: _angular_core.InputSignalWithTransform<boolean, unknown>;
     adoptItems(items: readonly KbqDropdownItem[]): void;
     animationDone: Subject<AnimationEvent_2>;
     readonly backdropClass: _angular_core.InputSignal<string>;
@@ -129,7 +131,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     readonly xPosition: _angular_core.ModelSignal<KbqDropdownPositionX>;
     readonly yPosition: _angular_core.ModelSignal<KbqDropdownPositionY>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; "isSignal": true; }; "yPosition": { "alias": "yPosition"; "required": false; "isSignal": true; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; "isSignal": true; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "panelClass": { "alias": "class"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "xPosition": "xPositionChange"; "yPosition": "yPositionChange"; "overlapTriggerY": "overlapTriggerYChange"; "overlapTriggerX": "overlapTriggerXChange"; "closed": "closed"; }, ["panelFormField", "searches", "queriedItems", "lazyContent"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "activeDescendantNavigation": { "alias": "activeDescendantNavigation"; "required": false; "isSignal": true; }; "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; "isSignal": true; }; "xPosition": { "alias": "xPosition"; "required": false; "isSignal": true; }; "yPosition": { "alias": "yPosition"; "required": false; "isSignal": true; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; "isSignal": true; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "panelClass": { "alias": "class"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "safeArea": { "alias": "safeArea"; "required": false; "isSignal": true; }; }, { "xPosition": "xPositionChange"; "yPosition": "yPositionChange"; "overlapTriggerY": "overlapTriggerYChange"; "overlapTriggerX": "overlapTriggerXChange"; "closed": "closed"; }, ["panelFormField", "searches", "queriedItems", "lazyContent"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -325,6 +327,7 @@ export class KbqDropdownStaticContent {
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSiblingPopup {
     constructor();
     protected get ariaExpanded(): boolean | null;
+    readonly autoFocus: _angular_core.InputSignalWithTransform<boolean, unknown>;
     close(): void;
     readonly data: _angular_core.InputSignal<any>;
     get dir(): Direction;
@@ -354,11 +357,13 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     // (undocumented)
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
     readonly openedChange: Observable<boolean>;
+    readonly origin: _angular_core.InputSignal<KbqOverlayOrigin | null>;
     readonly restoreFocus: _angular_core.ModelSignal<boolean>;
     toggle(): void;
+    updatePosition(): void;
     widthOrigin?: KbqPanelWidthOrigin;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; "isSignal": true; }; "offsetY": { "alias": "offsetY"; "required": false; "isSignal": true; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; "isSignal": true; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; "isSignal": true; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; "isSignal": true; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; "isSignal": true; }; }, { "offsetX": "offsetXChange"; "openByArrowDown": "openByArrowDownChange"; "restoreFocus": "kbqDropdownTriggerRestoreFocusChange"; "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDropdownTrigger, "[kbqDropdownTriggerFor]", ["kbqDropdownTrigger"], { "offsetX": { "alias": "offsetX"; "required": false; "isSignal": true; }; "offsetY": { "alias": "offsetY"; "required": false; "isSignal": true; }; "data": { "alias": "kbqDropdownTriggerData"; "required": false; "isSignal": true; }; "openByArrowDown": { "alias": "openByArrowDown"; "required": false; "isSignal": true; }; "origin": { "alias": "kbqDropdownTriggerOrigin"; "required": false; "isSignal": true; }; "autoFocus": { "alias": "kbqDropdownTriggerAutoFocus"; "required": false; "isSignal": true; }; "restoreFocus": { "alias": "kbqDropdownTriggerRestoreFocus"; "required": false; "isSignal": true; }; "dropdown": { "alias": "kbqDropdownTriggerFor"; "required": false; "isSignal": true; }; }, { "offsetX": "offsetXChange"; "openByArrowDown": "openByArrowDownChange"; "restoreFocus": "kbqDropdownTriggerRestoreFocusChange"; "dropdownOpened": "dropdownOpened"; "dropdownClosed": "dropdownClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdownTrigger, never>;
 }

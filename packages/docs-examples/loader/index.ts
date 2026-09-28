@@ -61,6 +61,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridInfiniteSelectionExample);
         case 'ag-grid-loading-overlay':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridLoadingOverlayExample);
+        case 'ag-grid-long-cell-content':
+            return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridLongCellContentExample);
         case 'ag-grid-overview':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridOverviewExample);
         case 'ag-grid-quick-filter-state':
@@ -99,6 +101,10 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteOverviewExample);
         case 'autocomplete-search-smart':
             return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteSearchSmartExample);
+        case 'autocomplete-textarea':
+            return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteTextareaExample);
+        case 'autocomplete-triggers':
+            return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteTriggersExample);
         case 'autocomplete-with-footer':
             return import('@koobiq/docs-examples/components/autocomplete').then((m) => m.AutocompleteWithFooterExample);
         case 'badge-content':
@@ -283,6 +289,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownRecursiveTemplateExample);
         case 'dropdown-safe-area':
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownSafeAreaExample);
+        case 'dropdown-slash-menu':
+            return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownSlashMenuExample);
         case 'dropdown-with-filter':
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownWithFilterExample);
         case 'dropdown-with-footer':
@@ -737,6 +745,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverScrollingAndLayeringExample);
         case 'popover-small':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverSmallExample);
+        case 'popover-text-selection':
+            return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverTextSelectionExample);
         case 'popover-width':
             return import('@koobiq/docs-examples/components/popover').then((m) => m.PopoverWidthExample);
         case 'progress-bar-indeterminate':
@@ -955,6 +965,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tags').then((m) => m.TagAutocompleteOptionOperationsExample);
         case 'tag-autocomplete-overview':
             return import('@koobiq/docs-examples/components/tags').then((m) => m.TagAutocompleteOverviewExample);
+        case 'tag-autocomplete-relative-to-caret':
+            return import('@koobiq/docs-examples/components/tags').then((m) => m.TagAutocompleteRelativeToCaretExample);
         case 'tag-autocomplete-removable':
             return import('@koobiq/docs-examples/components/tags').then((m) => m.TagAutocompleteRemovableExample);
         case 'tag-autocomplete-search':
@@ -1101,6 +1113,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/tooltip').then((m) => m.TooltipOverviewExample);
         case 'tooltip-placements':
             return import('@koobiq/docs-examples/components/tooltip').then((m) => m.TooltipPlacementsExample);
+        case 'tooltip-relative-to-caret':
+            return import('@koobiq/docs-examples/components/tooltip').then((m) => m.TooltipRelativeToCaretExample);
         case 'tooltip-relative-to-pointer':
             return import('@koobiq/docs-examples/components/tooltip').then((m) => m.TooltipRelativeToPointerExample);
         case 'tooltip-style':

@@ -17,9 +17,15 @@
     --kbq-sidepanel-size-footer-padding-horizontal: var(--kbq-size-xxl);
     --kbq-sidepanel-size-footer-content-gap-horizontal: var(--kbq-size-l);
     /* THEME TOKENS */
-    --kbq-sidepanel-overlay-background: var(--kbq-background-overlay);
     --kbq-sidepanel-container-background: var(--kbq-background-card);
     --kbq-sidepanel-container-shadow: var(--kbq-shadow-popup);
     --kbq-sidepanel-header-text-color: var(--kbq-foreground-contrast);
     --kbq-sidepanel-content-text-color: var(--kbq-foreground-contrast);
+}
+
+// The backdrop is a sibling of the overlay host, not a descendant of the container, so it needs the
+// token declared on itself.
+.kbq-overlay-dark-backdrop {
+    /* THEME TOKENS */
+    --kbq-sidepanel-overlay-background: var(--kbq-background-overlay);
 }

@@ -1,3 +1,5 @@
+import { numberAttribute } from '@angular/core';
+
 export function isBoolean(value: unknown): value is boolean {
     return typeof value === 'boolean';
 }
@@ -107,4 +109,15 @@ export const kbqDeepMerge = <T>(base: T, patch: NoInfer<KbqDeepPartial<T>> | und
     }
 
     return (changed ? result : base) as T;
+};
+
+/**
+ * `numberAttribute` for an input whose default is `undefined`: a missing, empty or unparsable value gives
+ * `undefined` rather than `NaN` or `0`. Angular's own transform returns `NaN`, which is not nullish and
+ * therefore walks past every `??` meant to apply the default, and `0` for `null` and for an empty string.
+ */
+export const kbqOptionalNumberAttribute = (value: unknown): number | undefined => {
+    const parsed = value == null || value === '' ? NaN : numberAttribute(value);
+
+    return Number.isFinite(parsed) ? parsed : undefined;
 };

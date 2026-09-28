@@ -25,7 +25,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
     },
     "autocomplete": {
         "en": "Autocomplete suggests matching options in a dropdown while the user types and lets them select a value without entering it in full.",
-        "ru": "Autocomplete предлагает подходящие варианты в выпадающем списке по мере ввода и позволяет выбрать значение, не вводя его целиком."
+        "ru": "Autocomplete показывает подходящие варианты в раскрывающемся списке по мере ввода. Значение можно выбрать, не вводя его целиком."
     },
     "badge": {
         "en": "A badge is used to highlight the status, count, or other important characteristics of an object.",

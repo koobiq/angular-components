@@ -5,6 +5,7 @@ import { TagAutocompleteEditableExample } from './tag-autocomplete-editable/tag-
 import { TagAutocompleteOnpasteOffExample } from './tag-autocomplete-onpaste-off/tag-autocomplete-onpaste-off-example';
 import { TagAutocompleteOptionOperationsExample } from './tag-autocomplete-option-operations/tag-autocomplete-option-operations-example';
 import { TagAutocompleteOverviewExample } from './tag-autocomplete-overview/tag-autocomplete-overview-example';
+import { TagAutocompleteRelativeToCaretExample } from './tag-autocomplete-relative-to-caret/tag-autocomplete-relative-to-caret-example';
 import { TagAutocompleteRemovableExample } from './tag-autocomplete-removable/tag-autocomplete-removable-example';
 import { TagAutocompleteSearchExample } from './tag-autocomplete-search/tag-autocomplete-search-example';
 import { TagAutocompleteWithFormControlValidatorsExample } from './tag-autocomplete-with-form-control-validators/tag-autocomplete-with-form-control-validators-example';
@@ -36,6 +37,7 @@ export {
     TagAutocompleteOnpasteOffExample,
     TagAutocompleteOptionOperationsExample,
     TagAutocompleteOverviewExample,
+    TagAutocompleteRelativeToCaretExample,
     TagAutocompleteRemovableExample,
     TagAutocompleteSearchExample,
     TagAutocompleteWithFormControlValidatorsExample,
@@ -68,6 +70,7 @@ const EXAMPLES = [
     TagInputOverviewExample,
     TagListOverviewExample,
     TagAutocompleteOverviewExample,
+    TagAutocompleteRelativeToCaretExample,
     TagAutocompleteSearchExample,
     TagAutocompleteOptionOperationsExample,
     TagInputOnpasteOffExample,

@@ -136,8 +136,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /** Whether the dropdown projects a search form-field. @docs-private */
     readonly hasSearch = computed(() => !!this.panelFormField());
 
+    /**
+     * Whether the arrow keys move a highlight instead of the DOM focus. Turn it on when the keyboard belongs to
+     * something outside the panel — an editor whose caret the panel is anchored to, for instance — and forward
+     * the keys with {@link handleKeydown}.
+     */
+    readonly activeDescendantNavigation = input(false, { transform: booleanAttribute });
+
     /** Whether the panel highlights the active item instead of focusing it. @docs-private */
-    readonly inSearchMode: Signal<boolean> = computed(() => !!this.search());
+    readonly inSearchMode: Signal<boolean> = computed(() => !!this.search() || this.activeDescendantNavigation());
 
     readonly navigationWithWrap = input<boolean>(false);
 

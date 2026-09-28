@@ -14,6 +14,7 @@ import { PopoverScrollExample } from './popover-scroll/popover-scroll-example';
 import { PopoverScrollingAndLayeringPageExample } from './popover-scrolling-and-layering-page/popover-scrolling-and-layering-page-example';
 import { PopoverScrollingAndLayeringExample } from './popover-scrolling-and-layering/popover-scrolling-and-layering-example';
 import { PopoverSmallExample } from './popover-small/popover-small-example';
+import { PopoverTextSelectionExample } from './popover-text-selection/popover-text-selection-example';
 import { PopoverWidthExample } from './popover-width/popover-width-example';
 
 export {
@@ -32,6 +33,7 @@ export {
     PopoverScrollingAndLayeringExample,
     PopoverScrollingAndLayeringPageExample,
     PopoverSmallExample,
+    PopoverTextSelectionExample,
     PopoverWidthExample
 };
 
@@ -51,7 +53,8 @@ const EXAMPLES = [
     PopoverSmallExample,
     PopoverPaddingsExample,
     PopoverScrollingAndLayeringExample,
-    PopoverScrollingAndLayeringPageExample
+    PopoverScrollingAndLayeringPageExample,
+    PopoverTextSelectionExample
 ];
 
 @NgModule({

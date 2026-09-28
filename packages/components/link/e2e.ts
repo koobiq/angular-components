@@ -262,3 +262,41 @@ export class E2eLinkStates {}
     }
 })
 export class E2eLinkWithCaption {}
+
+@Component({
+    selector: 'e2e-link-trailing-icon-wrap',
+    imports: [KbqLinkModule, KbqIconModule],
+    template: `
+        @for (size of sizes; track size) {
+            <div data-testid="e2eLinkTrailingIconWrapItem">
+                <a kbq-link class="kbq-link_external" [compact]="size === 'compact'" [big]="size === 'big'">
+                    <span class="kbq-link__text">Technical support center</span>
+                    <i kbq-icon="kbq-north-east_16"></i>
+                </a>
+            </div>
+            <div data-testid="e2eLinkTrailingIconWrapItem">
+                <a kbq-link [compact]="size === 'compact'" [big]="size === 'big'">
+                    <i kbq-icon="kbq-calendar-o_16"></i>
+                    <span class="kbq-link__text">Scan report</span>
+                    <i kbq-icon="kbq-arrow-right_16"></i>
+                </a>
+            </div>
+        }
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--kbq-size-xs);
+            padding: var(--kbq-size-s);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eLinkTrailingIconWrap'
+    }
+})
+export class E2eLinkTrailingIconWrap {
+    protected readonly sizes = ['normal', 'compact', 'big'] as const;
+}

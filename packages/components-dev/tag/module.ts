@@ -6,6 +6,7 @@ import {
     TagAutocompleteOnpasteOffExample,
     TagAutocompleteOptionOperationsExample,
     TagAutocompleteOverviewExample,
+    TagAutocompleteRelativeToCaretExample,
     TagAutocompleteRemovableExample,
     TagAutocompleteSearchExample,
     TagAutocompleteWithFormControlValidatorsExample,
@@ -43,6 +44,7 @@ import { DevThemeToggle } from '../theme-toggle';
         TagInputOverviewExample,
         TagListOverviewExample,
         TagAutocompleteOverviewExample,
+        TagAutocompleteRelativeToCaretExample,
         TagAutocompleteSearchExample,
         TagAutocompleteOptionOperationsExample,
         TagInputOnpasteOffExample,
@@ -68,6 +70,8 @@ import { DevThemeToggle } from '../theme-toggle';
     template: `
         <!-- Autocomplete -->
         <tag-autocomplete-option-operations-example />
+        <hr />
+        <tag-autocomplete-relative-to-caret-example />
         <hr />
         <tag-autocomplete-overview-example />
         <hr />

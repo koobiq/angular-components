@@ -41,6 +41,7 @@ import {
     KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
+    kbqOptionalNumberAttribute,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
     ruRULocaleData
@@ -223,11 +224,7 @@ export class KbqCodeBlock implements AfterViewInit {
      * Can be toggled by `viewAll` property.
      */
     readonly maxHeight = input<number | undefined, unknown>(undefined, {
-        transform: (value) => {
-            const parsed = numberAttribute(value);
-
-            return Number.isFinite(parsed) ? parsed : undefined;
-        }
+        transform: kbqOptionalNumberAttribute
     });
 
     /**

@@ -19,8 +19,7 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
             </kbq-sidepanel-actions>
         </kbq-sidepanel-footer>
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    host: { class: 'layout-column flex' }
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleSidepanelDisableCloseContent {}
 

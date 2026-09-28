@@ -116,6 +116,11 @@ export type DocsStructureItem = {
      * Determined by comparing the current date with expiration date.
      */
     isNew?: boolean;
+    /**
+     * Marks the item as recently updated until the date passed to `expiresAt`.
+     * The sidenav shows only the "new" badge when both flags are set.
+     */
+    isUpdated?: boolean;
 };
 
 export enum DocsStructureCategoryId {
@@ -181,7 +186,7 @@ const expiresAt = (expiresAt: string): boolean => {
     return createdDate.diffNow('days').days > 0;
 };
 
-/** Returns all ISO dates used to gate `isNew` badges (see `expiresAt`). Used by the integrity spec. */
+/** Returns all ISO dates used to gate `isNew` and `isUpdated` badges (see `expiresAt`). Used by the integrity spec. */
 export const docsGetIsNewExpiryDates = (): readonly string[] => isNewExpiryDates;
 
 const structure: DocsStructure = makeStructure({
@@ -360,7 +365,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'autocomplete',
                     hasApi: true,
                     apiId: 'autocomplete',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-10-25')
                 },
                 {
                     id: DocsStructureItemId.Badge,
@@ -538,7 +544,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'dropdown',
                     hasApi: true,
                     apiId: 'dropdown',
-                    hasExamples: false
+                    hasExamples: false,
+                    isUpdated: expiresAt('2026-10-25')
                 },
                 {
                     id: DocsStructureItemId.DynamicTranslation,
@@ -798,7 +805,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'popover',
                     hasApi: true,
                     apiId: 'popover',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-10-25')
                 },
                 {
                     id: DocsStructureItemId.ProgressBar,
@@ -992,7 +1000,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'tags autocomplete',
                     hasApi: true,
                     apiId: 'tags',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-10-25')
                 },
                 {
                     id: DocsStructureItemId.TagInput,
@@ -1111,7 +1120,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'tooltip',
                     hasApi: true,
                     apiId: 'tooltip',
-                    hasExamples: true
+                    hasExamples: true,
+                    isUpdated: expiresAt('2026-10-25')
                 },
                 {
                     id: DocsStructureItemId.TopBar,

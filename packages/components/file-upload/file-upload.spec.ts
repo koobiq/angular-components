@@ -415,9 +415,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             // variant to the same behaviour, which it only diverged from once `kbqTooltipDisabled` started
             // being honoured on a `kbqEllipsisCenter` host.
 
-            // Timed rather than flushed: the list scrolls inside a `kbq-scrollbar`, whose track polls with
-            // a self-requeuing `requestAnimationFrame`, and `flush()` never reaches the end of a queue that
-            // refills itself. 500ms clears the ellipsis debounce (50ms) and the tooltip enterDelay (400ms).
+            // 500ms clears the ellipsis debounce (50ms) and the tooltip enterDelay (400ms).
             const settle = () => tick(500);
 
             jest.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);

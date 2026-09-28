@@ -8,6 +8,7 @@ import { KbqComponentColors, KbqFormsModule, PopUpPlacements } from '@koobiq/com
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { TooltipExamplesModule } from '../../docs-examples/components/tooltip';
@@ -75,6 +76,7 @@ export class DevDocsExamples {}
         KbqCheckboxModule,
         KbqSelectModule,
         KbqIconModule,
+        KbqTextareaModule,
         KbqToggleModule,
         DevThemeToggle,
         DevDocsExamples
@@ -101,6 +103,7 @@ export class DevApp {
     ELEMENTS = {
         BUTTON: 'button',
         INPUT: 'input',
+        CARET: 'caret',
         ICON: 'icon',
         EXTENDED: 'extended'
     };

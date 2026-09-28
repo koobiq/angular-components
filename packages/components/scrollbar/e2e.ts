@@ -1,5 +1,6 @@
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
 import { KbqNativeScrollbar, KbqScrollbar, KbqScrollbarMode, KbqScrollbarViewport } from './scrollbar';
 
 @Component({
@@ -279,6 +280,207 @@ export class E2eScrollbarVirtualScroll {
         const newItems = Array.from({ length: 50 }).map((_, i) => `Item #${nextIndex + i}`);
 
         this.items.update((items) => [...items, ...newItems]);
+    }
+}
+
+// Taller than any viewport below, so loading it is enough to make the content overflow.
+const E2E_TALL_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='400'/%3E";
+
+// A component host left at the default `display: inline`, as most are: a resize observer reports nothing for
+// it, whatever grows inside.
+@Component({
+    selector: 'e2e-scrollbar-inline-host',
+    template: '<ng-content />',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class E2eScrollbarInlineHost {}
+
+const E2E_LONG_TEXT =
+    'Content that arrives after the viewport was measured has to be noticed without anyone touching the ' +
+    'scrollbar: nothing scrolls, nothing is hovered, the size changes and the bar has to follow on its own.';
+
+@Component({
+    selector: 'e2e-scrollbar-content-changes',
+    imports: [KbqScrollbar, KbqScrollbarViewport, NgTemplateOutlet, E2eScrollbarInlineHost],
+    template: `
+        <div class="e2e-controls">
+            <button type="button" data-testid="e2eScrollbarContentChangesAdd" (click)="addItems()">Add</button>
+            <button type="button" data-testid="e2eScrollbarContentChangesRemove" (click)="items.set(0)">Remove</button>
+            <button type="button" data-testid="e2eScrollbarContentChangesImage" (click)="image.set(tallImage)">
+                Image
+            </button>
+            <button type="button" data-testid="e2eScrollbarContentChangesEnlarge" (click)="enlarged.set(true)">
+                Enlarge
+            </button>
+            <button type="button" data-testid="e2eScrollbarContentChangesText" (click)="text.set(longText)">
+                Text
+            </button>
+            <button type="button" data-testid="e2eScrollbarContentChangesBlock" (click)="block.set(true)">Block</button>
+            <button
+                type="button"
+                data-testid="e2eScrollbarContentChangesBlockImage"
+                (click)="blockImage.set(tallImage)"
+            >
+                Block image
+            </button>
+            <button
+                type="button"
+                data-testid="e2eScrollbarContentChangesInlineImage"
+                (click)="inlineImage.set(tallImage)"
+            >
+                Inline image
+            </button>
+            <button type="button" data-testid="e2eScrollbarContentChangesInlineGrow" (click)="inlineGrown.set(true)">
+                Inline grow
+            </button>
+            <button type="button" data-testid="e2eScrollbarContentChangesWiden" (click)="widened.set(true)">
+                Widen
+            </button>
+            <button type="button" data-testid="e2eScrollbarContentChangesLock" (click)="locked.set(true)">Lock</button>
+            <button type="button" data-testid="e2eScrollbarContentChangesUnlock" (click)="locked.set(false)">
+                Unlock
+            </button>
+            <button type="button" data-testid="e2eScrollbarContentChangesShift" (click)="shifted.set(true)">
+                Shift
+            </button>
+        </div>
+
+        <ng-template #content>
+            <div>
+                <p class="e2e-line" [style.width.px]="widened() ? 600 : null">First line</p>
+                <p class="e2e-line">Second line</p>
+                <div>
+                    @for (item of itemList(); track item) {
+                        <p class="e2e-line">Item {{ item }}</p>
+                    }
+                </div>
+                <img alt="" [attr.src]="image()" />
+                <p class="e2e-line">{{ text() }}</p>
+            </div>
+            <!-- More root nodes, so that these land as direct children of the viewport's content. -->
+            @if (block()) {
+                <div class="e2e-block"><img alt="" [attr.src]="blockImage()" /></div>
+            }
+            <e2e-scrollbar-inline-host>
+                <div [class.e2e-grown]="inlineGrown()"><img alt="" [attr.src]="inlineImage()" /></div>
+            </e2e-scrollbar-inline-host>
+        </ng-template>
+
+        <div class="e2e-viewports">
+            <kbq-scrollbar
+                kbqScrollbarMode="always"
+                class="e2e-viewport"
+                data-testid="e2eScrollbarContentChangesComponent"
+            >
+                <ng-container [ngTemplateOutlet]="content" />
+            </kbq-scrollbar>
+
+            <div
+                kbqScrollbarViewport
+                kbqScrollbarMode="always"
+                class="e2e-viewport e2e-viewport_directive"
+                data-testid="e2eScrollbarContentChangesDirective"
+                [class.e2e-viewport_locked]="locked()"
+            >
+                <ng-container [ngTemplateOutlet]="content" />
+            </div>
+
+            <kbq-scrollbar
+                kbqScrollbarMode="always"
+                class="e2e-viewport"
+                data-testid="e2eScrollbarContentChangesComponentText"
+            >
+                {{ text() }}
+            </kbq-scrollbar>
+
+            <div
+                kbqScrollbarViewport
+                kbqScrollbarMode="always"
+                class="e2e-viewport e2e-viewport_directive"
+                data-testid="e2eScrollbarContentChangesDirectiveText"
+            >
+                {{ text() }}
+            </div>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-xs);
+        }
+
+        .e2e-controls,
+        .e2e-viewports {
+            display: flex;
+            gap: var(--kbq-size-m);
+            margin-block-end: var(--kbq-size-m);
+        }
+
+        .e2e-viewport {
+            /* kbq-scrollbar grows along its parent's main axis by design; the text scenarios need a fixed width. */
+            flex: none;
+            width: 200px;
+            height: 120px;
+            background-color: var(--kbq-background-bg-secondary);
+        }
+
+        .e2e-viewport_directive {
+            overflow: auto;
+        }
+
+        .e2e-viewport_locked {
+            overflow: hidden;
+        }
+
+        .e2e-grown {
+            height: 400px;
+        }
+
+        .e2e-line {
+            margin: 0;
+            line-height: 20px;
+        }
+
+        img {
+            display: block;
+        }
+
+        :host(.e2e-scrollbar-content-changes_enlarged) .e2e-line {
+            font-size: 40px;
+            line-height: 48px;
+        }
+
+        /* Grows the scrollable size with no resize, no mutation inside the viewport and no event. */
+        :host(.e2e-scrollbar-content-changes_shifted) .e2e-line {
+            transform: translateY(300px);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eScrollbarContentChanges',
+        '[class.e2e-scrollbar-content-changes_enlarged]': 'enlarged()',
+        '[class.e2e-scrollbar-content-changes_shifted]': 'shifted()'
+    }
+})
+export class E2eScrollbarContentChanges {
+    protected readonly tallImage = E2E_TALL_IMAGE;
+    protected readonly longText = E2E_LONG_TEXT;
+
+    protected readonly items = signal(0);
+    protected readonly itemList = computed(() => Array.from({ length: this.items() }, (_, index) => index));
+    protected readonly image = signal<string | null>(null);
+    protected readonly enlarged = signal(false);
+    protected readonly text = signal('Short text');
+    protected readonly block = signal(false);
+    protected readonly blockImage = signal<string | null>(null);
+    protected readonly inlineImage = signal<string | null>(null);
+    protected readonly inlineGrown = signal(false);
+    protected readonly widened = signal(false);
+    protected readonly locked = signal(false);
+    protected readonly shifted = signal(false);
+
+    protected addItems(): void {
+        this.items.update((count) => count + 12);
     }
 }
 

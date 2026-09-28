@@ -1690,6 +1690,31 @@ Two more fixes with nothing to migrate: the locale subscription created in the c
 
 Reported by `select-signal-inputs`.
 
+#### Sidepanel
+
+**A sidepanel without a backdrop no longer freezes the page.** `createOverlay()` hardcoded CDK's `BlockScrollStrategy` for every panel, and that strategy pins the document with `position: fixed` — the exact opposite of what the non-modal mode is named after. The strategy follows the modality now: `block()` with a backdrop, `reposition()` without. `KbqSidepanelConfig` gained `scrollStrategy?: () => ScrollStrategy` for the panels that want something else, and the blocked page survives closing the lower panel of a stack, which used to release it while the panels above stayed open.
+
+**Focus is captured and restored in both modes.** `trapFocusAutoCapture` defaulted to `!!hasBackdrop`, so a non-modal sidepanel neither took focus nor gave it back — `CdkTrapFocus` only restores focus it captured itself, and the guide promised restoration unconditionally. It defaults to `true` now. The focus _trap_ still follows `hasBackdrop`: a non-modal panel leaves the page behind it tabbable, and `trapFocus: true` opts in.
+
+| Pattern                                                      | Manual migration                                                           |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------- |
+| `{ hasBackdrop: false }` needing the block                   | `scrollStrategy: () => overlay.scrollStrategies.block()`                   |
+| `{ hasBackdrop: false }` keeping focus out                   | `trapFocusAutoCapture: false`                                              |
+| `config.hasBackdrop = …` after open                          | Never worked — the value is read once. Only `disableClose` is re-read      |
+| `overlayRef.backdropElement!`                                | `null` without a backdrop; decide the backdrop when you open the sidepanel |
+| `.kbq-sidepanel-overlay` in a stylesheet                     | The class is no longer stamped; tag the pane with `overlayPanelClass`      |
+| `host: { class: 'layout-column flex' }` on sidepanel content | Delete it — the package styles the portal host now                         |
+| `closeDirective.sidepanelResult = …`                         | An input signal now: bind `kbq-sidepanel-close="…"` in the template        |
+| `closeDirective.sidepanelResult` read                        | `sidepanelResult()`                                                        |
+
+**`KbqSidepanelModule` no longer swaps `FocusTrapFactory` application-wide.** The module provided `{ provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }`, an unscoped override of a `providedIn: 'root'` CDK service: importing the sidepanel module changed the focus-trap implementation of every trapping component in the application — modal, dropdown, popover. The override is scoped to the sidepanel container now. Add the provider to your own application config if you were depending on it.
+
+The container is a dialog to assistive technology at last: `role="dialog"`, `aria-modal` for a modal panel, and an `aria-labelledby` pointing at the `kbq-sidepanel-header` title, with `ariaLabel` / `ariaLabelledBy` on the config for a panel that has no header. While a modal sidepanel is open the rest of the page is `aria-hidden`, so a screen reader stops walking the page behind it. Any `role` or `aria-*` you were stamping on the container yourself is a duplicate now.
+
+Four smaller fixes with nothing to migrate: a component-provided `KbqSidepanelService` closes the panels it opened when it is destroyed, instead of leaving an orphaned overlay behind; `closeAll()` no longer reverses the live stack in place; the indent strip belongs to the top panel of a stack alone, where a stack three deep used to draw one strip per level and closing a lower panel left the one above exposing a panel that was no longer there; a second `close('B')` before the animation finishes no longer overwrites the `'A'` the first call promised; and a click inside a sidepanel at another edge no longer closes an unrelated panel. `KbqSidepanelService` is `providedIn: 'root'`, and `KbqSidepanelAnimationState` is exported from the entry point.
+
+Reported by `sidepanel-non-modal-behavior`.
+
 #### Split button
 
 `KbqSplitButton.disabled` was published as `boolean`, but the backing field is declared without an initializer and the setter returns early for `undefined`. A `<kbq-split-button>` with no `[disabled]` binding therefore reported `undefined` from a non-nullable type, and the code reading it was quietly wrong:
@@ -1711,6 +1736,32 @@ The getter now reports `boolean | undefined`, which is what the sibling `KbqButt
 A `<kbq-split-button>` with no projected button no longer throws outside dev mode. The guard sits behind `isDevMode()`, so production renders an empty control instead of aborting the change detection pass of whoever rendered it — a host that used the throw as a runtime assertion needs its own check.
 
 Reported by `split-button-optional-disabled`.
+
+#### Table
+
+`KbqTableCellContent` is removed. It was declared `selector: 'kbq-table td'`, and Angular's directive selector grammar has element names, attributes, classes and `:not(…)` — but no combinators. The parser calls `setElement()` for every bare tag it meets, so the second one overwrote the first and the effective selector was plain `td`: every template that imported `KbqTableModule` got a directive instance plus a live content query on every cell it rendered, whether or not the table was a `kbq-table`. The `kbq-table` element the selector named has never existed either — the component is an attribute on a native `<table>`.
+
+The one rule the directive fed — a cell holding a button keeps the row at the button's own height — is CSS now, which also drops the `@koobiq/components/button` dependency from the table entry point:
+
+```scss
+.kbq-table > :is(tbody, tfoot) > tr > :is(td, th):has(.kbq-button, .kbq-button-icon) {
+    padding-block: var(--kbq-size-xxs);
+}
+```
+
+| Pattern                         | Manual migration                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------- |
+| `KbqTableCellContent`           | Delete it from the `imports` array; nothing replaces it                         |
+| `.kbq-table-cell_has-button`    | Select the cell: `:is(td, th):has(.kbq-button, .kbq-button-icon)`               |
+| `tr:hover { background: none }` | Bind `[disableHover]` or set `--kbq-table-states-hover-background: transparent` |
+
+Row hover and the pill corner radii cover `<th>` inside `<tbody>` as well as `<td>`, so a row led by a row header is highlighted and rounded as a unit instead of from its second cell on. That is also why a consumer rule keyed on the row rather than the cell used to be a silent no-op.
+
+Every color moved behind a `--kbq-table-*` token — `--kbq-table-header-text`, `--kbq-table-body-text`, `--kbq-table-border-color`, `--kbq-table-states-hover-background` and `--kbq-table-sticky-header-background` — and the row radius behind `--kbq-table-size-row-border-radius`. No value changed: a pinned header still takes `--kbq-background-bg`, and the point of the token is that a table on a card, in a modal or in a sidepanel can now be pointed at that surface — `--kbq-table-sticky-header-background: var(--kbq-background-card)` — instead of out-specifying `.kbq-table > thead > tr > th`.
+
+Cell padding and the corner radii are logical properties, alignment goes through `--kbq-table-cell-text-align` (default `start`), and `<tfoot>` gets the library color and typography it was already being padded for. A pinned header publishes its measured height as `--kbq-table-size-sticky-header-height`, which the table uses as `scroll-margin-block-start` on its cells and their focusable content, so a control scrolled to the top edge of the container does not land under the header (WCAG 2.2 SC 2.4.11). Add `scroll-padding-block-start` to your own scroll container if it holds more than the table.
+
+Reported by `table-cell-content`.
 
 #### Tags
 

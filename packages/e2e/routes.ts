@@ -4,6 +4,7 @@ import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
 import {
     E2eNativeScrollbar,
+    E2eScrollbarContentChanges,
     E2eScrollbarHover,
     E2eScrollbarMode,
     E2eScrollbarNested,
@@ -16,7 +17,7 @@ import {
     E2eScrollbarViewportBoundId,
     E2eScrollbarVirtualScroll
 } from 'packages/components/scrollbar/e2e';
-import { E2eAccordionStates } from '../components/accordion/e2e';
+import { E2eAccordionContentPanel, E2eAccordionStates } from '../components/accordion/e2e';
 import {
     E2eActionsPanelGlobalOverlayContainer,
     E2eActionsPanelWithOverlayContainer
@@ -29,7 +30,9 @@ import {
     E2eAutocompleteScrollbar,
     E2eAutocompleteScrollbarNoOverflow,
     E2eAutocompleteScrollClose,
-    E2eAutocompleteStates
+    E2eAutocompleteStates,
+    E2eAutocompleteTextarea,
+    E2eAutocompleteTriggers
 } from '../components/autocomplete/e2e';
 import { E2eBadgeAsyncIcon, E2eBadgeStyles } from '../components/badge/e2e';
 import {
@@ -96,7 +99,7 @@ import {
     E2eInlineEditTruncation
 } from '../components/inline-edit/e2e';
 import { E2eInputStateAndStyle } from '../components/input/e2e';
-import { E2eLinkStates, E2eLinkWithCaption } from '../components/link/e2e';
+import { E2eLinkStates, E2eLinkTrailingIconWrap, E2eLinkWithCaption } from '../components/link/e2e';
 import {
     E2eListDragAndDrop,
     E2eListDragGrouped,
@@ -183,7 +186,11 @@ import {
     E2eVirtualScrollSelectPanelMaxHeight,
     E2eVirtualScrollSelectScrollbar
 } from '../components/select/e2e';
-import { E2eSidepanelScrollbarNoOverflow, E2eSidepanelStateAndStyle } from '../components/sidepanel/e2e';
+import {
+    E2eSidepanelComponentPortal,
+    E2eSidepanelScrollbarNoOverflow,
+    E2eSidepanelStateAndStyle
+} from '../components/sidepanel/e2e';
 import {
     E2eSplitButtonDropdown,
     E2eSplitButtonStateAndStyle,
@@ -211,6 +218,7 @@ import {
 import { E2eTableStates } from '../components/table/e2e';
 import { E2eTabNavBar, E2eTabsScrollbarFlash, E2eTabsStates } from '../components/tabs/e2e';
 import {
+    E2eTagAutocompleteRelativeToCaret,
     E2eTagAutocompleteStates,
     E2eTagEditable,
     E2eTagInputSeparators,
@@ -235,7 +243,7 @@ import {
 import { E2eTitleOverflow } from '../components/title/e2e';
 import { E2eToastInteraction, E2eToastStates } from '../components/toast/e2e';
 import { E2eToggleHeight, E2eToggleStateAndStyle, E2eToggleWithTextAndCaption } from '../components/toggle/e2e';
-import { E2eTooltipArrowOffset, E2eTooltipStates } from '../components/tooltip/e2e';
+import { E2eTooltipArrowOffset, E2eTooltipRelativeToCaret, E2eTooltipStates } from '../components/tooltip/e2e';
 import { E2eTopBarStates, E2eTopBarSticky } from '../components/top-bar/e2e';
 import {
     E2eMultilineTreeSelectStates,
@@ -318,6 +326,7 @@ const components: Record<string, Type<unknown>> = {
     E2eClampedTextStateAndStyle,
     E2eClampedTextStates,
     E2eAccordionStates,
+    E2eAccordionContentPanel,
     E2eTextareaStates,
     E2eTextareaGrowBehavior,
     E2eTextareaGrowMaxRows,
@@ -330,6 +339,7 @@ const components: Record<string, Type<unknown>> = {
     E2eContentPanelScrollOverflow,
     E2eAppSwitcherWithSitesStates,
     E2eTagAutocompleteStates,
+    E2eTagAutocompleteRelativeToCaret,
     E2eFilterBarStates,
     E2eFilterBarFilters,
     E2eFilterBarPanelMaxHeight,
@@ -344,6 +354,7 @@ const components: Record<string, Type<unknown>> = {
     E2eBadgeAsyncIcon,
     E2eLinkStates,
     E2eLinkWithCaption,
+    E2eLinkTrailingIconWrap,
     E2eTagInputStates,
     E2eTagInputSeparators,
     E2eModalStates,
@@ -368,6 +379,8 @@ const components: Record<string, Type<unknown>> = {
     E2eAutocompleteScrollClose,
     E2eAutocompleteScrollbar,
     E2eAutocompleteScrollbarNoOverflow,
+    E2eAutocompleteTextarea,
+    E2eAutocompleteTriggers,
     E2eCheckboxStateAndStyle,
     E2eDropdownStates,
     E2eDropdownNestedLtr,
@@ -389,6 +402,7 @@ const components: Record<string, Type<unknown>> = {
     E2eScrollbarMode,
     E2eScrollbarScrollTo,
     E2eScrollbarVirtualScroll,
+    E2eScrollbarContentChanges,
     E2eScrollbarNested,
     E2eScrollbarNonScrollableOverflow,
     E2eScrollbarPadding,
@@ -401,6 +415,7 @@ const components: Record<string, Type<unknown>> = {
     E2eProgressSpinnerStates,
     E2eSidepanelStateAndStyle,
     E2eSidepanelScrollbarNoOverflow,
+    E2eSidepanelComponentPortal,
     E2eHorizontalNavbarStates,
     E2eVerticalNavbarStates,
     E2eVerticalNavbarBrandAutoLongTitle,
@@ -429,6 +444,7 @@ const components: Record<string, Type<unknown>> = {
     E2ePopoverCloseOnScroll,
     E2eTooltipStates,
     E2eTooltipArrowOffset,
+    E2eTooltipRelativeToCaret,
     E2eTagListStates,
     E2eTopBarStates,
     E2eTopBarSticky,

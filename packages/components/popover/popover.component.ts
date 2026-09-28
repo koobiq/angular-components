@@ -50,6 +50,7 @@ import {
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
     KbqOverflowShadowTop,
+    KbqOverlayOrigin,
     KbqPopUp,
     KbqPopUpPlacementValues,
     KbqPopUpSizeValues,
@@ -666,7 +667,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
      * (click, keyboard, programmatic) do — a hover- or focus-triggered popover must not steal focus.
      */
     get capturesFocusOnOpen(): boolean {
-        return this.hasClickTrigger || this.deliberateOpen;
+        return this.autoFocus && (this.hasClickTrigger || this.deliberateOpen);
     }
 
     /** @docs-private */
@@ -711,6 +712,28 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // TODO: Skipped for migration because:
     //  Class of this input is referenced in the signature of another class.
     @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
+
+    /**
+     * Input (`kbqPopoverAutoFocus`) — whether opening the popover moves the keyboard focus into the panel. Turn it
+     * off for a panel that must not disturb what the reader is doing: taking focus away from a text selection
+     * collapses it. Focus then never enters the panel, so its content has to be reachable some other way.
+     */
+    @Input({ alias: 'kbqPopoverAutoFocus', transform: booleanAttribute }) autoFocus: boolean = true;
+
+    /**
+     * Input (`kbqPopoverOrigin`) — what the panel is positioned against: an element, or a rectangle in viewport
+     * coordinates such as the one `kbqCreateCaretOrigin` keeps on the caret. `null` anchors it to the trigger.
+     *
+     * Bind it before `kbqPopoverVisible`, which opens the panel as it is written.
+     */
+    @Input('kbqPopoverOrigin')
+    get popoverOrigin(): KbqOverlayOrigin | null {
+        return this.origin;
+    }
+
+    set popoverOrigin(value: KbqOverlayOrigin | null) {
+        this.updateOrigin(value);
+    }
 
     /** Input (`kbqEnterDelay`) — delay before opening, in milliseconds. Defaults to `0`. */
     // TODO: Skipped for migration because:

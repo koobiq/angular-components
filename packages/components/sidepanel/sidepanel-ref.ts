@@ -34,6 +34,9 @@ export class KbqSidepanelRef<T = any, R = any> {
     /** Result to be passed down to the `afterDismissed` stream. */
     private result: R | undefined;
 
+    /** Whether `close()` has already started the closing animation. */
+    private closing = false;
+
     constructor(
         public readonly containerInstance: KbqSidepanelContainerComponent,
         public readonly overlayRef: OverlayRef,
@@ -41,14 +44,14 @@ export class KbqSidepanelRef<T = any, R = any> {
     ) {
         this.id = this.config.id || `kbq-sidepanel-${uniqueId++}`;
         this.containerInstance.id = this.id;
-        overlayRef.backdropElement?.classList?.add(config.backdropClass ?? 'kbq-overlay-dark-backdrop');
+        overlayRef.backdropElement?.classList.add(config.backdropClass ?? 'kbq-overlay-dark-backdrop');
 
         const slideBelowStart = containerInstance.animationStateChanged.pipe(
             filter(
                 (event) =>
                     event.phaseName === 'start' &&
                     [KbqSidepanelAnimationState.Lower, KbqSidepanelAnimationState.BottomPanel].includes(
-                        event.toState as any
+                        event.toState as KbqSidepanelAnimationState
                     )
             )
         );
@@ -105,18 +108,23 @@ export class KbqSidepanelRef<T = any, R = any> {
                 this.afterClosed$.complete();
             });
 
-        merge(
-            overlayRef.backdropClick(),
-            overlayRef.keydownEvents().pipe(
+        overlayRef
+            .keydownEvents()
+            .pipe(
                 // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
                 filter((event) => event.keyCode === ESCAPE)
-            ),
+            )
+            .subscribe((event) => {
+                if (this.config.disableClose) return;
+
+                event.preventDefault();
+                this.close();
+            });
+
+        merge(
+            overlayRef.backdropClick(),
             this.containerInstance.indentClick(),
-            overlayRef
-                .outsidePointerEvents()
-                .pipe(
-                    filter((event) => isHtmlElement(event.target) && !!event.target.closest('.kbq-sidepanel-container'))
-                )
+            overlayRef.outsidePointerEvents().pipe(filter((event) => this.isClickInsideSamePositionStack(event)))
         ).subscribe(() => {
             if (this.config.disableClose) return;
 
@@ -125,18 +133,20 @@ export class KbqSidepanelRef<T = any, R = any> {
     }
 
     close(result?: R): void {
-        if (!this.afterClosed$.closed) {
-            // Transition the backdrop in parallel to the sidepanel.
-            this.containerInstance.animationStateChanged
-                .pipe(
-                    filter((event) => event.phaseName === 'done'),
-                    take(1)
-                )
-                .subscribe(() => this.overlayRef.detachBackdrop());
+        if (this.closing) return;
 
-            this.result = result;
-            this.containerInstance.exit();
-        }
+        this.closing = true;
+
+        // Transition the backdrop in parallel to the sidepanel.
+        this.containerInstance.animationStateChanged
+            .pipe(
+                filter((event) => event.phaseName === 'done'),
+                take(1)
+            )
+            .subscribe(() => this.overlayRef.detachBackdrop());
+
+        this.result = result;
+        this.containerInstance.exit();
     }
 
     /** Gets an observable that is notified when the sidepanel is started closing. */
@@ -152,5 +162,18 @@ export class KbqSidepanelRef<T = any, R = any> {
     /** Gets an observable that is notified when the sidepanel has opened and appeared. */
     afterOpened(): Observable<void> {
         return this.afterOpened$.asObservable();
+    }
+
+    /**
+     * A pointer event outside this overlay closes the sidepanel only when it lands in a sidepanel of the
+     * same stack — that is the exposed strip of a panel opened over this one. Panels at other edges do
+     * not overlap this one and must not close it.
+     */
+    private isClickInsideSamePositionStack(event: MouseEvent): boolean {
+        if (!isHtmlElement(event.target)) return false;
+
+        const container = event.target.closest('.kbq-sidepanel-container');
+
+        return !!container && container.classList.contains(`kbq-sidepanel-container_${this.config.position}`);
     }
 }
