@@ -162,6 +162,7 @@ yarn run stylelint                                                     # Lint SC
 yarn run prettier                                                      # Check formatting
 yarn run cspell                                                        # Spell-check Markdown (dictionaries in tools/cspell-locales/{en,ru}.json)
 yarn run check-peer-deps                                               # Validate peerDependencies of the published packages
+yarn run check-tokens-data                                             # Verify the design tokens docs data matches the installed @koobiq/design-tokens
 yarn run eslint:fix && yarn run stylelint:fix && yarn run prettier:fix # Auto-fix all
 ```
 
@@ -190,15 +191,15 @@ The guard reads `dist/components/<name>/index.d.ts`, so build the package first;
 
 Every pull request runs these workflows:
 
-| Workflow                          | What it runs                                                                                                                    |
-| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`             |
-| Unit tests                        | `styles:build-all`, then every `unit:*` script                                                                                  |
-| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                |
-| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen` and `check-api-docs`              |
-| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build` |
-| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label          |
-| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                      |
+| Workflow                          | What it runs                                                                                                                             |
+| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-tokens-data` |
+| Unit tests                        | `styles:build-all`, then every `unit:*` script                                                                                           |
+| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                         |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen` and `check-api-docs`                       |
+| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`          |
+| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                   |
+| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                               |
 
 A docs preview is deployed to Firebase for pull requests opened from this repository.
 
@@ -241,7 +242,7 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 - A live example is `<Example id="alert-overview" />`, with the key from `example-module.ts`. The build fails, with the position in the file, on what `tools/docs-pages/compile-page.ts` cannot turn into Angular: an unknown example, imports and `{expressions}`, HTML outside its short list of elements (write the rest in Markdown). MDX syntax applies: comments are `{/* */}`, `<br />` needs the slash, a literal `{` or `<` is escaped with a backslash. The JSDoc of the public API goes through the same compiler in `docs:api-gen`, whose errors name the declaration: the same rules apply there, `{@link Name}` becomes inline code, a block of code has to stand on its own rather than inside a list or a quote, and an `@example` without a fence of its own is taken as TypeScript. Every overview or examples tab that `structure.ts` routes to needs a page. `docs:start:dev` rebuilds the pages on save.
 - `apps/docs/src/app/structure.ts` is the single source of the navigation (`hasApi`, `hasExamples`, `isNew` with an expiry date); the routes, the sitemap, the prerender route list and `llms.txt` are all derived from it.
 - Examples live in `packages/docs-examples/components/<name>/<example-name>/<example-name>-example.ts` with a `/** @title ... */` JSDoc, selector `<example-name>-example` and class `<ExampleName>Example`, registered in that folder's `index.ts` NgModule. After adding or renaming one, run `yarn run build:docs-examples-module` to regenerate the committed `packages/docs-examples/example-module.ts` and `packages/docs-examples/loader/index.ts` (the `@koobiq/docs-examples/loader` entry point, kept apart so the pages that show examples do not load it).
-- Committed generated files — never hand-edit: `packages/docs-examples/example-module.ts`, `packages/docs-examples/loader/index.ts`, `tools/public_api_guard/**`, `tools/check-public-api-any/baseline.json`, `tools/check-api-docs/baseline.json`, `apps/docs/src/llms.txt`, `apps/docs/src/llms-full.txt`, `apps/docs/src/sitemap.xml`, `apps/docs/src/prerender-routes.txt`, `apps/docs/src/app/seo-descriptions.ts`, `apps/docs/src/assets/versions.json`. The docs metadata files are refreshed by the release scripts (`release:extract-docs-meta`); leave them alone in feature branches.
+- Committed generated files — never hand-edit: `packages/docs-examples/example-module.ts`, `packages/docs-examples/loader/index.ts`, `tools/public_api_guard/**`, `tools/check-public-api-any/baseline.json`, `tools/check-api-docs/baseline.json`, `apps/docs/src/llms.txt`, `apps/docs/src/llms-full.txt`, `apps/docs/src/sitemap.xml`, `apps/docs/src/prerender-routes.txt`, `apps/docs/src/app/seo-descriptions.ts`, `apps/docs/src/assets/versions.json`, `apps/docs/src/app/components/design-tokens-viewers/data/*.ts`. The docs metadata files are refreshed by the release scripts (`release:extract-docs-meta`); leave them alone in feature branches.
 
 ### Schematics
 
