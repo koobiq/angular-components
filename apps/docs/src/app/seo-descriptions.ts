@@ -36,8 +36,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Хлебные крошки – это элемент навигации, который позволяет пользователю легко ориентироваться на сайте и понимать, где он находится в данный момент относительно главной страницы."
     },
     "button": {
-        "en": "koobiq buttons are available using native <button> or <a> elements.",
-        "ru": "Используется для запуска действий."
+        "en": "A button triggers an action. Add the kbq-button attribute to a native <button> element, or to <a> when the button leads to another page.",
+        "ru": "Кнопка запускает действие. Атрибут kbq-button добавляют к нативному элементу <button>, а если кнопка ведёт на другую страницу — к <a>."
     },
     "button-group": {
         "en": "Button Group combines multiple buttons to emphasize their close relationship.",

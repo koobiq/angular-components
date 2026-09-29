@@ -1,33 +1,61 @@
-koobiq buttons are available using native `<button>` or `<a>` elements.
-
-### Variants
-
-There are two button variants, each applied as an attribute:
-
-- basic buttons;
-- icon buttons.
-
-#### Basic buttons
-
-Basic `kbq-button` buttons are rectangular buttons containing text only.
+A button triggers an action. Add the `kbq-button` attribute to a native `<button>` element, or to `<a>` when the button leads to another page.
 
 <Example id="button-overview" />
 
-![Button states](./assets/images/Basic_buttons.png)
-Basic button's states
+### Style and color
 
-#### Icon buttons
+The look of a button is set by two inputs: the style `kbqStyle` (`KbqButtonStyles`) and the color `color` (`KbqComponentColors`). There are three styles: `filled` (the default), `outline` and `transparent`. Each of them comes in two colors of its own:
 
-Icon buttons consist of an icon and can contain text.
-To create an icon button, add the `<i kbq-icon="icon_name"></i>` element within `<button kbq-icon-button>` where `"icon_name"` is the name of a Koobiq icon. For example:
+| `kbqStyle`         | `color`                                 |
+| :----------------- | :-------------------------------------- |
+| `filled` (default) | `contrast`, `contrast-fade` (default)   |
+| `outline`          | `theme-fade`, `contrast-fade` (default) |
+| `transparent`      | `theme`, `contrast` (default)           |
 
-Add any text before or after the `<i>` element to place a button label to the right or to the left of the icon.
+Without `color`, a button takes the default color of its style and keeps following it when the style changes. A combination missing from the table is rendered in the default color of the style as well. Buttons have no status colors (`success`, `warning`, `error`).
 
-### Colors
+<Example id="button-fill-and-style" />
 
-koobiq provides three button colors, applied using the `color` property with possible values `theme`, `secondary`, and `error`.
+A button with an icon only is styled the same way:
+
+<Example id="button-fill-and-style-only-icon" />
+
+### Content
+
+A button holds a text label, icons, or both. To place an icon before the label, add the `kbqButtonPrefix` directive to it; to place it after the label, add `kbqButtonSuffix`. The side is decided by the directive, not by the order in the markup. An icon placed next to the label without these directives works too, but then a label that does not fit is cut off without an ellipsis.
+
+<Example id="button-content" />
+
+If a button contains only icons — one or two — it is styled as an icon button automatically: with one icon it is a 32 × 32px square. An icon is decorative, so give such a button an accessible name with `aria-label` or `aria-labelledby`. For a clickable icon without a button container, use [Icon Button](/en/components/icon-button).
+
+### Size
+
+| Parameter         | Value                                  |
+| :---------------- | :------------------------------------- |
+| Height            | 32px                                   |
+| Icon button width | 32px with one icon                     |
+| Text              | Text Normal Medium                     |
+| Icon              | L (16px)                               |
+| Multiline         | No: the label always stays on one line |
+
+### Width
+
+Depending on the content, the width of a button follows one of three modes.
+
+Hug is the default: the button is as wide as its content plus the side paddings, but no wider than its container.
+
+<Example id="button-hug-content" />
+
+Fixed: the width is set in CSS and does not depend on the length of the label. A label that does not fit is truncated with an ellipsis. Mind the 12px side paddings: they are part of the width.
+
+<Example id="button-fixed-content" />
+
+Fill: the button stretches to the width of its container (`width: 100%`) and resizes with it, for example with a modal window. The label behaves as in Fixed.
+
+<Example id="button-fill-content" />
 
 ### Progress indication
 
-If processing an action takes more than 1-2 seconds, the progress indication ("loading") can be used. This shows that the system takes action, and the user won't wonder whether the button is working or not.
-To enable the button progress indication, use `class="kbq-progress"` which can be combined with other properties.
+If an action takes more than 1–2 seconds, show that the system is working on it: add the `kbq-progress` class to the button. The class can be combined with any style, color and state. It only draws the indicator and does not block the button, so prevent the action from being triggered again in your own code.
+
+<Example id="button-loading-state" />
