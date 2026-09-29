@@ -5,6 +5,7 @@ Koobiq по умолчанию использует шрифты [Inter](https:/
 | Шрифт          | Жирность | Стиль   |
 | -------------- | -------- | ------- |
 | JetBrains Mono | 400      | Обычный |
+| JetBrains Mono | 600      | Обычный |
 | JetBrains Mono | 700      | Обычный |
 | Inter          | 400      | Обычный |
 | Inter          | 400      | Курсив  |
@@ -36,6 +37,7 @@ npm install @fontsource/inter @fontsource/jetbrains-mono
 
 // JetBrains Mono
 @import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
 ```
 
@@ -52,5 +54,5 @@ npm install @fontsource/inter @fontsource/jetbrains-mono
     rel="stylesheet"
 />
 <!-- JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
 ```
