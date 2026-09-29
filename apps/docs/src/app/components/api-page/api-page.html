@@ -81,11 +81,8 @@
                                     }
                                     <!-- After the badges, which a link hidden until hover would otherwise push away from the name. -->
                                     <docs-api-link [member]="member.id" [name]="member.name" />
-                                    <!-- The whole of a type cut off with an ellipsis is shown in a tooltip. -->
                                     @if (member.type) {
-                                        <code kbq-title class="docs-api__term-type">
-                                            <docs-api-type [parts]="member.type" />
-                                        </code>
+                                        <code class="docs-api__term-type"><docs-api-type [parts]="member.type" /></code>
                                     }
                                 </dt>
                                 @if (hasDetails(member)) {

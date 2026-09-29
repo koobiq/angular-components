@@ -459,6 +459,28 @@ describe('renderEntrySignature', () => {
     });
 
     // The text the extractor gives the alias keeps the comments of the fields, which the list below the signature shows.
+    it('writes the utility type or the intersection around the object literal of a type alias as written', () => {
+        const alias = (literal: { before: string; after: string }): DocEntry =>
+            ({
+                name: 'KbqOptions',
+                entryType: EntryType.TypeAlias,
+                type: '',
+                generics: [],
+                description: '',
+                rawComment: '',
+                jsdocTags: [],
+                members: [property({ name: 'width', type: 'number' })],
+                literal
+            }) as DocEntry;
+
+        expect(renderEntrySignature(alias({ before: 'Partial<', after: '>' }))).toBe(
+            ['type KbqOptions = Partial<{', '    width: number;', '}>;'].join('\n')
+        );
+        expect(renderEntrySignature(alias({ before: '', after: ' & KbqBase' }))).toBe(
+            ['type KbqOptions = {', '    width: number;', '} & KbqBase;'].join('\n')
+        );
+    });
+
     it('writes a type alias of an object literal field by field, a field of an object literal type nested', () => {
         expect(
             renderEntrySignature({
@@ -620,6 +642,18 @@ describe('member presentation', () => {
                 property({ name: 'value', memberTags: [MemberTags.Input, MemberTags.Optional] })
             ].map(isOptionalMember)
         ).toEqual([false, false, false, true, false, true, false]);
+    });
+
+    // A field declared without `?` in `Partial<{ ... }>` may be left out all the same; one declared with it in
+    // `Required<{ ... }>` may not.
+    it('takes the optionality of a field from the utility type around its literal', () => {
+        const fields = [
+            property({ name: 'width', optionalByWrapper: true }),
+            property({ name: 'height', memberTags: [MemberTags.Optional], optionalByWrapper: false })
+        ];
+
+        expect(fields.map(isOptionalMember)).toEqual([true, false]);
+        expect(fields.map(getMemberDisplayName)).toEqual(['width?', 'height']);
     });
 
     it('follows a member with the fields of its object literal type, named by their path', () => {

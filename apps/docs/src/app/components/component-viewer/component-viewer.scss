@@ -361,20 +361,22 @@
     gap: var(--kbq-size-xs) var(--kbq-size-s);
 }
 
-// The type of a member sits at the far end of the header, set like inline code, on the line of the name: it takes the
-// room the name and the badges leave, up to its own width, and what does not fit is cut off with an ellipsis. With no
-// basis of its own it never moves to a line apart; the header breaks only where the name and the badges alone
-// overflow it, on a phone.
-.docs-api__member > dt > .docs-api__term-type {
+// The type of a member sits at the far end of the header, set like inline code. One that does not fit beside the name
+// and the badges goes whole to a line of its own, from its start, and breaks where it has to. The spacer before it takes
+// the room left on the line of the name: it pushes the type to the far end there, and stays behind when the type moves
+// on, where an auto margin would push it to the far end of its own line too.
+.docs-api__member > dt::after {
+    content: '';
     flex: 1 1 0;
-    min-width: 0;
-    max-width: max-content;
-    margin-inline-start: auto;
+    order: 1;
+    // Takes back the gap before it: with nothing to fit, it never moves on alone to add an empty line to the header.
+    margin-inline-start: calc(-1 * var(--kbq-size-s));
+}
+
+.docs-api__member > dt > .docs-api__term-type {
+    order: 2;
     padding: var(--kbq-markdown-code-size-inline-padding);
     border-radius: var(--kbq-markdown-code-size-border-radius);
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     color: var(--kbq-markdown-code-text);
     background: var(--kbq-markdown-code-background);
 }
@@ -432,14 +434,6 @@
 .docs-api .docs-api__term-type .kbq-link {
     font: inherit;
     letter-spacing: inherit;
-
-    // The theme takes the outline off a focused `.kbq-link` and gives it back through the class the link directive
-    // sets on keyboard focus; these links are plain anchors.
-    &:focus-visible {
-        outline-style: solid;
-        outline-width: var(--kbq-link-size-state-focused-outline-width);
-        outline-color: var(--kbq-link-state-focused-outline);
-    }
 }
 
 .docs-api__note-title {

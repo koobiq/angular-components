@@ -1,4 +1,4 @@
-import { DeclaredFunctionType, DocEntry, MemberEntry, PropertyEntry } from '../rendering/entities';
+import { DeclaredFunctionType, DocEntry, LiteralContext, MemberEntry, PropertyEntry } from '../rendering/entities';
 
 export type PackageMetadata = { resolvedPath: string; tsCompilerPath: string; packageName: string };
 
@@ -67,6 +67,8 @@ export interface DeclarationSourceMetadata {
      * reports such an alias as the text of its type.
      */
     members?: PropertyEntry[];
+    /** The text of the type of the alias around that literal, when a utility type or an intersection holds it. */
+    literal?: LiteralContext;
 }
 
 /** Read from the source of a class or an interface, next to what Angular's extractor reports for it. */

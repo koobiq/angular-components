@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
-import { KbqTitleDirective } from '@koobiq/components/title';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
@@ -178,25 +177,6 @@ describe(DocsApiPage.name, () => {
         ]);
     });
 
-    // The header keeps to one line, and cuts a long type off with an ellipsis.
-    it('shows the whole of the type of a member in a tooltip when it is cut off', () => {
-        const fixture = TestBed.createComponent(DocsApiPage);
-
-        fixture.componentRef.setInput('entryPoint', ENTRY_POINT);
-        fixture.detectChanges();
-
-        const titled = fixture.debugElement.queryAll(By.directive(KbqTitleDirective));
-
-        expect(titled.map(({ nativeElement }) => nativeElement.closest('.docs-api__member').id)).toEqual([
-            'KbqAlert-title',
-            'KbqAlert-color',
-            'KbqAlert-open',
-            'KbqAlert-closed',
-            'KbqAlert-icon'
-        ]);
-        expect(titled.every(({ nativeElement }) => nativeElement.matches('dt > .docs-api__term-type'))).toBe(true);
-    });
-
     it('shows no body for a member with nothing to say beyond its name and type', () => {
         const page = render();
 
@@ -250,27 +230,25 @@ describe(DocsApiPage.name, () => {
         ]);
     });
 
-    // The router only sets the fragment; the list of sections beside the page scrolls to a heading on its own too.
-    it('copies the address the link to a heading leads to, and scrolls to the heading', () => {
+    // The link puts the heading in the URL and copies it; the page stays where the reader is.
+    it('copies the address the link to a heading leads to, without moving the page', () => {
         const scrollIntoView = jest.fn();
 
         // jsdom lays nothing out, and has no scrolling to offer.
         Object.defineProperty(Element.prototype, 'scrollIntoView', { value: scrollIntoView, configurable: true });
 
         try {
-            const page = render();
-            const link: HTMLAnchorElement = page.querySelector('#KbqAlert')!.parentElement!.querySelector('a')!;
+            const link: HTMLAnchorElement = render().querySelector('#KbqAlert')!.parentElement!.querySelector('a')!;
 
             link.click();
 
             expect(copyWithToast).toHaveBeenCalledWith(link.href);
-            expect(scrollIntoView.mock.contexts).toEqual([page.querySelector('#KbqAlert')]);
+            expect(scrollIntoView).not.toHaveBeenCalled();
 
-            // Opened in a new tab, the link neither copies nor moves this one.
+            // Opened in a new tab, the link copies nothing.
             link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, metaKey: true }));
 
             expect(copyWithToast).toHaveBeenCalledTimes(1);
-            expect(scrollIntoView).toHaveBeenCalledTimes(1);
         } finally {
             delete (Element.prototype as Partial<Element>).scrollIntoView;
         }
@@ -346,6 +324,13 @@ describe(DocsApiPage.name, () => {
         expect(Array.from(type.querySelectorAll('a'), (link) => link.getAttribute('href'))).toEqual([
             '/#KbqActionsPanelRef',
             '/ru/components/core/api#KbqOption'
+        ]);
+        // Links of the design system, set apart from the type by their colour rather than an underline.
+        expect(
+            Array.from(type.querySelectorAll('a'), ({ classList }) => classList.contains('kbq-link_no-underline'))
+        ).toEqual([
+            true,
+            true
         ]);
     });
 

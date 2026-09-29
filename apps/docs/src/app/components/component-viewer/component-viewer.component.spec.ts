@@ -1,6 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, Params, provideRouter, Router, UrlSegment } from '@angular/router';
+import {
+    ActivatedRoute,
+    convertToParamMap,
+    ParamMap,
+    Params,
+    provideRouter,
+    Router,
+    UrlSegment
+} from '@angular/router';
 import { BehaviorSubject, map, of } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
@@ -199,7 +207,11 @@ describe(DocsComponentApiPageComponent.name, () => {
     let scrollToElement: jest.SpyInstance;
 
     /** The tab reads the API from `data` and the member a link points at from the query; the anchors read `fragment`. */
+    let queryParamMap: BehaviorSubject<ParamMap>;
+
     const createPage = (queryParams: Params = {}): ComponentFixture<DocsComponentApiPageComponent> => {
+        queryParamMap = new BehaviorSubject(convertToParamMap(queryParams));
+
         TestBed.configureTestingModule({
             imports: [DocsComponentApiPageComponent],
             providers: [
@@ -210,7 +222,7 @@ describe(DocsComponentApiPageComponent.name, () => {
                     useValue: {
                         fragment: of(null),
                         data: of({ page: ALERT_API }),
-                        queryParamMap: of(convertToParamMap(queryParams))
+                        queryParamMap: queryParamMap.asObservable()
                     }
                 }
             ]
@@ -258,5 +270,19 @@ describe(DocsComponentApiPageComponent.name, () => {
 
         expect(scrollToElement).toHaveBeenCalledWith(member);
         expect(member.classList).toContain('docs-api__member_selected');
+    });
+
+    // The link of a member selects it and copies the address; the page stays where the reader is.
+    it('highlights a member selected on the open page without scrolling to it', async () => {
+        const fixture = createPage();
+
+        await fixture.whenStable();
+
+        queryParamMap.next(convertToParamMap({ member: 'KbqAlert-title' }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(fixture.nativeElement.querySelector('#KbqAlert-title').classList).toContain('docs-api__member_selected');
+        expect(scrollToElement).not.toHaveBeenCalled();
     });
 });

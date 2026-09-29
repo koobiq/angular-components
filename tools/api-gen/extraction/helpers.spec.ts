@@ -801,5 +801,66 @@ describe('reading object literal types from source', () => {
         } as unknown as DocEntry;
 
         expect(updateEntries([alias], {}, {}, {}, { KbqConfig: { members } })).toEqual([{ ...alias, members }]);
+
+        const literal = { before: 'Partial<', after: '>' };
+
+        expect(updateEntries([alias], {}, {}, {}, { KbqConfig: { members, literal } })).toEqual([
+            { ...alias, members, literal }
+        ]);
+    });
+
+    it('reads the fields of an object literal a utility type wraps, the optionality it decides with them', () => {
+        const { members, literal } = readSourceFile('packages/components/select/select.component.ts').declarations
+            .KbqSelectOptions;
+
+        expect(literal).toEqual({ before: 'Partial<', after: '>' });
+        expect(
+            members?.slice(0, 2).map(({ name, memberTags, optionalByWrapper }) => [name, memberTags, optionalByWrapper])
+        ).toEqual([
+            ['panelWidth', [], true],
+            ['panelMinWidth', [], true]
+        ]);
+        expect(members?.every(({ optionalByWrapper }) => optionalByWrapper)).toBe(true);
+    });
+
+    it('reads the fields of the object literal of an intersection, and the types beside it as written', () => {
+        const { members, literal } = readSourceFile('packages/components/core/locales/types.ts').declarations
+            .KbqInputNumberLocaleConfiguration;
+
+        expect(literal).toEqual({ before: '', after: ' & KbqNumberFormatOptions' });
+        expect(members?.map(({ name }) => name)).toEqual([
+            'groupSeparator',
+            'fractionSeparator',
+            'startFormattingFrom'
+        ]);
+    });
+
+    it('decides the optionality by `Required`, keeps it by `Readonly`, and reads no other combination', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'api-gen-'));
+        const file = join(dir, 'types.ts');
+
+        writeFileSync(
+            file,
+            [
+                'export type KbqRequired = Required<{ size?: string }>;',
+                'export type KbqReadonly = Readonly<{ size?: string }>;',
+                'export type KbqTwoLiterals = { size: string } & { color: string };',
+                "export type KbqStyle = 'filled' | (string & {});"
+            ].join('\n')
+        );
+
+        try {
+            const { KbqRequired, KbqReadonly, KbqTwoLiterals, KbqStyle } = readSourceFile(file).declarations;
+
+            expect(KbqRequired.members?.[0].optionalByWrapper).toBe(false);
+            expect(KbqReadonly).toEqual({
+                members: [expect.not.objectContaining({ optionalByWrapper: expect.anything() })],
+                literal: { before: 'Readonly<', after: '>' }
+            });
+            expect(KbqTwoLiterals).toBeUndefined();
+            expect(KbqStyle).toBeUndefined();
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
     });
 });

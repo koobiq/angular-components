@@ -76,8 +76,22 @@ export interface ConstantEntry extends DocEntry {
     declaredFunctionType?: DeclaredFunctionType;
 }
 
+/** The text of a type around the object literal in it, as the source writes it: `Partial<` and `>`, or ` & KbqBase`. */
+export interface LiteralContext {
+    before: string;
+    after: string;
+}
+
 /** Documentation entity for a type alias. */
-export type TypeAliasEntry = ConstantEntry;
+export interface TypeAliasEntry extends ConstantEntry {
+    generics?: GenericEntry[];
+    /**
+     * The fields of the object literal the alias names, read from the source: the extractor reports an alias as the
+     * text of its type. The literal may sit in a utility type or in an intersection; `literal` has the text around it.
+     */
+    members?: PropertyEntry[];
+    literal?: LiteralContext;
+}
 
 /** Documentation entity for a TypeScript class. */
 export interface ClassEntry extends DocEntry {
@@ -176,6 +190,11 @@ export interface PropertyEntry extends MemberEntry {
      * from the source: the extractor does not look into the type of a field.
      */
     members?: PropertyEntry[];
+    /**
+     * Set on a field of an object literal that a utility type decides the optionality of: `true` under `Partial`,
+     * `false` under `Required`. The signature writes the field as declared; a reader may leave it out by this.
+     */
+    optionalByWrapper?: boolean;
 }
 
 /** Sub-entry for a class method. */

@@ -13,7 +13,7 @@ import { Params, RouterLink } from '@angular/router';
 import { KbqBadge } from '@koobiq/components/badge';
 import { KbqCodeBlock, KbqCodeBlockFile } from '@koobiq/components/code-block';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqTitleDirective } from '@koobiq/components/title';
+import { KbqLink } from '@koobiq/components/link';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { DOCS_API_MEMBER_PARAM, DOCS_API_WITHOUT_MEMBER } from '../../constants/api-page';
 import { DocsLocale } from '../../constants/locale';
@@ -35,10 +35,6 @@ const DOCS_API_LOCALE = new InjectionToken<Signal<DocsLocale>>('DOCS_API_LOCALE'
 /** Whether a click opens its link in a new tab or window, which the router leaves to the browser. */
 const opensElsewhere = ({ button, ctrlKey, metaKey, shiftKey, altKey }: MouseEvent): boolean =>
     button !== 0 || ctrlKey || metaKey || shiftKey || altKey;
-
-/** Scrolls to a section of the tab the way the list of its sections does: the router only sets the fragment. */
-const scrollToSection = (document: Document, id: string): void =>
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
 /** JSDoc text: the HTML compiled from its Markdown, and the code in between, highlighted. */
 @Component({
@@ -71,22 +67,19 @@ export class DocsApiText {
  */
 @Component({
     selector: 'docs-api-type',
-    imports: [RouterLink],
+    imports: [RouterLink, KbqLink],
     template: `
         @for (part of parts(); track $index) {
             @if (!part.link) {
                 <ng-container>{{ part.text }}</ng-container>
             } @else if (part.link.page) {
-                <a
-                    class="docs-markdown__a kbq-link kbq-text-only"
-                    [fragment]="part.text"
-                    [routerLink]="getTabPath(part.link.page)"
-                >
+                <a kbq-link noUnderline [fragment]="part.text" [routerLink]="getTabPath(part.link.page)">
                     <ng-container>{{ part.text }}</ng-container>
                 </a>
             } @else {
                 <a
-                    class="docs-markdown__a kbq-link kbq-text-only"
+                    kbq-link
+                    noUnderline
                     queryParamsHandling="merge"
                     [fragment]="part.text"
                     [queryParams]="withoutMember"
@@ -114,17 +107,20 @@ export class DocsApiType {
         return `/${this.locale()}/${page}`;
     }
 
-    /** Scrolls to a section of this tab, unless the click opens the link in a new tab or window. */
+    /**
+     * Scrolls to a section of this tab the way the list of its sections does: the router only sets the fragment. A
+     * click that opens the link in a new tab or window leaves this one where it is.
+     */
     protected scrollToSection(id: string, event: MouseEvent): void {
-        if (!opensElsewhere(event)) scrollToSection(this.document, id);
+        if (!opensElsewhere(event)) this.document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     }
 }
 
 /**
- * The link to a section of the tab — a group, an entry or a member — as an icon beside its name: it leads there and
- * copies the address it leads to. A member is selected through the query, and the page scrolls to it and highlights it;
- * a heading is reached through the fragment, and scrolled to here, as the list of sections beside the page does. The
- * link is named by its text rather than `aria-label`: a tooltip repeating the text of its trigger is not announced twice.
+ * The link to a section of the tab — a group, an entry or a member — as an icon beside its name: it puts the address of
+ * the section in the URL, a member through the query and highlighted, a heading through the fragment, and copies it.
+ * The page stays where the reader is; one opened at that address scrolls to the section. The link is named by its
+ * text rather than `aria-label`: a tooltip repeating the text of its trigger is not announced twice.
  */
 @Component({
     selector: 'docs-api-link',
@@ -168,16 +164,9 @@ export class DocsApiLink {
     });
 
     private readonly clipboard = inject(DocsClipboardService);
-    private readonly document = inject(DOCUMENT);
 
     protected follow(link: HTMLAnchorElement, event: MouseEvent): void {
-        if (opensElsewhere(event)) return;
-
-        this.clipboard.copyWithToast(link.href);
-
-        const heading = this.heading();
-
-        if (heading) scrollToSection(this.document, heading);
+        if (!opensElsewhere(event)) this.clipboard.copyWithToast(link.href);
     }
 }
 
@@ -231,7 +220,7 @@ const TEMPLATE_KINDS = new Set(['component', 'directive', 'pipe']);
  */
 @Component({
     selector: 'docs-api-page',
-    imports: [KbqBadge, KbqCodeBlock, KbqTitleDirective, DocsApiText, DocsApiCall, DocsApiLink, DocsApiType],
+    imports: [KbqBadge, KbqCodeBlock, DocsApiText, DocsApiCall, DocsApiLink, DocsApiType],
     templateUrl: './api-page.html',
     providers: [{ provide: DOCS_API_LOCALE, useFactory: () => inject(DocsApiPage).locale }],
     changeDetection: ChangeDetectionStrategy.OnPush,

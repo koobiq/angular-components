@@ -6,6 +6,7 @@ import {
     ElementRef,
     inject,
     Type,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -186,11 +187,13 @@ export class DocsComponentApiPageComponent {
             this.wrapper().scrollToSelectedContentSection();
         });
 
-        // Registered after the anchors, which scroll a page whose URL names no heading back to its top.
+        // Registered after the anchors, which scroll a page whose URL names no heading back to its top. Only a page
+        // opened at a member scrolls to it: the link of a member on the page selects it and copies the address, and
+        // leaves the page where the reader is.
         afterRenderEffect(() => {
             this.entryPoint();
 
-            const member = this.member();
+            const member = untracked(this.member);
             const target = member && this.document.getElementById(member);
 
             if (target) this.wrapper().scrollToElement(target);

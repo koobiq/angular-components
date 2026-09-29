@@ -14,7 +14,8 @@ import {
     ParameterEntry,
     PipeEntry,
     PropertyEntry,
-    SignalApi
+    SignalApi,
+    TypeAliasEntry
 } from './entities';
 import { isDeprecatedEntry } from './entities/categorization';
 import { normalizeFunctionFields } from './transforms/normalize-function-fields';
@@ -302,12 +303,16 @@ export function getMemberBinding(member: MemberEntry): MemberBinding | undefined
     }
 }
 
+/** Whether an object may leave the member out: by its own `?`, or by the utility type its literal is wrapped in. */
+const mayBeLeftOut = (member: MemberEntry): boolean =>
+    (member as PropertyEntry).optionalByWrapper ?? isOptional(member);
+
 /**
  * Whether an object may leave the member out: an optional field or method. A binding is not marked so — any
  * input a template may leave unbound is optional to it — and is marked `required` otherwise.
  */
 export function isOptionalMember(member: MemberEntry): boolean {
-    return isOptional(member) && !getMemberBinding(member);
+    return mayBeLeftOut(member) && !getMemberBinding(member);
 }
 
 /** The name a template binds the member by, which is the alias of a binding; a method as `open()`. */
@@ -327,8 +332,8 @@ export function getMemberName(member: MemberEntry): string {
 }
 
 /**
- * How a template writes the member: `[value]`, `(changed)`, `[(opened)]`; a method as `open()`, and an optional
- * one the way its declaration marks it, as `label?` or `keys?()`.
+ * How a template writes the member: `[value]`, `(changed)`, `[(opened)]`; a method as `open()`, and one an object
+ * may leave out marked as optional, as `label?` or `keys?()`.
  */
 export function getMemberDisplayName(member: MemberEntry): string {
     const name = getMemberName(member);
@@ -341,7 +346,7 @@ export function getMemberDisplayName(member: MemberEntry): string {
         case 'output':
             return `(${name})`;
         default:
-            if (!isOptional(member)) return name;
+            if (!mayBeLeftOut(member)) return name;
 
             return getMemberRole(member) === 'method' ? `${member.name}?()` : `${member.name}?`;
     }
@@ -686,11 +691,14 @@ export function renderEntrySignature(entry: DocEntry): string {
         case EntryType.Enum:
             return renderEnum(entry as DocEntry & { members: EnumMemberEntry[] });
         case EntryType.TypeAlias: {
-            const alias = entry as ConstantEntry & { generics?: GenericEntry[]; members?: MemberEntry[] };
+            const alias = entry as TypeAliasEntry;
             const head = `type ${alias.name}${renderGenerics(alias.generics)} =`;
+            const { before = '', after = '' } = alias.literal ?? {};
 
             // An object literal, written out the way an interface is: the list below the signature has the comments.
-            if (alias.members?.length) return [`${head} {`, ...renderBody(alias.members), '};'].join('\n');
+            // The utility type or the intersection around it is written as the source writes it.
+            if (alias.members?.length)
+                return [`${head} ${before}{`, ...renderBody(alias.members), `}${after};`].join('\n');
 
             return `${head} ${alias.type};`;
         }

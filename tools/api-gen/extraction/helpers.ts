@@ -321,6 +321,70 @@ function readLiteralMembers(literal: ts.TypeLiteralNode, sourceFile: ts.SourceFi
 const readFields = (node: ts.TypeNode | undefined, sourceFile: ts.SourceFile): PropertyEntry[] | undefined =>
     node && ts.isTypeLiteralNode(node) ? readLiteralMembers(node, sourceFile) : undefined;
 
+/**
+ * The utility types that change what the fields of the object literal they wrap allow: whether an object may leave
+ * them out, or nothing a reader is told of. `Readonly` is here for its fields still to be listed.
+ */
+const FIELD_WRAPPERS = new Map<string, boolean | undefined>([
+    ['Partial', true],
+    ['Required', false],
+    ['Readonly', undefined]
+]);
+
+/**
+ * The fields of the object literal a type alias names: the whole type, the one argument of a utility type in
+ * `FIELD_WRAPPERS`, or the one literal of an intersection. Anything else — a union, a mapped type, several literals —
+ * is left to be read as the text of the type.
+ */
+function readAliasFields(
+    type: ts.TypeNode,
+    sourceFile: ts.SourceFile
+): Pick<DeclarationSourceMetadata, 'members' | 'literal'> | undefined {
+    if (ts.isTypeLiteralNode(type)) return defined({ members: readLiteralMembers(type, sourceFile) });
+
+    if (ts.isTypeReferenceNode(type)) {
+        const wrapper = type.typeName.getText(sourceFile);
+        const [argument] = type.typeArguments ?? [];
+        const members =
+            FIELD_WRAPPERS.has(wrapper) && type.typeArguments?.length === 1 && ts.isTypeLiteralNode(argument)
+                ? readLiteralMembers(argument, sourceFile)
+                : undefined;
+        const optional = FIELD_WRAPPERS.get(wrapper);
+
+        return (
+            members && {
+                members: members.map((field) => ({ ...field, ...defined({ optionalByWrapper: optional }) })),
+                literal: { before: `${wrapper}<`, after: '>' }
+            }
+        );
+    }
+
+    if (!ts.isIntersectionTypeNode(type)) return undefined;
+
+    const literals = type.types.filter(ts.isTypeLiteralNode);
+
+    if (literals.length !== 1) return undefined;
+
+    const [literal] = literals;
+    const members = readLiteralMembers(literal, sourceFile);
+    const index = type.types.indexOf(literal);
+    const text = (types: readonly ts.TypeNode[]): string[] => types.map((part) => typeText(part, sourceFile)!);
+
+    return (
+        members && {
+            members,
+            literal: {
+                before: text(type.types.slice(0, index))
+                    .map((part) => `${part} & `)
+                    .join(''),
+                after: text(type.types.slice(index + 1))
+                    .map((part) => ` & ${part}`)
+                    .join('')
+            }
+        }
+    );
+}
+
 /** What the source says about one member that the compiler's resolved entry does not. */
 function readMemberSource(
     element: ts.ClassElement | ts.TypeElement,
@@ -737,7 +801,7 @@ export function updateEntries(
         // The extractor reports a type alias as the text of its type. One naming an object literal is an interface
         // to a reader, and its fields are listed the way the members of an interface are.
         if (entry.entryType === EntryType.TypeAlias) {
-            res.push({ ...entry, ...defined({ members: declaration?.members }) });
+            res.push({ ...entry, ...defined({ members: declaration?.members, literal: declaration?.literal }) });
 
             return res;
         }
@@ -806,9 +870,10 @@ export function readSourceFile(entrySrc: string): {
 
         // A type and a value may share a name, so what is read of one keeps what was read of the other.
         if (ts.isTypeAliasDeclaration(node)) {
-            const members = readFields(node.type, sourceFile);
+            const fields = readAliasFields(node.type, sourceFile);
 
-            if (members) declarations[ts.idText(node.name)] = { ...declarations[ts.idText(node.name)], members };
+            if (fields?.members)
+                declarations[ts.idText(node.name)] = { ...declarations[ts.idText(node.name)], ...fields };
         }
 
         if (ts.isVariableStatement(node)) {

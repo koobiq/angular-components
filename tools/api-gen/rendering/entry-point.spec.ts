@@ -191,6 +191,30 @@ describe(getApiEntryPoint.name, () => {
         ]);
     });
 
+    it('marks the fields of an object literal in `Partial` as optional, as a reader may leave them out', () => {
+        const [options] = getEntries([
+            entry({
+                name: 'KbqSelectOptions',
+                entryType: EntryType.TypeAlias,
+                type: 'Partial<{ panelWidth: number; }>',
+                literal: { before: 'Partial<', after: '>' },
+                members: [
+                    property({
+                        name: 'panelWidth',
+                        type: 'number',
+                        description: 'Width of the panel.',
+                        optionalByWrapper: true
+                    })
+                ]
+            })
+        ]);
+
+        expect(options.signature).toBe(
+            ['type KbqSelectOptions = Partial<{', '    panelWidth: number;', '}>;'].join('\n')
+        );
+        expect(options.members?.map(({ name, optional }) => [name, optional])).toEqual([['panelWidth', true]]);
+    });
+
     it('lists the fields of a type alias naming an object literal, a nested one by its path, the optional ones marked', () => {
         const [config] = getEntries([
             entry({
