@@ -2993,6 +2993,9 @@ export class KbqFormsModule {
 }
 
 // @public
+export const kbqGetElementHeight: (element: Element) => number;
+
+// @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
 
 // @public
@@ -3977,7 +3980,7 @@ export type KbqTimeRangeLocaleConfig = {
         apply: string;
         cancel: string;
         rangeLabel: string;
-        outOfBoundsError: string;
+        outOfBoundsError?: string;
         allTime: string;
         currentQuarter: string;
         currentYear: string;

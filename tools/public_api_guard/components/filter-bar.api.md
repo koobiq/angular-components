@@ -783,7 +783,7 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeInputComponent, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated
 export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;

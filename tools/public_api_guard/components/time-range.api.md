@@ -14,7 +14,6 @@ import { DurationUnit } from '@koobiq/date-adapter';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { FormGroupDirective } from '@angular/forms';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -22,10 +21,10 @@ import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimepicker } from '@koobiq/components/timepicker';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -95,6 +94,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     onApply(popover: KbqPopoverTrigger): void;
     onCancel(popover: KbqPopoverTrigger): void;
     onChange: (_value: KbqTimeRangeRange) => void;
+    protected onFooterPointerDown(): void;
     onTouch: () => void;
     // (undocumented)
     onVisibleChange(isVisible: boolean): void;
@@ -130,6 +130,7 @@ export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleCont
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     constructor();
     readonly availableTimeRangeTypes: _angular_core.InputSignal<KbqTimeRangeType[]>;
+    protected readonly boundsHint: _angular_core.Signal<string>;
     // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point index.d.ts
     protected readonly form: FormGroup<FormValue<T>>;
     protected readonly isRangeVisible: _angular_core.Signal<boolean>;
@@ -139,9 +140,14 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     readonly minDate: _angular_core.InputSignal<T | null>;
     // (undocumented)
     ngOnInit(): void;
+    // Warning: (ae-forgotten-export) The symbol "RangeBorder" needs to be exported by the entry point index.d.ts
+    protected onBorderFocusOut(border: RangeBorder, input: FocusEvent): void;
+    protected onBorderInput(border: RangeBorder): void;
     onChange: (_value: KbqTimeRangeRange) => void;
+    protected onRangeFocusOut(input: FocusEvent): void;
     onTouch: () => void;
     readonly optionTemplate: _angular_core.InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
+    protected outOfBoundsMessage(): string;
     // Warning: (ae-forgotten-export) The symbol "RangeErrorStateMatcher" needs to be exported by the entry point index.d.ts
     protected readonly rangeStateMatcher: RangeErrorStateMatcher;
     readonly rangeValue: _angular_core.InputSignal<Required<KbqRangeValue<T>>>;
