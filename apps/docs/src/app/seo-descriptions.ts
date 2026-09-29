@@ -208,11 +208,11 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Поповер — небольшой немодальный диалог без затемнения, который открывается рядом с триггерным элементом. Он может содержать текст, поля ввода, любые другие элементы управления."
     },
     "progress-bar": {
-        "en": "<kbq-progress-bar> is a component that allows display progress bar.",
+        "en": "<kbq-progress-bar> is a component that displays a progress indicator.",
         "ru": "<kbq-progress-bar> - компонент, отображающий индикатор выполнения."
     },
     "progress-spinner": {
-        "en": "<kbq-progress-spinner> is a component that allows display progress spinner.",
+        "en": "<kbq-progress-spinner> is a component that displays a progress indicator as a spinner.",
         "ru": "<kbq-progress-spinner> - компонент, отображающий индикатор загрузки в виде спиннера."
     },
     "radio": {
@@ -348,7 +348,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Поля формы показывают ошибки через ErrorStateMatcher — небольшой объект-политику, который решает, когда выводить уже существующие ошибки контрола пользователю."
     },
     "versioning": {
-        "en": "For the sake of keeping things simple, refer to the Semver spec for anything this document does not cover.",
+        "en": "Our releases follow the versioning described in the Semver spec.",
         "ru": "Для наших релизов мы придерживаемся версионирования основанного на Semver spec."
     }
 } as const;

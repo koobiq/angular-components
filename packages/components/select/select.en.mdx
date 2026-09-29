@@ -2,29 +2,27 @@ Select - allows the user to select one or more values from a predefined list.
 
 <Example id="select-overview" />
 
-### States
-
-#### Validation
+### Validation
 
 <Example id="select-validation" />
 
-#### Inactive states
+### Inactive states
 
 <Example id="select-disabled" />
 
-#### Reset selected value
+### Reset selected value
 
 The reset control clears everything except disabled options. Change that with the `clearPredicate` attribute: `[clearPredicate]="clearEverything"` and `clearEverything = () => true` clear the disabled ones too.
 
 <Example id="select-cleaner-with-disabled" />
 
-#### Multiple selection
+### Multiple selection
 
 Whichever order the values are picked in, the form control receives them in panel order — the order the options are declared in. Pass a `sortComparator` to order them differently.
 
 <Example id="select-multiple" />
 
-#### Multiple selection (multiline)
+### Multiple selection (multiline)
 
 <Example id="select-with-multiline-matcher" />
 
@@ -33,7 +31,7 @@ itself. When that happens and the panel fits neither below the trigger nor above
 the trigger's first row and drawn over the rest of them, opening one gap below that row. The first row, the
 chevron and the cleaner stay visible and clickable.
 
-#### Customizing tags
+### Customizing tags
 
 In multiple selection mode the markup of every tag can be replaced with your own. Declare an `<ng-template #kbqSelectTagContent>` inside `<kbq-select>` — it is rendered once per selected option and receives the option as `$implicit` and the `KbqSelect` instance as `select`:
 
@@ -51,19 +49,19 @@ In multiple selection mode the markup of every tag can be replaced with your own
 
 The template replaces the built-in markup completely, so the color, the disabled state and the remove control have to be reproduced by hand. Keep `<kbq-tag>` as the root element: the “+N” counter of hidden tags measures the rendered `kbq-tag` elements, and any other root element breaks it.
 
-#### Grouping values
+### Grouping values
 
 <Example id="select-groups" />
 
-#### Filling a list of values
+### Filling a list of values
 
-##### List with search
+#### List with search
 
 Use search when the list has more than 10 items. Search splits a multi-word query into parts and searches for them independently, trims leading and trailing spaces, is case-insensitive, and folds diacritics. The algorithm is described in the [Smart search guide](/en/other/search-smart).
 
 <Example id="select-search" />
 
-##### Select all
+#### Select all
 
 In multiple selection mode all the values can be selected at once. The feature is off by default — turn it on with the `selectAll` attribute, and a master checkbox appears above the list.
 
@@ -86,13 +84,35 @@ Once everything is selected, the control can show a label of its own instead of 
 
 <Example id="select-select-all-label" />
 
-##### Selecting everything from the keyboard
+#### Selecting everything from the keyboard
 
 `Ctrl`/`Cmd` + `A` selects all options in multiple selection mode. By default a repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. With `selectAll` the shortcut always toggles both ways, so it and the master checkbox cannot disagree.
 
 Inside a non-empty search field the first press selects the text of the field; the next one falls through to the options. The behaviour can be replaced wholesale with the `selectAllHandler` input — `onSelectAll` is then not emitted for the shortcut, as the handler owns the behaviour.
 
-##### Footer
+#### Search in Select for short lists
+
+When there are only a few options, the search can be hidden automatically. This feature is off by default.
+Use the `searchMinOptionsThreshold` attribute to configure it.
+
+Possible values:
+
+- `'auto'` – hides the search if there are fewer than 10 options (the default threshold).
+- `<number>` – hides the search if there are fewer options than the specified number.
+
+To configure this for all selects in a module with consistent display rules, use the `kbqSelectOptionsProvider` provider:
+
+```ts
+import { kbqSelectOptionsProvider } from '@koobiq/components/select';
+
+@NgModule({
+    providers: [
+        kbqSelectOptionsProvider({ searchMinOptionsThreshold: 'auto' })
+    ]
+})
+```
+
+#### Footer
 
 You can place auxiliary elements in the footer: actions, links, hints. It stays put while the list scrolls under it.
 
@@ -102,7 +122,7 @@ With the panel open, `Tab` moves focus into the footer, visiting each interactiv
 
 <Example id="select-footer" />
 
-#### Select height
+### Select height
 
 By default, the maximum height of the list is 256px. When there are many options, the drop-down menu becomes scrollable.
 
@@ -160,7 +180,7 @@ To set a fixed width of 400px for the select, use the `panelWidth` attribute wit
 
 <Example id="select-with-panel-width-fixed" />
 
-A panel growing with long option text stops at 640px. The cap is soft — it never makes the panel narrower than the select, and never clamps an explicit `panelWidth`. Raise or lower it for one select with `panelMaxWidth`, or for the whole application by setting the `--kbq-panel-size-width-max` token on `:root` (it is shared with tree-select, autocomplete and dropdown).
+A panel growing with long option text stops at 640px. The cap is soft — it never makes the panel narrower than the select, and never clamps an explicit `panelWidth`. Raise or lower it for one select with `panelMaxWidth`, or for the whole application by setting the `--kbq-panel-size-width-max` token on `:root` (it is shared with [Tree-select](/en/components/tree-select), [Autocomplete](/en/components/autocomplete) and [Dropdown](/en/components/dropdown)).
 
 To configure the select width for all selects within a module according to unified display rules, use the `kbqSelectOptionsProvider`.
 
@@ -170,28 +190,6 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 @NgModule({
     providers: [
         kbqSelectOptionsProvider({ panelWidth: 'auto' })
-    ]
-})
-```
-
-##### Search in Select for short lists
-
-You can configure a select so that the search is disabled when there is a small number of options. By default, this feature is turned off.
-Use the `searchMinOptionsThreshold` attribute to configure it.
-
-Possible values:
-
-- `'auto'` – disables search if the number of options is less than 10 (default behavior).
-- `<number>` – disables search if the number of options is less than the specified number.
-
-To configure search disabling for all selects in a module with consistent display rules, you can use the `kbqSelectOptionsProvider` provider:
-
-```ts
-import { kbqSelectOptionsProvider } from '@koobiq/components/select';
-
-@NgModule({
-    providers: [
-        kbqSelectOptionsProvider({ minOptionsThreshold: 'auto' })
     ]
 })
 ```

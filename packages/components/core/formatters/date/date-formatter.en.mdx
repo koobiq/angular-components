@@ -179,18 +179,20 @@ export const appConfig: ApplicationConfig = {
 
 On the very first visit there is no cookie yet, and the page renders with the fallback (`'utc'` in the example). After hydration, compare it with `Intl.DateTimeFormat().resolvedOptions().timeZone`, write the cookie and, if the zone has to apply right away, call `setTimezone()` — that is a single re-render, and only on the first visit. When the zone is stored in the user profile on the server, even the first visit avoids it.
 
-### Absolute date
+### Available formats
+
+#### Absolute date
 
 <Example id="absolute-date-formatter" />
 
-### Relative date
+#### Relative date
 
 <Example id="relative-date-formatter" />
 
-### Date range
+#### Date range
 
 <Example id="range-date-formatter" />
 
-### Duration
+#### Duration
 
 <Example id="duration-date-formatter" />

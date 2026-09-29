@@ -10,6 +10,12 @@ kbq-select-matcher - allows you to replace the entire contents of kbq-select, in
 
 <Example id="tree-select-custom-matcher" />
 
+#### Input field example
+
+An input inside `kbq-select-matcher`. `[useDefaultHandlers]="false"` turns off the tree select's own click, keyboard and focus handlers so that the input receives them, and the example opens the panel and passes the keys to it by itself.
+
+<Example id="tree-select-custom-matcher-with-input" />
+
 #### Deleted nodes example
 
 Shows how to handle selected values whose nodes were deleted on the backend: the deleted nodes are hidden from the dropdown but stay in the selection as removable error tags, the field is shown in an error state while any deleted value is selected, and a hint explains why.
