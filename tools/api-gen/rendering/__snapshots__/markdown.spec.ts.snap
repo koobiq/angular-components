@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`renderApiAsMarkdown renders the groups of the API tab at the given depth and the entries below them 1`] = `
+"### Components
+
+#### KbqAlert (component)
+
+Shows a message. Import \`KbqAlertModule\` or the component itself.
+
+##### Usage
+
+Put a title inside.
+
+\`\`\`ts
+@Component({ selector: 'kbq-alert' })
+class KbqAlert {
+    @Input() compact: boolean;
+}
+\`\`\`
+
+- \`[compact]\`: \`boolean\` — Whether the alert is compact.
+
+### Types
+
+#### KbqAlertStyle (type)
+
+Style.
+
+\`\`\`ts
+type KbqAlertStyle = 'error' | 'warning';
+\`\`\`"
+`;

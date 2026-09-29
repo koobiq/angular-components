@@ -1,12 +1,35 @@
 @use '../dist/components/core/styles/common/tokens';
 
 .docs-component-navbar {
+    // The actions move to a row of their own when the tabs leave them no room, as on a phone. Tabs that do not fit
+    // even a row of their own page through themselves, as the tab bar does in a narrow container.
+    flex-wrap: wrap;
+    row-gap: var(--kbq-size-m);
+
     & .docs-component-navbar__links {
         display: flex;
         align-items: center;
 
         & .kbq-link {
             padding: var(--kbq-size-s) var(--kbq-size-m);
+        }
+    }
+
+    & > .kbq-tab-nav-bar {
+        min-width: 0;
+    }
+
+    & .docs-component-navbar__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        align-items: center;
+        gap: var(--kbq-size-m) var(--kbq-size-l);
+        // A guide has no tabs: the actions keep to the end of the row all the same.
+        margin-left: auto;
+
+        & .kbq-link {
+            white-space: nowrap;
         }
     }
 }

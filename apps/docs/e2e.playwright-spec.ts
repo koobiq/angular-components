@@ -558,3 +558,66 @@ test.describe('prerendered SEO metadata', () => {
         await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex,follow');
     });
 });
+
+// `tools/llms` writes an index for agents and the Markdown of every item next to its pages; a copy of the site that
+// served the app shell in their place, or lost a file, would leave an agent reading HTML or nothing at all.
+test.describe('documentation for agents', () => {
+    test('serves the index and the Markdown of every item it links', async ({ request }) => {
+        const index = await request.get('/llms.txt');
+
+        expect(index.status()).toBe(200);
+        expect(index.headers()['content-type']).toContain('text/plain');
+
+        const paths = Array.from(
+            (await index.text()).matchAll(/\]\(https:\/\/koobiq\.io(\/[^)]+\.md)\)/g),
+            ([, path]) => path
+        );
+
+        expect(paths.length).toBeGreaterThan(80);
+
+        for (const path of paths) {
+            const response = await request.get(path);
+
+            expect(response.status(), path).toBe(200);
+            expect(response.headers()['content-type'], path).toContain('text/markdown');
+        }
+    });
+
+    test('serves every item in one file as well', async ({ request }) => {
+        const full = await request.get('/llms-full.txt');
+
+        expect(full.status()).toBe(200);
+        expect(await full.text()).toContain('\n## Button\n');
+    });
+
+    test('answers a Markdown file it does not have with a 404 rather than the app', async ({ request }) => {
+        expect((await request.get('/en/components/missing.md')).status()).toBe(404);
+    });
+
+    test('points every page of an item, in either locale, at its Markdown and the site at its index', async ({
+        page
+    }) => {
+        await page.goto('/ru/components/alert/api');
+        await waitForHydration(page);
+
+        await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
+            'href',
+            'https://koobiq.io/en/components/alert.md'
+        );
+        await expect(page.locator('link[rel="describedby"]')).toHaveAttribute('href', '/llms.txt');
+        expect((await page.request.get('/ru/components/alert.md')).status()).toBe(404);
+    });
+
+    test('copies the Markdown of the item it is on, in English on a page in Russian too', async ({ context, page }) => {
+        await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+        await page.goto('/ru/components/alert/overview');
+        await waitForHydration(page);
+
+        await page.getByRole('button', { name: 'Скопировать страницу' }).click();
+
+        await expect(page.locator('kbq-toast')).toContainText('Скопировано');
+        expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+            await (await page.request.get('/en/components/alert.md')).text()
+        );
+    });
+});

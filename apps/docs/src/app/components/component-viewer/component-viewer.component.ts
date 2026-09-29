@@ -34,6 +34,7 @@ import { DocsPagePrefetch } from '../../services/page-resolver';
 import { docsDevVersionPlaceholder, docsKoobiqVersion } from '../../version';
 import { DocsApiPage } from '../api-page/api-page';
 import { DocsApiEntryPoint } from '../api-page/api-page.types';
+import { DocsCopyPage } from '../copy-page/copy-page';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import { DocsComponentViewerWrapperComponent } from './component-viewer-wrapper';
 
@@ -52,7 +53,8 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
         RouterLink,
         RouterLinkActive,
         DocsRegisterHeaderDirective,
-        KbqIcon
+        KbqIcon,
+        DocsCopyPage
     ],
     templateUrl: './component-viewer.template.html',
     styleUrls: ['./component-viewer.scss'],

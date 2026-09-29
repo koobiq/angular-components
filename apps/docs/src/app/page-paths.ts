@@ -1,7 +1,8 @@
-import { DOCS_SUPPORTED_LOCALES } from './constants/locale';
+import { DOCS_SUPPORTED_LOCALES, DocsLocale } from './constants/locale';
 import {
     docsGetItems,
     DocsStructureCategoryId,
+    DocsStructureItem,
     DocsStructureItemId,
     DocsStructureItemTab,
     DocsStructureTokensTab
@@ -28,6 +29,14 @@ const getLocalizedContentPaths = (): string[] => {
 
     return ['', ...paths, DocsStructureCategoryId.Icons];
 };
+
+/**
+ * Path of the Markdown of a structure item — every tab of it in one file, for agents — next to its English pages:
+ * `/en/components/button.md`. `tools/llms` writes the file, the pages of the item in every locale link to it. It is in
+ * English only: a model reads it just as well and answers in the language it is asked in.
+ */
+export const docsGetMarkdownPath = ({ categoryId, id }: Pick<DocsStructureItem, 'categoryId' | 'id'>): string =>
+    `/${DocsLocale.En}/${categoryId}/${id}.md`;
 
 /** Returns every application page that should be prerendered and whether it belongs in the sitemap. */
 export const docsGetPagePaths = (): DocsPagePath[] => {
