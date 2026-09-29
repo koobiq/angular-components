@@ -302,6 +302,60 @@ face narrower than the real one can leave the extension outside the box — exac
 untouched, and from the other side, under a 6 s font stall the spec as it stood reproduces CI's
 received image exactly where the helper holds the Inter split 6 times out of 6.
 
+## Follow-up, 2026-09-29
+
+### `form-field › e2eControlMatrix under forced autofill`, again
+
+Still the most frequent flake after the 2026-09-15 fix: 16 of the 36 red `E2E tests` runs between
+2026-09-16 and 2026-09-29, three of them on `main`. It only ever failed in three shapes —
+`05-light.png` at 9 pixels, `05-dark.png` at 1, `04-light.png` at 2 — and the received images are
+byte-identical from one run to the next. A binary state, then, and one chosen per shot rather than per
+machine: in the runs where `05-dark.png` failed, `05-light.png` had matched a moment earlier.
+
+The diff is anti-aliasing on the rounded corners and nothing else — the border, the tint and the focus
+ring; every straight edge is identical. 226 raw pixels in the light shot, of which only the 9 in the
+focused column's corners exceed `threshold: 0.05`: the ring is where the contrast is highest.
+
+**The 2026-09-15 explanation does not hold.** Nothing in either matrix animates but the parked
+suppressions, 8 and 14 of them, before the theme swap or after it (`getAnimations({ subtree: true })`),
+so `expectSettledAnimations` returned at once and never gated anything.
+
+**Cause: partial raster.** The parked `background-color` transition repaints every autofilled control
+on every frame — a 500 ms trace holds some 30 paints of each of the 14 fields and 130 raster tasks —
+and only the invalidated part of each tile is rasterized again. The anti-aliased edge of a curve
+comes out a few percent off when the raster that last touched it covered only part of the tile — the
+baselines are the whole-tile rendering — so the corners keep whichever rendering that raster left,
+and timing decides which it was. `toHaveScreenshot` hides most of it: when the first capture misses,
+it shoots again until two frames agree, and locally the later frames usually return to the baseline
+rendering. In CI they stayed on the other one.
+
+- In Docker at 6 workers, a `locator.screenshot()` taken 250 ms after the gate reproduces CI's
+  received image byte for byte in 8 of 10 light shots and 2 of 10 dark ones. With
+  `--disable-partial-raster`, 20 of 20 match the baseline.
+- `--disable-features=CompositeBGColorAnimation` changes nothing: the transition runs on the main
+  thread.
+- It is also what Cause 3 measured. Without the flag, the shots compared at threshold 0 fail 18 of 50
+  repeats, at 8, 29, 33 and 86 pixels — the counts recorded there. `threshold: 0.05` absorbed most of
+  it, `expectSettledAnimations` none of it.
+
+**Fix.** `test.use({ launchOptions: { args: ['--disable-partial-raster'] } })` at the top of
+`form-field/e2e.playwright-spec.ts` — top-level, because a launch option cannot be scoped to a
+describe — and `threshold: 0.05` removed, so the two matrices are compared at the project's 0 again.
+`expectSettledAnimations` stays, as the guard against a transition added later, with its comment
+corrected. No baseline moved.
+
+Not applied to the whole suite: every other shot is taken with `animations: 'disabled'`, which stops
+what would keep repainting through it, and the flag is Chromium's while the same project launches
+WebKit for `sidepanel` and `scrollbar/deprecated`.
+
+The repaint itself is not a test artifact. The same transition runs wherever a field is really
+autofilled, so an autofilled field has its page repainted and partly rasterized again on every frame
+for as long as it stays filled. That is the cost of the suppression technique, left for a separate
+change.
+
+**Verified:** at threshold 0, in Docker at 6 workers — the whole `form-field` spec ×3 (156/156) and
+the two autofill shots ×25 (50/50).
+
 ## Not fixed
 
 - **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
