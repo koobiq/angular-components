@@ -291,8 +291,8 @@ export class KbqSidepanelService implements OnDestroy {
         const lower = openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 1];
         const bottom = openedSidepanelsWithSamePosition[openedSidepanelsWithSamePosition.length - 2];
 
-        lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Lower);
-        bottom?.containerInstance.setAnimationState(KbqSidepanelAnimationState.BottomPanel);
+        this.setAnimationState(lower, KbqSidepanelAnimationState.Lower);
+        this.setAnimationState(bottom, KbqSidepanelAnimationState.BottomPanel);
 
         const injector = Injector.create({
             parent: this.injector,
@@ -438,8 +438,23 @@ export class KbqSidepanelService implements OnDestroy {
 
         const [lower, bottom] = this.getLowerSidepanelsWithSamePosition(index);
 
-        lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.BecomingNormal);
-        bottom?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Lower);
+        this.setAnimationState(lower, KbqSidepanelAnimationState.BecomingNormal);
+        this.setAnimationState(bottom, KbqSidepanelAnimationState.Lower);
+    }
+
+    /**
+     * Moves a sidepanel into `state`, unless it is closing already.
+     *
+     * The exit animation is what disposes the overlay, so interrupting it with another state leaves the
+     * sidepanel in the DOM and in `openedSidepanels` for good — which is what closing a stack of them as
+     * a group used to do to the panels underneath.
+     */
+    private setAnimationState(sidepanelRef: KbqSidepanelRef | undefined, state: KbqSidepanelAnimationState): void {
+        const containerInstance = sidepanelRef?.containerInstance;
+
+        if (!containerInstance || containerInstance.animationState === KbqSidepanelAnimationState.Hidden) return;
+
+        containerInstance.setAnimationState(state);
     }
 
     /**
@@ -458,7 +473,7 @@ export class KbqSidepanelService implements OnDestroy {
         if (index > -1) {
             const [lower] = this.getLowerSidepanelsWithSamePosition(index);
 
-            lower?.containerInstance.setAnimationState(KbqSidepanelAnimationState.Visible);
+            this.setAnimationState(lower, KbqSidepanelAnimationState.Visible);
 
             this.openedSidepanels.splice(index, 1);
             this.updateIndents(sidepanelRef.config);
