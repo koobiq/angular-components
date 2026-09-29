@@ -12,7 +12,7 @@ kbq-select-matcher - allows you to replace the entire contents of kbq-select, in
 
 #### Input field example
 
-An input inside `kbq-select-matcher`. `[useDefaultHandlers]="false"` turns off the tree select's own click, keyboard and focus handlers so that the input receives them, and the example opens the panel and passes the keys to it by itself.
+An input inside `kbq-select-matcher`. `[useDefaultHandlers]="false"` turns off the tree select's own click, keyboard and focus handlers, which would otherwise toggle the panel on every click and swallow `Space` and `Enter` typed into the input. The example opens the panel and passes the keys to it by itself.
 
 <Example id="tree-select-custom-matcher-with-input" />
 

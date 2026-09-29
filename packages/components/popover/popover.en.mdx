@@ -124,7 +124,7 @@ A popover can open next to selected text. It stays next to the selection while t
 
 `kbqPopoverOrigin` accepts an element or a rectangle in viewport coordinates. `kbqCreateCaretOrigin` creates a dynamic origin for the selection, and `kbqGetSelectionRect` measures its position inside the element. `updatePosition(true)` moves an open popover to a changed selection. `null` anchors it back to the trigger.
 
-`[kbqPopoverAutoFocus]="false"` leaves the focus and selection where they were. Cancel the default `mousedown` action inside the popover so the first click does not collapse the selection. The `Escape` key is handled on the document.
+`[kbqPopoverAutoFocus]="false"` leaves the focus and selection where they were. Cancel the default `mousedown` action inside the popover so the first click does not collapse the selection. Handle `Escape` on the document: the focus stays in the text, so neither the trigger nor the panel receives the key.
 
 The popover opens once the selection is final: after `pointerup` for pointer selection and after a short pause for keyboard selection. Otherwise, it anchors to the first characters of a selection that is still growing. The popover lives in an overlay at the end of the document, so `Tab` walks past it; when needed, handle `Tab` separately and move focus to the first popover element.
 
