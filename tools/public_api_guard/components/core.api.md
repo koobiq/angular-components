@@ -3502,7 +3502,6 @@ export interface KbqLocaleStringsData {
     timeRange: KbqTimeRangeLocaleConfiguration;
     // (undocumented)
     timezone: KbqTimezoneLocaleConfiguration;
-    // (undocumented)
     username: KbqUsernameLocaleConfiguration;
 }
 

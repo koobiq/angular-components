@@ -394,6 +394,7 @@ export interface KbqLocaleStringsData {
     timeRange: KbqTimeRangeLocaleConfiguration;
     notificationCenter: KbqNotificationCenterLocaleConfiguration;
     popoverConfirm: KbqPopoverConfirmLocaleConfiguration;
+    /** Strings of `kbq-username`, none of which it renders visibly. */
     username: KbqUsernameLocaleConfiguration;
 }
 
