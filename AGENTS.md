@@ -258,23 +258,21 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 
 <!-- Adapted from Angular team recommendations: https://v20.angular.dev/assets/context/best-practices.md -->
 
-You are an expert in TypeScript, Angular, and scalable web application development. You write functional, maintainable, performant, and accessible code following Angular and TypeScript best practices.
+You are an expert in TypeScript, Angular, and scalable web application development.
 
 ### TypeScript Best Practices
 
-- Use strict type checking
-- Prefer type inference when the type is obvious
-- Avoid the `any` type; use `unknown` when type is uncertain
+- `strictNullChecks` and `strictFunctionTypes` are on but `noImplicitAny` is off, so a parameter without a type annotation silently becomes `any`: annotate parameters, and rely on inference where the type is obvious
+- Avoid `any`, and use `unknown` for a value of uncertain type — but not in published declarations: `check-public-api-any` counts both and fails when a package's count grows, so give new public members concrete or generic types
 - Prefer `readonly` where appropriate (e.g., signals, injections)
 - Use `protected` for template bindings
 
 ### Angular Best Practices
 
-- Always use standalone components over NgModules
-- Must NOT set `standalone: true` inside Angular decorators. It's the default in Angular v19+
+- Components and directives are standalone; each entry point's `Kbq<Name>Module` only re-exports them for NgModule consumers
+- Don't write `standalone: true` in Angular decorators; it has been the default since Angular 19
 - Use signals for state management
-- Implement lazy loading for feature routes
-- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
+- Put host bindings and listeners in the `host` object of the `@Component` or `@Directive` decorator, not in `@HostBinding` / `@HostListener`
 - Use `NgOptimizedImage` for all static images (does not work for inline base64 images).
 
 ### Server Side Rendering (SSR)
@@ -283,21 +281,19 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 ### Accessibility Requirements
 
-- It MUST pass all AXE checks.
-- It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes.
+- Components, docs examples and the docs site must pass all AXE checks and meet WCAG AA, including focus management, color contrast, and ARIA attributes.
 - Source all component-provided default ARIA text from `kbqInjectA11yLocaleConfiguration()`
 
 ### Components
 
-- Keep components small and focused on a single responsibility
 - Use `input()` and `output()` functions instead of decorators
 - Use `model()` for two-way bound properties with `[(prop)]` syntax instead of pairing `input()` with `output()`
 - Use `computed()` for derived state
 - Set `changeDetection: ChangeDetectionStrategy.OnPush` in `@Component` decorator
 - Prefer inline templates for small components
-- Prefer Reactive forms instead of Template-driven ones
-- Do NOT use `ngClass`, use `class` bindings instead
-- Do NOT use `ngStyle`, use `style` bindings instead
+- Form controls are used with both reactive and template-driven forms, and the docs examples show both
+- Use `class` bindings instead of `ngClass`
+- Use `style` bindings instead of `ngStyle`
 - When using external templates/styles, use paths relative to the component TS file.
 - When a projected child depends on its host component, inject a narrow `InjectionToken` scoped to the members it uses, not the host's concrete class.
 
@@ -309,19 +305,15 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 - Use signals for local component state
 - Use `computed()` for derived state
-- Keep state transformations pure and predictable
-- Do NOT use `mutate` on signals, use `update` or `set` instead
 
 ### Templates
 
-- Keep templates simple and avoid complex logic
 - Use native control flow (`@if`, `@for`, `@switch`) instead of `*ngIf`, `*ngFor`, `*ngSwitch`
 - Use the async pipe to handle observables
 - Do not assume globals like (`new Date()`) are available.
 
 ### Services
 
-- Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
 
@@ -329,5 +321,5 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 - Prefer clear naming and structure over comments. Add concise comments only to explain non-obvious rationale or constraints; never restate the code
 - Use `/** JSDoc */` for user-facing public API documentation and `//` for implementation comments. Omit details apparent from names, types, or signatures
-- Do NOT commit commented-out code or comments describing change history
+- Don't commit commented-out code or comments describing change history
 - Update or remove comments that become outdated because of your changes
