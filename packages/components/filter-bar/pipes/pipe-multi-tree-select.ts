@@ -7,6 +7,7 @@ import { KbqHighlightModule, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } f
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTreeModule, kbqTreeSelectAllValue, KbqTreeSelection } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
@@ -33,7 +34,8 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
         KbqTreeSelectModule,
         FormsModule,
         KbqBadgeModule,
-        KbqPseudoCheckboxModule
+        KbqPseudoCheckboxModule,
+        KbqSelectNoOptions
     ],
     templateUrl: 'pipe-multi-tree-select.html',
     styleUrls: ['base-pipe.scss', 'pipe-multi-tree-select.scss'],
@@ -216,6 +218,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
     }
 
     toggleSelectAllNode(emitEvent: boolean = true) {
+        // With nothing to toggle, the toggle would still commit an empty value and announce a change.
+        if (this.noOptions) return;
+
         if (this.select().search()?.ngControl?.value) {
             // `KbqTreeOption.setSelected()` does not consult `disabled`, so the locked options are filtered
             // out here rather than relying on the tree's own guards.
@@ -277,7 +282,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqTreeSelectPipeBase<KbqSe
         if (template?.values) {
             const values = [...(template.values as KbqTreeSelectNode[])];
 
-            if (this.data.selectAll) {
+            if (this.data.selectAll && values.length) {
                 values.unshift({
                     name: this.localeConfiguration().pipe.selectAll,
                     value: kbqTreeSelectAllValue,

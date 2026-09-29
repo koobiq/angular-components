@@ -92,6 +92,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected readonly elementRef: ElementRef<HTMLElement>;
     protected readonly filterBar: KbqFilterBarHost | null;
     protected readonly focusMonitor: FocusMonitor;
+    protected focusTrigger(): void;
     get isEmpty(): boolean;
     isMac: boolean;
     isTemplateRef(value: unknown): boolean;
@@ -100,6 +101,9 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected multilineOptions?: boolean;
     // (undocumented)
     ngAfterViewInit(): void;
+    protected get noOptions(): boolean;
+    protected get noOptionsMessage(): string;
+    protected noOptionsText?: string;
     onClear(): void;
     onRemove(): void;
     abstract open(): void;
@@ -708,6 +712,7 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     minDateTime?: unknown;
     minInterval?: unknown;
     multilineOptions?: boolean;
+    noOptionsText?: string;
     panelMaxHeight?: KbqPanelMaxHeight;
     // (undocumented)
     values?: unknown[];

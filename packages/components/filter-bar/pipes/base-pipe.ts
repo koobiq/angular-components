@@ -100,6 +100,12 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
      * the pipe template. Only consumed by the select / multi-select pipe components.
      */
     protected multilineOptions?: boolean;
+    /**
+     * Message shown in place of the options when the pipe template has none, forwarded from the pipe
+     * template. Only consumed by the select-family pipe components; `undefined` falls back to the localized
+     * `pipe.noOptions` string.
+     */
+    protected noOptionsText?: string;
 
     /**
      * Whether the current platform is a Mac.
@@ -120,6 +126,19 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     /** Whether the current pipe is removable or cleanable. Used for apply style modifier */
     get showRemoveButton(): boolean {
         return this.data.removable || (this.data.cleanable && !this.isEmpty);
+    }
+
+    /**
+     * Whether the pipe template provides no values to choose from. Only consumed by the select-family pipe
+     * components, which then show `noOptionsMessage` instead of the list.
+     */
+    protected get noOptions(): boolean {
+        return !this.values?.length;
+    }
+
+    /** Message the select-family pipe components show when there are no options. */
+    protected get noOptionsMessage(): string {
+        return this.noOptionsText ?? this.localeConfiguration().pipe.noOptions;
     }
 
     /** Localized strings of the filter-bar, falling back to the defaults outside a bar.
@@ -206,13 +225,14 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         // Sync the comparator whenever a matching template is present, independently of `values`, so a
         // template that sets/updates/removes `compareWith` (or omits `values`) is never left with a stale
         // comparator. Absent `compareWith` resets to the pipe's default id-based `compareByValue`.
-        // `lockedValues`, `panelMaxHeight` and `multilineOptions` are synced on the same terms, and for
-        // the same reason.
+        // `lockedValues`, `panelMaxHeight`, `multilineOptions` and `noOptionsText` are synced on the same
+        // terms, and for the same reason.
         if (template) {
             this.optionCompareWith = template.compareWith;
             this.lockedValues = template.lockedValues;
             this.panelMaxHeight = template.panelMaxHeight;
             this.multilineOptions = template.multilineOptions;
+            this.noOptionsText = template.noOptionsText;
         }
     };
 
@@ -284,6 +304,15 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
             return;
         }
 
+        this.focusTrigger();
+    }
+
+    /**
+     * Focuses the pipe's trigger button with `currentFocusOrigin`, unconditionally.
+     *
+     * @docs-private
+     */
+    protected focusTrigger(): void {
         const trigger = this.elementRef.nativeElement.querySelector<HTMLElement>(
             'button:not(.kbq-pipe__remove-button)'
         );

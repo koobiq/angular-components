@@ -108,6 +108,16 @@ Both lines are truncated by default; `multilineOptions: true` wraps them instead
 
 <Example id="filter-bar-option-caption" />
 
+### No options
+
+When the template of a `select`, `multiselect`, `tree-select` or `multi-tree-select` pipe has no `values`, the dropdown shows a message instead of an empty list. The search field and "Select all" are hidden — there is nothing to search or select.
+
+<Example id="filter-bar-no-options" />
+
+The message comes from the localization. To replace it for a single pipe, pass `noOptionsText` in the pipe template. The option is ignored by other pipe types.
+
+<Example id="filter-bar-no-options-text" />
+
 ### Inactive filter
 
 The filter value cannot be changed or deleted.

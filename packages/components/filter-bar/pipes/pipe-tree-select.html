@@ -7,10 +7,12 @@
     [ngModel]="selected"
     [panelClass]="'kbq-pipe-tree-select__panel'"
     [panelMaxHeight]="panelMaxHeight"
+    [searchMinOptionsThreshold]="noOptions ? 1 : undefined"
     [tabIndex]="-1"
     (opened)="onOpen()"
     (selectionChange)="onSelect($event.value)"
 >
+    <!-- Stays rendered without options, hidden by `searchMinOptionsThreshold`: the select wires its search up once. -->
     @if (data.search) {
         <kbq-form-field noBorders kbqSelectSearch>
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
@@ -27,6 +29,10 @@
     }
 
     <div kbq-select-search-empty-result>{{ localeConfiguration().pipe.emptySearchResult }}</div>
+
+    @if (noOptions) {
+        <kbq-select-no-options>{{ noOptionsMessage }}</kbq-select-no-options>
+    }
 
     <kbq-cleaner />
 

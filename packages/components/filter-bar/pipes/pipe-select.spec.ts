@@ -14,6 +14,7 @@ import {
     KbqSelectValue
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
+import { registerNoOptionsTests } from './pipe-no-options.spec-helper';
 import { KbqPipeSelectComponent } from './pipe-select';
 import { registerPipeStatesTests } from './pipe-states.spec-helper';
 
@@ -136,6 +137,24 @@ describe('KbqPipeSelectComponent', () => {
 
             return { fixture, filterBar: filterBarDebugElement };
         }
+    });
+
+    registerNoOptionsTests({
+        pipeSelector: 'kbq-pipe-select',
+        createPipe,
+        createFilter,
+        createTemplate: (overrides) => ({
+            name: 'Select',
+            id: PIPE_TEMPLATE_ID,
+            type: KbqPipeTypes.Select,
+            values: SELECT_VALUES,
+            cleanable: false,
+            removable: false,
+            disabled: false,
+            ...overrides
+        }),
+        values: SELECT_VALUES,
+        createFixture: () => TestBed.createComponent(TestComponent)
     });
 
     describe('isEmpty', () => {

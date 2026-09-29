@@ -561,6 +561,7 @@ export const enUSLocaleData: {
             applyButton: string;
             emptySearchResult: string;
             selectAll: string;
+            noOptions: string;
         };
         datePipe: {
             customPeriod: string;
@@ -834,6 +835,7 @@ export const esLALocaleData: {
             applyButton: string;
             emptySearchResult: string;
             selectAll: string;
+            noOptions: string;
         };
         datePipe: {
             customPeriod: string;
@@ -1375,6 +1377,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 applyButton: string;
                 emptySearchResult: string;
                 selectAll: string;
+                noOptions: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -1623,6 +1626,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 applyButton: string;
                 emptySearchResult: string;
                 selectAll: string;
+                noOptions: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -1867,6 +1871,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 applyButton: string;
                 emptySearchResult: string;
                 selectAll: string;
+                noOptions: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -2117,6 +2122,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 applyButton: string;
                 emptySearchResult: string;
                 selectAll: string;
+                noOptions: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -2363,6 +2369,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 applyButton: string;
                 emptySearchResult: string;
                 selectAll: string;
+                noOptions: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -3103,6 +3110,7 @@ export type KbqFilterBarLocaleConfiguration = {
         applyButton: string;
         emptySearchResult: string;
         selectAll: string;
+        noOptions: string;
     };
     datePipe: {
         customPeriod: string;
@@ -5234,6 +5242,7 @@ export const ptBRLocaleData: {
             applyButton: string;
             emptySearchResult: string;
             selectAll: string;
+            noOptions: string;
         };
         datePipe: {
             customPeriod: string;
@@ -5703,6 +5712,7 @@ export const ruRULocaleData: {
             applyButton: string;
             emptySearchResult: string;
             selectAll: string;
+            noOptions: string;
         };
         datePipe: {
             customPeriod: string;
@@ -6081,6 +6091,7 @@ export const tkTMLocaleData: {
             applyButton: string;
             emptySearchResult: string;
             selectAll: string;
+            noOptions: string;
         };
         datePipe: {
             customPeriod: string;

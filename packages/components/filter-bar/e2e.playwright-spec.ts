@@ -433,4 +433,53 @@ test.describe('KbqFilterBarModule', () => {
             await expect(locator).toHaveScreenshot('04-pipe-fill-dark.png');
         });
     });
+
+    test.describe('E2eFilterBarNoOptions', () => {
+        const getComponent = (page: Page) => page.getByTestId('e2eFilterBarNoOptions');
+        const getScreenshotTarget = (locator: Locator) => locator.getByTestId('e2eScreenshotTarget');
+
+        /** Opens the pipe with the given type modifier; `kbq-select` opens an empty list after a delay. */
+        const openPipe = async (page: Page, pipeClass: string) => {
+            await page.goto('/E2eFilterBarNoOptions');
+            await getComponent(page).locator(`.${pipeClass} .kbq-select__trigger`).click();
+            await expect(page.locator('.cdk-overlay-pane .kbq-select-no-options')).toBeVisible();
+        };
+
+        for (const pipeClass of [
+            'kbq-pipe__select',
+            'kbq-pipe__multiselect',
+            'kbq-pipe__tree-select',
+            'kbq-pipe__multi-tree-select'
+        ]) {
+            test(`should show the message in place of the list of ${pipeClass}`, async ({ page }) => {
+                await openPipe(page, pipeClass);
+
+                const panel = page.locator('.cdk-overlay-pane');
+
+                await expect(panel.locator('.kbq-select-no-options')).toHaveText('Нет вариантов');
+                await expect(panel.locator('input')).toHaveCount(0);
+                await expect(panel.locator('.kbq-option, .kbq-tree-option')).toHaveCount(0);
+            });
+        }
+
+        test('states', async ({ page }) => {
+            await openPipe(page, 'kbq-pipe__select');
+
+            const locator = getScreenshotTarget(getComponent(page));
+
+            await expect(locator).toHaveScreenshot('05-no-options-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(locator).toHaveScreenshot('05-no-options-dark.png');
+        });
+
+        test('tree states', async ({ page }) => {
+            await openPipe(page, 'kbq-pipe__tree-select');
+
+            const locator = getScreenshotTarget(getComponent(page));
+
+            await expect(locator).toHaveScreenshot('06-no-options-tree-light.png');
+            await e2eEnableDarkTheme(page);
+            await expect(locator).toHaveScreenshot('06-no-options-tree-dark.png');
+        });
+    });
 });
