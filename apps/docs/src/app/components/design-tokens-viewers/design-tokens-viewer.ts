@@ -6,6 +6,7 @@ import { DocsLocale } from 'src/app/constants/locale';
 import { DOCS_TRANSLATIONS } from 'src/app/services/i18n';
 import { DocsStructureTokensTab } from '../../structure';
 import { DocsComponentViewerComponent } from '../component-viewer/component-viewer.component';
+import { DocsCopyPage } from '../copy-page/copy-page';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
@@ -15,14 +16,15 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
-        DocsRegisterHeaderDirective
+        DocsRegisterHeaderDirective,
+        DocsCopyPage
     ],
     template: `
         <div class="docs-component-header">
             <div class="docs-component-name" docsRegisterHeader>
                 {{ t('designTokens') }}
             </div>
-            <div class="docs-component-navbar layout-padding-top-s">
+            <div class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s">
                 <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                     @for (link of links; track link) {
                         <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="link.value">
@@ -30,6 +32,12 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
                         </a>
                     }
                 </nav>
+
+                @if (structureItem) {
+                    <div class="docs-component-navbar__actions">
+                        <docs-copy-page [item]="structureItem" />
+                    </div>
+                }
             </div>
         </div>
 

@@ -1,441 +1,119 @@
-<!-- This file is auto-generated. Do not edit it manually! -->
-
 # Koobiq Angular
 
 > Koobiq is an open-source design system for designers and developers, focused on designing products related to **information security**.
 
-## main
+`@koobiq/components` 20.x for Angular 20. Every link below leads to one item of the documentation as Markdown, in English, in the order of its tabs: the overview with the full source of its examples, the API, the extra examples. Without `.md`, the address opens the page itself.
+
+Rules for code that uses Koobiq:
+
+- Import from the secondary entry points only, for example `import { KbqButtonModule } from '@koobiq/components/button'`: the root of the package exports nothing. Shared providers, tokens and utilities come from `@koobiq/components/core`.
+- Start from the closest example of an item instead of guessing its inputs. The API section of the item lists every input and output; where the text of a page disagrees with it, the API section is right.
+- Put text controls, such as `input[kbqInput]`, `textarea[kbqTextarea]` and `kbq-select`, inside `<kbq-form-field>`; their hints and errors go inside it too.
+- Style with the `--kbq-*` design tokens and the `kbq-*` typography classes; never hard-code colors, sizes or fonts.
+- Icons come from `@koobiq/icons` through `<i kbq-icon="kbq-..."></i>`; an icon-only button needs an accessible label.
+- Do not use anything marked as deprecated in new code.
+
+## Main
+
+- [Installation](https://koobiq.io/en/main/installation.md): This guide describes how to set up an Angular project to use `@koobiq/components`.
+- [Versioning](https://koobiq.io/en/main/versioning.md): Our releases follow the versioning described in the [Semver spec](http://semver.org/).
+- [Theming](https://koobiq.io/en/main/theming.md): A theme in Koobiq is a set of CSS variables.
+- [Localization](https://koobiq.io/en/main/localization.md): Koobiq components render some strings of their own — the filters menu of the filter bar, the tooltips of the code block, the accessible names of every icon-only button, the placeholder of a datepicker, and so on.
+- [Typography](https://koobiq.io/en/main/typography.md): Koobiq typography defines the fonts, weights, and text styles used to create a consistent visual hierarchy in interfaces.
+- [Design tokens](https://koobiq.io/en/main/design-tokens.md): The global CSS custom properties (`--kbq-*`) of the themes: colors, typography, shadows, border radius and sizes.
+- [Schematics](https://koobiq.io/en/main/schematics.md): As part of the **Koobiq** design system, a set of **schematics** is provided — CLI tools designed to automate library installation, perform migrations, and update components in Angular projects.
+- [Upgrade guide](https://koobiq.io/en/main/migration.md): New versions include improvements but also contain **breaking changes**; they must be applied step by step.
+
+## Components
+
+- [Accordion](https://koobiq.io/en/components/accordion.md): An accordion is an interactive UI element that allows users to expand and collapse individual blocks of information on demand, organizing them into compact sections. Entry point: `@koobiq/components/accordion`.
+- [Actions panel](https://koobiq.io/en/components/actions-panel.md): `KbqActionsPanel` - popup panel with bulk actions on selected objects. Entry point: `@koobiq/components/actions-panel`.
+- [AG grid](https://koobiq.io/en/components/ag-grid.md): AG Grid is designed for working with large tables.
+- [Alert](https://koobiq.io/en/components/alert.md): Shows important information on a page. Entry point: `@koobiq/components/alert`.
+- [App Switcher](https://koobiq.io/en/components/app-switcher.md): A menu for switching between applications and platforms. Entry point: `@koobiq/components/app-switcher`.
+- [Autocomplete](https://koobiq.io/en/components/autocomplete.md): Autocomplete suggests matching options in a dropdown while the user types and lets them select a value without entering it in full. Entry point: `@koobiq/components/autocomplete`.
+- [Badge](https://koobiq.io/en/components/badge.md): A badge is used to highlight the status, count, or other important characteristics of an object. Entry point: `@koobiq/components/badge`.
+- [Breadcrumbs](https://koobiq.io/en/components/breadcrumbs.md): Breadcrumbs are a navigation element that helps users easily orient themselves on a website and understand their current location relative to the main page. Entry point: `@koobiq/components/breadcrumbs`.
+- [Button](https://koobiq.io/en/components/button.md): koobiq buttons are available using native `<button>` or `<a>` elements. Entry point: `@koobiq/components/button`.
+- [Button Group](https://koobiq.io/en/components/button-group.md): Button Group combines multiple buttons to emphasize their close relationship. Entry point: `@koobiq/components/button`.
+- [Button toggle](https://koobiq.io/en/components/button-toggle.md): A button group is suitable for choosing from a list of 3 to 5 items when they fit in a single row without wrapping. Entry point: `@koobiq/components/button-toggle`.
+- [Checkbox](https://koobiq.io/en/components/checkbox.md): Checkbox lets users select independent options and can also represent the selection state of a group. Entry point: `@koobiq/components/checkbox`.
+- [Clamped list](https://koobiq.io/en/components/clamped-list.md): Clamped List displays long lists compactly, hides items that do not fit the configured limit, and lets users expand the full content. Entry point: `@koobiq/components/clamped-text`.
+- [Clamped text](https://koobiq.io/en/components/clamped-text.md): The **Clamped Text** component helps display long text neatly. Entry point: `@koobiq/components/clamped-text`.
+- [Code block](https://koobiq.io/en/components/code-block.md): `<kbq-code-block>` is a component that displays reformatted text content with syntax highlighting. Entry point: `@koobiq/components/code-block`.
+- [Content panel](https://koobiq.io/en/components/content-panel.md): `KbqContentPanel` - a slide-out side panel that shifts adjacent content. Entry point: `@koobiq/components/content-panel`.
+- [Core](https://koobiq.io/en/components/core.md): **Core** is the public entry point to the shared APIs of the Koobiq component library. Entry point: `@koobiq/components/core`.
+- [Datepicker](https://koobiq.io/en/components/datepicker.md): A date field (datepicker) is a special input field with a widget for selecting a date. Entry point: `@koobiq/components/datepicker`.
+- [Description list](https://koobiq.io/en/components/dl.md): Description list displays term-description pairs in adaptive, horizontal, or vertical layouts. Entry point: `@koobiq/components/dl`.
+- [Divider](https://koobiq.io/en/components/divider.md): `<kbq-divider>` is a component that allows for koobiq styling of a line separator with various orientation options. Entry point: `@koobiq/components/divider`.
+- [Dropdown](https://koobiq.io/en/components/dropdown.md): Dropdown displays a menu with actions or options next to a trigger and supports disabled, loading, footer, and keyboard interaction states. Entry point: `@koobiq/components/dropdown`.
+- [Dynamic translation](https://koobiq.io/en/components/dynamic-translation.md): `KbqDynamicTranslation` — component for embedding custom components into translatable strings. Entry point: `@koobiq/components/dynamic-translation`.
+- [Empty state](https://koobiq.io/en/components/empty-state.md): A placeholder component for empty states or error messages. Entry point: `@koobiq/components/empty-state`.
+- [File upload](https://koobiq.io/en/components/file-upload.md): Allows the user to upload files to the product. Entry point: `@koobiq/components/file-upload`.
+- [Filter Bar](https://koobiq.io/en/components/filter-bar.md): A composite component for filtering data in a table or list. Entry point: `@koobiq/components/filter-bar`.
+- [Flag](https://koobiq.io/en/components/flag.md): The `kbq-flag` component shows a country flag. Entry point: `@koobiq/components/flag`.
+- [Form field](https://koobiq.io/en/components/form-field.md): `<kbq-form-field>` is a component used to create forms and input fields with support for styling and additional features. Entry point: `@koobiq/components/form-field`.
+- [Highlight](https://koobiq.io/en/components/highlight.md): Highlighting matches helps users quickly understand why a result is relevant and speeds up navigation through lists.
+- [Icon](https://koobiq.io/en/components/icon.md): Uses `@koobiq/icons` CSS font. Entry point: `@koobiq/components/icon`.
+- [Icon Button](https://koobiq.io/en/components/icon-button.md): For icon buttons (clickable icons). Entry point: `@koobiq/components/icon`.
+- [Icon Item](https://koobiq.io/en/components/icon-item.md): A backing icon can be used instead of an illustration where you want to attract attention with graphics. Entry point: `@koobiq/components/icon`.
+- [Inline edit](https://koobiq.io/en/components/inline-edit.md): Inline editing can replace a traditional form when the user only needs to update a few fields among many available parameters. Entry point: `@koobiq/components/inline-edit`.
+- [Input](https://koobiq.io/en/components/input.md): Input provides text, numeric, and password fields with formatting, validation, masking, and other data-entry behavior. Entry point: `@koobiq/components/input`.
+- [Layout flex](https://koobiq.io/en/components/layout-flex.md): Layout flex provides Koobiq CSS classes for arranging, aligning, and ordering elements in flex containers.
+- [Link](https://koobiq.io/en/components/link.md): A link connects web pages or acts as a lighter alternative to a button. Entry point: `@koobiq/components/link`.
+- [List](https://koobiq.io/en/components/list.md): A list shows a set of related items and lets the user select one or several of them. Entry point: `@koobiq/components/list`.
+- [Markdown](https://koobiq.io/en/components/markdown.md): `KbqMarkdown` - component that allows converting text written in _Markdown_ markup language into _HTML_. Entry point: `@koobiq/components/markdown`.
+- [Modal](https://koobiq.io/en/components/modal.md): A modal dialog opens as a window on top of the page, dims the underlying layer, and blocks all interaction with it. Entry point: `@koobiq/components/modal`.
+- [Navbar](https://koobiq.io/en/components/navbar.md): The main menu allows for product navigation. Entry point: `@koobiq/components/navbar`.
+- [Notification Center](https://koobiq.io/en/components/notification-center.md): Notification center — a panel for application notifications. Entry point: `@koobiq/components/notification-center`.
+- [Overflow items](https://koobiq.io/en/components/overflow-items.md): Component for automatically hiding elements with dynamic adaptation to the container width. Entry point: `@koobiq/components/overflow-items`.
+- [Overlay](https://koobiq.io/en/components/loader-overlay.md): The loading overlay displays an ongoing process within a block. Entry point: `@koobiq/components/loader-overlay`.
+- [Popover](https://koobiq.io/en/components/popover.md): A popover is a small non-modal dialog without dimming that opens next to a trigger element. Entry point: `@koobiq/components/popover`.
+- [Progress bar](https://koobiq.io/en/components/progress-bar.md): `<kbq-progress-bar>` is a component that displays a progress indicator. Entry point: `@koobiq/components/progress-bar`.
+- [Progress spinner](https://koobiq.io/en/components/progress-spinner.md): `<kbq-progress-spinner>` is a component that displays a progress indicator as a spinner. Entry point: `@koobiq/components/progress-spinner`.
+- [Radio](https://koobiq.io/en/components/radio.md): Radio buttons allow users to select from a set of mutually exclusive, related options. Entry point: `@koobiq/components/radio`.
+- [Resizer](https://koobiq.io/en/components/resizer.md): Directive for resizing an element in a specified direction using the mouse pointer. Entry point: `@koobiq/components/resizer`.
+- [Scrollbar](https://koobiq.io/en/components/scrollbar.md): `KbqScrollbar` is a customizable scrollbar. Entry point: `@koobiq/components/scrollbar`.
+- [Search expandable](https://koobiq.io/en/components/search-expandable.md): A search field that expands from a compact icon button. Entry point: `@koobiq/components/search-expandable`.
+- [Select](https://koobiq.io/en/components/select.md): Select - allows the user to select one or more values from a predefined list. Entry point: `@koobiq/components/select`.
+- [Sidebar](https://koobiq.io/en/components/sidebar.md): Component designed to add collapsible side content. Entry point: `@koobiq/components/sidebar`.
+- [Sidepanel](https://koobiq.io/en/components/sidepanel.md): A sidepanel is a window that slides in from the edge of the screen and appears on top of the main page content. Entry point: `@koobiq/components/sidepanel`.
+- [Skeleton](https://koobiq.io/en/components/skeleton.md): `KbqSkeleton` is a temporary placeholder that occupies the space of the loading element and displays its approximate layout while the actual content is still loading. Entry point: `@koobiq/components/skeleton`.
+- [Split button](https://koobiq.io/en/components/split-button.md): A split button combines several related actions into a single control. Entry point: `@koobiq/components/split-button`.
+- [Splitter](https://koobiq.io/en/components/splitter.md): Splitter resizes neighboring panels by dragging the separator. Entry point: `@koobiq/components/splitter`.
+- [Table](https://koobiq.io/en/components/table.md): A table is similar to a grid but simpler in structure. Entry point: `@koobiq/components/table`.
+- [Tabs](https://koobiq.io/en/components/tabs.md): Tabs divide content into groups and allow you to switch between them without reloading the page. Entry point: `@koobiq/components/tabs`.
+- [Tag](https://koobiq.io/en/components/tag.md): Tags are used within the [`Tag list`](https://koobiq.io/en/components/tag-list.md) component in input fields to represent selected values: [`Select Multiple`](https://koobiq.io/en/components/select.md#multiple-selection), [`Tag autocomplete`](https://koobiq.io/en/components/tag-autocomplete.md), [`Tag input`](https://koobiq.io/en/components/tag-input.md). Entry point: `@koobiq/components/tags`.
+- [Tag autocomplete](https://koobiq.io/en/components/tag-autocomplete.md): Tags Autocomplete is used to select one or multiple values from a list and to input custom values. Entry point: `@koobiq/components/tags`.
+- [Tag input](https://koobiq.io/en/components/tag-input.md): Tag Input lets users enter multiple values as tags and supports keyboard navigation, selection, and removal. Entry point: `@koobiq/components/tags`.
+- [Tag list](https://koobiq.io/en/components/tag-list.md): Tag List displays a collection of tags and supports keyboard navigation, multiple selection, and removal. Entry point: `@koobiq/components/tags`.
+- [Textarea](https://koobiq.io/en/components/textarea.md): `KbqTextarea` — component for multi-line text input. Entry point: `@koobiq/components/textarea`.
+- [Time range](https://koobiq.io/en/components/time-range.md): Time range selection menu. Entry point: `@koobiq/components/time-range`.
+- [Timepicker](https://koobiq.io/en/components/timepicker.md): A time field (timepicker) is a special input field that allows entering only time. Entry point: `@koobiq/components/timepicker`.
+- [Timezone](https://koobiq.io/en/components/timezone.md): `kbq-timezone-select` is a timezone selection component that extends `kbq-select`. Entry point: `@koobiq/components/timezone`.
+- [Title](https://koobiq.io/en/components/title.md): The `kbq-title` directive shows a [tooltip](https://koobiq.io/en/components/tooltip.md) with the full text when the element's content does not fit and is truncated with an ellipsis. Entry point: `@koobiq/components/title`.
+- [Toast](https://koobiq.io/en/components/toast.md): A toast is a non-modal message displayed on top of all elements on the screen. Entry point: `@koobiq/components/toast`.
+- [Toggle](https://koobiq.io/en/components/toggle.md): **State toggle button:** on or off. Entry point: `@koobiq/components/toggle`.
+- [Tooltip](https://koobiq.io/en/components/tooltip.md): Tooltip — a hint that appears on hover or focus. Entry point: `@koobiq/components/tooltip`.
+- [Topbar](https://koobiq.io/en/components/top-bar.md): Topbar is a toolbar that always remains visible on the page and provides quick access to navigation and controls. Entry point: `@koobiq/components/top-bar`.
+- [Tree](https://koobiq.io/en/components/tree.md): A hierarchical list (tree) is a tree-structured catalog for working with large amounts of data. Entry point: `@koobiq/components/tree`.
+- [Tree select](https://koobiq.io/en/components/tree-select.md): Tree Select lets users search and select one or more values from hierarchical data while preserving the tree structure. Entry point: `@koobiq/components/tree-select`.
+- [Username](https://koobiq.io/en/components/username.md): The pattern is used when the interface refers to an internal user. Entry point: `@koobiq/components/username`.
+
+## Other
+
+- [Date formatter](https://koobiq.io/en/other/date-formatter.md): DateFormatter is a unified system for formatting dates and times.
+- [Filesize formatter](https://koobiq.io/en/other/filesize-formatter.md): **Filesize formatter** automatically converts values into kilobytes, megabytes, gigabytes, etc., taking localization into account.
+- [Forms](https://koobiq.io/en/other/forms.md): Form layout utilities arrange fields, labels, hints, and validation messages in horizontal, vertical, or grouped layouts.
+- [Number formatter](https://koobiq.io/en/other/number-formatter.md): Every language has its own norms for writing numbers: the decimal separator, digit grouping, the labels for thousands and millions.
+- [Validation](https://koobiq.io/en/other/validation.md): Form-field controls display errors via [`ErrorStateMatcher`](https://koobiq.io/en/other/validation.md) — a small policy object that decides _when_ to surface a control's existing errors.
+- [Smart search](https://koobiq.io/en/other/search-smart.md): Search fields in the kit's components leave matching entirely to the consumer, and the default reach-for is substring search.
 
-- [installation](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/docs/guides/installation.en.md)
-- [versioning](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/docs/guides/versioning.en.md)
-- [theming](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/docs/guides/theming.en.md)
-- [typography](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/core/styles/typography/typography.en.md)
-- [schematics](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/docs/guides/schematics.en.md)
-- [migration](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/docs/guides/migration.en.md)
+## Icons
 
-## components
+- [Icons](https://raw.githubusercontent.com/koobiq/icons/12.2.1/llms.txt): the llms.txt of `@koobiq/icons` 12.2.1, with its packages, the naming of the icons and how to import them.
+- [Icon reference](https://raw.githubusercontent.com/koobiq/icons/12.2.1/llms-full.txt): every icon name with its sizes, tags and imports.
 
-### accordion
+## Optional
 
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/accordion/accordion.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/accordion.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/accordion/accordion-overview/accordion-overview-example.ts)
-
-### actions-panel
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/actions-panel/actions-panel.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/actions-panel.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/actions-panel/actions-panel-overview/actions-panel-overview-example.ts)
-
-### ag-grid
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/docs/data-grid/ag-grid/ag-grid.en.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/ag-grid/ag-grid-overview/ag-grid-overview-example.ts)
-
-### alert
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/alert/alert.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/alert.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/alert/alert-overview/alert-overview-example.ts)
-
-### app-switcher
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/app-switcher/app-switcher.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/app-switcher.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/app-switcher/app-switcher-overview/app-switcher-overview-example.ts)
-
-### autocomplete
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/autocomplete/autocomplete.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/autocomplete.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/autocomplete/autocomplete-overview/autocomplete-overview-example.ts)
-
-### badge
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/badge/badge.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/badge.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/badge/badge-overview/badge-overview-example.ts)
-
-### breadcrumbs
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/breadcrumbs/breadcrumbs.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/breadcrumbs.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/breadcrumbs/breadcrumbs-overview/breadcrumbs-overview-example.ts)
-
-### button
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/button/button.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/button.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/button/button-overview/button-overview-example.ts)
-
-### button-group
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/button/button-group.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/button.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/button/button-group-overview/button-group-overview-example.ts)
-
-### button-toggle
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/button-toggle/button-toggle.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/button-toggle.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/button-toggle/button-toggle-overview/button-toggle-overview-example.ts)
-
-### checkbox
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/checkbox/checkbox.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/checkbox.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/checkbox/checkbox-overview/checkbox-overview-example.ts)
-
-### clamped-list
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/clamped-text/clamped-list.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/clamped-text.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/clamped-text/clamped-list-overview/clamped-list-overview-example.ts)
-
-### clamped-text
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/clamped-text/clamped-text.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/clamped-text.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/clamped-text/clamped-text-overview/clamped-text-overview-example.ts)
-
-### code-block
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/code-block/code-block.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/code-block.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/code-block/code-block-overview/code-block-overview-example.ts)
-
-### content-panel
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/content-panel/content-panel.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/content-panel.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/content-panel/content-panel-overview/content-panel-overview-example.ts)
-
-### core
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/core/core.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/core.api.md)
-
-### datepicker
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/datepicker/datepicker.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/datepicker.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/datepicker/datepicker-overview/datepicker-overview-example.ts)
-
-### dl
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/dl/dl.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/dl.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/dl/dl-overview/dl-overview-example.ts)
-
-### divider
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/divider/divider.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/divider.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/divider/divider-overview/divider-overview-example.ts)
-
-### dropdown
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/dropdown/dropdown.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/dropdown.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/dropdown/dropdown-overview/dropdown-overview-example.ts)
-
-### dynamic-translation
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/dynamic-translation/dynamic-translation.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/dynamic-translation.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/dynamic-translation/dynamic-translation-overview/dynamic-translation-overview-example.ts)
-
-### empty-state
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/empty-state/empty-state.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/empty-state.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/empty-state/empty-state-overview/empty-state-overview-example.ts)
-
-### file-upload
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/file-upload/file-upload.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/file-upload.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/file-upload/file-upload-overview/file-upload-overview-example.ts)
-
-### filter-bar
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/filter-bar/filter-bar.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/filter-bar.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/filter-bar/filter-bar-overview/filter-bar-overview-example.ts)
-
-### flag
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/flag/flag.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/flag.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/flag/flag-overview/flag-overview-example.ts)
-
-### form-field
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/form-field/form-field.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/form-field.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/form-field/form-field-overview/form-field-overview-example.ts)
-
-### highlight
-
-### icon
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/icon/icon.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/icon.api.md)
-
-### icon-button
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/icon/icon-button.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/icon.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/icon/icon-button-overview/icon-button-overview-example.ts)
-
-### icon-item
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/icon/icon-item.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/icon.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/icon/icon-item-overview/icon-item-overview-example.ts)
-
-### inline-edit
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/inline-edit/inline-edit.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/inline-edit.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/inline-edit/inline-edit-overview/inline-edit-overview-example.ts)
-
-### input
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/input/input.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/input.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/input/input-overview/input-overview-example.ts)
-
-### link
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/link/link.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/link.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/link/link-overview/link-overview-example.ts)
-
-### list
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/list/list.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/list.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/list/list-overview/list-overview-example.ts)
-
-### markdown
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/markdown/markdown.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/markdown.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/markdown/markdown-overview/markdown-overview-example.ts)
-
-### modal
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/modal/modal.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/modal.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/modal/modal-overview/modal-overview-example.ts)
-
-### navbar
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/navbar/navbar.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/navbar.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/navbar/navbar-overview/navbar-overview-example.ts)
-
-### notification-center
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/notification-center/notification-center.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/notification-center.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/notification-center/notification-center-overview/notification-center-overview-example.ts)
-
-### overflow-items
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/overflow-items/overflow-items.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/overflow-items.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/overflow-items/overflow-items-overview/overflow-items-overview-example.ts)
-
-### loader-overlay
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/loader-overlay/loader-overlay.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/loader-overlay.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/loader-overlay/loader-overlay-overview/loader-overlay-overview-example.ts)
-
-### popover
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/popover/popover.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/popover.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/popover/popover-overview/popover-overview-example.ts)
-
-### progress-bar
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/progress-bar/progress-bar.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/progress-bar.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/progress-bar/progress-bar-overview/progress-bar-overview-example.ts)
-
-### progress-spinner
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/progress-spinner/progress-spinner.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/progress-spinner.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/progress-spinner/progress-spinner-overview/progress-spinner-overview-example.ts)
-
-### radio
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/radio/radio.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/radio.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/radio/radio-overview/radio-overview-example.ts)
-
-### resizer
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/resizer/resizer.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/resizer.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/resizer/resizer-overview/resizer-overview-example.ts)
-
-### scrollbar
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/scrollbar/scrollbar.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/scrollbar.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/scrollbar/scrollbar-overview/scrollbar-overview-example.ts)
-
-### search-expandable
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/search-expandable/search-expandable.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/search-expandable.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/search-expandable/search-expandable-overview/search-expandable-overview-example.ts)
-
-### select
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/select/select.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/select.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/select/select-overview/select-overview-example.ts)
-
-### sidebar
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/sidebar/sidebar.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/sidebar.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/sidebar/sidebar-overview/sidebar-overview-example.ts)
-
-### sidepanel
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/sidepanel/sidepanel.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/sidepanel.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/sidepanel/sidepanel-overview/sidepanel-overview-example.ts)
-
-### skeleton
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/skeleton/skeleton.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/skeleton.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/skeleton/skeleton-overview/skeleton-overview-example.ts)
-
-### split-button
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/split-button/split-button.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/split-button.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/split-button/split-button-overview/split-button-overview-example.ts)
-
-### splitter
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/splitter/splitter.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/splitter.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/splitter/splitter-overview/splitter-overview-example.ts)
-
-### table
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/table/table.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/table.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/table/table-overview/table-overview-example.ts)
-
-### tabs
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/tabs/tabs.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/tabs.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/tabs/tabs-overview/tabs-overview-example.ts)
-
-### tag
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/tags/tag.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/tags.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/tags/tag-overview/tag-overview-example.ts)
-
-### tag-autocomplete
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/tags/tag-autocomplete.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/tags.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/tags/tag-autocomplete-overview/tag-autocomplete-overview-example.ts)
-
-### tag-input
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/tags/tag-input.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/tags.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/tags/tag-input-overview/tag-input-overview-example.ts)
-
-### tag-list
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/tags/tag-list.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/tags.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/tags/tag-list-overview/tag-list-overview-example.ts)
-
-### textarea
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/textarea/textarea.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/textarea.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/textarea/textarea-overview/textarea-overview-example.ts)
-
-### time-range
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/time-range/time-range.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/time-range.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/time-range/time-range-overview/time-range-overview-example.ts)
-
-### timepicker
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/timepicker/timepicker.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/timepicker.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/timepicker/timepicker-overview/timepicker-overview-example.ts)
-
-### timezone
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/timezone/timezone.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/timezone.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/timezone/timezone-overview/timezone-overview-example.ts)
-
-### title
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/title/title.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/title.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/title/title-overview/title-overview-example.ts)
-
-### toast
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/toast/toast.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/toast.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/toast/toast-overview/toast-overview-example.ts)
-
-### toggle
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/toggle/toggle.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/toggle.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/toggle/toggle-overview/toggle-overview-example.ts)
-
-### tooltip
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/tooltip/tooltip.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/tooltip.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/tooltip/tooltip-overview/tooltip-overview-example.ts)
-
-### top-bar
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/top-bar/top-bar.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/top-bar.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/top-bar/top-bar-overview/top-bar-overview-example.ts)
-
-### tree
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/tree/tree.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/tree.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/tree/tree-overview/tree-overview-example.ts)
-
-### tree-select
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/tree-select/tree-select.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/tree-select.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/tree-select/tree-select-overview/tree-select-overview-example.ts)
-
-### username
-
-- [overview](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/components/username/username.en.md)
-- [api](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/tools/public_api_guard/components/username.api.md)
-- [example](https://raw.githubusercontent.com/koobiq/angular-components/refs/tags/20.2.0/packages/docs-examples/components/username/username-overview/username-overview-example.ts)
+- [Full documentation](https://koobiq.io/llms-full.txt): every item above in one file, several megabytes long: search it rather than read it whole.

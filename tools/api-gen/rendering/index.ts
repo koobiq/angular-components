@@ -94,7 +94,7 @@ function getEntryPages(entryCollections: EntryCollection<DocEntry>[]): Map<strin
 /**
  * Writes the API of each entry point as the data its `/api` tab renders, with a registry that loads it by the
  * structure item, and persists each entry point's manifest as JSON: the input `tools/check-api-docs` and
- * `tools/generate-llms-txt.ts` read.
+ * `tools/llms` read.
  */
 export function generateApiPages(entryCollections: EntryCollection<DocEntry>[]): number {
     const files: Record<string, string> = {};

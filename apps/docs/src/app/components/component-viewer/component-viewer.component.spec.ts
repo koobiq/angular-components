@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -97,6 +99,44 @@ describe(DocsComponentViewerComponent.name, () => {
     });
 });
 
+describe('the actions of the header', () => {
+    const render = (categoryId: DocsStructureCategoryId, id: DocsStructureItemId): HTMLElement => {
+        TestBed.configureTestingModule({
+            imports: [DocsComponentViewerComponent],
+            providers: [
+                provideRouter([]),
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                provideDocsLocale(DocsLocale.En),
+                { provide: ActivatedRoute, useValue: { url: of(segments(categoryId, id)) } }
+            ]
+        });
+
+        const fixture = TestBed.createComponent(DocsComponentViewerComponent);
+
+        fixture.detectChanges();
+
+        return fixture.nativeElement;
+    };
+
+    it('offers the Markdown of a component next to its tabs and its source', () => {
+        const header = render(DocsStructureCategoryId.Components, DocsStructureItemId.Alert);
+
+        expect(header.querySelector('[kbqTabNavBar]')).not.toBeNull();
+        expect(header.querySelector('.docs-component-navbar__actions docs-copy-page')).not.toBeNull();
+        expect(header.querySelector('.docs-component-navbar__actions [kbq-link]')?.textContent).toContain(
+            'Source code'
+        );
+    });
+
+    it('offers the Markdown of a guide, which has no tabs', () => {
+        const header = render(DocsStructureCategoryId.Main, DocsStructureItemId.Installation);
+
+        expect(header.querySelector('[kbqTabNavBar]')).toBeNull();
+        expect(header.querySelector('.docs-component-navbar__actions docs-copy-page')).not.toBeNull();
+    });
+});
+
 // The router waits for the page of a tab, so it starts loading while the pointer or the focus is on the link.
 describe('prefetching the page of a tab', () => {
     it.each(['mouseenter', 'focus'])('loads the API of the item on %s of its tab', (type) => {
@@ -106,6 +146,8 @@ describe('prefetching the page of a tab', () => {
             imports: [DocsComponentViewerComponent],
             providers: [
                 provideRouter([]),
+                provideHttpClient(),
+                provideHttpClientTesting(),
                 provideDocsLocale(DocsLocale.En),
                 {
                     provide: ActivatedRoute,
