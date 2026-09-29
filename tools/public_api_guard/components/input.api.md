@@ -264,7 +264,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     onPaste(event: ClipboardEvent): void;
-    // (undocumented)
     onTouched: () => void;
     // (undocumented)
     placeholder: string;

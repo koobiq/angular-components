@@ -123,7 +123,7 @@ export class KbqSingleFileUploadComponent
 
     /**
      * Determines which kind of items the upload component can accept.
-     * @default mixed
+     * @default 'file'
      */
     allowed = input<KbqFileUploadAllowedTypeValues>(KbqFileUploadAllowedType.File);
     /**

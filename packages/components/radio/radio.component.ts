@@ -185,7 +185,10 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
     private _labelPosition: 'before' | 'after' = 'after';
 
-    /** The method to be called in order to update ngModel */
+    /**
+     * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     controlValueAccessorChangeFn: (value: any) => void = () => {};
 
     /**

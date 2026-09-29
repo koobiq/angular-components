@@ -74,7 +74,7 @@ export class KbqBreadcrumbsSeparator {
 
 /**
  * Directive to style and configure buttons used as breadcrumb items.
- * - Inherits focus management behavior from `RdxRovingFocusItemDirective`.
+ * - Takes part in the roving focus of `KbqBreadcrumbs`: the arrow keys move between the items.
  * - Optionally injects `KbqButton` to customize its style for breadcrumb usage.
  * - Sets `type="button"` on a `<button>` host, so a breadcrumb never submits a surrounding form.
  */

@@ -50,6 +50,14 @@ describe(compilePage.name, () => {
         );
     });
 
+    // Text nested under a heading of the page, compiled piece by piece, would repeat its ids.
+    it('renders every heading at the given depth without an anchor', () => {
+        expect(
+            compilePage('## Usage\n\n### Usage', { path: 'KbqAlert', examples: {}, url: null, headingDepth: 4 })
+                .template
+        ).toBe(['<h4 class="kbq-markdown__h4">Usage</h4>', '<h4 class="kbq-markdown__h4">Usage</h4>'].join('\n'));
+    });
+
     // Angular drops a text node of whitespace alone, which would join the words around it.
     it('keeps the space between inline elements', () => {
         const { nodes, errors } = parseTemplate(compile('`disabled` _and_ `aria-disabled`').template, 'page.html');
@@ -66,6 +74,22 @@ describe(compilePage.name, () => {
 
         expect(errors).toBeNull();
         expect(readStaticText(nodes)).toBe(text);
+    });
+
+    // `[innerHTML]` shows the character references of a template as they are, and `&ngsp;` is no entity at all.
+    it('compiles into HTML, which escapes the text for HTML alone', () => {
+        const { template } = compilePage('`{{ value }}` _and_ `@for`: "a" & [b](/b "{{ b }}")', {
+            path: 'KbqAlert',
+            examples: {},
+            url: null,
+            output: 'html'
+        });
+
+        expect(template).toBe(
+            '<p class="kbq-markdown__p"><code class="kbq-markdown__code">{{ value }}</code> <em>and</em> ' +
+                '<code class="kbq-markdown__code">@for</code>: &#34;a&#34; &#38; ' +
+                `<a class="${LINK_CLASS}" href="/b" title="{{ b }}">b</a></p>`
+        );
     });
 
     it('renders the items of a tight list without paragraphs', () => {
@@ -178,11 +202,14 @@ describe(compilePage.name, () => {
 
         expect(page.template).toBe(
             [
-                '<pre class="kbq-docs-pre"><kbq-code-block filled [files]="[codeBlocks[0]]" /></pre>',
-                '<pre class="kbq-docs-pre"><kbq-code-block filled [files]="[codeBlocks[1]]" /></pre>'
+                '<kbq-code-block class="docs-code-block" filled [files]="[codeBlocks[0]]" />',
+                '<kbq-code-block class="docs-code-block" filled [files]="[codeBlocks[1]]" />'
             ].join('\n')
         );
-        expect(page.codeBlocks).toEqual([{ content: '<p>{{ value }}</p>', language: 'html' }, { content: 'plain' }]);
+        expect(page.codeBlocks).toEqual([
+            { content: '<p>{{ value }}</p>', language: 'html' },
+            { content: 'plain', language: 'plaintext' }
+        ]);
     });
 
     it('renders an example with its class and lists every example once', () => {

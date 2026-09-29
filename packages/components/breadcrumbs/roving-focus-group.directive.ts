@@ -2,6 +2,12 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { booleanAttribute, computed, Directive, ElementRef, inject, Input, input, output, signal } from '@angular/core';
 import { ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, KbqRovingFocusOrientation } from './utils';
 
+/**
+ * Moves the focus between the items of `KbqBreadcrumbs` with the arrow keys, keeping one of them in the tab
+ * order. The breadcrumbs apply it themselves, as a host directive.
+ *
+ * @docs-private
+ */
 @Directive({
     selector: '[rdxRovingFocusGroup]',
     host: {
@@ -27,6 +33,7 @@ export class RdxRovingFocusGroupDirective {
      * the ambient CDK `Directionality`.
      */
     readonly dir = input<Direction | null>(null);
+    /** Whether the arrow keys wrap around, from the last item to the first and back. */
     readonly loop = input<boolean, unknown>(true, { transform: booleanAttribute });
     readonly preventScrollOnEntryFocus = input<boolean, unknown>(false, { transform: booleanAttribute });
 

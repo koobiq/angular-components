@@ -295,7 +295,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
      * Override to replace or extend the default list.
      *
      * @example
-     * `<kbq-inline-edit [interactiveSelectors]="['a', 'kbq-tag', 'button']">`
+     * ```html
+     * <kbq-inline-edit [interactiveSelectors]="['a', 'kbq-tag', 'button']">
+     * ```
      */
     readonly interactiveSelectors = input<string[]>(['a', 'kbq-tag']);
 

@@ -9,33 +9,41 @@ import { TreeControl } from '../control/tree-control';
  * Transform nested nodes of type `T` to flattened nodes of type `F`.
  *
  * For example, the input data of type `T` is nested, and contains its children data:
- *   SomeNode: {
+ *
+ * ```ts
+ * SomeNode: {
  *     key: 'Fruits',
  *     children: [
- *       NodeOne: {
- *         key: 'Apple',
- *       },
- *       NodeTwo: {
- *        key: 'Pear',
- *      }
- *    ]
- *  }
- *  After flattener flatten the tree, the structure will become
- *  SomeNode: {
- *    key: 'Fruits',
- *    expandable: true,
- *    level: 1
- *  },
- *  NodeOne: {
- *    key: 'Apple',
- *    expandable: false,
- *    level: 2
- *  },
- *  NodeTwo: {
- *   key: 'Pear',
- *   expandable: false,
- *   level: 2
+ *         NodeOne: {
+ *             key: 'Apple'
+ *         },
+ *         NodeTwo: {
+ *             key: 'Pear'
+ *         }
+ *     ]
  * }
+ * ```
+ *
+ * After flattener flatten the tree, the structure will become
+ *
+ * ```ts
+ * SomeNode: {
+ *     key: 'Fruits',
+ *     expandable: true,
+ *     level: 1
+ * },
+ * NodeOne: {
+ *     key: 'Apple',
+ *     expandable: false,
+ *     level: 2
+ * },
+ * NodeTwo: {
+ *     key: 'Pear',
+ *     expandable: false,
+ *     level: 2
+ * }
+ * ```
+ *
  * and the output flattened type is `F` with additional information.
  */
 export class KbqTreeFlattener<T, F> {

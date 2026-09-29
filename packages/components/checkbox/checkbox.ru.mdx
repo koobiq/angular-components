@@ -24,10 +24,10 @@ Dual-state применяется с использованием логичес
 Это поведение может быть настроено <a href="https://angular.io/guide/dependency-injection" target="_blank">добавлением нового значения</a>
 `KBQ_CHECKBOX_CLICK_ACTION` на checkbox.
 
-```
+```ts
 providers: [
     { provide: KBQ_CHECKBOX_CLICK_ACTION, useValue: 'check' }
-]
+];
 ```
 
 Возможные значения: noop, check, check-indeterminate

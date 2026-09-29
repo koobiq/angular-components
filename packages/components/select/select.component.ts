@@ -818,8 +818,7 @@ export class KbqSelect
     /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
      * By default, the internal handler selects all options.
-     * @param event The keyboard event that triggered the handler.
-     * @param select Reference to this select component.
+     * It is called with the keyboard event that triggered it and a reference to this select component.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -1478,10 +1477,16 @@ export class KbqSelect
         }
     }
 
-    /** `View -> model callback called when value changes` */
+    /**
+     * Called when the value changes. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onChange: (value: any) => void = () => {};
 
-    /** `View -> model callback called when select has been touched` */
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onTouched = () => {};
 
     /** Resets the search component if present. */

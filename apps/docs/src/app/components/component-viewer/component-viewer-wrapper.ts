@@ -57,4 +57,9 @@ export class DocsComponentViewerWrapperComponent extends DocsLocaleState {
     scrollToSelectedContentSection(): void {
         this.anchors()?.setScrollPosition();
     }
+
+    /** Scrolls an element of the article to the top of the page, the way a link to a heading does. */
+    scrollToElement(target: HTMLElement): void {
+        this.anchors()?.scrollToElement(target);
+    }
 }

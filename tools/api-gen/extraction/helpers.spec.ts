@@ -1,6 +1,17 @@
-import { ClassEntry, DocEntry, EntryType, MemberTags, MemberType, PropertyEntry } from '../rendering/entities';
+import { mkdtempSync, rmSync, writeFileSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
+import {
+    ClassEntry,
+    DocEntry,
+    EntryType,
+    FunctionWithOverloads,
+    MemberTags,
+    MemberType,
+    PropertyEntry
+} from '../rendering/entities';
 import { ClassEntryMetadata } from '../types';
-import { entryHandler, updateEntries } from './helpers';
+import { readSourceFile, updateEntries } from './helpers';
 
 /** A directive entry carrying the given inputs, as Angular's extractor reports one. */
 const directive = (name: string, inputs: { name: string; inputAlias?: string }[]): ClassEntry =>
@@ -19,7 +30,7 @@ const directive = (name: string, inputs: { name: string; inputAlias?: string }[]
     }) as unknown as ClassEntry;
 
 const metadata = (hostDirectives: ClassEntryMetadata['hostDirectives']): Record<string, ClassEntryMetadata> => ({
-    KbqHost: { decorators: ['Component'], baseClass: null, hostDirectives }
+    KbqHost: { decorators: ['Component'], bases: [], hostDirectives, members: {} }
 });
 
 /** The member names `updateEntries` leaves on the host. */
@@ -80,21 +91,30 @@ describe('host directive inputs', () => {
 
 describe('reading hostDirectives from source', () => {
     it('reads the directive and the inputs it forwards', () => {
-        expect(entryHandler('packages/components/accordion/accordion.ts').KbqAccordion.hostDirectives).toEqual([
+        expect(
+            readSourceFile('packages/components/accordion/accordion.ts').classes.KbqAccordion.hostDirectives
+        ).toEqual([
             { name: 'KbqStateSaving', inputs: { useStateSaving: 'useStateSaving', stateSavingKey: 'stateSavingKey' } }
         ]);
     });
 
     it('reads a directive applied without forwarding anything', () => {
         expect(
-            entryHandler('packages/components/toggle/toggle.component.ts').KbqToggleComponent.hostDirectives
+            readSourceFile('packages/components/toggle/toggle.component.ts').classes.KbqToggleComponent.hostDirectives
         ).toEqual([{ name: 'KbqCheckable', inputs: {} }]);
     });
 
     it('reports none for a component that applies no host directive', () => {
-        expect(entryHandler('packages/components/accordion/accordion-item.ts').KbqAccordionItem.hostDirectives).toEqual(
-            []
-        );
+        expect(
+            readSourceFile('packages/components/accordion/accordion-item.ts').classes.KbqAccordionItem.hostDirectives
+        ).toEqual([]);
+    });
+
+    it('reads the outputs it forwards', () => {
+        expect(
+            readSourceFile('packages/components/navbar/navbar-item.component.ts').classes.KbqNavbarItem
+                .hostDirectives[0].outputs
+        ).toEqual({ kbqVisibleChange: 'kbqVisibleChange', kbqPlacementChange: 'kbqPlacementChange' });
     });
 });
 
@@ -111,7 +131,6 @@ describe('non-class entries', () => {
 
         expect(entry).not.toHaveProperty('members');
         expect(entry).not.toHaveProperty('isService');
-        expect(entry).not.toHaveProperty('extendedDoc');
     });
 
     it('still enriches the class entries beside it', () => {
@@ -123,5 +142,725 @@ describe('non-class entries', () => {
 
         expect(entries).toHaveLength(2);
         expect(((entries[1] as ClassEntry).members ?? []).map(({ name }) => name)).toEqual(['ownInput', 'forwarded']);
+    });
+});
+
+describe('reading members from source', () => {
+    const { KbqDlComponent } = readSourceFile('packages/components/dl/dl.component.ts').classes;
+
+    it('reads the initializer API and the default of a signal input', () => {
+        expect(KbqDlComponent.members.verticalBreakpoint).toEqual({
+            signalApi: 'input',
+            defaultValue: '400',
+            binding: { input: 'verticalBreakpoint', required: false }
+        });
+    });
+
+    it('reads the type argument as the declared type', () => {
+        expect(KbqDlComponent.members.verticalAlign).toEqual({
+            signalApi: 'input',
+            declaredType: 'KbqDlAlign',
+            defaultValue: "'start'",
+            binding: { input: 'verticalAlign', required: false }
+        });
+    });
+
+    // `undefined` is what an input without a default gets, so it is not shown as one.
+    it('reads no default when the source passes undefined', () => {
+        expect(KbqDlComponent.members.resizerAriaLabel).toEqual({
+            signalApi: 'input',
+            declaredType: 'string | undefined',
+            binding: { input: 'resizerAriaLabel', required: false }
+        });
+    });
+
+    it('reads an output with its payload type', () => {
+        expect(KbqDlComponent.members.dtWidthChange).toEqual({
+            signalApi: 'output',
+            declaredType: 'number | null',
+            binding: { output: 'dtWidthChange' }
+        });
+    });
+
+    it('reads the default of a decorated input', () => {
+        expect(
+            readSourceFile('packages/components/tabs/tab-group.component.ts').classes.KbqTabGroup.members.headerPosition
+        ).toEqual({
+            declaredType: 'KbqTabHeaderPosition',
+            defaultValue: "'above'",
+            binding: { input: 'headerPosition', required: false }
+        });
+    });
+
+    // A default is written in full, however long: a placeholder would leave a reader guessing.
+    it('reads a default spanning lines in full, indented from the line it starts on', () => {
+        expect(
+            readSourceFile('packages/components/dropdown/dropdown.component.ts').classes.KbqDropdown.members
+                .panelMinWidth.defaultValue
+        ).toBe(
+            [
+                'this.defaultOptions.panelMinWidth === undefined',
+                '    ? KBQ_PANEL_DEFAULT_MIN_WIDTH',
+                '    : this.defaultOptions.panelMinWidth'
+            ].join('\n')
+        );
+    });
+
+    it('reads the names a signal input and a model bind under, their aliases included', () => {
+        const { members } = readSourceFile('packages/components/dropdown/dropdown-trigger.directive.ts').classes
+            .KbqDropdownTrigger;
+
+        expect([members.dropdown.binding, members.restoreFocus.binding]).toEqual([
+            { input: 'kbqDropdownTriggerFor', required: false },
+            {
+                input: 'kbqDropdownTriggerRestoreFocus',
+                output: 'kbqDropdownTriggerRestoreFocusChange',
+                required: false
+            }
+        ]);
+    });
+
+    it('reads the alias of a decorated input', () => {
+        expect(
+            readSourceFile('packages/components/tooltip/tooltip.component.ts').classes.KbqTooltipTrigger.members
+                .relativeToPointer.binding
+        ).toEqual({ input: 'kbqRelativeToPointer', required: false });
+    });
+
+    // Angular's extractor reports none: without these, the interface would read as empty.
+    it('reads the index signatures of an interface', () => {
+        expect(
+            readSourceFile('packages/components/timezone/timezone.models.ts').classes.KbqTimezonesByCountry
+                .indexSignatures
+        ).toEqual(['[countryName: string]: KbqTimezoneZone[];']);
+    });
+
+    it('reads the bases a class extends', () => {
+        expect(readSourceFile('packages/components/button/button-group.ts').classes.KbqButtonGroupRoot.bases).toEqual([
+            'KbqColorDirective'
+        ]);
+    });
+
+    // The inherited members come from `KbqPipe`, whose source gives their declared types, not from `Omit`.
+    it('reads the type a utility type narrows as the base', () => {
+        expect(
+            readSourceFile('packages/components/filter-bar/filter-bar.types.ts').classes.KbqPipeTemplate.bases
+        ).toEqual(['KbqPipe']);
+    });
+
+    it('reads a base no utility type wraps as written', () => {
+        expect(readSourceFile('packages/components/file-upload/file-upload.ts').classes.KbqFile.bases).toEqual([
+            'File'
+        ]);
+    });
+});
+
+describe('member source metadata', () => {
+    /** A member as Angular's extractor reports one. */
+    const member = (patch: Partial<PropertyEntry>): PropertyEntry => ({
+        name: '',
+        memberType: MemberType.Property,
+        memberTags: [],
+        type: 'boolean',
+        description: '',
+        jsdocTags: [],
+        ...patch
+    });
+
+    const classEntry = (name: string, members: PropertyEntry[]): ClassEntry =>
+        ({ name, entryType: EntryType.Component, members }) as unknown as ClassEntry;
+
+    const classMetadata = (patch: Partial<ClassEntryMetadata>): ClassEntryMetadata => ({
+        decorators: ['Component'],
+        bases: [],
+        hostDirectives: [],
+        members: {},
+        ...patch
+    });
+
+    const membersOf = (entries: DocEntry[]): PropertyEntry[] => (entries[0] as ClassEntry).members as PropertyEntry[];
+
+    it('adds what the source says to a member the class declares', () => {
+        const [verticalAlign] = membersOf(
+            updateEntries([classEntry('KbqDl', [member({ name: 'verticalAlign', memberTags: [MemberTags.Input] })])], {
+                KbqDl: classMetadata({
+                    members: {
+                        verticalAlign: { signalApi: 'input', declaredType: 'KbqDlAlign', defaultValue: "'start'" }
+                    }
+                })
+            })
+        );
+
+        expect(verticalAlign).toMatchObject({
+            signalApi: 'input',
+            declaredType: 'KbqDlAlign',
+            defaultValue: "'start'"
+        });
+    });
+
+    it('names the class an inherited member is declared in, however far up', () => {
+        const [color] = membersOf(
+            updateEntries([classEntry('KbqButton', [member({ name: 'color', memberTags: [MemberTags.Inherited] })])], {
+                KbqButton: classMetadata({ bases: ['KbqButtonBase'] }),
+                KbqButtonBase: classMetadata({ bases: ['KbqColorDirective'] }),
+                KbqColorDirective: classMetadata({ members: { color: { declaredType: 'KbqComponentColors' } } })
+            })
+        );
+
+        expect(color).toMatchObject({ inheritedFrom: 'KbqColorDirective', declaredType: 'KbqComponentColors' });
+    });
+
+    // Angular's extractor marks only the bindings a class declares itself.
+    it('gives a directive the bindings it inherits from its base directive', () => {
+        const [disabled] = membersOf(
+            updateEntries(
+                [
+                    classEntry('KbqFileDropDirective', [
+                        member({ name: 'disabled', memberTags: [MemberTags.Readonly, MemberTags.Inherited] })
+                    ])
+                ],
+                {
+                    KbqFileDropDirective: classMetadata({ bases: ['KbqDrop'] }),
+                    KbqDrop: classMetadata({
+                        members: {
+                            disabled: { signalApi: 'model', binding: { input: 'disabled', output: 'disabledChange' } }
+                        }
+                    })
+                }
+            )
+        );
+
+        expect(disabled).toMatchObject({
+            memberTags: [MemberTags.Readonly, MemberTags.Inherited, MemberTags.Input, MemberTags.Output],
+            inputAlias: 'disabled',
+            outputAlias: 'disabledChange',
+            isRequiredInput: false,
+            signalApi: 'model',
+            inheritedFrom: 'KbqDrop'
+        });
+    });
+
+    it('gives no bindings to a service extending a directive', () => {
+        const [filesDropped] = membersOf(
+            updateEntries(
+                [
+                    {
+                        ...classEntry('KbqFullScreenDropzoneService', [
+                            member({ name: 'filesDropped', memberTags: [MemberTags.Readonly, MemberTags.Inherited] })
+                        ]),
+                        entryType: EntryType.UndecoratedClass
+                    }
+                ],
+                {
+                    KbqFullScreenDropzoneService: classMetadata({ decorators: ['Injectable'], bases: ['KbqDrop'] }),
+                    KbqDrop: classMetadata({
+                        members: { filesDropped: { signalApi: 'output', binding: { output: 'filesDropped' } } }
+                    })
+                }
+            )
+        );
+
+        expect(filesDropped.memberTags).toEqual([MemberTags.Readonly, MemberTags.Inherited]);
+        expect(filesDropped).toMatchObject({ signalApi: 'output', inheritedFrom: 'KbqDrop' });
+        expect(filesDropped).not.toHaveProperty('binding');
+    });
+
+    // The docs show the pair the way a template binds it: one `[(dtWidth)]`, declared as a `model()`.
+    it('merges a hidden backing input and its change output into the public member', () => {
+        const members = membersOf(
+            updateEntries(
+                [
+                    classEntry('KbqDl', [
+                        member({
+                            name: 'dtWidthInput',
+                            memberTags: [MemberTags.Input],
+                            inputAlias: 'dtWidth',
+                            jsdocTags: [{ name: 'docs-private', comment: '' }]
+                        }),
+                        member({ name: 'dtWidth', type: 'WritableSignal<number | null>', description: 'Width.' }),
+                        member({ name: 'dtWidthChange', memberTags: [MemberTags.Output], outputAlias: 'dtWidthChange' })
+                    ])
+                ],
+                {
+                    KbqDl: classMetadata({
+                        members: {
+                            dtWidthInput: { signalApi: 'input', declaredType: 'number | null', defaultValue: 'null' },
+                            dtWidth: {},
+                            dtWidthChange: { signalApi: 'output' }
+                        }
+                    })
+                }
+            )
+        );
+
+        expect(members.map(({ name }) => name)).toEqual(['dtWidthInput', 'dtWidth']);
+        expect(members[1]).toMatchObject({
+            memberTags: [MemberTags.Input, MemberTags.Output],
+            inputAlias: 'dtWidth',
+            outputAlias: 'dtWidthChange',
+            signalApi: 'model',
+            declaredType: 'number | null',
+            defaultValue: 'null',
+            description: 'Width.'
+        });
+    });
+
+    it('leaves a backing input with no public counterpart hidden and alone', () => {
+        const members = membersOf(
+            updateEntries(
+                [
+                    classEntry('KbqCodeBlock', [
+                        member({
+                            name: 'canLoadInput',
+                            memberTags: [MemberTags.Input],
+                            inputAlias: 'canLoad',
+                            jsdocTags: [{ name: 'docs-private', comment: '' }]
+                        })
+                    ])
+                ],
+                { KbqCodeBlock: classMetadata({}) }
+            )
+        );
+
+        expect(members.map(({ name, memberTags }) => [name, memberTags])).toEqual([
+            ['canLoadInput', [MemberTags.Input]]
+        ]);
+    });
+
+    // Angular binds a forwarded input on the host under the exposed name, never under the directive's alias.
+    it('binds a forwarded host directive input under the name the host exposes', () => {
+        const members = membersOf(
+            updateEntries(
+                [classEntry('KbqHost', [])],
+                {
+                    KbqHost: classMetadata({
+                        hostDirectives: [
+                            { name: 'KbqLocaleOverrides', inputs: { kbqLocaleOverrides: 'localeOverrides' } }
+                        ]
+                    })
+                },
+                {
+                    KbqLocaleOverrides: classEntry('KbqLocaleOverrides', [
+                        member({ name: 'overrides', memberTags: [MemberTags.Input], inputAlias: 'kbqLocaleOverrides' })
+                    ])
+                },
+                {
+                    KbqLocaleOverrides: classMetadata({
+                        members: { overrides: { signalApi: 'input', declaredType: 'KbqPartialLocaleData' } }
+                    })
+                }
+            )
+        );
+
+        expect(members).toEqual([
+            expect.objectContaining({
+                name: 'localeOverrides',
+                inputAlias: 'localeOverrides',
+                declaredType: 'KbqPartialLocaleData',
+                forwardedFrom: { directive: 'KbqLocaleOverrides', input: 'kbqLocaleOverrides' }
+            })
+        ]);
+    });
+
+    // A getter the host reads its state through binds nothing: the forwarded input is still what is bound.
+    it('forwards a host directive input beside a host member of that name that binds nothing', () => {
+        const members = membersOf(
+            updateEntries(
+                [
+                    classEntry('KbqFileUpload', [
+                        member({
+                            name: 'disabled',
+                            memberType: MemberType.Getter,
+                            jsdocTags: [{ name: 'docs-private', comment: '' }]
+                        })
+                    ])
+                ],
+                {
+                    KbqFileUpload: classMetadata({
+                        hostDirectives: [{ name: 'KbqFileUploadContext', inputs: { disabled: 'disabled' } }]
+                    })
+                },
+                {
+                    KbqFileUploadContext: classEntry('KbqFileUploadContext', [
+                        member({
+                            name: 'disabled',
+                            memberTags: [MemberTags.Input, MemberTags.Output],
+                            inputAlias: 'disabled',
+                            outputAlias: 'disabledChange'
+                        })
+                    ])
+                }
+            )
+        );
+
+        expect(
+            members.map(({ name, memberType, memberTags, outputAlias }) => [name, memberType, memberTags, outputAlias])
+        ).toEqual([
+            ['disabled', MemberType.Getter, [], undefined],
+            // Its `Change` output stays on the directive: on the host, the model is an input alone.
+            ['disabled', MemberType.Property, [MemberTags.Input], undefined]
+        ]);
+    });
+
+    it('forwards the outputs a host directive exposes, under the names it exposes them', () => {
+        const members = membersOf(
+            updateEntries(
+                [classEntry('KbqNavbarItem', [])],
+                {
+                    KbqNavbarItem: classMetadata({
+                        hostDirectives: [
+                            {
+                                name: 'KbqTooltipTrigger',
+                                inputs: { kbqVisible: 'kbqVisible' },
+                                outputs: { kbqVisibleChange: 'kbqVisibleChange', kbqPlacementChange: 'placementChange' }
+                            }
+                        ]
+                    })
+                },
+                {
+                    KbqTooltipTrigger: classEntry('KbqTooltipTrigger', [
+                        member({
+                            name: 'visible',
+                            memberTags: [MemberTags.Input, MemberTags.Output],
+                            inputAlias: 'kbqVisible',
+                            outputAlias: 'kbqVisibleChange'
+                        }),
+                        member({
+                            name: 'placement',
+                            memberTags: [MemberTags.Output],
+                            outputAlias: 'kbqPlacementChange'
+                        })
+                    ])
+                }
+            )
+        );
+
+        expect(
+            members.map(({ name, inputAlias, outputAlias, forwardedFrom }) => ({
+                name,
+                inputAlias,
+                outputAlias,
+                forwardedFrom
+            }))
+        ).toEqual([
+            {
+                name: 'kbqVisible',
+                inputAlias: 'kbqVisible',
+                outputAlias: 'kbqVisibleChange',
+                forwardedFrom: { directive: 'KbqTooltipTrigger', input: 'kbqVisible', output: 'kbqVisibleChange' }
+            },
+            {
+                name: 'placementChange',
+                inputAlias: undefined,
+                outputAlias: 'placementChange',
+                forwardedFrom: { directive: 'KbqTooltipTrigger', output: 'kbqPlacementChange' }
+            }
+        ]);
+    });
+
+    // The public side of a backing input can be a getter that adds to the bound value what the class knows.
+    it('merges a hidden backing input into a public getter', () => {
+        const [, disabled] = membersOf(
+            updateEntries(
+                [
+                    classEntry('KbqTreeNodeToggle', [
+                        member({
+                            name: 'disabledInput',
+                            memberTags: [MemberTags.Input],
+                            inputAlias: 'disabled',
+                            jsdocTags: [{ name: 'docs-private', comment: '' }]
+                        }),
+                        member({ name: 'disabled', memberType: MemberType.Getter })
+                    ])
+                ],
+                {
+                    KbqTreeNodeToggle: classMetadata({
+                        members: {
+                            disabledInput: { signalApi: 'input', defaultValue: 'false' },
+                            disabled: { declaredType: 'boolean' }
+                        }
+                    })
+                }
+            )
+        );
+
+        expect(disabled).toMatchObject({
+            memberType: MemberType.Property,
+            memberTags: [MemberTags.Input],
+            inputAlias: 'disabled',
+            signalApi: 'input',
+            declaredType: 'boolean',
+            defaultValue: 'false'
+        });
+    });
+});
+
+describe('reading exported constants and functions from source', () => {
+    it('writes an arrow function constant with the types its source annotates', () => {
+        expect(
+            readSourceFile('packages/components/input/input-number.ts').declarations.kbqInputLocaleConfigurationProvider
+        ).toEqual({
+            declaredType: '(configuration: KbqDeepPartial<KbqInputLocaleConfiguration>) => Provider',
+            declaredFunctionType: {
+                generics: '',
+                params: ['configuration: KbqDeepPartial<KbqInputLocaleConfiguration>'],
+                returnType: 'Provider'
+            }
+        });
+    });
+
+    it('writes a token with the type argument it is created with', () => {
+        expect(
+            readSourceFile('packages/components/code-block/code-block-highlight.ts').declarations
+                .KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG
+        ).toEqual({ declaredType: 'InjectionToken<KbqCodeBlockHighlightJsConfig>' });
+    });
+
+    it('reads each overload of a function, and its implementation apart', () => {
+        expect(
+            readSourceFile('packages/components/core/locales/locale-service.ts').declarations.kbqInjectLocaleService
+        ).toEqual({
+            callable: {
+                overloads: [
+                    { params: ['InjectOptions & { optional?: false }'], returnType: 'KbqLocaleService' },
+                    { params: ['InjectOptions'], returnType: 'KbqLocaleService | null' }
+                ],
+                implementation: { params: ['InjectOptions'], returnType: 'KbqLocaleService | null' }
+            }
+        });
+    });
+
+    /** A constant or function entry, as Angular's extractor reports one. */
+    const entry = (patch: Record<string, unknown>): DocEntry => patch as unknown as DocEntry;
+
+    it('gives a constant the declared type of the constant it is another name for', () => {
+        const [provider] = updateEntries(
+            [
+                entry({
+                    name: 'kbqFilesizeProvider',
+                    entryType: EntryType.Constant,
+                    type: '(configuration: { … }) => Provider'
+                })
+            ],
+            {},
+            {},
+            {},
+            {
+                kbqFilesizeProvider: { aliasOf: 'kbqSizeUnitsProvider' },
+                kbqSizeUnitsProvider: { declaredType: '(configuration: KbqDeepPartial<KbqSizeUnits>) => Provider' }
+            }
+        );
+
+        expect(provider).toMatchObject({ declaredType: '(configuration: KbqDeepPartial<KbqSizeUnits>) => Provider' });
+    });
+
+    // The compiler spells an alias out; a parameter the source leaves unannotated keeps its type.
+    it('replaces the compiler types of a function signature with the annotated ones', () => {
+        const [fn] = updateEntries(
+            [
+                entry({
+                    name: 'kbqInjectLocaleService',
+                    entryType: EntryType.Function,
+                    signatures: [
+                        {
+                            params: [
+                                { name: 'options', type: 'InjectOptions | undefined' },
+                                { name: 'fallback', type: 'string' }
+                            ],
+                            returnType: 'KbqLocaleService'
+                        }
+                    ],
+                    implementation: null
+                })
+            ],
+            {},
+            {},
+            {},
+            {
+                kbqInjectLocaleService: {
+                    callable: {
+                        overloads: [],
+                        implementation: { params: ['InjectOptions', undefined], returnType: 'KbqLocaleService | null' }
+                    }
+                }
+            }
+        );
+
+        expect((fn as unknown as FunctionWithOverloads).signatures[0]).toEqual({
+            params: [
+                { name: 'options', type: 'InjectOptions' },
+                { name: 'fallback', type: 'string' }
+            ],
+            returnType: 'KbqLocaleService | null'
+        });
+    });
+});
+
+describe('reading object literal types from source', () => {
+    it('reads the fields of a type alias naming an object literal, as the members of an interface', () => {
+        const { members } = readSourceFile('packages/components/breadcrumbs/breadcrumbs.types.ts').declarations
+            .KbqBreadcrumbsConfiguration;
+
+        expect(
+            members?.map(({ name, type, memberType, memberTags }) => ({ name, type, memberType, memberTags }))
+        ).toEqual([
+            { name: 'max', type: 'number | null', memberType: MemberType.Property, memberTags: [] },
+            { name: 'size', type: 'KbqDefaultSizes', memberType: MemberType.Property, memberTags: [] },
+            { name: 'firstItemNegativeMargin', type: 'boolean', memberType: MemberType.Property, memberTags: [] },
+            { name: 'wrapMode', type: 'KbqBreadcrumbsWrapMode', memberType: MemberType.Property, memberTags: [] }
+        ]);
+        expect(members?.map(({ description }) => description)).toEqual([
+            'Specifies the maximum number of breadcrumb items to display.\n- If a number is provided, only that many items will be shown.\n- If `null`, no limit is applied, and all breadcrumb items are displayed.',
+            '',
+            'Determines if a negative margin should be applied to the first breadcrumb item.',
+            'Manages breadcrumb items when space is limited:\n- `auto`: Adjusts based on space and item count.\n- `wrap`: Moves items to the next line if needed.\n- `none`: Prevents wrapping, allowing overflow.'
+        ]);
+    });
+
+    it('marks an optional field', () => {
+        const { members } = readSourceFile('packages/components/actions-panel/actions-panel.ts').declarations
+            .KbqActionsPanelTemplateContext;
+
+        expect(members?.map(({ name, memberTags }) => [name, memberTags])).toEqual([
+            ['$implicit', [MemberTags.Optional]],
+            ['data', [MemberTags.Optional]],
+            ['actionsPanelRef', []]
+        ]);
+    });
+
+    it('reads the fields nested in a field, and the type of that field without their comments', () => {
+        const { indent } = readSourceFile('packages/components/toast/toast.type.ts').classes.KbqToastConfig.members;
+
+        expect(indent.declaredType).toBe('{ vertical: number; horizontal: number; }');
+        expect(indent.members?.map(({ name, type, description }) => ({ name, type, description }))).toEqual([
+            { name: 'vertical', type: 'number', description: 'Vertical spacing from the top or bottom of the screen.' },
+            {
+                name: 'horizontal',
+                type: 'number',
+                description: 'Horizontal spacing from the left or right of the screen.'
+            }
+        ]);
+    });
+
+    it('leaves out a field the docs leave out, nested or not', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'api-gen-'));
+        const file = join(dir, 'config.ts');
+
+        writeFileSync(
+            file,
+            [
+                'export type KbqConfig = {',
+                '    size: string;',
+                '    /** @docs-private */',
+                '    token: string;',
+                '    indent: {',
+                '        vertical: number;',
+                '        /** @internal */',
+                '        cache: number;',
+                '    };',
+                '};'
+            ].join('\n')
+        );
+
+        try {
+            const { members } = readSourceFile(file).declarations.KbqConfig;
+
+            expect(members?.map(({ name, members: fields }) => [name, fields?.map(({ name }) => name)])).toEqual([
+                ['size', undefined],
+                ['indent', ['vertical']]
+            ]);
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
+    });
+
+    it('leaves a literal with more than named fields in it to the text of its type', () => {
+        const { unitSystems } = readSourceFile('packages/components/core/formatters/filesize/config.ts').classes
+            .KbqSizeUnitsLocaleConfiguration.members;
+
+        expect(unitSystems).toEqual({
+            declaredType: '{ [KbqMeasurementSystem.SI]: KbqUnitSystem; [KbqMeasurementSystem.IEC]: KbqUnitSystem; }'
+        });
+    });
+
+    it('gives a type alias the fields read from its source', () => {
+        const members: PropertyEntry[] = [
+            {
+                name: 'size',
+                memberType: MemberType.Property,
+                memberTags: [],
+                type: 'string',
+                description: '',
+                jsdocTags: []
+            }
+        ];
+        const alias = {
+            name: 'KbqConfig',
+            entryType: EntryType.TypeAlias,
+            type: '{ size: string; }'
+        } as unknown as DocEntry;
+
+        expect(updateEntries([alias], {}, {}, {}, { KbqConfig: { members } })).toEqual([{ ...alias, members }]);
+
+        const literal = { before: 'Partial<', after: '>' };
+
+        expect(updateEntries([alias], {}, {}, {}, { KbqConfig: { members, literal } })).toEqual([
+            { ...alias, members, literal }
+        ]);
+    });
+
+    it('reads the fields of an object literal a utility type wraps, the optionality it decides with them', () => {
+        const { members, literal } = readSourceFile('packages/components/select/select.component.ts').declarations
+            .KbqSelectOptions;
+
+        expect(literal).toEqual({ before: 'Partial<', after: '>' });
+        expect(
+            members?.slice(0, 2).map(({ name, memberTags, optionalByWrapper }) => [name, memberTags, optionalByWrapper])
+        ).toEqual([
+            ['panelWidth', [], true],
+            ['panelMinWidth', [], true]
+        ]);
+        expect(members?.every(({ optionalByWrapper }) => optionalByWrapper)).toBe(true);
+    });
+
+    it('reads the fields of the object literal of an intersection, and the types beside it as written', () => {
+        const { members, literal } = readSourceFile('packages/components/core/locales/types.ts').declarations
+            .KbqInputNumberLocaleConfiguration;
+
+        expect(literal).toEqual({ before: '', after: ' & KbqNumberFormatOptions' });
+        expect(members?.map(({ name }) => name)).toEqual([
+            'groupSeparator',
+            'fractionSeparator',
+            'startFormattingFrom'
+        ]);
+    });
+
+    it('decides the optionality by `Required`, keeps it by `Readonly`, and reads no other combination', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'api-gen-'));
+        const file = join(dir, 'types.ts');
+
+        writeFileSync(
+            file,
+            [
+                'export type KbqRequired = Required<{ size?: string }>;',
+                'export type KbqReadonly = Readonly<{ size?: string }>;',
+                'export type KbqTwoLiterals = { size: string } & { color: string };',
+                "export type KbqStyle = 'filled' | (string & {});"
+            ].join('\n')
+        );
+
+        try {
+            const { KbqRequired, KbqReadonly, KbqTwoLiterals, KbqStyle } = readSourceFile(file).declarations;
+
+            expect(KbqRequired.members?.[0].optionalByWrapper).toBe(false);
+            expect(KbqReadonly).toEqual({
+                members: [expect.not.objectContaining({ optionalByWrapper: expect.anything() })],
+                literal: { before: 'Readonly<', after: '>' }
+            });
+            expect(KbqTwoLiterals).toBeUndefined();
+            expect(KbqStyle).toBeUndefined();
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
     });
 });

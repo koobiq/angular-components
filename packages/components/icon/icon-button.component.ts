@@ -53,7 +53,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly isCompact = computed(() => this.size() === 'compact' || this.small());
 
-    /** Name of an icon within a @koobiq/icons. */
+    /** Name of an icon within a `@koobiq/icons`. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
     @Input({ alias: 'kbq-icon-button' }) iconName: string;

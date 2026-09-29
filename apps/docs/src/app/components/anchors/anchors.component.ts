@@ -17,7 +17,14 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { filter, fromEvent, Subscription, timer } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+import { DOCS_API_WITHOUT_MEMBER } from '../../constants/api-page';
 import { DOCS_MARKDOWN_HEADING_CLASSES } from '../live-example/markdown-content';
+
+/**
+ * The path of a URL, without its query and fragment: the links take it as a path, where a `?` would be encoded
+ * into the last segment and lead nowhere.
+ */
+const getPath = (url: string): string => url.split(/[?#]/)[0];
 
 interface KbqDocsAnchor {
     href: string;
@@ -59,6 +66,9 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
     protected pathName: string;
 
+    /** The query of a link to a heading: the rest of the current one, without the member selected on an API tab. */
+    protected readonly queryParams = DOCS_API_WITHOUT_MEMBER;
+
     private readonly headerHeight: number = 64;
 
     private fragment = '';
@@ -94,7 +104,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     constructor() {
         const router = this.router;
 
-        this.pathName = router.url.split('#')[0];
+        this.pathName = getPath(router.url);
 
         this.router.events
             .pipe(
@@ -102,7 +112,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
                 takeUntilDestroyed()
             )
             .subscribe(() => {
-                const [rootUrl] = router.url.split('#');
+                const rootUrl = getPath(router.url);
 
                 if (rootUrl !== this.pathName) {
                     this.pathName = rootUrl;
@@ -143,7 +153,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         const target = this.document.getElementById(this.fragment);
 
         if (target) {
-            this.scrollToFragment(target);
+            this.scrollToElement(target);
         } else {
             // For SSR compatibility
             if (typeof container.scroll === 'function') container.scroll(0, 0);
@@ -165,7 +175,11 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         anchor.element.scrollIntoView({ behavior: 'smooth' });
     }
 
-    private scrollToFragment(target: HTMLElement): void {
+    /**
+     * Scrolls the element to the top of the page at once, and keeps it there for a while as the content above it
+     * grows: lazily loaded examples and code blocks rendered again in the browser push it down.
+     */
+    scrollToElement(target: HTMLElement): void {
         clearTimeout(this.fragmentScrollTimer);
         this.fragmentScrollSubscription?.unsubscribe();
 

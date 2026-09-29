@@ -1045,7 +1045,10 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
-    // View to model callback that should be called if the list or its options lost focus.
+    /**
+     * Called when the control is blurred. Needed to properly implement `ControlValueAccessor`.
+     * @docs-private
+     */
     onTouched: () => void = () => {};
 
     // Removes an option from the selection list and updates the active item.

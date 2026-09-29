@@ -60,8 +60,7 @@ export const kbqCodeBlockHighlightJsConfigProvider = (options: KbqCodeBlockHighl
 /**
  * Fallback language for code block if language is not supported/specified.
  *
- * List of supported languages:
- * @link https://highlightjs.readthedocs.io/en/stable/supported-languages.html
+ * See the [list of supported languages](https://highlightjs.readthedocs.io/en/stable/supported-languages.html).
  */
 export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE = new InjectionToken<string>(
     'KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE',

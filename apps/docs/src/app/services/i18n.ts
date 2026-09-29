@@ -96,7 +96,6 @@ export const DOCS_TRANSLATIONS = {
     iconKeywords: { ru: 'Ключевые слова', en: 'Key words' },
 
     // example / live-example viewers
-    loadingDocument: { ru: 'Загрузка документа...', en: 'Loading document...' },
     showExampleCode: { ru: 'Показать код', en: 'Show code' },
     hideExampleCode: { ru: 'Скрыть код', en: 'Hide code' },
     resetState: { ru: 'Сбросить состояние', en: 'Reset state' },
@@ -104,7 +103,13 @@ export const DOCS_TRANSLATIONS = {
     exitFullscreen: { ru: 'Выйти из полноэкранного режима', en: 'Exit full screen' },
     openInNewTab: { ru: 'Открыть в новой вкладке', en: 'Open in new tab' },
 
+    // navbar
+    navbarTelegram: { ru: 'Koobiq в Telegram', en: 'Koobiq on Telegram' },
+    navbarGitHub: { ru: 'Репозиторий на GitHub', en: 'GitHub repository' },
+    navbarMenu: { ru: 'Меню', en: 'Menu' },
+
     // navbar theme switcher
+    themeSwitcher: { ru: 'Тема оформления', en: 'Color theme' },
     themeGroupHeader: { ru: 'ТЕМА', en: 'THEME' },
     themeSystem: { ru: 'Как в системе', en: 'Same as system' },
     themeLight: { ru: 'Светлая', en: 'Light' },
@@ -151,6 +156,10 @@ export const DOCS_TRANSLATION_TEMPLATES = {
     seoItemDescription: {
         ru: (name: string) => `Документация по ${name} в дизайн-системе Koobiq для Angular.`,
         en: (name: string) => `${name} documentation for the Koobiq Angular design system.`
+    },
+    apiCopyLink: {
+        ru: (name: string) => `Скопировать ссылку на ${name}`,
+        en: (name: string) => `Copy link to ${name}`
     }
 } satisfies Record<string, Record<DocsLocale, (value: string) => string>>;
 

@@ -74,7 +74,7 @@ export class KbqFileLoader {
     /**
      * Reflects webkitdirectory attribute,
      * which indicates that elements can only select directories instead of files.
-     * @link [`HTMLInputElement: webkitdirectory property`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory)
+     * See [`HTMLInputElement: webkitdirectory property`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory).
      */
     readonly onlyDirectory = input<boolean | null>(null);
 

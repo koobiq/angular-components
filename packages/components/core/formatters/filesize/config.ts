@@ -31,11 +31,7 @@ export interface KbqSizeUnitsLocaleConfiguration {
      * @see KbqMeasurementSystem
      */
     defaultUnitSystem: KbqMeasurementSystemType;
-    /**
-     * Default number of decimal places to display in formatted output.
-     * @example
-     * `2` → "1.23 KB"
-     */
+    /** Default number of decimal places to display in formatted output: with `2`, "1.23 KB". */
     defaultPrecision: number;
     /** @see KbqMeasurementSystem */
     unitSystems: {

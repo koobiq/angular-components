@@ -128,7 +128,7 @@ export class KbqMultipleFileUploadComponent
 
     /**
      * Determines which kind of items the upload component can accept.
-     * @default mixed
+     * @default 'file'
      */
     allowed = input<KbqEnumValues<KbqFileUploadAllowedType>>(KbqFileUploadAllowedType.File);
     /**

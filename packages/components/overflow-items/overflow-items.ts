@@ -362,9 +362,7 @@ export class KbqOverflowItems {
         return itemsSize + resultSize > containerSizeWithoutPaddings;
     }
 
-    /**
-     * @TODO Should be removed when `Array.prototype.findLast` is supported.
-     */
+    // TODO: Should be removed when `Array.prototype.findLast` is supported.
     private findLast<T>(array: ReadonlyArray<T>, predicate: (item: T) => boolean): T | undefined {
         for (let i = array.length - 1; i >= 0; i--) {
             if (predicate(array[i])) {

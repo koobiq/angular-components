@@ -50,7 +50,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     hasError: boolean = false;
 
-    /** Name of an icon within a @koobiq/icons. Accepts "namespace:name" syntax. */
+    /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
     // TODO: Skipped for migration because:
     //  Subclass KbqIconButton overrides this input with `@Input({ alias: 'kbq-icon-button' })`
     //  using a plain string, which is incompatible with InputSignal<string>.

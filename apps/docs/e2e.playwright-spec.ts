@@ -310,6 +310,31 @@ test.describe('docs app', () => {
         expect(errors).toEqual([]);
     });
 
+    // The API tab renders data rather than a compiled page, and its JSDoc goes into the page as `[innerHTML]`.
+    test('hydrates the API tab without errors', async ({ page }) => {
+        const errors = collectErrors(page);
+
+        await page.goto('/en/components/select/api');
+        await waitForHydration(page);
+
+        await expect(page.locator('#KbqSelect-panelClass .kbq-markdown__p')).toBeVisible();
+        expect(errors).toEqual([]);
+    });
+
+    test('scrolls to the member a link points at and highlights it', async ({ page }) => {
+        await page.goto('/en/components/select/api?member=KbqSelect-panelClass');
+        await waitForHydration(page);
+
+        await expect(page.locator('#KbqSelect-panelClass')).toHaveClass(/docs-api__member_selected/);
+        await expect(page.locator('#KbqSelect-panelClass')).toBeInViewport();
+
+        await page.locator('#KbqSelect-backdropClass .docs-api__link').click();
+
+        await expect(page).toHaveURL(/\/en\/components\/select\/api\?member=KbqSelect-backdropClass$/);
+        await expect(page.locator('#KbqSelect-backdropClass')).toHaveClass(/docs-api__member_selected/);
+        await expect(page.locator('#KbqSelect-panelClass')).not.toHaveClass(/docs-api__member_selected/);
+    });
+
     // AG Grid does not support server-side rendering: the prerendered page leaves its examples to the browser.
     test('renders the examples that cannot render on the server once the page is hydrated', async ({ page }) => {
         const errors = collectErrors(page);
@@ -355,6 +380,18 @@ test.describe('prerendered pages compiled from MDX', () => {
         await expect(example.locator('kbq-skeleton')).toBeVisible();
         await expect(example).toHaveAttribute('aria-busy', 'true');
         await expect(example.locator('ag-grid-angular')).toHaveCount(0);
+    });
+});
+
+test.describe('prerendered API tab', () => {
+    test.use({ javaScriptEnabled: false });
+
+    test('carries the entries and their JSDoc in the initial HTML', async ({ page }) => {
+        await page.goto('/en/components/select/api');
+
+        await expect(page.locator('h3#api-components')).toHaveText('Components');
+        await expect(page.locator('h4#KbqSelect')).toHaveText('KbqSelect');
+        await expect(page.locator('#KbqSelect-panelClass .kbq-markdown__p')).toBeVisible();
     });
 });
 

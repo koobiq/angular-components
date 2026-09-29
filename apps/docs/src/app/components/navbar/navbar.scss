@@ -1,5 +1,7 @@
+// The sidenav shows the logo on a wide screen. The link itself is hidden there, not just its logo: an empty link
+// would still take the focus.
 .docs-navbar__logo {
-    display: flex;
+    display: none;
     align-items: center;
 }
 
@@ -22,7 +24,6 @@
     }
 }
 
-.docs-navbar__mobile-logo,
 .docs-navbar__mobile-menu {
     display: none !important;
 }
@@ -35,7 +36,10 @@
         }
     }
 
-    .docs-navbar__mobile-logo,
+    .docs-navbar__logo {
+        display: flex;
+    }
+
     .docs-navbar__mobile-menu {
         display: block !important;
     }

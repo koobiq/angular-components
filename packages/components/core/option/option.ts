@@ -374,8 +374,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     /**
-     * `Selects the option while indicating the selection came from the user. Used to
-     * determine if the select's view -> model callback should be invoked.`
+     * Selects the option while indicating the selection came from the user. Used to
+     * determine if the select's view -> model callback should be invoked.
      */
     selectViaInteraction(): void {
         if (this.userSelect()) return;

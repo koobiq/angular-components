@@ -209,8 +209,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     /**
      * @param value The number to be formatted.
      * @param digitsInfo Decimal representation options, specified by a string
-     * in the following format:<br>
-     * <code>{minIntegerDigits}.{minFractionDigits}-{maxFractionDigits}</code>.
+     * in the format `{minIntegerDigits}.{minFractionDigits}-{maxFractionDigits}`.
      *   - `minIntegerDigits`: The minimum number of integer digits before the decimal point.
      * Default is `1`.
      *   - `minFractionDigits`: The minimum number of digits after the decimal point.
@@ -284,8 +283,7 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     /**
      * @param value The number to be formatted.
      * @param digitsInfo Decimal representation options, specified by a string
-     * in the following format:<br>
-     * <code>{minIntegerDigits}.{minFractionDigits}-{maxFractionDigits}</code>.
+     * in the format `{minIntegerDigits}.{minFractionDigits}-{maxFractionDigits}`.
      *   - `minIntegerDigits`: The minimum number of integer digits before the decimal point.
      * Default is `1`.
      *   - `minFractionDigits`: The minimum number of digits after the decimal point.

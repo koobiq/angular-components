@@ -62,8 +62,8 @@
                             },
                             {
                                 "glob": "**/*",
-                                "input": "dist/docs-content",
-                                "output": "/docs-content"
+                                "input": "dist/docs-content/examples-source",
+                                "output": "/docs-content/examples-source"
                             },
                             {
                                 "glob": "favicon.ico",

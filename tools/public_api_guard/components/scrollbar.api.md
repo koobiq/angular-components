@@ -59,6 +59,16 @@ export class KbqScrollbar {
 export type KbqScrollbarMode = 'always' | 'hidden' | 'hover' | 'native';
 
 // @public
+export class KbqScrollbarModule {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqScrollbarModule, never>;
+    // (undocumented)
+    static ɵinj: i0.ɵɵInjectorDeclaration<KbqScrollbarModule>;
+    // (undocumented)
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqScrollbarModule, never, [typeof KbqNativeScrollbar, typeof KbqScrollbar, typeof KbqScrollbarViewport], [typeof KbqNativeScrollbar, typeof KbqScrollbar, typeof KbqScrollbarViewport]>;
+}
+
+// @public
 export type KbqScrollbarOptions = {
     mode: KbqScrollbarMode;
     hideDelay: number;

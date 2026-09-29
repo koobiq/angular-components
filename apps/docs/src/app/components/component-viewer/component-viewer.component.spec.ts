@@ -1,15 +1,23 @@
-import { provideHttpClient } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute, provideRouter, Router, UrlSegment } from '@angular/router';
+import {
+    ActivatedRoute,
+    convertToParamMap,
+    ParamMap,
+    Params,
+    provideRouter,
+    Router,
+    UrlSegment
+} from '@angular/router';
 import { BehaviorSubject, map, of } from 'rxjs';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
+import { DOCS_API_PAGES } from '../../services/page-resolver';
 import { DocsStructureCategoryId, DocsStructureItemId } from '../../structure';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
+import { DocsApiEntryPoint } from '../api-page/api-page.types';
 import {
-    DocsComponentApiComponent,
+    DocsComponentApiPageComponent,
     DocsComponentPageComponent,
     DocsComponentViewerComponent
 } from './component-viewer.component';
@@ -89,6 +97,36 @@ describe(DocsComponentViewerComponent.name, () => {
     });
 });
 
+// The router waits for the page of a tab, so it starts loading while the pointer or the focus is on the link.
+describe('prefetching the page of a tab', () => {
+    it.each(['mouseenter', 'focus'])('loads the API of the item on %s of its tab', (type) => {
+        const load = jest.fn(() => new Promise<never>(() => undefined));
+
+        TestBed.configureTestingModule({
+            imports: [DocsComponentViewerComponent],
+            providers: [
+                provideRouter([]),
+                provideDocsLocale(DocsLocale.En),
+                {
+                    provide: ActivatedRoute,
+                    useValue: { url: of(segments(DocsStructureCategoryId.Components, DocsStructureItemId.Alert)) }
+                },
+                { provide: DOCS_API_PAGES, useValue: { [DocsStructureItemId.Alert]: load } }
+            ]
+        });
+
+        const fixture = TestBed.createComponent(DocsComponentViewerComponent);
+
+        fixture.detectChanges();
+
+        const tabs: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbqTabLink]'));
+
+        tabs.find((tab) => tab.textContent?.trim() === 'API')!.dispatchEvent(new Event(type));
+
+        expect(load).toHaveBeenCalledTimes(1);
+    });
+});
+
 /** Stands in for a page compiled from MDX. */
 @Component({
     selector: 'docs-compiled-page',
@@ -132,7 +170,6 @@ describe(DocsComponentPageComponent.name, () => {
         expect(article.querySelector('.kbq-callout')).not.toBeNull();
     });
 
-    // A compiled page renders with the route; the API document reports through `contentRendered` instead.
     it('scrolls the anchors into position once the page has rendered', () => {
         createPage();
 
@@ -140,25 +177,112 @@ describe(DocsComponentPageComponent.name, () => {
     });
 });
 
-describe(DocsComponentApiComponent.name, () => {
-    it('loads the API document of the item the parent route shows', () => {
-        const url = of(segments(DocsStructureCategoryId.Components, DocsStructureItemId.Alert));
+const ALERT_API: DocsApiEntryPoint = {
+    path: '@koobiq/components/alert',
+    groups: [
+        {
+            id: 'api-components',
+            title: 'Components',
+            entries: [
+                {
+                    name: 'KbqAlert',
+                    kind: 'component',
+                    signature: 'class KbqAlert {}',
+                    members: [
+                        {
+                            id: 'KbqAlert-title',
+                            name: '[title]',
+                            type: [{ text: 'string' }],
+                            description: [{ type: 'html', html: '<p class="kbq-markdown__p">The title.</p>' }]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+};
+
+describe(DocsComponentApiPageComponent.name, () => {
+    let setScrollPosition: jest.SpyInstance;
+    let scrollToElement: jest.SpyInstance;
+
+    /** The tab reads the API from `data` and the member a link points at from the query; the anchors read `fragment`. */
+    let queryParamMap: BehaviorSubject<ParamMap>;
+
+    const createPage = (queryParams: Params = {}): ComponentFixture<DocsComponentApiPageComponent> => {
+        queryParamMap = new BehaviorSubject(convertToParamMap(queryParams));
 
         TestBed.configureTestingModule({
-            imports: [DocsComponentApiComponent],
+            imports: [DocsComponentApiPageComponent],
             providers: [
                 provideRouter([]),
                 provideDocsLocale(DocsLocale.En),
-                provideHttpClient(),
-                provideHttpClientTesting(),
-                { provide: ActivatedRoute, useValue: { fragment: of(null), parent: { url } } }
+                {
+                    provide: ActivatedRoute,
+                    useValue: {
+                        fragment: of(null),
+                        data: of({ page: ALERT_API }),
+                        queryParamMap: queryParamMap.asObservable()
+                    }
+                }
             ]
         });
 
-        TestBed.createComponent(DocsComponentApiComponent).detectChanges();
+        const fixture = TestBed.createComponent(DocsComponentApiPageComponent);
 
-        const request = TestBed.inject(HttpTestingController).expectOne('docs-content/api-docs/components-alert.html');
+        fixture.detectChanges();
 
-        expect(request.request.method).toBe('GET');
+        return fixture;
+    };
+
+    beforeEach(() => {
+        setScrollPosition = jest.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation();
+        scrollToElement = jest.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation();
+    });
+
+    afterEach(() => {
+        setScrollPosition.mockRestore();
+        scrollToElement.mockRestore();
+    });
+
+    it('renders the API as the article, followed by the improvement callout', () => {
+        const article: HTMLElement = createPage().nativeElement.querySelector('.docs-component-viewer__article');
+
+        expect(article.firstElementChild?.matches('docs-api-page')).toBe(true);
+        expect(article.querySelector('#KbqAlert')).not.toBeNull();
+        expect(article.querySelector('.kbq-callout')).not.toBeNull();
+    });
+
+    // A signature is a code block, and the page is stable once highlight.js has loaded to highlight it.
+    it('scrolls the anchors into position once the entries have rendered', async () => {
+        await createPage().whenStable();
+
+        expect(setScrollPosition).toHaveBeenCalledTimes(1);
+        expect(scrollToElement).not.toHaveBeenCalled();
+    });
+
+    it('scrolls to the member a link points at, and highlights it', async () => {
+        const fixture = createPage({ member: 'KbqAlert-title' });
+
+        await fixture.whenStable();
+
+        const member: HTMLElement = fixture.nativeElement.querySelector('#KbqAlert-title');
+
+        expect(scrollToElement).toHaveBeenCalledWith(member);
+        expect(member.classList).toContain('docs-api__member_selected');
+    });
+
+    // The link of a member selects it and copies the address; the page stays where the reader is.
+    it('highlights a member selected on the open page without scrolling to it', async () => {
+        const fixture = createPage();
+
+        await fixture.whenStable();
+
+        queryParamMap.next(convertToParamMap({ member: 'KbqAlert-title' }));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(fixture.nativeElement.querySelector('#KbqAlert-title').classList).toContain('docs-api__member_selected');
+        expect(scrollToElement).not.toHaveBeenCalled();
     });
 });
