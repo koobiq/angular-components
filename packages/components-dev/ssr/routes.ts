@@ -15,8 +15,6 @@ const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
     'notification-center-overview',
     'notification-center-popover',
     'notification-center-push',
-    'theme-css-variables',
-    'theme-static-selection',
     // AG Grid does not support server-side rendering.
     'content-panel-with-grid',
     // Both examples are a bare `<iframe src="/examples/<name>">`, a URL that only the docs app routes.
