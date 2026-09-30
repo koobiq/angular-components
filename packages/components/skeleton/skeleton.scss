@@ -22,12 +22,13 @@
     border-radius: var(--kbq-skeleton-border-radius);
 }
 
-.kbq-skeleton:not(.kbq-skeleton_disabled) {
-    &:is(kbq-skeleton) {
-        display: flex;
-        min-height: var(--kbq-skeleton-min-height);
-    }
+// The standalone element is a fallback too, so a class of the consumer resizes the block.
+:where(kbq-skeleton:not(.kbq-skeleton_disabled)) {
+    display: flex;
+    min-height: var(--kbq-skeleton-min-height);
+}
 
+.kbq-skeleton:not(.kbq-skeleton_disabled) {
     // A solid background and the filter turn the host, children included, into one shape of the host's own
     // outline; any opaque color works, the filter flattens it with the rest. No pseudo-elements, so the host's own
     // ones and replaced elements such as `<img>` keep working, and each line of an inline host gets a bar.

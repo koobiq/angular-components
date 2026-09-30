@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqSkeleton } from '@koobiq/components/skeleton';
+import { KbqSkeletonTree } from '@koobiq/components/skeleton';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
@@ -15,57 +15,47 @@ type DirectoryFlatNode = {
     expandable: boolean;
 };
 
-const directory: DirectoryNode[] = [
-    {
-        name: 'security.com',
-        children: [
-            { name: 'Administrators', children: [{ name: 'a.koobiq' }, { name: 'b.koobiq' }] },
-            { name: 'Operators', children: [{ name: 'c.koobiq' }] }
-        ]
-    },
+const DIRECTORY: DirectoryNode[] = [
+    { name: 'security.com', children: [{ name: 'Operators' }] },
     {
         name: 'corp.local',
-        children: [{ name: 'Developers' }]
-    }
+        children: [
+            { name: 'Administrators', children: [{ name: 'a.koobiq' }] },
+            { name: 'Developers', children: [{ name: 'b.koobiq' }] },
+            { name: 'Testers', children: [{ name: 'c.koobiq' }] }
+        ]
+    },
+    { name: 'lab.local', children: [{ name: 'Guests' }] }
 ];
 
 /**
- * @title Skeleton with tree
+ * @title Skeleton tree preset
  */
 @Component({
     selector: 'skeleton-tree-example',
-    imports: [KbqSkeleton, KbqToggleModule, FormsModule, KbqTreeModule],
+    imports: [KbqSkeletonTree, KbqToggleModule, FormsModule, KbqTreeModule],
     template: `
         <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
 
-        <kbq-tree-selection
-            class="example-tree"
-            [dataSource]="dataSource"
-            [disabled]="loading()"
-            [treeControl]="treeControl"
-            [(ngModel)]="selected"
-        >
-            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
-                <span [kbqSkeleton]="loading()">{{ node.name }}</span>
-            </kbq-tree-option>
+        @if (loading()) {
+            <kbq-skeleton-tree />
+        } @else {
+            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="selected">
+                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
-                <kbq-tree-node-toggle [kbqSkeleton]="loading()" [node]="node" />
-                <span [kbqSkeleton]="loading()">{{ node.name }}</span>
-            </kbq-tree-option>
-        </kbq-tree-selection>
+                <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                    <kbq-tree-node-toggle [node]="node" />
+                    {{ node.name }}
+                </kbq-tree-option>
+            </kbq-tree-selection>
+        }
     `,
     styles: `
         :host {
             display: flex;
             flex-direction: column;
-            align-items: center;
             gap: var(--kbq-size-xl);
             padding: var(--kbq-size-xl);
-        }
-
-        .example-tree {
-            align-self: stretch;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -90,8 +80,14 @@ export class SkeletonTreeExample {
     );
 
     constructor() {
-        this.dataSource.data = directory;
-        this.treeControl.expandAll();
+        this.dataSource.data = DIRECTORY;
+
+        // The second node is the expanded one, as in the preset.
+        const expanded = this.treeControl.dataNodes.find(({ name }) => name === 'corp.local');
+
+        if (expanded) {
+            this.treeControl.expand(expanded);
+        }
     }
 
     protected hasChild(_: number, node: DirectoryFlatNode): boolean {

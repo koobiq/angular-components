@@ -1,42 +1,51 @@
 import { NgModule } from '@angular/core';
-import { SkeletonAlertExample } from './skeleton-alert/skeleton-alert-example';
-import { SkeletonBadgeExample } from './skeleton-badge/skeleton-badge-example';
-import { SkeletonButtonExample } from './skeleton-button/skeleton-button-example';
+import { SkeletonAccordionExample } from './skeleton-accordion/skeleton-accordion-example';
+import { SkeletonCheckableExample } from './skeleton-checkable/skeleton-checkable-example';
+import { SkeletonCodeBlockExample } from './skeleton-code-block/skeleton-code-block-example';
 import { SkeletonDlExample } from './skeleton-dl/skeleton-dl-example';
+import { SkeletonElementsExample } from './skeleton-elements/skeleton-elements-example';
+import { SkeletonFormFieldExample } from './skeleton-form-field/skeleton-form-field-example';
+import { SkeletonGridExample } from './skeleton-grid/skeleton-grid-example';
+import { SkeletonGroupExample } from './skeleton-group/skeleton-group-example';
 import { SkeletonInSidepanelExample } from './skeleton-in-sidepanel/skeleton-in-sidepanel-example';
-import { SkeletonListExample } from './skeleton-list/skeleton-list-example';
 import { SkeletonOverviewExample } from './skeleton-overview/skeleton-overview-example';
 import { SkeletonTableExample } from './skeleton-table/skeleton-table-example';
-import { SkeletonTagExample } from './skeleton-tag/skeleton-tag-example';
+import { SkeletonTabsExample } from './skeleton-tabs/skeleton-tabs-example';
 import { SkeletonTreeExample } from './skeleton-tree/skeleton-tree-example';
 import { SkeletonTypographyExample } from './skeleton-typography/skeleton-typography-example';
 
 export {
-    SkeletonAlertExample,
-    SkeletonBadgeExample,
-    SkeletonButtonExample,
+    SkeletonAccordionExample,
+    SkeletonCheckableExample,
+    SkeletonCodeBlockExample,
     SkeletonDlExample,
+    SkeletonElementsExample,
+    SkeletonFormFieldExample,
+    SkeletonGridExample,
+    SkeletonGroupExample,
     SkeletonInSidepanelExample,
-    SkeletonListExample,
     SkeletonOverviewExample,
     SkeletonTableExample,
-    SkeletonTagExample,
+    SkeletonTabsExample,
     SkeletonTreeExample,
     SkeletonTypographyExample
 };
 
 const EXAMPLES = [
     SkeletonOverviewExample,
-    SkeletonInSidepanelExample,
-    SkeletonButtonExample,
-    SkeletonBadgeExample,
-    SkeletonTagExample,
-    SkeletonAlertExample,
+    SkeletonElementsExample,
+    SkeletonTypographyExample,
     SkeletonDlExample,
     SkeletonTableExample,
-    SkeletonTypographyExample,
-    SkeletonListExample,
-    SkeletonTreeExample
+    SkeletonGridExample,
+    SkeletonGroupExample,
+    SkeletonFormFieldExample,
+    SkeletonAccordionExample,
+    SkeletonCheckableExample,
+    SkeletonTabsExample,
+    SkeletonTreeExample,
+    SkeletonCodeBlockExample,
+    SkeletonInSidepanelExample
 ];
 
 @NgModule({

@@ -1,14 +1,17 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
-    SkeletonAlertExample,
-    SkeletonBadgeExample,
-    SkeletonButtonExample,
+    SkeletonAccordionExample,
+    SkeletonCheckableExample,
+    SkeletonCodeBlockExample,
     SkeletonDlExample,
+    SkeletonElementsExample,
+    SkeletonFormFieldExample,
+    SkeletonGridExample,
+    SkeletonGroupExample,
     SkeletonInSidepanelExample,
-    SkeletonListExample,
     SkeletonOverviewExample,
     SkeletonTableExample,
-    SkeletonTagExample,
+    SkeletonTabsExample,
     SkeletonTreeExample,
     SkeletonTypographyExample
 } from 'packages/docs-examples/components/skeleton';
@@ -18,34 +21,28 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     imports: [
         SkeletonOverviewExample,
-        SkeletonInSidepanelExample,
-        SkeletonButtonExample,
-        SkeletonBadgeExample,
-        SkeletonTagExample,
-        SkeletonAlertExample,
+        SkeletonElementsExample,
+        SkeletonTypographyExample,
         SkeletonDlExample,
         SkeletonTableExample,
-        SkeletonTypographyExample,
-        SkeletonListExample,
-        SkeletonTreeExample
+        SkeletonGridExample,
+        SkeletonGroupExample,
+        SkeletonFormFieldExample,
+        SkeletonAccordionExample,
+        SkeletonCheckableExample,
+        SkeletonTabsExample,
+        SkeletonTreeExample,
+        SkeletonCodeBlockExample,
+        SkeletonInSidepanelExample
     ],
     template: `
         <skeleton-overview-example />
         <hr />
 
-        <skeleton-in-sidepanel-example />
+        <skeleton-elements-example />
         <hr />
 
-        <skeleton-button-example />
-        <hr />
-
-        <skeleton-badge-example />
-        <hr />
-
-        <skeleton-tag-example />
-        <hr />
-
-        <skeleton-alert-example />
+        <skeleton-typography-example />
         <hr />
 
         <skeleton-dl-example />
@@ -54,13 +51,31 @@ import { DevThemeToggle } from '../theme-toggle';
         <skeleton-table-example />
         <hr />
 
-        <skeleton-typography-example />
+        <skeleton-grid-example />
         <hr />
 
-        <skeleton-list-example />
+        <skeleton-group-example />
+        <hr />
+
+        <skeleton-form-field-example />
+        <hr />
+
+        <skeleton-accordion-example />
+        <hr />
+
+        <skeleton-checkable-example />
+        <hr />
+
+        <skeleton-tabs-example />
         <hr />
 
         <skeleton-tree-example />
+        <hr />
+
+        <skeleton-code-block-example />
+        <hr />
+
+        <skeleton-in-sidepanel-example />
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -5,6 +5,114 @@
     --kbq-skeleton-wave-width: 100px;
 }
 
+:where(.kbq-skeleton-typography) {
+    --kbq-skeleton-typography-gap: var(--kbq-size-xxs);
+    --kbq-skeleton-typography-line-width-1: 80%;
+    --kbq-skeleton-typography-line-width-2: 100%;
+    --kbq-skeleton-typography-line-width-3: 60%;
+    --kbq-skeleton-typography-single-line-width: 50%;
+}
+
+// Rows and gaps of .kbq-dl, so the list does not move once it replaces the preset.
+:where(.kbq-skeleton-dl) {
+    --kbq-skeleton-dl-term-width: 120px;
+    --kbq-skeleton-dl-line-height: var(--kbq-size-l);
+    --kbq-skeleton-dl-row-height: var(--kbq-size-xl);
+    --kbq-skeleton-dl-column-gap: var(--kbq-size-l);
+    --kbq-skeleton-dl-row-gap: var(--kbq-size-l);
+    --kbq-skeleton-dl-line-width-1: 80%;
+    --kbq-skeleton-dl-line-width-2: 100%;
+    --kbq-skeleton-dl-line-width-3: 60%;
+}
+
+// Rows of .kbq-table: 10px of padding around a 20px line.
+:where(.kbq-skeleton-table) {
+    --kbq-skeleton-table-row-height: var(--kbq-size-4xl);
+    --kbq-skeleton-table-line-height: var(--kbq-size-l);
+    --kbq-skeleton-table-cell-padding-horizontal: var(--kbq-size-s);
+    --kbq-skeleton-table-border-width: var(--kbq-size-border-width);
+    --kbq-skeleton-table-border-color: var(--kbq-line-contrast-less);
+    --kbq-skeleton-table-selection-width: var(--kbq-size-4xl);
+    --kbq-skeleton-table-selection-size: var(--kbq-size-l);
+}
+
+// The gap of .kbq-tag-list, and that of a row of buttons.
+:where(.kbq-skeleton-group) {
+    --kbq-skeleton-group-gap: var(--kbq-size-xxs);
+}
+
+:where(.kbq-skeleton-group_button) {
+    --kbq-skeleton-group-gap: var(--kbq-size-s);
+}
+
+// Lines of .kbq-form-field: a 20px label, a 32px input or a 72px textarea with its container,
+// and a 16px hint, 6px apart.
+:where(.kbq-skeleton-form-field) {
+    --kbq-skeleton-form-field-label-width: 120px;
+    --kbq-skeleton-form-field-label-height: var(--kbq-size-xl);
+    --kbq-skeleton-form-field-line-height: var(--kbq-size-l);
+    --kbq-skeleton-form-field-control-height: var(--kbq-size-3xl);
+    --kbq-skeleton-form-field-textarea-height: 72px;
+    --kbq-skeleton-form-field-hint-width: 60%;
+    --kbq-skeleton-form-field-hint-height: var(--kbq-size-l);
+    --kbq-skeleton-form-field-gap: var(--kbq-size-xs);
+}
+
+// An item of .kbq-accordion: a 36px header inside a 2px border, with a 16px icon padded to 24px.
+:where(.kbq-skeleton-accordion) {
+    --kbq-skeleton-accordion-header-height: 36px;
+    --kbq-skeleton-accordion-border-width: 2px;
+    --kbq-skeleton-accordion-padding: var(--kbq-size-xs) var(--kbq-size-s);
+    --kbq-skeleton-accordion-icon-size: var(--kbq-size-l);
+    --kbq-skeleton-accordion-icon-padding: var(--kbq-size-xxs);
+    --kbq-skeleton-accordion-line-height: var(--kbq-size-l);
+}
+
+// A 16px control 8px away from the 20px line of the label, and the 16px line of the hint 2px below.
+:where(.kbq-skeleton-checkable) {
+    --kbq-skeleton-checkable-gap: var(--kbq-size-s);
+    --kbq-skeleton-checkable-control-gap: var(--kbq-size-s);
+    --kbq-skeleton-checkable-control-width: var(--kbq-size-l);
+    --kbq-skeleton-checkable-control-height: var(--kbq-size-l);
+    --kbq-skeleton-checkable-label-line-height: var(--kbq-size-xl);
+    --kbq-skeleton-checkable-line-height: var(--kbq-size-l);
+    --kbq-skeleton-checkable-label-width-1: 120px;
+    --kbq-skeleton-checkable-label-width-2: 140px;
+    --kbq-skeleton-checkable-label-width-3: 80px;
+    --kbq-skeleton-checkable-hint-width: 60%;
+    --kbq-skeleton-checkable-hint-height: var(--kbq-size-l);
+    --kbq-skeleton-checkable-hint-gap: var(--kbq-size-3xs);
+}
+
+:where(.kbq-skeleton-checkable_toggle) {
+    --kbq-skeleton-checkable-control-width: 28px;
+}
+
+// Tabs of .kbq-tab-group: 32px tabs 8px apart, the selected one filled.
+:where(.kbq-skeleton-tabs) {
+    --kbq-skeleton-tabs-tab-height: var(--kbq-size-3xl);
+    --kbq-skeleton-tabs-tab-width: var(--kbq-size-6xl);
+    --kbq-skeleton-tabs-tab-padding: var(--kbq-size-m);
+    --kbq-skeleton-tabs-line-height: var(--kbq-size-l);
+    --kbq-skeleton-tabs-gap: var(--kbq-size-s);
+    --kbq-skeleton-tabs-content-gap: var(--kbq-size-s);
+    --kbq-skeleton-tabs-vertical-width: 160px;
+}
+
+// Nodes of .kbq-tree-selection indented by kbqTreeNodePadding with its default: 32px rows with a 16px toggle 12px in,
+// and 14px further for a child.
+:where(.kbq-skeleton-tree) {
+    --kbq-skeleton-tree-node-height: var(--kbq-size-3xl);
+    --kbq-skeleton-tree-padding: var(--kbq-size-m);
+    --kbq-skeleton-tree-indent: 14px;
+    --kbq-skeleton-tree-gap: var(--kbq-size-s);
+    --kbq-skeleton-tree-toggle-size: var(--kbq-size-l);
+    --kbq-skeleton-tree-line-height: var(--kbq-size-l);
+    --kbq-skeleton-tree-label-width-1: 120px;
+    --kbq-skeleton-tree-label-width-2: 100px;
+    --kbq-skeleton-tree-label-width-3: 80px;
+}
+
 // The filter paints the host as a flat black shape; only the alpha of `fill` and of the wave colors is used,
 // as mask layers that thin that shape out. Declared on the theme and inherited, like the wave colors, so that the
 // nearest theme wins: a `.kbq-dark .kbq-skeleton` rule would also match inside a light section of a dark page.

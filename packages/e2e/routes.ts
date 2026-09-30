@@ -192,7 +192,13 @@ import {
     E2eSidepanelScrollbarNoOverflow,
     E2eSidepanelStateAndStyle
 } from '../components/sidepanel/e2e';
-import { E2eSkeletonBorderRadius } from '../components/skeleton/e2e';
+import {
+    E2eSkeletonBorderRadius,
+    E2eSkeletonComponentPresets,
+    E2eSkeletonPresetList,
+    E2eSkeletonPresets,
+    E2eSkeletonStates
+} from '../components/skeleton/e2e';
 import {
     E2eSplitButtonDropdown,
     E2eSplitButtonStateAndStyle,
@@ -421,6 +427,10 @@ const components: Record<string, Type<unknown>> = {
     E2eSidepanelScrollbarNoOverflow,
     E2eSidepanelComponentPortal,
     E2eSkeletonBorderRadius,
+    E2eSkeletonComponentPresets,
+    E2eSkeletonPresetList,
+    E2eSkeletonPresets,
+    E2eSkeletonStates,
     E2eHorizontalNavbarStates,
     E2eVerticalNavbarStates,
     E2eVerticalNavbarBrandAutoLongTitle,
