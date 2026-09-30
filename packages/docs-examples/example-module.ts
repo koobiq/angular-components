@@ -2454,6 +2454,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-no-options-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-not-specified": {
+    "packagePath": "components/filter-bar/filter-bar-not-specified",
+    "title": "filter-bar-not-specified",
+    "componentName": "FilterBarNotSpecifiedExample",
+    "files": [
+      "filter-bar-not-specified-example.ts"
+    ],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
+    "selector": "filter-bar-not-specified-example",
+    "primaryFile": "filter-bar-not-specified-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-option-caption": {
     "packagePath": "components/filter-bar/filter-bar-option-caption",
     "title": "filter-bar-option-caption",
@@ -7861,6 +7875,7 @@ export type LiveExampleId =
   | 'filter-bar-locked-options'
   | 'filter-bar-master-checkbox'
   | 'filter-bar-no-options'
+  | 'filter-bar-not-specified'
   | 'filter-bar-option-caption'
   | 'filter-bar-overview'
   | 'filter-bar-panel-max-height'
