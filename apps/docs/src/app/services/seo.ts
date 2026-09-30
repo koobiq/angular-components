@@ -73,7 +73,11 @@ export type DocsResolvedSeo = {
     description: string;
     canonicalUrl: string | null;
     alternates: ReadonlyArray<{ locale: DocsLocale | 'x-default'; url: string }>;
-    /** The Markdown of the structure item the page belongs to, which agents read instead of the page: English only. */
+    /**
+     * The Markdown of the structure item the page belongs to, which agents read instead of the page. Relative: the page
+     * is prerendered before it knows its host, and the file is next to it on every one, the next version and the
+     * previews of pull requests included.
+     */
     markdownUrl: string | null;
     image: DocsSeoImage;
     locale: DocsLocale;
@@ -183,9 +187,13 @@ export const docsResolveSeo = (
     const item = categoryId && itemId ? docsGetItemById(itemId, categoryId) : undefined;
 
     if (item) {
-        const markdownUrl = `${SITE_ORIGIN}${docsGetMarkdownPath(item)}`;
-
-        return { ...resolveItemSeo(item, tab, locale), canonicalUrl, alternates, markdownUrl, locale };
+        return {
+            ...resolveItemSeo(item, tab, locale),
+            canonicalUrl,
+            alternates,
+            markdownUrl: docsGetMarkdownPath(item, locale),
+            locale
+        };
     }
 
     if (categoryId === DocsStructureCategoryId.Icons) {

@@ -1,11 +1,13 @@
 /**
- * Generates the documentation for agents, in English: the Markdown of every structure item and `llms-full.txt` into
- * `dist/docs-llms`, which the documentation site serves from its root, and the committed index `llms.txt`.
+ * Generates the documentation for agents, in English: the Markdown of every structure item, under every locale, and
+ * `llms-full.txt` into `dist/docs-llms`, which the documentation site serves from its root, and the committed index
+ * `llms.txt`.
  * Needs the manifest `yarn run docs:api-gen` writes.
  */
 import { mkdirSync, rmSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { format, resolveConfig } from 'prettier';
+import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
 import { docsGetCategories, DocsStructureItem } from '../../apps/docs/src/app/structure';
 import { renderItemMarkdown } from './item-markdown';
 import { LLMS_FULL_TXT, LlmsCategory, LlmsHeader, renderLlmsFullTxt, renderLlmsTxt } from './llms-txt';
@@ -50,7 +52,10 @@ export const generateLlms = async (): Promise<LlmsOutput> => {
         for (const item of category.items) {
             const markdown = renderItemMarkdown(item, sources, { depth: 1 });
 
-            if (markdown) files.set(getMarkdownPath(item), `${markdown}\n`);
+            // The same English text next to the pages of every locale: each links the Markdown at its own address.
+            for (const locale of Object.values(DocsLocale)) {
+                if (markdown) files.set(getMarkdownPath(item, locale), `${markdown}\n`);
+            }
 
             const fullItem = renderItemMarkdown(item, sources, { depth: 2, apiListedBy });
 

@@ -1,9 +1,10 @@
 /**
  * Checks the documentation for agents without writing it: the committed `llms.txt` is what the generator writes now,
- * every item of the documentation has its Markdown, and every file the site serves is plain Markdown an agent can read
- * without the site (see `findMarkdownProblems`). Needs the manifest `yarn run docs:api-gen` writes.
+ * every item of the documentation has its Markdown under every locale, and every file the site serves is plain Markdown
+ * an agent can read without the site (see `findMarkdownProblems`). Needs the manifest `yarn run docs:api-gen` writes.
  */
 import { readFileSync } from 'fs';
+import { DocsLocale } from '../../apps/docs/src/app/constants/locale';
 import { docsGetItems } from '../../apps/docs/src/app/structure';
 import { generateLlms, LLMS_TXT_PATH } from './generate';
 import { LLMS_FULL_TXT, LLMS_TXT } from './llms-txt';
@@ -34,11 +35,26 @@ const checkLlms = async (): Promise<void> => {
         );
     }
 
+    // Every locale holds the English Markdown: its copies are checked for being the same, the English one for the rest.
+    const copies = new Set<string>();
+
     for (const item of docsGetItems()) {
-        if (!files.has(getMarkdownPath(item))) errors.push(`${item.categoryId}/${item.id}: no Markdown`);
+        const english = files.get(getMarkdownPath(item, DocsLocale.En));
+
+        for (const locale of Object.values(DocsLocale)) {
+            const path = getMarkdownPath(item, locale);
+
+            if (!files.has(path)) {
+                errors.push(`${item.categoryId}/${item.id}: no Markdown in "${locale}"`);
+            } else if (locale !== DocsLocale.En) {
+                copies.add(path);
+
+                if (files.get(path) !== english) errors.push(`${path}: differs from the English Markdown`);
+            }
+        }
     }
 
-    for (const [path, text] of [[LLMS_TXT, llmsTxt], ...files]) {
+    for (const [path, text] of [[LLMS_TXT, llmsTxt], ...files].filter(([path]) => !copies.has(path))) {
         errors.push(...findMarkdownProblems(text, served).map((problem) => `${path}: ${problem}`));
 
         if (path !== LLMS_TXT && path !== LLMS_FULL_TXT && text.length > LARGE_FILE_LENGTH) largeFiles.push(path);
@@ -47,7 +63,7 @@ const checkLlms = async (): Promise<void> => {
     const sizes = [...files].map(([path, text]) => ({ path, size: Buffer.byteLength(text) }));
     const total = sizes.reduce((sum, { size }) => sum + size, 0);
     const largest = sizes
-        .filter(({ path }) => path !== LLMS_FULL_TXT)
+        .filter(({ path }) => path !== LLMS_FULL_TXT && !copies.has(path))
         .sort((a, b) => b.size - a.size)
         .slice(0, 5)
         .map(({ path, size }) => `${path} ${Math.round(size / 1024)} KB`);
