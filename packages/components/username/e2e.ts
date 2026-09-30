@@ -115,3 +115,45 @@ export class E2eUsernameStateAndStyle {
         ]
     ]);
 }
+
+/**
+ * `text` is the only mode that flows inside a sentence: `inline` makes the host a flex container, which
+ * is block-level and breaks the line. Neither is clipped here, which is why `text` attaches no
+ * `kbq-title` — there is no ellipsis for it to detect.
+ */
+@Component({
+    selector: 'e2e-username-in-prose',
+    imports: [
+        KbqUsername
+    ],
+    template: `
+        <div data-testid="e2eUsernameProse">
+            @for (mode of modes(); track mode) {
+                <p>
+                    Assigned by
+                    <kbq-username [userInfo]="profile" [mode]="mode" />
+                    earlier today.
+                </p>
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            p {
+                width: 320px;
+                margin: 0 0 8px;
+            }
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eUsernameInProse'
+    }
+})
+export class E2eUsernameInProse {
+    protected readonly profile = fullProfile;
+    protected readonly modes = signal<KbqUsernameMode[]>([
+        'text',
+        'inline'
+    ]);
+}

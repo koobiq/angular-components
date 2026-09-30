@@ -157,9 +157,10 @@ export class KbqUsername {
     );
 
     /**
-     * Whether the layout can clip its text. `text` mode applies no ellipsis, so the `kbq-title`
-     * measurement — a resize observer, a content observer and a focus monitor per part — has nothing to
-     * detect there and is not attached.
+     * Whether the layout can clip its text. `kbq-truncate-line()` is applied to `stacked` and `inline`
+     * only, so in `text` mode nothing is ever clipped and the verdict `kbq-title` computes is known in
+     * advance. Attaching it there would cost a `MutationObserver` per part and a forced layout read on
+     * every resize and every content mutation, for a tooltip that could never show.
      * @docs-private
      */
     protected readonly canTruncate = computed(() => this.mode() !== 'text');

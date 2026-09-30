@@ -75,7 +75,7 @@ export type KbqUserInfo = {
  *
  * - `stacked`: Elements shown vertically.
  * - `inline`: Elements shown in one line. Text ellipsis is applied to both parts.
- * - `text`: Plain text, no layout styling. No text-ellipsis.
+ * - `text`: `display: inline`, so the username flows inside a sentence; nothing clips it, hence no title.
  */
 export type KbqUsernameMode = 'stacked' | 'inline' | 'text';
 
