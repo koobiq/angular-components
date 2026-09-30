@@ -23,43 +23,13 @@ export class FilterBarNoOptionsExample {
 
     pipeTemplates: KbqPipeTemplate[] = [
         {
-            name: 'Select',
-            id: 'Select',
+            name: 'Tenant',
+            id: 'Tenant',
             type: KbqPipeTypes.Select,
             values: [],
 
             cleanable: false,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'MultiSelect',
-            id: 'MultiSelect',
-            type: KbqPipeTypes.MultiSelect,
-            values: [],
-
-            cleanable: false,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'TreeSelect',
-            id: 'TreeSelect',
-            type: KbqPipeTypes.TreeSelect,
-            values: [],
-
-            cleanable: false,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'MultiTreeSelect',
-            id: 'MultiTreeSelect',
-            type: KbqPipeTypes.MultiTreeSelect,
-            values: [],
-
-            cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         }
     ];
@@ -73,49 +43,14 @@ export class FilterBarNoOptionsExample {
             saved: false,
             pipes: [
                 {
-                    name: 'Select',
-                    id: 'Select',
+                    name: 'Tenant',
+                    id: 'Tenant',
                     type: KbqPipeTypes.Select,
                     value: null,
                     search: true,
 
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'MultiSelect',
-                    id: 'MultiSelect',
-                    type: KbqPipeTypes.MultiSelect,
-                    value: null,
-                    search: true,
-                    selectAll: true,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'TreeSelect',
-                    id: 'TreeSelect',
-                    type: KbqPipeTypes.TreeSelect,
-                    value: null,
-                    search: true,
-
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'MultiTreeSelect',
-                    id: 'MultiTreeSelect',
-                    type: KbqPipeTypes.MultiTreeSelect,
-                    value: null,
-                    search: true,
-                    selectAll: true,
-
-                    cleanable: true,
-                    removable: false,
+                    cleanable: false,
+                    removable: true,
                     disabled: false
                 }
             ]

@@ -67,9 +67,6 @@ const DEV_DATA_OBJECT = {
         <filter-bar-no-options-example />
         <br />
         <br />
-        <filter-bar-no-options-text-example />
-        <br />
-        <br />
         <filter-bar-locked-options-example />
         <br />
         <br />

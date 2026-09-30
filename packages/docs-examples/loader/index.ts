@@ -401,8 +401,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarLockedOptionsExample);
         case 'filter-bar-master-checkbox':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarMasterCheckboxExample);
-        case 'filter-bar-no-options-text':
-            return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarNoOptionsTextExample);
         case 'filter-bar-no-options':
             return import('@koobiq/docs-examples/components/filter-bar').then((m) => m.FilterBarNoOptionsExample);
         case 'filter-bar-option-caption':

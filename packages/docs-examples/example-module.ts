@@ -2442,18 +2442,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-master-checkbox-example.ts",
     "importPath": "components/filter-bar"
   },
-  "filter-bar-no-options-text": {
-    "packagePath": "components/filter-bar/filter-bar-no-options-text",
-    "title": "filter-bar-no-options-text",
-    "componentName": "FilterBarNoOptionsTextExample",
-    "files": [
-      "filter-bar-no-options-text-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "filter-bar-no-options-text-example",
-    "primaryFile": "filter-bar-no-options-text-example.ts",
-    "importPath": "components/filter-bar"
-  },
   "filter-bar-no-options": {
     "packagePath": "components/filter-bar/filter-bar-no-options",
     "title": "filter-bar-no-options",
@@ -7872,7 +7860,6 @@ export type LiveExampleId =
   | 'filter-bar-localization'
   | 'filter-bar-locked-options'
   | 'filter-bar-master-checkbox'
-  | 'filter-bar-no-options-text'
   | 'filter-bar-no-options'
   | 'filter-bar-option-caption'
   | 'filter-bar-overview'
