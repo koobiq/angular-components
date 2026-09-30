@@ -273,6 +273,35 @@ describe(KbqUsername.name, () => {
         });
     });
 
+    /**
+     * `textOf` collapses whitespace and `\s` covers `\u00A0`, so every assertion above reads a plain space
+     * where the compact layout emits a non-breaking one. The separator has to be asserted on the raw text,
+     * and a screenshot cannot stand in for it: the two characters have the same advance width, so they
+     * differ only once the line wraps.
+     */
+    it('should keep the compact site parenthetical on the same line with a non-breaking space', () => {
+        const fixture = createComponent(TestComponent);
+
+        fixture.componentInstance.isCompact.set(true);
+        fixture.componentInstance.userInfo.set({ lastName: 'Root', login: 'mroot', site: 'corp' });
+        fixture.detectChanges();
+
+        const primary = fixture.debugElement.query(By.css('.kbq-username__primary'));
+
+        expect(primary.nativeElement.textContent).toContain('\u00A0(corp)');
+    });
+
+    it('should separate the site parenthetical with ordinary whitespace outside the compact layout', () => {
+        const fixture = createComponent(TestComponent);
+
+        fixture.componentInstance.userInfo.set({ lastName: 'Root', login: 'mroot', site: 'corp' });
+        fixture.detectChanges();
+
+        const secondary = fixture.debugElement.query(By.css('.kbq-username__secondary'));
+
+        expect(secondary.nativeElement.textContent).not.toContain('\u00A0');
+    });
+
     it('should honour a component-scoped mapping on both the rendered and the injected path', () => {
         const fixture = createComponent(ScopedMappingComponent);
 
