@@ -110,7 +110,7 @@ export const ruRULocaleData = {
             applyButton: 'Применить',
             emptySearchResult: 'Ничего не найдено',
             selectAll: 'Выбрать все',
-            noOptions: 'Нет вариантов'
+            noOptions: 'Нет доступных опций'
         },
         datePipe: {
             customPeriod: 'Произвольный период',

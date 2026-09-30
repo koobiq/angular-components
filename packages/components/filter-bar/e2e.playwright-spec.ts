@@ -456,7 +456,7 @@ test.describe('KbqFilterBarModule', () => {
 
                 const panel = page.locator('.cdk-overlay-pane');
 
-                await expect(panel.locator('.kbq-select-no-options')).toHaveText('Нет вариантов');
+                await expect(panel.locator('.kbq-select-no-options')).toHaveText('Нет доступных опций');
                 await expect(panel.locator('input')).toHaveCount(0);
                 await expect(panel.locator('.kbq-option, .kbq-tree-option')).toHaveCount(0);
             });
