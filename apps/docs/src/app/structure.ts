@@ -1222,8 +1222,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'input',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false,
-                    isNew: expiresAt('2026-09-25')
+                    hasExamples: false
                 }
             ]
         }

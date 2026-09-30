@@ -328,6 +328,7 @@ Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](http
 | Font           | Weight | Style  |
 | -------------- | ------ | ------ |
 | JetBrains Mono | 400    | Normal |
+| JetBrains Mono | 600    | Normal |
 | JetBrains Mono | 700    | Normal |
 | Inter          | 400    | Normal |
 | Inter          | 400    | Italic |
@@ -359,6 +360,7 @@ Then you add the following code inside your global styles:
 
 // JetBrains Mono
 @import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
 ```
 
@@ -375,7 +377,7 @@ Add the following code inside your `<head>` tag:
     rel="stylesheet"
 />
 <!-- JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
 ```
 
 ### schematics
@@ -482,6 +484,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 4. **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
 5. **20.2.0**: the move of the filter-bar API to signals.
 6. **20.2.0**: one shared mechanism for dropdown panel width.
+7. **20.2.0**: the move of the alert API to signals.
 
 ### 1. Upgrade to 18.5.3
 
@@ -750,6 +753,48 @@ const w = this.select.panelWidth();
 
 **`kbq-dropdown`'s minimum width is now measured with `getBoundingClientRect()`** (the trigger's full border-box) instead of `getComputedStyle().width` minus its borders (the old, incorrectly-computed content-box). A trigger with padding or a border renders a wider panel than before by that amount; a trigger with neither is unaffected.
 
+### 7. Alert upgrade (20.2.0)
+
+`KbqAlert` finished its move to signals and closed the members that were never part of its contract. Template bindings are untouched — `[compact]`, `[alertStyle]` and `[alertColor]` bind exactly as before; what changed is programmatic access and one input's value.
+
+`alertColor` was an asymmetric accessor: the setter took a color, the getter returned the CSS class built from it. Reading back an `'error'` you had assigned gave you `'kbq-alert_error'`, so `alert.alertColor === KbqAlertColors.Error` was never true, and a single read-then-write stored the class into the color and produced `kbq-alert_kbq-alert_error` — a class no theme rule matches, so the alert lost its background. It is a read-only input signal now and reports the raw color.
+
+| Member                                                                             | Before                     | After                                               |
+| ---------------------------------------------------------------------------------- | -------------------------- | --------------------------------------------------- |
+| `compact`                                                                          | `boolean`                  | `InputSignalWithTransform`, `booleanAttribute`      |
+| `alertStyle`                                                                       | `KbqAlertStyles \| string` | `InputSignal<'default' \| 'colored'>`               |
+| `alertColor`                                                                       | accessor pair              | read-only `InputSignalWithTransform`, value changed |
+| `icon` / `iconItem` / `button` / `title` / `control` / `closeButton` / `isColored` | public                     | `protected`                                         |
+
+| Pattern                                        | Manual migration                                                                                 |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `.compact` / `.alertStyle`                     | Read them as calls — `alert.compact()`; the value is unchanged                                   |
+| `.alertColor`                                  | `alert.alertColor()` reports `'error'`, not `'kbq-alert_error'` — drop any class-string parsing  |
+| `.alertColor = …`                              | The input is read-only; drive it with `[alertColor]`                                             |
+| `[alertColor]="'danger'"`                      | Both inputs are narrowed to their enum literals, so a typo no longer compiles                    |
+| Projected content inside a wrapper element     | The slot queries are `descendants: false`; project the slots as direct children of `<kbq-alert>` |
+| `A11yModule` / `PlatformModule` via the module | `KbqAlertModule` no longer re-exports them; import them from `@angular/cdk` yourself             |
+
+**`<kbq-alert compact>` now does what it reads like.** Without the `booleanAttribute` transform the bare attribute bound the empty string, which is falsy, so the alert stayed at its normal size. Markup that carried the attribute as decoration turns compact after the update.
+
+Additive, with nothing to migrate: a `closed` output that fires when the projected close control is activated (the alert still does not hide itself), and `exportAs` on the component and all three directives. Three fixes come for free: the projected status icon is auto-tinted reactively instead of once after content init, so a changing `[alertColor]` no longer leaves a red icon on a green alert; the normal-size icon padding uses the token that matches its state; and in the light theme the default-style warning and success icons are darkened to clear the WCAG 3:1 non-text contrast minimum.
+
+#### Running the migration
+
+The `alert-signals` schematic runs automatically:
+
+```bash
+ng update @koobiq/components@20
+```
+
+Or manually — for example, if you have already upgraded to 20.2.0:
+
+```bash
+ng g @koobiq/components:alert-signals --project <your project>
+```
+
+Handled by `alert-signals`: the `compact` and `alertStyle` reads are rewritten, the rest is reported.
+
 ### After the migration
 
 The migration is regex-based and does not rewrite aliased imports, local variables, or re-exports — **review the diff before committing**, rebuild the project and run your tests. The full list of breaking changes is on the [Angular 20 breaking changes](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.en.md) page.
@@ -835,6 +880,7 @@ import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -842,6 +888,7 @@ import * as i1 from '@koobiq/components/icon';
 import { InjectionToken } from '@angular/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
@@ -902,7 +949,7 @@ export class KbqAccordionContent {
 }
 
 // @public (undocumented)
-export class KbqAccordionContentDirective implements AfterViewInit {
+export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewInit {
     constructor();
     get contentId(): string;
     // (undocumented)
@@ -914,6 +961,11 @@ export class KbqAccordionContentDirective implements AfterViewInit {
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngDoCheck(): void;
+    // (undocumented)
+    ngOnInit(): void;
+    protected onTransitionEnd(event: TransitionEvent): void;
     // (undocumented)
     toggle(): void;
     get triggerId(): string;
@@ -935,7 +987,7 @@ export class KbqAccordionHeader {
 }
 
 // @public (undocumented)
-export class KbqAccordionItem implements OnDestroy {
+export class KbqAccordionItem implements OnInit, OnDestroy {
     constructor();
     readonly accordion: KbqAccordion;
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -960,6 +1012,8 @@ export class KbqAccordionItem implements OnDestroy {
     static ngAcceptInputType_expanded: unknown;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     open(): void;
     readonly opened: _angular_core.OutputEmitterRef<void>;
     get orientation(): KbqAccordionOrientation;
@@ -1803,6 +1857,8 @@ By default, alerts are styled conservatively and stand out only by the icon colo
 ### Status
 
 The `alertColor` input sets the status: `error`, `warning`, `success` or `info` (the default). It drives the background in the colored variant and auto-tints a projected status icon that has no explicit `[color]`: the icon is tinted to the matching status color, except `info`, which is tinted to `contrast`. Set `[color]` on the icon yourself to opt out of the auto-tint.
+
+Project a single status icon. The slot renders every `[kbq-icon]` and `[kbq-icon-item]` it receives but auto-tints only one of them — a `kbq-icon` wins over a `kbq-icon-item` — so any further icon keeps whatever color it was given. Projecting one of each also logs a warning in dev mode.
 
 <!-- example(alert-status) -->
 
@@ -3145,6 +3201,8 @@ export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfigu
 
 // @public
 export class KbqBreadcrumbButton implements OnInit {
+    // (undocumented)
+    protected readonly element: HTMLElement;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
@@ -6250,6 +6308,7 @@ export const enUSLocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -6514,6 +6573,7 @@ export const esLALocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -7040,6 +7100,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -7279,6 +7340,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -7514,6 +7576,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -7755,6 +7818,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -7992,6 +8056,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 apply: string;
                 cancel: string;
                 rangeLabel: string;
+                outOfBoundsError: string;
                 allTime: string;
                 currentQuarter: string;
                 currentYear: string;
@@ -8634,6 +8699,9 @@ export class KbqFormsModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormsModule, never, [typeof KbqForm, typeof KbqFormElement], [typeof KbqForm, typeof KbqFormElement]>;
 }
+
+// @public
+export const kbqGetElementHeight: (element: Element) => number;
 
 // @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
@@ -9462,6 +9530,14 @@ export class KbqSelectFooter {
 }
 
 // @public
+export class KbqSelectFooterItem {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSelectFooterItem, "[kbq-select-footer-item]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectFooterItem, never>;
+}
+
+// @public
 export type KbqSelectLocaleConfiguration = {
     hiddenItemsText: string;
     selectAll: string;
@@ -9612,6 +9688,7 @@ export type KbqTimeRangeLocaleConfig = {
         apply: string;
         cancel: string;
         rangeLabel: string;
+        outOfBoundsError?: string;
         allTime: string;
         currentQuarter: string;
         currentYear: string;
@@ -10217,6 +10294,7 @@ export const ptBRLocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -10671,6 +10749,7 @@ export const ruRULocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -11043,6 +11122,7 @@ export const tkTMLocaleData: {
             apply: string;
             cancel: string;
             rangeLabel: string;
+            outOfBoundsError: string;
             allTime: string;
             currentQuarter: string;
             currentYear: string;
@@ -14381,7 +14461,7 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeInputComponent, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated
 export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -18486,6 +18566,8 @@ A dialog may open from a user action. The system can also block the user with a 
 - Clicking outside the modal window. By default, modal windows do not close this way. However, closing by clicking outside the window can be useful when there is no risk of data loss and the system is not awaiting user input (for example, when there are no terminal buttons in the window).
 - The Esc key (equivalent to the "Cancel" button)
 
+The dialog closes on a left mouse button click only: the right and middle buttons open the browser's context menu or trigger its own actions and leave the window alone. The [side panel](/en/components/sidepanel) behaves the same way.
+
 Do not close a modal window automatically by timeout, as the user may not have had time to read the information inside.
 
 Sometimes the system cannot allow the user to return to interacting with the page. Even in this situation, the modal window should not be a dead end in the use case — action options must be provided. For example, if the system shows a window about an expired session, returning to the page in the background is not possible — but a link to the login page should be offered.
@@ -18573,7 +18655,7 @@ Opening one modal dialog from another is incorrect. But if it happens (as an eco
 
 #### Fully custom content
 
-When a modal is opened via `KbqModalService.open` with a `kbqComponent`, use the `kbq-modal-title`, `kbq-modal-body`, and `kbq-modal-footer` directives to compose the dialog. They keep the standard layout and scroll shadows, so a long body still casts a shadow onto the header and footer, exactly as in a modal created via `KbqModalService.create`.
+When a modal is opened via `KbqModalService.open` with a `kbqComponent`, use the `kbq-modal-title`, `kbq-modal-body`, and `kbq-modal-footer` directives to compose the dialog. To add a caption, place `kbq-modal-caption` inside `kbq-modal-title` — it is rendered in the dialog header, below the title. These directives keep the standard layout and scroll shadows, so a long body still casts a shadow onto the header and footer, exactly as in a modal created via `KbqModalService.create`.
 
 <!-- example(modal-full-custom) -->
 
@@ -18609,11 +18691,11 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/overlay';
-import * as i1 from '@koobiq/components/core';
-import * as i2 from '@angular/cdk/a11y';
+import * as i1 from '@koobiq/components/title';
+import * as i2$1 from '@angular/cdk/a11y';
+import * as i2 from '@koobiq/components/core';
 import * as i3 from '@koobiq/components/button';
 import * as i4 from '@koobiq/components/icon';
-import * as i5 from '@koobiq/components/title';
 import * as i6 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
@@ -18678,9 +18760,17 @@ export const KBQ_MODAL_DATA: InjectionToken<unknown>;
 export class KbqModalBody {
     constructor();
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }]>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, [{ directive: typeof i2.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalBody, never>;
+}
+
+// @public
+export class KbqModalCaption {
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalCaption, "[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]", never, {}, {}, never, ["*"], true, [{ directive: typeof i1.KbqTitleDirective; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalCaption, never>;
 }
 
 // @public (undocumented)
@@ -18870,7 +18960,7 @@ export class KbqModalModule {
     // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2.A11yModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i5.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2$1.A11yModule, typeof i3.KbqButtonModule, typeof i4.KbqIconModule, typeof i1.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
 }
 
 // @public
@@ -18925,7 +19015,7 @@ export class KbqModalTitle {
     // (undocumented)
     protected modal: KbqModalComponent<any, any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*", "kbq-modal-caption, [kbq-modal-caption], [kbqModalCaption]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalTitle, never>;
 }
@@ -22264,15 +22354,19 @@ Once everything is selected, the control can show a label of its own instead of 
 
 Inside a non-empty search field the first press selects the text of the field; the next one falls through to the options. The behaviour can be replaced wholesale with the `selectAllHandler` input — `onSelectAll` is then not emitted for the shortcut, as the handler owns the behaviour.
 
-##### Footer List
+##### Footer
 
-If additional controls need to be arranged, you can enable the display of a footer. You can display various auxiliary controls in the footer: buttons, links, tooltips.
+You can place auxiliary elements in the footer: actions, links, hints. It stays put while the list scrolls under it.
+
+An action is drawn as a row of the drop-down menu rather than as a form button: add `kbq-select-footer-item` to a native `button` or `a`, and it lines up with the options above it. Any click inside the footer closes the panel.
+
+With the panel open, `Tab` moves focus into the footer, visiting each interactive element in turn — an action row or a link alike — and `Shift + Tab` walks back the same way. Disabled controls are skipped, whether they carry the `disabled` attribute or the `kbq-disabled` class an `a` has to use instead. Once the controls run out, the next `Tab` closes the panel and returns focus to the field, as `Esc` does from anywhere in the footer.
 
 <!-- example(select-footer) -->
 
 #### Select height
 
-By default, the maximum height of the list is 256px. When there are many selections in the select-footer, the drop-down menu will appear scrolling.
+By default, the maximum height of the list is 256px. When there are many options, the drop-down menu becomes scrollable.
 
 You can customize the height if needed. For example, in a normal menu, 7-8 items are visible. If there are 10 options to choose from, you can increase the height of the list and show all the items without hiding a small part under the scroll. Use the `panelMaxHeight` attribute with a value in pixels.
 
@@ -22733,7 +22827,7 @@ export class KbqSelectModule {
     // (undocumented)
     static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqSelectModule>;
     // (undocumented)
-    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqSelect, typeof KbqOptionTooltip, typeof KbqSelectLoading, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText], [typeof KbqSelect, typeof KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSelectModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqIconModule, typeof i4.KbqTagsModule, typeof i5.KbqToolTipModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectFooterItem, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof i6.NgTemplateOutlet, typeof i7.A11yModule, typeof KbqSelect, typeof KbqOptionTooltip, typeof KbqSelectLoading, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText], [typeof KbqSelect, typeof KbqOptionTooltip, typeof i2.KbqOptionModule, typeof i2.KbqSelectSearch, typeof i2.KbqSelectFooter, typeof i2.KbqSelectFooterItem, typeof i2.KbqSelectMatcher, typeof i2.KbqSelectTrigger, typeof i2.KbqSelectSearchEmptyResult, typeof KbqSelectLoading, typeof i11.KbqFormFieldModule, typeof KbqSelectError, typeof KbqSelectNoOptions, typeof KbqSelectErrorText]>;
 }
 
 // @public
@@ -23030,6 +23124,8 @@ By default the sidepanel appears on the right, but depending on context it can a
 #### Modal mode (with page blocking)
 
 When opening, the sidepanel slides in from the edge of the screen and dims the rest of the page (indicating that the dimmed area is not interactive). When closed (or when the overlay is clicked), it slides back out.
+
+The sidepanel closes on a left mouse button click only: the right and middle buttons open the browser's context menu or trigger its own actions and leave the panel alone. The [modal dialog](/en/components/modal) behaves the same way.
 
 <!-- example(sidepanel-overview) -->
 
@@ -27228,7 +27324,11 @@ When there are no preset values, only the start and end of the period remain in 
 
 ### Selection restriction
 
-You can configure the minimum and maximum date. For example, a range from 2015 to 2017.
+You can configure the minimum and maximum date through `minDate` and `maxDate`.
+
+Both bounds take the time into account, not just the date. If you set `maxDate` to 31 December with no time, midnight is the only choice — to make the whole day available, set the time to 23:59.
+
+The bounds are shown in the picker: next to the "Period" option, or under the "to" field when there are no presets.
 
 <!-- example(time-range-min-max) -->
 
@@ -27256,7 +27356,6 @@ import { DurationUnit } from '@koobiq/date-adapter';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { FormGroupDirective } from '@angular/forms';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -27264,10 +27363,10 @@ import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimepicker } from '@koobiq/components/timepicker';
 import { KbqTimeRangeLocaleConfig } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
-import { NgForm } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
@@ -27337,6 +27436,7 @@ export class KbqTimeRange<T> implements ControlValueAccessor, OnInit {
     onApply(popover: KbqPopoverTrigger): void;
     onCancel(popover: KbqPopoverTrigger): void;
     onChange: (_value: KbqTimeRangeRange) => void;
+    protected onFooterPointerDown(): void;
     onTouch: () => void;
     // (undocumented)
     onVisibleChange(isVisible: boolean): void;
@@ -27372,6 +27472,7 @@ export type KbqTimeRangeCustomizableTitleContext = Partial<KbqTimeRangeTitleCont
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
     constructor();
     readonly availableTimeRangeTypes: _angular_core.InputSignal<KbqTimeRangeType[]>;
+    protected readonly boundsHint: _angular_core.Signal<string>;
     // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point index.d.ts
     protected readonly form: FormGroup<FormValue<T>>;
     protected readonly isRangeVisible: _angular_core.Signal<boolean>;
@@ -27381,9 +27482,14 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     readonly minDate: _angular_core.InputSignal<T | null>;
     // (undocumented)
     ngOnInit(): void;
+    // Warning: (ae-forgotten-export) The symbol "RangeBorder" needs to be exported by the entry point index.d.ts
+    protected onBorderFocusOut(border: RangeBorder, input: FocusEvent): void;
+    protected onBorderInput(border: RangeBorder): void;
     onChange: (_value: KbqTimeRangeRange) => void;
+    protected onRangeFocusOut(input: FocusEvent): void;
     onTouch: () => void;
     readonly optionTemplate: _angular_core.InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
+    protected outOfBoundsMessage(): string;
     // Warning: (ae-forgotten-export) The symbol "RangeErrorStateMatcher" needs to be exported by the entry point index.d.ts
     protected readonly rangeStateMatcher: RangeErrorStateMatcher;
     readonly rangeValue: _angular_core.InputSignal<Required<KbqRangeValue<T>>>;
