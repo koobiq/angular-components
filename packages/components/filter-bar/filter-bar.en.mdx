@@ -63,14 +63,6 @@ If there are many values, "Select All" will allow you to select all values ​�
 
 <Example id="filter-bar-master-checkbox" />
 
-### Parameter not specified
-
-The dropdown can offer a way to find objects whose parameter has no value. The option goes at the top of the list and is localized. Its wording can be chosen to agree with the name of the filter.
-
-<Example id="filter-bar-not-specified" />
-
-It is an ordinary option: add it first to the `values` of the pipe template.
-
 ### Locked values
 
 The `multiselect` and `multi-tree-select` pipe templates accept an optional `lockedValues` — the list of values whose selection cannot be removed. They are always selected: rendered as disabled options with a checked checkbox, kept by clearing the pipe, and folded into an incoming filter value silently, without a change event. A pipe holding nothing but its locked values reads as empty — it renders unfilled and hides its clear button. Note that "reads as empty" is about the UI only: because a pipe's `value` is meant to be applied as-is, clearing removes just the entries the user was able to select, and both `onClearPipe` and `onChangePipe` still carry a `value` listing the locked ones.
@@ -115,6 +107,12 @@ Add `caption` to the option value of a `select` or `multiselect` pipe to show a 
 Both lines are truncated by default; `multilineOptions: true` wraps them instead.
 
 <Example id="filter-bar-option-caption" />
+
+### Parameter not specified
+
+The dropdown can offer a way to find objects whose parameter has no value. The option goes at the top of the list and is localized. Its wording can be chosen to agree with the name of the filter.
+
+<Example id="filter-bar-not-specified" />
 
 ### No available values
 
