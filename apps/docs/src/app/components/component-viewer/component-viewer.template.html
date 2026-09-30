@@ -5,8 +5,8 @@
         <div docsRegisterHeader class="docs-component-name">
             {{ structureItem.name[locale()!] }}
         </div>
-        <div class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s">
-            @if (!structureItem.isGuide) {
+        @if (!structureItem.isGuide) {
+            <div class="docs-component-navbar layout-row layout-align-space-between-center layout-padding-top-s">
                 <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                     <a
                         kbqTabLink
@@ -40,19 +40,15 @@
                         </a>
                     }
                 </nav>
-            }
 
-            <div class="docs-component-navbar__actions">
                 @if (githubSourceUrl) {
                     <a kbq-link big target="_blank" rel="noopener noreferrer" [href]="githubSourceUrl">
                         <i kbq-icon="kbq-code_16"></i>
                         <span class="kbq-link__text">{{ t('viewSourceOnGitHub') }}</span>
                     </a>
                 }
-
-                <docs-copy-page [item]="structureItem" />
             </div>
-        </div>
+        }
     </div>
 }
 
