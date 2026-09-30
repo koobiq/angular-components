@@ -1,6 +1,6 @@
 `KbqSkeleton` is a temporary placeholder that occupies the space of the loading element and displays its approximate layout while the actual content is still loading.
 
-Put the `[kbqSkeleton]="loading"` directive right on a ready-made component or on text: while `loading` is true, the placeholder repeats its shape and size.
+Put the `kbqSkeleton` directive on a ready-made component or on text: while the data loads, the placeholder repeats its shape and size.
 
 <Example id="skeleton-overview" />
 
@@ -10,45 +10,65 @@ Until the data loads, show a preset in place of the component: a placeholder wit
 
 #### Elements
 
+Placeholders of a [button](en/components/button), a [badge](en/components/badge), a [tag](en/components/tag), an [icon](en/components/icon) and a [link](en/components/link).
+
 <Example id="skeleton-elements" />
 
 #### Typography
+
+A placeholder of text at any level of [typography](en/main/typography/overview).
 
 <Example id="skeleton-typography" />
 
 #### Description list
 
+A placeholder of a [description list](en/components/dl).
+
 <Example id="skeleton-dl" />
 
 #### Table
 
+A placeholder of a [table](en/components/table).
+
 <Example id="skeleton-table" />
+
+For [AG Grid](en/components/ag-grid/overview), the preset has row selection and pinned columns.
 
 <Example id="skeleton-grid" />
 
 #### Group
 
+A row of identical placeholders, such as for a [tag list](en/components/tag-list) or a row of [badges](en/components/badge).
+
 <Example id="skeleton-group" />
 
 #### Form field
+
+A placeholder of a [form field](en/components/form-field).
 
 <Example id="skeleton-form-field" />
 
 #### Accordion
 
+A placeholder of an [accordion](en/components/accordion).
+
 <Example id="skeleton-accordion" />
 
 #### Checkbox, radio button and toggle
+
+A placeholder of a [checkbox](en/components/checkbox), a [radio button](en/components/radio) or a [toggle](en/components/toggle).
 
 <Example id="skeleton-checkable" />
 
 #### Tabs
 
-A preset nested in `<kbq-skeleton-tabs>` is shown in place of the text.
+A placeholder of [tabs](en/components/tabs). A preset nested in `<kbq-skeleton-tabs>` is shown in place of the text.
 
 <Example id="skeleton-tabs" />
 
 #### Tree
+
+A placeholder of a [tree](en/components/tree).
 
 <Example id="skeleton-tree" />
 
@@ -82,13 +102,13 @@ import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skel
 
 #### Code block
 
-While the code loads, a `<kbq-skeleton>` of a fixed height of 100px holds the place of the code block.
+While the code loads, a `<kbq-skeleton>` of a fixed height holds the place of the [code block](en/components/code-block).
 
 <Example id="skeleton-code-block" />
 
 #### Panel loading
 
-The data of a side panel often arrives in parts. While a part loads, a preset holds its place: the buttons and the description come first, then the list of servers.
+The data of a [side panel](en/components/sidepanel) often arrives in parts. While a part loads, a preset holds its place, and the parts that have loaded show up at once, without waiting for the rest.
 
 <Example id="skeleton-in-sidepanel" />
 

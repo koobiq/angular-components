@@ -18,7 +18,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         <kbq-toggle [(ngModel)]="loading">Loading</kbq-toggle>
 
         @if (loading()) {
-            <kbq-skeleton [style.height.px]="100" />
+            <kbq-skeleton [style.height.px]="98" />
         } @else {
             <kbq-code-block lineNumbers [files]="files" />
         }
