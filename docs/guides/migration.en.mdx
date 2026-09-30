@@ -1300,11 +1300,9 @@ Handled by `checkbox-signals`: the one-way input reads are rewritten, the rest i
 
 #### Clamped text
 
-The expand/collapse control had no disclosure semantics, and the state was published on the element that cannot be operated. `aria-expanded` sat on the `<kbq-clamped-text>` host and on the `[kbqClampedList]` container — both role-less wrappers, where the attribute conveys nothing — while `kbqClampedListTrigger`, which takes the click and the Enter/Space keys, carried no `role`, no `aria-expanded` and no `aria-controls`. The trigger owns all four now, so a hand-written `role="button"` on it is a duplicate; an explicit `role` or `tabindex` on the element still wins over the directive's default.
+The disclosure semantics belong to `kbqClampedListTrigger` now: `role`, `tabindex`, `aria-expanded` and `aria-controls` all sit on it. `aria-expanded` used to sit on the `<kbq-clamped-text>` host and on the `[kbqClampedList]` container — role-less wrappers, where the attribute conveys nothing — while the trigger, which takes the click and the Enter/Space keys, carried neither a role nor any disclosure state. Neither container renders `aria-expanded` any more, a hand-written `role="button"` is a duplicate, and an explicit `role` or `tabindex` on the element still wins over the directive's default.
 
-`aria-expanded` is no longer rendered on either container. A selector or assertion that read the state off the wrapper has to read it off the trigger.
-
-`kbqClampedListTrigger` no longer applies `kbq-clamped-text__toggle`. That class has one rule, in the clamped-text stylesheet, injected only once a `KbqClampedText` exists — so a `kbqClampedList` trigger had spacing or not depending on whether an unrelated component happened to be on the page. The list trigger has no spacing of its own now: lay it out with the list, and drop any `margin-top` override written against it. The clamped-text toggle keeps the class, and its gap can be adjusted through `--kbq-clamped-text-size-toggle-margin`.
+`kbqClampedListTrigger` no longer applies `kbq-clamped-text__toggle`. That class has one rule, in the clamped-text stylesheet, which is injected together with a `KbqClampedText`: the `kbqClampedList` trigger had spacing whenever an unrelated component happened to be on the page. The list trigger has no spacing of its own now — drop any `margin-top` override written against it. The clamped-text toggle keeps the class, and `--kbq-clamped-text-size-toggle-margin` sets its gap.
 
 | Pattern                           | Manual migration                                                |
 | --------------------------------- | --------------------------------------------------------------- |
@@ -1314,9 +1312,15 @@ The expand/collapse control had no disclosure semantics, and the state was publi
 | `.hasToggle.set(…)`               | `hasToggle` is a read-only `Signal`, written by the measurement |
 | `.text()` / `.textContainer()`    | `protected`; query the element from your own template           |
 
-`isCollapsed` is a `model()` on `KbqClampedText`, so `isCollapsedChange` means what the guide always said it did: user intent. It no longer fires for the component's own first measurement, and no longer echoes a value the parent wrote into `[isCollapsed]` — wiring it to a route query parameter no longer writes one on every mount. A handler that relied on the mount-time emission to learn the initial state has to read it from `[(isCollapsed)]`. `KbqClampedList` is unaffected: its `isCollapsed` was already a `model()`.
+`isCollapsed` is a `model()` on `KbqClampedText`, so `isCollapsedChange` means user intent, as the guide always said it did. It fires when the toggle is operated; the component's first measurement and a value the parent wrote into `[isCollapsed]` no longer trigger it. A route query parameter is no longer rewritten on every mount, and a handler reads the initial state from `[(isCollapsed)]` rather than from the mount-time emission. `KbqClampedList` is unaffected: its `isCollapsed` was already a `model()`.
 
-Four fixes with nothing to migrate. Space and Enter on the trigger call `preventDefault()`, so Space stops scrolling the page while it expands, and a native `<button>` host stops toggling twice from the synthetic click. Collapsing scrolls with `{ block: 'nearest', inline: 'nearest' }` instead of centering on both axes, and `[scrollOnCollapse]="false"` turns it off. `rows` takes a string attribute now, so `rows="3"` compiles under `strictTemplates` the way `debounceTime="300"` already did, and `[debounceTime]` is re-read on every resize instead of once at `ngAfterViewInit`. And nothing renders before the first measurement any more: the toggle appears once the content is known to overflow, and the text stays clamped until then rather than shipping expanded — which is what the prerendered documentation page used to do.
+Fixes with nothing to migrate:
+
+- Space and Enter on the trigger call `preventDefault()`. Space no longer scrolls the page while it expands, and a native `<button>` host no longer toggles twice from the synthetic click.
+- Collapsing scrolls with `{ block: 'nearest', inline: 'nearest' }` instead of centering on both axes, and `[scrollOnCollapse]="false"` turns it off.
+- `rows` takes a string attribute, so `rows="3"` compiles under `strictTemplates`.
+- `[debounceTime]` is re-read on every resize instead of once at `ngAfterViewInit`.
+- The toggle does not appear before the first measurement, and the text stays clamped until then. The prerendered documentation page used to ship it expanded.
 
 Reported by `clamped-text-disclosure`.
 
