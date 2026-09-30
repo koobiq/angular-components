@@ -13,6 +13,19 @@ import {
  */
 const AUTOFILL_SUPPRESSION_DURATION = 600_000_000;
 
+/**
+ * Chromium re-rasterizes only the invalidated part of a tile, and the anti-aliased edge of a curve
+ * rasterized that way can come out a few percent off the same edge rasterized with the whole tile.
+ * A forced autofill never stops invalidating — the parked `background-color` transition repaints
+ * every autofilled control on every frame — so the rounded corners around the controls keep
+ * whichever rendering the last raster left, and which one that is depends on timing. Both autofill
+ * matrices failed on exactly that, with a byte-identical diff from one CI run to the next.
+ *
+ * Top-level because a launch option cannot be scoped to a describe. The other shots in this file
+ * are of pages that stop repainting before the capture, so they come out the same either way.
+ */
+test.use({ launchOptions: { args: ['--disable-partial-raster'] } });
+
 test.describe('KbqFormFieldModule', () => {
     test.describe('E2eFormFieldAddons', () => {
         test.beforeEach(async ({ page }) => page.goto('/E2eFormFieldAddons'));
@@ -757,32 +770,18 @@ test.describe('KbqFormFieldModule', () => {
              * back: once finished the transition is gone, so a later capture with 'allow' still
              * shows the blue. Measured, not guessed. Do not remove.
              *
-             * `threshold` is the price of that: these are the only shots in the suite Playwright does
-             * not stabilize, so the anti-aliased edges of the autofill tint land a few units either
-             * side of a rounding boundary from run to run — measured, `rgba(174,185,208)` against
-             * `rgba(179,189,211)`, about 2% of the YIQ range.
-             *
-             * A magnitude knob rather than `maxDiffPixels`, because the noise is a magnitude: this
-             * absorbs a 2% shift across any number of pixels, while `maxDiffPixels` would admit any
-             * number of *fully* wrong ones. That distinction matters here — the seam this block
-             * exists to catch is one pixel wide, so a count-based cap large enough for the noise
-             * would also be large enough to hide it.
+             * No `threshold`: the corner noise it used to absorb came from partial raster, which the
+             * `test.use` at the top of this file turns off, and the seam these shots exist to catch
+             * is one pixel wide.
              */
-            const screenshot = { animations: 'allow', threshold: 0.05 } as const;
+            const screenshot = { animations: 'allow' } as const;
 
             /**
              * Waits until the only animations left in the matrix are the parked autofill suppressions.
              *
-             * `animations: 'allow'` freezes nothing, so it preserves the 600000s `background-color`
-             * transition — and equally leaves every *other* transition in the matrix running,
-             * including the focus border's own colour transition. Shooting mid-transition is what
-             * put single border pixels a few units either side of a rounding boundary and past
-             * `threshold`; the measured worst offenders sat on the focused column's border and
-             * needed a threshold of 0.139 to absorb, nearly three times the one this block sets.
-             *
-             * Gating on the animations themselves rather than widening `threshold`, because the seam
-             * these shots exist to catch is one pixel wide — a tolerance loose enough for the noise
-             * would also be loose enough to hide it.
+             * `animations: 'allow'` freezes nothing, so it would equally let any *other* transition in
+             * the matrix be shot at an arbitrary point. Nothing else animates there today, so this
+             * returns at once; it is what keeps a transition added later from becoming a flake.
              */
             const expectSettledAnimations = async (matrix: Locator) =>
                 expect
@@ -872,8 +871,8 @@ test.describe('KbqFormFieldModule', () => {
 
                     await e2eEnableDarkTheme(page);
 
-                    // The theme swap restarts every colour transition in the matrix, so the settled
-                    // state has to be re-established rather than carried over from the light shot.
+                    // Re-established rather than carried over: a transition added later would run
+                    // again on the theme swap.
                     await expectSettledAnimations(matrix);
                     await expect(matrix).toHaveScreenshot(`${name}-dark.png`, screenshot);
                 });
