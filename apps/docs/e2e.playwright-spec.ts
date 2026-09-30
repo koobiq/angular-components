@@ -607,4 +607,17 @@ test.describe('documentation for agents', () => {
         await expect(page.locator('link[rel="describedby"]')).toHaveAttribute('href', '/llms.txt');
         expect((await page.request.get('/ru/components/alert.md')).status()).toBe(404);
     });
+
+    test('copies the Markdown of the item it is on, in English on a page in Russian too', async ({ context, page }) => {
+        await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+        await page.goto('/ru/components/alert/overview');
+        await waitForHydration(page);
+
+        await page.getByRole('button', { name: 'Скопировать страницу' }).click();
+
+        await expect(page.locator('kbq-toast')).toContainText('Скопировано');
+        expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+            await (await page.request.get('/en/components/alert.md')).text()
+        );
+    });
 });

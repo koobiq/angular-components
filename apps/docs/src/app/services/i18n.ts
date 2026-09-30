@@ -40,6 +40,19 @@ export const DOCS_TRANSLATIONS = {
     examplesTab: { ru: 'Примеры', en: 'Examples' },
     viewSourceOnGitHub: { ru: 'Исходный код', en: 'Source code' },
 
+    // copy page: the Markdown of a structure item for AI assistants
+    copyPage: { ru: 'Скопировать страницу', en: 'Copy page' },
+    copyPageActions: { ru: 'Страница в Markdown', en: 'Page as Markdown' },
+    copyPageMore: { ru: 'Другие действия со страницей', en: 'More page actions' },
+    copyPageFailed: { ru: 'Не удалось скопировать страницу', en: 'Could not copy the page' },
+    viewAsMarkdown: { ru: 'Открыть как Markdown', en: 'View as Markdown' },
+    openInClaude: { ru: 'Открыть в Claude', en: 'Open in Claude' },
+    openInClaudeCode: { ru: 'Открыть в Claude Code', en: 'Open in Claude Code' },
+    openInClaudeCodeTerminal: { ru: 'Открыть в Claude Code в терминале', en: 'Open in Claude Code in the terminal' },
+    openInChatGpt: { ru: 'Открыть в ChatGPT', en: 'Open in ChatGPT' },
+    openInCodex: { ru: 'Открыть в Codex', en: 'Open in Codex' },
+    openInCursor: { ru: 'Открыть в Cursor', en: 'Open in Cursor' },
+
     // migration guide
     migrationFrom: { ru: 'С', en: 'From' },
     migrationFromLabel: { ru: 'С версии', en: 'From version' },
@@ -173,6 +186,28 @@ export const docsTranslateTemplate = (key: DocsTranslationTemplateKey, locale: D
 export const DOCS_MIGRATION_RANGE_TITLE: Record<DocsLocale, (from: string, to: string) => string> = {
     ru: (from, to) => `Обновление с ${from} на ${to}`,
     en: (from, to) => `Upgrading from ${from} to ${to}`
+};
+
+/**
+ * The prompts the copy-page menu opens an AI assistant with: a chat is asked about the page, a coding agent to use it in
+ * the project it runs in. Both get the Markdown of the page and the index of the whole documentation.
+ */
+export const DOCS_COPY_PAGE_PROMPTS: Record<
+    'chat' | 'agent',
+    Record<DocsLocale, (page: string, index: string) => string>
+> = {
+    chat: {
+        ru: (page, index) =>
+            `Я читаю документацию Koobiq Angular: ${page}. Помоги мне с ней: объясни, приведи примеры или помоги отладить код на её основе. Оглавление всей документации: ${index}.`,
+        en: (page, index) =>
+            `I'm reading the Koobiq Angular documentation: ${page}. Help me with it: explain it, give examples or help debug code based on it. The index of the whole documentation: ${index}.`
+    },
+    agent: {
+        ru: (page, index) =>
+            `Прочитай документацию Koobiq Angular: ${page}, и помоги использовать это в текущем проекте. Оглавление всей документации: ${index}.`,
+        en: (page, index) =>
+            `Read the Koobiq Angular documentation at ${page} and help me use it in this project. The index of the whole documentation: ${index}.`
+    }
 };
 
 /** How many of the migration steps on screen the reader has marked done. */
