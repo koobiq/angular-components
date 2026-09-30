@@ -127,7 +127,7 @@ export class E2eUsernameStateAndStyle {
         KbqUsername
     ],
     template: `
-        <div data-testid="e2eUsernameProse">
+        <div class="e2e-username-prose" data-testid="e2eUsernameProse">
             @for (mode of modes(); track mode) {
                 <p>
                     Assigned by
@@ -139,9 +139,18 @@ export class E2eUsernameStateAndStyle {
     `,
     styles: `
         :host {
-            p {
+            /* The screenshot target is this block, so it has to hug the prose: left to its own width it
+            spans the page and three quarters of the baseline come out empty. */
+            .e2e-username-prose {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
                 width: 320px;
-                margin: 0 0 8px;
+            }
+
+            p {
+                margin: 0;
             }
         }
     `,
