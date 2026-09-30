@@ -136,8 +136,8 @@ export function kbqFormatUsernameCustom<T = unknown>(
  * A key followed by `.` renders an initial and any other key renders the full value; the separating
  * spaces are inserted by the pipe, so a character that is neither a mapped key nor `.` is dropped.
  *
- * @see KbqUsernameCustomPipe for the rule that derives the form from the key's case and keeps the
- * format's own punctuation.
+ * {@link KbqUsernameCustomPipe} derives the form from the key's case instead, and keeps the format's own
+ * punctuation.
  */
 @Pipe({
     name: 'kbqUsername',
@@ -158,7 +158,7 @@ export class KbqUsernamePipe<T = unknown> implements PipeTransform {
  * A lowercase key renders an initial and an uppercase one the full value; every character with no
  * mapped field is emitted verbatim, so the format carries its own separators.
  *
- * @see KbqUsernamePipe for the rule that derives the form from a following `.`.
+ * {@link KbqUsernamePipe} derives the form from a following `.` instead.
  */
 @Pipe({
     name: 'kbqUsernameCustom',

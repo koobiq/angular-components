@@ -70,7 +70,7 @@ export const KBQ_USERNAME_LOCALE_CONFIGURATION = new InjectionToken<KbqUsernameL
 /**
  * Utility provider. Only the strings you pass are overridden; the rest keep following the active locale.
  *
- * @see KBQ_USERNAME_LOCALE_CONFIGURATION
+ * Provides {@link KBQ_USERNAME_LOCALE_CONFIGURATION}.
  */
 export const kbqUsernameLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqUsernameLocaleConfiguration>

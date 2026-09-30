@@ -33,9 +33,9 @@ export enum KbqUsernameFormatKey {
  * Maps each format key to a property name in the user profile object.
  * Allows flexible formatting regardless of profile field names.
  *
- * Excludes the uppercase keys: `KbqUsernamePipe` decides shortness from the following {@link
- * KbqUsernameFormatKey.Dot}, so a case pair would carry no meaning for it.
- * @see KbqFormatKeyToProfileMappingExtended
+ * Excludes the uppercase keys: `KbqUsernamePipe` decides shortness from a following
+ * {@link KbqUsernameFormatKey.Dot}, so a case pair would carry no meaning for it. The mapping that does
+ * carry them is {@link KbqFormatKeyToProfileMappingExtended}.
  */
 export type KbqFormatKeyToProfileMapping<T = any> = {
     [
@@ -49,7 +49,8 @@ export type KbqFormatKeyToProfileMapping<T = any> = {
 /**
  * Maps each format key to a property name in the user profile object.
  * Allows flexible formatting regardless of profile field names.
- * @see KbqUsernameCustomPipe
+ *
+ * Covers the uppercase keys as well, which is the pair {@link KbqUsernameCustomPipe} derives the form from.
  */
 export type KbqFormatKeyToProfileMappingExtended<T = any> = {
     [key in KbqUsernameFormatKey]: keyof T | undefined;
