@@ -140,8 +140,7 @@ export function kbqFormatUsernameCustom<T = unknown>(
  * punctuation.
  */
 @Pipe({
-    name: 'kbqUsername',
-    pure: true
+    name: 'kbqUsername'
 })
 export class KbqUsernamePipe<T = unknown> implements PipeTransform {
     private readonly mapping = inject(KBQ_PROFILE_MAPPING) ?? kbqDefaultProfileMapping;
@@ -161,8 +160,7 @@ export class KbqUsernamePipe<T = unknown> implements PipeTransform {
  * {@link KbqUsernamePipe} derives the form from a following `.` instead.
  */
 @Pipe({
-    name: 'kbqUsernameCustom',
-    pure: true
+    name: 'kbqUsernameCustom'
 })
 export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
     private readonly mapping = inject(KBQ_PROFILE_MAPPING) ?? kbqDefaultProfileMapping;
