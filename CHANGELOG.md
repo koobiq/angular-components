@@ -1,3 +1,50 @@
+# 20.4.0 (2026-09-30)
+
+### Koobiq
+
+ * bug fix  **tabs:** align overflow on scale ([#DS-5520](https://github.com/koobiq/angular-components/issues/issue/DS-5520)) ([#2014](https://github.com/koobiq/angular-components/issues/2014)) ([4da529e](https://github.com/koobiq/angular-components/commit/4da529e4de4947dd59a29f21af03852ab030dfed))
+ * feature  **core:** add error state matcher for cross field validation ([#DS-401](https://github.com/koobiq/angular-components/issues/issue/DS-401)) ([#2047](https://github.com/koobiq/angular-components/issues/2047)) ([4ca4f52](https://github.com/koobiq/angular-components/commit/4ca4f5230110e85f774f8d66b662ab154f307e2c))
+ * feature  **filter-bar:** captions and wrapping for select pipe options ([#DS-4952](https://github.com/koobiq/angular-components/issues/issue/DS-4952)) ([#2021](https://github.com/koobiq/angular-components/issues/2021)) ([cdf4f8f](https://github.com/koobiq/angular-components/commit/cdf4f8f1998f4d05d9535da1cc4cb6550a5393fc))
+ * feature  **inline-edit:** async save with progress and server error states ([#DS-4384](https://github.com/koobiq/angular-components/issues/issue/DS-4384)) ([#2068](https://github.com/koobiq/angular-components/issues/2068)) ([689daba](https://github.com/koobiq/angular-components/commit/689daba997fb02edd9f7247118718c1aee32eae9))
+ * feature  **list:** "select all" row in kbq-list-selection ([#DS-4036](https://github.com/koobiq/angular-components/issues/issue/DS-4036)) ([#2006](https://github.com/koobiq/angular-components/issues/2006)) ([4c6cfd8](https://github.com/koobiq/angular-components/commit/4c6cfd8680e7b31d64a071588c790c21ce54803b))
+ * feature  **tabs:** scroll in paginated tabs ([#DS-4259](https://github.com/koobiq/angular-components/issues/issue/DS-4259)) ([#1976](https://github.com/koobiq/angular-components/issues/1976)) ([c11d092](https://github.com/koobiq/angular-components/commit/c11d09295c0d7df5b415bb0d6154855aa2f844e6))
+
+### Documentation
+
+ * docs  **ag-grid:** add an example of overflow items in cells ([#DS-4572](https://github.com/koobiq/angular-components/issues/issue/DS-4572)) (#2087) ([undefined](https://github.com/koobiq/angular-components/commit/bcfb751a675344b7c4a6c8c04675aa3d5b158549))
+ * docs  **filter-bar:** localize the data of the examples (#2020) ([undefined](https://github.com/koobiq/angular-components/commit/4824e45a7f98cf1eb3094bde41bbed255d1ee1c5))
+ * docs  **list:** shorten select all description ([#DS-4036](https://github.com/koobiq/angular-components/issues/issue/DS-4036)) (#2030) ([undefined](https://github.com/koobiq/angular-components/commit/28ab1334e2b02d5f7ebca3f078a865f13df79f50))
+
+## 20.3.2 (2026-09-30)
+
+### Koobiq
+
+ * bug fix  **accordion:** content height inside kbq-content-panel ([#DS-5625](https://github.com/koobiq/angular-components/issues/issue/DS-5625)) ([#2098](https://github.com/koobiq/angular-components/issues/2098)) ([0e0b5fe](https://github.com/koobiq/angular-components/commit/0e0b5fe32faff3408e9856845f6de7e03a47fc24))
+ * bug fix  **accordion:** initial [expanded]="true" collapsed on init ([#DS-5624](https://github.com/koobiq/angular-components/issues/issue/DS-5624)) ([#2084](https://github.com/koobiq/angular-components/issues/2084)) ([b0b9678](https://github.com/koobiq/angular-components/commit/b0b9678e69bd76b6723e3c875bfa8f4995303fe4))
+ * bug fix  **alert:** errors following a full review of the component ([#2015](https://github.com/koobiq/angular-components/issues/2015)) ([e161ca7](https://github.com/koobiq/angular-components/commit/e161ca77499214eaab2d777055676533183529da))
+ * bug fix  **breadcrumbs:** never submit a surrounding form ([#DS-5597](https://github.com/koobiq/angular-components/issues/issue/DS-5597)) ([#2081](https://github.com/koobiq/angular-components/issues/2081)) ([81d10b9](https://github.com/koobiq/angular-components/commit/81d10b972fc280da94cf1b8621271a8050e6ba1d))
+ * bug fix  **button-toggle:** extend the item hover zone over the group's gap and padding ([#DS-4164](https://github.com/koobiq/angular-components/issues/issue/DS-4164)) ([#1892](https://github.com/koobiq/angular-components/issues/1892)) ([475288d](https://github.com/koobiq/angular-components/commit/475288dc18b7e7c4c0ab95b93f1f6145ddb6f9a7))
+ * bug fix  **components, schematics:** bugs uncovered by the test-suite audit, and a suite that can fail again ([#DS-5633](https://github.com/koobiq/angular-components/issues/issue/DS-5633)) ([#2082](https://github.com/koobiq/angular-components/issues/2082)) ([ff60493](https://github.com/koobiq/angular-components/commit/ff60493327d8342e624bd6e1fb795334491e84a3))
+ * bug fix  **e2e:** eliminate flaky screenshot tests ([#DS-5461](https://github.com/koobiq/angular-components/issues/issue/DS-5461)) ([#1972](https://github.com/koobiq/angular-components/issues/1972)) ([ad4667f](https://github.com/koobiq/angular-components/commit/ad4667f39430709d407e71ed966bb0bf544afa7e))
+ * bug fix  **file-upload,ellipsis-center:** proper file item overflow ([#DS-5271](https://github.com/koobiq/angular-components/issues/issue/DS-5271)) ([#2007](https://github.com/koobiq/angular-components/issues/2007)) ([5ef064f](https://github.com/koobiq/angular-components/commit/5ef064f5f83f4c4f13e33022d149a76cf1fa902e))
+ * bug fix  **filter-bar:** keep a short pipe name from collapsing, cap the whole pipe at its max-width token ([#DS-5588](https://github.com/koobiq/angular-components/issues/issue/DS-5588)) ([#2073](https://github.com/koobiq/angular-components/issues/2073)) ([1f70294](https://github.com/koobiq/angular-components/commit/1f702945ef00c716ba61a7ed20e3dc1404a7c6aa))
+ * bug fix  **filter-bar:** keep both halves of a pipe on the same style ([#DS-5587](https://github.com/koobiq/angular-components/issues/issue/DS-5587)) ([#2074](https://github.com/koobiq/angular-components/issues/2074)) ([be3d9a6](https://github.com/koobiq/angular-components/commit/be3d9a6de8585b8ba4dbeeac1eacde7b4ba6338b))
+ * bug fix  **filter-bar:** stale open request reopens a pipe after the filter is recreated ([#DS-5517](https://github.com/koobiq/angular-components/issues/issue/DS-5517)) ([#2017](https://github.com/koobiq/angular-components/issues/2017)) ([59c2c73](https://github.com/koobiq/angular-components/commit/59c2c736ad63562816696dc9f71fc9d4b63b2b23))
+ * bug fix  **link:** wrap a trailing icon together with the last word ([#DS-5532](https://github.com/koobiq/angular-components/issues/issue/DS-5532)) ([#2096](https://github.com/koobiq/angular-components/issues/2096)) ([cd49862](https://github.com/koobiq/angular-components/commit/cd49862c8517159ef17512b6347d439b0d26ca6f))
+ * bug fix  **markdown, scrollbar:** customize the native scrollbars of the markdown content ([#DS-4089](https://github.com/koobiq/angular-components/issues/issue/DS-4089)) ([#2051](https://github.com/koobiq/angular-components/issues/2051)) ([f998bae](https://github.com/koobiq/angular-components/commit/f998bae14959a65ad9f12c46f6827541529f0e64))
+ * bug fix  **modal:** add modal caption as directive ([#DS-5519](https://github.com/koobiq/angular-components/issues/issue/DS-5519)) ([#2008](https://github.com/koobiq/angular-components/issues/2008)) ([21d9ee7](https://github.com/koobiq/angular-components/commit/21d9ee775170de619263f2e9f7952791dd23dad4))
+ * bug fix  **modal:** do not close on a right click outside the window ([#DS-5566](https://github.com/koobiq/angular-components/issues/issue/DS-5566)) ([#2088](https://github.com/koobiq/angular-components/issues/2088)) ([a36d3de](https://github.com/koobiq/angular-components/commit/a36d3de47508449d57f9028d47eec8c926cbc8cb))
+ * bug fix  prerender every documentation example under SSR ([#DS-5467](https://github.com/koobiq/angular-components/issues/issue/DS-5467)) ([#2009](https://github.com/koobiq/angular-components/issues/2009)) ([f05bf59](https://github.com/koobiq/angular-components/commit/f05bf5947ae92b0d5d7bbffe92e669c24b92d8e7))
+ * bug fix  **select:** footer action as a drop-down menu row ([#DS-2761](https://github.com/koobiq/angular-components/issues/issue/DS-2761)) ([#2010](https://github.com/koobiq/angular-components/issues/2010)) ([550f821](https://github.com/koobiq/angular-components/commit/550f8211f4d6c2e3ac3eef8aa6740913effe7a05))
+ * bug fix  **sidepanel:** closeAll() leaving stacked panels open ([#DS-5632](https://github.com/koobiq/angular-components/issues/issue/DS-5632)) ([#2101](https://github.com/koobiq/angular-components/issues/2101)) ([48ee7a3](https://github.com/koobiq/angular-components/commit/48ee7a34a8f7703486f1b9e6bc3b62f4b76e2dfe))
+ * bug fix  **time-range:** validate range borders and bound the swap ([#DS-4642](https://github.com/koobiq/angular-components/issues/issue/DS-4642)) ([#2028](https://github.com/koobiq/angular-components/issues/2028)) ([d197679](https://github.com/koobiq/angular-components/commit/d1976792b5081dc178a3fd6845c56a4d031a9c59))
+ * bug fix  **typography:** add the kbq-mono-normal-medium and kbq-mono-codeblock classes ([#2102](https://github.com/koobiq/angular-components/issues/2102)) ([f1d4ea9](https://github.com/koobiq/angular-components/commit/f1d4ea9e395b9a4e0144e8ee1c13317d6a8eb460))
+ * bug fix  **typography:** load JetBrains Mono 600 used by the mono-normal-medium level ([#2104](https://github.com/koobiq/angular-components/issues/2104)) ([c216b93](https://github.com/koobiq/angular-components/commit/c216b93fa7e47bd418bd59a17b01ab3f6e9c70b0))
+
+### Documentation
+
+ * bug fix  keep welcome previews proportional on mobile ([#DS-5593](https://github.com/koobiq/angular-components/issues/issue/DS-5593)) ([#2097](https://github.com/koobiq/angular-components/issues/2097)) ([03316eb](https://github.com/koobiq/angular-components/commit/03316ebb5d4d983ca415c1d468a69b9ec46e3120))
+
 # 20.3.0 (2026-09-07)
 
 ### Components
