@@ -594,7 +594,7 @@ test.describe('documentation for agents', () => {
         expect((await request.get('/en/components/missing.md')).status()).toBe(404);
     });
 
-    test('points every page of an item, in either locale, at its Markdown and the site at its index', async ({
+    test('points every page of an item at the English Markdown at its own address, on the host that serves it', async ({
         page
     }) => {
         await page.goto('/ru/components/alert/api');
@@ -602,9 +602,13 @@ test.describe('documentation for agents', () => {
 
         await expect(page.locator('link[rel="alternate"][type="text/markdown"]')).toHaveAttribute(
             'href',
-            'https://koobiq.io/en/components/alert.md'
+            '/ru/components/alert.md'
         );
         await expect(page.locator('link[rel="describedby"]')).toHaveAttribute('href', '/llms.txt');
-        expect((await page.request.get('/ru/components/alert.md')).status()).toBe(404);
+
+        const markdown = await page.request.get('/ru/components/alert.md');
+
+        expect(markdown.status()).toBe(200);
+        expect(await markdown.text()).toBe(await (await page.request.get('/en/components/alert.md')).text());
     });
 });

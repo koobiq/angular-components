@@ -10,7 +10,7 @@ describe(docsResolveSeo.name, () => {
         expect(seo.title).toBe('Alert — Overview · Koobiq');
         expect(seo.description).toBe(DOCS_SEO_DESCRIPTIONS.alert.en);
         expect(seo.canonicalUrl).toBe('https://koobiq.io/en/components/alert/overview');
-        expect(seo.markdownUrl).toBe('https://koobiq.io/en/components/alert.md');
+        expect(seo.markdownUrl).toBe('/en/components/alert.md');
         expect(seo.image).toEqual({
             url: 'https://koobiq.io/assets/images/welcome/alerts-light.png',
             alt: 'Alert — Koobiq documentation',
@@ -31,7 +31,7 @@ describe(docsResolveSeo.name, () => {
             { locale: 'ru', url: 'https://koobiq.io/ru/components/select/examples' },
             { locale: 'x-default', url: 'https://koobiq.io/ru/components/select/examples' }
         ]);
-        expect(seo.markdownUrl).toBe('https://koobiq.io/en/components/select.md');
+        expect(seo.markdownUrl).toBe('/ru/components/select.md');
     });
 
     it('uses the main illustration when an item has no preview', () => {
@@ -48,7 +48,7 @@ describe(docsResolveSeo.name, () => {
         const seo = docsResolveSeo('/ru/main/design-tokens/palette', DocsLocale.Ru);
 
         expect(seo.title).toBe('Дизайн-токены — Инженерная палитра · Koobiq');
-        expect(seo.markdownUrl).toBe('https://koobiq.io/en/main/design-tokens.md');
+        expect(seo.markdownUrl).toBe('/ru/main/design-tokens.md');
     });
 
     it('uses a localized Markdown summary added before the examples', () => {
@@ -105,7 +105,7 @@ describe(DocsSeoService.name, () => {
         );
         expect(document.querySelectorAll('link[rel="alternate"][hreflang]')).toHaveLength(3);
         expect(document.querySelector('link[rel="alternate"][type="text/markdown"]')?.getAttribute('href')).toBe(
-            'https://koobiq.io/en/components/alert.md'
+            '/en/components/alert.md'
         );
         expect(document.querySelector('meta[name="twitter:card"]')?.getAttribute('content')).toBe('summary');
 

@@ -43,10 +43,13 @@ export const collectPageSources = (): LlmsPageSources =>
 export const getPageSource = (sources: LlmsPageSources, id: string, tab: DocsStructureItemTab): string | undefined =>
     sources.get(pageKey(id, tab));
 
-/** Path of the Markdown of an item under the site root, next to its English pages: `en/components/button.md`. */
-export const getMarkdownPath = (item: DocsStructureItem): string => docsGetMarkdownPath(item).slice(1);
+/** Path of the Markdown of an item under the site root, next to its pages in a locale: `ru/components/button.md`. */
+export const getMarkdownPath = (item: DocsStructureItem, locale: DocsLocale): string =>
+    docsGetMarkdownPath(item, locale).slice(1);
 
-export const getMarkdownUrl = (item: DocsStructureItem): string => `${LLMS_SITE_ORIGIN}${docsGetMarkdownPath(item)}`;
+/** The address a text links the Markdown of an item by: the English one, like the text itself. */
+export const getMarkdownUrl = (item: DocsStructureItem): string =>
+    `${LLMS_SITE_ORIGIN}${docsGetMarkdownPath(item, DocsLocale.En)}`;
 
 /** The page of an item a person opens first. */
 export const getPageUrl = ({ categoryId, id }: DocsStructureItem): string => {
