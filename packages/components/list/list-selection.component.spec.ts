@@ -3726,7 +3726,7 @@ describe('KbqListSelection select all row', () => {
     template: `
         <kbq-list-selection
             aria-label="Mailboxes"
-            [multiple="checkbox"
+            multiple="checkbox"
             [autoSelect]="autoSelect()"
             [disabled]="disabled()"
             [draggable]="draggable()"
