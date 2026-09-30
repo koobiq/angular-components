@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - 20.3.x
+      - 20.4.x
   pull_request:
   # Retries keep the runner green through a flake, which is the right default for a pull request and
   # the wrong one for finding out what is unstable. This is how the suite gets run at zero retries
