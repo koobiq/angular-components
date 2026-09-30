@@ -5348,45 +5348,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidepanel-with-dynamic-config-update-example.ts",
     "importPath": "components/sidepanel"
   },
-  "skeleton-alert": {
-    "packagePath": "components/skeleton/skeleton-alert",
-    "title": "Skeleton with alerts",
-    "componentName": "SkeletonAlertExample",
+  "skeleton-accordion": {
+    "packagePath": "components/skeleton/skeleton-accordion",
+    "title": "Skeleton accordion preset",
+    "componentName": "SkeletonAccordionExample",
     "files": [
-      "skeleton-alert-example.ts"
+      "skeleton-accordion-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "skeleton-alert-example",
-    "primaryFile": "skeleton-alert-example.ts",
+    "selector": "skeleton-accordion-example",
+    "primaryFile": "skeleton-accordion-example.ts",
     "importPath": "components/skeleton"
   },
-  "skeleton-badge": {
-    "packagePath": "components/skeleton/skeleton-badge",
-    "title": "Skeleton with badges",
-    "componentName": "SkeletonBadgeExample",
+  "skeleton-checkable": {
+    "packagePath": "components/skeleton/skeleton-checkable",
+    "title": "Skeleton checkable preset",
+    "componentName": "SkeletonCheckableExample",
     "files": [
-      "skeleton-badge-example.ts"
+      "skeleton-checkable-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "skeleton-badge-example",
-    "primaryFile": "skeleton-badge-example.ts",
+    "selector": "skeleton-checkable-example",
+    "primaryFile": "skeleton-checkable-example.ts",
     "importPath": "components/skeleton"
   },
-  "skeleton-button": {
-    "packagePath": "components/skeleton/skeleton-button",
-    "title": "Skeleton with buttons",
-    "componentName": "SkeletonButtonExample",
+  "skeleton-code-block": {
+    "packagePath": "components/skeleton/skeleton-code-block",
+    "title": "Skeleton in place of a code block",
+    "componentName": "SkeletonCodeBlockExample",
     "files": [
-      "skeleton-button-example.ts"
+      "skeleton-code-block-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "skeleton-button-example",
-    "primaryFile": "skeleton-button-example.ts",
+    "selector": "skeleton-code-block-example",
+    "primaryFile": "skeleton-code-block-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-dl": {
     "packagePath": "components/skeleton/skeleton-dl",
-    "title": "Skeleton with description list",
+    "title": "Skeleton description list preset",
     "componentName": "SkeletonDlExample",
     "files": [
       "skeleton-dl-example.ts"
@@ -5394,6 +5394,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "skeleton-dl-example",
     "primaryFile": "skeleton-dl-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-elements": {
+    "packagePath": "components/skeleton/skeleton-elements",
+    "title": "Skeleton element presets",
+    "componentName": "SkeletonElementsExample",
+    "files": [
+      "skeleton-elements-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-elements-example",
+    "primaryFile": "skeleton-elements-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-form-field": {
+    "packagePath": "components/skeleton/skeleton-form-field",
+    "title": "Skeleton form field preset",
+    "componentName": "SkeletonFormFieldExample",
+    "files": [
+      "skeleton-form-field-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-form-field-example",
+    "primaryFile": "skeleton-form-field-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-grid": {
+    "packagePath": "components/skeleton/skeleton-grid",
+    "title": "Skeleton grid preset",
+    "componentName": "SkeletonGridExample",
+    "files": [
+      "skeleton-grid-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-grid-example",
+    "primaryFile": "skeleton-grid-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-group": {
+    "packagePath": "components/skeleton/skeleton-group",
+    "title": "Skeleton group preset",
+    "componentName": "SkeletonGroupExample",
+    "files": [
+      "skeleton-group-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-group-example",
+    "primaryFile": "skeleton-group-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-in-sidepanel": {
@@ -5406,18 +5454,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "skeleton-in-sidepanel-example",
     "primaryFile": "skeleton-in-sidepanel-example.ts",
-    "importPath": "components/skeleton"
-  },
-  "skeleton-list": {
-    "packagePath": "components/skeleton/skeleton-list",
-    "title": "Skeleton with list",
-    "componentName": "SkeletonListExample",
-    "files": [
-      "skeleton-list-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "skeleton-list-example",
-    "primaryFile": "skeleton-list-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-overview": {
@@ -5434,7 +5470,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "skeleton-table": {
     "packagePath": "components/skeleton/skeleton-table",
-    "title": "Skeleton with table",
+    "title": "Skeleton table preset",
     "componentName": "SkeletonTableExample",
     "files": [
       "skeleton-table-example.ts"
@@ -5444,21 +5480,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "skeleton-table-example.ts",
     "importPath": "components/skeleton"
   },
-  "skeleton-tag": {
-    "packagePath": "components/skeleton/skeleton-tag",
-    "title": "Skeleton with tags",
-    "componentName": "SkeletonTagExample",
+  "skeleton-tabs": {
+    "packagePath": "components/skeleton/skeleton-tabs",
+    "title": "Skeleton tabs preset",
+    "componentName": "SkeletonTabsExample",
     "files": [
-      "skeleton-tag-example.ts"
+      "skeleton-tabs-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "skeleton-tag-example",
-    "primaryFile": "skeleton-tag-example.ts",
+    "selector": "skeleton-tabs-example",
+    "primaryFile": "skeleton-tabs-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-tree": {
     "packagePath": "components/skeleton/skeleton-tree",
-    "title": "Skeleton with tree",
+    "title": "Skeleton tree preset",
     "componentName": "SkeletonTreeExample",
     "files": [
       "skeleton-tree-example.ts"
@@ -5470,7 +5506,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "skeleton-typography": {
     "packagePath": "components/skeleton/skeleton-typography",
-    "title": "Skeleton with typography",
+    "title": "Skeleton typography preset",
     "componentName": "SkeletonTypographyExample",
     "files": [
       "skeleton-typography-example.ts"
@@ -8168,15 +8204,18 @@ export type LiveExampleId =
   | 'sidepanel-state-saving'
   | 'sidepanel-with-custom-injector'
   | 'sidepanel-with-dynamic-config-update'
-  | 'skeleton-alert'
-  | 'skeleton-badge'
-  | 'skeleton-button'
+  | 'skeleton-accordion'
+  | 'skeleton-checkable'
+  | 'skeleton-code-block'
   | 'skeleton-dl'
+  | 'skeleton-elements'
+  | 'skeleton-form-field'
+  | 'skeleton-grid'
+  | 'skeleton-group'
   | 'skeleton-in-sidepanel'
-  | 'skeleton-list'
   | 'skeleton-overview'
   | 'skeleton-table'
-  | 'skeleton-tag'
+  | 'skeleton-tabs'
   | 'skeleton-tree'
   | 'skeleton-typography'
   | 'split-button-content'

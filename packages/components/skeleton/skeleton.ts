@@ -22,12 +22,12 @@ const findWave = (host: HTMLElement): Animation | undefined =>
         .find((animation) => 'animationName' in animation && animation.animationName === WAVE_ANIMATION_NAME);
 
 /**
- * Component used to load the `.kbq-skeleton` styles.
+ * Component used to load the styles of `.kbq-skeleton` and of the presets, each of which renders a `.kbq-skeleton`.
  */
 @Component({
     selector: 'skeleton-style-loader',
     template: '',
-    styleUrls: ['skeleton.scss', 'skeleton-tokens.scss'],
+    styleUrls: ['skeleton.scss', 'skeleton-presets.scss', 'skeleton-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -125,7 +125,11 @@ class SkeletonWave {
         for (const { host, offset, wave } of hosts) {
             if (wave) {
                 this.startTime ??= wave.startTime;
-                wave.startTime = this.startTime;
+
+                // Still unresolved on a wave that has not started yet: setting it would pause the wave.
+                if (this.startTime !== null) {
+                    wave.startTime = this.startTime;
+                }
             }
 
             // Writing an unchanged offset back would invalidate the host's style for nothing.

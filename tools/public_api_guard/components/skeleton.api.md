@@ -4,26 +4,222 @@
 
 ```ts
 
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
+import { InjectionToken } from '@angular/core';
+import { Provider } from '@angular/core';
+
+// @public
+export const KBQ_SKELETON_PRESETS_CONFIGURATION: InjectionToken<KbqSkeletonPresetsConfiguration>;
 
 // @public
 export class KbqSkeleton {
     constructor();
-    readonly enabled: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly enabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSkeleton, "kbq-skeleton, [kbqSkeleton]", ["kbqSkeleton"], { "enabled": { "alias": "kbqSkeleton"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSkeleton, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeleton, never>;
+}
+
+// @public
+export class KbqSkeletonAccordion {
+    // (undocumented)
+    protected readonly rowList: _angular_core.Signal<number[]>;
+    readonly rows: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonAccordion, "kbq-skeleton-accordion", never, { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonAccordion, never>;
+}
+
+// @public
+export class KbqSkeletonBadge {
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonBadge, "kbq-skeleton-badge", never, {}, {}, never, never, true, [{ directive: typeof KbqSkeleton; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonBadge, never>;
+}
+
+// @public
+export class KbqSkeletonButton {
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonButton, "kbq-skeleton-button", never, {}, {}, never, never, true, [{ directive: typeof KbqSkeleton; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonButton, never>;
+}
+
+// @public
+export class KbqSkeletonCheckable {
+    readonly control: _angular_core.InputSignal<KbqSkeletonCheckableControl>;
+    // (undocumented)
+    protected readonly controlClass: _angular_core.Signal<string>;
+    readonly hint: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    readonly label: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    // (undocumented)
+    protected readonly rowList: _angular_core.Signal<number[]>;
+    readonly rows: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonCheckable, "kbq-skeleton-checkable", never, { "control": { "alias": "control"; "required": false; "isSignal": true; }; "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "hint": { "alias": "hint"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonCheckable, never>;
+}
+
+// @public
+export type KbqSkeletonCheckableControl = 'checkbox' | 'radio' | 'toggle';
+
+// @public
+export class KbqSkeletonDl {
+    // (undocumented)
+    protected readonly rowList: _angular_core.Signal<number[]>;
+    readonly rows: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonDl, "kbq-skeleton-dl", never, { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonDl, never>;
+}
+
+// @public
+export class KbqSkeletonFormField {
+    readonly contentClass: _angular_core.InputSignal<string | string[] | Set<string> | undefined>;
+    readonly control: _angular_core.InputSignal<KbqSkeletonFormFieldControl>;
+    readonly hint: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    readonly horizontal: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    readonly label: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    readonly labelClass: _angular_core.InputSignal<string | string[] | Set<string> | undefined>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonFormField, "kbq-skeleton-form-field", never, { "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "control": { "alias": "control"; "required": false; "isSignal": true; }; "label": { "alias": "label"; "required": false; "isSignal": true; }; "hint": { "alias": "hint"; "required": false; "isSignal": true; }; "labelClass": { "alias": "labelClass"; "required": false; "isSignal": true; }; "contentClass": { "alias": "contentClass"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonFormField, never>;
+}
+
+// @public
+export type KbqSkeletonFormFieldControl = 'input' | 'textarea';
+
+// @public
+export class KbqSkeletonGroup {
+    readonly count: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    protected readonly itemList: _angular_core.Signal<number[]>;
+    readonly preset: _angular_core.InputSignal<KbqSkeletonGroupPreset>;
+    // (undocumented)
+    protected readonly presetClass: _angular_core.Signal<string>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonGroup, "kbq-skeleton-group", never, { "preset": { "alias": "preset"; "required": true; "isSignal": true; }; "count": { "alias": "count"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonGroup, never>;
+}
+
+// @public
+export type KbqSkeletonGroupPreset = 'button' | 'badge' | 'tag' | 'icon' | 'link';
+
+// @public
+export class KbqSkeletonIcon {
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonIcon, "kbq-skeleton-icon", never, {}, {}, never, never, true, [{ directive: typeof KbqSkeleton; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonIcon, never>;
+}
+
+// @public
+export class KbqSkeletonLink {
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonLink, "kbq-skeleton-link", never, {}, {}, never, never, true, [{ directive: typeof KbqSkeleton; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonLink, never>;
 }
 
 // @public (undocumented)
 export class KbqSkeletonModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSkeletonModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqSkeletonModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqSkeletonModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSkeletonModule, never, [typeof KbqSkeleton], [typeof KbqSkeleton]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSkeletonModule, never, [typeof KbqSkeleton, typeof KbqSkeletonButton, typeof KbqSkeletonBadge, typeof KbqSkeletonTag, typeof KbqSkeletonIcon, typeof KbqSkeletonLink, typeof KbqSkeletonTypography, typeof KbqSkeletonDl, typeof KbqSkeletonTable, typeof KbqSkeletonGroup, typeof KbqSkeletonFormField, typeof KbqSkeletonAccordion, typeof KbqSkeletonCheckable, typeof KbqSkeletonTabs, typeof KbqSkeletonTree], [typeof KbqSkeleton, typeof KbqSkeletonButton, typeof KbqSkeletonBadge, typeof KbqSkeletonTag, typeof KbqSkeletonIcon, typeof KbqSkeletonLink, typeof KbqSkeletonTypography, typeof KbqSkeletonDl, typeof KbqSkeletonTable, typeof KbqSkeletonGroup, typeof KbqSkeletonFormField, typeof KbqSkeletonAccordion, typeof KbqSkeletonCheckable, typeof KbqSkeletonTabs, typeof KbqSkeletonTree]>;
+}
+
+// @public
+export interface KbqSkeletonPresetsConfiguration {
+    accordionRows: number;
+    checkableRows: number;
+    dlRows: number;
+    groupCount: number;
+    tableColumns: number;
+    tableRows: number;
+    tabsContentLines: number;
+    tabsCount: number;
+    treeChildren: number;
+    treeRows: number;
+    typographyLines: number;
+}
+
+// @public
+export const kbqSkeletonPresetsConfigurationProvider: (configuration: Partial<KbqSkeletonPresetsConfiguration>) => Provider;
+
+// @public
+export class KbqSkeletonTable {
+    readonly columns: _angular_core.InputSignalWithTransform<readonly string[], string | number | readonly string[]>;
+    // (undocumented)
+    protected readonly gridTemplateColumns: _angular_core.Signal<string>;
+    readonly header: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    readonly pinnedColumns: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    protected readonly rowList: _angular_core.Signal<number[]>;
+    readonly rows: _angular_core.InputSignalWithTransform<number, string | number>;
+    readonly selectable: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonTable, "kbq-skeleton-table", never, { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "columns": { "alias": "columns"; "required": false; "isSignal": true; }; "header": { "alias": "header"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "pinnedColumns": { "alias": "pinnedColumns"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonTable, never>;
+}
+
+// @public
+export class KbqSkeletonTabs {
+    readonly contentLines: _angular_core.InputSignalWithTransform<number, string | number>;
+    readonly count: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    protected readonly tabList: _angular_core.Signal<number[]>;
+    readonly vertical: _angular_core.InputSignalWithTransform<boolean, string | boolean>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonTabs, "kbq-skeleton-tabs", never, { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "count": { "alias": "count"; "required": false; "isSignal": true; }; "contentLines": { "alias": "contentLines"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonTabs, never>;
+}
+
+// @public
+export class KbqSkeletonTag {
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonTag, "kbq-skeleton-tag", never, {}, {}, never, never, true, [{ directive: typeof KbqSkeleton; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonTag, never>;
+}
+
+// @public
+export class KbqSkeletonTree {
+    // (undocumented)
+    protected readonly childList: _angular_core.Signal<number[]>;
+    readonly children: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    protected readonly rowList: _angular_core.Signal<number[]>;
+    readonly rows: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonTree, "kbq-skeleton-tree", never, { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "children": { "alias": "children"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonTree, never>;
+}
+
+// @public
+export class KbqSkeletonTypography {
+    readonly level: _angular_core.InputSignal<string>;
+    // (undocumented)
+    protected readonly levelClass: _angular_core.Signal<string>;
+    // (undocumented)
+    protected readonly lineList: _angular_core.Signal<number[]>;
+    readonly lines: _angular_core.InputSignalWithTransform<number, string | number>;
+    // (undocumented)
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSkeletonTypography, "kbq-skeleton-typography", never, { "level": { "alias": "level"; "required": false; "isSignal": true; }; "lines": { "alias": "lines"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSkeletonTypography, never>;
 }
 
 // (No @packageDocumentation comment for this package)

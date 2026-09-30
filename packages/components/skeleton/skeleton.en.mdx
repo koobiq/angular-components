@@ -1,70 +1,100 @@
 `KbqSkeleton` is a temporary placeholder that occupies the space of the loading element and displays its approximate layout while the actual content is still loading.
 
+Put the `[kbqSkeleton]="loading"` directive right on a ready-made component or on text: while `loading` is true, the placeholder repeats its shape and size.
+
 <Example id="skeleton-overview" />
 
-### Usage examples
+### Presets
 
-#### Panel loading
+Until the data loads, show a preset in place of the component: a placeholder with the sizes from the design.
 
-Skeletons are also useful when opening a side panel with loading content.
+#### Elements
 
-<Example id="skeleton-in-sidepanel" />
+<Example id="skeleton-elements" />
 
-#### Button and button group
+#### Typography
 
-Put the directive on every button: a button keeps its size and corner radius, and the buttons of a group keep their segments.
-
-<Example id="skeleton-button" />
-
-#### Badge
-
-A badge keeps its size and corner radius.
-
-<Example id="skeleton-badge" />
-
-#### Tag and tag list
-
-Put the directive on every tag: the list keeps its layout and line wrapping.
-
-<Example id="skeleton-tag" />
-
-#### Alert
-
-An alert turns into a single block of its own size, together with the title, icon and text.
-
-<Example id="skeleton-alert" />
+<Example id="skeleton-typography" />
 
 #### Description list
-
-Wrap the term and the value in a `span` with the directive: the list keeps its grid, and every line of text gets a bar of its own length.
 
 <Example id="skeleton-dl" />
 
 #### Table
 
-Put the directive on the cell content, not on the cell itself: the table keeps its columns, and the bars follow the length of the text.
-
 <Example id="skeleton-table" />
 
-#### Typography
+<Example id="skeleton-grid" />
 
-On an inline element, the skeleton takes the height of the typography level, so headings and body text keep their proportions.
+#### Group
 
-<Example id="skeleton-typography" />
+<Example id="skeleton-group" />
 
-#### List
+#### Form field
 
-Put the directive on the text of every option and disable the list while it loads, so that options cannot be selected.
+<Example id="skeleton-form-field" />
 
-<Example id="skeleton-list" />
+#### Accordion
+
+<Example id="skeleton-accordion" />
+
+#### Checkbox, radio button and toggle
+
+<Example id="skeleton-checkable" />
+
+#### Tabs
+
+A preset nested in `<kbq-skeleton-tabs>` is shown in place of the text.
+
+<Example id="skeleton-tabs" />
 
 #### Tree
 
-Put the directive on the text of every node and on the toggle: the tree keeps its indents. Disable the tree while it loads.
-
 <Example id="skeleton-tree" />
 
+#### Global configuration
+
+A provider sets how many lines and items the presets show without attributes, for an application or a part of it. The values below are the defaults. The keys it leaves out come from the closest provider above.
+
+```ts
+import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skeleton';
+
+@Component({
+    providers: [
+        kbqSkeletonPresetsConfigurationProvider({
+            typographyLines: 1,
+            dlRows: 3,
+            tableRows: 3,
+            tableColumns: 3,
+            groupCount: 3,
+            accordionRows: 3,
+            checkableRows: 1,
+            tabsCount: 3,
+            tabsContentLines: 3,
+            treeRows: 3,
+            treeChildren: 3
+        })
+    ]
+})
+```
+
+### Usage examples
+
+#### Code block
+
+While the code loads, a `<kbq-skeleton>` of a fixed height of 100px holds the place of the code block.
+
+<Example id="skeleton-code-block" />
+
+#### Panel loading
+
+The data of a side panel often arrives in parts. While a part loads, a preset holds its place: the buttons and the description come first, then the list of servers.
+
+<Example id="skeleton-in-sidepanel" />
+
 ### Guidelines
+
+The placeholder should follow the structure of the page with real content, so that the content appears in the same places once it loads.
 
 Use:
 
@@ -75,4 +105,4 @@ Don't use:
 
 - If loading takes less than 1 second, no loading indicators are needed.
 - If you need to show loading for a single element, such as a video, use a [progress spinner](en/components/progress-spinner). Skeletons are better suited for full-page loading.
-- For long-running processes such as file conversion or data upload/download, use [progress bars](en/components/progress-bar) or [progress spinners](en/components/progress-spinner). It's recommended to display the remaining time next to the progress bar.
+- For long-running processes such as file conversion or data upload/download, use [progress bars](en/components/progress-bar) or [progress spinners](en/components/progress-spinner) that show the remaining time or the percentage done.

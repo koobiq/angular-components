@@ -1,0 +1,350 @@
+// As the components they stand in for, the element presets sit in a line of text and do not shrink in a row.
+:where(.kbq-skeleton-button, .kbq-skeleton-badge, .kbq-skeleton-tag, .kbq-skeleton-icon, .kbq-skeleton-link) {
+    display: inline-flex;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
+:where(.kbq-skeleton-button) {
+    width: 72px;
+    height: var(--kbq-size-3xl);
+}
+
+:where(.kbq-skeleton-badge, .kbq-skeleton-tag) {
+    width: var(--kbq-size-6xl);
+    height: var(--kbq-size-xxl);
+}
+
+:where(.kbq-skeleton-icon) {
+    width: var(--kbq-size-xxl);
+    height: var(--kbq-size-xxl);
+}
+
+:where(.kbq-skeleton-link) {
+    width: var(--kbq-size-3xl);
+    height: var(--kbq-size-xl);
+}
+
+:where(.kbq-skeleton-typography) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+// A line of the level less the gap, so the placeholder is as tall as the text it stands in for.
+:where(.kbq-skeleton-typography__line) {
+    height: calc(1lh - var(--kbq-skeleton-typography-gap));
+    margin-block: calc(var(--kbq-skeleton-typography-gap) / 2);
+}
+
+:where(.kbq-skeleton-typography__line:nth-child(3n + 1)) {
+    width: var(--kbq-skeleton-typography-line-width-1);
+}
+
+:where(.kbq-skeleton-typography__line:nth-child(3n + 2)) {
+    width: var(--kbq-skeleton-typography-line-width-2);
+}
+
+:where(.kbq-skeleton-typography__line:nth-child(3n)) {
+    width: var(--kbq-skeleton-typography-line-width-3);
+}
+
+:where(.kbq-skeleton-typography__line:only-child) {
+    width: var(--kbq-skeleton-typography-single-line-width);
+}
+
+:where(.kbq-skeleton-dl) {
+    display: grid;
+    grid-template-columns: var(--kbq-skeleton-dl-term-width) minmax(0, 1fr);
+    grid-auto-rows: var(--kbq-skeleton-dl-row-height);
+    align-items: center;
+    gap: var(--kbq-skeleton-dl-row-gap) var(--kbq-skeleton-dl-column-gap);
+    width: 100%;
+}
+
+:where(.kbq-skeleton-dl__term, .kbq-skeleton-dl__description) {
+    height: var(--kbq-skeleton-dl-line-height);
+}
+
+// Every other child is a description, and the descriptions take the lengths in turn.
+:where(.kbq-skeleton-dl__description:nth-child(6n + 2)) {
+    width: var(--kbq-skeleton-dl-line-width-1);
+}
+
+:where(.kbq-skeleton-dl__description:nth-child(6n + 4)) {
+    width: var(--kbq-skeleton-dl-line-width-2);
+}
+
+:where(.kbq-skeleton-dl__description:nth-child(6n)) {
+    width: var(--kbq-skeleton-dl-line-width-3);
+}
+
+:where(.kbq-skeleton-table) {
+    display: grid;
+    width: 100%;
+}
+
+:where(.kbq-skeleton-table__cell) {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    height: var(--kbq-skeleton-table-row-height);
+    padding-inline: var(--kbq-skeleton-table-cell-padding-horizontal);
+}
+
+:where(.kbq-skeleton-table__cell_header) {
+    border-bottom: var(--kbq-skeleton-table-border-width) solid var(--kbq-skeleton-table-border-color);
+}
+
+:where(.kbq-skeleton-table__cell_pinned-edge) {
+    border-inline-end: var(--kbq-skeleton-table-border-width) solid var(--kbq-skeleton-table-border-color);
+}
+
+:where(.kbq-skeleton-table__cell > .kbq-skeleton) {
+    flex: 1;
+    height: var(--kbq-skeleton-table-line-height);
+}
+
+// The checkbox of a grid whose rows can be selected.
+:where(.kbq-skeleton-table__cell_selection > .kbq-skeleton) {
+    flex: none;
+    width: var(--kbq-skeleton-table-selection-size);
+    height: var(--kbq-skeleton-table-selection-size);
+}
+
+:where(.kbq-skeleton-group) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kbq-skeleton-group-gap);
+}
+
+:where(.kbq-skeleton-form-field) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+:where(.kbq-skeleton-form-field_horizontal) {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+// Sized the way the label of .kbq-form-field is, so a labelClass such as flex-30 gives both the same width.
+:where(.kbq-skeleton-form-field__label) {
+    box-sizing: border-box;
+    display: flex;
+    margin-bottom: var(--kbq-skeleton-form-field-gap);
+}
+
+// Like the label of a horizontal .kbq-form-field: level with the value of the control.
+:where(.kbq-skeleton-form-field_horizontal > .kbq-skeleton-form-field__label) {
+    margin-bottom: 0;
+    padding: var(--kbq-size-xs) var(--kbq-size-l) 0 0;
+}
+
+// The bar sits in the middle of the line the text of the label would take.
+:where(.kbq-skeleton-form-field__label > .kbq-skeleton) {
+    width: var(--kbq-skeleton-form-field-label-width);
+    height: var(--kbq-skeleton-form-field-line-height);
+    margin-block: calc((var(--kbq-skeleton-form-field-label-height) - var(--kbq-skeleton-form-field-line-height)) / 2);
+}
+
+:where(.kbq-skeleton-form-field__content) {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+:where(.kbq-skeleton-form-field__control) {
+    height: var(--kbq-skeleton-form-field-control-height);
+}
+
+:where(.kbq-skeleton-form-field_textarea .kbq-skeleton-form-field__control) {
+    height: var(--kbq-skeleton-form-field-textarea-height);
+}
+
+:where(.kbq-skeleton-form-field__hint) {
+    width: var(--kbq-skeleton-form-field-hint-width);
+    height: var(--kbq-skeleton-form-field-hint-height);
+    margin-top: var(--kbq-skeleton-form-field-gap);
+}
+
+:where(.kbq-skeleton-accordion) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+:where(.kbq-skeleton-accordion__item) {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    height: calc(var(--kbq-skeleton-accordion-header-height) + var(--kbq-skeleton-accordion-border-width) * 2);
+    border: var(--kbq-skeleton-accordion-border-width) solid transparent;
+    padding: var(--kbq-skeleton-accordion-padding);
+}
+
+// At the top of the header, as the icon of the component.
+:where(.kbq-skeleton-accordion__icon) {
+    flex: none;
+    align-self: flex-start;
+    width: var(--kbq-skeleton-accordion-icon-size);
+    height: var(--kbq-skeleton-accordion-icon-size);
+    margin: var(--kbq-skeleton-accordion-icon-padding);
+}
+
+:where(.kbq-skeleton-accordion__title) {
+    flex: 1;
+    height: var(--kbq-skeleton-accordion-line-height);
+}
+
+:where(.kbq-skeleton-checkable) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-skeleton-checkable-gap);
+}
+
+:where(.kbq-skeleton-checkable__row) {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--kbq-skeleton-checkable-control-gap);
+}
+
+// The control sits in the middle of the line of the label, as in the component.
+:where(.kbq-skeleton-checkable__control) {
+    flex: none;
+    width: var(--kbq-skeleton-checkable-control-width);
+    height: var(--kbq-skeleton-checkable-control-height);
+    margin-top: calc(
+        (var(--kbq-skeleton-checkable-label-line-height) - var(--kbq-skeleton-checkable-control-height)) / 2
+    );
+}
+
+// As wide as the label, which gives the hint its share.
+:where(.kbq-skeleton-checkable__text) {
+    display: flex;
+    flex-direction: column;
+}
+
+:where(.kbq-skeleton-checkable__label) {
+    height: var(--kbq-skeleton-checkable-line-height);
+    margin-block: calc(
+        (var(--kbq-skeleton-checkable-label-line-height) - var(--kbq-skeleton-checkable-line-height)) / 2
+    );
+}
+
+:where(.kbq-skeleton-checkable__row:nth-child(3n + 1) .kbq-skeleton-checkable__label) {
+    width: var(--kbq-skeleton-checkable-label-width-1);
+}
+
+:where(.kbq-skeleton-checkable__row:nth-child(3n + 2) .kbq-skeleton-checkable__label) {
+    width: var(--kbq-skeleton-checkable-label-width-2);
+}
+
+:where(.kbq-skeleton-checkable__row:nth-child(3n) .kbq-skeleton-checkable__label) {
+    width: var(--kbq-skeleton-checkable-label-width-3);
+}
+
+// A line of smaller text right below the label, as kbq-hint in the component.
+:where(.kbq-skeleton-checkable__hint) {
+    width: var(--kbq-skeleton-checkable-hint-width);
+    height: var(--kbq-skeleton-checkable-hint-height);
+    margin-top: var(--kbq-skeleton-checkable-hint-gap);
+}
+
+:where(.kbq-skeleton-tabs) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-skeleton-tabs-content-gap);
+    width: 100%;
+}
+
+:where(.kbq-skeleton-tabs_vertical) {
+    flex-direction: row;
+}
+
+:where(.kbq-skeleton-tabs__header) {
+    display: flex;
+    gap: var(--kbq-skeleton-tabs-gap);
+}
+
+:where(.kbq-skeleton-tabs_vertical > .kbq-skeleton-tabs__header) {
+    flex-direction: column;
+    flex: none;
+    width: var(--kbq-skeleton-tabs-vertical-width);
+}
+
+// The selected tab fills the height of a tab of .kbq-tab-group, the others are a line of text.
+:where(.kbq-skeleton-tabs__tab) {
+    display: flex;
+    align-items: center;
+    height: var(--kbq-skeleton-tabs-tab-height);
+}
+
+:where(.kbq-skeleton-tabs__tab > .kbq-skeleton) {
+    width: var(--kbq-skeleton-tabs-tab-width);
+    height: var(--kbq-skeleton-tabs-line-height);
+}
+
+:where(.kbq-skeleton-tabs__tab_selected > .kbq-skeleton) {
+    height: var(--kbq-skeleton-tabs-tab-height);
+}
+
+// A stacked tab takes the width of the list, and the text of the others keeps to the padding of the tab.
+:where(.kbq-skeleton-tabs_vertical .kbq-skeleton-tabs__tab > .kbq-skeleton) {
+    width: 100%;
+}
+
+:where(.kbq-skeleton-tabs_vertical .kbq-skeleton-tabs__tab:not(.kbq-skeleton-tabs__tab_selected)) {
+    padding-inline: var(--kbq-skeleton-tabs-tab-padding);
+}
+
+:where(.kbq-skeleton-tabs__content) {
+    min-width: 0;
+}
+
+:where(.kbq-skeleton-tabs_vertical > .kbq-skeleton-tabs__content) {
+    flex: 1;
+}
+
+:where(.kbq-skeleton-tree) {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+:where(.kbq-skeleton-tree__node) {
+    display: flex;
+    align-items: center;
+    gap: var(--kbq-skeleton-tree-gap);
+    height: var(--kbq-skeleton-tree-node-height);
+    padding-inline-start: var(--kbq-skeleton-tree-padding);
+}
+
+:where(.kbq-skeleton-tree__node_nested) {
+    padding-inline-start: calc(var(--kbq-skeleton-tree-padding) + var(--kbq-skeleton-tree-indent));
+}
+
+:where(.kbq-skeleton-tree__toggle) {
+    flex: none;
+    width: var(--kbq-skeleton-tree-toggle-size);
+    height: var(--kbq-skeleton-tree-toggle-size);
+}
+
+:where(.kbq-skeleton-tree__label) {
+    height: var(--kbq-skeleton-tree-line-height);
+}
+
+:where(.kbq-skeleton-tree__node_1 > .kbq-skeleton-tree__label) {
+    width: var(--kbq-skeleton-tree-label-width-1);
+}
+
+:where(.kbq-skeleton-tree__node_2 > .kbq-skeleton-tree__label) {
+    width: var(--kbq-skeleton-tree-label-width-2);
+}
+
+:where(.kbq-skeleton-tree__node_3 > .kbq-skeleton-tree__label) {
+    width: var(--kbq-skeleton-tree-label-width-3);
+}
