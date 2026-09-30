@@ -62,6 +62,37 @@ Collapsed/expanded group state and row selection can each be persisted independe
 
 <Example id="ag-grid-row-group" />
 
+### Expandable rows
+
+The `kbqAgGridRowDetail` directive expands a row to show a custom component below it. Pass the component via `kbqAgGridRowDetailComponent` and set `getRowId`. The component receives the row data and the `collapse()` method through the `KBQ_AG_GRID_ROW_DETAIL_PARAMS` token.
+
+The behavior of expanded rows is configured with the following inputs:
+
+| Input                            | Description                                                  |
+| -------------------------------- | ------------------------------------------------------------ |
+| `kbqAgGridRowDetailSingleExpand` | Keeps only one row expanded                                  |
+| `kbqAgGridRowDetailFilled`       | Fills the expanded row with a background                     |
+| `kbqAgGridRowDetailSticky`       | Keeps the expanded part in place during horizontal scrolling |
+
+The directive methods are available via `#rowDetail="kbqAgGridRowDetail"`:
+
+| Method          | Description                  |
+| --------------- | ---------------------------- |
+| `expand(id)`    | Expands the row              |
+| `collapse(id)`  | Collapses the row            |
+| `toggle(id)`    | Expands or collapses the row |
+| `collapseAll()` | Collapses all rows           |
+
+In the example, Enter on a row calls `toggle()`.
+
+The screen reader labels of the expand toggle are Russian by default. To switch the language, provide a labels provider:
+
+```ts
+providers: [kbqAgGridRowDetailLabelsProvider(KBQ_AG_GRID_ROW_DETAIL_LABELS_EN)];
+```
+
+<Example id="ag-grid-row-detail" />
+
 ### Actions panel for selected rows
 
 The [Actions panel](/en/components/actions-panel) component allows you to perform bulk actions on rows selected in the table. To prevent the panel from overlapping the last rows of the table, a `padding-bottom` is added to `.ag-body-viewport` when it opens.
@@ -140,22 +171,32 @@ The `kbqAgGridRowFocusState` directive saves the focused cell. Add it with a uni
 
 <Example id="ag-grid-row-focus-state" />
 
-### Column menu
+### Table settings menu
 
-The `kbqAgGridColumnMenu` directive adds a button in the top-right corner of the grid that opens a column management menu. The menu allows showing and hiding columns, reordering them via drag-and-drop, pinning them to the left or right, and searching for a column by name. The reset button restores columns to their initial state.
+The `kbqAgGridSettingsMenu` directive adds a table settings button in the top-right corner of the grid. By default, the menu contains two items:
+
+| Item                                 | Description                                                        |
+| ------------------------------------ | ------------------------------------------------------------------ |
+| `kbqAgGridSettingsMenuColumnsItem()` | Showing, hiding, reordering and pinning columns, searching by name |
+| `kbqAgGridSettingsMenuSortItem()`    | Sorting by several columns                                         |
+
+The reset button restores the columns and the sorting to their initial state.
 
 Constraints are configured via `ColDef`:
 
 - `lockVisible: true` prevents hiding a column. The last visible column can never be hidden regardless.
 - `lockPinned: true` prevents pinning and unpinning a column.
 
-Russian labels are used by default. To switch the language, provide a labels provider:
+Russian labels are used by default. To switch the language, provide the labels providers:
 
 ```ts
-providers: [kbqAgGridColumnMenuLabelsProvider(KBQ_AG_GRID_COLUMN_MENU_LABELS_EN)];
+providers: [
+    kbqAgGridSettingsMenuLabelsProvider(KBQ_AG_GRID_SETTINGS_MENU_LABELS_EN),
+    kbqAgGridColumnMenuLabelsProvider(KBQ_AG_GRID_COLUMN_MENU_LABELS_EN)
+];
 ```
 
-<Example id="ag-grid-column-menu" />
+<Example id="ag-grid-settings-menu" />
 
 ### Loading overlay
 
