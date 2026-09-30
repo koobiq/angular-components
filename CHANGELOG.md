@@ -1,3 +1,20 @@
+# 20.4.0 (2026-09-30)
+
+### Koobiq
+
+ * bug fix  **tabs:** align overflow on scale ([#DS-5520](https://github.com/koobiq/angular-components/issues/issue/DS-5520)) ([#2014](https://github.com/koobiq/angular-components/issues/2014)) ([4da529e](https://github.com/koobiq/angular-components/commit/4da529e4de4947dd59a29f21af03852ab030dfed))
+ * feature  **core:** add error state matcher for cross field validation ([#DS-401](https://github.com/koobiq/angular-components/issues/issue/DS-401)) ([#2047](https://github.com/koobiq/angular-components/issues/2047)) ([4ca4f52](https://github.com/koobiq/angular-components/commit/4ca4f5230110e85f774f8d66b662ab154f307e2c))
+ * feature  **filter-bar:** captions and wrapping for select pipe options ([#DS-4952](https://github.com/koobiq/angular-components/issues/issue/DS-4952)) ([#2021](https://github.com/koobiq/angular-components/issues/2021)) ([cdf4f8f](https://github.com/koobiq/angular-components/commit/cdf4f8f1998f4d05d9535da1cc4cb6550a5393fc))
+ * feature  **inline-edit:** async save with progress and server error states ([#DS-4384](https://github.com/koobiq/angular-components/issues/issue/DS-4384)) ([#2068](https://github.com/koobiq/angular-components/issues/2068)) ([689daba](https://github.com/koobiq/angular-components/commit/689daba997fb02edd9f7247118718c1aee32eae9))
+ * feature  **list:** "select all" row in kbq-list-selection ([#DS-4036](https://github.com/koobiq/angular-components/issues/issue/DS-4036)) ([#2006](https://github.com/koobiq/angular-components/issues/2006)) ([4c6cfd8](https://github.com/koobiq/angular-components/commit/4c6cfd8680e7b31d64a071588c790c21ce54803b))
+ * feature  **tabs:** scroll in paginated tabs ([#DS-4259](https://github.com/koobiq/angular-components/issues/issue/DS-4259)) ([#1976](https://github.com/koobiq/angular-components/issues/1976)) ([c11d092](https://github.com/koobiq/angular-components/commit/c11d09295c0d7df5b415bb0d6154855aa2f844e6))
+
+### Documentation
+
+ * docs  **ag-grid:** add an example of overflow items in cells ([#DS-4572](https://github.com/koobiq/angular-components/issues/issue/DS-4572)) (#2087) ([undefined](https://github.com/koobiq/angular-components/commit/bcfb751a675344b7c4a6c8c04675aa3d5b158549))
+ * docs  **filter-bar:** localize the data of the examples (#2020) ([undefined](https://github.com/koobiq/angular-components/commit/4824e45a7f98cf1eb3094bde41bbed255d1ee1c5))
+ * docs  **list:** shorten select all description ([#DS-4036](https://github.com/koobiq/angular-components/issues/issue/DS-4036)) (#2030) ([undefined](https://github.com/koobiq/angular-components/commit/28ab1334e2b02d5f7ebca3f078a865f13df79f50))
+
 ## 20.3.2 (2026-09-30)
 
 ### Koobiq

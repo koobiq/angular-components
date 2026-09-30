@@ -1556,6 +1556,12 @@ The [Actions panel](/en/components/actions-panel) component allows you to perfor
 
 <!-- example(ag-grid-and-actions-panel) -->
 
+### Long lists in cells
+
+A long list can fit into a single line of a cell: [Overflow items](/en/components/overflow-items) hides what does not fit the width and recalculates that whenever the column is resized. The hidden items can be expanded in the cell itself or shown as a full list in a [Popover](/en/components/popover). To let the row height follow the content, enable `autoHeight` for the column.
+
+<!-- example(ag-grid-long-cell-content) -->
+
 ### Copying selected rows
 
 The `kbqAgGridCopyByCtrlC` directive allows you to copy selected rows to the clipboard using the `Ctrl+C` keyboard shortcut.
@@ -5983,6 +5989,9 @@ export function createSearchPredicate(query: string): (value: string | readonly 
 // @public
 export function createTouchEvent(type: string, pageX?: number, pageY?: number): UIEvent;
 
+// @public
+export type CrossFieldErrorScope = (errorKey: string, errorValue: unknown) => readonly string[] | null;
+
 // @public (undocumented)
 export const D = 68;
 
@@ -6157,6 +6166,8 @@ export const enUSLocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         expandBreadcrumbs: string;
@@ -6423,6 +6434,8 @@ export const esLALocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         expandBreadcrumbs: string;
@@ -6949,6 +6962,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             expandBreadcrumbs: string;
@@ -7190,6 +7205,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             expandBreadcrumbs: string;
@@ -7426,6 +7443,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             expandBreadcrumbs: string;
@@ -7667,6 +7686,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             expandBreadcrumbs: string;
@@ -7905,6 +7926,8 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         a11y: {
             close: string;
             save: string;
+            saving: string;
+            saveFailed: string;
             cancel: string;
             removeAll: string;
             expandBreadcrumbs: string;
@@ -8191,6 +8214,8 @@ export const KBQ_WINDOW: InjectionToken<Window>;
 export type KbqA11yLocaleConfiguration = {
     close: string;
     save: string;
+    saving: string;
+    saveFailed: string;
     cancel: string;
     removeAll: string;
     expandBreadcrumbs: string;
@@ -8705,6 +8730,12 @@ export const kbqGetElementHeight: (element: Element) => number;
 
 // @public
 export function kbqGetPanelWidthOrigin(origin: KbqPanelWidthOrigin): number;
+
+// @public
+export const kbqGetScrollOverflowTolerance: (element: Element) => number;
+
+// @public
+export const kbqHasScrollOverflow: (element: Element, axis?: KbqScrollAxis) => boolean;
 
 // @public
 export const kbqHighlightBackgroundMark: (text: string) => string;
@@ -9497,6 +9528,9 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 }
 
 // @public
+export type KbqScrollAxis = 'horizontal' | 'vertical';
+
+// @public
 export interface KbqSelectAllAdapter<T> {
     isSelectable: (item: T) => boolean;
     isSelected: (item: T) => boolean;
@@ -10144,6 +10178,8 @@ export const ptBRLocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         expandBreadcrumbs: string;
@@ -10598,6 +10634,8 @@ export const ruRULocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         expandBreadcrumbs: string;
@@ -10833,6 +10871,14 @@ export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {
 }
 
 // @public
+export class ShowOnCrossFieldErrorStateMatcher extends ErrorStateMatcher {
+    constructor(scope: CrossFieldErrorScope, own?: ErrorStateMatcher);
+    // (undocumented)
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    protected shouldReveal(controls: AbstractControl[]): boolean;
+}
+
+// @public
 export class ShowOnFormSubmitErrorStateMatcher implements ErrorStateMatcher {
     // (undocumented)
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
@@ -10971,6 +11017,8 @@ export const tkTMLocaleData: {
     a11y: {
         close: string;
         save: string;
+        saving: string;
+        saveFailed: string;
         cancel: string;
         removeAll: string;
         expandBreadcrumbs: string;
@@ -13642,7 +13690,17 @@ pipeTemplates: KbqPipeTemplate[] = [
 
 The value caps the scrollable list only, and the list's own padding is added on top of it — so a multiple of the 32px option height fits without a scrollbar and without a clipped row. The pipe's search field is rendered above the list and adds to the panel's total height, while the "select all" row scrolls with the options and is counted by the cap. A value taller than the room left in the viewport is clipped by the overlay rather than scrolled. Omitting the option — or passing `null` — restores the default. The option is ignored by other pipe types.
 
+An option with a `caption`, and any option under `multilineOptions`, is taller than 32px, so fewer of them fit.
+
 <!-- example(filter-bar-panel-max-height) -->
+
+### Caption in options
+
+Add `caption` to the option value of a `select` or `multiselect` pipe to show a second line in the dropdown — a technical identifier, for example.
+
+Both lines are truncated by default; `multilineOptions: true` wraps them instead.
+
+<!-- example(filter-bar-option-caption) -->
 
 ### Inactive filter
 
@@ -13864,6 +13922,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     isTemplateRef(value: unknown): boolean;
     get localeData(): KbqFilterBarConfiguration;
     protected lockedValues?: unknown[];
+    protected multilineOptions?: boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     onClear(): void;
@@ -14598,6 +14657,7 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     maxInterval?: unknown;
     minDateTime?: unknown;
     minInterval?: unknown;
+    multilineOptions?: boolean;
     panelMaxHeight?: KbqPanelMaxHeight;
     // (undocumented)
     values?: unknown[];
@@ -14695,6 +14755,7 @@ export enum KbqSaveFilterStatuses {
 
 // @public (undocumented)
 export interface KbqSelectValue {
+    caption?: string;
     id?: string | number;
     // (undocumented)
     name: string;
@@ -16780,6 +16841,38 @@ If the user clears a value, you can substitute either a default value or the las
 
 <!-- example(inline-edit-validation) -->
 
+### Saving to a server
+
+The component owns the loading state: it closes the editor, keeps the timings, updates its own status and remembers the last saved value. Connect the stream of the request to the `saveHandler` property for that.
+
+View mode renders the control's value: the editor closes before the server answers.
+
+If the value still equals the one the editor opened with, no request is sent. `compareWith` decides that: the default compares with `===`, which suits text and numbers, so bind your own for arrays and objects, or `null` to send every time. A failed save is always retried.
+
+The request outlives the field — removing the row doesn't cancel it. Provide `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER` in the root injector if a failure has to be reported after that, because the `saveError` output goes away with the view.
+
+#### Loading state
+
+If the server responds within 100 ms, don't show a loading indicator. Otherwise, the field in view mode switches to the Progress state for at least 300 ms to avoid flickering. Edit mode cannot be reopened while the request is in flight.
+
+<!-- example(inline-edit-save-progress) -->
+
+#### Save error
+
+The value's background turns into the error color and stays that way until the user reacts. The entered value is kept in the field.
+
+The message is shown by the application: set the shared reaction with the `KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER` token, override it for a single field with the `saveErrorHandler` property, or subscribe to the field's `saveError` output. The handler receives the error and the field itself, with its `retrySave()`, `toggleMode()` and `rollback()` actions.
+
+The message doesn't hide on a timeout, and closing or dismissing it discards the unsaved value.
+
+Cancelling the editor doesn't clear the failed state: the value is still the one the server refused, so the field stays marked until the save succeeds or `rollback()` discards it.
+
+<!-- example(inline-edit-save-error) -->
+
+When the server rejects part of the value rather than all of it, match the rejected items against what view mode shows and mark only those.
+
+<!-- example(inline-edit-save-invalid-items) -->
+
 ### Action menu
 
 On hover or focus, an action button or menu can appear on the right side of the field, offering options such as:
@@ -16864,6 +16957,7 @@ import * as _angular_core from '@angular/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
+import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqConnectedOverlayOriginProvider } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -16871,9 +16965,14 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqLabel } from '@koobiq/components/form-field';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import * as _koobiq_components_core from '@koobiq/components/core';
+import { Observable } from 'rxjs';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
+
+// @public
+export const KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER: InjectionToken<KbqInlineEditSaveErrorHandler>;
 
 // @public
 export class KbqFocusRegionItem {
@@ -16890,8 +16989,9 @@ export class KbqFocusRegionItem {
 }
 
 // @public
-export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
+export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInlineEditSaveRecovery {
     constructor();
+    protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly anchorFocused: _angular_core.WritableSignal<boolean>;
     protected cancel(): void;
     protected readonly canceled: _angular_core.OutputEmitterRef<void>;
@@ -16899,6 +16999,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly className: _angular_core.Signal<string>;
     protected readonly colors: typeof KbqComponentColors;
     commit(): void;
+    readonly compareWith: _angular_core.InputSignal<((a: any, b: any) => boolean) | null>;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly editModeWidth: _angular_core.InputSignalWithTransform<number | undefined, unknown>;
     // (undocumented)
@@ -16910,6 +17011,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly hasInteractiveContent: _angular_core.WritableSignal<boolean>;
     readonly interactiveSelectors: _angular_core.InputSignal<string[]>;
     protected readonly isEditMode: _angular_core.Signal<boolean>;
+    protected readonly isSaving: _angular_core.Signal<boolean>;
     protected readonly isSingleSelect: _angular_core.Signal<boolean>;
     protected readonly label: _angular_core.Signal<KbqLabel | undefined>;
     protected readonly menu: _angular_core.Signal<KbqInlineEditMenu | undefined>;
@@ -16926,8 +17028,15 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly overlayWidth: _angular_core.WritableSignal<string | number>;
     protected readonly placements: typeof PopUpPlacements;
     protected readonly regionItems: _angular_core.Signal<readonly KbqFocusRegionItem[]>;
+    retrySave(): void;
+    rollback(): void;
     protected save($event?: Event): void;
     protected readonly saved: _angular_core.OutputEmitterRef<void>;
+    protected readonly saveError: _angular_core.OutputEmitterRef<KbqInlineEditSaveErrorContext<any>>;
+    readonly saveErrorHandler: _angular_core.InputSignal<KbqInlineEditSaveErrorHandler | null>;
+    readonly saveHandler: _angular_core.InputSignal<KbqInlineEditSaveHandler | undefined>;
+    readonly saveStatus: _angular_core.Signal<KbqInlineEditSaveStatus>;
+    protected readonly saveStatusMessage: _angular_core.Signal<string>;
     protected readonly scrollStrategy: _angular_core.WritableSignal<ScrollStrategy>;
     protected readonly selectRef: _angular_core.Signal<KbqSelect | undefined>;
     readonly setValueHandler: _angular_core.InputSignal<((value: any) => void) | undefined>;
@@ -16941,7 +17050,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider {
     protected readonly validationTooltipScrollStrategy: () => ScrollStrategy;
     protected readonly viewContainer: _angular_core.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "overlayPanelClass": { "alias": "overlayPanelClass"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; "interactiveSelectors": { "alias": "interactiveSelectors"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList", "selectRef"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "overlayPanelClass": { "alias": "overlayPanelClass"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "saveHandler": { "alias": "saveHandler"; "required": false; "isSignal": true; }; "saveErrorHandler": { "alias": "saveErrorHandler"; "required": false; "isSignal": true; }; "canSaveOnEnter": { "alias": "canSaveOnEnter"; "required": false; "isSignal": true; }; "interactiveSelectors": { "alias": "interactiveSelectors"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "saveError": "saveError"; "modeChange": "modeChange"; }, ["menu", "label", "formFieldRefList", "selectRef"], ["kbq-label", "[kbqInlineEditViewMode]", "[kbqInlineEditMenu]", "[kbqInlineEditEditMode]"], true, [{ directive: typeof i1.CdkMonitorFocus; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
 }
@@ -16975,6 +17084,37 @@ export class KbqInlineEditPlaceholder {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInlineEditPlaceholder, never>;
 }
+
+// @public
+export interface KbqInlineEditSaveErrorContext<E = any> {
+    readonly error: E;
+    readonly inlineEdit: KbqInlineEditSaveRecovery;
+}
+
+// @public
+export type KbqInlineEditSaveErrorHandler = (context: KbqInlineEditSaveErrorContext) => void;
+
+// @public
+export type KbqInlineEditSaveHandler = () => Observable<unknown>;
+
+// @public
+export const kbqInlineEditSaveProgressDelay = 100;
+
+// @public
+export const kbqInlineEditSaveProgressMinimumDuration = 300;
+
+// @public
+export interface KbqInlineEditSaveRecovery {
+    // (undocumented)
+    retrySave(): void;
+    // (undocumented)
+    rollback(): void;
+    // (undocumented)
+    toggleMode(): void;
+}
+
+// @public
+export type KbqInlineEditSaveStatus = 'idle' | 'pending' | 'progress' | 'error';
 
 // (No @packageDocumentation comment for this package)
 
@@ -17837,6 +17977,16 @@ option, and the user extends it with `Ctrl` + click or `Shift` + click.
 
 A bare `multiple`, or any other value, is treated as `checkbox`.
 
+#### Select all
+
+When users often have to select every value, or to leave out just a few, put a "Select all" master checkbox
+at the top of the list with the `selectAll` attribute — `multiple="checkbox"` mode only:
+
+"Select all" is not rendered with single selection, `multiple="keyboard"`, `horizontal`, an empty list or a
+virtual scroller.
+
+<!-- example(list-select-all) -->
+
 #### Matching values
 
 The list compares the values coming from the form control with the values of its options by identity. When
@@ -17882,18 +18032,24 @@ expression that builds a new function on every change detection pass makes the l
 
 ### Keyboard
 
-The list is a single tab stop. Inside it the arrows move the active option, `Home` and `End` jump to the
+The list is a single tab stop. Tabbing into it focuses the first selected option, or the first item of the
+list when nothing is selected. Inside it the arrows move the active option, `Home` and `End` jump to the
 ends, `PageUp` and `PageDown` move by a page, `Space` and `Enter` toggle the active option, and typing
 letters jumps to the option that starts with them.
 
 #### Selecting everything
 
 `Ctrl`/`Cmd` + `A` selects every option that is not disabled, in multiple selection mode only. By default a
-repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. The batch is reported
-through `onSelectAll`, which carries the options the shortcut could act on.
+repeated press keeps them selected; `selectAllToggle` makes it deselect them instead. While a
+[`selectAll`](#select-all) row is on screen the shortcut always toggles both ways, so it and the master
+checkbox cannot disagree; in the modes that render no row it keeps its select-only default. The batch is
+reported through `onSelectAll`, which carries the options the shortcut could act on; `selectionChange` stays
+silent for it.
 
 The behaviour can be replaced wholesale with the `selectAllHandler` input. It receives the keyboard event
-and the list, and it has to be a function — anything else throws.
+and the list, and it has to be a function — anything else throws. Note that the handler replaces the
+shortcut only: the master checkbox keeps running the built-in toggle, so with `selectAll` on you own both
+paths.
 
 #### Copying
 
@@ -17976,7 +18132,7 @@ be resolved back to the list instance that would have to draw it.
 
 ### Accessibility
 
-`kbq-list-selection` is announced as a `listbox` and every `kbq-list-option` as an `option` carrying its own `aria-selected`. With `multiple` the list is additionally marked `aria-multiselectable`, and with `horizontal` it reports `aria-orientation="horizontal"` and moves the active option with the Left/Right arrows. The list is a single tab stop; roving focus moves between the options. A disabled list or option is reported through `aria-disabled`. The built-in pseudo-checkbox is decorative and stays out of the accessibility tree; if you project your own `kbq-pseudo-checkbox` instead (`externalPseudoCheckbox`), mark it `aria-hidden="true"` too — the option's own `aria-selected` already carries the selected state.
+`kbq-list-selection` is announced as a `listbox` and every `kbq-list-option` as an `option` carrying its own `aria-selected`. The "select all" row stays an `option` too — a `checkbox` is not a valid child of a listbox — and reports the batch state on `aria-checked`, including `mixed` for a partial selection; it carries no `aria-selected` of its own. With `multiple` the list is additionally marked `aria-multiselectable`, and with `horizontal` it reports `aria-orientation="horizontal"` and moves the active option with the Left/Right arrows. The list is a single tab stop; roving focus moves between the options. A disabled list or option is reported through `aria-disabled`. The built-in pseudo-checkbox is decorative and stays out of the accessibility tree; if you project your own `kbq-pseudo-checkbox` instead (`externalPseudoCheckbox`), mark it `aria-hidden="true"` too — the option's own `aria-selected` already carries the selected state.
 
 A listbox needs an accessible name, so give the list one with `aria-label` or `aria-labelledby`:
 
@@ -18028,6 +18184,7 @@ import { KbqLine } from '@koobiq/components/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOptionActionComponent } from '@koobiq/components/core';
 import { KbqPseudoCheckbox } from '@koobiq/components/core';
+import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { MultipleMode } from '@koobiq/components/core';
@@ -18100,6 +18257,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     constructor();
     // (undocumented)
     readonly actionButton: _angular_core.Signal<KbqOptionActionComponent | undefined>;
+    protected get ariaChecked(): string | null;
+    protected get ariaSelected(): boolean | null;
     blur(): void;
     // (undocumented)
     readonly checkboxPosition: _angular_core.InputSignal<"before" | "after">;
@@ -18146,6 +18305,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     preventBlur: boolean;
     // (undocumented)
     readonly pseudoCheckbox: _angular_core.Signal<KbqPseudoCheckbox | undefined>;
+    readonly selectAllRow: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selected(): boolean;
     set selected(value: boolean);
     setSelected(selected: boolean): void;
@@ -18164,7 +18324,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     get value(): T;
     set value(newValue: T);
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "dragHandles", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "dragHandles", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListOption<any>, never>;
 }
@@ -18189,6 +18349,7 @@ export class KbqListSelectAllEvent<T> {
 // @public (undocumented)
 export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor();
+    get allOptionsSelected(): boolean;
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
     blur(): void;
@@ -18221,6 +18382,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     get multiple(): boolean;
     // (undocumented)
     multipleMode: MultipleMode | null;
+    readonly navigableOptions: QueryList<KbqListOption<T>>;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -18249,6 +18411,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     get optionFocusChanges(): Observable<KbqOptionEvent<T>>;
     // (undocumented)
     options: QueryList<KbqListOption<T>>;
+    refreshSelectAllState(): void;
     // (undocumented)
     registerOnChange(fn: (value: T[]) => void): void;
     // (undocumented)
@@ -18260,8 +18423,12 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     selectActiveOptions(): void;
     selectAll(): void;
+    readonly selectAllEnabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void;
     set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection<T>) => void);
+    readonly selectAllOption: _angular_core.Signal<KbqListOption<T> | undefined>;
+    get selectAllState(): KbqPseudoCheckboxState;
+    protected selectAllText: string;
     readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: _angular_core.OutputEmitterRef<KbqListSelectionChange<T>>;
@@ -18275,10 +18442,12 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     setSelectedOptionsByKey(option: KbqListOption<T>, shiftKey: boolean, ctrlKey: boolean): void;
     // (undocumented)
     get showCheckbox(): boolean;
+    protected get showSelectAll(): boolean;
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
     toggleFocusedOption(): void;
+    toggleSelectAll(): void;
     // (undocumented)
     updateScrollSize(): void;
     // (undocumented)
@@ -18290,7 +18459,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     writeValue(values: T[] | T | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "dragPreview": { "alias": "dragPreview"; "required": false; "isSignal": true; }; "dragCursor": { "alias": "dragCursor"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["options"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "dragPreview": { "alias": "dragPreview"; "required": false; "isSignal": true; }; "dragCursor": { "alias": "dragCursor"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllEnabled": { "alias": "selectAll"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["virtualScroll", "options"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListSelection<any>, never>;
 }
@@ -24205,11 +24374,11 @@ Don't use empty tabs together with inactive tabs. They look similar, which may c
 
 #### Scroll
 
-When there isn't enough place for tabs in a single row, they aren't placed in the next row. Instead, they gradually get hidden with the option to show elements outside the visible area.
+Horizontal tabs don't wrap or shrink. If there isn't enough space, some tabs are hidden and scroll buttons appear at the edges. Tabs can also be scrolled horizontally on a touchpad, with the mouse wheel while holding Shift, or by dragging.
 
 <!-- example(tabs-with-scroll) -->
 
-When there isn't enough place for vertical tabs, a scrollbar appears.
+Vertical tabs can be scrolled if they don't fit within the available height.
 
 <!-- example(tabs-with-scroll-vertical) -->
 
