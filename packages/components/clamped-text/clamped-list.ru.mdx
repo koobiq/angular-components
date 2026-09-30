@@ -41,7 +41,7 @@ Clamped List компактно отображает длинные списки
 
 Переключатель размещаете вы, но делать его доступным вручную не нужно: поставьте на него `kbqClampedListTrigger`, и директива сама задаст `role="button"`, `tabindex="0"`, `aria-expanded` и `aria-controls` на список. Прописывать эти атрибуты руками не нужно, и не стоит обходиться голым `<a>` без директивы — именно `kbqClampedListTrigger` превращает элемент в управление раскрытием.
 
-<!-- prettier-ignore -->
+{/* prettier-ignore */}
 ```html
 <div #list="kbqClampedList" kbqClampedList [items]="items">
     @for (item of list.visibleItems(); track item) {

@@ -41,7 +41,7 @@ Read-only members for the template:
 
 The trigger is yours to place, but not to make accessible: put `kbqClampedListTrigger` on it and the directive supplies `role="button"`, `tabindex="0"`, `aria-expanded` and an `aria-controls` pointing at the list. Do not write those attributes by hand, and do not reach for a bare `<a>` without them — `kbqClampedListTrigger` is what turns the element into a disclosure control.
 
-<!-- prettier-ignore -->
+{/* prettier-ignore */}
 ```html
 <div #list="kbqClampedList" kbqClampedList [items]="items">
     @for (item of list.visibleItems(); track item) {
