@@ -1,6 +1,6 @@
 `KbqSkeleton` - это временная заглушка, которая занимает место подгружаемого элемента и отображает его примерный макет, пока реальный контент еще загружается.
 
-Директива `[kbqSkeleton]="loading"` ставится прямо на готовый компонент или текст: пока `loading` истинно, заглушка повторяет его форму и размер.
+Директива `kbqSkeleton` ставится на готовый компонент или текст: пока идёт загрузка, заглушка повторяет его форму и размер.
 
 <Example id="skeleton-overview" />
 
@@ -10,45 +10,65 @@
 
 #### Элементы
 
+Заглушки [кнопки](ru/components/button), [бейджа](ru/components/badge), [тега](ru/components/tag), [иконки](ru/components/icon) и [ссылки](ru/components/link).
+
 <Example id="skeleton-elements" />
 
 #### Типографика
+
+Заглушка текста любого уровня [типографики](ru/main/typography/overview).
 
 <Example id="skeleton-typography" />
 
 #### Список описаний
 
+Заглушка [списка описаний](ru/components/dl).
+
 <Example id="skeleton-dl" />
 
 #### Таблица
 
+Заглушка [таблицы](ru/components/table).
+
 <Example id="skeleton-table" />
+
+Для [AG Grid](ru/components/ag-grid/overview) у пресета есть выбор строк и закреплённые колонки.
 
 <Example id="skeleton-grid" />
 
 #### Группа
 
+Ряд одинаковых заглушек, например для [списка тегов](ru/components/tag-list) или ряда [бейджей](ru/components/badge).
+
 <Example id="skeleton-group" />
 
 #### Поле формы
+
+Заглушка [поля формы](ru/components/form-field).
 
 <Example id="skeleton-form-field" />
 
 #### Аккордеон
 
+Заглушка [аккордеона](ru/components/accordion).
+
 <Example id="skeleton-accordion" />
 
 #### Чекбокс, радиокнопка и переключатель
+
+Заглушка [чекбокса](ru/components/checkbox), [радиокнопки](ru/components/radio) или [переключателя](ru/components/toggle).
 
 <Example id="skeleton-checkable" />
 
 #### Вкладки
 
-Пресет, вложенный в `<kbq-skeleton-tabs>`, показывается вместо текста.
+Заглушка [вкладок](ru/components/tabs). Пресет, вложенный в `<kbq-skeleton-tabs>`, показывается вместо текста.
 
 <Example id="skeleton-tabs" />
 
 #### Дерево
+
+Заглушка [дерева](ru/components/tree).
 
 <Example id="skeleton-tree" />
 
@@ -82,13 +102,13 @@ import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skel
 
 #### Блок кода
 
-Пока код загружается, на месте блока кода стоит `<kbq-skeleton>` фиксированной высоты в 100px.
+Пока код загружается, на месте [блока кода](ru/components/code-block) стоит `<kbq-skeleton>` фиксированной высоты.
 
 <Example id="skeleton-code-block" />
 
 #### Загрузка панели
 
-Данные боковой панели часто приходят частями. Пока часть загружается, на её месте стоит пресет: сначала появляются кнопки и описание, затем список серверов.
+Данные [боковой панели](ru/components/sidepanel) часто приходят частями. Пока часть загружается, на её месте стоит пресет, а загруженные части появляются сразу, не дожидаясь остальных.
 
 <Example id="skeleton-in-sidepanel" />
 
