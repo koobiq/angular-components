@@ -14,22 +14,6 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Copy",
     "ru": "Скопировать",
   },
-  "copyPage": {
-    "en": "Copy page",
-    "ru": "Скопировать страницу",
-  },
-  "copyPageActions": {
-    "en": "Page as Markdown",
-    "ru": "Страница в Markdown",
-  },
-  "copyPageFailed": {
-    "en": "Could not copy the page",
-    "ru": "Не удалось скопировать страницу",
-  },
-  "copyPageMore": {
-    "en": "More page actions",
-    "ru": "Другие действия со страницей",
-  },
   "copySvg": {
     "en": "Copy SVG",
     "ru": "Скопировать SVG",
@@ -198,30 +182,6 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
     "en": "Nothing found",
     "ru": "Ничего не найдено",
   },
-  "openInChatGpt": {
-    "en": "Open in ChatGPT",
-    "ru": "Открыть в ChatGPT",
-  },
-  "openInClaude": {
-    "en": "Open in Claude",
-    "ru": "Открыть в Claude",
-  },
-  "openInClaudeCode": {
-    "en": "Open in Claude Code",
-    "ru": "Открыть в Claude Code",
-  },
-  "openInClaudeCodeTerminal": {
-    "en": "Open in Claude Code in the terminal",
-    "ru": "Открыть в Claude Code в терминале",
-  },
-  "openInCodex": {
-    "en": "Open in Codex",
-    "ru": "Открыть в Codex",
-  },
-  "openInCursor": {
-    "en": "Open in Cursor",
-    "ru": "Открыть в Cursor",
-  },
   "openInNewTab": {
     "en": "Open in new tab",
     "ru": "Открыть в новой вкладке",
@@ -317,10 +277,6 @@ exports[`DOCS_TRANSLATIONS matches the exact strings previously inlined across t
   "value": {
     "en": "Value",
     "ru": "Значение",
-  },
-  "viewAsMarkdown": {
-    "en": "View as Markdown",
-    "ru": "Открыть как Markdown",
   },
   "viewSourceOnGitHub": {
     "en": "Source code",
