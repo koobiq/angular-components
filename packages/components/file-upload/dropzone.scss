@@ -1,7 +1,21 @@
+// `--kbq-background-overlay-theme` was dropped in @koobiq/design-tokens v4; it is now an opaque base
+// plus `--kbq-opacity-overlay`. The two are normally composed with `opacity`, which is not available
+// here — the overlay already animates its own appearance with it, and it would fade the dashed border
+// and the empty state along with the background. Mixing keeps the alpha on the colour alone.
 .kbq-dropzone-overlay {
     --kbq-dropzone-padding: var(--kbq-size-s);
-    --kbq-dropzone-overlay-background: var(--kbq-background-overlay-theme);
-    --kbq-dropzone-component-background: var(--kbq-background-overlay-theme);
+    --kbq-dropzone-overlay-background: color-mix(
+        in srgb,
+        var(--kbq-background-overlay-base-theme) /* color-mix only allows percentage value */
+            calc(var(--kbq-opacity-overlay) * 100%),
+        transparent
+    );
+    --kbq-dropzone-component-background: color-mix(
+        in srgb,
+        var(--kbq-background-overlay-base-theme) /* color-mix only allows percentage value */
+            calc(var(--kbq-opacity-overlay) * 100%),
+        transparent
+    );
     --kbq-dropzone-border-color: var(--kbq-line-theme-fade);
 
     padding: var(--kbq-dropzone-padding);

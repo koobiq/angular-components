@@ -2,6 +2,7 @@
 
 // @deprecated @TODO: Will be removed in a future major version.
 @forward '@koobiq/design-tokens/web/variables';
-@forward '@koobiq/design-tokens/web/palette';
+// `_palette.scss` is gone in @koobiq/design-tokens v4 — it only ever held the legacy HSL palette,
+// which v4 removed. Nothing in this repository read the `$palette` map.
 @forward '@koobiq/design-tokens/web/typography';
 @forward '@koobiq/design-tokens/web/md-typography';
