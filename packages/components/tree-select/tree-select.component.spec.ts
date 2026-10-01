@@ -6492,3 +6492,98 @@ describe('KbqTreeSelect first-row panel anchor', () => {
         expect(overlapPosition(select)).toBeUndefined();
     });
 });
+
+/** A tree-select with no data, projecting the empty-state message behind a flag. */
+@Component({
+    selector: 'tree-select-without-options',
+    imports: [
+        KbqFormFieldModule,
+        KbqTreeModule,
+        KbqTreeSelectModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select>
+                @if (showMessage) {
+                    <kbq-select-no-options>Nothing to choose from</kbq-select-no-options>
+                }
+
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class TreeSelectWithoutOptions {
+    showMessage = true;
+
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+    readonly select = viewChild.required(KbqTreeSelect);
+}
+
+describe('KbqTreeSelect without options', () => {
+    let fixture: ComponentFixture<TreeSelectWithoutOptions>;
+    let overlayContainerElement: HTMLElement;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [TreeSelectWithoutOptions, NoopAnimationsModule],
+            providers: [{ provide: Directionality, useFactory: () => ({ value: 'ltr' }) }]
+        });
+
+        fixture = TestBed.createComponent(TreeSelectWithoutOptions);
+        overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+    });
+
+    const open = () => {
+        fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
+        fixture.detectChanges();
+        flush();
+    };
+
+    it('should open onto the projected message', fakeAsync(() => {
+        fixture.detectChanges();
+        open();
+
+        expect(fixture.componentInstance.select().panelOpen).toBe(true);
+        expect(
+            overlayContainerElement.querySelector('.kbq-tree-select__content .kbq-select-no-options')?.textContent
+        ).toContain('Nothing to choose from');
+    }));
+
+    it('should stay closed without the message', fakeAsync(() => {
+        fixture.componentInstance.showMessage = false;
+        fixture.detectChanges();
+        open();
+
+        expect(fixture.componentInstance.select().panelOpen).toBe(false);
+    }));
+
+    it('should close on Escape', fakeAsync(() => {
+        fixture.detectChanges();
+        open();
+
+        expect(fixture.componentInstance.select().panelOpen).toBe(true);
+
+        dispatchKeyboardEvent(getTreeSelectElement(fixture), 'keydown', ESCAPE);
+        fixture.detectChanges();
+        flush();
+
+        expect(fixture.componentInstance.select().panelOpen).toBe(false);
+    }));
+
+    it('should have no accessibility violations in the open panel', async () => {
+        fixture.autoDetectChanges();
+        fixture.componentInstance.select().open();
+        await fixture.whenStable();
+
+        expect(overlayContainerElement.querySelector('.kbq-select-no-options')).not.toBeNull();
+        expect(await axe(overlayContainerElement)).toHaveNoViolations();
+    });
+});

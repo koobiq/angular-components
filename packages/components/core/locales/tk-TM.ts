@@ -112,7 +112,8 @@ export const tkTMLocaleData = {
             removeButtonTooltip: 'Ýokla',
             applyButton: 'Ulan',
             emptySearchResult: 'Hiç zat tapylmady',
-            selectAll: 'Ählisini saýla'
+            selectAll: 'Ählisini saýla',
+            noOptions: 'Wariant ýok'
         },
         datePipe: {
             customPeriod: 'Laýyk döwür',

@@ -6,6 +6,7 @@ import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqTreeModule, KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
@@ -29,6 +30,7 @@ import { KbqTreeSelectPipeBase } from './tree-select-pipe-base';
         KbqHighlightModule,
         KbqTreeModule,
         KbqTreeSelectModule,
+        KbqSelectNoOptions,
         FormsModule
     ],
     templateUrl: 'pipe-tree-select.html',

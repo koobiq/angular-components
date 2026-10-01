@@ -16,6 +16,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqBasePipe } from './base-pipe';
+import { registerNoOptionsTests } from './pipe-no-options.spec-helper';
 import { registerPipeStatesTests } from './pipe-states.spec-helper';
 import { KbqPipeTreeSelectComponent } from './pipe-tree-select';
 
@@ -144,6 +145,24 @@ describe('KbqPipeTreeSelectComponent', () => {
 
             return { fixture, filterBar: filterBarDebugElement };
         }
+    });
+
+    registerNoOptionsTests({
+        pipeSelector: 'kbq-pipe-tree-select',
+        createPipe,
+        createFilter,
+        createTemplate: (overrides) => ({
+            name: 'TreeSelect',
+            id: PIPE_TEMPLATE_ID,
+            type: KbqPipeTypes.TreeSelect,
+            values: TREE_DATA,
+            cleanable: false,
+            removable: false,
+            disabled: false,
+            ...overrides
+        }),
+        values: TREE_DATA,
+        createFixture: () => TestBed.createComponent(TestComponent)
     });
 
     describe('isEmpty', () => {

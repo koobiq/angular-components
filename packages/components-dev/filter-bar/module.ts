@@ -64,6 +64,12 @@ const DEV_DATA_OBJECT = {
         <filter-bar-option-caption-example />
         <br />
         <br />
+        <filter-bar-no-options-example />
+        <br />
+        <br />
+        <filter-bar-not-specified-example />
+        <br />
+        <br />
         <filter-bar-locked-options-example />
         <br />
         <br />

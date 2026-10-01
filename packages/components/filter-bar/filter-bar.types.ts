@@ -268,6 +268,12 @@ export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
      */
     multilineOptions?: boolean;
     /**
+     * Message shown in the dropdown of the `select`, `multiselect`, `tree-select` and `multi-tree-select`
+     * pipes when `values` is empty. Defaults to the localized `pipe.noOptions` string. Ignored by other pipe
+     * types.
+     */
+    noOptionsText?: string;
+    /**
      * Earliest selectable instant for the `date` / `datetime` pipe custom period. Accepts any value the
      * configured `DateAdapter` can deserialize (with the default Luxon adapter: an ISO-8601 string, a
      * `Date`, or a `DateTime`). The `date` pipe uses only its day (pinned to the start of day). Ignored by

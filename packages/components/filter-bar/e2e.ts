@@ -1430,3 +1430,137 @@ export class E2eFilterBarPipeFill {
         }
     ];
 }
+
+/**
+ * A pipe of every select-family type without values: each dropdown shows the "no options" message in place of
+ * the list, with no search field and no "select all" row. The first one is the removable `select` of the design.
+ */
+@Component({
+    selector: 'e2e-filter-bar-no-options',
+    imports: [KbqFilterBarModule],
+    template: `
+        <div class="e2e-filter-bar-no-options__target" data-testid="e2eScreenshotTarget">
+            <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="filter">
+                @for (pipe of filter.pipes; track pipe) {
+                    <ng-container *kbqPipe="pipe" />
+                }
+            </kbq-filter-bar>
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: 8px;
+        }
+
+        /* The panel is portaled into the overlay, so the target needs room for it to overlap. */
+        .e2e-filter-bar-no-options__target {
+            height: 160px;
+            width: 720px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eFilterBarNoOptions'
+    }
+})
+export class E2eFilterBarNoOptions {
+    readonly pipeTemplates: KbqPipeTemplate[] = [
+        {
+            name: 'Tenant',
+            id: 'E2eNoOptionsSelect',
+            type: KbqPipeTypes.Select,
+            values: [],
+
+            cleanable: false,
+            removable: true,
+            disabled: false
+        },
+        {
+            name: 'MultiSelect',
+            id: 'E2eNoOptionsMultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            values: [],
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'TreeSelect',
+            id: 'E2eNoOptionsTreeSelect',
+            type: KbqPipeTypes.TreeSelect,
+            values: [],
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiTreeSelect',
+            id: 'E2eNoOptionsMultiTreeSelect',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: [],
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        }
+    ];
+
+    readonly filter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Tenant',
+                id: 'E2eNoOptionsSelect',
+                type: KbqPipeTypes.Select,
+                value: null,
+                search: true,
+
+                cleanable: false,
+                removable: true,
+                disabled: false
+            },
+            {
+                name: 'MultiSelect',
+                id: 'E2eNoOptionsMultiSelect',
+                type: KbqPipeTypes.MultiSelect,
+                value: null,
+                search: true,
+                selectAll: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'TreeSelect',
+                id: 'E2eNoOptionsTreeSelect',
+                type: KbqPipeTypes.TreeSelect,
+                value: null,
+                search: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'MultiTreeSelect',
+                id: 'E2eNoOptionsMultiTreeSelect',
+                type: KbqPipeTypes.MultiTreeSelect,
+                value: null,
+                search: true,
+                selectAll: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+}

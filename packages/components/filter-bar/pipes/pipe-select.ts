@@ -94,6 +94,10 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
 
     /** opens select */
     override open() {
+        // Without options the search is hidden and nothing in the panel takes the focus: the trigger has to,
+        // or Escape never reaches the select.
+        if (this.noOptions) this.focusTrigger();
+
         this.select().open();
     }
 

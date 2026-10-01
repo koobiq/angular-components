@@ -20,6 +20,7 @@ import { kbqTreeSelectAllValue } from '@koobiq/components/tree';
 import { BehaviorSubject } from 'rxjs';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiTreeSelectComponent } from './pipe-multi-tree-select';
+import { registerNoOptionsTests } from './pipe-no-options.spec-helper';
 import { registerPipeStatesTests } from './pipe-states.spec-helper';
 
 const DEV_DATA_OBJECT = {
@@ -158,6 +159,24 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             return { fixture, filterBar: filterBarDebugElement };
         }
+    });
+
+    registerNoOptionsTests({
+        pipeSelector: 'kbq-pipe-multi-tree-select',
+        createPipe,
+        createFilter,
+        createTemplate: (overrides) => ({
+            name: 'MultiTreeSelect',
+            id: PIPE_TEMPLATE_ID,
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: TREE_DATA,
+            cleanable: false,
+            removable: false,
+            disabled: false,
+            ...overrides
+        }),
+        values: TREE_DATA,
+        createFixture: () => TestBed.createComponent(TestComponent)
     });
 
     describe('isEmpty', () => {
@@ -380,6 +399,37 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(component.allOptionsSelected).toBe(true);
             expect(component.selectedAllEqualsSelectedNothing).toBe(true);
             expect(component.data.value).toEqual([]);
+        }));
+    });
+
+    describe('select all without options', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+
+            fixture.componentInstance.pipeTemplates = [{ ...fixture.componentInstance.pipeTemplates[0], values: [] }];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: null, selectAll: true })
+            ]);
+            fixture.detectChanges();
+        });
+
+        it('should not add the "select all" node', () => {
+            expect(getPipeComponent().dataSource.data).toEqual([]);
+        });
+
+        it('should keep the value and emit nothing on Ctrl+A', fakeAsync(() => {
+            const changeSpy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(changeSpy);
+            openSelect();
+            flush();
+
+            getPipeComponent().selectAllHandler(new KeyboardEvent('keydown'));
+            flush();
+
+            expect(getPipeComponent().data.value).toBeNull();
+            expect(changeSpy).not.toHaveBeenCalled();
         }));
     });
 

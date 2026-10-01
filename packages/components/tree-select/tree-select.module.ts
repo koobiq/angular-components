@@ -8,6 +8,7 @@ import {
     KbqSelectTrigger
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelect } from './tree-select.component';
@@ -27,6 +28,7 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
+        KbqSelectNoOptions,
         KbqTreeSelect
     ],
     exports: [
@@ -39,6 +41,7 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
+        KbqSelectNoOptions,
         KbqFormFieldModule
     ]
 })

@@ -74,6 +74,7 @@ import {
 } from '../components/file-upload/e2e';
 import {
     E2eFilterBarFilters,
+    E2eFilterBarNoOptions,
     E2eFilterBarOptionCaption,
     E2eFilterBarPanelMaxHeight,
     E2eFilterBarPipeFill,
@@ -346,6 +347,7 @@ const components: Record<string, Type<unknown>> = {
     E2eFilterBarPipeTruncation,
     E2eFilterBarOptionCaption,
     E2eFilterBarPipeFill,
+    E2eFilterBarNoOptions,
     E2eFlagStyles,
     E2eTimepickerStates,
     E2eIconStateAndStyle,

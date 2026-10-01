@@ -247,6 +247,8 @@ export type KbqFilterBarLocaleConfiguration = {
         applyButton: string;
         emptySearchResult: string;
         selectAll: string;
+        /** Shown in the dropdown of an option pipe whose template has no values. */
+        noOptions: string;
     };
     datePipe: {
         customPeriod: string;
