@@ -109,7 +109,10 @@ export class KbqTooltipComponent extends KbqPopUp {
     }
 }
 
-export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy');
+export const KBQ_TOOLTIP_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>('kbq-tooltip-scroll-strategy', {
+    providedIn: 'root',
+    factory: () => kbqTooltipScrollStrategyFactory(inject(Overlay))
+});
 
 /** @docs-private */
 export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy {

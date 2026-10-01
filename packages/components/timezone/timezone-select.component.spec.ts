@@ -1,6 +1,6 @@
-import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
+import { OverlayContainer, RepositionScrollStrategy, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, QueryList, ViewChild, ViewChildren, getDebugNode } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren, getDebugNode, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -183,6 +183,15 @@ class TimezoneSelectWithSearch implements OnInit {
             })
             .filter((group) => group.zones.length > 0);
     }
+}
+
+@Component({
+    selector: 'standalone-timezone-select',
+    imports: [KbqTimezoneSelect],
+    template: '<kbq-timezone-select />'
+})
+class StandaloneTimezoneSelect {
+    readonly select = viewChild.required(KbqTimezoneSelect);
 }
 
 describe('KbqTimezoneSelect', () => {
@@ -834,5 +843,25 @@ describe('KbqTimezoneSelect', () => {
 
             flush();
         }));
+    });
+
+    // `KbqTimezoneSelect` is exported standalone, so `imports: [KbqTimezoneSelect]` is a legitimate way to
+    // consume it — but it extends `KbqSelect` and inherits its `KBQ_SELECT_SCROLL_STRATEGY` injection, while
+    // its own `imports` carry no module that provides that token. Every other suite here pulls in
+    // `KbqSelectModule`, which hides the gap.
+    describe('without KbqSelectModule', () => {
+        beforeEach(() => {
+            TestBed.configureTestingModule({ imports: [StandaloneTimezoneSelect, NoopAnimationsModule] });
+
+            overlayContainer = TestBed.inject(OverlayContainer);
+        });
+
+        it('should render when imported as a bare standalone component', () => {
+            const fixture = TestBed.createComponent(StandaloneTimezoneSelect);
+
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(RepositionScrollStrategy);
+        });
     });
 });

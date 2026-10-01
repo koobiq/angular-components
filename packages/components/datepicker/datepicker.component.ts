@@ -36,9 +36,16 @@ import { KbqDatepickerInput } from './datepicker-input.directive';
 /** Used to generate a unique ID for each datepicker instance. */
 let datepickerUid = 0;
 
-/** Injection token that determines the scroll handling while the calendar is open. */
+/**
+ * Injection token that determines the scroll handling while the calendar is open. The root default keeps the
+ * datepicker usable outside `KbqDatepickerModule`'s injector; providing the token anywhere still wins over it.
+ */
 export const KBQ_DATEPICKER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
-    'kbq-datepicker-scroll-strategy'
+    'kbq-datepicker-scroll-strategy',
+    {
+        providedIn: 'root',
+        factory: () => KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY(inject(Overlay))
+    }
 );
 
 /** @docs-private */
