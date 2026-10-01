@@ -1,13 +1,17 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { _IdGenerator } from '@angular/cdk/a11y';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { getSupportedInputTypes } from '@angular/cdk/platform';
-import { Directive, DoCheck, ElementRef, Input, OnChanges, OnDestroy, inject } from '@angular/core';
+import { Directive, DoCheck, ElementRef, inject, Input, OnChanges, OnDestroy } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-import { getKbqInputUnsupportedTypeError } from './input-errors';
+import { getKbqInputUnsupportedTypeError, KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE } from './input-errors';
 import { KbqNumberInput } from './input-number';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
+
+// `typeof ngDevMode` is the guard the build optimizer folds away in production bundles.
+declare const ngDevMode: boolean | undefined;
 
 const KBQ_INPUT_INVALID_TYPES = [
     'button',
@@ -20,8 +24,6 @@ const KBQ_INPUT_INVALID_TYPES = [
     'reset',
     'submit'
 ];
-
-let nextUniqueId = 0;
 
 @Directive({
     selector: `input[kbqInput],input[kbqNumberInput]`,
@@ -97,7 +99,7 @@ export class KbqInput
     //  is not migrated.
     @Input() placeholder: string;
 
-    protected uid = `kbq-input-${nextUniqueId++}`;
+    protected uid = inject(_IdGenerator).getId('kbq-input-');
     protected previousNativeValue: any;
     protected neverEmptyInputTypes = [
         'date',
@@ -307,6 +309,19 @@ export class KbqInput
         if (KBQ_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
             throw getKbqInputUnsupportedTypeError(this._type);
         }
+
+        // A native number field runs the value sanitization algorithm on assignment and drops anything that
+        // is not a valid floating-point number — which is every value `kbqNumberInput` renders once a group
+        // separator or a comma fraction separator is in it. It also reports `selectionStart` as `null`,
+        // disabling caret preservation. Reset rather than throw, so an existing consumer keeps working.
+        if (this.numberInput && this._type === 'number') {
+            this._type = 'text';
+
+            if (typeof ngDevMode === 'undefined' || ngDevMode) {
+                // eslint-disable-next-line no-console
+                console.warn(KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE);
+            }
+        }
     }
 
     /** Checks whether the input type is one of the types that are never empty. */
@@ -321,11 +336,20 @@ export class KbqInput
 
         return validity?.badInput;
     }
+
+    /**
+     * The bare-attribute forms (`<input kbqInput required>`) pass `''` to a boolean setter, which
+     * `strictAttributeTypes` rejects without these declarations.
+     * @docs-private
+     */
+    static ngAcceptInputType_required: BooleanInput;
+    /** @docs-private */
+    static ngAcceptInputType_disabled: BooleanInput;
 }
 
 @Directive({
     selector: 'input[kbqInputMonospace]',
     host: { class: 'kbq-input_monospace' },
-    exportAs: 'KbqInputMonospace'
+    exportAs: 'kbqInputMonospace, KbqInputMonospace'
 })
 export class KbqInputMono {}

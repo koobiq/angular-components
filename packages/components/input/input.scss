@@ -17,6 +17,10 @@
     padding: var(--kbq-input-size-padding-vertical) var(--kbq-input-size-padding-horizontal);
 }
 
+/*
+ * Native number fields, i.e. `<input kbqInput type="number">` without `kbqNumberInput` — that directive
+ * always renders into a `type="text"` field, so these rules deliberately do not reach it.
+ */
 input.kbq-input[type='number'] {
     -moz-appearance: textfield;
 }
