@@ -24,9 +24,4 @@ The collapsed state can be driven from outside: the parent sets it, and gets a n
 
 <Example id="clamped-text-external-state" />
 
-A user action is the only thing that travels back — neither the component's own measurement nor a value the parent wrote itself. That makes the state safe to keep in a route query parameter: a page load will not overwrite it.
-
-### Accessibility
-
-- **The toggle.** The component renders the toggle and gives it button semantics: the toggle sits in the tab order, points at the clamped region, and reports whether the text is collapsed or expanded.
-- **The label.** The "Expand" and "Collapse" labels come from the active locale, so there is no accessible name to supply.
+A user action is the only thing that travels back — neither the component's own measurement nor a value the parent wrote itself. That makes the state safe to keep in a route query parameter: a page load will not overwrite the parameter.
