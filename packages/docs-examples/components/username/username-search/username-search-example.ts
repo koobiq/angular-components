@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { kbqBuildUsernameText, KbqUserInfo, KbqUsernameModule, KbqUsernamePipe } from '@koobiq/components/username';
+import {
+    kbqBuildUsernameText,
+    kbqInjectUsernameFormatter,
+    KbqUserInfo,
+    KbqUsernameModule
+} from '@koobiq/components/username';
 import { startWith } from 'rxjs';
 
 /**
@@ -64,7 +69,7 @@ import { startWith } from 'rxjs';
     }
 })
 export class UsernameSearchExample {
-    private readonly usernamePipe = inject(KbqUsernamePipe);
+    private readonly formatUsername = kbqInjectUsernameFormatter();
 
     protected readonly searchControl = new FormControl('', { nonNullable: true });
 
@@ -84,7 +89,7 @@ export class UsernameSearchExample {
 
         return this.users.filter((user) =>
             kbqBuildUsernameText(
-                { name: this.usernamePipe.transform(user), login: user.login, site: user.site },
+                { name: this.formatUsername(user), login: user.login, site: user.site },
                 { formatSite: (s) => s }
             )
                 .toLowerCase()

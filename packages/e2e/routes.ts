@@ -264,7 +264,7 @@ import {
     E2eTreeSelectStates
 } from '../components/tree-select/e2e';
 import { E2eTreeOptionActionVisibility, E2eTreeStates, E2eTreeTwoLineNode } from '../components/tree/e2e';
-import { E2eUsernameStateAndStyle } from '../components/username/e2e';
+import { E2eUsernameInProse, E2eUsernameStateAndStyle } from '../components/username/e2e';
 
 // Keyed by class name: the production configuration minifies the bundle and mangles class names,
 // so the route path has to come from the key rather than from `component.name`.
@@ -425,6 +425,7 @@ const components: Record<string, Type<unknown>> = {
     E2eNavbarCollapse,
     E2eVerticalNavbarItemClippedTitle,
     E2eUsernameStateAndStyle,
+    E2eUsernameInProse,
     E2eToastStates,
     E2eTitleOverflow,
     E2eEllipsisCenterOverflow,
