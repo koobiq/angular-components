@@ -62,6 +62,7 @@ import { Type } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
@@ -2735,7 +2736,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
-    // (undocumented)
     protected readonly hostView: ViewContainerRef;
     readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
@@ -2812,6 +2812,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     updatePosition(reapplyPosition?: boolean): void;
     // (undocumented)
     updateVisible(externalValue: boolean): void;
+    protected readonly viewportRuler: ViewportRuler;
     // (undocumented)
     protected visible: boolean;
     // (undocumented)
@@ -2884,6 +2885,9 @@ export class KbqRectangleItem {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRectangleItem, never>;
 }
+
+// @public
+export const kbqRevealSelection: (element: HTMLInputElement) => void;
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
@@ -2979,6 +2983,9 @@ export class KbqSelectTrigger {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectTrigger, never>;
 }
+
+// @public
+export const kbqSetSelectionRange: (element: HTMLInputElement, start: number, end: number) => void;
 
 // @public
 export interface KbqSizeUnitsConfig {

@@ -11,14 +11,12 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 
-// @public (undocumented)
+// @public
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
-    // (undocumented)
     charWidth: number;
     debounceInterval: number;
     // (undocumented)
     set kbqEllipsisCenter(value: string);
-    // (undocumented)
     minVisibleLength: number;
     // (undocumented)
     static ngAcceptInputType_debounceInterval: unknown;
@@ -29,6 +27,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     // (undocumented)
     ngOnInit(): void;
     refresh(): void;
+    // @deprecated (undocumented)
     readonly resizeStream: Subject<Event>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEllipsisCenterDirective, "[kbqEllipsisCenter]", never, { "kbqEllipsisCenter": { "alias": "kbqEllipsisCenter"; "required": false; }; "minVisibleLength": { "alias": "minVisibleLength"; "required": false; }; "charWidth": { "alias": "charWidth"; "required": false; }; "debounceInterval": { "alias": "debounceInterval"; "required": false; }; }, {}, never, never, true, never>;

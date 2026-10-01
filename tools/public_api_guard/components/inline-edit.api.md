@@ -39,6 +39,7 @@ export class KbqFocusRegionItem {
 // @public
 export class KbqInlineEdit {
     constructor();
+    protected readonly anchorFocused: WritableSignal<boolean>;
     protected cancel(): void;
     protected readonly canceled: OutputEmitterRef<void>;
     readonly canSaveOnEnter: InputSignal<(event: KeyboardEvent) => boolean>;
@@ -51,6 +52,7 @@ export class KbqInlineEdit {
     protected readonly formFieldRef: Signal<KbqFormField | undefined>;
     protected readonly formFieldRefList: Signal<readonly KbqFormField[]>;
     readonly getValueHandler: InputSignal<(() => unknown) | undefined>;
+    protected readonly hasInteractiveContent: WritableSignal<boolean>;
     readonly interactiveSelectors: InputSignal<string[]>;
     protected readonly isEditMode: Signal<boolean>;
     protected readonly label: Signal<KbqLabel | undefined>;

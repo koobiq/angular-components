@@ -253,7 +253,7 @@ export type RdxAccordionItemState = 'open' | 'closed';
 //
 // dist/components/accordion/accordion-content.d.ts:5:153 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
 // dist/components/accordion/accordion-header.d.ts:5:150 - (ae-forgotten-export) The symbol "i1_3" needs to be exported by the entry point index.d.ts
-// dist/components/accordion/accordion-trigger.component.d.ts:23:153 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+// dist/components/accordion/accordion-trigger.component.d.ts:24:153 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
