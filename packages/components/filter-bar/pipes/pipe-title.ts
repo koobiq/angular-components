@@ -41,7 +41,10 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     @Input({ alias: 'kbqPipeTitle' }) viewValue: TemplateRef<any>;
 
     get parent(): HTMLElement {
-        return this.parentContainer?.nativeElement || this.parentContainer;
+        // A content query refresh resets parentContainer, so fall back the same way ngAfterViewInit does.
+        const container = this.parentContainer || this.componentInstance?.parentTextElement || this.elementRef;
+
+        return container.nativeElement || container;
     }
 
     get child(): HTMLElement {
