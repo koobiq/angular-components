@@ -1,35 +1,72 @@
-For the sake of keeping things simple, refer to the [Semver spec](http://semver.org/)
-for anything this document does not cover.
+Our releases follow the versioning described in the [Semver spec](http://semver.org/).
 
-### Versioning semver
+### Versioning
 
-1. **MAJOR** version when
+**MAJOR**
 
-- Change named exports exposed via the main entry point.
-- Changing and renaming public interfaces (@Inputs/@Outputs).
-- Change named exports exposed via the main entry point.
-- Changes in CSS that can affect layout outside of a component.
-- Upgrade peer dependencies.
-- You've made a visual change in a component that could affect someone using the public API.
-  Box sizing could affect positioning, or child content.
+Contains significant new features and changes and may include breaking changes.
+Upgrading takes effort from developers and involves changes that are incompatible
+with previous versions: in the API, file paths, component behavior and/or dependencies.
+Components deprecated earlier are removed in a new major version.
 
-2. **MINOR** version when
+For example:
 
-- Anything that has a leading underscore.
-- Anything inside Template(). This includes elements, attributes and classes.
-  For example, add / removing attributes or changing text content.
-  Some integration tests may be relying on this, but it's still not a breaking change.
-  It won't break you in production if you're using caret versions from NPM.
-  It'll break your tests, but you'll update those prior to releasing anything.
+- The names of exported entry points change;
+- Public interfaces (@Inputs/@Outputs) change or are renamed;
+- CSS changes that affect styles outside a component;
+- A peer dependency moves to a new major version;
+- A visual change in a component that could affect the public API.
 
-3. **PATCH** version when
+**MINOR**
 
-- update package dependencies
-- Directory structure changes
+Includes small features and changes.
+Upgrading does not require any action from developers.
+Minor versions may deprecate components.
+Full backward compatibility is kept.
 
-4. **NO RELEASE** when
+For example:
 
-- Update dev dependencies
-- Add tests or examples
-- Update examples
-- Update internal documentation
+- Something is added to a component's template. This includes elements, attributes and classes.
+
+**PATCH**
+
+Contains bug fixes. Upgrading takes no effort from developers.
+
+For example:
+
+- package dependencies are updated;
+- the project structure changes;
+- improvements and fixes.
+
+**No release**
+
+- Dev dependencies are updated
+- Tests or examples are added
+- Examples are updated
+- Internal documentation is updated
+
+### Release frequency
+
+We follow a time-based release schedule that consists of:
+
+- One major release every six months
+- One to three minor releases for each major release
+- Patch releases shipped as urgent fixes when needed
+
+### Support policy
+
+Every major release is supported for about 12 months.
+We distinguish two stages of support for major releases:
+
+| Status | Period   | Description                                                      |
+| ------ | -------- | ---------------------------------------------------------------- |
+| Active | 6 months | Regular minor releases                                           |
+| LTS    | 6 months | Patch releases that fix critical issues, and compatible features |
+
+Our support policy covers every part of the design system,
+including the codebase, the Figma design kits and our documentation.
+
+We recommend always staying on the active version.
+When a version moves from the active stage to LTS (long-term support),
+projects should start migrating to the new active major version.
+That said, we are always ready to consider critical fixes for earlier versions too.

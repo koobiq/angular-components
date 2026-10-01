@@ -10,6 +10,8 @@ Koobiq solves this with `ErrorStateMatcher`.
 
 Validators and the `FormControl` remain unchanged — `ErrorStateMatcher` never adds or removes errors. It only decides when `kbq-form-field` should reveal the `<kbq-error>` children and apply the `kbq-invalid` CSS class.
 
+In other words, **errors belong to the `FormControl`**. For a required field that starts empty, `control.hasError('required')` returns `true` as soon as the control is created. `ErrorStateMatcher` only decides when to tell the user about it.
+
 **Registration:**
 
 Apply a matcher to all controls inside a component via providers:
@@ -38,7 +40,7 @@ Override for a single control using the `[errorStateMatcher]` input (supported b
 
 ## Components
 
-**Tag list**
+### Tag list
 
 `kbq-tag-list` supports `ErrorStateMatcher` and integrates with `kbq-form-field` the same way as other controls.
 
