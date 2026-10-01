@@ -1,3 +1,5 @@
+@use '../core/styles/common/squircle' as *;
+
 .kbq-dropzone-overlay {
     --kbq-dropzone-padding: var(--kbq-size-s);
     --kbq-dropzone-overlay-background: var(--kbq-background-overlay-theme);
@@ -21,7 +23,7 @@
         align-items: center;
         justify-content: center;
 
-        border-radius: var(--kbq-size-border-radius);
+        @include kbq-squircle(var(--kbq-size-border-radius));
         border: var(--kbq-size-border-width) dashed var(--kbq-dropzone-border-color);
         background-color: var(--kbq-dropzone-component-background);
 

@@ -4,6 +4,7 @@
 
 @use 'navbar-item_vertical';
 @use 'navbar-item_horizontal';
+@use '../core/styles/common/squircle' as *;
 
 .kbq-navbar-item {
     box-sizing: border-box;
@@ -13,7 +14,7 @@
     display: flex;
     align-items: center;
 
-    border-radius: var(--kbq-navbar-item-size-content-border-radius);
+    @include kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
 
     & .kbq-icon {
         min-width: var(--kbq-size-l);
@@ -48,7 +49,7 @@
 
         display: none;
 
-        border-radius: var(--kbq-navbar-item-size-content-border-radius);
+        @include kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
     }
 
     // The badge sits in the same corner in both orientations; only the offsets differ, and each partial

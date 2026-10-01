@@ -1,5 +1,6 @@
 @use '../common/vendor-prefixes';
 @use './tokens' as *;
+@use './squircle' as *;
 
 %kbq-select-base {
     box-sizing: border-box;
@@ -189,7 +190,7 @@
 
     overflow: hidden;
 
-    border-radius: var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius));
+    @include kbq-squircle(var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius)));
 
     // Override option to scale based on font-size of the trigger.
     .kbq-option {
@@ -288,7 +289,7 @@
     // Transparent border, as on an option, so the row keeps the same content inset — and so the focus
     // ring below can recolour it without shifting anything.
     border: var(--kbq-size-3xs) solid transparent;
-    border-radius: var(--kbq-select-footer-item-size-border-radius, var(--kbq-size-xxs));
+    @include kbq-squircle(var(--kbq-select-footer-item-size-border-radius, var(--kbq-size-xxs)));
 
     padding: 0 kbq-difference-series-css-variables([size-m, size-3xs]);
 

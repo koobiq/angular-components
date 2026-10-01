@@ -1,3 +1,5 @@
+@use '../core/styles/common/squircle' as *;
+
 .kbq-flag {
     display: inline-block;
     position: relative;
@@ -8,7 +10,7 @@
     aspect-ratio: var(--kbq-flag-aspect-ratio);
     vertical-align: middle;
     overflow: hidden;
-    border-radius: var(--kbq-flag-border-radius);
+    @include kbq-squircle(var(--kbq-flag-border-radius));
 
     // The flag fills the box whether it is projected directly or passed through the `svg` input
     // (the markup may sit inside a wrapper element). The two carriers need different mechanisms.
@@ -47,7 +49,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        border-radius: inherit;
+        @include kbq-squircle-inherit();
         box-shadow: inset 0 0 0 1px var(--kbq-flag-shadow-color);
         pointer-events: none;
     }
@@ -55,5 +57,10 @@
     // Neutral placeholder when no flag is projected (unknown / invalid country code).
     &.kbq-flag_empty {
         background: var(--kbq-flag-empty-background);
+    }
+
+    // The 50% radius already draws a circle, a squircle would turn it into a rounded square.
+    &.kbq-flag_circle {
+        corner-shape: round;
     }
 }

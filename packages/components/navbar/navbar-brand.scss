@@ -1,6 +1,7 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 @use './navbar-theme';
+@use '../core/styles/common/squircle' as *;
 
 .kbq-navbar-logo {
     display: flex;
@@ -11,7 +12,7 @@
 
     display: flex;
 
-    border-radius: var(--kbq-size-s);
+    @include kbq-squircle(var(--kbq-size-s));
 
     &:after {
         position: absolute;
@@ -19,7 +20,7 @@
 
         display: none;
 
-        border-radius: var(--kbq-navbar-item-size-content-border-radius);
+        @include kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
     }
 
     & .kbq-navbar-title {

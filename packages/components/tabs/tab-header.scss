@@ -1,5 +1,6 @@
 @use '../core/styles/common/vendor-prefixes';
 @use './tabs-common';
+@use '../core/styles/common/squircle' as *;
 
 @include tabs-common.paginated-tab-header;
 
@@ -8,7 +9,7 @@
     overflow: hidden;
     position: relative;
     flex-shrink: 0;
-    border-radius: var(--kbq-tabs-size-tab-stack-horizontal-border-radius);
+    @include kbq-squircle(var(--kbq-tabs-size-tab-stack-horizontal-border-radius));
 
     &.kbq-tab-header_underlined {
         .kbq-tab-group:not(.kbq-tab-group_on-surface) & {

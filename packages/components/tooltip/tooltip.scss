@@ -3,6 +3,7 @@
 @use '../core/styles/common/tokens' as *;
 
 @use './tooltip-theme' as *;
+@use '../core/styles/common/squircle' as *;
 
 $trigger-margin: 8px;
 $trigger-margin_without-arrow: 4px;
@@ -45,7 +46,7 @@ $navbar-trigger-margin: $trigger-margin + 1px;
 }
 
 .kbq-tooltip__inner {
-    border-radius: var(--kbq-tooltip-size-border-radius);
+    @include kbq-squircle(var(--kbq-tooltip-size-border-radius));
     overflow-wrap: break-word;
 }
 
@@ -54,7 +55,7 @@ $navbar-trigger-margin: $trigger-margin + 1px;
 
     // Kept alongside the radius of `.kbq-tooltip__inner`: this element is the one carrying `box-shadow`
     // (see `_tooltip-theme.scss`), and without a radius here the shadow is cast with square corners.
-    border-radius: var(--kbq-tooltip-size-border-radius);
+    @include kbq-squircle(var(--kbq-tooltip-size-border-radius));
 
     white-space: pre-line;
 

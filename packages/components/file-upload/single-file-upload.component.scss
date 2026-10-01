@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/squircle' as *;
 
 @mixin _kbq-single-file-upload-theme() {
     background-color: var(--kbq-file-upload-single-default-container-background);
@@ -107,7 +108,7 @@
     .kbq-file-upload {
         min-height: var(--kbq-file-upload-single-min-height);
 
-        border-radius: var(--kbq-file-upload-size-single-container-border-radius);
+        @include kbq-squircle(var(--kbq-file-upload-size-single-container-border-radius));
         border-width: var(--kbq-file-upload-size-single-container-border-width);
         border-style: dashed;
 

@@ -1,4 +1,5 @@
 @use './checkbox-theme' as *;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-checkbox__frame {
     display: flex;
@@ -9,7 +10,7 @@
     pointer-events: none;
     background-color: transparent;
 
-    border-radius: var(--kbq-checkbox-size-normal-border-radius);
+    @include kbq-squircle(var(--kbq-checkbox-size-normal-border-radius));
 
     border: {
         width: var(--kbq-checkbox-size-normal-border-width);
@@ -106,7 +107,7 @@
     }
 
     & .kbq-checkbox__frame {
-        border-radius: var(--kbq-checkbox-size-big-border-radius);
+        @include kbq-squircle(var(--kbq-checkbox-size-big-border-radius));
 
         border: {
             width: var(--kbq-checkbox-size-big-border-width);

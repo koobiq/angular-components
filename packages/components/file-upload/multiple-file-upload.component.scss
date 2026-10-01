@@ -1,3 +1,5 @@
+@use '../core/styles/common/squircle' as *;
+
 @mixin _kbq-list-item($state-name) {
     --kbq-option-background: var(--kbq-list-#{$state-name}-container-background);
 
@@ -169,7 +171,7 @@
 
 // todo нужно рефакторить со стилями тут сложно
 .kbq-multiple-file-upload .kbq-file-upload {
-    border-radius: var(--kbq-file-upload-size-multiple-big-container-border-radius);
+    @include kbq-squircle(var(--kbq-file-upload-size-multiple-big-container-border-radius));
     border-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
     border-style: dashed;
 
@@ -294,7 +296,7 @@
         padding: 0 calc(var(--kbq-size-xxs) - var(--kbq-size-border-width));
 
         .kbq-file-upload__row {
-            border-radius: var(--kbq-size-xs);
+            @include kbq-squircle(var(--kbq-size-xs));
         }
     }
 

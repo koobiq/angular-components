@@ -1,4 +1,5 @@
 @use './toast-theme' as *;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-toast {
     display: flex;
@@ -8,7 +9,7 @@
 
     height: auto;
 
-    border-radius: var(--kbq-toast-size-container-border-radius);
+    @include kbq-squircle(var(--kbq-toast-size-container-border-radius));
 
     padding-left: var(--kbq-toast-size-container-padding-left);
     padding-right: var(--kbq-toast-size-container-padding-right);

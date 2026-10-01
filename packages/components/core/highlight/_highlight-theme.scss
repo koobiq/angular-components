@@ -1,3 +1,5 @@
+@use '../styles/common/squircle' as *;
+
 @mixin kbq-highlight-theme() {
     .kbq-highlight {
         color: inherit;
@@ -12,6 +14,6 @@
         color: var(--kbq-foreground-contrast);
         background-color: var(--kbq-background-highlight);
 
-        border-radius: var(--kbq-size-xxs);
+        @include kbq-squircle(var(--kbq-size-xxs));
     }
 }

@@ -1,6 +1,7 @@
 @use '../core/styles/common/tokens' as *;
 
 @use './alert-theme' as *;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-alert {
     display: flex;
@@ -26,7 +27,7 @@
 }
 
 .kbq-alert.kbq-alert_normal {
-    border-radius: var(--kbq-alert-size-normal-container-border-radius);
+    @include kbq-squircle(var(--kbq-alert-size-normal-container-border-radius));
 
     padding: var(--kbq-alert-size-normal-container-padding-top) var(--kbq-alert-size-normal-container-padding-right)
         var(--kbq-alert-size-normal-container-padding-bottom) var(--kbq-alert-size-normal-container-padding-left);
@@ -79,7 +80,7 @@
 }
 
 .kbq-alert.kbq-alert_compact {
-    border-radius: var(--kbq-alert-size-compact-container-border-radius);
+    @include kbq-squircle(var(--kbq-alert-size-compact-container-border-radius));
 
     padding: var(--kbq-alert-size-compact-container-padding-top) var(--kbq-alert-size-compact-container-padding-right)
         var(--kbq-alert-size-compact-container-padding-bottom) var(--kbq-alert-size-compact-container-padding-left);

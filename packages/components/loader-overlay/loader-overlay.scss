@@ -1,3 +1,4 @@
+@use '../core/styles/common/squircle' as *;
 @use '../core/styles/common/tokens' as *;
 
 @use './loader-overlay-theme' as *;
@@ -29,7 +30,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    border-radius: inherit;
+    @include kbq-squircle-inherit();
 
     // todo
     z-index: 10;

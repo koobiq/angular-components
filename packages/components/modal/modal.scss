@@ -2,6 +2,7 @@
 @use './modal-confirm';
 @use './modal-animation';
 @use './modal-theme' as *;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-modal-container {
     box-sizing: border-box;
@@ -10,7 +11,7 @@
 
     top: var(--kbq-size-5xl);
 
-    border-radius: var(--kbq-modal-size-border-radius);
+    @include kbq-squircle(var(--kbq-modal-size-border-radius));
 
     width: auto;
 
@@ -74,7 +75,7 @@
 .kbq-modal-content {
     position: relative;
 
-    border-radius: var(--kbq-modal-size-border-radius);
+    @include kbq-squircle(var(--kbq-modal-size-border-radius));
 
     background-clip: padding-box;
 }

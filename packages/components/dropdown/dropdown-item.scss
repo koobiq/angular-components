@@ -1,10 +1,11 @@
 @use '../core/styles/common/animation';
 @use '../core/styles/common/list';
 @use '../core/styles/common/vendor-prefixes';
+@use '../core/styles/common/squircle' as *;
 
 .kbq-dropdown-item {
     width: 100%;
-    border-radius: var(--kbq-dropdown-item-border-radius);
+    @include kbq-squircle(var(--kbq-dropdown-item-border-radius));
 
     @include vendor-prefixes.user-select(none);
     @include list.kbq-list-item-base();
@@ -45,7 +46,7 @@
     right: -1px;
     bottom: -1px;
 
-    border-radius: inherit;
+    @include kbq-squircle-inherit();
 }
 
 .kbq-dropdown-item_has-action {

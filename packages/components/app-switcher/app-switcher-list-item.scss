@@ -1,5 +1,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
+@use '../core/styles/common/squircle' as *;
 
 .kbq-app-switcher-list-item {
     position: relative;
@@ -10,7 +11,7 @@
     max-width: 100%;
     min-height: var(--kbq-app-switcher-size-list-item-height-min, 38px);
 
-    border-radius: var(--kbq-size-s);
+    @include kbq-squircle(var(--kbq-size-s));
 
     padding: var(--kbq-size-xxs) var(--kbq-size-m) var(--kbq-size-xs) var(--kbq-size-m);
 
@@ -43,7 +44,7 @@
 
         &:has(+ :not(.kbq-app-switcher-site_nested)),
         &:last-child {
-            border-bottom-left-radius: var(--kbq-size-s);
+            @include kbq-squircle(var(--kbq-size-s), border-bottom-left-radius);
 
             &:after {
                 top: 0;
@@ -72,7 +73,7 @@
     width: var(--kbq-size-xxl);
     height: var(--kbq-size-xxl);
 
-    border-radius: var(--kbq-size-xxs);
+    @include kbq-squircle(var(--kbq-size-xxs));
 
     & .kbq-icon {
         transform: rotate(0deg);

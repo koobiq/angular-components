@@ -1,3 +1,4 @@
+@use '../../styles/common/squircle' as *;
 @use '../../styles/common/tokens' as *;
 
 @use './pseudo-checkbox-theme' as *;
@@ -14,10 +15,11 @@
     height: var(--kbq-checkbox-size-normal-width);
 
     border: {
-        radius: var(--kbq-checkbox-size-normal-border-radius);
         width: var(--kbq-checkbox-size-normal-border-width);
         style: solid;
     }
+
+    @include kbq-squircle(var(--kbq-checkbox-size-normal-border-radius));
 
     cursor: pointer;
 
@@ -55,10 +57,8 @@
     width: var(--kbq-checkbox-size-big-width);
     height: var(--kbq-checkbox-size-big-width);
 
-    border: {
-        radius: var(--kbq-checkbox-size-big-border-radius);
-        width: var(--kbq-checkbox-size-big-border-width);
-    }
+    border-width: var(--kbq-checkbox-size-big-border-width);
+    @include kbq-squircle(var(--kbq-checkbox-size-big-border-radius));
 }
 
 @include kbq-pseudo-checkbox-theme();

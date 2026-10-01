@@ -1,5 +1,6 @@
 @use './dropdown-theme' as theme;
 @use '../core/styles/common/select';
+@use '../core/styles/common/squircle' as *;
 
 .kbq-dropdown-trigger {
     &.kbq-button {
@@ -42,7 +43,7 @@
     min-width: max(var(--kbq-dropdown-size-container-width-min), 100%);
     max-width: var(--kbq-dropdown-size-container-width-max);
 
-    border-radius: var(--kbq-dropdown-size-container-border-radius);
+    @include kbq-squircle(var(--kbq-dropdown-size-container-border-radius));
 
     box-sizing: border-box;
 
