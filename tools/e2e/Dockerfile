@@ -18,7 +18,7 @@ ARG PLAYWRIGHT_VERSION
 #   docker buildx imagetools inspect mcr.microsoft.com/playwright:v<version>-noble --format '{{.Manifest.Digest}}'
 #
 # noble is Ubuntu 24.04, matching the `ubuntu-latest` runner the current baselines came from.
-FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
+FROM mcr.microsoft.com/playwright:v${PLAYWRIGHT_VERSION}-noble@sha256:eff16c30e6f3f4af0a03fa4b706120d5e9b0891c344a27d64559aff5900a4a27
 
 WORKDIR /app
 
