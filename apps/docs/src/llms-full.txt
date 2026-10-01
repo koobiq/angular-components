@@ -324,6 +324,7 @@ Koobiq uses the [Inter](https://github.com/rsms/inter) and [JetBrains Mono](http
 | Font           | Weight | Style  |
 | -------------- | ------ | ------ |
 | JetBrains Mono | 400    | Normal |
+| JetBrains Mono | 600    | Normal |
 | JetBrains Mono | 700    | Normal |
 | Inter          | 400    | Normal |
 | Inter          | 400    | Italic |
@@ -355,6 +356,7 @@ Then you add the following code inside your global styles:
 
 // JetBrains Mono
 @import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/600.css';
 @import '@fontsource/jetbrains-mono/700.css';
 ```
 
@@ -371,7 +373,7 @@ Add the following code inside your `<head>` tag:
     rel="stylesheet"
 />
 <!-- JetBrains Mono -->
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
 ```
 
 ### schematics
@@ -623,6 +625,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@angular/cdk/a11y';
@@ -695,7 +698,7 @@ export class KbqAccordionContent {
 }
 
 // @public (undocumented)
-export class KbqAccordionContentDirective implements AfterContentInit, AfterViewInit {
+export class KbqAccordionContentDirective implements AfterContentInit, DoCheck, AfterViewInit {
     constructor();
     get contentId(): string;
     // (undocumented)
@@ -709,6 +712,9 @@ export class KbqAccordionContentDirective implements AfterContentInit, AfterView
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngDoCheck(): void;
+    protected onTransitionEnd(event: TransitionEvent): void;
     // (undocumented)
     toggle(): void;
     get triggerId(): string;
@@ -864,7 +870,7 @@ export type RdxAccordionItemState = 'open' | 'closed';
 //
 // dist/components/accordion/accordion-content.d.ts:5:153 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
 // dist/components/accordion/accordion-header.d.ts:5:150 - (ae-forgotten-export) The symbol "i1_3" needs to be exported by the entry point index.d.ts
-// dist/components/accordion/accordion-trigger.component.d.ts:23:153 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+// dist/components/accordion/accordion-trigger.component.d.ts:24:153 - (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
@@ -2339,7 +2345,7 @@ import { TemplateRef } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 
-// @public
+// @public @deprecated
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
 // @public
@@ -3095,6 +3101,8 @@ export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfigu
 // @public
 export class KbqBreadcrumbButton implements OnInit {
     // (undocumented)
+    protected readonly element: HTMLElement;
+    // (undocumented)
     ngOnInit(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbButton, "[kbq-button][kbqBreadcrumb]", never, {}, {}, never, never, true, [{ directive: typeof i1.RdxRovingFocusItemDirective; inputs: { "focusable": "focusable"; }; outputs: {}; }]>;
@@ -3268,8 +3276,8 @@ export class RdxRovingFocusItemDirective implements OnInit, OnDestroy {
 
 // Warnings were encountered during analysis:
 //
-// dist/components/breadcrumbs/breadcrumbs.d.ts:27:134 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-// dist/components/breadcrumbs/breadcrumbs.d.ts:120:540 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+// dist/components/breadcrumbs/breadcrumbs.d.ts:29:134 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+// dist/components/breadcrumbs/breadcrumbs.d.ts:122:540 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
@@ -3881,6 +3889,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/button';
 import * as i2 from '@koobiq/components/title';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
@@ -3962,6 +3971,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     get selected(): any;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
+    readonly stretched: InputSignalWithTransform<boolean, unknown>;
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput?: boolean): void;
     get value(): any;
     set value(newValue: any);
@@ -3970,7 +3980,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     set vertical(value: boolean);
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }
@@ -5391,6 +5401,7 @@ import { Type } from '@angular/core';
 import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
+import { ViewportRuler } from '@angular/cdk/scrolling';
 
 // @public (undocumented)
 export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
@@ -6074,7 +6085,7 @@ export function getKbqSelectNonFunctionValueError(): Error;
 // @public (undocumented)
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
-// @public
+// @public @deprecated
 export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
 // @public (undocumented)
@@ -7508,6 +7519,12 @@ export type KbqFlexDirection = 'row' | 'column';
 // @public
 export type KbqFlexWrap = 'nowrap' | 'wrap';
 
+// @public
+export const kbqFocusAndReveal: (element: HTMLElement, skipReveal?: boolean) => void;
+
+// @public
+export function kbqFocusOptionActionOnTab($event: KeyboardEvent, actionButton: KbqOptionActionComponent | undefined): void;
+
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
     // (undocumented)
@@ -7761,7 +7778,6 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     get disabled(): any;
     set disabled(value: any);
-    // (undocumented)
     focus(): void;
     getHeight(): number;
     // (undocumented)
@@ -7785,6 +7801,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     // (undocumented)
     ngOnDestroy(): void;
     protected onMouseenter(): void;
+    protected onMouseleave(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
     protected readonly parent: KbqOptionParentComponent;
@@ -8058,7 +8075,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
-    // (undocumented)
     protected readonly hostView: ViewContainerRef;
     readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
@@ -8135,6 +8151,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     updatePosition(reapplyPosition?: boolean): void;
     // (undocumented)
     updateVisible(externalValue: boolean): void;
+    protected readonly viewportRuler: ViewportRuler;
     // (undocumented)
     protected visible: boolean;
     // (undocumented)
@@ -8195,7 +8212,6 @@ export class KbqRectangleItem {
     // (undocumented)
     get collapsed(): boolean;
     set collapsed(value: boolean);
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     protected readonly isBrowser: boolean;
@@ -8208,6 +8224,9 @@ export class KbqRectangleItem {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRectangleItem, never>;
 }
+
+// @public
+export const kbqRevealSelection: (element: HTMLInputElement) => void;
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
@@ -8303,6 +8322,9 @@ export class KbqSelectTrigger {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSelectTrigger, never>;
 }
+
+// @public
+export const kbqSetSelectionRange: (element: HTMLInputElement, start: number, end: number) => void;
 
 // @public
 export interface KbqSizeUnitsConfig {
@@ -9569,7 +9591,20 @@ If the date field is required, use the `required` parameter.
 
 #### Date selection restriction
 
-The calendar widget will not allow selecting a date outside the allowed range.
+The range is configured with two separate pairs of bindings, and both are needed:
+
+- `minDate` / `maxDate` on `<kbq-datepicker>` restrict the calendar — out-of-range days are
+  not selectable.
+- `min` / `max` on the `<input>` drive validation, including dates typed with the keyboard or
+  pasted. A value outside the range is still written to the form control, and the control is
+  marked invalid with `kbqDatepickerMin` or `kbqDatepickerMax`.
+
+Validation requires a form control on the input (`ngModel`, `formControl` or `formControlName`) —
+without one the validators never run.
+
+`min` and `max` are compared with the time part included rather than by calendar day, because the
+input keeps the time of the value it parses. Set the lower bound to the start of the first allowed
+day and the upper bound to the end of the last allowed day, so that both boundary days stay valid.
 
 <!-- example(datepicker-minimax) -->
 
@@ -10445,6 +10480,18 @@ export class DividerOverviewExample {}
 
 <!-- example(dropdown-disabled) -->
 
+### Progress state
+
+Add the `progress` attribute to `kbq-dropdown-item` to show a loading shimmer on the item. It can be combined with `disabled` to also prevent interaction while loading.
+
+<!-- example(dropdown-item-progress) -->
+
+### Footer
+
+You can place auxiliary elements in the footer: [buttons](en/components/button), [links](en/components/link), hints.
+
+<!-- example(dropdown-with-footer) -->
+
 ### Open by Arrow Down ↓
 
 <!-- example(dropdown-open-by-arrow-down) -->
@@ -10507,6 +10554,7 @@ import * as i3 from '@angular/common';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleTextRef } from '@koobiq/components/core';
@@ -10608,7 +10656,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
     get yPosition(): KbqDropdownPositionY;
     set yPosition(value: KbqDropdownPositionY);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownStaticContent]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdown, "kbq-dropdown", ["kbqDropdown"], { "navigationWithWrap": { "alias": "navigationWithWrap"; "required": false; }; "xPosition": { "alias": "xPosition"; "required": false; }; "yPosition": { "alias": "yPosition"; "required": false; }; "overlapTriggerY": { "alias": "overlapTriggerY"; "required": false; }; "overlapTriggerX": { "alias": "overlapTriggerX"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelClass": { "alias": "class"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "closed": "closed"; }, ["search", "lazyContent", "items"], ["*", "[kbqDropdownFooter], kbq-dropdown-footer", "[kbqDropdownStaticContent]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
@@ -10646,6 +10694,14 @@ export interface KbqDropdownDefaultOptions {
 }
 
 // @public
+export class KbqDropdownFooter {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDropdownFooter, "[kbqDropdownFooter], kbq-dropdown-footer", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownFooter, never>;
+}
+
+// @public
 export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor, parentDropdownPanel?: KbqDropdownPanel | undefined);
     checkDisabled(event: Event): void;
@@ -10674,12 +10730,13 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
     ngOnDestroy(): void;
     // (undocumented)
     parentDropdownPanel?: KbqDropdownPanel | undefined;
+    readonly progress: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     resetStyles(): void;
     // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon"], ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDropdownItem, [null, null, { optional: true; }]>;
 }
@@ -10696,7 +10753,7 @@ export class KbqDropdownModule {
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof i3.NgClass, typeof i4.KbqDropdownStaticContent, typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent], [typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent, typeof i4.KbqDropdownStaticContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDropdownModule, never, [typeof i1.OverlayModule, typeof i2.KbqIconModule, typeof i3.NgClass, typeof i4.KbqDropdownStaticContent, typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent, typeof i4.KbqDropdownFooter], [typeof i4.KbqDropdown, typeof i5.KbqDropdownItem, typeof i6.KbqDropdownTrigger, typeof i7.KbqDropdownContent, typeof i4.KbqDropdownStaticContent, typeof i4.KbqDropdownFooter]>;
 }
 
 // @public
@@ -11945,9 +12002,12 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     $implicit: unknown;
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
+    protected get currentFocusOrigin(): NonNullable<FocusOrigin>;
     readonly data: KbqPipeData<V>;
     protected readonly destroyRef: DestroyRef;
+    protected readonly elementRef: ElementRef<HTMLElement>;
     protected readonly filterBar: KbqFilterBar | null;
+    protected readonly focusMonitor: FocusMonitor;
     get isEmpty(): boolean;
     isMac: boolean;
     isTemplateRef(value: unknown): boolean;
@@ -11957,6 +12017,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     onClear(): void;
     onRemove(): void;
     abstract open(): void;
+    protected restoreTriggerFocus(): void;
     get showRemoveButton(): boolean;
     readonly stateChanges: Subject<void>;
     updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
@@ -12286,7 +12347,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
-    listSelection: Signal<KbqListSelection>;
+    listSelection: Signal<KbqListSelection | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -12333,7 +12394,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
     hideCalendars(): void;
     get isEmpty(): boolean;
     protected isListMode: boolean;
-    listSelection: Signal<KbqListSelection>;
+    listSelection: Signal<KbqListSelection | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     onApplyPeriod(): void;
@@ -14534,6 +14595,7 @@ export class KbqFocusRegionItem {
 // @public
 export class KbqInlineEdit {
     constructor();
+    protected readonly anchorFocused: WritableSignal<boolean>;
     protected cancel(): void;
     protected readonly canceled: OutputEmitterRef<void>;
     readonly canSaveOnEnter: InputSignal<(event: KeyboardEvent) => boolean>;
@@ -14546,6 +14608,7 @@ export class KbqInlineEdit {
     protected readonly formFieldRef: Signal<KbqFormField | undefined>;
     protected readonly formFieldRefList: Signal<readonly KbqFormField[]>;
     readonly getValueHandler: InputSignal<(() => unknown) | undefined>;
+    protected readonly hasInteractiveContent: WritableSignal<boolean>;
     readonly interactiveSelectors: InputSignal<string[]>;
     protected readonly isEditMode: Signal<boolean>;
     protected readonly label: Signal<KbqLabel | undefined>;
@@ -16045,6 +16108,8 @@ A dialog may open from a user action. The system can also block the user with a 
 - Clicking outside the modal window. By default, modal windows do not close this way. However, closing by clicking outside the window can be useful when there is no risk of data loss and the system is not awaiting user input (for example, when there are no terminal buttons in the window).
 - The Esc key (equivalent to the "Cancel" button)
 
+The dialog closes on a left mouse button click only: the right and middle buttons open the browser's context menu or trigger its own actions and leave the window alone. The [side panel](/en/components/sidepanel) behaves the same way.
+
 Do not close a modal window automatically by timeout, as the user may not have had time to read the information inside.
 
 Sometimes the system cannot allow the user to return to interacting with the page. Even in this situation, the modal window should not be a dead end in the use case — action options must be provided. For example, if the system shows a window about an expired session, returning to the page in the background is not possible — but a link to the login page should be offered.
@@ -16187,6 +16252,7 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export type ConfirmType = 'confirm' | 'success' | 'warn';
@@ -16231,8 +16297,10 @@ export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
 // @public
 export const KBQ_MODAL_DATA: InjectionToken<unknown>;
 
-// @public (undocumented)
+// @public
 export class KbqModalBody {
+    constructor();
+    protected checkOverflow(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -16254,6 +16322,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     get beforeClose(): Observable<R | undefined>;
     // (undocumented)
     bodyContainer: ViewContainerRef;
+    readonly bodyOverflow: WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
     get cancelText(): string;
     // (undocumented)
@@ -16410,6 +16479,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
 // @public (undocumented)
 export class KbqModalFooter {
     // (undocumented)
+    protected modal: KbqModalComponent<any, any>;
+    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalFooter, "[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalFooter, never>;
@@ -16494,6 +16565,12 @@ export class KbqModalTitle {
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalTitle, never>;
+}
+
+// @public
+export interface KbqOverflowShadowState {
+    bottom: boolean;
+    top: boolean;
 }
 
 // @public
@@ -17007,7 +17084,6 @@ export class KbqNavbarRectangleElement {
     // (undocumented)
     get collapsed(): boolean;
     set collapsed(value: boolean);
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     get horizontal(): boolean;
@@ -17031,7 +17107,6 @@ export class KbqNavbarRectangleElement {
 export class KbqNavbarTitle implements AfterViewInit {
     // (undocumented)
     checkTextOverflown(): void;
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     readonly hovered: Subject<boolean>;
@@ -19917,7 +19992,9 @@ To make navigation easier, selected items can be pinned to the top of the list.
 
 Add `cdk-virtual-scroll-viewport` to your component template to display only visible elements and improve performance.
 
-When option values are objects, provide a `virtualOptionFactory` that maps a value to a `KbqVirtualOption` carrying the display label (and optionally a per-value `disabled` state). The factory is used whenever the selected value's `KbqOption` is not currently rendered — virtual scroll recycled it out of the viewport, or the value was set programmatically before its option was rendered. The same `KbqVirtualOption` powers the trigger label in single mode and tag labels in multiple mode.
+When option values are objects, provide a `virtualOptionFactory` that maps a value to a `KbqVirtualOption` carrying the display label (and optionally a per-value `disabled` state). The factory is used whenever the selected value's `KbqOption` is not currently rendered — virtual scroll recycled it out of the viewport, the value was set programmatically before its option was rendered, or the value is missing from the currently loaded data (server-side search). The same `KbqVirtualOption` powers the trigger label in single mode and tag labels in multiple mode.
+
+Narrowing the data source down — a search field over the same array — keeps the selected value in the trigger even while its option is filtered out of the list.
 
 <!-- example(select-virtual-scroll) -->
 
@@ -20692,6 +20769,7 @@ export class KbqSidepanelActions {
 
 // @public
 export class KbqSidepanelBody {
+    constructor();
     protected checkOverflow(): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelBody, "kbq-sidepanel-body, [kbq-sidepanel-body], kbqSidepanelBody", never, {}, {}, never, never, true, never>;
@@ -26181,8 +26259,9 @@ export class KbqToastContainerComponent extends CdkScrollable {
     createTemplate<C>(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<C>;
     // (undocumented)
     createToast<C>(data: KbqToastData, componentType: any, onTop: boolean): ComponentRef<C>;
-    // (undocumented)
+    // @deprecated
     dispatchScrollEvent: () => void;
+    elementScrolled(): Observable<Event>;
     // (undocumented)
     getInjector(data: KbqToastData): Injector;
     // (undocumented)
@@ -27750,6 +27829,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     get showCheckbox(): any;
     set showCheckbox(value: any);
     // (undocumented)
+    get textElement(): ElementRef;
+    // (undocumented)
     toggle(): void;
     // (undocumented)
     get toggleElement(): KbqTreeNodeToggleBaseDirective<KbqTreeOption>;
@@ -28386,6 +28467,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly openedStream: Observable<void>;
     // (undocumented)
     options: QueryList<KbqTreeOption>;
+    protected optionsContainer: ElementRef<HTMLElement>;
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange>;
     // (undocumented)
     overlayDir: CdkConnectedOverlay;
