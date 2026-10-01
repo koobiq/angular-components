@@ -14,6 +14,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeMultiSelectComponent } from './pipe-multi-select';
+import { registerNoOptionsTests } from './pipe-no-options.spec-helper';
 import { registerPipeStatesTests } from './pipe-states.spec-helper';
 
 const SELECT_VALUES = [
@@ -145,6 +146,24 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             return { fixture, filterBar: filterBarDebugElement };
         }
+    });
+
+    registerNoOptionsTests({
+        pipeSelector: 'kbq-pipe-multi-select',
+        createPipe,
+        createFilter,
+        createTemplate: (overrides) => ({
+            name: 'MultiSelect',
+            id: PIPE_TEMPLATE_ID,
+            type: KbqPipeTypes.MultiSelect,
+            values: SELECT_VALUES,
+            cleanable: false,
+            removable: false,
+            disabled: false,
+            ...overrides
+        }),
+        values: SELECT_VALUES,
+        createFixture: () => TestBed.createComponent(TestComponent)
     });
 
     describe('isEmpty', () => {
@@ -1029,6 +1048,42 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             expect(preventSpy).toHaveBeenCalled();
             expect(toggleSpy).toHaveBeenCalled();
+        }));
+    });
+
+    describe('select all without options', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TestComponent);
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+
+            fixture.componentInstance.pipeTemplates = [{ ...fixture.componentInstance.pipeTemplates[0], values: [] }];
+            fixture.componentInstance.activeFilter = createFilter([
+                createPipe({ name: 'test', value: null, selectAll: true })
+            ]);
+            fixture.detectChanges();
+        });
+
+        it('should not render the "select all" row', fakeAsync(() => {
+            openSelect();
+            flush();
+            fixture.detectChanges();
+
+            expect(document.querySelector('.kbq-select-no-options')).not.toBeNull();
+            expect(document.querySelectorAll('.kbq-option').length).toBe(0);
+        }));
+
+        it('should keep the value and emit nothing on Ctrl+A', fakeAsync(() => {
+            const changeSpy = jest.fn();
+
+            getFilterBar().onChangePipe.subscribe(changeSpy);
+            openSelect();
+            flush();
+
+            getPipeComponent().selectAllHandler(new KeyboardEvent('keydown'));
+            flush();
+
+            expect(getPipeComponent().data.value).toBeNull();
+            expect(changeSpy).not.toHaveBeenCalled();
         }));
     });
 

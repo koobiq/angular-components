@@ -114,7 +114,8 @@ export const esLALocaleData = {
             removeButtonTooltip: 'Eliminar',
             applyButton: 'Aplicar',
             emptySearchResult: 'No se encontró nada',
-            selectAll: 'Seleccionar todo'
+            selectAll: 'Seleccionar todo',
+            noOptions: 'Sin opciones'
         },
         datePipe: {
             customPeriod: 'Personalizar período',

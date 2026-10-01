@@ -41,6 +41,10 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+        // Seeds `treeControl.dataNodes`, which `expandAll()` and the search filter read: a template without
+        // `values` never assigns the data, and the panel still opens onto the "no options" message.
+        this.dataSource.data = [];
     }
 
     ngOnInit(): void {
@@ -66,6 +70,10 @@ export abstract class KbqTreeSelectPipeBase<V> extends KbqBasePipe<V> implements
     override open() {
         setTimeout(() => {
             if (this.destroyed) return;
+
+            // Without options the search is hidden and nothing in the panel takes the focus: the trigger has
+            // to, or Escape never reaches the select.
+            if (this.noOptions) this.focusTrigger();
 
             this.select().open();
         });

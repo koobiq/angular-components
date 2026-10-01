@@ -12,6 +12,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelect } from './tree-select.component';
@@ -28,6 +29,7 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
+        KbqSelectNoOptions,
         NgTemplateOutlet,
         A11yModule,
         KbqTreeSelect
@@ -39,6 +41,7 @@ import { KbqTreeSelect } from './tree-select.component';
         KbqSelectMatcher,
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
+        KbqSelectNoOptions,
         KbqFormFieldModule
     ]
 })

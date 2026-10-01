@@ -94,6 +94,7 @@ import {
     kbqCleanerFactoryProvider
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqSelectNoOptions } from '@koobiq/components/select';
 import { KbqTag, KbqTagRemove } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
@@ -354,6 +355,9 @@ export class KbqTreeSelect
     readonly tree = contentChild(KbqTreeSelection);
 
     readonly search = contentChild(KbqSelectSearch);
+
+    /** Message projected for an empty tree — the only thing the panel opens onto without options. */
+    private readonly noOptionsMessage = contentChild(KbqSelectNoOptions);
 
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
@@ -1029,7 +1033,9 @@ export class KbqTreeSelect
     }
 
     open(): void {
-        if (this.disabled || !this.options || !this.options.length || this._panelOpen) return;
+        if (this.disabled || !this.options || this._panelOpen) return;
+
+        if (!this.options.length && !this.noOptionsMessage()) return;
 
         // add check for form-field bounding rectangles, since it adds extra padding around the trigger
         this.triggerRect = (
