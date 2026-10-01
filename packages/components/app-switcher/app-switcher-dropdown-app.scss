@@ -1,5 +1,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
+@use '../core/styles/common/squircle' as *;
 
 .kbq-app-switcher-dropdown-app {
     display: flex;
@@ -8,7 +9,7 @@
     width: 100%;
     min-height: var(--kbq-app-switcher-size-dropdown-app-height-min, 50px);
 
-    border-radius: var(--kbq-size-xs);
+    @include kbq-squircle(var(--kbq-size-xs));
     // transparent border to keep the box model aligned with the other list rows (matches kbq-list-item-base)
     border: var(--kbq-size-3xs) solid transparent;
 

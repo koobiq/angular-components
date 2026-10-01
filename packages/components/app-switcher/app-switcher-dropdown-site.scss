@@ -1,5 +1,6 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
+@use '../core/styles/common/squircle' as *;
 
 .kbq-app-switcher-dropdown-site {
     display: flex;
@@ -12,7 +13,7 @@
 
     text-decoration: none;
 
-    border-radius: var(--kbq-size-xs);
+    @include kbq-squircle(var(--kbq-size-xs));
 
     @include common.user-select(none);
     @include common.kbq-list-item-base();

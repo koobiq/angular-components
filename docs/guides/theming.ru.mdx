@@ -161,6 +161,41 @@ export class MyCard {}
 
 Отдельный миксин `_my-card-theme.scss`, который потом нужно регистрировать в едином источнике темы, писать **не надо**.
 
+#### Форма углов
+
+Где браузер поддерживает `corner-shape`, компоненты скругляют углы сквирклом (`corner-shape: squircle`), в остальных браузерах — обычным радиусом. Сквиркл выглядит мельче дуги того же радиуса, поэтому радиус для него увеличивается. Чтобы углы вашего компонента совпадали с библиотечными, подключите миксин:
+
+```scss
+@use '@koobiq/components/core/styles/common/squircle' as *;
+
+.my-card {
+    @include kbq-squircle(var(--kbq-size-border-radius));
+}
+```
+
+Без SCSS то же правило пишется вручную:
+
+```css
+.my-card {
+    --my-card-radius: var(--kbq-size-border-radius);
+
+    border-radius: var(--my-card-radius);
+}
+
+@supports (corner-shape: squircle) {
+    .my-card {
+        corner-shape: squircle;
+        border-radius: clamp(
+            var(--my-card-radius) * 1.85,
+            var(--my-card-radius) * 2.3 - 3.6px,
+            var(--my-card-radius) * 2
+        );
+    }
+}
+```
+
+Радиус компонента библиотеки меняйте через его переменную (например, `--kbq-button-size-border-radius`), а не через `border-radius`. Увеличивается именно переменная: с голым `border-radius` угол останется сквирклом и будет выглядеть слишком мелким. Компоненту, скруглённому в круг через `50%`, нужно ещё `corner-shape: round`.
+
 ### Смена оформления одним файлом
 
 Оформление всего приложения меняется в одном месте:

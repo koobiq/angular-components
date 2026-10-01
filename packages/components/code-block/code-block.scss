@@ -1,4 +1,5 @@
 @use './code-block-theme' as theme;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-code-block {
     display: flex;
@@ -7,7 +8,7 @@
 
     border-width: var(--kbq-code-block-size-container-border-width);
     border-style: solid;
-    border-radius: var(--kbq-code-block-size-container-border-radius);
+    @include kbq-squircle(var(--kbq-code-block-size-container-border-radius));
 
     box-sizing: border-box;
 
@@ -52,7 +53,7 @@
         flex-grow: 1;
         flex-direction: column;
 
-        border-radius: var(--kbq-code-block-size-container-border-radius);
+        @include kbq-squircle(var(--kbq-code-block-size-container-border-radius));
 
         &.cdk-keyboard-focused {
             outline-style: solid;
@@ -151,7 +152,7 @@
             .kbq-code-block__actionbar__button-stack {
                 border-width: 1px;
                 border-style: solid;
-                border-radius: calc(var(--kbq-size-border-radius) + 1px);
+                @include kbq-squircle(calc(var(--kbq-size-border-radius) + 1px));
             }
         }
 
@@ -170,14 +171,14 @@
     }
 
     &:not(.kbq-code-block_hide-tabs) {
+        $radius: var(--kbq-code-block-size-container-border-radius);
+
         .kbq-code-block__header {
-            border-radius: var(--kbq-code-block-size-container-border-radius)
-                var(--kbq-code-block-size-container-border-radius) 0 0;
+            @include kbq-squircle($radius $radius 0 0);
         }
 
         .kbq-code-block__main {
-            border-radius: 0 0 var(--kbq-code-block-size-container-border-radius)
-                var(--kbq-code-block-size-container-border-radius);
+            @include kbq-squircle(0 0 $radius $radius);
         }
     }
 
@@ -199,10 +200,10 @@
         position: absolute;
         bottom: calc(var(--kbq-code-block-size-container-border-width) * -1);
 
-        border-radius: var(--kbq-code-block-size-container-border-radius);
+        @include kbq-squircle(var(--kbq-code-block-size-container-border-radius));
 
         .kbq-code-block__view-all__wrapper {
-            border-radius: var(--kbq-size-border-radius);
+            @include kbq-squircle(var(--kbq-size-border-radius));
         }
 
         &.kbq-code-block__view-all_collapsed {

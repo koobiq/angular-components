@@ -1,4 +1,5 @@
 @use './notification-center-theme' as *;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-notification-center {
     position: relative;
@@ -22,7 +23,7 @@
         margin-top: var(--kbq-size-xxs);
         margin-bottom: var(--kbq-size-xxs);
 
-        border-radius: var(--kbq-notification-center-size-container-border-radius);
+        @include kbq-squircle(var(--kbq-notification-center-size-container-border-radius));
 
         height: var(
             --kbq-notification-center-popover-height,
@@ -119,7 +120,7 @@
 
     overflow: auto;
 
-    border-radius: inherit;
+    @include kbq-squircle-inherit();
 
     padding-bottom: var(--kbq-size-xl);
 
@@ -137,7 +138,7 @@
     }
 
     & .kbq-loader-overlay_parent {
-        border-radius: inherit;
+        @include kbq-squircle-inherit();
     }
 }
 
