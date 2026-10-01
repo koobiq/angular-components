@@ -131,7 +131,7 @@
         "mdast-util-mdx-jsx": "^3.2.0",
         "mdast-util-to-string": "^4.0.0",
         "merge2": "^1.2.3",
-        "moment": "~2.29.2",
+        "moment": "~2.31.0",
         "ng-packagr": "^20.3.2",
         "path-normalize": "^6.0.7",
         "postcss": "^8.5.28",
@@ -171,6 +171,7 @@
         "postcss": "^8.5.28",
         "serialize-javascript": "^7.0.7",
         "uuid": "^11.1.1",
+        "webpack-dev-middleware": "^7.4.6",
         "webpack-dev-server": "^5.2.6"
     },
     "scripts": {
