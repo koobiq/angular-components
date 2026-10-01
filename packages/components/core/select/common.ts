@@ -134,7 +134,9 @@ export abstract class KbqAbstractSelect {
     protected readonly overlayPanelClass = 'kbq-select-overlay';
 
     protected setOverlayPosition() {
-        if (!this.overlayDir.overlayRef) return;
+        // A disposed overlay keeps its `overlayRef` but loses `hostElement`, and an expansion or selection
+        // change can still arrive once the select has closed for good.
+        if (!this.overlayDir.overlayRef?.hostElement) return;
 
         this.resetOverlay();
 

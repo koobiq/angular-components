@@ -9,6 +9,7 @@ import {
     OnChanges,
     OnInit,
     Optional,
+    Renderer2,
     SimpleChanges
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -33,6 +34,8 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
 
     @Input() kbqSidepanelClose: any;
 
+    private readonly renderer = inject(Renderer2);
+
     constructor(
         @Optional() public sidepanelRef: KbqSidepanelRef,
         private elementRef: ElementRef<HTMLElement>,
@@ -40,6 +43,12 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
     ) {}
 
     ngOnInit() {
+        // A button with no type submits the form it sits in, so closing a sidepanel from inside a form would
+        // submit it too. A type the author set is left alone.
+        if (!this.elementRef.nativeElement.hasAttribute('type')) {
+            this.renderer.setAttribute(this.elementRef.nativeElement, 'type', 'button');
+        }
+
         if (!this.sidepanelRef) {
             // When this directive is included in a sidepanel via TemplateRef (rather than being
             // in a Component), the SidepanelRef isn't available via injection because embedded

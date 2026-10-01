@@ -216,6 +216,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
     private hoverSubscription = Subscription.EMPTY;
 
+    /** Waits for the exit animation to finish a close; must not outlive the trigger, or it emits once destroyed. */
+    private readonly closeAnimationSubscriptions = new Subscription();
+
     private classAddedToOverlayContainer: boolean = false;
 
     constructor(
@@ -246,6 +249,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.closeAnimationSubscriptions.unsubscribe();
+
         if (this.overlayRef) {
             this.overlayRef.dispose();
             this.overlayRef = null;
@@ -414,18 +419,20 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
             if (this.dropdown.lazyContent) {
                 // Wait for the exit animation to finish before detaching the content.
-                animationSubscription
-                    .pipe(
-                        // Interrupt if the content got re-attached.
-                        takeUntil(this.dropdown.lazyContent.attached)
-                    )
-                    .subscribe({
-                        next: () => this.dropdown.lazyContent!.detach(),
-                        // No matter whether the content got re-attached, reset the this.dropdown.
-                        complete: () => this.setIsOpened(false)
-                    });
+                this.closeAnimationSubscriptions.add(
+                    animationSubscription
+                        .pipe(
+                            // Interrupt if the content got re-attached.
+                            takeUntil(this.dropdown.lazyContent.attached)
+                        )
+                        .subscribe({
+                            next: () => this.dropdown.lazyContent!.detach(),
+                            // No matter whether the content got re-attached, reset the this.dropdown.
+                            complete: () => this.setIsOpened(false)
+                        })
+                );
             } else {
-                animationSubscription.subscribe(() => this.setIsOpened(false));
+                this.closeAnimationSubscriptions.add(animationSubscription.subscribe(() => this.setIsOpened(false)));
             }
         } else {
             this.setIsOpened(false);

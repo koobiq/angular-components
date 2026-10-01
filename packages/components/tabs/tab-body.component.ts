@@ -62,6 +62,9 @@ export type KbqTabBodyOriginState = 'left' | 'right';
     }
 })
 export class KbqTabBody implements OnInit, OnDestroy {
+    /** Set once the view is torn down; the animation callbacks can still fire after that. */
+    private isDestroyed = false;
+
     /** The shifted index position of the tab body, where zero represents the active center tab. */
     @Input()
     set position(position: number) {
@@ -128,10 +131,14 @@ export class KbqTabBody implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        this.isDestroyed = true;
         this.dirChangeSubscription.unsubscribe();
     }
 
     onTranslateTabStarted(e: AnimationEvent): void {
+        // Both animation callbacks still fire when the body is destroyed mid-animation.
+        if (this.isDestroyed) return;
+
         const isCentering = this.isCenterPosition(e.toState);
 
         this.beforeCentering.emit(isCentering);
@@ -142,6 +149,8 @@ export class KbqTabBody implements OnInit, OnDestroy {
     }
 
     onTranslateTabComplete(e: AnimationEvent): void {
+        if (this.isDestroyed) return;
+
         // If the transition to the center is complete, emit an event.
         if (this.isCenterPosition(e.toState) && this.isCenterPosition(this.bodyPosition)) {
             this.onCentered.emit();

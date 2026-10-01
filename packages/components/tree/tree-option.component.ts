@@ -7,9 +7,11 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     Inject,
+    inject,
     InjectionToken,
     Input,
     NgZone,
@@ -101,6 +103,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     readonly onBlur = new Subject<KbqTreeOptionEvent>();
 
     preventBlur: boolean = false;
+
+    /** Set once the option is destroyed; the tree can still emit a selection change for it after that. */
+    private isDestroyed = false;
 
     @ViewChild('kbqTitleContainer') parentTextElement: ElementRef;
 
@@ -211,6 +216,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         @Inject(KBQ_TREE_OPTION_PARENT_COMPONENT) public tree: any
     ) {
         super(elementRef, tree);
+
+        inject(DestroyRef).onDestroy(() => (this.isDestroyed = true));
     }
 
     ngAfterContentInit(): void {
@@ -376,6 +383,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     emitSelectionChangeEvent(): void {
+        // The tree can still hold an option whose node was re-rendered away until it rebuilds its list.
+        if (this.isDestroyed) return;
+
         this.onSelectionChange.emit(new KbqTreeOptionChange(this));
     }
 

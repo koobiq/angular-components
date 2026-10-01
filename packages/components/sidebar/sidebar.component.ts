@@ -85,6 +85,9 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly isBrowser = inject(Platform).isBrowser;
 
+    /** Set once the view is torn down; the animation can still report done after that. */
+    private isDestroyed = false;
+
     @Input()
     get opened(): boolean {
         return this._opened;
@@ -157,6 +160,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     }
 
     ngOnDestroy(): void {
+        this.isDestroyed = true;
         this.unRegisterKeydownListener();
     }
 
@@ -178,6 +182,9 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
      * @docs-private
      */
     onAnimationDone() {
+        // The animation still reports done when the sidebar is destroyed before it finishes.
+        if (this.isDestroyed) return;
+
         this.internalState = this._opened;
 
         this.stateChanged.emit(this._opened);
