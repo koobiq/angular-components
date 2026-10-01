@@ -1,12 +1,10 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { Directive, DoCheck, ElementRef, Input, OnChanges, OnDestroy, inject } from '@angular/core';
+import { _IdGenerator } from '@angular/cdk/a11y';
+import { booleanAttribute, Directive, DoCheck, ElementRef, inject, Input, OnChanges, OnDestroy } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
-
-let nextUniqueId = 0;
 
 @Directive({
     selector: `input[kbqInputPassword]`,
@@ -68,6 +66,7 @@ export class KbqInputPassword
      */
     readonly stateChanges = new Subject<any>();
 
+    /** Emits when the password hints are asked to re-run their rules. */
     readonly checkRule = new Subject<void>();
 
     /**
@@ -87,7 +86,9 @@ export class KbqInputPassword
     //  is not migrated.
     @Input() placeholder: string;
 
-    protected uid = `kbq-input-${nextUniqueId++}`;
+    // Own namespace: sharing `kbq-input-` with `KbqInput` produced duplicate ids on any page holding both
+    // controls, and the form field's `<label for>` then resolved to the wrong control.
+    protected uid = inject(_IdGenerator).getId('kbq-input-password-');
     protected previousNativeValue: any;
 
     /**
@@ -96,7 +97,7 @@ export class KbqInputPassword
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
             return this.ngControl.disabled;
@@ -106,7 +107,7 @@ export class KbqInputPassword
     }
 
     set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this._disabled = value;
 
         // Browsers may not fire the blur event if the input is disabled too quickly.
         // Reset from here to ensure that the element doesn't become stuck.
@@ -141,18 +142,16 @@ export class KbqInputPassword
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
     }
 
     set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
+        this._required = value;
     }
 
     private _required = false;
-
-    // this.elementRef.nativeElement.type = this._type;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -203,6 +202,7 @@ export class KbqInputPassword
 
     ngOnDestroy() {
         this.stateChanges.complete();
+        this.checkRule.complete();
     }
 
     ngDoCheck() {
@@ -232,6 +232,7 @@ export class KbqInputPassword
         }
     }
 
+    /** Asks every `kbq-password-hint` in the form field to re-run its rule against the current value. */
     checkRules() {
         this.checkRule.next();
     }
