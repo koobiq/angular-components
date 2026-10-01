@@ -13,3 +13,11 @@ List items can be inline. For compactness, a short label is used on the expand b
 A multi-line list with a centered dot as a separator. The label on the text button is capitalized.
 
 <Example id="clamped-list-dotted" />
+
+### Accessibility
+
+The trigger is yours to place, so applying `kbqClampedListTrigger` to it is a manual step: without the directive the trigger is not reachable from the keyboard, and a screen reader does not report whether the list is collapsed or expanded.
+
+The trigger carries no spacing of its own: lay it out with the list.
+
+> The API tab of this page is shared with **Clamped text**: both components ship from the `@koobiq/components/clamped-text` entry point, because they share the trigger directive, the `KbqClampedRoot` contract and one locale section.

@@ -20,6 +20,8 @@ If the hidden portion contains only one line, the component displays it immediat
 
 ### External state control
 
-The `isCollapsed` input lets you control the component's state from outside — for example, from route query params. The `isCollapsedChange` output allows you to sync the state back, forming a two-way binding.
+The collapsed state can be driven from outside: the parent sets it, and gets a new value back when the user operates the toggle.
 
 <Example id="clamped-text-external-state" />
+
+A user action is the only thing that travels back — neither the component's own measurement nor a value the parent wrote itself. That makes the state safe to keep in a route query parameter: a page load will not overwrite the parameter.

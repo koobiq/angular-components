@@ -1,5 +1,7 @@
 import { afterNextRender, ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { enUSLocaleData } from '@koobiq/components/core';
+import { KbqLink } from '@koobiq/components/link';
+import { KbqClampedList, KbqClampedListTrigger } from './clamped-list';
 import { KbqClampedText } from './clamped-text';
 import { kbqClampedTextDefaultMaxRows, kbqClampedTextLocaleConfigurationProvider } from './constants';
 
@@ -69,6 +71,10 @@ export class E2eClampedTextStateAndStyle {
             <kbq-clamped-text [rows]="2">{{ text }}</kbq-clamped-text>
         </div>
         <button data-testid="resize_persistence_widen" type="button" (click)="widen()">Widen</button>
+
+        <div data-testid="unbreakable_token" style="max-width: 200px;">
+            <kbq-clamped-text [rows]="2">{{ unbreakableToken }}</kbq-clamped-text>
+        </div>
     `,
     styles: `
         :host {
@@ -87,8 +93,54 @@ export class E2eClampedTextStateAndStyle {
 export class E2eClampedTextStates {
     protected readonly text = text;
     protected readonly resizeWidth = signal(200);
+    /**
+     * Eight 80-character words. Nothing inside a word can wrap, so each one overflows the 200px
+     * container on a line of its own — enough lines to exceed `rows` and collapse, while every
+     * line is wider than the box the collapsed state must not let scroll.
+     */
+    protected readonly unbreakableToken = Array.from({ length: 8 }, () => 'a'.repeat(80)).join(' ');
 
     protected widen(): void {
         this.resizeWidth.set(1000);
     }
+}
+
+/**
+ * Renders `kbqClampedList` on a page with no `kbq-clamped-text`, so the trigger is shown with only
+ * the styling the directive owns.
+ */
+@Component({
+    selector: 'e2e-clamped-list',
+    imports: [KbqClampedList, KbqClampedListTrigger, KbqLink],
+    template: `
+        <div #clampedList="kbqClampedList" class="layout-column layout-gap-xxs" kbqClampedList [items]="items">
+            @for (item of clampedList.visibleItems(); track item) {
+                <span>{{ item }}</span>
+            }
+
+            @if (clampedList.hasToggle()) {
+                <a data-testid="e2eClampedListTrigger" kbq-link kbqClampedListTrigger pseudo>
+                    @if (clampedList.isCollapsed()) {
+                        {{ clampedList.showMoreCountText() }}
+                    } @else {
+                        {{ clampedList.localeConfiguration().closeText }}
+                    }
+                </a>
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            display: block;
+            padding: var(--kbq-size-s);
+        }
+    `,
+    providers: [kbqClampedTextLocaleConfigurationProvider(enUSLocaleData.clampedText)],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eClampedList'
+    }
+})
+export class E2eClampedList {
+    protected readonly items = Array.from({ length: 17 }, (_, index) => `Item ${index + 1}`);
 }
