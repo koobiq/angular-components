@@ -1,3 +1,4 @@
+import { Platform } from '@angular/cdk/platform';
 import {
     afterNextRender,
     AfterRenderRef,
@@ -34,6 +35,8 @@ import { KbqAccordion, KbqAccordionVariant } from './accordion.component';
     }
 })
 export class KbqAccordionTrigger implements AfterViewInit {
+    private readonly platform = inject(Platform);
+
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     /** @docs-private */
@@ -66,6 +69,11 @@ export class KbqAccordionTrigger implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        // Skipped on the server: the write would reach the prerendered `style` attribute, and hydration
+        // reuses that node, so the client would read `none` back as the transition worth restoring and
+        // `enableAnimation()` would make it permanent. There is nothing to suppress without a paint.
+        if (!this.platform.isBrowser) return;
+
         this.disableAnimation();
     }
 

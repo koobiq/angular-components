@@ -286,7 +286,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects?.()?.[0]?.height ?? 0;
     }
 
     select(emitEvent: boolean = true): void {

@@ -1,3 +1,4 @@
+import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     afterNextRender,
@@ -35,6 +36,7 @@ const CONTENT_HEIGHT = '--radix-accordion-content-height';
 export class KbqAccordionContentDirective implements AfterContentInit, DoCheck, AfterViewInit {
     private readonly renderer: Renderer2 = inject(Renderer2);
     private readonly injector = inject(Injector);
+    private readonly platform = inject(Platform);
 
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
@@ -75,6 +77,11 @@ export class KbqAccordionContentDirective implements AfterContentInit, DoCheck, 
     }
 
     ngAfterViewInit(): void {
+        // Skipped on the server: the write would reach the prerendered `style` attribute, and hydration
+        // reuses that node, so the client would read `none` back as the transition worth restoring and
+        // `enableAnimation()` would make it permanent. There is nothing to suppress without a paint.
+        if (!this.platform.isBrowser) return;
+
         this.disableAnimation();
     }
 

@@ -455,7 +455,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
 
     /** @docs-private */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects?.()?.[0]?.height ?? 0;
     }
 
     // View to model callback that should be called if the list or its options lost focus.
@@ -852,7 +852,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
 
     /** @docs-private */
     getHeight(): number {
-        return this.elementRef.nativeElement.getClientRects()[0]?.height ?? 0;
+        return this.elementRef.nativeElement.getClientRects?.()?.[0]?.height ?? 0;
     }
 
     /** Handles click events on the list option. */
