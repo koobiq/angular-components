@@ -322,7 +322,7 @@ export class KbqStepper {
     // @deprecated (undocumented)
     connectTo(_: any): void;
     // Warning: (ae-forgotten-export) The symbol "KbqStepperControl" needs to be exported by the entry point index.d.ts
-    protected readonly control: i0.Signal<KbqStepperControl>;
+    protected readonly control: Signal<KbqStepperControl>;
     protected readonly mouseUp: Subject<void>;
     onStepDown(event: MouseEvent): void;
     onStepUp(event: MouseEvent): void;

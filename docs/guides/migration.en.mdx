@@ -1522,6 +1522,42 @@ Three smaller changes reach a consumer. `saved` and `canceled` are public, so a 
 
 Handled by `inline-edit-a11y-and-types`: the `modeAsReadonly` reads are rewritten, the rest is reported.
 
+#### Input
+
+The headline is a platform mutation that never belonged to the component. `KbqNumberInput`'s constructor called `Object.defineProperty(Object.getPrototypeOf(this.nativeElement), 'valueAsNumber', …)` — that is `HTMLInputElement.prototype`, not the element — so constructing a single koobiq number input replaced `valueAsNumber` for **every `<input>` in the application**, third-party widgets and native `type="date"`/`type="number"` fields included, permanently and with no teardown. The replacement treated `,` as a decimal point and returned `null` where the DOM specification requires `NaN`. The patch is gone; a locale-aware numeric read is a member of the directive now: `numberInput.valueAsNumber`.
+
+`KbqNumberInput` also declared `implements KbqFormFieldControl<any>` and populated none of it. The private `control` field behind `ngControl` had no writer anywhere in the file, so `ngControl` was permanently `undefined`, and `id`, `placeholder`, `empty`, `required` and `errorState` existed only to satisfy the interface. Nothing broke at runtime, because the `KbqFormFieldControl` provider lives on the sibling `KbqInput` that matches the same host — but the members were public, so a consumer reading `numberInputRef.errorState` got `undefined` with no type error. The interface and the six members are removed.
+
+**The numeric inputs are signals now.** `min`, `max`, `step` and `bigStep` were `@Input()` accessor pairs, each coercing into a private backing field; all four are `input()` signals, so a programmatic read is a call. The value is unchanged, which is what makes the rewrite mechanical. They are read-only, though: an `input()` has no `.set()`, so a value that moves at runtime has to be bound rather than assigned — that is the cost of the change, and the one case the schematic reports instead of fixing.
+
+`bigStep` had a second spelling worth keeping: the legacy `big-step` attribute, which used to be read once at construction through a `HostAttributeToken` and therefore ignored every later change. Both spellings are signal inputs now and both are reactive; `bigStep` is the `computed()` that resolves them, and the kebab-case one wins when both are bound. The two raw inputs are visible in the typings as `bigStepInput` and `bigStepAttribute` — an input bound from a consumer's template cannot be `protected`, so they could not be hidden. They are `@docs-private`: read `bigStep()`, not either of them.
+
+`valueChange` and `disabledChange` were `EventEmitter`s with no `@Output()` decorator — an event surface by convention only. They are plain RxJS `Subject`s. Subscribing is identical; a call to `.emit()` becomes `.next()`.
+
+**A password field's generated id changed.** `KbqInputPassword` drew from the same `kbq-input-` counter as `KbqInput`, so any page holding both controls emitted two elements with the same id, and the form field's `<label for>` resolved to whichever of them came first — clicking the label focused the wrong control. It mints its ids in a `kbq-input-password-` namespace now, so what used to render `id="kbq-input-7"` renders `id="kbq-input-password-7"`. That breaks anything keyed on the generated value: a CSS selector, a test locator, a hand-written `aria-labelledby`. The schematic reports those; the durable fix is to stop depending on a generated id rather than to renumber it.
+
+| Pattern                                                          | Manual migration                                                        |
+| ---------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `numberInput.min` / `.max` / `.step` / `.bigStep`                | `numberInput.min()` — auto-fixed by the schematic                       |
+| `numberInput.min = 0`                                            | Bind `[min]="0"` — an `input()` has no `.set()`                         |
+| `numberInput.valueChange.emit(v)`                                | `numberInput.valueChange.next(v)`                                       |
+| `numberInput.ngControl` / `.errorState` / `.empty` / `.required` | Read them off the sibling `KbqInput`, or off the `<kbq-form-field>`     |
+| `inputElement.valueAsNumber`                                     | `numberInput.valueAsNumber`, or read the bound form control             |
+| `import { MinValidator, MaxValidator }`                          | `KbqMinValidator`, `KbqMaxValidator` — deprecated aliases for one minor |
+| `import { MIN_VALIDATOR, MAX_VALIDATOR }`                        | `KBQ_MIN_VALIDATOR`, `KBQ_MAX_VALIDATOR` — deprecated aliases           |
+| `<input kbqNumberInput type="number">`                           | Drop the attribute — the directive resets it to `text` and warns        |
+| `#kbq-input-7` on a password field                               | Stop keying on a generated id — the namespace changed                   |
+
+Template bindings are untouched: `[min]="lower"`, `min="3"` and `big-step="2"` all keep working.
+
+The unprefixed `MinValidator` / `MaxValidator` are the exact names `@angular/forms` exports, so importing both in one file shadowed the framework's. `type="number"` had a functional symptom: a native number field runs the value sanitization algorithm on assignment and rejects everything the directive renders once a group separator or a comma fraction separator is in it, so every fractional value — and every value ≥ 1000 while `withThousandSeparator` is on — silently disappeared from the field while the model still held it.
+
+Fixes with nothing to migrate: the numeric inputs coerce their value, so a static `min="3"` holds the number `3` instead of the string `"3"` (the `ngAcceptInputType_*` declarations that used to carry that are gone — a signal input types what it accepts through its transform's parameter); the validators no longer `parseInt` their bound value, so `[min]="0.5"` validates against `0.5` rather than `0` and a bound `[min]="0"` reaches the DOM instead of being dropped by a falsy check; stepping runs in integer space against a decimal scale, so one arrow press on `1.005` with `step="0.001"` renders `1,006` rather than `1,0059999999999998`; `startFormattingFrom` is read from the input as well as from the locale, instead of being declared and ignored; `KbqNumberInput` carries spinbutton semantics (`role`, `aria-valuenow`, `aria-valuetext`, `aria-valuemin`, `aria-valuemax`, `inputmode`).
+
+Migrated by `input-number-surface`, which rewrites the signal reads and reports the rest. The rewrite is scoped to a receiver the file annotates as `KbqNumberInput` and to a `#ref="kbqNumberInput"` template reference — `min`, `max` and `step` are too common to match on the member name alone, so a receiver whose type is only inferred, an index read and a destructuring are all left for you.
+
+`KbqNumberInput.value` and `disabled` stay accessors deliberately. Both setters do more than store: `value` reformats the field and notifies the `ControlValueAccessor`, `disabled` blurs the element. A `model()` cannot intercept a write, so converting either would drop the side effect an external `[(value)]` depends on.
+
 #### Link
 
 The three inputs the automated signal migration skipped were all accessors, and each did something beyond storing a value: `disabled` wrote a separate signal, `tabIndex` folded in the disabled state, and `print` was a setter with no getter that also computed the printed URL.

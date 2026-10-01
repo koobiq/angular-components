@@ -141,6 +141,28 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 </kbq-form-field>
             </div>
         </div>
+
+        <!--
+            Keyboard surface for the interaction specs: typing, stepping, pasting and locale switching are
+            asserted here rather than screenshotted, so this block adds no baseline.
+        -->
+        <div data-testid="e2eInputNumberKeyboard">
+            <kbq-form-field style="width: 240px">
+                <kbq-label>Keyboard</kbq-label>
+
+                <input
+                    kbqNormalizeWhitespace
+                    kbqNumberInput
+                    data-testid="e2eInputNumberKeyboardControl"
+                    [max]="1000000"
+                    [min]="-1000000"
+                    [bigStep]="10"
+                    [step]="0.5"
+                    [(ngModel)]="keyboardValue"
+                />
+                <kbq-stepper />
+            </kbq-form-field>
+        </div>
     `,
     styles: `
         :host {
@@ -176,6 +198,7 @@ export class E2eInputStateAndStyle {
     inputValue = signal('Input Value');
     inputMonoValue = signal('P@a$$w0rd');
     inputNumberValue = signal(123456);
+    keyboardValue: number | null = null;
     errorStateMatcher = (state: ('error' | string)[]): ErrorStateMatcher => new CustomErrorStateMatcher(state);
 
     states: InputStates[][] = [
