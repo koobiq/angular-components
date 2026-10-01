@@ -28,6 +28,5 @@ A user action is the only thing that travels back — neither the component's ow
 
 ### Accessibility
 
-- **The toggle.** The component renders it and announces it as a button: the keyboard reaches it, and assistive technology reports whether the text is collapsed or expanded.
-- **The link to the text.** The toggle points at the clamped region, so assistive technology knows what it controls.
-- **The label.** The toggle's label comes from the active locale, so it needs no accessible name of its own.
+- **The toggle.** The component renders the toggle and gives it button semantics: the toggle sits in the tab order, points at the clamped region, and reports whether the text is collapsed or expanded.
+- **The label.** The "Expand" and "Collapse" labels come from the active locale, so there is no accessible name to supply.

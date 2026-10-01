@@ -1320,7 +1320,7 @@ Fixes with nothing to migrate:
 - Collapsing scrolls with `{ block: 'nearest', inline: 'nearest' }` instead of centering on both axes, and `[scrollOnCollapse]="false"` turns it off.
 - `rows` takes a string attribute, so `rows="3"` compiles under `strictTemplates`.
 - `[debounceTime]` is re-read on every resize instead of once at `ngAfterViewInit`.
-- The toggle does not appear before the first measurement, and the text stays clamped until then. The prerendered documentation page used to ship it expanded.
+- The toggle does not appear before the first measurement, and the text stays clamped until then. The prerendered documentation page used to ship the text expanded.
 
 Reported by `clamped-text-disclosure`.
 
