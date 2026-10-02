@@ -253,18 +253,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-and-content-panel-example.ts",
     "importPath": "components/ag-grid"
   },
-  "ag-grid-column-menu": {
-    "packagePath": "components/ag-grid/ag-grid-column-menu",
-    "title": "AG Grid with column menu",
-    "componentName": "AgGridColumnMenuExample",
-    "files": [
-      "ag-grid-column-menu-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "ag-grid-column-menu-example",
-    "primaryFile": "ag-grid-column-menu-example.ts",
-    "importPath": "components/ag-grid"
-  },
   "ag-grid-column-state": {
     "packagePath": "components/ag-grid/ag-grid-column-state",
     "title": "AG Grid with `KbqAgGridColumnState` directive",
@@ -397,6 +385,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-row-actions-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-row-detail": {
+    "packagePath": "components/ag-grid/ag-grid-row-detail",
+    "title": "AG Grid with `KbqAgGridRowDetail` directive",
+    "componentName": "AgGridRowDetailExample",
+    "files": [
+      "ag-grid-row-detail-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-row-detail-example",
+    "primaryFile": "ag-grid-row-detail-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-row-dragging": {
     "packagePath": "components/ag-grid/ag-grid-row-dragging",
     "title": "AG Grid with row dragging",
@@ -443,6 +443,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "ag-grid-row-selection-state-example",
     "primaryFile": "ag-grid-row-selection-state-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-settings-menu": {
+    "packagePath": "components/ag-grid/ag-grid-settings-menu",
+    "title": "AG Grid with `KbqAgGridSettingsMenu` directive",
+    "componentName": "AgGridSettingsMenuExample",
+    "files": [
+      "ag-grid-settings-menu-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-settings-menu-example",
+    "primaryFile": "ag-grid-settings-menu-example.ts",
     "importPath": "components/ag-grid"
   },
   "ag-grid-skeleton-cell-renderer": {
@@ -7696,7 +7708,6 @@ export type LiveExampleId =
   | 'actions-panel-with-dropdown-and-popover'
   | 'ag-grid-and-actions-panel'
   | 'ag-grid-and-content-panel'
-  | 'ag-grid-column-menu'
   | 'ag-grid-column-state'
   | 'ag-grid-copy-selected'
   | 'ag-grid-export'
@@ -7708,10 +7719,12 @@ export type LiveExampleId =
   | 'ag-grid-overview'
   | 'ag-grid-quick-filter-state'
   | 'ag-grid-row-actions'
+  | 'ag-grid-row-detail'
   | 'ag-grid-row-dragging'
   | 'ag-grid-row-focus-state'
   | 'ag-grid-row-group'
   | 'ag-grid-row-selection-state'
+  | 'ag-grid-settings-menu'
   | 'ag-grid-skeleton-cell-renderer'
   | 'ag-grid-status-bar'
   | 'alert-close'
