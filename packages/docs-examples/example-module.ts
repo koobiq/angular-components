@@ -5386,16 +5386,100 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidepanel-with-dynamic-config-update-example.ts",
     "importPath": "components/sidepanel"
   },
-  "skeleton-directive": {
-    "packagePath": "components/skeleton/skeleton-directive",
-    "title": "Skeleton directive",
-    "componentName": "SkeletonDirectiveExample",
+  "skeleton-accordion": {
+    "packagePath": "components/skeleton/skeleton-accordion",
+    "title": "Skeleton accordion preset",
+    "componentName": "SkeletonAccordionExample",
     "files": [
-      "skeleton-directive-example.ts"
+      "skeleton-accordion-example.ts"
     ],
     "localImportFiles": [],
-    "selector": "skeleton-directive-example",
-    "primaryFile": "skeleton-directive-example.ts",
+    "selector": "skeleton-accordion-example",
+    "primaryFile": "skeleton-accordion-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-checkable": {
+    "packagePath": "components/skeleton/skeleton-checkable",
+    "title": "Skeleton checkable preset",
+    "componentName": "SkeletonCheckableExample",
+    "files": [
+      "skeleton-checkable-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-checkable-example",
+    "primaryFile": "skeleton-checkable-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-code-block": {
+    "packagePath": "components/skeleton/skeleton-code-block",
+    "title": "Skeleton in place of a code block",
+    "componentName": "SkeletonCodeBlockExample",
+    "files": [
+      "skeleton-code-block-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-code-block-example",
+    "primaryFile": "skeleton-code-block-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-dl": {
+    "packagePath": "components/skeleton/skeleton-dl",
+    "title": "Skeleton description list preset",
+    "componentName": "SkeletonDlExample",
+    "files": [
+      "skeleton-dl-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-dl-example",
+    "primaryFile": "skeleton-dl-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-elements": {
+    "packagePath": "components/skeleton/skeleton-elements",
+    "title": "Skeleton element presets",
+    "componentName": "SkeletonElementsExample",
+    "files": [
+      "skeleton-elements-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-elements-example",
+    "primaryFile": "skeleton-elements-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-form-field": {
+    "packagePath": "components/skeleton/skeleton-form-field",
+    "title": "Skeleton form field preset",
+    "componentName": "SkeletonFormFieldExample",
+    "files": [
+      "skeleton-form-field-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-form-field-example",
+    "primaryFile": "skeleton-form-field-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-grid": {
+    "packagePath": "components/skeleton/skeleton-grid",
+    "title": "Skeleton grid preset",
+    "componentName": "SkeletonGridExample",
+    "files": [
+      "skeleton-grid-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-grid-example",
+    "primaryFile": "skeleton-grid-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-group": {
+    "packagePath": "components/skeleton/skeleton-group",
+    "title": "Skeleton group preset",
+    "componentName": "SkeletonGroupExample",
+    "files": [
+      "skeleton-group-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-group-example",
+    "primaryFile": "skeleton-group-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-in-sidepanel": {
@@ -5420,6 +5504,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "skeleton-overview-example",
     "primaryFile": "skeleton-overview-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-table": {
+    "packagePath": "components/skeleton/skeleton-table",
+    "title": "Skeleton table preset",
+    "componentName": "SkeletonTableExample",
+    "files": [
+      "skeleton-table-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-table-example",
+    "primaryFile": "skeleton-table-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-tabs": {
+    "packagePath": "components/skeleton/skeleton-tabs",
+    "title": "Skeleton tabs preset",
+    "componentName": "SkeletonTabsExample",
+    "files": [
+      "skeleton-tabs-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-tabs-example",
+    "primaryFile": "skeleton-tabs-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-tree": {
+    "packagePath": "components/skeleton/skeleton-tree",
+    "title": "Skeleton tree preset",
+    "componentName": "SkeletonTreeExample",
+    "files": [
+      "skeleton-tree-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-tree-example",
+    "primaryFile": "skeleton-tree-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-typography": {
+    "packagePath": "components/skeleton/skeleton-typography",
+    "title": "Skeleton typography preset",
+    "componentName": "SkeletonTypographyExample",
+    "files": [
+      "skeleton-typography-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-typography-example",
+    "primaryFile": "skeleton-typography-example.ts",
     "importPath": "components/skeleton"
   },
   "split-button-content": {
@@ -8113,9 +8245,20 @@ export type LiveExampleId =
   | 'sidepanel-state-saving'
   | 'sidepanel-with-custom-injector'
   | 'sidepanel-with-dynamic-config-update'
-  | 'skeleton-directive'
+  | 'skeleton-accordion'
+  | 'skeleton-checkable'
+  | 'skeleton-code-block'
+  | 'skeleton-dl'
+  | 'skeleton-elements'
+  | 'skeleton-form-field'
+  | 'skeleton-grid'
+  | 'skeleton-group'
   | 'skeleton-in-sidepanel'
   | 'skeleton-overview'
+  | 'skeleton-table'
+  | 'skeleton-tabs'
+  | 'skeleton-tree'
+  | 'skeleton-typography'
   | 'split-button-content'
   | 'split-button-disabled-state'
   | 'split-button-menu-width'
