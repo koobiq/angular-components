@@ -23,3 +23,5 @@ jobs:
       - run: yarn run check-public-api-any
       - run: yarn run docs:api-gen
       - run: yarn run check-api-docs
+      # Reads the manifest docs:api-gen has just written, like check-api-docs.
+      - run: yarn run check-llms

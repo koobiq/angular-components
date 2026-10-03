@@ -7,7 +7,8 @@
             "cleanUrls": true,
             "rewrites": [
                 {
-                    "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
+                    // Markdown and text files are served as they are: one that does not exist is a 404, not the app shell.
+                    "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg|md|txt))",
                     "destination": "/index.csr.html"
                 }
             ],
@@ -46,6 +47,21 @@
                         {
                             "key": "Content-Security-Policy",
                             "value": "upgrade-insecure-requests; default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' * data:; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://mc.yandex.com https://yastatic.net; frame-src 'self' https://mc.yandex.ru https://mc.yandex.com; child-src 'self' blob: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://koobiq.io https://*.koobiq.io https://mc.yandex.ru https://mc.yandex.com https://*.algolia.net https://*.algolianet.com https://*.algolia.io;"
+                        }
+                    ]
+                },
+                {
+                    // The Markdown of every documentation item, generated for agents by tools/llms.
+                    "source": "/**/*.md",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "text/markdown; charset=utf-8"
+                        },
+                        {
+                            // A copy of the pages people read, which search engines index instead.
+                            "key": "X-Robots-Tag",
+                            "value": "noindex"
                         }
                     ]
                 },
@@ -126,7 +142,8 @@
             "cleanUrls": true,
             "rewrites": [
                 {
-                    "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg))",
+                    // Markdown and text files are served as they are: one that does not exist is a 404, not the app shell.
+                    "source": "/**/!(*.@(js|ts|html|css|json|svg|png|jpg|jpeg|md|txt))",
                     "destination": "/index.csr.html"
                 }
             ],
@@ -167,6 +184,21 @@
                         {
                             "key": "Content-Security-Policy",
                             "value": "upgrade-insecure-requests; frame-ancestors 'self' https://*.web.app; default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' * data:; media-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://mc.yandex.ru https://mc.yandex.com https://yastatic.net; frame-src 'self' https://mc.yandex.ru https://mc.yandex.com; child-src 'self' blob: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://koobiq.io https://*.koobiq.io https://mc.yandex.ru https://mc.yandex.com https://*.algolia.net https://*.algolianet.com https://*.algolia.io;"
+                        }
+                    ]
+                },
+                {
+                    // The Markdown of every documentation item, generated for agents by tools/llms.
+                    "source": "/**/*.md",
+                    "headers": [
+                        {
+                            "key": "Content-Type",
+                            "value": "text/markdown; charset=utf-8"
+                        },
+                        {
+                            // A copy of the pages people read, which search engines index instead.
+                            "key": "X-Robots-Tag",
+                            "value": "noindex"
                         }
                     ]
                 },

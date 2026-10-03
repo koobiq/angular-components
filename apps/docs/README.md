@@ -33,8 +33,8 @@ yarn run build:docs-examples
 # Generate sitemap
 yarn run docs:generate-sitemap
 
-# Generate llms.txt
-yarn run docs:generate-llms-txt
+# Generate llms.txt, llms-full.txt and the Markdown of every page for agents
+yarn run docs:generate-llms
 
 # Generate prerender routes
 yarn run docs:generate-prerender-routes

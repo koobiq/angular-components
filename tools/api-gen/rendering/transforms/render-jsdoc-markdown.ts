@@ -8,7 +8,7 @@ const INLINE_LINK_TAG = /\{\s*@link\s+([^}|]+?)(?:\s*\|\s*([^}]+))?\s*\}/g;
  * `{@link Foo}` is standard JSDoc that MDX would read as an expression. It becomes inline code rather than
  * a link: the generator does not know where the page of every symbol lives.
  */
-function resolveLinkTags(text: string): string {
+export function resolveLinkTags(text: string): string {
     return text.replace(INLINE_LINK_TAG, (_match, target: string, label?: string) => `\`${(label ?? target).trim()}\``);
 }
 
