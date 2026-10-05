@@ -2,9 +2,7 @@ A popover is a small non-modal dialog without dimming that opens next to a trigg
 
 <Example id="popover-overview" />
 
-### States
-
-#### Size
+### Size
 
 By default, the popover opens with a preset **Medium** width, but two additional sizes and the option to use a custom value are available.
 
@@ -18,7 +16,7 @@ The height of the popover depends on its content. The recommended maximum height
 
 <Example id="popover-height" />
 
-#### Configuring padding
+### Configuring padding
 
 To flexibly control popover padding based on its content, reset the default values using `[kbqPopoverDefaultPaddings]="false"`. Then apply inner padding (padding) directly in the template of the content area:
 
@@ -26,7 +24,7 @@ To flexibly control popover padding based on its content, reset the default valu
 
 The default padding also keeps the focus outline of the first field in the content area from being clipped by the panel, which hides its overflow. After resetting it, reserve that space in your own padding.
 
-#### Hiding the arrow
+### Hiding the arrow
 
 The arrow extending from the popover can be hidden, which allows the popover to be positioned closer to the trigger element.
 
@@ -34,29 +32,29 @@ The arrow extending from the popover can be hidden, which allows the popover to 
 
 <Example id="popover-arrowless" />
 
-#### Offset
+### Offset
 
 The popover has an additional `kbqPopoverOffset` parameter that controls the offset of the popover relative to the trigger element.
 
 <Example id="popover-arrow-and-offset" />
 
-#### Alignment
+### Alignment
 
 Consider the context in which the popover appears. Configure the alignment so that the popover does not obscure elements that may be needed.
 
-##### Centered on the element
+#### Centered on the element
 
 The arrow is positioned at the center of the popover and points to the middle of the trigger element.
 
 <Example id="popover-placement-center" />
 
-##### At the edge of the element
+#### At the edge of the element
 
 The popover aligns with the edge of the trigger element; the arrow is at a fixed distance from the edge of the popover. If the trigger element is too small, the arrow aligns with its center.
 
 <Example id="popover-placement-edges" />
 
-#### Behavior when scrolling the page
+### Behavior when scrolling the page
 
 By default, the popover does not close when the page scrolls and scrolls along with the page, remaining at the position from which it was opened.
 
@@ -65,6 +63,14 @@ The popover can be configured to close when the page scrolls; which behavior to 
 <Example id="popover-scroll" />
 
 The behavior is controlled by `kbqPopoverCloseOnScroll`, which has three states. Left unbound, the popover survives a scroll but still closes once it has scrolled out of a container marked with the `kbq-hide-nested-popup` class. Set to `true`, it closes on any scroll. Set to `false`, it never closes on a scroll — not even in such a container.
+
+### Layering
+
+By default, the popover appears above the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/topbar), and above adjacent elements in other cases.
+
+To prevent the popover from overlapping a required element during scrolling and instead have it hidden beneath it, adjust its position using a custom z-index or offset parameters.
+
+<Example id="popover-scrolling-and-layering" />
 
 ### Usage examples
 
@@ -118,7 +124,7 @@ A popover can open next to selected text. It stays next to the selection while t
 
 `kbqPopoverOrigin` accepts an element or a rectangle in viewport coordinates. `kbqCreateCaretOrigin` creates a dynamic origin for the selection, and `kbqGetSelectionRect` measures its position inside the element. `updatePosition(true)` moves an open popover to a changed selection. `null` anchors it back to the trigger.
 
-`[kbqPopoverAutoFocus]="false"` leaves the focus and selection where they were. Cancel the default `mousedown` action inside the popover so the first click does not collapse the selection. The `Escape` key is handled on the document.
+`[kbqPopoverAutoFocus]="false"` leaves the focus and selection where they were. Cancel the default `mousedown` action inside the popover so the first click does not collapse the selection. Handle `Escape` on the document: the focus stays in the text, so neither the trigger nor the panel receives the key.
 
 The popover opens once the selection is final: after `pointerup` for pointer selection and after a short pause for keyboard selection. Otherwise, it anchors to the first characters of a selection that is still growing. The popover lives in an overlay at the end of the document, so `Tab` walks past it; when needed, handle `Tab` separately and move focus to the first popover element.
 
@@ -129,14 +135,6 @@ By default the popover opens on a click and on `Enter`/`Space`, and closes on a 
 `kbqEnterDelay` and `kbqLeaveDelay` set the delays before opening and closing, in milliseconds. Both default to `0`, with one exception: a popover whose trigger includes `hover` closes after 500 ms unless `kbqLeaveDelay` is bound explicitly, which keeps the panel reachable while the pointer travels towards it. Bind `kbqLeaveDelay="0"` to opt out.
 
 `kbqTrigger`, `kbqEnterDelay` and `kbqLeaveDelay` are shared with the [tooltip](/en/components/tooltip) directive, so binding them on an element that carries both reconfigures both.
-
-### Layering
-
-By default, the popover appears above the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/topbar), and above adjacent elements in other cases.
-
-To prevent the popover from overlapping a required element during scrolling and instead have it hidden beneath it, adjust its position using a custom z-index or offset parameters.
-
-<Example id="popover-scrolling-and-layering" />
 
 ### Accessibility
 
