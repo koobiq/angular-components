@@ -1507,6 +1507,34 @@ Two fixes with nothing to migrate. `empty-state.scss` loads its own token layer 
 
 Reported by `empty-state-error-color`.
 
+#### Filter bar
+
+The popover that saves and renames a filter was reworked, and so were the strings around it.
+
+**`filters.saveChanges` and `filters.saveAsNew` were split.** Each did two jobs: the label of a dropdown item and the header of the popover that item opens. The header now captions the unlabelled name field, which reads wrong on a dropdown item, so each key became two:
+
+| Removed key   | Popover header      | Dropdown item       |
+| ------------- | ------------------- | ------------------- |
+| `saveChanges` | `saveChangesHeader` | `saveChangesButton` |
+| `saveAsNew`   | `saveAsNewHeader`   | `saveAsNewButton`   |
+
+`KbqFilterSavePopover.popoverHeader` returns `saveAsNewHeader` when saving a new filter and `saveChangesHeader` when renaming one, and the name field takes its accessible name from it.
+
+**`filters.name` was removed.** The popover no longer renders a caption above the name field; its header carries it.
+
+**Renaming a filter no longer saves it.** A `KbqSaveFilterStatuses.NewName` save used to stamp `saved: true` / `changed: false` onto the payload, so renaming a filter with unsaved pipe edits declared them saved. The payload now keeps the filter's own flags and still carries the pipes shown in the bar, so persist the name only.
+
+The default wording changed too. In `en-US`: "Save as new" for the tooltip of the save button and for both "save as new" items, "Save" for the "save changes" item, "Rename" for the rename item, "New filter" and "New name" for the headers, and "A search with such name already exists" and "A filter with such name already exists" for the errors. The alert of a failed save now defaults to the duplicate-name text, so pass your own `text` to `filterSavedUnsuccessfully()` for any other failure. Override the strings through `kbqFilterBarLocaleConfigurationProvider` if they do not fit.
+
+| Pattern                                                 | Manual migration                                                                                    |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| A read of `filters.saveChanges` / `filters.saveAsNew`   | Read `…Header` for the popover header or `…Button` for the dropdown item                            |
+| A `saveChanges` / `saveAsNew` key in a partial override | Replace it with `…Header` and/or `…Button` — the literal has too few keys for the schematic to know |
+| A read of `filters.name`                                | Drop it, or bind your own string if the field still needs a visible caption                         |
+| A handler of `KbqSaveFilterStatuses.NewName`            | Persist the name only — writing the whole payload back saves the pending pipe edits                 |
+
+Handled by `filter-bar-rename-action`: the `name` key is removed and `saveChanges` / `saveAsNew` are split in `filters` locale literals, the rest is reported.
+
 #### Flag
 
 `[innerHTML]` on `<kbq-flag>` is no longer a supported way to pass a flag. The component renders `<ng-content />`, so the host element is where projected nodes land, and an `innerHTML` write from the parent targets that same element. The two only coexisted because the component's own view contributed no DOM; the review gave the string form a slot of its own, so `<kbq-flag [innerHTML]="flag" />` becomes `<kbq-flag [svg]="flag" />`.

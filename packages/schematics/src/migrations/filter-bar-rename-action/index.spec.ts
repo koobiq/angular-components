@@ -55,7 +55,7 @@ describe(SCHEMATIC_NAME, () => {
                 'export const configuration = {\n' +
                     '    filters: {\n' +
                     "        saveAsNewFilter: 'Save as new filter',\n" +
-                    "        saveChanges: 'Save changes',\n" +
+                    "        change: 'Edit',\n" +
                     "        remove: 'Delete',\n" +
                     "        name: 'Name',\n" +
                     "        saveButton: 'Save'\n" +
@@ -69,7 +69,7 @@ describe(SCHEMATIC_NAME, () => {
                 'export const configuration = {\n' +
                     '    filters: {\n' +
                     "        saveAsNewFilter: 'Save as new filter',\n" +
-                    "        saveChanges: 'Save changes',\n" +
+                    "        change: 'Edit',\n" +
                     "        remove: 'Delete',\n" +
                     "        saveButton: 'Save'\n" +
                     '    }\n' +
@@ -86,7 +86,7 @@ describe(SCHEMATIC_NAME, () => {
                 'export const configuration = {\n' +
                     '    filters: {\n' +
                     "        saveAsNewFilter: 'Save as new filter',\n" +
-                    "        saveChanges: 'Save changes',\n" +
+                    "        change: 'Edit',\n" +
                     "        actionsTooltip: 'Filter actions',\n" +
                     "        name: 'Name'\n" +
                     '    }\n' +
@@ -99,7 +99,7 @@ describe(SCHEMATIC_NAME, () => {
                 'export const configuration = {\n' +
                     '    filters: {\n' +
                     "        saveAsNewFilter: 'Save as new filter',\n" +
-                    "        saveChanges: 'Save changes',\n" +
+                    "        change: 'Edit',\n" +
                     "        actionsTooltip: 'Filter actions'\n" +
                     '    }\n' +
                     '};\n'
@@ -114,7 +114,7 @@ describe(SCHEMATIC_NAME, () => {
                 ts,
                 'export const configuration = {\n' +
                     "    'saveAsNewFilter': 'Save as new filter',\n" +
-                    "    'saveChanges': 'Save changes',\n" +
+                    "    'change': 'Edit',\n" +
                     "    'actionsTooltip': 'Filter actions',\n" +
                     "    'name': 'Name'\n" +
                     '};\n'
@@ -143,7 +143,7 @@ describe(SCHEMATIC_NAME, () => {
                 "const name = 'Name';\n" +
                 'export const filters = {\n' +
                 "    saveAsNewFilter: 'Save as new filter',\n" +
-                "    saveChanges: 'Save changes',\n" +
+                "    change: 'Edit',\n" +
                 "    actionsTooltip: 'Filter actions',\n" +
                 '    name\n' +
                 '};\n';
@@ -167,6 +167,163 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
+    describe('split keys', () => {
+        it('splits saveChanges and saveAsNew into header and button keys carrying the old value', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                ts,
+                'export const configuration = {\n' +
+                    '    filters: {\n' +
+                    "        saveAsNewFilter: 'Save as new filter',\n" +
+                    "        saveChanges: 'Save changes',\n" +
+                    "        saveAsNew: 'Save as new',\n" +
+                    "        change: 'Edit',\n" +
+                    "        name: 'Name',\n" +
+                    "        saveButton: 'Save'\n" +
+                    '    }\n' +
+                    '};\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                'export const configuration = {\n' +
+                    '    filters: {\n' +
+                    "        saveAsNewFilter: 'Save as new filter',\n" +
+                    "        saveChangesHeader: 'Save changes',\n" +
+                    "        saveChangesButton: 'Save changes',\n" +
+                    "        saveAsNewHeader: 'Save as new',\n" +
+                    "        saveAsNewButton: 'Save as new',\n" +
+                    "        change: 'Edit',\n" +
+                    "        saveButton: 'Save'\n" +
+                    '    }\n' +
+                    '};\n'
+            );
+            expect(messages.join('\n')).not.toContain('did not rewrite');
+        });
+
+        it('splits a key of a single-line literal', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(ts, "export const filters = { saveAsNewFilter: 'A', saveChanges: 'B', change: 'C' };\n");
+
+            expect((await run(first)).readText(ts)).toBe(
+                "export const filters = { saveAsNewFilter: 'A', saveChangesHeader: 'B', saveChangesButton: 'B', change: 'C' };\n"
+            );
+        });
+
+        it('keeps the quotes of a quoted key', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                'export const filters = {\n' +
+                    "    'saveAsNewFilter': 'A',\n" +
+                    "    'saveAsNew': 'B',\n" +
+                    "    'change': 'C'\n" +
+                    '};\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                'export const filters = {\n' +
+                    "    'saveAsNewFilter': 'A',\n" +
+                    "    'saveAsNewHeader': 'B',\n" +
+                    "    'saveAsNewButton': 'B',\n" +
+                    "    'change': 'C'\n" +
+                    '};\n'
+            );
+        });
+
+        it('expands a shorthand key into two references to its variable', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "const saveChanges = 'B';\n" +
+                    'export const filters = {\n' +
+                    "    saveAsNewFilter: 'A',\n" +
+                    "    change: 'C',\n" +
+                    '    saveChanges\n' +
+                    '};\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                "const saveChanges = 'B';\n" +
+                    'export const filters = {\n' +
+                    "    saveAsNewFilter: 'A',\n" +
+                    "    change: 'C',\n" +
+                    '    saveChangesHeader: saveChanges,\n' +
+                    '    saveChangesButton: saveChanges\n' +
+                    '};\n'
+            );
+        });
+
+        it('does not repeat a key the literal already has', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                'export const filters = {\n' +
+                    "    saveAsNewFilter: 'A',\n" +
+                    "    saveChanges: 'B',\n" +
+                    "    saveChangesHeader: 'C',\n" +
+                    "    saveAsNew: 'D',\n" +
+                    "    saveAsNewHeader: 'E',\n" +
+                    "    saveAsNewButton: 'F'\n" +
+                    '};\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                'export const filters = {\n' +
+                    "    saveAsNewFilter: 'A',\n" +
+                    "    saveChangesButton: 'B',\n" +
+                    "    saveChangesHeader: 'C',\n" +
+                    "    saveAsNewHeader: 'E',\n" +
+                    "    saveAsNewButton: 'F'\n" +
+                    '};\n'
+            );
+        });
+
+        it('keeps the line endings of a CRLF file', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "export const filters = {\r\n    saveAsNewFilter: 'A',\r\n    saveAsNew: 'B',\r\n    change: 'C'\r\n};\r\n"
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                'export const filters = {\r\n' +
+                    "    saveAsNewFilter: 'A',\r\n" +
+                    "    saveAsNewHeader: 'B',\r\n" +
+                    "    saveAsNewButton: 'B',\r\n" +
+                    "    change: 'C'\r\n" +
+                    '};\r\n'
+            );
+        });
+
+        it('leaves a partial override alone and reports it', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+            const source =
+                'export const providers = [\n' +
+                "    kbqFilterBarLocaleConfigurationProvider({ filters: { saveAsNew: 'Save as new' } })\n" +
+                '];\n';
+
+            appTree.overwrite(ts, source);
+
+            expect((await run(first)).readText(ts)).toBe(source);
+            expect(messages.join('\n')).toContain('did not rewrite');
+        });
+    });
+
     describe('warnings', () => {
         it('reports a read of the removed key the fix could not rewrite', async () => {
             const [first] = projects.keys();
@@ -180,16 +337,46 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages.join('\n')).toContain('Manual migration required');
         });
 
-        it('reports a read of popoverHeader', async () => {
+        it('reports a read of a split key', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
             const messages = collectLogs();
 
-            appTree.overwrite(ts, 'export const header = popover.popoverHeader;\n');
+            appTree.overwrite(ts, 'export const label = configuration.filters.saveChanges;\n');
 
             await run(first);
 
-            expect(messages.join('\n')).toContain('no longer depends on the mode');
+            expect(messages.join('\n')).toContain('were split: read');
+        });
+
+        it('does not report a call of the KbqFilters method sharing a split key name', async () => {
+            const [first] = projects.keys();
+            const { html } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                html,
+                '<kbq-filters #filters="kbqFilters" />\n<button (click)="filters.saveAsNew()">Save</button>\n'
+            );
+
+            await run(first);
+
+            expect(messages.join('\n')).not.toContain('were split');
+        });
+
+        it('reports a split key overridden in a template binding', async () => {
+            const [first] = projects.keys();
+            const { html } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                html,
+                `<kbq-filter-bar [localeOverrides]="{ filterBar: { filters: { saveChanges: 'Save' } } }" />\n`
+            );
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('did not rewrite');
         });
 
         it('reports a handler of the NewName save status', async () => {
@@ -233,6 +420,7 @@ describe(SCHEMATIC_NAME, () => {
 
             expect(note).toContain('only renames');
             expect(note).toContain('survives a rename');
+            expect(note).toContain('split into a `…Header` key');
         });
     });
 

@@ -199,22 +199,26 @@ describe('KbqFilters', () => {
         });
 
         describe('popoverHeader', () => {
-            it('should return saveAsNew text when saveNewFilter is true', () => {
+            it('should return saveAsNewHeader text when saveNewFilter is true', () => {
                 initFixture();
                 const component = getFiltersComponent();
 
                 component.saveNewFilter = true;
 
-                expect(component.popoverHeader).toBe(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNew);
+                expect(component.popoverHeader).toBe(
+                    KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNewHeader
+                );
             });
 
-            it('should return saveAsNew text when saveNewFilter is false', () => {
+            it('should return saveChangesHeader text when saveNewFilter is false', () => {
                 initFixture();
                 const component = getFiltersComponent();
 
                 component.saveNewFilter = false;
 
-                expect(component.popoverHeader).toBe(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNew);
+                expect(component.popoverHeader).toBe(
+                    KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveChangesHeader
+                );
             });
         });
 
@@ -1297,6 +1301,46 @@ describe('KbqFilters', () => {
                 KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNewFilter
             );
         }));
+
+        it('should label the actions of a changed saved filter with their own strings', fakeAsync(() => {
+            const strings = KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters;
+
+            initFixture(createFilter([], { saved: true, changed: true }));
+
+            filtersDebugElement.query(By.css('.kbq-button_action')).nativeElement.click();
+            flush();
+            fixture.detectChanges();
+
+            const labels = Array.from(document.querySelectorAll('.kbq-dropdown-item'), (item) =>
+                item.textContent?.trim()
+            );
+
+            expect(labels).toEqual([
+                strings.saveChangesButton,
+                strings.saveAsNewButton,
+                strings.change,
+                strings.resetChanges,
+                strings.remove
+            ]);
+        }));
+
+        it.each([
+            ['saving a new filter', 'openSaveAsNewFilterPopover', 'saveAsNewHeader'],
+            ['renaming the filter', 'openChangeFilterNamePopover', 'saveChangesHeader']
+        ] as const)('should title the popover and name its field when %s', (_, open, header) =>
+            fakeAsync(() => {
+                const text = KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters[header];
+
+                initFixture(createFilter([], { name: 'Existing', saved: true }));
+
+                getFiltersComponent()[open]();
+                fixture.detectChanges();
+                flush();
+
+                expect(document.querySelector('.kbq-popover__header')?.textContent?.trim()).toBe(text);
+                expect(document.querySelector('.kbq-popover__content input')?.getAttribute('aria-label')).toBe(text);
+            })()
+        );
     });
 
     describe('Template integration', () => {
