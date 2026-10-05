@@ -77,7 +77,7 @@ export class AgGridSkeletonCellRendererExample {
         }
     };
     readonly defaultColDef: ColDef = {
-        cellRendererSelector: (params: ICellRendererParams) =>
-            params.data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
+        cellRendererSelector: ({ data }: ICellRendererParams) =>
+            data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
     };
 }
