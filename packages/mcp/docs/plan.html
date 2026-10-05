@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>koobiq-mcp — план</title>
+<style>
+:root {
+    --surface-0: #edede9;
+    --surface-1: #f5f5f2;
+    --surface-2: #ffffff;
+    --page: #fbfbf9;
+    --border: rgba(0, 0, 0, 0.11);
+    --text-primary: #1a1a18;
+    --text-secondary: #5c5c56;
+    --text-muted: #8a8a82;
+    --text-accent: #2b5ce6;
+    --bg-accent: #eef2fe;
+    --border-accent: #afc0f5;
+    --text-danger: #b3261e;
+    --bg-danger: #fcedec;
+    --text-warning: #8a5a00;
+    --bg-warning: #fdf3e2;
+    --text-success: #0f6e56;
+    --bg-success: #e1f5ee;
+    --radius: 8px;
+    --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --surface-0: #1f1f1d;
+        --surface-1: #242421;
+        --surface-2: #2b2b27;
+        --page: #1a1a18;
+        --border: rgba(255, 255, 255, 0.13);
+        --text-primary: #f0f0ec;
+        --text-secondary: #afafa6;
+        --text-muted: #7e7e76;
+        --text-accent: #9bb4f8;
+        --bg-accent: #1e2a4a;
+        --border-accent: #3c4f7d;
+        --text-danger: #f2a49e;
+        --bg-danger: #3a1f1d;
+        --text-warning: #e3b467;
+        --bg-warning: #3a2e18;
+        --text-success: #7fd3b6;
+        --bg-success: #15332b;
+    }
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    padding: 2.5rem 1.5rem 4rem;
+    background: var(--page);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+}
+
+main { max-width: 860px; margin: 0 auto; }
+
+h1 { font-size: 22px; font-weight: 500; margin: 0 0 4px; }
+h2 { font-size: 16px; font-weight: 500; margin: 0 0 4px; }
+h3 { font-size: 14px; font-weight: 500; margin: 0 0 8px; }
+
+.lede { font-size: 13px; color: var(--text-secondary); margin: 0 0 1.75rem; }
+.sub { font-size: 13px; color: var(--text-secondary); margin: 0 0 14px; }
+
+.card {
+    background: var(--surface-1);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
+.card + .card { margin-top: 12px; }
+
+.badge { font-size: 11px; padding: 2px 9px; border-radius: var(--radius); white-space: nowrap; font-weight: 500; }
+.bad { background: var(--bg-danger); color: var(--text-danger); }
+.miss { background: var(--surface-0); color: var(--text-muted); }
+.part { background: var(--bg-warning); color: var(--text-warning); }
+.ok { background: var(--bg-success); color: var(--text-success); }
+
+.row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-top: 0.5px solid var(--border); }
+.row:first-child { border-top: none; }
+.n { font-family: var(--mono); font-size: 12px; color: var(--text-muted); width: 16px; flex-shrink: 0; padding-top: 2px; }
+.title { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 3px; }
+.title span:first-child { font-size: 14px; font-weight: 500; }
+.note { font-size: 13px; color: var(--text-secondary); line-height: 1.55; }
+
+code { font-family: var(--mono); font-size: 12px; color: var(--text-accent); }
+
+.steps { border-left: 2px solid var(--border); padding-left: 16px; font-size: 13px; line-height: 1.6; }
+.steps > div { margin-bottom: 13px; }
+.steps > div:last-child { margin-bottom: 0; }
+.steps b { font-size: 14px; font-weight: 500; }
+.steps p { margin: 0; color: var(--text-secondary); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
+.head { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.head span { font-size: 14px; font-weight: 500; }
+
+svg { flex-shrink: 0; }
+
+section { margin-bottom: 1.75rem; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    color: var(--text-muted);
+    padding: 0 12px 8px 0;
+    border-bottom: 0.5px solid var(--border);
+}
+td {
+    padding: 9px 12px 9px 0;
+    border-bottom: 0.5px solid var(--border);
+    color: var(--text-secondary);
+    vertical-align: top;
+    line-height: 1.5;
+}
+tr:last-child td { border-bottom: none; }
+td:first-child { color: var(--text-primary); }
+td b { color: var(--text-primary); font-weight: 500; }
+
+pre {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    background: var(--surface-0);
+    border-radius: var(--radius);
+    padding: 11px 13px;
+    margin: 10px 0 0;
+    overflow-x: auto;
+}
+pre b { color: var(--text-primary); font-weight: 500; }
+
+.pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 9px;
+    border-radius: var(--radius);
+    background: var(--bg-accent);
+    color: var(--text-accent);
+    border: 0.5px solid var(--border-accent);
+}
+
+footer {
+    background: var(--surface-1);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+</style>
+</head>
+<body>
+<main>
+
+<h1>koobiq-mcp — план</h1>
+<p class="lede">Пять приёмочных сценариев, решённые вопросы по данным, порядок работ. Обновлено 1 октября 2026</p>
+
+<section>
+<h2>Что решено</h2>
+<p class="sub">Эти вопросы закрыты. К ним не возвращаемся</p>
+
+<div class="card">
+    <div class="row">
+        <span class="n">1</span>
+        <div>
+            <div class="title"><span>Живой API — из <code>.d.ts</code> в <code>node_modules</code> проекта</span><span class="badge ok">сделано</span></div>
+            <div class="note">Источник правды о том API, который у человека реально установлен. Весь пакет разбирается за 40 мс, одна точка входа за 13; читается лениво и кешируется на процесс. Парсер построчный, без зависимости от <code>typescript</code> — и сверяется с настоящим компилятором в тесте</div>
+        </div>
+    </div>
+    <div class="row">
+        <span class="n">2</span>
+        <div>
+            <div class="title"><span>История API — <code>data/history.json</code>, едет внутри пакета</span></div>
+            <div class="note">Собирается из golden-файлов <code>tools/public_api_guard/**</code> по git-тегам. Они проходят ревью в CI, поэтому отчёт на теге <i>и есть</i> публичная поверхность того релиза. 78 тегов читаются за 2,7 с без сборки и установки чего-либо</div>
+        </div>
+    </div>
+    <div class="row">
+        <span class="n">3</span>
+        <div>
+            <div class="title"><span>Гайды — текущий текст, с указанием релиза</span><span class="badge ok">сделано</span></div>
+            <div class="note">Гайда нет в <code>node_modules</code>, читать с машины пользователя нечего — значит он едет в пакете. Берётся с последнего релизного тега, не из рабочего дерева. Хранить все ревизии пробовали и отказались — замер ниже</div>
+        </div>
+    </div>
+    <div class="row">
+        <span class="n">4</span>
+        <div>
+            <div class="title"><span>Иконки и токены — из установленной версии</span></div>
+            <div class="note"><code>kbq-icons-info.json</code> и компилированный CSS токенов. Мажоры иконок 9–12, каждый со своим ридером и фикстурами из реальных тарболов. Карта переименований 10→11 работает в обе стороны</div>
+        </div>
+    </div>
+    <div class="row">
+        <span class="n">5</span>
+        <div>
+            <div class="title"><span>Фреймворк — определяется, не спрашивается</span><span class="badge ok">сделано</span></div>
+            <div class="note">По <code>node_modules</code>: <code>@koobiq/components</code> → Angular, <code>@koobiq/react-components</code> → React. React-проект получает явный отказ вместо Angular-разметки. Иконки и токены общие для обеих линий, поэтому по ним фреймворк не определить — только по этим пакетам</div>
+        </div>
+    </div>
+</div>
+
+<p class="sub" style="margin:12px 0 0">Отклонено: <code>api-manifest</code> как источник живого API — это несохраняемый артефакт сборки, его нет ни в пакете, ни у пользователя. Полный манифест — 1,84 млн токенов, урезанный — 198 тыс.; против 22 мс парсинга <code>.d.ts</code> на машине пользователя это не окупается.</p>
+</section>
+
+<section>
+<h2>Сделано</h2>
+<p class="sub">Все пять пунктов порядка работ закрыты</p>
+
+<div class="card">
+<h3>Ранжирование: частичные совпадения вместо строгого И</h3>
+<p class="note" style="margin:0 0 10px">Непопавший терм обнулял весь хит. Это выглядит как точность, а работает как молчание — из тринадцати вопросов, которые человек реально задаёт, пять возвращали пустоту.</p>
+<table>
+    <tr><th>Приёмочные запросы</th><th>Было</th><th>Стало</th></tr>
+    <tr><td>Находят нужное в топ-8</td><td>7 из 13</td><td><b>15 из 15</b></td></tr>
+    <tr><td>Возвращают пустоту</td><td>5</td><td><b>0</b></td></tr>
+</table>
+<p class="note" style="margin:12px 0 0"><b>Покрытие умножает, а не отсекает:</b> хит, совпавший по всем термам, сохраняет ровно прежний балл, а совпавший по одному из трёх получает около девятой части. Плюс относительный пол — результат ниже 20% от лучшего не показывается, иначе список добивается мусором до лимита.</p>
+<p class="note" style="margin:10px 0 0"><b>Два провала оказались не ранжированием, а дырами в данных.</b> Ни одна иконка не помечена тегом «корзина» — там <code>удалить</code>, <code>убрать</code>, <code>мусор</code>. В 41 токене тени кириллицы нет вовсе. Появился словарь на ~50 слов для того, чего в данных нет по-русски: «тень для оверлея» теперь первым отдаёт <code>--kbq-shadow-overlay</code>. Совпадение через словарь дисконтировано — буквальное всегда выше.</p>
+<p class="note" style="margin:10px 0 0"><b>Русский словоизменяется:</b> «корзины» не содержит «корзина» ни как подстрока, ни наоборот. Допуск на окончание растёт с длиной слова — «редактировать»/«редактирование» расходятся на четыре буквы. Порог держит честность: «список» и «списать» совпадают на четырёх буквах и не должны матчиться.</p>
+</div>
+
+<div class="card">
+<h3><code>which_component_when</code></h3>
+<p class="note" style="margin:0 0 10px">Ошибка, которую инструмент предотвращает, — не «ничего не нашёл», а <b>«нашёл соседа»</b>: <code>autocomplete</code> вместо множественного выбора, <code>toast</code> для сообщения, которое нужно подтвердить. Поэтому ответ — это строка таблицы целиком: что взять, что не брать и <i>почему не</i>.</p>
+<table>
+    <tr><td>Источник</td><td><code>docs/guides/which-component-when.{en,ru}.md</code> — обычный гайд, единственный источник правды</td></tr>
+    <tr><td>Разобрано</td><td>79 строк разграничения, 12 маршрутов по словам, 75 описаний компонентов — одинаково в обоих языках</td></tr>
+    <tr><td>Точность</td><td>английский <b>11 из 11</b> первым, русский <b>6 из 9</b> первым, 9 из 9 в топ-3</td></tr>
+    <tr><td>Цена ответа</td><td>94–371 токен</td></tr>
+</table>
+<p class="note" style="margin:12px 0 0"><b>Колонка «не брать» намеренно не участвует в скоринге.</b> Она называет то, что использовать <i>нельзя</i>, — и матчинг по ней ранжирует строку по тому самому слову, от которого она предостерегает: запрос на множественный выбор ставил <code>radio</code> первым, потому что <code>select</code> стоит в той строке как ошибка.</p>
+<p class="note" style="margin:10px 0 0"><b>Части документа опознаются по форме, а не по заголовку.</b> Поиск по английским заголовкам работал, пока у гайда не появился русский текст: <code>## Разграничение</code> — это не <code>## Disambiguation</code>, и каждый русский вопрос молча возвращал пустоту.</p>
+</div>
+
+<div class="card">
+<h3>Живой API из <code>.d.ts</code></h3>
+<p class="note" style="margin:0 0 10px">Читается тот пакет, который стоит у человека. Angular пишет метаданные прямо в <code>.d.ts</code> — <code>ɵcmp</code> и <code>ɵdir</code> содержат селектор, exportAs, карту входов с алиасами, выходы и host-директивы.</p>
+<table>
+    <tr><td>Разбор всего пакета</td><td><b>40 мс</b>, 1047 экспортированных символов, 310 компонентов и директив</td></tr>
+    <tr><td>Входов / выходов</td><td>1020 / 188</td></tr>
+    <tr><td><b>Имя свойства ≠ атрибут шаблона</b></td><td><b>230</b> — все они назывались неверно</td></tr>
+    <tr><td>Унаследованных входов</td><td>269 — приходят от базового класса, часто из другой точки входа</td></tr>
+    <tr><td>Через host-директиву</td><td>10 — старый путь их не видел вовсе</td></tr>
+</table>
+<p class="note" style="margin:12px 0 0"><code>KbqAutocompleteTrigger.connectedTo</code> в шаблоне пишется как <code>kbqAutocompleteConnectedTo</code>. Раньше сервер называл имя свойства — атрибут, который молча ничего не делает. Теперь и <code>get_component</code>, и поиск работают по имени из шаблона.</p>
+<p class="note" style="margin:10px 0 0"><b>Цепочка наследования обязательна.</b> <code>color</code> у кнопки объявлен не в <code>KbqButton</code>, а в <code>KbqColorDirective</code> в <code>core</code>. Парсер, читающий только собственное объявление класса, потерял бы вход, который старый путь находил.</p>
+</div>
+
+<div class="card">
+<h3>Парсер сверяется с компилятором</h3>
+<p class="note" style="margin:0"><code>typescript</code> весит ~22 МБ, а сервер запускают через <code>npx</code> — поэтому парсер построчный, без этой зависимости в рантайме. Чтобы срез оставался честным, настоящий компилятор стоит в devDependencies, и тест прогоняет <b>обе реализации по всем 64 точкам входа установленного пакета</b>: больше 250 объявлений, селекторы и карты входов и выходов сравниваются поэлементно. Если Angular поменяет формат, упадёт тест, а не ответ пользователю.</p>
+</div>
+
+<div class="card">
+<h3><code>get_component</code> — шум убран</h3>
+<table>
+    <tr><th></th><th>Было</th><th>Стало</th></tr>
+    <tr><td><code>button</code>, весь ответ</td><td>837 токенов</td><td><b>494</b></td></tr>
+    <tr><td><code>button</code>, один символ с методами</td><td>—</td><td><b>182</b></td></tr>
+    <tr><td>Членов у <code>KbqButton</code> в выдаче</td><td>24</td><td><b>4 входа</b></td></tr>
+</table>
+<p class="note" style="margin:12px 0 0">По умолчанию — входы, выходы, селектор, exportAs. <code>include: ["methods"]</code> добавляет публичные методы, <code>["internals"]</code> — всё остальное. Директивы без входов собраны в одну строку: <code>KbqButtonCssStyler</code> делит селектор с компонентом и руками не пишется.</p>
+<p class="note" style="margin:10px 0 0">Остаток до 494 — это список из 13 примеров и перечень прочих экспортов. Они полезны, поэтому остались; обещанные ~90 токенов относятся к блоку API, а не ко всему ответу.</p>
+</div>
+
+<div class="card">
+<h3>Гайды в индексе</h3>
+<p class="note" style="margin:0 0 10px">Восемь гайдов на двух языках, текст с последнего релиза. Инструмент <code>get_guide</code> сужает в три шага, чтобы ответ не стоил дороже вопроса.</p>
+<table>
+    <tr><td>Гайдов</td><td><b>8</b> × 2 языка — installation, theming, localization, validation, schematics, search-smart, angular-20-breaking-changes, migration</td></tr>
+    <tr><td>Разделов</td><td><b>168</b></td></tr>
+    <tr><td>Размер</td><td>168 КБ, сборка 0,1 с</td></tr>
+    <tr><td>Цена ответа</td><td>список гайдов 348 токенов → список разделов 139 → текст раздела ~125</td></tr>
+</table>
+<p class="note" style="margin:12px 0 0"><b>Восьмой гайд добавлен сверх списка — <code>migration</code>.</b> Это уже готовый кросс-версионный документ: 30 разделов, каждый подписан версией — <code>Token update (18.6.x)</code>, <code>Button review (21.0.0)</code>. Проза «что делать руками» к диффам из <code>history.json</code>.</p>
+<p class="note" style="margin:10px 0 0">Не шлются: <code>versioning</code>, <code>directory-structure</code>, <code>theming-deprecated</code>, <code>customization</code>, <code>component-health</code>. Файлы с номером в начале (<code>06-testing.md</code>, <code>07-linting.md</code>) отсеиваются правилом, без списка.</p>
+</div>
+
+<div class="card">
+<h3>Русский поиск по компонентам</h3>
+<p class="note" style="margin:0 0 10px">Id компонента английский и таким останется — <code>select</code>, <code>tree-select</code>. По-русски запрос попадает в прозу самой страницы: её заголовки и первую фразу.</p>
+<table>
+    <tr><td>Страниц</td><td><b>143</b> компонента, оба языка полностью</td></tr>
+    <tr><td>Проиндексировано строк</td><td><b>666</b> — заголовки разделов и описание компонента</td></tr>
+    <tr><td>Цена</td><td><code>index.json</code> 683 → <b>733 КБ</b>, то есть <b>+49 КБ</b></td></tr>
+</table>
+<pre>«выбрать несколько значений»  → <b>select</b>, list, tree-select
+«вкладки»                     → <b>tabs</b>
+«хлебные крошки»              → <b>breadcrumbs</b></pre>
+<p class="note" style="margin:10px 0 0">Описание возвращается на языке вопроса: кириллица в запросе — ответ по-русски.</p>
+</div>
+
+<div class="card">
+<h3>Инструмент <code>migrate</code></h3>
+<p class="note" style="margin:0 0 10px">Две половины, отвечающие на разные вопросы. <code>history.json</code> говорит, <i>что</i> сдвинулось — механически, из отчётов, одобренных в CI на каждом теге. Гайд миграции говорит, <i>что писать вместо</i>. Обновлению нужны обе.</p>
+<table>
+    <tr><td>18.4.0 → 19.0.0, сырых изменений</td><td>2930 по 57 точкам входа</td></tr>
+    <tr><td>Размер сводки</td><td><b>358 токенов</b></td></tr>
+    <tr><td>Что в ней ведёт</td><td>точки входа, которые <b>потеряли</b> API — это и ломает сборку</td></tr>
+</table>
+<p class="note" style="margin:12px 0 0"><b>Служебное компилятора отфильтровано.</b> <code>ngAcceptInputType_*</code> и <code>ɵ*</code> составляли <b>72 из 728</b> удалений — десятую часть числа, по которому планируют обновление. Показывать их как удалённый API значит сообщать о поломке там, где ничего не ломалось.</p>
+<p class="note" style="margin:10px 0 0"><b>Заголовок наследует релиз от родителя.</b> <code>#### Running the migration</code> встречается в гайде под тремя разными <code>###</code>, каждый про свой релиз. В плоском списке они неразличимы, и читателя, идущего на 19.x, отправляло к инструкциям для 21.0.0. Разбор теперь хранит уровень заголовка.</p>
+</div>
+
+<div class="card">
+<h3>Почему отказались хранить все ревизии гайдов</h3>
+<p class="note" style="margin:0 0 10px">Сначала хранили каждую ревизию с 18.0.0, чтобы проект на 18.x получал текст 18.x. Замер показал, что платить за это нечем.</p>
+<table>
+    <tr><th>Русская темизация, 9 ревизий 18.0.0–20.3.0</th><th></th></tr>
+    <tr><td>Ревизий с одинаковым набором заголовков</td><td><b>7 из 9</b></td></tr>
+    <tr><td>Код в сниппетах с 18.4.0 по 20.3.0</td><td><b>побайтово одинаков</b></td></tr>
+    <tr><td>Размер <code>guides.json</code></td><td>1056 КБ → <b>168 КБ</b></td></tr>
+    <tr><td>Время сборки</td><td>1,7 с → <b>0,1 с</b></td></tr>
+</table>
+<p class="note" style="margin:12px 0 0">Ревизии отличались формулировками, а не механизмом: ни import path, ни имена классов, ни примеры кода за шесть релизов не менялись. 888 КБ уходило на то, что агент всё равно написал бы правильно. Осталось поле <code>since</code> — ответ называет релиз, из которого взят текст, и предупреждает, если проект на другом мажоре.</p>
+<p class="note" style="margin:10px 0 0">Разбивка на разделы осталась и остаётся обязательной: <code>migration.en</code> это 218 КБ ≈ <b>62 000 токенов</b> одним куском. Она не требует ручной работы — это регулярка по заголовкам.</p>
+</div>
+
+<div class="card">
+<h3>Новый гайд попадёт в индекс сам?</h3>
+<p class="note" style="margin:0">Нумерованные — да, отсеиваются правилом. Именованные — нет: «для нас или для людей» это редакторское решение, из файла его не вывести. Но <b>потеряться гайд не может</b>: если появляется именованный файл, которого нет ни в списке публичных, ни в списке исключённых, сборка индекса падает с ошибкой и называет его. Молчаливый пропуск — ровно та поломка, ради которой весь этот пункт и делался.</p>
+</div>
+
+<div class="card">
+<h3>Попутно: баг, из-за которого история была занижена вчетверо</h3>
+<p class="note" style="margin:0 0 10px"><code>git cat-file --batch</code> отдаёт размер блоба в <b>байтах</b>, а чтение резало строку по <b>символам</b>. Пока содержимое ASCII, это одно и то же. На первом русском файле курсор уезжал на один символ за каждую не-ASCII букву, заголовок следующей записи попадал в середину текста, размер парсился в NaN — и остаток пачки молча терялся.</p>
+<table>
+    <tr><th></th><th>Было (неверно)</th><th>Стало</th></tr>
+    <tr><td>Релизов с изменениями</td><td>37 из 75</td><td><b>60</b> из 75</td></tr>
+    <tr><td>Изменений</td><td>848</td><td><b>4619</b></td></tr>
+    <tr><td>Из них удалений</td><td>153</td><td><b>728</b></td></tr>
+    <tr><td>Размер</td><td>63 КБ</td><td><b>392 КБ</b></td></tr>
+</table>
+<p class="note" style="margin:10px 0 0">В гайдах тот же баг съедал шесть из семи ревизий темизации. Чтение вынесено в <code>src/indexer/git.ts</code> и работает на Buffer — один раз на оба индекса.</p>
+</div>
+</section>
+
+<section>
+<h2>Пять приёмочных сценариев</h2>
+<p class="sub">Задачи реальных команд. Каждый либо проходит, либо нет</p>
+
+<div class="card">
+    <div class="row">
+        <span class="n">1</span>
+        <div>
+            <div class="title"><span>Начальная настройка на пустом приложении</span><span class="badge ok">проходит</span></div>
+            <div class="note">Запрос «темизация» по-русски находит гайд; <code>get_guide('theming', 'prebuilt')</code> отдаёт точный кусок про подключение <code>theme.css</code> и класс <code>kbq-app-background</code>. Сервер больше не беднее llms.txt</div>
+        </div>
+    </div>
+    <div class="row">
+        <span class="n">2</span>
+        <div>
+            <div class="title"><span>API компонента: inputs, outputs, на что завязаться</span><span class="badge ok">проходит</span></div>
+            <div class="note">Читается установленный пакет. 230 входов, у которых имя свойства не совпадает с атрибутом, теперь названы правильно; унаследованные и host-директивные помечены источником. Ответ называет установленную версию, а не ту, из которой собран сервер</div>
+        </div>
+    </div>
+    <div class="row">
+        <span class="n">3</span>
+        <div>
+            <div class="title"><span>Миграция между версиями и планирование релизов</span><span class="badge ok">проходит</span></div>
+            <div class="note">Инструмент <code>migrate</code> сводит обе половины: диффы из <code>history.json</code> и прозу из гайда. Сводка по 18.4.0 → 19.0.0 — это 2930 изменений, свёрнутых в <b>358 токенов</b>, с перечнем точек входа, которые <i>потеряли</i> API</div>
+        </div>
+    </div>
+    <div class="row">
+        <span class="n">4</span>
+        <div>
+            <div class="title"><span>Подбор иконок и цветов по смыслу</span><span class="badge ok">проходит</span></div>
+            <div class="note">15 приёмочных запросов из 15 находят нужное. «тень для оверлея» отдаёт <code>--kbq-shadow-overlay</code>, «обычная ссылка» — <code>link</code>, «хлебные крошки» — <code>breadcrumbs</code></div>
+        </div>
+    </div>
+    <div class="row">
+        <span class="n">5</span>
+        <div>
+            <div class="title"><span>Поля ввода, валидация, общие паттерны</span><span class="badge ok">закрыт решением</span></div>
+            <div class="note">Гайд <code>validation</code> в индексе, со ссылками на запускаемые примеры. Отдельные тексты про паттерны полей ввода <b>решено не писать</b> — их закрывают сами примеры</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<section>
+<h2>Порядок работ</h2>
+<p class="sub">По тяжести отказа, а не по объёму</p>
+
+<div class="steps">
+    <div><b>1 — гайды из <code>docs/guides</code> в индекс <span class="badge ok">сделано</span></b><p>Закрыл сценарий 1 и половину пятого</p></div>
+    <div><b>2 — живой API из <code>.d.ts</code> в <code>node_modules</code> <span class="badge ok">сделано</span></b><p>Закрыл сценарий 2 и вычистил <code>get_component</code>. Баррель 19.x обрабатывается тем же кодом: относительные ре-экспорты раскрываются при чтении точки входа</p></div>
+    <div><b>3 — русский поиск по компонентам <span class="badge ok">сделано</span></b><p>666 строк, +49 КБ к индексу. Заголовки и первая фраза страницы каждого из 143 компонентов, на двух языках</p></div>
+    <div><b>4 — инструмент <code>migrate</code> <span class="badge ok">сделано</span></b><p>Закрыл сценарий 3</p></div>
+    <div><b>5 — ранжирование вместо строгого И <span class="badge ok">сделано</span></b><p>Закрыл сценарий 4. Приёмочный набор из 15 запросов живёт в тестах — без него следующая правка скоринга была бы гаданием</p></div>
+    <div><b>Не делаем — тексты паттернов полей ввода</b><p>Решено: их закрывают примеры к полям ввода. Писать отдельную прозу незачем</p></div>
+</div>
+</section>
+
+<section>
+<h2>Что уже работает</h2>
+<p class="sub">Проверено на реальном проекте, 151 тест</p>
+
+<div class="grid">
+<div class="card">
+    <div class="head"><span class="pill">8 инструментов</span></div>
+    <div class="note"><code>search</code>, <code>get_component</code>, <code>get_example</code>, <code>get_icon</code>, <code>get_token</code>, <code>get_guide</code>, <code>migrate</code>, <code>which_component_when</code>. Новые регистрируются только в конец: вставка в середину ломает кеш всему, что идёт после</div>
+</div>
+<div class="card">
+    <div class="head"><span class="pill">Цена схем</span></div>
+    <div class="note">≈1598–2238 токенов на запрос — доля только нашего сервера, восемь инструментов. Средний ответ 320 токенов</div>
+</div>
+<div class="card">
+    <div class="head"><span class="pill">Иконки 9–12</span></div>
+    <div class="note">Фикстуры из опубликованных тарболов. <code>tags</code> в 9 и 10 бывает строкой вместо массива — 156 записей из 1066; схема «только массив» отвергала весь файл</div>
+</div>
+<div class="card">
+    <div class="head"><span class="pill">Токены</span></div>
+    <div class="note">1862 из 2004 помечены deprecated. Текст про замену берётся из самого пакета, а не из советов AGENTS.md — они противоречили друг другу</div>
+</div>
+<div class="card">
+    <div class="head"><span class="pill">Перекос версий</span></div>
+    <div class="note">API брать неоткуда, кроме проекта, — он верен по построению. Предупреждение о перекосе осталось, но теперь оно прямо говорит, что относится только к примерам и темам из индекса</div>
+</div>
+<div class="card">
+    <div class="head"><span class="pill">Данные в пакете</span></div>
+    <div class="note">examples 2252 КБ, index 725 КБ, history 397 КБ, guides 265 КБ. Примеры, гайды и история читаются лениво — большинство вызовов их не трогает</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2>Известные шероховатости</h2>
+<p class="sub">Всё, что осознанно оставлено недоделанным. Сгруппировано по тому, что с этим делать</p>
+
+<h3 style="margin:18px 0 10px">Данные, которые могут устареть</h3>
+
+<div class="card">
+<h3>Примеры — один срез, и это самое версионно-опасное место</h3>
+<p class="note" style="margin:0 0 10px"><b>Механика.</b> <code>packages/docs-examples/example-module.ts</code> перечисляет каждый пример и его файлы; индексатор читает список, затем сами файлы, и пишет <code>data/examples.json</code>. Файл едет в npm-пакете и читается лениво. Сервер никогда не ходит в документацию по сети.</p>
+<p class="note" style="margin:0 0 10px"><b>Почему не все версии, как у гайдов.</b> За 78 релизов набор примеров менялся в <b>70 из них</b>, разных файлов за всю историю — <b>4025</b>. Дедупликация не работает, приём не окупается.</p>
+<p class="note" style="margin:0"><b>Чем это грозит.</b> Между 19.x и 20.x <b>90 из 607</b> символов, на которые ссылаются примеры, перестали существовать — 15%. Пример отдаётся с указанием версии и сверяется с живым API проекта.</p>
+</div>
+
+<div class="card">
+<h3><code>symbols</code> в индексе — 512 КБ из 725, и теперь только запасной путь</h3>
+<p class="note" style="margin:0">До перехода на <code>.d.ts</code> индекс был единственным источником API. Теперь он срабатывает, только если <code>@koobiq/components</code> не установлен — то есть почти никогда. <b>70% размера <code>index.json</code> лежит ради этого случая.</b> Варианта два: выбросить их и честно отвечать «пакет не установлен», либо оставить как есть. Второе стоит 512 КБ в каждой установке пакета.</p>
+</div>
+
+<div class="card">
+<h3>История называет свойства, живой API — атрибуты</h3>
+<p class="note" style="margin:0">История собирается из <code>api.md</code> и называет входы по имени свойства; живой API читает <code>.d.ts</code> и называет их по атрибуту шаблона. Для 230 входов это разные слова. Чтобы история говорила атрибутами, нужны <code>.d.ts</code> старых релизов — 78 скачанных тарболов. Делать стоит тогда, когда в <code>migrate</code> это окажется помехой.</p>
+</div>
+
+<h3 style="margin:22px 0 10px">Пробелы в самих данных, не в коде</h3>
+
+<div class="card">
+<h3>Теги иконок по-русски неполны</h3>
+<p class="note" style="margin:0">Ни одна иконка в 11.7.1 не помечена тегом «корзина», хотя по-русски её так и называют — там <code>удалить</code>, <code>убрать</code>, <code>мусор</code>. Словарь на ~50 слов это прикрывает, но настоящее место правки — сами теги. В токенах кириллицы нет вовсе, и там словарь не заплатка, а единственный мост.</p>
+</div>
+
+<div class="card">
+<h3>Русский <code>which_component_when</code> слабее английского</h3>
+<p class="note" style="margin:0 0 10px">Английский — <b>11 из 11</b> первым, русский — <b>6 из 9</b>, 9 из 9 в топ-3. Разница не в ранжировании, а в словах: «редактировать значение на месте» и формулировка гайда «Изменить одно-два поля из многих» не пересекаются ни одним словом.</p>
+<p class="note" style="margin:0">Лечится двумя способами, оба в гайде, а не в коде: дописать в русский указатель слов те формулировки, которыми спрашивают на самом деле, либо переписать задачи в таблицах ближе к живой речи. Код для этого уже всё делает — указатель слов разбирается и даёт буст кластеру.</p>
+</div>
+
+<div class="card">
+<h3>Гайд может сослаться на исчезнувший пример</h3>
+<p class="note" style="margin:0">Гайд и примеры собираются из одного релиза, но расходились раньше и могут разойтись снова. Ответ сверяет ссылки с тем, что реально есть, и помечает недостающие строкой «Referenced but no longer shipped».</p>
+</div>
+
+<h3 style="margin:22px 0 10px">Незавершённое в репозитории компонентов</h3>
+
+<div class="card">
+<h3>Два гайда не закоммичены</h3>
+<p class="note" style="margin:0"><code>docs/guides/which-component-when.en.md</code> и <code>.ru.md</code> существуют только в рабочем дереве. Сборщик их видит — он читает и неотслеживаемые файлы — но помечает <code>unreleased</code>, и ответ честно говорит, что гайда нет ни в одном релизе. То же с <code>localization</code>. Коммит и релиз снимут пометку сам собой.</p>
+</div>
+
+<div class="card">
+<h3>Индекс собран с untagged-чекаута</h3>
+<p class="note" style="margin:0 0 10px">Сейчас это <code>main</code> на <code>0a69dc840</code>, один изменённый файл. Сервер предупреждает прямо: «может описывать API, которого нет ни в одном опубликованном релизе». Для выпуска пакета сборку надо делать с тега.</p>
+<pre>the bundled index was built from an untagged checkout at 0a69dc840,
+1 file(s) modified, not from a release</pre>
+</div>
+
+<div class="card">
+<h3>Два чекаута монорепы на машине</h3>
+<p class="note" style="margin:0"><code>angular-components</code> — main, теги до 20.4.0. <code>components-angular</code> — ветка <code>feat/DS-4087</code> от 24 сентября, теги до 20.3.1. Все сборки до этой итерации шли из второго: устаревшего и не с main. Сборщики теперь указывают на первый; второй стоит убрать, чтобы это не повторилось.</p>
+</div>
+
+<h3 style="margin:22px 0 10px">Код, который стоит упростить</h3>
+
+<div class="card">
+<h3><code>get_example</code> — 1802 токена, фильтра по умолчанию нет</h3>
+<p class="note" style="margin:0">Отдаёт все файлы примера целиком. Это самый дорогой ответ сервера, вдвое дороже следующего. Нужен разумный умолчательный срез — обычно нужен только <code>*.html</code> и <code>*.ts</code> компонента, а не спеки и не стили.</p>
+</div>
+
+<div class="card">
+<h3><code>src/indexer/git.ts</code> наполовину перестал быть нужен</h3>
+<p class="note" style="margin:0">Ценность там одна — <code>readBlobs</code>, пакетное чтение блобов. Для <code>build-history</code> оно окупается целиком: 78 тегов × ~60 отчётов, иначе 4700 запусков <code>git</code>. Для <code>build-guides</code> после отказа от ревизий читается <b>один</b> тег и ~18 файлов — экономия 17 запусков, то есть ничего. Оставлено ради одного места, где решена ловушка «байты против символов»; разведи их — и в простом пути она вернётся при первой же оптимизации.</p>
+</div>
+
+<div class="card">
+<h3><code>parse-api-md.ts</code> — временные леса, которые остались</h3>
+<p class="note" style="margin:0">223 строки. Живой API его больше не использует; он кормит только историю и те самые <code>symbols</code> в индексе. Если <code>symbols</code> выбросить, останется один потребитель — и тогда файл честно переедет в историю.</p>
+</div>
+
+<h3 style="margin:22px 0 10px">Поиск</h3>
+
+<div class="card">
+<h3>Частотный вес работает только в <code>which_component_when</code></h3>
+<p class="note" style="margin:0">Редкое слово перевешивает частое при выборе компонента, но не в общем поиске. В поиске коллекция — весь индекс, частоты пришлось бы считать заранее при сборке. Выигрыш неочевиден, замера нет.</p>
+</div>
+</section>
+
+<section>
+<h2>Открытые вопросы</h2>
+<p class="sub">Требуют решения, но не блокируют порядок работ выше</p>
+
+<div class="grid">
+<div class="card">
+    <div class="head"><span>Koobiq для React</span></div>
+    <div class="note">Определение фреймворка сделано, отказ для React-проекта работает. Что именно индексировать из <code>~/Dev/work-opensource/react-components</code> — следующая итерация, как договорились</div>
+</div>
+<div class="card">
+    <div class="head"><span>Публикация в npm</span></div>
+    <div class="note">Пакет собирается тарболлом и ставится из файла. Версия привязана к релизу, из которого собран индекс — 20.4.0. Перед публикацией сборку надо делать с тега, иначе индекс описывает неопубликованный API</div>
+</div>
+<div class="card">
+    <div class="head"><span><code>run_drift_audit</code></span></div>
+    <div class="note">Проверка проекта на отставшие паттерны и deprecated-токены. При 1862 deprecated из 2004 наивная реализация даст столько шума, что ей не будут пользоваться. Отложено сознательно</div>
+</div>
+<div class="card">
+    <div class="head"><span>Где запускать сборку индексов</span></div>
+    <div class="note">Нужен чекаут монорепы с тегами — значит, только CI репозитория MCP. Полный пересбор обоих индексов около 4 с, инкрементальность не нужна. Коммитить результат, а не генерировать на <code>prepack</code>: хук сломал бы <code>npm pack</code> всем, у кого нет монорепы рядом, и лишил бы ревью диффа</div>
+</div>
+</div>
+</section>
+
+<footer>
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" style="margin-top:3px"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v.01M8 7.5v3.5" stroke-linecap="round"/></svg>
+<div><b>Все пять приёмочных сценариев закрыты.</b> Четыре проходят проверками, пятый — решением не писать то, что уже показывают примеры. Дальше — не новые инструменты, а эксплуатация: сборка индексов в CI, Koobiq для React и аккуратный подход к <code>run_drift_audit</code>.</div>
+</footer>
+
+</main>
+</body>
+</html>

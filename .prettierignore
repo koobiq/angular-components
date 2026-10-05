@@ -32,3 +32,6 @@ apps/docs/src/app/seo-descriptions.ts
 
 # ignore CODEOWNERS to keep its column alignment
 /.github/CODEOWNERS
+
+# ignore the MCP planning page: a self-contained document with its own inline styles
+/packages/mcp/docs/plan.html

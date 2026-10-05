@@ -143,6 +143,9 @@ module.exports = tseslint.config(
             '.claude',
             // ignore build tokens
             'apps/docs/src/styles/koobiq/default-theme/',
+            // ignore the MCP planning page: a standalone document with its own inline styles, not
+            // an Angular template, so the HTML parser trips over the CSS braces in its <style>
+            'packages/mcp/docs/plan.html',
             // ignore index.html
             '**/index.html',
             // ignore mocks
