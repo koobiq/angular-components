@@ -181,6 +181,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     isRtl(): boolean;
     protected isTriggerValueVisible(index: number): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
+    readonly labelable = false;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get multiple(): boolean;
     set multiple(value: boolean);

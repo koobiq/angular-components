@@ -9371,10 +9371,14 @@ describe('KbqSelect', () => {
                 flush();
 
                 const host = getSelectElement(fixture);
-                const label: HTMLElement = fixture.debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
+                const caption: HTMLElement = fixture.debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
 
-                expect(label.id).toBeTruthy();
-                expect(host.getAttribute('aria-labelledby')).toBe(label.id);
+                expect(caption.tagName).toBe('SPAN');
+                expect(caption.id).toBeTruthy();
+                // A `kbq-select` is not labelable, so the caption is not a `<label>`; the name is carried
+                // by `aria-labelledby` instead.
+                expect(caption.getAttribute('for')).toBeNull();
+                expect(host.getAttribute('aria-labelledby')).toBe(caption.id);
             }));
 
             it('should fall back to an explicit aria-label without a form-field label', fakeAsync(() => {

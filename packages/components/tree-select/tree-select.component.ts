@@ -296,6 +296,12 @@ export class KbqTreeSelect
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
 
+    /**
+     * A `kbq-tree-select` is not a native labelable element, so the form-field's `<label for>` cannot
+     * associate with it. The control is named through `aria-labelledby` instead.
+     */
+    readonly labelable = false;
+
     /** Number of the selected items that do not fit into the trigger. */
     readonly hiddenItems = signal(0);
 

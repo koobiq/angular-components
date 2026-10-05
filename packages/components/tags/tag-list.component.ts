@@ -139,6 +139,12 @@ export class KbqTagList
     readonly controlType: string = 'tag-list';
 
     /**
+     * A `kbq-tag-list` is not a native labelable element, so the form-field's `<label for>` cannot
+     * associate with it.
+     */
+    readonly labelable = false;
+
+    /**
      * Emits whenever the component state changes and should cause the parent
      * form-field to update. Implemented as part of `KbqFormFieldControl`.
      * @docs-private

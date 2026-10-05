@@ -46,6 +46,8 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     /** @docs-private */
     controlType = 'select';
     /** @docs-private */
+    readonly labelable = false;
+    /** @docs-private */
     stateChanges: Observable<void> = new Subject<void>();
     /** @docs-private */
     ngControl: NgControl | null = this.timeRange.ngControl;

@@ -57,6 +57,17 @@ export abstract class KbqFormFieldControl<T> {
     readonly controlType?: string;
 
     /**
+     * Whether the control is a native labelable element, so that the `<label for>` a wrapping
+     * `kbq-form-field` renders associates with it.
+     *
+     * Defaults to `true`. A control rendered as a custom element (`kbq-select`, for one) sets it to
+     * `false`: a `<label>` with neither a `for` matching a labelable element nor a nested one is
+     * invalid, so the form field renders the caption as a `<span>` instead and the control is named
+     * through `aria-labelledby`.
+     */
+    readonly labelable?: boolean;
+
+    /**
      * Sets the ids of the elements (hints, errors) that describe the control.
      *
      * Implement it only when `aria-describedby` has to be placed on an element other than the one
