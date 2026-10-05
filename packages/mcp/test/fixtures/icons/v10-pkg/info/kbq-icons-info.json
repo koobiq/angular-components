@@ -1,0 +1,58 @@
+{
+    "aix_16": {
+        "codepoint": "0xF501",
+        "description": "",
+        "tags": [
+            "aix",
+            "aix",
+            "ibm",
+            "ibm",
+            "os",
+            "system",
+            "ос",
+            "система"
+        ],
+        "code": null
+    },
+    "aix_24": {
+        "codepoint": "0xF502",
+        "tags": "",
+        "code": null
+    },
+    "trash_16": {
+        "codepoint": "0xF56A",
+        "description": "",
+        "tags": [
+            "delete",
+            "remove",
+            "мусор",
+            "убрать",
+            "удалить"
+        ],
+        "code": null
+    },
+    "trash_24": {
+        "codepoint": "0xF989",
+        "description": "",
+        "tags": [
+            "delete",
+            "удалить"
+        ],
+        "code": null
+    },
+    "info-circle_16": {
+        "codepoint": "0xF5C3",
+        "description": "",
+        "tags": [
+            "information",
+            "информация",
+            "круг"
+        ],
+        "code": null
+    },
+    "bsd_24": {
+        "codepoint": "0xF504",
+        "tags": "",
+        "code": null
+    }
+}
