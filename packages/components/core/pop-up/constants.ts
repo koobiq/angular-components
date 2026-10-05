@@ -1,5 +1,5 @@
 import { InjectionToken, Provider, Type } from '@angular/core';
-import { TooltipSizeArrowSize } from '@koobiq/design-tokens';
+import { SizeM } from '@koobiq/design-tokens';
 import { Observable } from 'rxjs';
 import { KbqEnumValues } from '../utils';
 
@@ -132,4 +132,7 @@ export const KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS = 'kbq-connected-overlay_overla
  *
  * @docs-private
  */
-export const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT = Math.round(parseInt(TooltipSizeArrowSize) * Math.sqrt(2));
+// `TooltipSizeArrowSize` was removed in @koobiq/design-tokens v4 along with the rest of the
+// deprecated component tokens; it aliased `{size.m}`, which is what its deprecation notice told
+// consumers to use.
+export const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT = Math.round(parseInt(SizeM) * Math.sqrt(2));
