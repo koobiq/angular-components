@@ -86,8 +86,8 @@
                                 "output": "/"
                             },
                             {
-                                "glob": "llms-full.txt",
-                                "input": "apps/docs/src",
+                                "glob": "**/*",
+                                "input": "dist/docs-llms",
                                 "output": "/"
                             }
                         ],

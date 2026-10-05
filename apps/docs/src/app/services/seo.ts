@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
+import { docsGetMarkdownPath } from '../page-paths';
 import { DOCS_SEO_DESCRIPTIONS } from '../seo-descriptions';
 import {
     docsGetCategoryById,
@@ -72,6 +73,12 @@ export type DocsResolvedSeo = {
     description: string;
     canonicalUrl: string | null;
     alternates: ReadonlyArray<{ locale: DocsLocale | 'x-default'; url: string }>;
+    /**
+     * The Markdown of the structure item the page belongs to, which agents read instead of the page. Relative: the page
+     * is prerendered before it knows its host, and the file is next to it on every one, the next version and the
+     * previews of pull requests included.
+     */
+    markdownUrl: string | null;
     image: DocsSeoImage;
     locale: DocsLocale;
     noIndex: boolean;
@@ -180,7 +187,13 @@ export const docsResolveSeo = (
     const item = categoryId && itemId ? docsGetItemById(itemId, categoryId) : undefined;
 
     if (item) {
-        return { ...resolveItemSeo(item, tab, locale), canonicalUrl, alternates, locale };
+        return {
+            ...resolveItemSeo(item, tab, locale),
+            canonicalUrl,
+            alternates,
+            markdownUrl: docsGetMarkdownPath(item, locale),
+            locale
+        };
     }
 
     if (categoryId === DocsStructureCategoryId.Icons) {
@@ -191,6 +204,7 @@ export const docsResolveSeo = (
             description: DOCS_TRANSLATIONS.seoIconsDescription[locale],
             canonicalUrl,
             alternates,
+            markdownUrl: null,
             image: resolveImage(ICONS_IMAGE, docsTranslateTemplate('seoImageAlt', locale, categoryName)),
             locale,
             noIndex: false
@@ -209,6 +223,7 @@ export const docsResolveSeo = (
         description: DOCS_TRANSLATIONS.seoSiteDescription[locale],
         canonicalUrl,
         alternates,
+        markdownUrl: null,
         image: resolveImage(FALLBACK_IMAGE, DOCS_TRANSLATIONS.seoFallbackImageAlt[locale]),
         locale,
         noIndex: !isHome
@@ -229,6 +244,7 @@ export class DocsSeoService {
         this.updateMeta(seo);
         this.updateCanonical(seo.canonicalUrl);
         this.updateAlternates(seo.alternates);
+        this.updateMarkdownAlternate(seo.markdownUrl);
     }
 
     private updateMeta(seo: DocsResolvedSeo): void {
@@ -281,6 +297,26 @@ export class DocsSeoService {
         if (!link) {
             link = this.document.createElement('link');
             link.rel = 'canonical';
+            this.document.head.appendChild(link);
+        }
+
+        link.href = href;
+    }
+
+    /** The `alternate` link agents discover the Markdown of the page by (https://llmstxt.org). */
+    private updateMarkdownAlternate(href: string | null): void {
+        let link = this.document.querySelector<HTMLLinkElement>('link[rel="alternate"][type="text/markdown"]');
+
+        if (!href) {
+            link?.remove();
+
+            return;
+        }
+
+        if (!link) {
+            link = this.document.createElement('link');
+            link.rel = 'alternate';
+            link.type = 'text/markdown';
             this.document.head.appendChild(link);
         }
 

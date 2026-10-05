@@ -14,7 +14,7 @@ Adding a theme to the page means putting a class on `<body>`. Everything below i
 
 ### Setup
 
-- [Install the Koobiq package](/main/installation).
+- [Install the Koobiq package](/en/main/installation).
 - Include `css-tokens.css`, `css-tokens-light.css` and `css-tokens-dark.css` — these hold the global values.
 - Include the prebuilt styles in your main stylesheet. Components and overlays (popups, dropdowns) need this to render correctly:
 
@@ -52,7 +52,7 @@ protected readonly themeService = inject(KbqThemeService);
 </button>
 ```
 
-If you have more than two themes and need a list rather than a light/dark switch, you can pin one by name. See [Core](/components/core) for the details and a live example.
+If you have more than two themes and need a list rather than a light/dark switch, you can pin one by name. See [Core](/en/components/core) for the details and a live example.
 
 #### Theme selectors
 
@@ -89,7 +89,7 @@ Nothing to import, no mixin to write, nothing to register in a single theme entr
 
 <Example id="theme-css-variables" />
 
-The full list of global variables is on the [Design tokens](/main/design-tokens/colors) page.
+The full list of global variables is on the [Design tokens](/en/main/design-tokens/colors) page.
 
 ### Overriding a component's variables
 
@@ -183,257 +183,9 @@ One honest limitation: this works at the global layer. Component variables are d
 
 ### Where to find the variables
 
-Global variables, with their values and previews: [Design tokens](/main/design-tokens/colors).
+Global variables, with their values and previews: [Design tokens](/en/main/design-tokens/colors).
 
-Component variables don't have a rendered reference page yet — a proper one is on the way. Until then, read them from the source:
-
-<details>
-    <summary>
-        <span class="kbq-markdown__p">Component variables, by component</span>
-    </summary>
-    <ul>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/accordion/accordion-tokens.scss">
-                accordion
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/alert/alert-tokens.scss">
-                alert
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/autocomplete/autocomplete-tokens.scss">
-                autocomplete
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/badge/badge-tokens.scss">
-                badge
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/button/button-tokens.scss">
-                button
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/button-toggle/button-toggle-tokens.scss">
-                button-toggle
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/checkbox/checkbox-tokens.scss">
-                checkbox,pseudo-checkbox
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/code-block/code-block-tokens.scss">
-                code-block
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/datepicker/datepicker-tokens.scss">
-                datepicker
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/dl/dl-tokens.scss">
-                description-list
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/divider/divider-tokens.scss">
-                divider
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/dropdown/dropdown-tokens.scss">
-                dropdown
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/empty-state/empty-state-tokens.scss">
-                empty-state
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/file-upload/file-upload-tokens.scss">
-                file-upload
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/form-field/form-field-tokens.scss">
-                form-field
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/form-field/hint-tokens.scss">
-                hint
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/icon/icon-tokens.scss">
-                icon
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/icon/icon-button-tokens.scss">
-                icon-button
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/icon/icon-item-tokens.scss">
-                icon-item
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/input/input-tokens.scss">
-                input
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/link/link-tokens.scss">
-                link
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/list/list-tokens.scss">
-                list
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/loader-overlay/loader-overlay-tokens.scss">
-                loader-overlay
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/modal/modal-tokens.scss">
-                modal
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/markdown/markdown-tokens.scss">
-                markdown
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/navbar/navbar-tokens.scss">
-                navbar
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/popover/popover-tokens.scss">
-                popover
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/progress-bar/progress-bar-tokens.scss">
-                progress-bar
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/progress-spinner/progress-spinner-tokens.scss">
-                progress-spinner
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/radio/radio-tokens.scss">
-                radio
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/risk-level/risk-level-tokens.scss">
-                risk-level
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/select/select-tokens.scss">
-                select
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/sidepanel/sidepanel-tokens.scss">
-                sidepanel
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/scrollbar/scrollbar-tokens.scss">
-                scrollbar-component
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/core/styles/theming/scrollbar-tokens.scss">
-                scrollbar
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/core/forms/forms-tokens.scss">
-                forms
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/core/option/option-tokens.scss">
-                option
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/splitter/splitter-tokens.scss">
-                splitter
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/tags/tag-tokens.scss">
-                tag
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/tags/tag-input-tokens.scss">
-                tag-input
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/table/table-tokens.scss">
-                table
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/textarea/textarea-tokens.scss">
-                textarea
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/timezone/timezone-option-tokens.scss">
-                timezone
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/toast/toast-tokens.scss">
-                toast
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/toggle/toggle-tokens.scss">
-                toggle
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/tooltip/tooltip-tokens.scss">
-                tooltip
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/tree/tree-tokens.scss">
-                tree
-            </a>
-        </li>
-        <li>
-            <a href="https://github.com/koobiq/angular-components/tree/main/packages/components/tree-select/tree-select-tokens.scss">
-                tree-select
-            </a>
-        </li>
-    </ul>
-</details>
+The variables of a component are declared next to its code, in its tokens file, such as `button-tokens.scss` for the button: open it from the **Source code** link on the page of the component. In a browser, the developer tools show them on the element of the component, as custom properties such as `--kbq-button-*`.
 
 ### Where the values come from
 
