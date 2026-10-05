@@ -120,7 +120,7 @@
             (click)="saveChanges()"
         >
             <i kbq-icon="kbq-floppy-disk_16"></i>
-            {{ strings.saveChanges }}
+            {{ strings.saveChangesButton }}
             @if (filterBar.isSavedAndChanged()) {
                 <i class="kbq kbq-icon kbq-icon-button kbq-warning layout-margin-left-xs kbq-circle-xs_16"></i>
             }
@@ -128,7 +128,7 @@
     }
     <button kbq-dropdown-item (click)="savePopover.openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
-        {{ strings.saveAsNew }}
+        {{ strings.saveAsNewButton }}
     </button>
 
     @if (!filterBar.isReadOnly()) {

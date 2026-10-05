@@ -10,6 +10,8 @@ import {
     NAME_MEMBER_PATTERN,
     REMOVED_KEY,
     SHORTHAND_MESSAGE,
+    SPLIT_KEYS,
+    SPLIT_MEMBER_PATTERN,
     templateWarnPatterns,
     tsWarnPatterns,
     WarnPattern
@@ -21,10 +23,11 @@ const HTML_EXT = '.html';
 
 const LABEL = '[filter-bar-rename-action]';
 
-/** A half-open `[start, end)` range of the file content. */
-interface Span {
+/** A replacement of the half-open `[start, end)` range of the file content; `null` deletes the property. */
+interface Edit {
     start: number;
     end: number;
+    text: string | null;
 }
 
 const createSourceFile = (fileName: string, content: string): ts.SourceFile =>
@@ -40,47 +43,78 @@ function propertyName(property: ts.ObjectLiteralElementLike): string | null {
 
 /** What the AST pass found in one file. */
 interface Findings {
-    /** Spans of the `name` properties to delete. */
-    spans: Span[];
+    /** Deletions of `name` properties and rewrites of split keys. */
+    edits: Edit[];
     /** Whether a matched literal carries `name` as a shorthand, which the fix leaves alone. */
     shorthand: boolean;
 }
 
 /**
- * The `name` member of an object literal that is recognisably a filter-bar `filters` locale
- * section — one carrying enough of the sibling keys listed in {@link FINGERPRINT_KEYS}.
- *
- * A shorthand `name` is reported rather than deleted: dropping it would also drop a reference to a
- * variable the file still declares, which is a different edit from removing a dead string.
+ * Whether an object literal is recognisably a filter-bar `filters` locale section — one carrying
+ * enough of the sibling keys listed in {@link FINGERPRINT_KEYS}.
  */
-function findNameMember(node: ts.ObjectLiteralExpression): ts.ObjectLiteralElementLike | null {
-    let member: ts.ObjectLiteralElementLike | null = null;
-    let fingerprint = 0;
-
-    for (const property of node.properties) {
+function isFiltersSection(node: ts.ObjectLiteralExpression): boolean {
+    const fingerprint = node.properties.filter((property) => {
         const name = propertyName(property);
 
-        if (name === null) continue;
+        return name !== null && FINGERPRINT_KEYS.includes(name);
+    });
 
-        if (name === REMOVED_KEY) member = property;
-        else if (FINGERPRINT_KEYS.includes(name)) fingerprint++;
-    }
-
-    return fingerprint >= MIN_FINGERPRINT_MATCHES ? member : null;
+    return fingerprint.length >= MIN_FINGERPRINT_MATCHES;
 }
 
-/** Every removable `name` property across the file, plus whether a shorthand one was left behind. */
+/**
+ * Rewrites a split key into its `…Header` / `…Button` pair, both carrying the old value, so every
+ * string keeps showing where it did. A half the literal already has is not repeated; with both
+ * present the old property is just deleted. A shorthand expands into two references to its variable.
+ */
+function splitProperty(
+    property: ts.PropertyAssignment | ts.ShorthandPropertyAssignment,
+    name: string,
+    targets: readonly string[],
+    existing: Set<string | null>,
+    sourceFile: ts.SourceFile
+): Edit {
+    const start = property.getStart(sourceFile);
+    const end = property.getEnd();
+    const missing = targets.filter((target) => !existing.has(target));
+
+    if (!missing.length) return { start, end, text: null };
+
+    const text = sourceFile.text;
+    const key = text.slice(property.name.getStart(sourceFile), property.name.getEnd());
+    const value = ts.isPropertyAssignment(property)
+        ? text.slice(property.initializer.getStart(sourceFile), property.initializer.getEnd())
+        : name;
+    const indent = text.slice(text.lastIndexOf('\n', start - 1) + 1, start);
+    const separator = /^[ \t]*$/.test(indent) ? `,${text.includes('\r\n') ? '\r\n' : '\n'}${indent}` : ', ';
+
+    return { start, end, text: missing.map((target) => `${key.replace(name, target)}: ${value}`).join(separator) };
+}
+
+/** Every edit across the file, plus whether a shorthand `name` was left behind. */
 function collectFindings(sourceFile: ts.SourceFile): Findings {
-    const findings: Findings = { spans: [], shorthand: false };
+    const findings: Findings = { edits: [], shorthand: false };
 
     const visit = (node: ts.Node) => {
-        if (ts.isObjectLiteralExpression(node)) {
-            const member = findNameMember(node);
+        if (ts.isObjectLiteralExpression(node) && isFiltersSection(node)) {
+            const existing = new Set(node.properties.map(propertyName));
 
-            if (member && ts.isPropertyAssignment(member)) {
-                findings.spans.push({ start: member.getStart(sourceFile), end: member.getEnd() });
-            } else if (member) {
-                findings.shorthand = true;
+            for (const property of node.properties) {
+                if (!ts.isPropertyAssignment(property) && !ts.isShorthandPropertyAssignment(property)) continue;
+
+                const name = propertyName(property);
+                const targets = name === null ? undefined : SPLIT_KEYS.get(name);
+
+                if (name !== null && targets) {
+                    findings.edits.push(splitProperty(property, name, targets, existing, sourceFile));
+                } else if (name === REMOVED_KEY && ts.isPropertyAssignment(property)) {
+                    findings.edits.push({ start: property.getStart(sourceFile), end: property.getEnd(), text: null });
+                } else if (name === REMOVED_KEY) {
+                    // A shorthand `name`: deleting it would also drop a reference to a variable the
+                    // file still declares, which is a different edit from removing a dead string.
+                    findings.shorthand = true;
+                }
             }
         }
 
@@ -97,15 +131,21 @@ const SEPARATOR_BEFORE = /,[ \t]*\r?\n?[ \t]*$/;
 const SEPARATOR_AFTER = /^,[ \t]*\r?\n?[ \t]*/;
 
 /**
- * Deletes the given properties, each together with exactly one adjacent separator — the preceding
- * one when the property has one — so the literal keeps its shape and nothing around it is
- * reformatted. A sole property leaves an empty literal rather than a stray comma.
+ * Applies the edits right-to-left, so earlier offsets stay valid. A deleted property takes exactly
+ * one adjacent separator with it — the preceding one when it has one — so the literal keeps its shape
+ * and nothing around it is reformatted. A sole property leaves an empty literal rather than a stray
+ * comma.
  */
-function removeProperties(content: string, spans: Span[]): string {
+function applyEdits(content: string, edits: Edit[]): string {
     let result = content;
 
-    // Right-to-left, so earlier offsets stay valid.
-    for (const { start, end } of [...spans].sort((a, b) => b.start - a.start)) {
+    for (const { start, end, text } of [...edits].sort((a, b) => b.start - a.start)) {
+        if (text !== null) {
+            result = result.slice(0, start) + text + result.slice(end);
+
+            continue;
+        }
+
         const before = SEPARATOR_BEFORE.exec(result.slice(0, start));
         const after = before ? null : SEPARATOR_AFTER.exec(result.slice(end));
 
@@ -160,12 +200,15 @@ export default function filterBarRenameAction(options: Schema): Rule {
 
             let content = originalContent;
 
-            // Parsing every .ts of the project is not free, and a file that carries no `name` member
-            // at all cannot hold a literal to fix.
-            if (filePath.endsWith(TS_EXT) && NAME_MEMBER_PATTERN.test(content)) {
-                const { spans, shorthand } = collectFindings(createSourceFile(filePath, content));
+            // Parsing every .ts of the project is not free, and a file that carries no `name`,
+            // `saveChanges` or `saveAsNew` member at all cannot hold a literal to fix.
+            if (
+                filePath.endsWith(TS_EXT) &&
+                (NAME_MEMBER_PATTERN.test(content) || SPLIT_MEMBER_PATTERN.test(content))
+            ) {
+                const { edits, shorthand } = collectFindings(createSourceFile(filePath, content));
 
-                content = removeProperties(content, spans);
+                content = applyEdits(content, edits);
 
                 if (shorthand) logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${SHORTHAND_MESSAGE}`]);
             }

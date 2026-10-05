@@ -62,7 +62,7 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
                             #newFilterName
                             kbqInput
                             type="text"
-                            [attr.aria-label]="strings.saveAsNew"
+                            [attr.aria-label]="popoverHeader"
                             [formControl]="filterName"
                             (keydown.enter)="saveAsNew($event)"
                         />
@@ -153,11 +153,13 @@ export class KbqFilterSavePopover implements AfterViewInit {
     }
 
     /**
-     * Header of the popover. Both modes ask for a name — a new filter's or a replacement for the current
-     * one — so both show the same caption, which doubles as the caption of the unlabelled name field.
+     * Header of the popover, which depends on the mode: a new filter or a new name for the current one.
+     * It doubles as the caption of the unlabelled name field.
      */
     get popoverHeader(): string {
-        return this.filterBar().localeConfiguration().filters.saveAsNew;
+        const strings = this.filterBar().localeConfiguration().filters;
+
+        return this.saveNewFilter ? strings.saveAsNewHeader : strings.saveChangesHeader;
     }
 
     ngAfterViewInit(): void {
