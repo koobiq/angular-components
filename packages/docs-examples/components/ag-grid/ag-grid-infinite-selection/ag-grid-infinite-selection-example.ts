@@ -120,8 +120,8 @@ export class AgGridInfiniteSelectionExample {
     };
     protected readonly getRowId: GetRowIdFunc = ({ data }) => data.id;
     protected readonly defaultColDef: ColDef = {
-        cellRendererSelector: (params: ICellRendererParams) =>
-            params.data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
+        cellRendererSelector: ({ data }: ICellRendererParams) =>
+            data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
     };
     protected readonly rowSelection: RowSelectionOptions = {
         mode: 'multiRow',

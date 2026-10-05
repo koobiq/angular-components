@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
     AgGridAndActionsPanelExample,
+    AgGridAndContentPanelExample,
     AgGridColumnMenuExample,
     AgGridColumnStateExample,
     AgGridCopySelectedExample,
@@ -8,6 +9,7 @@ import {
     AgGridExternalFilterStateExample,
     AgGridFilterStateExample,
     AgGridInfiniteSelectionExample,
+    AgGridLoadErrorExample,
     AgGridLoadingOverlayExample,
     AgGridOverviewExample,
     AgGridQuickFilterStateExample,
@@ -41,9 +43,14 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridLoadingOverlayExample,
         AgGridSkeletonCellRendererExample,
         AgGridInfiniteSelectionExample,
-        AgGridAndActionsPanelExample
+        AgGridAndActionsPanelExample,
+        AgGridAndContentPanelExample,
+        AgGridLoadErrorExample
     ],
     template: `
+        <hr />
+        <ag-grid-load-error-example />
+        <hr />
         <ag-grid-column-menu-example />
         <hr />
         <ag-grid-loading-overlay-example />

@@ -159,9 +159,51 @@ The `kbqAgGridLoadingOverlay` directive controls the grid loading state: when th
 
 ### Skeleton cell renderer
 
-`KbqAgGridSkeletonCellRenderer` is used together with the infinite row model (`rowModelType="infinite"`). While a data block is not yet loaded (`params.data === undefined`), cells display skeleton placeholders.
+`KbqAgGridSkeletonCellRenderer` draws a skeleton placeholder in a cell of a row the infinite row model (`rowModelType="infinite"`) has not loaded yet. Pick it through `cellRendererSelector` in `defaultColDef`; a row counts as unloaded when `data` is `undefined`, and returning `undefined` for the rest hands them back to the column's own renderer:
+
+```ts
+readonly defaultColDef: ColDef = {
+    cellRendererSelector: ({ data }: ICellRendererParams) =>
+        data === undefined ? { component: KbqAgGridSkeletonCellRenderer } : undefined
+};
+```
+
+Every bar fills its column: the page arrives under rows that are already on screen, and bars of differing width would only make the grid look unsettled. The cold start above is the other case — there the placeholder stands in for a grid that is not there yet, and its bars do vary.
+
+Wire `KbqAgGridSkeletonSelectionCellComponent` into `selectionColumnDef` the same way, so the checkbox column matches instead of showing an interactive checkbox for a row that has no data. The theme stops at the renderers and leaves this wiring to you on purpose: a directive doing it for you would have to merge into the column definition after the grid is ready, and AG Grid replaces that grid option wholesale on every new input reference.
+
+How many skeleton rows appear is governed by two AG Grid options, both defaulting to one row: `infiniteInitialRowCount` before anything has loaded, and `cacheOverflowSize` while the next page loads. The grid reads them when it builds its block cache and holds on to those values, so a later one only takes effect the next time that cache is rebuilt — which is what handing the grid a new datasource does. The load error example below switches between one and three rows that way.
+
+Keep the datasource honest about the size of the dataset while you are at it: answer `-1` for as long as there is more to come, including for pages you serve from a cache of your own. A datasource that names the total early ends the scrolling story — the grid lays every row out at once and stops appending the trailing rows the skeletons are drawn on.
 
 <Example id="ag-grid-skeleton-cell-renderer" />
+
+### Load errors
+
+When a page fails to load, `kbqAgGridLoadError` replaces it with a full width error row carrying a retry link. The row scrolls vertically with the data, stays put during horizontal scrolling, spans the pinned columns, and picks up the grid's row height and dividers.
+
+AG Grid's own `failCallback()` leaves the rows of a failed block blank forever and raises no grid event, so the data source has to report the failure to the directive itself, passing the `startRow` of the request that failed:
+
+```ts
+error: () => {
+    params.failCallback();
+    this.loadError().fail(params.startRow);
+};
+```
+
+Retrying calls `refreshInfiniteCache()`, which marks every cached block for reload — the Community edition has no per-block retry. Keep already fetched pages in the data source and serve them from there, so that only the failed page reaches the network.
+
+Russian labels are used by default. To switch the language, provide a labels provider:
+
+```ts
+providers: [kbqAgGridLoadErrorLabelsProvider(KBQ_AG_GRID_LOAD_ERROR_LABELS_EN)];
+```
+
+When the language can change while the grid is on screen, bind the preset to the `kbqAgGridLoadErrorLabels` input instead of providing it — the input is a signal, so a banner that is already rendered picks the new strings up. The example below computes it off `KbqLocaleService`: Russian for `ru-RU`, English for every other locale.
+
+If the grid does not use skeletons, render a plain text indicator in the same place instead, as the toggle in the example below does. The string belongs to the application, so it is localized there, off the same locale as the banner. Such an indicator is a single row whose label starts where the selection checkbox would be, so render it through `isFullWidthRow` and `fullWidthCellRenderer`: a full width row has no cells, so nothing indents the label and no checkbox is drawn beside it. A label rendered inside a cell cannot be moved onto the selection column instead — the cell clips whatever sticks out of it.
+
+<Example id="ag-grid-load-error" />
 
 ### Row selection with infinite scrolling
 

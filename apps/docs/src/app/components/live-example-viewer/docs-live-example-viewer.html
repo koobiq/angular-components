@@ -7,7 +7,13 @@
         @if (exampleComponentType(); as exampleComponentType) {
             <ng-template [ngComponentOutlet]="exampleComponentType" />
         } @else if (isLoading()) {
-            <kbq-skeleton class="docs-live-example__skeleton" />
+            @if (isDataGridExample()) {
+                <div class="ag-theme-koobiq docs-live-example__skeleton docs-live-example__skeleton_grid">
+                    <kbq-ag-grid-loading-overlay />
+                </div>
+            } @else {
+                <kbq-skeleton class="docs-live-example__skeleton" />
+            }
         }
     </div>
 

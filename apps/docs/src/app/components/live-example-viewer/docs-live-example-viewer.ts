@@ -15,6 +15,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqAgGridLoadingOverlayComponent } from '@koobiq/ag-grid-angular-theme';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { kbqInjectNativeElement, KbqStateSavingService } from '@koobiq/components/core';
@@ -51,6 +52,9 @@ export interface DocsExampleLoader {
 const isLoader = (component: Type<unknown> | DocsExampleLoader): component is DocsExampleLoader =>
     typeof component !== 'function';
 
+/** Examples whose placeholder is shaped like a grid. Matches `importPath` in `EXAMPLE_COMPONENTS`. */
+const DATA_GRID_EXAMPLES_IMPORT_PATH = 'components/ag-grid';
+
 @Component({
     selector: 'docs-live-example-viewer',
     imports: [
@@ -61,7 +65,8 @@ const isLoader = (component: Type<unknown> | DocsExampleLoader): component is Do
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
-        KbqSkeleton
+        KbqSkeleton,
+        KbqAgGridLoadingOverlayComponent
     ],
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
@@ -112,6 +117,16 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     /** Whether the example waits for its class to load, which a skeleton shows. */
     protected readonly isLoading = computed(
         () => isLoader(this.component()) && !this.loadedComponent() && !this.hasFailedToLoad()
+    );
+
+    /**
+     * Whether the placeholder should be shaped like a data grid rather than a plain block. Keyed off
+     * the example's package rather than off `isLoading`: today AG Grid is the only family that cannot
+     * render on the server, but `packages/docs-examples/server-rendering.ts` takes further entries,
+     * and a grid-shaped placeholder would be wrong for them.
+     */
+    protected readonly isDataGridExample = computed(
+        () => this.exampleData().importPath === DATA_GRID_EXAMPLES_IMPORT_PATH
     );
 
     /** Component type for the current example. */

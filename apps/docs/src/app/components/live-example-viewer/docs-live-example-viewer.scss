@@ -4,6 +4,12 @@
     height: 300px;
 }
 
+// `kbq-ag-grid-loading-overlay` is styled to fill a grid, so it needs a positioned box of its own
+// here. The `.ag-theme-koobiq` class is what its rules are scoped under.
+.docs-live-example__skeleton_grid {
+    position: relative;
+}
+
 .docs-live-example-viewer {
     margin: var(--kbq-size-xl) 0;
 
