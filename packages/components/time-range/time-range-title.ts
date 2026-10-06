@@ -7,6 +7,9 @@ import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeService } from './time-range.service';
 import { KbqTimeRangeCustomizableTitleContext, KbqTimeRangeRange, KbqTimeRangeTitleContext } from './types';
 
+// Some locales word the period without a preposition and leave `title.for` empty.
+const withPrefix = (prefix: string, period: string): string => (prefix ? `${prefix} ${period}` : period);
+
 /** @docs-private */
 @Component({
     selector: 'kbq-time-range-title',
@@ -77,9 +80,8 @@ export class KbqTimeRangeTitle {
         if (timeRangeUnit === 'other') {
             switch (context.type) {
                 case 'range': {
-                    return (
-                        localeConfiguration.title.for +
-                        ' ' +
+                    return withPrefix(
+                        localeConfiguration.title.for,
                         this.timeRangeService.dateFormatter.rangeLongDate(
                             this.timeRangeService.dateAdapter.deserialize(context.startDateTime ?? ''),
                             this.timeRangeService.dateAdapter.deserialize(context.endDateTime ?? '')
@@ -103,9 +105,8 @@ export class KbqTimeRangeTitle {
 
         if (!context.startDateTime) return '';
 
-        return (
-            localeConfiguration.title.for +
-            ' ' +
+        return withPrefix(
+            localeConfiguration.title.for,
             this.timeRangeService.dateFormatter.duration(
                 this.timeRangeService.dateAdapter.deserialize(context.startDateTime),
                 this.timeRangeService.dateAdapter.today(),

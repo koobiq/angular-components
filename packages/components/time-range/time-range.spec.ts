@@ -143,6 +143,14 @@ describe('KbqTimeRange', () => {
             expect(getTriggerNativeElement(debugElement).textContent).toMatchSnapshot();
         });
 
+        it('should prepend a non-empty title.for to the period', () => {
+            const { debugElement } = setup(TestComponent, [
+                kbqTimeRangeLocaleConfigurationProvider({ title: { for: 'за' } })
+            ]);
+
+            expect(getTriggerNativeElement(debugElement).textContent).toMatch(/^за \S/);
+        });
+
         it('should open popover when trigger is clicked', fakeAsync(() => {
             const fixture = setup(TestComponent);
             const { debugElement } = fixture;
@@ -230,7 +238,9 @@ describe('KbqTimeRange', () => {
 
             // Replacing the types is not the user picking a range, so nothing may reach the control.
             expect(componentInstance.control.value).toBeNull();
-            expect(getTriggerNativeElement(debugElement).textContent).toContain('Выберите период');
+            expect(getTriggerNativeElement(debugElement).textContent).toContain(
+                ruRULocaleData.timeRange.title.placeholder
+            );
         }));
 
         it('should work with custom ranges', () => {
