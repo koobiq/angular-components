@@ -519,9 +519,9 @@ class BasicEvents {
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    openedChangeListener = jest.fn();
-    openedListener = jest.fn();
-    closedListener = jest.fn();
+    openedChangeListener = vi.fn();
+    openedListener = vi.fn();
+    closedListener = vi.fn();
 
     readonly select = viewChild.required(KbqTreeSelect);
 
@@ -922,7 +922,7 @@ class MultiTreeSelectWithClearPredicate {
 class SelectWithChangeEvent {
     readonly treeSelect = viewChild.required(KbqTreeSelect);
 
-    selectionChangeListener = jest.fn();
+    selectionChangeListener = vi.fn();
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -2670,7 +2670,7 @@ describe('KbqTreeSelect', () => {
 
                 it('should consider the selection a result of a user action when closed', fakeAsync(() => {
                     const option = fixture.componentInstance.options().at(0)!;
-                    const spy = jest.fn();
+                    const spy = vi.fn();
                     const subscription = option.userInteraction.subscribe(spy);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
@@ -2813,7 +2813,7 @@ describe('KbqTreeSelect', () => {
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
                 // Use a spy since focus can be flaky in unit tests.
-                const focusSpyFn = jest.spyOn(select, 'focus');
+                const focusSpyFn = vi.spyOn(select, 'focus');
 
                 dispatchKeyboardEvent(trigger, 'keydown', TAB);
                 fixture.detectChanges();
@@ -2846,7 +2846,7 @@ describe('KbqTreeSelect', () => {
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
                 const event = createKeyboardEvent('keydown', ESCAPE);
-                const stopPropagationSpy = jest.spyOn(event, 'stopPropagation');
+                const stopPropagationSpy = vi.spyOn(event, 'stopPropagation');
 
                 dispatchEvent(trigger, event);
                 fixture.detectChanges();
@@ -3157,7 +3157,7 @@ describe('KbqTreeSelect', () => {
             it('should focus itself after list closed by KeyBoard events', fakeAsync(() => {
                 const closeAndFocusKeys: number[] = [TAB, ESCAPE, DOWN_ARROW, UP_ARROW];
                 const selectInstance = fixture.componentInstance.select();
-                const focusSpyFn = jest.spyOn(selectInstance, 'focus');
+                const focusSpyFn = vi.spyOn(selectInstance, 'focus');
 
                 closeAndFocusKeys.forEach((keyCode) => {
                     trigger.click();
@@ -3485,7 +3485,7 @@ describe('KbqTreeSelect', () => {
 
             it('should report the removed nodes on the selection change', fakeAsync(() => {
                 const fixture = createFixture((instance) => (instance.disabledByInput = ['Downloads']));
-                const listener = jest.fn();
+                const listener = vi.fn();
 
                 fixture.componentInstance.select().selectionChange.subscribe(listener);
 
@@ -3738,7 +3738,7 @@ describe('KbqTreeSelect', () => {
 
         it('should select the search text (not options) when the text is only partially selected', fakeAsync(() => {
             const input = getSearchInput();
-            const onSelectAll = jest.fn();
+            const onSelectAll = vi.fn();
 
             testInstance.select().onSelectAll.subscribe(onSelectAll);
 
@@ -4033,7 +4033,7 @@ describe('KbqTreeSelect', () => {
 
             expect(activeItem).toBeTruthy();
 
-            const focusSpy = jest.spyOn(activeItem, 'focus');
+            const focusSpy = vi.spyOn(activeItem, 'focus');
 
             dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
             fixture.detectChanges();
@@ -4120,7 +4120,7 @@ describe('KbqTreeSelect', () => {
             const debugElement = fixture.debugElement.query(By.directive(KbqTreeSelect));
             const select = debugElement.componentInstance;
 
-            const spy = jest.fn();
+            const spy = vi.fn();
             const subscription = select.stateChanges.subscribe(undefined, undefined, spy);
 
             fixture.destroy();
@@ -4265,7 +4265,7 @@ describe('KbqTreeSelect', () => {
 
         it('should override error matching behavior via injection token', fakeAsync(() => {
             const errorStateMatcher: ErrorStateMatcher = {
-                isErrorState: jest.fn(() => true)
+                isErrorState: vi.fn(() => true)
             };
 
             fixture.destroy();
@@ -4295,7 +4295,7 @@ describe('KbqTreeSelect', () => {
         }));
 
         it('should set proper form group validation state on ngSubmit handler, without setTimeout', fakeAsync(() => {
-            const submitReactiveSpyFn = jest.spyOn(fixture.componentInstance, 'submitReactive');
+            const submitReactiveSpyFn = vi.spyOn(fixture.componentInstance, 'submitReactive');
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
 
@@ -4310,7 +4310,7 @@ describe('KbqTreeSelect', () => {
         it('should be able to override the error matching behavior via an @Input', fakeAsync(() => {
             const fixture = TestBed.createComponent(CustomErrorBehaviorSelect);
             const component = fixture.componentInstance;
-            const matcher = jest.fn(() => true);
+            const matcher = vi.fn(() => true);
 
             fixture.detectChanges();
 
@@ -4357,7 +4357,7 @@ describe('KbqTreeSelect', () => {
 
         it('should support use inside a custom value accessor', fakeAsync(() => {
             const fixture = TestBed.createComponent(CompWithCustomSelect);
-            const writeValueSpyFn = jest.spyOn(fixture.componentInstance.customAccessor(), 'writeValue');
+            const writeValueSpyFn = vi.spyOn(fixture.componentInstance.customAccessor(), 'writeValue');
 
             fixture.detectChanges();
 
@@ -4456,7 +4456,7 @@ describe('KbqTreeSelect', () => {
             fixture.autoDetectChanges();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            const toggleSpyFn = jest.spyOn(fixture.componentInstance.select(), 'toggle');
+            const toggleSpyFn = vi.spyOn(fixture.componentInstance.select(), 'toggle');
 
             expect(toggleSpyFn).toHaveBeenCalledTimes(0);
 
@@ -4482,8 +4482,8 @@ describe('KbqTreeSelect', () => {
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
-            const triggerKeydownHandlerSpyFn = jest.spyOn(fixture.componentInstance.select(), 'triggerKeydownHandler');
-            const panelKeydownHandlerSpyFn = jest.spyOn(fixture.componentInstance.select(), 'panelKeydownHandler');
+            const triggerKeydownHandlerSpyFn = vi.spyOn(fixture.componentInstance.select(), 'triggerKeydownHandler');
+            const panelKeydownHandlerSpyFn = vi.spyOn(fixture.componentInstance.select(), 'panelKeydownHandler');
 
             expect(triggerKeydownHandlerSpyFn).toHaveBeenCalledTimes(0);
             expect(panelKeydownHandlerSpyFn).toHaveBeenCalledTimes(0);
@@ -4761,7 +4761,7 @@ describe('KbqTreeSelect', () => {
 
         it('should update the data binding before emitting the change event', fakeAsync(() => {
             const instance = fixture.componentInstance;
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             fixture.detectChanges();
             instance.select().selectionChange.subscribe(() => spy(instance.selectedFood));
@@ -5237,7 +5237,7 @@ describe('KbqTreeSelect', () => {
 
         it('should emit onSelectAll with selected=true on a no-op CTRL + A when everything is already selected', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-tree-select');
-            const onSelectAll = jest.fn();
+            const onSelectAll = vi.fn();
 
             fixture.componentInstance.select().onSelectAll.subscribe(onSelectAll);
             fixture.componentInstance.select().open();
@@ -5473,7 +5473,7 @@ describe('KbqTreeSelect', () => {
             }));
 
             it('should emit onSelectAll on click', fakeAsync(() => {
-                const onSelectAll = jest.fn();
+                const onSelectAll = vi.fn();
 
                 testInstance.select().onSelectAll.subscribe(onSelectAll);
 
@@ -5852,7 +5852,7 @@ describe('KbqTreeSelect', () => {
 
             it('should call errorStateMatcher and update errorState on blur', () => {
                 const fixture = createComponent(TreeSelectWithErrorStateMatcher);
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
@@ -5894,7 +5894,7 @@ describe('KbqTreeSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
@@ -5933,7 +5933,7 @@ describe('KbqTreeSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
@@ -6037,7 +6037,7 @@ describe('KbqTreeSelect', () => {
         function mockFieldWidth(fixture: ComponentFixture<unknown>, width: number) {
             const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-            return jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
+            return vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
         }
 
         function getPane(): HTMLElement {
@@ -6129,7 +6129,7 @@ describe('KbqTreeSelect', () => {
 
             /** Reports the given width for the panel only, so that the lock has something to measure. */
             function mockPanelBoundingRect(width: number) {
-                return jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+                return vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
                     this: Element
                 ): DOMRect {
                     const w = this.classList?.contains('kbq-tree-select__panel') ? width : 0;
@@ -6454,7 +6454,7 @@ describe('KbqTreeSelect first-row panel anchor', () => {
         stubRect(pane, { top: 0, bottom: PANE_HEIGHT });
         Array.from(list.children).forEach((row, index) => rows[index] && stubRect(row, rows[index]));
 
-        jest.spyOn(window, 'getComputedStyle').mockImplementation((element: Element, pseudo?: string | null) => {
+        vi.spyOn(window, 'getComputedStyle').mockImplementation((element: Element, pseudo?: string | null) => {
             if (element === content) return { height: LIST_HEIGHT, maxHeight: LIST_HEIGHT } as CSSStyleDeclaration;
 
             if (element === pane) {
@@ -6490,7 +6490,7 @@ describe('KbqTreeSelect first-row panel anchor', () => {
     }));
 
     afterEach(() => {
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
 
         if (clientHeight) {
             Object.defineProperty(document.documentElement, 'clientHeight', clientHeight);
@@ -6516,7 +6516,7 @@ describe('KbqTreeSelect first-row panel anchor', () => {
     it('should reposition the panel when the anchor moves, and only then', () => {
         stubGeometry([FIRST_ROW, SECOND_ROW]);
 
-        const setOverlayPosition = jest.spyOn(
+        const setOverlayPosition = vi.spyOn(
             select as unknown as { setOverlayPosition: () => void },
             'setOverlayPosition'
         );

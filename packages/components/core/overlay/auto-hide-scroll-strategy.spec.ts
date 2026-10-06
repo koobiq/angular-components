@@ -20,8 +20,8 @@ function makeRect(top: number, left: number, bottom: number, right: number): DOM
 
 function makeScrollDispatcher(scrollSubject: Subject<CdkScrollable | void>, containers: CdkScrollable[] = []) {
     return {
-        scrolled: jest.fn(() => scrollSubject.asObservable()),
-        getAncestorScrollContainers: jest.fn(() => containers)
+        scrolled: vi.fn(() => scrollSubject.asObservable()),
+        getAncestorScrollContainers: vi.fn(() => containers)
     } as unknown as ScrollDispatcher;
 }
 
@@ -35,17 +35,17 @@ function makeOverlayRef(overlayElement: HTMLElement, positionOrigin?: unknown) {
 
     return {
         overlayElement,
-        updatePosition: jest.fn(),
-        getConfig: jest.fn(() => ({ positionStrategy }))
+        updatePosition: vi.fn(),
+        getConfig: vi.fn(() => ({ positionStrategy }))
     } as any;
 }
 
 function makeViewportRuler(width = 1000, height = 800) {
-    return { getViewportSize: jest.fn(() => ({ width, height })) } as unknown as ViewportRuler;
+    return { getViewportSize: vi.fn(() => ({ width, height })) } as unknown as ViewportRuler;
 }
 
 function makeNgZone() {
-    return { run: jest.fn((fn: () => void) => fn()) } as unknown as NgZone;
+    return { run: vi.fn((fn: () => void) => fn()) } as unknown as NgZone;
 }
 
 function makeScrollable(el: HTMLElement) {
@@ -64,7 +64,7 @@ function buildStrategy(
     const scrollDispatcher = deps.scrollDispatcher ?? makeScrollDispatcher(scroll$);
     const viewportRuler = deps.viewportRuler ?? makeViewportRuler();
     const ngZone = deps.ngZone ?? makeNgZone();
-    const onHide = jest.fn();
+    const onHide = vi.fn();
     const strategy = new KbqAutoHideScrollStrategy(scrollDispatcher, viewportRuler, ngZone, config, { onHide });
 
     return { strategy, scroll$, scrollDispatcher, viewportRuler, ngZone, onHide };
@@ -346,7 +346,7 @@ describe('KbqAutoHideScrollStrategy', () => {
             expect(onHide).not.toHaveBeenCalled();
 
             // simulate the trigger swapping its anchor between close and reopen
-            overlayRef.getConfig = jest.fn(() => ({
+            overlayRef.getConfig = vi.fn(() => ({
                 positionStrategy: Object.assign(Object.create(FlexibleConnectedPositionStrategy.prototype), {
                     _origin: outsideOrigin
                 })
@@ -546,7 +546,7 @@ describe('KbqAutoHideScrollStrategy', () => {
             const scrollDispatcher = makeScrollDispatcher(scroll$, [makeScrollable(container)]);
             const viewportRuler = makeViewportRuler();
             const ngZone = makeNgZone();
-            const onHide = jest.fn();
+            const onHide = vi.fn();
 
             const createScrollStrategy = kbqAutoHideScrollStrategyFactory(scrollDispatcher, viewportRuler, ngZone);
             const strategy = createScrollStrategy({ onHide }, { originElement: originEl });

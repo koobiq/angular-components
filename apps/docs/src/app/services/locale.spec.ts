@@ -1,20 +1,21 @@
 import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { DefaultUrlSerializer, Router } from '@angular/router';
+import type { Mock } from 'vitest';
 import { DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';
 
 describe(DocsLocaleService.name, () => {
     let router: {
         url: string;
-        navigate: jest.Mock;
+        navigate: Mock;
         parseUrl: (url: string) => ReturnType<DefaultUrlSerializer['parse']>;
     };
 
     const createService = (initialUrl = '/ru'): DocsLocaleService => {
         const serializer = new DefaultUrlSerializer();
 
-        router = { url: initialUrl, navigate: jest.fn(), parseUrl: (url: string) => serializer.parse(url) };
+        router = { url: initialUrl, navigate: vi.fn(), parseUrl: (url: string) => serializer.parse(url) };
 
         TestBed.configureTestingModule({
             providers: [

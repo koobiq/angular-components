@@ -2,6 +2,7 @@ import { DOCUMENT } from '@angular/common';
 import { PLATFORM_ID, REQUEST } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
+import type { Mocked } from 'vitest';
 import { KBQ_WINDOW } from '../tokens/window';
 import {
     KBQ_DEFAULT_THEMES,
@@ -94,17 +95,17 @@ function fakeStorageEvents() {
 }
 
 describe('KbqThemeService', () => {
-    let store: jest.Mocked<KbqThemeStore>;
+    let store: Mocked<KbqThemeStore>;
 
     function setup(matches = false, render = true) {
         const media = fakeMediaQueryList(matches);
-        const matchMedia = jest.fn().mockReturnValue(media.mql);
+        const matchMedia = vi.fn().mockReturnValue(media.mql);
 
         store = {
-            getMode: jest.fn().mockReturnValue(null),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue(null),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn().mockReturnValue(null),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue(null),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -238,7 +239,12 @@ describe('KbqThemeService', () => {
         // The `MediaQueryList` an app hands back is hand-written (see `provideServerWindow`), so it may be
         // missing pieces a real one always has.
         TestBed.configureTestingModule({
-            providers: [{ provide: KBQ_WINDOW, useValue: { matchMedia: () => ({ matches: true }) } }]
+            providers: [
+                {
+                    provide: KBQ_WINDOW,
+                    useValue: fakeWindow({ matchMedia: () => ({ matches: true }) as MediaQueryList })
+                }
+            ]
         });
 
         const service = TestBed.inject(KbqThemeService);
@@ -267,7 +273,10 @@ describe('KbqThemeService', () => {
             providers: [
                 {
                     provide: KBQ_WINDOW,
-                    useValue: { matchMedia: () => ({ matches: false, media: '', addEventListener: () => {} }) }
+                    useValue: fakeWindow({
+                        matchMedia: () =>
+                            ({ matches: false, media: '', addEventListener: () => {} }) as unknown as MediaQueryList
+                    })
                 }
             ]
         });
@@ -502,10 +511,10 @@ describe('KbqThemeService', () => {
         let storedMode: KbqThemeMode | null = null;
 
         store = {
-            getMode: jest.fn(() => storedMode),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue(null),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn(() => storedMode),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue(null),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -574,10 +583,10 @@ describe('KbqThemeService', () => {
         const changes = new Subject<void>();
 
         store = {
-            getMode: jest.fn().mockReturnValue(null),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue(null),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn().mockReturnValue(null),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue(null),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -642,10 +651,10 @@ describe('KbqThemeService', () => {
         const media = fakeMediaQueryList(false);
 
         store = {
-            getMode: jest.fn().mockReturnValue('dark'),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue('dark'),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn().mockReturnValue('dark'),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue('dark'),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -766,10 +775,10 @@ describe('KbqThemeService', () => {
         const media = fakeMediaQueryList(false);
 
         store = {
-            getMode: jest.fn().mockReturnValue(null),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue('dark'),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn().mockReturnValue(null),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue('dark'),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -1215,7 +1224,7 @@ describe('KbqThemeCookieStore', () => {
 
         store.setMode('dark');
 
-        const cookieSetter = jest.spyOn(document, 'cookie', 'set');
+        const cookieSetter = vi.spyOn(document, 'cookie', 'set');
 
         store.setMode('dark');
 

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ng add '@koobiq/components' should add missing dependencies to 'package.json': after running schematics 1`] = `
+exports[`ng add '@koobiq/components' > should add missing dependencies to 'package.json' > after running schematics 1`] = `
 {
   "@angular/animations": "^21.2.0",
   "@angular/cdk": "^0.0.0",
@@ -23,7 +23,7 @@ exports[`ng add '@koobiq/components' should add missing dependencies to 'package
 }
 `;
 
-exports[`ng add '@koobiq/components' should add missing dependencies to 'package.json': before running schematics 1`] = `
+exports[`ng add '@koobiq/components' > should add missing dependencies to 'package.json' > before running schematics 1`] = `
 {
   "@angular/common": "^21.2.0",
   "@angular/compiler": "^21.2.0",

@@ -87,7 +87,7 @@ describe('KbqSidepanelService', () => {
 
     it('should emit when sidepanel opening animation is complete', fakeAsync(() => {
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-        const afterOpenedCallback = jest.fn();
+        const afterOpenedCallback = vi.fn();
 
         sidepanelRef.afterOpened().subscribe(afterOpenedCallback);
 
@@ -102,7 +102,7 @@ describe('KbqSidepanelService', () => {
 
     it('should close a sidepanel and return result', fakeAsync(() => {
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-        const afterCloseCallback = jest.fn();
+        const afterCloseCallback = vi.fn();
 
         sidepanelRef.afterClosed().subscribe(afterCloseCallback);
         sidepanelRef.close('Result');
@@ -141,7 +141,7 @@ describe('KbqSidepanelService', () => {
 
     it('should change disableClose dynamically', fakeAsync(() => {
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-        const closeSpy = jest.spyOn(sidepanelRef, 'close');
+        const closeSpy = vi.spyOn(sidepanelRef, 'close');
 
         sidepanelRef.config.disableClose = true;
 
@@ -257,7 +257,7 @@ describe('KbqSidepanelService', () => {
     });
 
     it('should show only the topmost backdrop when multiple sidepanels are open', fakeAsync(() => {
-        const spy = jest.spyOn(sidepanelService, 'open');
+        const spy = vi.spyOn(sidepanelService, 'open');
 
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
@@ -377,7 +377,7 @@ describe('KbqSidepanelService', () => {
 
     it('should not trigger form submission when close button is clicked inside a form', fakeAsync(() => {
         const sidepanelRef = sidepanelService.open(SidepanelWithFormComponent);
-        const submitSpy = jest.spyOn(sidepanelRef.instance, 'onSubmit');
+        const submitSpy = vi.spyOn(sidepanelRef.instance, 'onSubmit');
 
         rootComponentFixture.detectChanges();
         flush();
@@ -394,7 +394,7 @@ describe('KbqSidepanelService', () => {
     describe('close result', () => {
         const closeWith = (buttonId: string) => {
             const sidepanelRef = sidepanelService.open(SidepanelWithCloseResults);
-            const result = jest.fn();
+            const result = vi.fn();
 
             sidepanelRef.afterClosed().subscribe(result);
             rootComponentFixture.detectChanges();
@@ -748,7 +748,7 @@ describe('KbqSidepanelService', () => {
 
         it('should not animate a closing sidepanel back into view when closing all sidepanels', fakeAsync(() => {
             const refs = [1, 2, 3].map(() => sidepanelService.open(SimpleSidepanelExample));
-            const spies = refs.map((ref) => jest.spyOn(ref.containerInstance, 'setAnimationState'));
+            const spies = refs.map((ref) => vi.spyOn(ref.containerInstance, 'setAnimationState'));
 
             sidepanelService.closeAll();
             rootComponentFixture.detectChanges();
@@ -802,7 +802,7 @@ describe('KbqSidepanelService', () => {
     describe('closing', () => {
         it('should deliver the result of the first close call', fakeAsync(() => {
             const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
-            const afterCloseCallback = jest.fn();
+            const afterCloseCallback = vi.fn();
 
             sidepanelRef.afterClosed().subscribe(afterCloseCallback);
 
@@ -1080,7 +1080,7 @@ describe('KbqSidepanelService state saving', () => {
     });
 
     it('warns when two open sidepanels share a key', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });
         sidepanelService.open(SimpleSidepanelExample, { stateSavingKey: key });

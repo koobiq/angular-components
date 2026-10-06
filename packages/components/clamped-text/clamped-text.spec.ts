@@ -34,7 +34,7 @@ const mockRenderedRows = (rows: number): void => {
         { item: () => null }
     ) as unknown as DOMRectList;
 
-    jest.spyOn(HTMLElement.prototype, 'getClientRects').mockReturnValue(rects);
+    vi.spyOn(HTMLElement.prototype, 'getClientRects').mockReturnValue(rects);
 };
 
 const createComponent = <T>(component: Type<T>): ComponentFixture<T> => {
@@ -132,7 +132,7 @@ class ClampedTextInitiallyExpanded {
 }
 
 describe('KbqClampedText', () => {
-    afterEach(() => jest.restoreAllMocks());
+    afterEach(() => vi.restoreAllMocks());
 
     describe('when the content fits', () => {
         beforeEach(() => mockRenderedRows(3));
@@ -269,7 +269,7 @@ describe('KbqClampedText', () => {
         describe('isCollapsedChange', () => {
             it('should not emit for the initial measurement', async () => {
                 const fixture = createComponent(ClampedTextTest);
-                const spy = jest.spyOn(fixture.componentInstance, 'onCollapseChanged');
+                const spy = vi.spyOn(fixture.componentInstance, 'onCollapseChanged');
 
                 await fixture.whenStable();
                 await measure(fixture);
@@ -279,7 +279,7 @@ describe('KbqClampedText', () => {
 
             it('should emit when the user operates the toggle', async () => {
                 const fixture = await createMeasuredComponent(ClampedTextTest);
-                const spy = jest.spyOn(fixture.componentInstance, 'onCollapseChanged');
+                const spy = vi.spyOn(fixture.componentInstance, 'onCollapseChanged');
 
                 requireToggle(fixture).click();
                 await fixture.whenStable();
@@ -289,7 +289,7 @@ describe('KbqClampedText', () => {
 
             it('should not echo a value the parent wrote itself', async () => {
                 const fixture = await createMeasuredComponent(ClampedTextTest);
-                const spy = jest.spyOn(fixture.componentInstance, 'onCollapseChanged');
+                const spy = vi.spyOn(fixture.componentInstance, 'onCollapseChanged');
 
                 fixture.componentInstance.isCollapsed.set(false);
                 await fixture.whenStable();
@@ -309,7 +309,7 @@ describe('KbqClampedText', () => {
 
             it('should scroll the component into view when collapsing', async () => {
                 const fixture = await createMeasuredComponent(ClampedTextTest);
-                const scrollIntoView = jest.spyOn(Element.prototype, 'scrollIntoView').mockImplementation();
+                const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(() => {});
 
                 await collapseThroughToggle(fixture);
 
@@ -322,7 +322,7 @@ describe('KbqClampedText', () => {
                 fixture.componentInstance.scrollOnCollapse.set(false);
                 await fixture.whenStable();
 
-                const scrollIntoView = jest.spyOn(Element.prototype, 'scrollIntoView').mockImplementation();
+                const scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(() => {});
 
                 await collapseThroughToggle(fixture);
 

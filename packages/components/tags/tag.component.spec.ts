@@ -101,9 +101,9 @@ export class TestTag {
     readonly editable = model(true);
     readonly preventEditSubmit = model(false);
 
-    readonly selectionChange = jest.fn();
-    readonly removedChange = jest.fn();
-    readonly editChange = jest.fn();
+    readonly selectionChange = vi.fn();
+    readonly removedChange = vi.fn();
+    readonly editChange = vi.fn();
 }
 
 @Component({
@@ -140,9 +140,9 @@ export class TestTagInsideTagList {
     readonly editable = model(true);
     readonly preventEditSubmit = model(false);
 
-    readonly selectionChange = jest.fn();
-    readonly removedChange = jest.fn();
-    readonly editChange = jest.fn();
+    readonly selectionChange = vi.fn();
+    readonly removedChange = vi.fn();
+    readonly editChange = vi.fn();
 }
 
 describe(KbqTag.name, () => {
@@ -233,7 +233,7 @@ describe(KbqTag.name, () => {
             }));
 
             it('emits destroy on destruction', () => {
-                const tagDestroySpyFn = jest.spyOn(testComponent, 'tagDestroy');
+                const tagDestroySpyFn = vi.spyOn(testComponent, 'tagDestroy');
 
                 // Force a destroy callback
                 testComponent.shouldShow = false;
@@ -253,7 +253,7 @@ describe(KbqTag.name, () => {
             });
 
             it('allows selection', () => {
-                const tagSelectionChangeSpyFn = jest.spyOn(testComponent, 'tagSelectionChange');
+                const tagSelectionChangeSpyFn = vi.spyOn(testComponent, 'tagSelectionChange');
 
                 expect(tagNativeElement.classList).not.toContain('kbq-selected');
 
@@ -269,7 +269,7 @@ describe(KbqTag.name, () => {
             });
 
             it('allows removal', () => {
-                const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
+                const tagRemoveSpyFn = vi.spyOn(testComponent, 'tagRemove');
 
                 tagInstance.remove();
                 fixture.detectChanges();
@@ -299,7 +299,7 @@ describe(KbqTag.name, () => {
             it('should not dispatch `selectionChange` event when deselecting a non-selected tag', () => {
                 tagInstance.deselect();
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 tagInstance.deselect();
@@ -311,7 +311,7 @@ describe(KbqTag.name, () => {
             it('should not dispatch `selectionChange` event when selecting a selected tag', () => {
                 tagInstance.select();
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 tagInstance.select();
@@ -323,7 +323,7 @@ describe(KbqTag.name, () => {
             it('should not dispatch `selectionChange` event when selecting a selected tag via user interaction', () => {
                 tagInstance.select();
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 tagInstance.selectViaInteraction();
@@ -333,7 +333,7 @@ describe(KbqTag.name, () => {
             });
 
             it('should dispatch `selectionChange` when the [selected] binding changes', () => {
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 testComponent.selected = true;
@@ -351,7 +351,7 @@ describe(KbqTag.name, () => {
                 tagInstance.selectViaInteraction();
                 fixture.detectChanges();
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = tagInstance.selectionChange.subscribe(spy);
 
                 testComponent.selected = true;
@@ -385,7 +385,7 @@ describe(KbqTag.name, () => {
                 it('DELETE emits the (removed) event', () => {
                     const DELETE_EVENT = createKeyboardEvent('keydown', DELETE) as KeyboardEvent;
 
-                    const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
+                    const tagRemoveSpyFn = vi.spyOn(testComponent, 'tagRemove');
 
                     // Use the delete to remove the tag
                     tagInstance.handleKeydown(DELETE_EVENT);
@@ -397,7 +397,7 @@ describe(KbqTag.name, () => {
                 it('BACKSPACE emits the (removed) event', () => {
                     const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE) as KeyboardEvent;
 
-                    const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
+                    const tagRemoveSpyFn = vi.spyOn(testComponent, 'tagRemove');
 
                     // Use the delete to remove the tag
                     tagInstance.handleKeydown(BACKSPACE_EVENT);
@@ -416,7 +416,7 @@ describe(KbqTag.name, () => {
                 it('DELETE does not emit the (removed) event', () => {
                     const DELETE_EVENT = createKeyboardEvent('keydown', DELETE) as KeyboardEvent;
 
-                    const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
+                    const tagRemoveSpyFn = vi.spyOn(testComponent, 'tagRemove');
 
                     // Use the delete to remove the tag
                     tagInstance.handleKeydown(DELETE_EVENT);
@@ -428,7 +428,7 @@ describe(KbqTag.name, () => {
                 it('BACKSPACE does not emit the (removed) event', () => {
                     const BACKSPACE_EVENT = createKeyboardEvent('keydown', BACKSPACE) as KeyboardEvent;
 
-                    const tagRemoveSpyFn = jest.spyOn(testComponent, 'tagRemove');
+                    const tagRemoveSpyFn = vi.spyOn(testComponent, 'tagRemove');
 
                     // Use the delete to remove the tag
                     tagInstance.handleKeydown(BACKSPACE_EVENT);

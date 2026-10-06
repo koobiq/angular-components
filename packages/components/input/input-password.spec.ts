@@ -269,7 +269,7 @@ describe('KbqPasswordInput', () => {
         // Same Angular-20 pattern as input-number's stepper test: turn off
         // ComponentFixtureAutoDetect so the lifecycle throw originates from our
         // explicit detectChanges() call inside the expect-to-throw wrapper.
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        vi.spyOn(console, 'error').mockImplementation(() => {});
 
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({

@@ -1,7 +1,8 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "types": ["node", "jest"]
+        "types": ["node", "vitest/globals"]
     },
-    "include": ["**/*.spec.ts", "**/*.d.ts"]
+    "include": ["**/*.spec.ts", "**/*.d.ts"],
+    "exclude": ["node_modules", "dist", ".claude"]
 }

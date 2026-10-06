@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`KbqInlineEdit should add css class when label provided 1`] = `
+exports[`KbqInlineEdit > should add css class when label provided 1`] = `
 [
   "kbq-inline-edit",
   "kbq-inline-edit_view",
@@ -8,7 +8,7 @@ exports[`KbqInlineEdit should add css class when label provided 1`] = `
 ]
 `;
 
-exports[`KbqInlineEdit should setup with default parameters 1`] = `
+exports[`KbqInlineEdit > should setup with default parameters 1`] = `
 [
   "kbq-inline-edit",
   "kbq-inline-edit_view",

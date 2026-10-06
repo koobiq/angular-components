@@ -46,7 +46,7 @@ describe('KbqCalendar', () => {
         it(`should update today's date`, () => {
             let fakeToday = adapter.createDate(2018, 0, 1);
 
-            jest.spyOn(adapter, 'today').mockImplementation(() => fakeToday);
+            vi.spyOn(adapter, 'today').mockImplementation(() => fakeToday);
 
             calendarInstance.activeDate = fakeToday;
             calendarInstance.updateTodaysDate();
@@ -82,7 +82,7 @@ describe('KbqCalendar', () => {
         });
 
         it('should complete the stateChanges stream', () => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             const subscription = calendarInstance.stateChanges.subscribe({ complete: spy });
 
             fixture.destroy();
@@ -214,7 +214,7 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the minDate changes', () => {
             fixture.detectChanges();
-            const initSpyFn = jest.spyOn(calendarInstance.monthView(), 'init');
+            const initSpyFn = vi.spyOn(calendarInstance.monthView(), 'init');
 
             testComponent.minDate = adapter.createDate(2017, 10, 1);
             fixture.detectChanges();
@@ -224,7 +224,7 @@ describe('KbqCalendar', () => {
 
         it('should re-render the month view when the maxDate changes', () => {
             fixture.detectChanges();
-            const initSpyFn = jest.spyOn(calendarInstance.monthView(), 'init');
+            const initSpyFn = vi.spyOn(calendarInstance.monthView(), 'init');
 
             testComponent.maxDate = adapter.createDate(2017, 11, 1);
             fixture.detectChanges();

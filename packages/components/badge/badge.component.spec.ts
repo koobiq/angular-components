@@ -164,17 +164,16 @@ describe(KbqBadge.name, () => {
             expect(host.classList.contains(badgeRightIconClassName)).toBe(false);
         });
 
-        it('should add right icon class when icon is projected asynchronously', (done) => {
+        it('should add right icon class when icon is projected asynchronously', async () => {
             testComponent.showIcon.set(true);
             fixture.detectChanges();
 
-            setTimeout(() => {
-                const icon = badgeNativeElement.querySelector('[kbq-icon]')!;
+            await new Promise<void>((resolve) => setTimeout(resolve));
 
-                expect(icon.classList.contains(rightIconClassName)).toBe(true);
-                expect(badgeNativeElement.classList.contains(badgeRightIconClassName)).toBe(true);
-                done();
-            });
+            const icon = badgeNativeElement.querySelector('[kbq-icon]')!;
+
+            expect(icon.classList.contains(rightIconClassName)).toBe(true);
+            expect(badgeNativeElement.classList.contains(badgeRightIconClassName)).toBe(true);
         });
     });
 });

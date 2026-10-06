@@ -188,7 +188,7 @@ describe(createChangelogWriterOptions.name, () => {
     });
 
     it('skips a commit whose subject already exists in the changelog', () => {
-        const onSkipDuplicate = jest.fn();
+        const onSkipDuplicate = vi.fn();
         const commitGroups = [
             {
                 title: 'Bug Fixes',

@@ -21,7 +21,7 @@ describe('kbqListenForCaretMoves', () => {
     afterEach(() => field.remove());
 
     it.each(['input', 'keyup', 'click', 'select', 'scroll'])('should report a caret move on %s', (name) => {
-        const callback = jest.fn();
+        const callback = vi.fn();
 
         kbqListenForCaretMoves(renderer, field, callback);
         dispatchFakeEvent(field, name);
@@ -30,7 +30,7 @@ describe('kbqListenForCaretMoves', () => {
     });
 
     it('should ignore events that do not move the caret', () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
 
         kbqListenForCaretMoves(renderer, field, callback);
         dispatchFakeEvent(field, 'mouseenter');
@@ -39,7 +39,7 @@ describe('kbqListenForCaretMoves', () => {
     });
 
     it('should stop listening once torn down', () => {
-        const callback = jest.fn();
+        const callback = vi.fn();
         const stop = kbqListenForCaretMoves(renderer, field, callback);
 
         stop();

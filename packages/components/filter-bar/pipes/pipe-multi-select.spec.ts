@@ -311,7 +311,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -436,7 +436,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const toggleSpy = jest.spyOn(component, 'toggleSelectionAll');
+            const toggleSpy = vi.spyOn(component, 'toggleSelectionAll');
 
             component.select().keyManager.setActiveItem(0);
 
@@ -456,7 +456,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const toggleSpy = jest.spyOn(component, 'toggleSelectionAll');
+            const toggleSpy = vi.spyOn(component, 'toggleSelectionAll');
 
             component.toggleSelectionAllByEnterKey();
 
@@ -490,7 +490,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClearPipe.subscribe(spy);
 
@@ -506,7 +506,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -559,7 +559,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             ]);
             fixture.detectChanges();
 
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onClose();
             flush();
@@ -581,7 +581,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const openSpy = jest.spyOn(component.select(), 'open');
+            const openSpy = vi.spyOn(component.select(), 'open');
 
             component.open();
 
@@ -1040,9 +1040,9 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const toggleSpy = jest.spyOn(component, 'toggleSelectionAll');
+            const toggleSpy = vi.spyOn(component, 'toggleSelectionAll');
             const event = new KeyboardEvent('keydown');
-            const preventSpy = jest.spyOn(event, 'preventDefault');
+            const preventSpy = vi.spyOn(event, 'preventDefault');
 
             component.selectAllHandler(event);
 
@@ -1073,7 +1073,7 @@ describe('KbqPipeMultiSelectComponent', () => {
         }));
 
         it('should keep the value and emit nothing on Ctrl+A', fakeAsync(() => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(changeSpy);
             openSelect();
@@ -1381,7 +1381,7 @@ describe('KbqPipeMultiSelectComponent', () => {
         }));
 
         it('should append the missing locked values without emitting a change', () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
@@ -1434,7 +1434,7 @@ describe('KbqPipeMultiSelectComponent', () => {
         });
 
         it('should emit the cleared value carrying the locked values', () => {
-            const clearSpy = jest.fn();
+            const clearSpy = vi.fn();
 
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [SELECT_VALUES[0], SELECT_VALUES[1]] })

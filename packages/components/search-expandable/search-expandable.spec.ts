@@ -140,7 +140,7 @@ describe('KbqSearchExpandable', () => {
 
         it('should emit isOpenedChange on toggle', () => {
             const component = debugElement.componentInstance as KbqSearchExpandable;
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             component.isOpenedChange.subscribe(spy);
 
@@ -478,7 +478,7 @@ describe('KbqSearchExpandable', () => {
 
             const component = local.debugElement.query(By.directive(KbqSearchExpandable))
                 .componentInstance as KbqSearchExpandable;
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             component.isOpenedChange.subscribe(spy);
 
@@ -731,7 +731,7 @@ describe('KbqSearchExpandable', () => {
         }));
 
         it('should not echo a programmatic write back into valueChanges', fakeAsync(() => {
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             local.componentInstance.searchControl.valueChanges.subscribe(spy);
 
@@ -790,7 +790,7 @@ describe('KbqSearchExpandable', () => {
 
     describe('focus monitoring', () => {
         it('should monitor the host element once', () => {
-            const monitor = jest.spyOn(TestBed.inject(FocusMonitor), 'monitor');
+            const monitor = vi.spyOn(TestBed.inject(FocusMonitor), 'monitor');
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
@@ -801,7 +801,7 @@ describe('KbqSearchExpandable', () => {
         });
 
         it('should not monitor a control that starts disabled', () => {
-            const monitor = jest.spyOn(TestBed.inject(FocusMonitor), 'monitor');
+            const monitor = vi.spyOn(TestBed.inject(FocusMonitor), 'monitor');
             const local = TestBed.createComponent(TestSearchExpandableWithDisabledFormControl);
 
             local.detectChanges();

@@ -7,6 +7,7 @@ import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
 import * as docsExamplesLoader from '@koobiq/docs-examples/loader';
 import { axe } from 'jest-axe';
+import type { MockInstance } from 'vitest';
 import { DocsExamplePage } from './example-page';
 import { DOCS_EXAMPLE_PAGE_ROUTES } from './example-page.routes';
 
@@ -34,7 +35,7 @@ class SidepanelExample {
 class PageNotFound {}
 
 describe(DocsExamplePage.name, () => {
-    let loadExampleComponent: jest.SpyInstance;
+    let loadExampleComponent: MockInstance;
 
     const url = (): string => TestBed.inject(Router).url;
 
@@ -54,7 +55,7 @@ describe(DocsExamplePage.name, () => {
     beforeEach(() => {
         EXAMPLE_COMPONENTS[EXAMPLE_ID] = { title: 'Basic select' } as LiveExample;
 
-        loadExampleComponent = jest
+        loadExampleComponent = vi
             .spyOn(docsExamplesLoader, 'loadExampleComponent')
             .mockResolvedValue(BasicSelectExample);
 
@@ -71,7 +72,7 @@ describe(DocsExamplePage.name, () => {
 
     afterEach(() => {
         delete EXAMPLE_COMPONENTS[EXAMPLE_ID];
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     it('renders the example in its frame once its class has loaded', async () => {
@@ -131,7 +132,7 @@ describe(DocsExamplePage.name, () => {
     it('stops waiting for an example that fails to load', async () => {
         loadExampleComponent.mockRejectedValue(new Error('ChunkLoadError'));
 
-        const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
         const harness = await open(`/examples/${EXAMPLE_ID}`);
 
         expect(error).toHaveBeenCalledWith(expect.stringContaining(`Could not load example '${EXAMPLE_ID}'`));

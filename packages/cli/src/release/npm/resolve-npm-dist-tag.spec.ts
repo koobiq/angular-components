@@ -1,14 +1,15 @@
+import type { MockedFunction } from 'vitest';
 import { parseVersionName } from '../version-name/parse-version';
 import * as npmClient from './npm-client';
 import { resolveNpmDistTag } from './resolve-npm-dist-tag';
 
-jest.mock('./npm-client');
+vi.mock('./npm-client');
 
-const npmViewDistTag = npmClient.npmViewDistTag as jest.MockedFunction<typeof npmClient.npmViewDistTag>;
+const npmViewDistTag = npmClient.npmViewDistTag as MockedFunction<typeof npmClient.npmViewDistTag>;
 
 describe(resolveNpmDistTag.name, () => {
     afterEach(() => {
-        jest.resetAllMocks();
+        vi.resetAllMocks();
     });
 
     it('tags a version that outranks the published latest as "latest"', () => {

@@ -2,6 +2,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
+import type { Mock } from 'vitest';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsCopyButtonComponent } from './copy-button';
@@ -23,12 +24,12 @@ const provideDocsLocale = (locale: DocsLocale) => {
 
 describe(DocsCopyButtonComponent.name, () => {
     let fixture: ComponentFixture<DocsCopyButtonComponent>;
-    let copy: jest.Mock;
+    let copy: Mock;
 
     const control = (): HTMLElement => fixture.nativeElement.querySelector('[kbq-link]');
 
     beforeEach(() => {
-        copy = jest.fn().mockReturnValue(true);
+        copy = vi.fn().mockReturnValue(true);
 
         TestBed.configureTestingModule({
             imports: [DocsCopyButtonComponent],

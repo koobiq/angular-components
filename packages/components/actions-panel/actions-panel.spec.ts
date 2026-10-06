@@ -308,7 +308,7 @@ describe(KbqActionsPanelModule.name, () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         actionsPanelRef.afterClosed.subscribe(spy);
         componentInstance.close();
@@ -344,7 +344,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should complete beforeClosed after it emits', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const completeSpy = jest.fn();
+        const completeSpy = vi.fn();
 
         actionsPanelRef.beforeClosed.subscribe({ complete: completeSpy });
         componentInstance.close();
@@ -354,7 +354,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should not emit beforeClosed again when close is called a second time', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         actionsPanelRef.beforeClosed.subscribe(spy);
         componentInstance.close();
@@ -379,7 +379,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should replay beforeOpened to subscribers that missed the synchronous emission', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         // open() has already run by the time openFromTemplate() returns, so this subscription
         // happens after the real emission — it should still receive the replayed value.
@@ -390,7 +390,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should complete beforeOpened after it emits', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const completeSpy = jest.fn();
+        const completeSpy = vi.fn();
 
         actionsPanelRef.beforeOpened.subscribe({ complete: completeSpy });
         expect(completeSpy).toHaveBeenCalledTimes(1);
@@ -400,7 +400,7 @@ describe(KbqActionsPanelModule.name, () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         actionsPanelRef.afterOpened.subscribe(spy);
         await fixture.whenStable();
@@ -466,7 +466,7 @@ describe(KbqActionsPanelModule.name, () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const scrollStrategy: ScrollStrategy = {
             attach: () => {},
-            enable: jest.fn(),
+            enable: vi.fn(),
             disable: () => {}
         };
 
@@ -623,7 +623,7 @@ describe(KbqActionsPanelModule.name, () => {
     });
 
     it('should not reach for the global custom OverlayContainer at all when overlayContainer is provided', () => {
-        const getContainerElement = jest.spyOn(FakeOverlayContainer.prototype, 'getContainerElement');
+        const getContainerElement = vi.spyOn(FakeOverlayContainer.prototype, 'getContainerElement');
         const { componentInstance } = createComponent(ActionsPanelController, [
             { provide: OverlayContainer, useClass: FakeOverlayContainer }
         ]);

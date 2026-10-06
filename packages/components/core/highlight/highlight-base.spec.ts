@@ -29,7 +29,7 @@ describe('highlight', () => {
         });
 
         it('should call mark only on matched parts', () => {
-            const spy = jest.fn((text: string) => text.toUpperCase());
+            const spy = vi.fn((text: string) => text.toUpperCase());
 
             highlight('a b a', 'a', spy);
 
@@ -57,7 +57,7 @@ describe('highlight', () => {
         });
 
         it('should return escaped value without calling mark when keyword is empty or not a string', () => {
-            const spy = jest.fn((text: string) => `[${text}]`);
+            const spy = vi.fn((text: string) => `[${text}]`);
 
             expect(highlight('Tom & Jerry', '', spy)).toBe('Tom &amp; Jerry');
             expect(highlight('Tom & Jerry', null, spy)).toBe('Tom &amp; Jerry');
