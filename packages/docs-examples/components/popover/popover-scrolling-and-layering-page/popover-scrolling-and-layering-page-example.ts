@@ -1,6 +1,7 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 
@@ -9,7 +10,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
  */
 @Component({
     selector: 'popover-scrolling-and-layering-page-example',
-    imports: [KbqButtonModule, KbqTopBarModule, CdkScrollable, KbqPopoverModule],
+    imports: [KbqButtonModule, KbqTopBarModule, CdkScrollable, KbqOverlayLayer, KbqPopoverModule],
     template: `
         <kbq-top-bar>
             <div
@@ -23,7 +24,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             <div kbqTopBarSpacer></div>
         </kbq-top-bar>
 
-        <div class="example-text-container" cdk-scrollable>
+        <div class="example-text-container" cdk-scrollable kbqOverlayLayer>
             <p>
                 A popover is a transient graphical user interface element that appears on top of the current page's
                 content to present information, options, or actions related to a specific UI element, which is commonly

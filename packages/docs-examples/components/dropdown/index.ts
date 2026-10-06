@@ -10,6 +10,8 @@ import { DropdownOpenByArrowDownExample } from './dropdown-open-by-arrow-down/dr
 import { DropdownOverviewExample } from './dropdown-overview/dropdown-overview-example';
 import { DropdownRecursiveTemplateExample } from './dropdown-recursive-template/dropdown-recursive-template-example';
 import { DropdownSafeAreaExample } from './dropdown-safe-area/dropdown-safe-area-example';
+import { DropdownScrollingAndLayeringPageExample } from './dropdown-scrolling-and-layering-page/dropdown-scrolling-and-layering-page-example';
+import { DropdownScrollingAndLayeringExample } from './dropdown-scrolling-and-layering/dropdown-scrolling-and-layering-example';
 import { DropdownSlashMenuExample } from './dropdown-slash-menu/dropdown-slash-menu-example';
 import { DropdownWithFilterExample } from './dropdown-with-filter/dropdown-with-filter-example';
 import { DropdownWithFooterExample } from './dropdown-with-footer/dropdown-with-footer-example';
@@ -27,6 +29,8 @@ export {
     DropdownOverviewExample,
     DropdownRecursiveTemplateExample,
     DropdownSafeAreaExample,
+    DropdownScrollingAndLayeringExample,
+    DropdownScrollingAndLayeringPageExample,
     DropdownSlashMenuExample,
     DropdownWithFilterExample,
     DropdownWithFooterExample,
@@ -46,6 +50,8 @@ const EXAMPLES = [
     DropdownOpenByArrowDownExample,
     DropdownRecursiveTemplateExample,
     DropdownSafeAreaExample,
+    DropdownScrollingAndLayeringExample,
+    DropdownScrollingAndLayeringPageExample,
     DropdownWithFilterExample,
     DropdownXPositionExample,
     DropdownSlashMenuExample

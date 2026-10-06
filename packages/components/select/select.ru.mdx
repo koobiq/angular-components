@@ -221,9 +221,7 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 
 ### Наслоение
 
-По умолчанию выпадающее меню показывается поверх горизонтальных [Navbar](/ru/components/navbar) и [Topbar](/ru/components/top-bar), в остальных случаях — поверх соседних элементов.
-
-Чтобы меню не перекрывало нужный вам элемент при прокрутке, а скрывалось под ним, настройте положение через кастомный z-index или параметры смещения.
+По умолчанию выпадающее меню показывается поверх горизонтальных [Navbar](/ru/components/navbar) и [Topbar](/ru/components/top-bar). Чтобы при прокрутке оно уходило под них, как в примере ниже, пометьте область содержимого директивой `kbqOverlayLayer` — см. [Панели под липкой шапкой](/ru/components/core/overview#панели-под-липкой-шапкой).
 
 <Example id="select-scrolling-and-layering" />
 

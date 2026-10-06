@@ -1,5 +1,6 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 
@@ -8,7 +9,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
  */
 @Component({
     selector: 'select-scrolling-and-layering-page-example',
-    imports: [KbqTopBarModule, CdkScrollable, KbqSelectModule],
+    imports: [KbqTopBarModule, CdkScrollable, KbqOverlayLayer, KbqSelectModule],
     template: `
         <kbq-top-bar>
             <div
@@ -22,7 +23,7 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             <div kbqTopBarSpacer></div>
         </kbq-top-bar>
 
-        <div class="example-text-container layout-padding-left-xxl" cdk-scrollable>
+        <div class="example-text-container layout-padding-left-xxl" cdk-scrollable kbqOverlayLayer>
             <p>
                 The &lt;select> HTML element represents a control that provides a menu of options. The above example
                 shows typical &lt;select> usage. It is given an id attribute to enable it to be associated with a

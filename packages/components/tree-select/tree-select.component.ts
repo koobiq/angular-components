@@ -51,6 +51,7 @@ import {
     HOME,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
+    KBQ_OVERLAY_LAYERS,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
@@ -277,6 +278,7 @@ export class KbqTreeSelect
     private readonly renderer = inject(Renderer2);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
@@ -1418,6 +1420,9 @@ export class KbqTreeSelect
 
     /** Callback that is invoked when the overlay panel has been attached. */
     onAttached() {
+        // `cdkConnectedOverlay` creates and attaches the overlay in one go, so this is the first point it exists.
+        this.overlayLayers.adopt(this.overlayDir.overlayRef, this.elementRef.nativeElement);
+
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this.changeDetectorRef.detectChanges();
             this.setOverlayPosition();

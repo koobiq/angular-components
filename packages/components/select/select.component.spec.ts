@@ -47,6 +47,7 @@ import {
     KbqOption,
     KbqOptionBase,
     KbqOptionSelectionChange,
+    KbqOverlayLayer,
     KbqPanelMaxHeight,
     KbqPartialLocaleData,
     KbqRepositionScrollStrategy,
@@ -10291,5 +10292,95 @@ describe('KbqSelect', () => {
 
             expect(selectAllText()).toBe('Everything');
         });
+    });
+
+    describe('overlay layer', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqSelectModule, KbqOverlayLayer],
+            template: `
+                <div kbqOverlayLayer>
+                    <kbq-form-field>
+                        <kbq-select #inside placeholder="Inside">
+                            <kbq-option value="steak">Steak</kbq-option>
+                        </kbq-select>
+                    </kbq-form-field>
+                </div>
+                <kbq-form-field>
+                    <kbq-select #outside placeholder="Outside">
+                        <kbq-option value="pizza">Pizza</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            `
+        })
+        class SelectInOverlayLayer {
+            readonly inside = viewChild.required('inside', { read: KbqSelect });
+            readonly outside = viewChild.required('outside', { read: KbqSelect });
+        }
+
+        let fixture: ComponentFixture<SelectInOverlayLayer>;
+
+        const getLayer = (): HTMLElement =>
+            fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer');
+
+        const openPanel = (select: KbqSelect): HTMLElement => {
+            select.open();
+            fixture.detectChanges();
+            flush();
+
+            return select.panel()!.nativeElement.closest('.cdk-overlay-pane').parentElement;
+        };
+
+        const clickOutside = (): void => {
+            document.body.click();
+            // The rxjs `delay` of the closing actions runs on `setInterval`, which `flush` skips.
+            tick();
+            fixture.detectChanges();
+        };
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([SelectInOverlayLayer]);
+            fixture = TestBed.createComponent(SelectInOverlayLayer);
+            fixture.detectChanges();
+            flush();
+        }));
+
+        it('should render the panel of a select inside the element into its overlay layer', fakeAsync(() => {
+            const overlayHost = openPanel(fixture.componentInstance.inside());
+
+            expect(overlayHost.parentElement).toBe(getLayer());
+        }));
+
+        it('should keep the panel of a select outside the element in the application-wide container', fakeAsync(() => {
+            const overlayHost = openPanel(fixture.componentInstance.outside());
+
+            expect(overlayHost.parentElement).toBe(overlayContainerElement);
+        }));
+
+        it('should close the layered panel on an outside click while other overlays are open', fakeAsync(() => {
+            const select = fixture.componentInstance.inside();
+            const otherOverlays = [document.createElement('div'), document.createElement('div')];
+
+            openPanel(select);
+            overlayContainerElement.append(...otherOverlays);
+            clickOutside();
+
+            expect(select.panelOpen).toBe(false);
+
+            otherOverlays.forEach((overlay) => overlay.remove());
+        }));
+
+        it('should keep the layered panel open on an outside click while a modal is open', fakeAsync(() => {
+            const select = fixture.componentInstance.inside();
+            const modalOverlay = document.createElement('div');
+
+            modalOverlay.classList.add('kbq-modal-overlay');
+            openPanel(select);
+            overlayContainerElement.appendChild(modalOverlay);
+            clickOutside();
+
+            expect(select.panelOpen).toBe(true);
+
+            modalOverlay.remove();
+        }));
     });
 });

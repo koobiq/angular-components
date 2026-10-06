@@ -418,7 +418,7 @@ export class MyTrigger {
 
 **`.cdk-overlay-container_dropdown` rules in your stylesheets** are dead — the class is never applied now. This is reported as a warning. If the rule was an override neutralising the demotion, it is simply redundant.
 
-**Panels that used to slide under your sticky chrome now render on top of it.** If you relied on the old behaviour, lower your header below the overlay container z-index (the library ships `$overlay-container-z-index: 1000`) rather than trying to reinstate the demotion — it lowered every overlay, not just the panel.
+**Panels that used to slide under your sticky chrome now render on top of it.** To get that back, mark the content area below `kbq-navbar` / `kbq-top-bar` with `kbqOverlayLayer` from `@koobiq/components/core` — see [Panels under a sticky header](/en/components/core/overview#panels-under-a-sticky-header). Unlike the demotion, it moves only the panels opened from inside that area: modals, sidepanels, toasts and tooltips stay above the bars.
 
 **`kbq-select` and popover panels inside `kbq-navbar` / `kbq-top-bar` are fixed by this release.** They applied the demotion unconditionally and had no opt-out, so they rendered behind the very chrome that contained them. No action needed — this is the bug the removal fixes.
 

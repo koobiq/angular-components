@@ -1,6 +1,7 @@
 import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
 import { E2eFormHorizontal } from 'packages/components/core/forms/e2e';
+import { E2eOverlayLayerGlobalOverlays, E2eOverlayLayerStickyBar } from 'packages/components/core/overlay/e2e';
 import { E2eTypographyStyles } from 'packages/components/core/styles/typography/e2e';
 import {
     E2eNativeScrollbar,
@@ -505,6 +506,8 @@ const components: Record<string, Type<unknown>> = {
     E2eInlineEditSelectChain,
     E2eInlineEditInteractiveContent,
     E2eFormHorizontal,
+    E2eOverlayLayerStickyBar,
+    E2eOverlayLayerGlobalOverlays,
     E2eTypographyStyles,
     E2eTreeTwoLineNode,
     E2eTreeOptionActionVisibility,

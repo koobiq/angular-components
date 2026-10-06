@@ -2545,6 +2545,9 @@ export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponen
 export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
 
 // @public
+export const KBQ_OVERLAY_LAYERS: InjectionToken<KbqOverlayLayers>;
+
+// @public
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
 
 // @public (undocumented)
@@ -3838,6 +3841,25 @@ export class KbqOverflowShadowTop {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowShadowTop, "[kbqOverflowShadowTop]", ["kbqOverflowShadowTop"], { "ref": { "alias": "kbqOverflowShadowTop"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowTop, never>;
+}
+
+// @public
+export class KbqOverlayLayer implements OnDestroy {
+    constructor();
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverlayLayer, "[kbqOverlayLayer]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverlayLayer, never>;
+}
+
+// @public
+export type KbqOverlayLayerOrigin = Element | (() => Element | null | undefined);
+
+// @public
+export interface KbqOverlayLayers {
+    adopt(overlayRef: OverlayRef, origin: KbqOverlayLayerOrigin): void;
 }
 
 // @public

@@ -236,6 +236,34 @@ Limitations:
 
 The full description, including a scenario with one shared container for all micro-frontends, is on the [Toast](/en/components/toast) page.
 
+### Panels under a sticky header
+
+Pop-up panels render into the application-wide overlay container (`z-index: 1000`), above `kbq-top-bar` and `kbq-navbar` (`990`). To have the panels opened from the page content slide under the bars while the content scrolls, mark the content area with `kbqOverlayLayer`:
+
+```html
+<kbq-top-bar>…</kbq-top-bar>
+
+<main kbqOverlayLayer>
+    <router-outlet />
+</main>
+```
+
+```ts
+import { KbqOverlayLayer } from '@koobiq/components/core';
+```
+
+The panels of select, tree-select, timezone select, dropdown, popover, autocomplete, datepicker and inline edit whose trigger is inside the marked element move into a layer of their own with `z-index: var(--kbq-overlay-layer-z-index, 980)`; the variable can be set on the element or any of its ancestors. Panels opened from those panels follow them. Modals, sidepanels, toasts, tooltips and the panels opened outside the element, the bars included, stay above the bars.
+
+Conditions:
+
+- the bars are outside the marked element;
+- neither the element nor its ancestors create a containing block for fixed elements: `transform`, `filter`, `perspective`, `contain`, `container-type`;
+- neither the element nor its ancestors raise it above the bars with `z-index`.
+
+Layered panels become descendants of the marked element: their events bubble through it, and inherited CSS properties come from it. The backdrop of such a panel also stays under the bars, so the bars remain clickable while the panel is open.
+
+<Example id="dropdown-scrolling-and-layering" />
+
 ### Scroll shadows
 
 The **Overflow Shadow** directives show the edges of a scrollable area. A shadow appears at a header or footer when hidden content remains in the corresponding direction.

@@ -64,26 +64,29 @@ the toolbar itself stick, set `--kbq-top-bar-inset-block-start: 0` and put it in
 `--kbq-top-bar-position` is already `sticky`, but a sticky box is only offset once it has an inset, so with
 the default `auto` the toolbar lays out exactly like `position: relative`.
 
+Panels opened from the page content paint above the toolbar. To have them slide under it, see
+[Panels under a sticky header](/en/components/core/overview#panels-under-a-sticky-header).
+
 ### CSS variables
 
 The inputs cover the shadow and the accessible name; everything else is configured through custom
 properties, set on `kbq-top-bar` itself or on any of its ancestors.
 
-| Variable                                  | Default                                    | Description                                                                                                                                          |
-| ----------------------------------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `--kbq-top-bar-z-index`                   | `990`                                      | Layer of the toolbar. It sits above page content and below every CDK overlay (`1000`), so dropdown, select and popover panels always paint above it. |
-| `--kbq-top-bar-position`                  | `sticky`                                   | `position` of the host. On its own it changes nothing — see `--kbq-top-bar-inset-block-start`.                                                       |
-| `--kbq-top-bar-inset-block-start`         | `auto`                                     | Distance a sticky toolbar keeps from the top of its scrolling ancestor. `auto` imposes no constraint, so the toolbar does not stick.                 |
-| `--kbq-top-bar-padding-vertical`          | `var(--kbq-size-m)`                        | Vertical padding of the toolbar.                                                                                                                     |
-| `--kbq-top-bar-padding-horizontal`        | `var(--kbq-size-xxl)`                      | Horizontal padding of the toolbar.                                                                                                                   |
-| `--kbq-top-bar-border-radius`             | `0`                                        | Corner radius of the toolbar.                                                                                                                        |
-| `--kbq-top-bar-spacer-min-width`          | `80px`                                     | Width of `[kbqTopBarSpacer]`, the guaranteed clearance between the two sides.                                                                        |
-| `--kbq-top-bar-container-start-min-width` | `0`                                        | Width the `start` container never shrinks below. Set it whenever the left-hand content has to stay readable in a narrow toolbar.                     |
-| `--kbq-top-bar-container-start-gap`       | `0`                                        | Gap between the elements of the `start` container.                                                                                                   |
-| `--kbq-top-bar-container-end-gap`         | `var(--kbq-size-s)`                        | Gap between the elements of the `end` container, and between the overflowing action buttons.                                                         |
-| `--kbq-top-bar-background`                | `var(--kbq-background-bg)`                 | Background of the toolbar.                                                                                                                           |
-| `--kbq-top-bar-shadow-bottom`             | `var(--kbq-shadow-overflow-normal-bottom)` | Shadow drawn while `withShadow` is set.                                                                                                              |
-| `--kbq-top-bar-shadow-transition`         | `ease-out 300ms`                           | Transition of that shadow.                                                                                                                           |
+| Variable                                  | Default                                    | Description                                                                                                                          |
+| ----------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `--kbq-top-bar-z-index`                   | `990`                                      | Layer of the toolbar: above page content and the `kbqOverlayLayer` layer (`980`), below the CDK overlay container (`1000`).          |
+| `--kbq-top-bar-position`                  | `sticky`                                   | `position` of the host. On its own it changes nothing — see `--kbq-top-bar-inset-block-start`.                                       |
+| `--kbq-top-bar-inset-block-start`         | `auto`                                     | Distance a sticky toolbar keeps from the top of its scrolling ancestor. `auto` imposes no constraint, so the toolbar does not stick. |
+| `--kbq-top-bar-padding-vertical`          | `var(--kbq-size-m)`                        | Vertical padding of the toolbar.                                                                                                     |
+| `--kbq-top-bar-padding-horizontal`        | `var(--kbq-size-xxl)`                      | Horizontal padding of the toolbar.                                                                                                   |
+| `--kbq-top-bar-border-radius`             | `0`                                        | Corner radius of the toolbar.                                                                                                        |
+| `--kbq-top-bar-spacer-min-width`          | `80px`                                     | Width of `[kbqTopBarSpacer]`, the guaranteed clearance between the two sides.                                                        |
+| `--kbq-top-bar-container-start-min-width` | `0`                                        | Width the `start` container never shrinks below. Set it whenever the left-hand content has to stay readable in a narrow toolbar.     |
+| `--kbq-top-bar-container-start-gap`       | `0`                                        | Gap between the elements of the `start` container.                                                                                   |
+| `--kbq-top-bar-container-end-gap`         | `var(--kbq-size-s)`                        | Gap between the elements of the `end` container, and between the overflowing action buttons.                                         |
+| `--kbq-top-bar-background`                | `var(--kbq-background-bg)`                 | Background of the toolbar.                                                                                                           |
+| `--kbq-top-bar-shadow-bottom`             | `var(--kbq-shadow-overflow-normal-bottom)` | Shadow drawn while `withShadow` is set.                                                                                              |
+| `--kbq-top-bar-shadow-transition`         | `ease-out 300ms`                           | Transition of that shadow.                                                                                                           |
 
 ### Accessibility
 

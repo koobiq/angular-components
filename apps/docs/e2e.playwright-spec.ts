@@ -240,7 +240,7 @@ test.describe('docs app', () => {
     });
 
     // Pop-ups are layered against the page they are on, so these examples frame the page of another example.
-    for (const component of ['popover', 'select']) {
+    for (const component of ['dropdown', 'popover', 'select']) {
         test(`frames the layering demo into the ${component} overview`, async ({ page }) => {
             const errors = collectErrors(page);
 
@@ -257,6 +257,7 @@ test.describe('docs app', () => {
             const demo = examplePage.locator(`${component}-scrolling-and-layering-page-example`);
 
             await expect(demo.locator('kbq-top-bar')).toBeVisible();
+            await expect(demo.locator('[kbqOverlayLayer]')).toHaveCount(1);
             await expect(frame.locator('docs-navbar')).toHaveCount(0);
 
             // The demo is sized to the frame, which has no room for the padding of the other examples.
