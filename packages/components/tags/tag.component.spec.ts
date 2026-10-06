@@ -449,19 +449,23 @@ describe(KbqTag.name, () => {
         });
     });
 
-    it('should start editing on double click', () => {
-        const { debugElement } = createComponent(TestTag);
+    it('should start editing on double click', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         expect(isTagEditing(debugElement)).toBeFalsy();
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
+        await fixture.whenStable();
+
         expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
-    it('should start editing on ENTER press', () => {
-        const { debugElement } = createComponent(TestTag);
+    it('should start editing on ENTER press', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         expect(isTagEditing(debugElement)).toBeFalsy();
@@ -469,17 +473,22 @@ describe(KbqTag.name, () => {
         tag.focus();
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
 
+        await fixture.whenStable();
+
         expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
-    it('should start editing on F2 press', () => {
-        const { debugElement } = createComponent(TestTag);
+    it('should start editing on F2 press', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         expect(isTagEditing(debugElement)).toBeFalsy();
 
         tag.focus();
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: F2 }));
+
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeTruthy();
     });
@@ -495,15 +504,20 @@ describe(KbqTag.name, () => {
         );
     });
 
-    it('should cancel editing on ESCAPE press', () => {
-        const { debugElement } = createComponent(TestTag);
+    it('should cancel editing on ESCAPE press', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
+        await fixture.whenStable();
+
         expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ESCAPE }));
+
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeFalsy();
     });
@@ -542,33 +556,43 @@ describe(KbqTag.name, () => {
         );
     }));
 
-    it('should submit editing on ENTER press', () => {
-        const { debugElement } = createComponent(TestTag);
+    it('should submit editing on ENTER press', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
 
+        await fixture.whenStable();
+
         expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
-    it('should submit editing on kbqEditSubmit click', () => {
-        const { debugElement } = createComponent(TestTag);
+    it('should submit editing on kbqEditSubmit click', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditSubmitElement(debugElement).dispatchEvent(new MouseEvent('click'));
 
+        await fixture.whenStable();
+
         expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
-    it('should prevent submit editing by preventEditSubmit property', () => {
+    it('should prevent submit editing by preventEditSubmit property', async () => {
         const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
         const tag = getTagElement(debugElement);
@@ -580,32 +604,44 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
 
+        await fixture.whenStable();
+
         expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
+
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeTruthy();
     });
 
-    it('should emit KbqTagEditChange event when editing submitted', () => {
-        const { debugElement, componentInstance } = createComponent(TestTag);
+    it('should emit KbqTagEditChange event when editing submitted', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
 
         getTagElement(debugElement).dispatchEvent(new MouseEvent('dblclick'));
 
+        await fixture.whenStable();
+
         getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
+
+        await fixture.whenStable();
 
         expect(componentInstance.editChange).toHaveBeenCalledWith(
             expect.objectContaining({ type: 'submit', reason: 'enter' })
         );
     });
 
-    it('should stay editable when pressing BACKSPACE/SPACE/DELETE keys', () => {
-        const { debugElement } = createComponent(TestTag);
+    it('should stay editable when pressing BACKSPACE/SPACE/DELETE keys', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         expect(isTagEditing(debugElement)).toBeFalsy();
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeTruthy();
 
@@ -614,6 +650,8 @@ describe(KbqTag.name, () => {
         input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: BACKSPACE }));
         input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
         input.dispatchEvent(new KeyboardEvent('keydown', { keyCode: DELETE }));
+
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeTruthy();
     });
@@ -631,11 +669,14 @@ describe(KbqTag.name, () => {
         expect(tag.classList.contains('cdk-keyboard-focused')).toBeTruthy();
     });
 
-    it('should select tag in tag-list on Ctrl + click', () => {
-        const { debugElement } = createComponent(TestTagInsideTagList);
+    it('should select tag in tag-list on Ctrl + click', async () => {
+        const fixture = createComponent(TestTagInsideTagList);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
+
+        await fixture.whenStable();
 
         expect(isTagSelected(debugElement)).toBeTruthy();
     });
@@ -717,20 +758,26 @@ describe(KbqTag.name, () => {
         expect(isTagSelected(debugElement)).toBeTruthy();
     });
 
-    it('should select tag in tag-list on Cmd + click', () => {
-        const { debugElement } = createComponent(TestTagInsideTagList);
+    it('should select tag in tag-list on Cmd + click', async () => {
+        const fixture = createComponent(TestTagInsideTagList);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('click', { metaKey: true }));
 
+        await fixture.whenStable();
+
         expect(isTagSelected(debugElement)).toBeTruthy();
     });
 
-    it('should select tag in tag-list on Shift + click', () => {
-        const { debugElement } = createComponent(TestTagInsideTagList);
+    it('should select tag in tag-list on Shift + click', async () => {
+        const fixture = createComponent(TestTagInsideTagList);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        await fixture.whenStable();
 
         expect(isTagSelected(debugElement)).toBeTruthy();
     });
@@ -771,10 +818,12 @@ describe(KbqTag.name, () => {
         expect(isTagSelected(debugElement)).toBeFalsy();
 
         tag.dispatchEvent(new MouseEvent('click'));
+        fixture.detectChanges();
 
         expect(isTagSelected(debugElement)).toBeTruthy();
 
         tag.dispatchEvent(new MouseEvent('click'));
+        fixture.detectChanges();
 
         expect(isTagSelected(debugElement)).toBeFalsy();
     }));
@@ -983,7 +1032,7 @@ describe(KbqTag.name, () => {
         expect(isTagSelected(debugElement)).toBeFalsy();
     }));
 
-    it('should toggle tag selection on SPACE keydown', () => {
+    it('should toggle tag selection on SPACE keydown', async () => {
         const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
         const tag = getTagElement(debugElement);
@@ -995,9 +1044,13 @@ describe(KbqTag.name, () => {
 
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
 
+        await fixture.whenStable();
+
         expect(isTagSelected(debugElement)).toBeTruthy();
 
         tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        await fixture.whenStable();
 
         expect(isTagSelected(debugElement)).toBeFalsy();
     });

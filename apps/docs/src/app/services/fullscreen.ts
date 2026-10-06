@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { afterNextRender, DestroyRef, inject, Injectable, NgZone, signal } from '@angular/core';
+import { afterNextRender, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
 
@@ -14,7 +14,6 @@ import { fromEvent } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class DocsFullscreenService {
     private readonly document = inject(DOCUMENT);
-    private readonly ngZone = inject(NgZone);
     private readonly destroyRef = inject(DestroyRef);
 
     private readonly availableState = signal(false);
@@ -35,11 +34,9 @@ export class DocsFullscreenService {
             );
             this.elementState.set(this.document.fullscreenElement);
 
-            this.ngZone.runOutsideAngular(() => {
-                fromEvent(this.document, 'fullscreenchange')
-                    .pipe(takeUntilDestroyed(this.destroyRef))
-                    .subscribe(() => this.elementState.set(this.document.fullscreenElement));
-            });
+            fromEvent(this.document, 'fullscreenchange')
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.elementState.set(this.document.fullscreenElement));
         });
     }
 

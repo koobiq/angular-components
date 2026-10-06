@@ -5,6 +5,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -15,6 +16,7 @@ import {
     EventEmitter,
     forwardRef,
     inject,
+    Injector,
     Input,
     input,
     IterableDiffer,
@@ -199,6 +201,7 @@ export class KbqTreeSelection
     private scheduler = inject(AsyncScheduler);
     private clipboard = inject(Clipboard, { optional: true });
     private readonly platform = inject(Platform);
+    private readonly injector = inject(Injector);
     protected readonly focusMonitor = inject(FocusMonitor);
 
     /**
@@ -702,6 +705,8 @@ export class KbqTreeSelection
                 this.onChange(this.getSelectedValues());
 
                 this.renderedOptions.notifyOnChanges();
+                // The "select all" row renders the selection state.
+                this.changeDetectorRef.markForCheck();
             });
     }
 
@@ -1067,6 +1072,10 @@ export class KbqTreeSelection
         this.sortedNodes = this.getSortedNodes(viewContainer);
 
         this.changeDetectorRef.detectChanges();
+        // The options are a content query of the view declaring this tree, refreshed only with that view. This mostly
+        // runs while change detection does, when a `markForCheck` would not bring it back to a view it has passed,
+        // and without zone.js nothing else would: the rendered nodes would never reach `renderedOptions`.
+        afterNextRender(() => this.changeDetectorRef.markForCheck(), { injector: this.injector });
     }
 
     /** @docs-private */
@@ -1341,6 +1350,7 @@ export class KbqTreeSelection
 
     private updateTabIndex(): void {
         this._tabIndex = this.renderedOptions.length === 0 ? -1 : 0;
+        this.changeDetectorRef.markForCheck();
     }
 
     private updateRenderedOptions = () => {
@@ -1356,7 +1366,11 @@ export class KbqTreeSelection
         }
 
         this.sortedNodes.forEach((node) => {
-            const found = this.unorderedOptions.find((option) => option.value === this.treeControl.getValue(node));
+            // By node first: nodes do not have to carry distinct values, and a value match would hand every node with
+            // the same value the first option holding it.
+            const found =
+                this.unorderedOptions.find((option) => option.data === node) ??
+                this.unorderedOptions.find((option) => option.value === this.treeControl.getValue(node));
 
             if (found) {
                 orderedOptions.push(found);
@@ -1384,6 +1398,9 @@ export class KbqTreeSelection
     private allowFocusEscape() {
         if (this._tabIndex !== -1) {
             this._tabIndex = -1;
+            // Written to the DOM right away, as `KbqTagList` does: the browser moves the focus as soon as this Tab is
+            // handled, and the binding is only applied by the change detection that runs after it.
+            this.elementRef.nativeElement.tabIndex = -1;
 
             clearTimeout(this.restoreTabIndexTimeout);
 

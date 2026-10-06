@@ -385,6 +385,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
         this.showEndCalendar = false;
 
         this.initFormGroup();
+        this.changeDetectorRef.markForCheck();
 
         setTimeout(() => {
             if (this.destroyed) return;
@@ -401,6 +402,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     showList() {
         this.isListMode = true;
+        this.changeDetectorRef.markForCheck();
 
         setTimeout(() => this.listSelection()?.focus());
         this.popover().updatePosition(true);
@@ -422,6 +424,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     onFocusStartInput() {
         this.showStartCalendar = true;
         this.showEndCalendar = false;
+        this.changeDetectorRef.markForCheck();
 
         this.popover().updatePosition(true);
     }
@@ -429,11 +432,13 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     onFocusEndInput() {
         this.showEndCalendar = true;
         this.showStartCalendar = false;
+        this.changeDetectorRef.markForCheck();
     }
 
     hideCalendars() {
         this.showStartCalendar = false;
         this.showEndCalendar = false;
+        this.changeDetectorRef.markForCheck();
     }
 
     /**

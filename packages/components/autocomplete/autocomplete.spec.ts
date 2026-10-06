@@ -5,7 +5,6 @@ import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
-    NgZone,
     OnDestroy,
     OnInit,
     Provider,
@@ -43,7 +42,6 @@ import {
     KbqPanelMaxWidth,
     KbqPanelWidth,
     KbqTextQuery,
-    MockNgZone,
     RIGHT_ARROW,
     SPACE,
     TAB,
@@ -74,7 +72,6 @@ import {
 describe('KbqAutocomplete', () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
-    let zone: MockNgZone;
 
     // Creates a test component fixture.
     function createComponent<T>(component: Type<T>, providers: Provider[] = []) {
@@ -89,7 +86,6 @@ describe('KbqAutocomplete', () => {
                 component
             ],
             providers: [
-                { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
                 { provide: KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS, useFactory: () => ({ autoActiveFirstOption: false }) },
                 ...providers
             ]
@@ -203,7 +199,7 @@ describe('KbqAutocomplete', () => {
         it('should close the panel when the user clicks away', fakeAsync(() => {
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
             dispatchFakeEvent(document, 'click');
 
             expect(fixture.componentInstance.trigger().panelOpen).toBeFalsy();
@@ -224,7 +220,7 @@ describe('KbqAutocomplete', () => {
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
             flush();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
@@ -239,7 +235,7 @@ describe('KbqAutocomplete', () => {
         it('should close the panel when a newly created option is clicked', fakeAsync(() => {
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             // Filter down the option list to a subset of original options ('Alabama', 'California')
             typeInElement('al', input);
@@ -256,6 +252,10 @@ describe('KbqAutocomplete', () => {
             typeInElement('al', input);
             fixture.detectChanges();
             tick();
+
+            // Picking an option closes the panel.
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
             options[1].click();
@@ -526,7 +526,7 @@ describe('KbqAutocomplete', () => {
         it('should update control value as user types with input value', () => {
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             typeInElement('a', input);
             fixture.detectChanges();
@@ -554,7 +554,7 @@ describe('KbqAutocomplete', () => {
         it('should update control value when option is selected with option value', fakeAsync(() => {
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -567,7 +567,7 @@ describe('KbqAutocomplete', () => {
         it('should update the control back to a string if user types after an option is selected', fakeAsync(() => {
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -584,7 +584,7 @@ describe('KbqAutocomplete', () => {
         it('should fill the text field with display value when an option is selected', () => {
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -597,7 +597,7 @@ describe('KbqAutocomplete', () => {
         it('should fill the text field with value if displayWith is not set', () => {
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             fixture.componentInstance.displayWith = null;
             fixture.componentInstance.options()[1].value = 'test value';
@@ -661,7 +661,7 @@ describe('KbqAutocomplete', () => {
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -731,7 +731,7 @@ describe('KbqAutocomplete', () => {
             trigger = fixture.componentInstance.trigger();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
             panel = fixture.componentInstance.panel();
         });
 
@@ -1077,7 +1077,6 @@ describe('KbqAutocomplete', () => {
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
             fixture.detectChanges();
 
             const inputBottom = inputReference.getBoundingClientRect().bottom;
@@ -1146,7 +1145,7 @@ describe('KbqAutocomplete', () => {
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             typeInElement('f', input);
             fixture.detectChanges();
@@ -1177,7 +1176,6 @@ describe('KbqAutocomplete', () => {
 
                 dispatchFakeEvent(inputEl, 'focusin');
                 fixture.detectChanges();
-                zone.simulateZoneExit();
                 fixture.detectChanges();
 
                 const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
@@ -1227,12 +1225,14 @@ describe('KbqAutocomplete', () => {
 
             options[0].click();
             fixture.detectChanges();
-            zone.simulateZoneExit();
-            fixture.detectChanges();
 
             const componentOptions = fixture.componentInstance.options();
 
             expect(componentOptions[0].selected).toBe(true);
+
+            // Picking an option closes the panel.
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
             options[1].click();
@@ -1251,14 +1251,16 @@ describe('KbqAutocomplete', () => {
 
             options[0].click();
             fixture.detectChanges();
-            zone.simulateZoneExit();
-            fixture.detectChanges();
 
             const componentOptions = fixture.componentInstance.options();
 
             componentOptions.forEach((option) => vi.spyOn(option, 'deselect'));
 
             expect(componentOptions[0].selected).toBe(true);
+
+            // Picking an option closes the panel.
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
             options[1].click();
@@ -1278,7 +1280,6 @@ describe('KbqAutocomplete', () => {
             preselectFixture.detectChanges();
             preselectFixture.componentInstance.trigger().open();
             preselectFixture.detectChanges();
-            zone.simulateZoneExit();
             preselectFixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('kbq-option')[0].classList).toContain('kbq-active');
@@ -1297,7 +1298,6 @@ describe('KbqAutocomplete', () => {
             overrideFixture.detectChanges();
             overrideFixture.componentInstance.trigger().open();
             overrideFixture.detectChanges();
-            zone.simulateZoneExit();
             overrideFixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('kbq-option')[0].classList).not.toContain('kbq-active');
@@ -1314,7 +1314,6 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('kbq-option')[0].classList).toContain('kbq-active');
@@ -1335,13 +1334,13 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
             option.click();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             expect(spy).toHaveBeenCalledWith(expect.any(KbqOptionSelectionChange));
         });
@@ -1357,7 +1356,6 @@ describe('KbqAutocomplete', () => {
             typeInElement('Cali', input);
             fixture.detectChanges();
             tick();
-            zone.simulateZoneExit();
             fixture.detectChanges();
 
             const inputBottom = inputReference.getBoundingClientRect().bottom;
@@ -1391,13 +1389,15 @@ describe('KbqAutocomplete', () => {
 
             input = fixture.debugElement.query(By.css('input')).nativeElement;
 
-            fixture.componentInstance.trigger().open();
-            fixture.detectChanges();
-            flush();
-
             trigger = fixture.componentInstance.trigger();
             closingActionFn = vi.fn();
+            // Ahead of the trigger's own subscription, made once the panel renders: that one closes the panel, and
+            // the outside click and Tab streams only report a panel that is still attached.
             closingActionsSub = trigger.panelClosingActions.subscribe(closingActionFn);
+
+            trigger.open();
+            fixture.detectChanges();
+            flush();
         }));
 
         afterEach(() => closingActionsSub.unsubscribe());
@@ -1422,7 +1422,7 @@ describe('KbqAutocomplete', () => {
             const tabEvent = createKeyboardEvent('keydown', TAB);
 
             input.focus();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             trigger.handleKeydown(tabEvent);
 
@@ -1809,7 +1809,6 @@ describe('KbqAutocomplete', () => {
 
         fixture.detectChanges();
         fixture.componentInstance.trigger().open();
-        zone.simulateZoneExit();
         fixture.detectChanges();
 
         const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
@@ -1863,7 +1862,7 @@ describe('KbqAutocomplete', () => {
         fixture.detectChanges();
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
-        zone.simulateZoneExit();
+        fixture.detectChanges();
 
         const overlayRect = overlayContainerElement.querySelector('.cdk-overlay-pane')!.getBoundingClientRect();
         const originRect = fixture.nativeElement.querySelector('.origin').getBoundingClientRect();
@@ -1877,7 +1876,7 @@ describe('KbqAutocomplete', () => {
         fixture.detectChanges();
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
-        zone.simulateZoneExit();
+        fixture.detectChanges();
 
         fixture.componentInstance.trigger().closePanel();
         fixture.detectChanges();
@@ -1887,7 +1886,7 @@ describe('KbqAutocomplete', () => {
 
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
-        zone.simulateZoneExit();
+        fixture.detectChanges();
 
         const overlayRect = overlayContainerElement.querySelector('.cdk-overlay-pane')!.getBoundingClientRect();
         const originRect = fixture.nativeElement.querySelector('.origin').getBoundingClientRect();
@@ -1930,7 +1929,7 @@ describe('KbqAutocomplete', () => {
         fixture.detectChanges();
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
-        zone.simulateZoneExit();
+        fixture.detectChanges();
 
         expect(fixture.componentInstance.trigger().panelOpen).toBe(true);
 
@@ -1998,7 +1997,7 @@ describe('KbqAutocomplete', () => {
         expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(500);
     });
 
-    it('should re-measure the panel min-width once the layout is stable after opening', () => {
+    it('should re-measure the panel min-width once the panel has rendered', () => {
         const widthFixture = createComponent(SimpleAutocomplete);
 
         widthFixture.componentInstance.width = 300;
@@ -2010,18 +2009,16 @@ describe('KbqAutocomplete', () => {
         const rectSpy = vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
-        widthFixture.detectChanges();
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        // The create-time measurement is applied before the layout settles.
+        // The create-time measurement is applied before the panel renders.
         expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(300);
 
-        // The host reaches its final width after the layout settles.
+        // The host reaches its final width by the time the panel renders.
         rectSpy.mockReturnValue({ width: 500 } as DOMRect);
 
-        // The `zone.onStable` callback re-measures the panel once the layout is stable.
-        zone.simulateZoneExit();
+        // The panel is re-measured after it renders.
         widthFixture.detectChanges();
 
         expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(500);
@@ -2190,7 +2187,6 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('kbq-option')[1].classList).toContain('kbq-active');
@@ -2203,7 +2199,6 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('kbq-option')[2].classList).toContain('kbq-active');
@@ -2328,7 +2323,7 @@ describe('KbqAutocomplete', () => {
         const openWithActiveOption = (fixture: ComponentFixture<SimpleAutocomplete | AutocompleteOnTextarea>) => {
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
 
             dispatchKeyboardEvent(fixture.nativeElement.querySelector('input, textarea'), 'keydown', DOWN_ARROW);
             fixture.detectChanges();
@@ -2707,7 +2702,6 @@ describe('KbqAutocomplete', () => {
             textarea.setSelectionRange(caret, caret);
             dispatchFakeEvent(textarea, 'input');
             fixture.detectChanges();
-            zone.simulateZoneExit();
             fixture.detectChanges();
         };
 
@@ -2906,7 +2900,7 @@ describe('KbqAutocomplete', () => {
 
             component.trigger().open();
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
             tick();
 
             getOptions()[0].click();
@@ -3121,7 +3115,7 @@ describe('KbqAutocomplete', () => {
             textarea.setSelectionRange(value.length, value.length);
             dispatchFakeEvent(textarea, 'input');
             fixture.detectChanges();
-            zone.simulateZoneExit();
+            fixture.detectChanges();
             tick();
             fixture.detectChanges();
         };
@@ -3480,7 +3474,7 @@ class AutocompleteWithNumbers {
         </kbq-form-field>
 
         <kbq-autocomplete #auto="kbqAutocomplete">
-            @for (option of options; track option) {
+            @for (option of options(); track option) {
                 <kbq-option [value]="option">
                     {{ option }}
                 </kbq-option>
@@ -3491,12 +3485,10 @@ class AutocompleteWithNumbers {
 })
 class AutocompleteWithOnPushDelay implements OnInit {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
-    options: string[];
+    readonly options = signal<string[]>([]);
 
     ngOnInit() {
-        setTimeout(() => {
-            this.options = ['One'];
-        }, 1000);
+        setTimeout(() => this.options.set(['One']), 1000);
     }
 }
 

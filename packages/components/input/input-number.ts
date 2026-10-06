@@ -280,6 +280,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         if (this._disabled !== newValue) {
             this._disabled = newValue;
             this.disabledChange.next(newValue);
+            this.stateChanges.next();
         }
 
         // We need to null check the `blur` method, because it's undefined during SSR.

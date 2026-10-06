@@ -381,6 +381,7 @@ describe(KbqSplitter.name, () => {
         ]);
         measure(fixture);
         pressKey(getSeparators(fixture)[0], 'Enter');
+        fixture.detectChanges();
 
         expect(getSizes(fixture)).toEqual([60, 540]);
     });

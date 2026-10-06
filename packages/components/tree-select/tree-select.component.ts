@@ -15,8 +15,8 @@ import {
     ElementRef,
     EventEmitter,
     InjectionToken,
+    Injector,
     Input,
-    NgZone,
     OnDestroy,
     OnInit,
     Output,
@@ -274,7 +274,7 @@ export class KbqTreeSelect
 {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private readonly renderer = inject(Renderer2);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
@@ -540,10 +540,7 @@ export class KbqTreeSelect
             );
         }
 
-        return this.ngZone.onStable.asObservable().pipe(
-            take(1),
-            switchMap(() => this.optionSelectionChanges)
-        );
+        return this.optionsInitialized.pipe(switchMap(() => this.optionSelectionChanges));
     }) as Observable<KbqTreeSelectChange>;
 
     /** Combined stream of all of the child options userInteraction events. */
@@ -555,11 +552,11 @@ export class KbqTreeSelect
             );
         }
 
-        return this.ngZone.onStable.asObservable().pipe(
-            take(1),
-            switchMap(() => this.userInteractionChanges)
-        );
+        return this.optionsInitialized.pipe(switchMap(() => this.userInteractionChanges));
     });
+
+    /** Emits once `options` is assigned, for subscribers that arrive before the content is resolved. */
+    private readonly optionsInitialized = new Subject<void>();
 
     // Stays an accessor: `KbqFormFieldControl` declares `placeholder` as a plain string property.
     @Input()
@@ -950,6 +947,10 @@ export class KbqTreeSelect
     constructor() {
         super();
 
+        // The template reads the state `stateChanges` reports (placeholder, error state, focus), and this view is
+        // OnPush: every report re-checks it.
+        this.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
+
         // The tree owns the "select all" row — it is the only place that can put it in front of the nodes
         // and into the key manager's list. Mirrored through an effect rather than assigned once in
         // `ngAfterContentInit` so a `[selectAll]` bound to a changing expression keeps working.
@@ -1065,6 +1066,9 @@ export class KbqTreeSelect
             if (this.multiSelection) {
                 this.refreshTriggerValues();
             }
+
+            // The trigger renders the selection, whichever way it changed (a click, `writeValue`, select all).
+            this.changeDetectorRef.markForCheck();
         });
 
         this.selectionModel.changed.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -1151,6 +1155,8 @@ export class KbqTreeSelect
         }
 
         this.contentInitialized.set(true);
+        this.optionsInitialized.next();
+        this.optionsInitialized.complete();
     }
 
     ngAfterViewInit() {
@@ -1277,10 +1283,8 @@ export class KbqTreeSelect
         this.changeDetectorRef.markForCheck();
 
         // Set the font size on the panel element once it exists.
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
+        afterNextRender(
+            () => {
                 if (this.triggerFontSize && this.overlayDir.overlayRef && this.overlayDir.overlayRef.overlayElement) {
                     this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this.triggerFontSize}px`;
                 }
@@ -1288,7 +1292,9 @@ export class KbqTreeSelect
                 if (this.search()) {
                     this.lockOverlayWidthForSearch(this.panel());
                 }
-            });
+            },
+            { injector: this.injector }
+        );
     }
 
     /** Closes the overlay panel and focuses the host element. */

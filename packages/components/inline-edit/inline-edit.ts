@@ -24,6 +24,7 @@ import {
     NgZone,
     numberAttribute,
     output,
+    PendingTasks,
     signal,
     TemplateRef,
     untracked,
@@ -215,6 +216,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     private readonly resizeObserver = inject(SharedResizeObserver);
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly ngZone = inject(NgZone);
+    private readonly pendingTasks = inject(PendingTasks);
     private readonly scrollDispatcher = inject(ScrollDispatcher);
     private readonly destroyRef = inject(DestroyRef);
     private readonly contentObserver = inject(ContentObserver);
@@ -560,7 +562,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         this.watchTabOutsideThePanel();
 
-        setTimeout(() => {
+        this.defer(() => {
             // Captured before the form-field checks below: an editor built on `setValueHandler` alone has no
             // `KbqFormField`, and `cancel()` and `rollback()` still have to restore something other than undefined.
             this.initialValue = this.getValue();
@@ -582,7 +584,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             if (this.initialValue) input?.select();
 
             this.openPanel(formFieldRef);
-        }, 0);
+        });
     }
 
     /** @docs-private */
@@ -838,7 +840,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
             case 'Enter': {
                 if (canSaveOnEnter(event)) {
                     event.preventDefault();
-                    setTimeout(() => this.save(event));
+                    this.defer(() => this.save(event));
                 }
 
                 break;
@@ -902,7 +904,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
             // Deferred by one task: the select also uses Tab to walk its own footer, and stays open when
             // it does. That is its business, and only the next task can tell the two apart.
-            setTimeout(() => {
+            this.defer(() => {
                 if (select.panelOpen || !this.isEditMode()) return;
 
                 this.ngZone.run(() => this.saveAndFocusAdjacentTabStop(event, backwards));
@@ -988,10 +990,26 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         this.editModeOrigin = null;
 
-        setTimeout(() => {
+        this.defer(() => {
             if (!this.elementRef.nativeElement.isConnected) return;
 
             this.focusViewTabStop(origin ?? 'program');
+        });
+    }
+
+    /**
+     * Runs `fn` in the next task, unless the inline edit is gone by then, and keeps the application unstable until
+     * then: without zone.js nothing else would make `whenStable` wait for a timer.
+     */
+    private defer(fn: () => void): void {
+        const removeTask = this.pendingTasks.add();
+
+        setTimeout(() => {
+            try {
+                if (!this.destroyRef.destroyed) fn();
+            } finally {
+                removeTask();
+            }
         });
     }
 
@@ -1046,7 +1064,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         this.editModeOrigin = null;
 
         // Deferred until view mode is rendered: until then the field's own tab stop — the fallback — is missing.
-        setTimeout(() => {
+        this.defer(() => {
             if (!this.elementRef.nativeElement.isConnected) return;
 
             const target = this.focusAdjacentTabStop(backwards);

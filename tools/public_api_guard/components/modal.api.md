@@ -214,7 +214,12 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     markForCheck(): void;
     protected readonly maskAnimationClasses: _angular_core.Signal<string>;
     // (undocumented)
-    readonly modalContainer: _angular_core.Signal<ElementRef<any>>;
+    get maskAnimationClassMap(): object | null;
+    set maskAnimationClassMap(value: object | null);
+    // (undocumented)
+    modalAnimationClassMap: object | null;
+    // (undocumented)
+    readonly modalContainer: i0.Signal<ElementRef<any>>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

@@ -288,8 +288,10 @@ test.describe('KbqNavbarModule', () => {
                     (frame as HTMLElement).style.width = `${width}px`;
                     window.dispatchEvent(new Event('resize'));
 
-                    // Queued after the navbar's 100ms resize debounce, whose update renders synchronously.
+                    // Queued after the navbar's 100ms resize debounce, then a frame more: the update it makes is
+                    // rendered by the change detection it schedules, not synchronously.
                     await new Promise((resolve) => setTimeout(resolve, 100));
+                    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve)));
 
                     const contentRight = Math.max(
                         ...Array.from(navbar.children, (container) => container.getBoundingClientRect().right)

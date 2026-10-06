@@ -28,7 +28,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         ]
     }).compileComponents();
 
-    return TestBed.createComponent<T>(component);
+    const fixture = TestBed.createComponent<T>(component);
+
+    // Without zone.js, auto-detection renders on the next scheduled tick rather than inside `createComponent`.
+
+    fixture.detectChanges();
+
+    return fixture;
 }
 
 @Component({
@@ -186,7 +192,7 @@ class PasswordInputWithLabel {
 }
 
 describe('KbqPasswordInput', () => {
-    it('should handle Alt+F8 only when KbqPasswordToggle is present', () => {
+    it('should handle Alt+F8 only when KbqPasswordToggle is present', async () => {
         const fixture = createComponent(PasswordInputWithDynamicToggle);
         const input = fixture.debugElement.query(By.directive(KbqInputPassword)).nativeElement as HTMLInputElement;
         const togglePassword = () =>
@@ -199,6 +205,9 @@ describe('KbqPasswordInput', () => {
         fixture.componentInstance.showToggle = true;
         fixture.detectChanges();
         togglePassword();
+
+        await fixture.whenStable();
+
         expect(input.type).toBe('text');
     });
 
