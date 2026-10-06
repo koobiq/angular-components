@@ -155,11 +155,11 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     protected readonly document: Document;
     protected get exposesPanel(): boolean;
     // (undocumented)
-    handleClick($event: MouseEvent): void;
+    handleClick($event: Event): void;
     // (undocumented)
     handleFocus(): void;
     // (undocumented)
-    handleInput(event: KeyboardEvent): void;
+    handleInput(event: Event): void;
     // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
     readonly inlineHint: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;

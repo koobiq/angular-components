@@ -1,5 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
-import { importProvidersFrom } from '@angular/core';
+import { provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
@@ -10,14 +9,7 @@ import { devAllRoutes } from './routes';
 
 bootstrapApplication(DevAllApp, {
     providers: [
-        provideAnimations(),
-        provideRouter(devAllRoutes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
-        // `KbqIconRegistry` optionally injects `HttpClient` and throws a descriptive error without it.
-        provideHttpClient(),
-        // Required by the sidebar's locale selector, and covers the routes that expect a locale service.
-        kbqLocaleServiceProvider(),
-        // `KbqNotificationCenterService` is `providedIn: 'root'` and injects `DateAdapter` and `DateFormatter`,
-        // which route-level providers cannot reach.
-        importProvidersFrom(KbqLuxonDateModule, KbqFormattersModule)
+        provideZoneChangeDetection(),
+        provideAnimations()
     ]
 }).catch((error) => console.error(error));

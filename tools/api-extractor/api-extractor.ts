@@ -27,12 +27,19 @@ const packageJsonFullPath: string | undefined = packageJsonLookup.tryGetPackageJ
 
 let hasErrors: boolean = false;
 
+/**
+ * ng-packagr flattens the declarations of every entry point into `<dist>/types`, naming each file
+ * after the package and the entry point — so a nested entry point such as `scrollbar/deprecated`
+ * becomes `koobiq-components-scrollbar-deprecated.d.ts`.
+ */
+function entryPointTypesPath(folder: string, component: string): string {
+    return `<projectFolder>../../dist/${folder}/types/koobiq-${folder}-${component.replace(/\//g, '-')}.d.ts`;
+}
+
 function runExtractor(folder: string, component: string): ExtractorResult {
     const configObject: IConfigFile = ExtractorConfig.loadFile(configObjectFullPath);
 
-    const mainEntryPointFilePath = configObject.mainEntryPointFilePath
-        .replace('components', folder)
-        .replace('button', component);
+    const mainEntryPointFilePath = entryPointTypesPath(folder, component);
     const reportFolder = configObject!.apiReport!.reportFolder!.replace('components', folder);
     // `reportFileName` must be a plain filename — api-extractor rejects path separators — so a
     // nested entry point like "scrollbar/deprecated" flattens to "scrollbar-deprecated.api.md" here,

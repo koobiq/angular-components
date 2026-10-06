@@ -59,6 +59,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     readonly inputElement: Signal<ElementRef<HTMLInputElement>>;
     // (undocumented)
     get inputId(): string;
+    // Warning: (ae-forgotten-export) The symbol "ToggleLabelPositionType" needs to be exported by the entry point koobiq-components-toggle.d.ts
+    //
     // (undocumented)
     readonly labelPosition: _angular_core.InputSignal<ToggleLabelPositionType>;
     readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;

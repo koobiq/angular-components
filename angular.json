@@ -26,7 +26,7 @@
             "prefix": "docs",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "optimization": {
                             "styles": {
@@ -125,7 +125,7 @@
                     "defaultConfiguration": "production"
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "configurations": {
                         "production": {
                             "buildTarget": "koobiq-docs:build:production"
@@ -152,7 +152,7 @@
             "sourceRoot": "packages/components",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/components/tsconfig.lib.json",
                         "project": "packages/components/ng-package.json"
@@ -182,7 +182,7 @@
             "sourceRoot": "packages/components-experimental",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/components-experimental/tsconfig.lib.json",
                         "project": "packages/components-experimental/ng-package.json"
@@ -213,7 +213,7 @@
             "sourceRoot": "packages/angular-moment-adapter",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/angular-moment-adapter/tsconfig.lib.json",
                         "project": "packages/angular-moment-adapter/ng-package.json"
@@ -243,7 +243,7 @@
             "sourceRoot": "packages/angular-luxon-adapter",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/angular-luxon-adapter/tsconfig.lib.json",
                         "project": "packages/angular-luxon-adapter/ng-package.json"
@@ -273,7 +273,7 @@
             "sourceRoot": "packages/docs-examples",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/docs-examples/tsconfig.lib.json",
                         "project": "packages/docs-examples/ng-package.json"
@@ -295,7 +295,7 @@
             "sourceRoot": "packages/components-dev/accordion",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/accordion"
@@ -312,7 +312,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-accordion:build"
                     }
@@ -325,7 +325,7 @@
             "sourceRoot": "packages/components-dev/actions-panel",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/actions-panel"
@@ -342,7 +342,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-actions-panel:build"
                     }
@@ -355,7 +355,7 @@
             "sourceRoot": "packages/components-dev/ag-grid",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/ag-grid"
@@ -372,7 +372,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-ag-grid:build"
                     }
@@ -385,7 +385,7 @@
             "sourceRoot": "packages/components-dev/alert",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/alert"
@@ -402,7 +402,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-alert:build"
                     }
@@ -415,7 +415,7 @@
             "sourceRoot": "packages/components-dev/all",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/all"
@@ -454,7 +454,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-all:build"
                     }
@@ -467,7 +467,7 @@
             "sourceRoot": "packages/components-dev/app-switcher",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/app-switcher"
@@ -484,7 +484,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-app-switcher:build"
                     }
@@ -497,7 +497,7 @@
             "sourceRoot": "packages/components-dev/autocomplete",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/autocomplete"
@@ -514,7 +514,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-autocomplete:build"
                     }
@@ -527,7 +527,7 @@
             "sourceRoot": "packages/components-dev/badge",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/badge"
@@ -544,7 +544,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-badge:build"
                     }
@@ -557,7 +557,7 @@
             "sourceRoot": "packages/components-dev/flag",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/flag"
@@ -574,7 +574,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-flag:build"
                     }
@@ -587,7 +587,7 @@
             "sourceRoot": "packages/components-dev/breadcrumbs",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/breadcrumbs"
@@ -604,7 +604,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-breadcrumbs:build"
                     }
@@ -617,7 +617,7 @@
             "sourceRoot": "packages/components-dev/button",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/button"
@@ -634,7 +634,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-button:build"
                     }
@@ -647,7 +647,7 @@
             "sourceRoot": "packages/components-dev/icon-adopted-stylesheets",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/icon-adopted-stylesheets"
@@ -671,7 +671,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-icon-adopted-stylesheets:build"
                     }
@@ -684,7 +684,7 @@
             "sourceRoot": "packages/components-dev/button-toggle",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/button-toggle"
@@ -701,7 +701,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-button-toggle:build"
                     }
@@ -714,7 +714,7 @@
             "sourceRoot": "packages/components-dev/checkbox",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/checkbox"
@@ -731,7 +731,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-checkbox:build"
                     }
@@ -744,7 +744,7 @@
             "sourceRoot": "packages/components-dev/clamped-text",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/clamped-text"
@@ -761,7 +761,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-clamped-text:build"
                     }
@@ -774,7 +774,7 @@
             "sourceRoot": "packages/components-dev/code-block",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/code-block"
@@ -791,7 +791,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-code-block:build"
                     }
@@ -804,7 +804,7 @@
             "sourceRoot": "packages/components-dev/content-panel",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/content-panel"
@@ -821,7 +821,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-content-panel:build"
                     }
@@ -834,7 +834,7 @@
             "sourceRoot": "packages/components-dev/date-formatter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/date-formatter"
@@ -851,7 +851,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-date-formatter:build"
                     }
@@ -864,7 +864,7 @@
             "sourceRoot": "packages/components-dev/date-pipes",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/date-pipes"
@@ -881,7 +881,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-date-pipes:build"
                     }
@@ -894,7 +894,7 @@
             "sourceRoot": "packages/components-dev/datepicker",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/datepicker"
@@ -911,7 +911,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-datepicker:build"
                     }
@@ -924,7 +924,7 @@
             "sourceRoot": "packages/components-dev/divider",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/divider"
@@ -941,7 +941,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-divider:build"
                     }
@@ -954,7 +954,7 @@
             "sourceRoot": "packages/components-dev/dl",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/dl"
@@ -971,7 +971,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-dl:build"
                     }
@@ -984,7 +984,7 @@
             "sourceRoot": "packages/components-dev/dynamic-translation",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/dynamic-translation"
@@ -1001,7 +1001,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-dynamic-translation:build"
                     }
@@ -1014,7 +1014,7 @@
             "sourceRoot": "packages/components-dev/dropdown",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/dropdown"
@@ -1031,7 +1031,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-dropdown:build"
                     }
@@ -1044,7 +1044,7 @@
             "sourceRoot": "packages/e2e",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/e2e"
@@ -1092,7 +1092,7 @@
                     "defaultConfiguration": "production"
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "configurations": {
                         "production": {
                             "buildTarget": "dev-e2e:build:production"
@@ -1111,7 +1111,7 @@
             "sourceRoot": "packages/components-dev/empty-state",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/empty-state"
@@ -1135,7 +1135,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-empty-state:build"
                     }
@@ -1148,7 +1148,7 @@
             "sourceRoot": "packages/components-dev/form-field",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/form-field"
@@ -1165,7 +1165,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-form-field:build"
                     }
@@ -1178,7 +1178,7 @@
             "sourceRoot": "packages/components-dev/forms",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/forms"
@@ -1195,7 +1195,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-forms:build"
                     }
@@ -1208,7 +1208,7 @@
             "sourceRoot": "packages/components-dev/flex-layout",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/flex-layout"
@@ -1225,7 +1225,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-flex-layout:build"
                     }
@@ -1238,7 +1238,7 @@
             "sourceRoot": "packages/components-dev/file-upload",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/file-upload"
@@ -1255,7 +1255,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-file-upload:build"
                     }
@@ -1268,7 +1268,7 @@
             "sourceRoot": "packages/components-dev/filesize-formatter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/filesize-formatter"
@@ -1285,7 +1285,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-filesize-formatter:build"
                     }
@@ -1298,7 +1298,7 @@
             "sourceRoot": "packages/components-dev/filter-bar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/filter-bar"
@@ -1315,7 +1315,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-filter-bar:build"
                     }
@@ -1328,7 +1328,7 @@
             "sourceRoot": "packages/components-dev/icon",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/icon"
@@ -1357,7 +1357,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-icon:build"
                     }
@@ -1370,7 +1370,7 @@
             "sourceRoot": "packages/components-dev/icon-item",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/icon-item"
@@ -1387,7 +1387,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-icon-item:build"
                     }
@@ -1400,7 +1400,7 @@
             "sourceRoot": "packages/components-dev/highlight",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/highlight"
@@ -1417,7 +1417,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-highlight:build"
                     }
@@ -1430,7 +1430,7 @@
             "sourceRoot": "packages/components-dev/hint",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/hint"
@@ -1447,7 +1447,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-hint:build"
                     }
@@ -1460,7 +1460,7 @@
             "sourceRoot": "packages/components-dev/inline-edit",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/inline-edit"
@@ -1477,7 +1477,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-inline-edit:build"
                     }
@@ -1490,7 +1490,7 @@
             "sourceRoot": "packages/components-dev/input",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/input"
@@ -1507,7 +1507,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-input:build"
                     }
@@ -1520,7 +1520,7 @@
             "sourceRoot": "packages/components-dev/link",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/link"
@@ -1537,7 +1537,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-link:build"
                     }
@@ -1550,7 +1550,7 @@
             "sourceRoot": "packages/components-dev/list",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/list"
@@ -1567,7 +1567,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-list:build"
                     }
@@ -1580,7 +1580,7 @@
             "sourceRoot": "packages/components-dev/loader-overlay",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/loader-overlay"
@@ -1597,7 +1597,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-loader-overlay:build"
                     }
@@ -1610,7 +1610,7 @@
             "sourceRoot": "packages/components-dev/locale",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/locale"
@@ -1627,7 +1627,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-locale:build"
                     }
@@ -1640,7 +1640,7 @@
             "sourceRoot": "packages/components-dev/markdown",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/markdown"
@@ -1657,7 +1657,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-markdown:build"
                     }
@@ -1670,7 +1670,7 @@
             "sourceRoot": "packages/components-dev/modal",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/modal"
@@ -1687,7 +1687,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-modal:build"
                     }
@@ -1700,7 +1700,7 @@
             "sourceRoot": "packages/components-dev/navbar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/navbar"
@@ -1717,7 +1717,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-navbar:build"
                     }
@@ -1730,7 +1730,7 @@
             "sourceRoot": "packages/components-dev/number-formatter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/number-formatter"
@@ -1747,7 +1747,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-number-formatter:build"
                     }
@@ -1760,7 +1760,7 @@
             "sourceRoot": "packages/components-dev/notification-center",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/notification-center"
@@ -1777,7 +1777,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-notification-center:build"
                     }
@@ -1790,7 +1790,7 @@
             "sourceRoot": "packages/components-dev/overflow-items",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/overflow-items"
@@ -1807,7 +1807,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-overflow-items:build"
                     }
@@ -1820,7 +1820,7 @@
             "sourceRoot": "packages/components-dev/popover",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/popover"
@@ -1837,7 +1837,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-popover:build"
                     }
@@ -1850,7 +1850,7 @@
             "sourceRoot": "packages/components-dev/progress-bar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/progress-bar"
@@ -1867,7 +1867,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-progress-bar:build"
                     }
@@ -1880,7 +1880,7 @@
             "sourceRoot": "packages/components-dev/progress-spinner",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/progress-spinner"
@@ -1897,7 +1897,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-progress-spinner:build"
                     }
@@ -1910,7 +1910,7 @@
             "sourceRoot": "packages/components-dev/radio",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/radio"
@@ -1927,7 +1927,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-radio:build"
                     }
@@ -1940,7 +1940,7 @@
             "sourceRoot": "packages/components-dev/resizer",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/resizer"
@@ -1957,7 +1957,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-resizer:build"
                     }
@@ -1970,7 +1970,7 @@
             "sourceRoot": "packages/components-dev/scrollbar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/scrollbar"
@@ -1987,7 +1987,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-scrollbar:build"
                     }
@@ -2000,7 +2000,7 @@
             "sourceRoot": "packages/components-dev/search-expandable",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/search-expandable"
@@ -2017,7 +2017,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-search-expandable:build"
                     }
@@ -2030,7 +2030,7 @@
             "sourceRoot": "packages/components-dev/select",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/select"
@@ -2047,7 +2047,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-select:build"
                     }
@@ -2060,7 +2060,7 @@
             "sourceRoot": "packages/components-dev/sidebar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/sidebar"
@@ -2077,7 +2077,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-sidebar:build"
                     }
@@ -2090,7 +2090,7 @@
             "sourceRoot": "packages/components-dev/sidepanel",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/sidepanel"
@@ -2107,7 +2107,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-sidepanel:build"
                     }
@@ -2120,7 +2120,7 @@
             "sourceRoot": "packages/components-dev/skeleton",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/skeleton"
@@ -2137,7 +2137,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-skeleton:build"
                     }
@@ -2150,7 +2150,7 @@
             "sourceRoot": "packages/components-dev/splitter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/splitter"
@@ -2167,7 +2167,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-splitter:build"
                     }
@@ -2180,7 +2180,7 @@
             "sourceRoot": "packages/components-dev/split-button",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/split-button"
@@ -2197,7 +2197,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-split-button:build"
                     }
@@ -2210,7 +2210,7 @@
             "sourceRoot": "packages/components-dev/ssr",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/ssr"
@@ -2244,7 +2244,7 @@
                     "defaultConfiguration": "production"
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "configurations": {
                         "production": {
                             "buildTarget": "dev-ssr:build:production"
@@ -2263,7 +2263,7 @@
             "sourceRoot": "packages/components-dev/table",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/table"
@@ -2280,7 +2280,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-table:build"
                     }
@@ -2293,7 +2293,7 @@
             "sourceRoot": "packages/components-dev/tabs",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tabs"
@@ -2310,7 +2310,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tabs:build"
                     }
@@ -2323,7 +2323,7 @@
             "sourceRoot": "packages/components-dev/tag",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tag"
@@ -2340,7 +2340,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tag:build"
                     }
@@ -2353,7 +2353,7 @@
             "sourceRoot": "packages/components-dev/textarea",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/textarea"
@@ -2370,7 +2370,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-textarea:build"
                     }
@@ -2383,7 +2383,7 @@
             "sourceRoot": "packages/components-dev/timepicker",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/timepicker"
@@ -2400,7 +2400,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-timepicker:build"
                     }
@@ -2413,7 +2413,7 @@
             "sourceRoot": "packages/components-dev/time-range",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/time-range"
@@ -2430,7 +2430,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-time-range:build"
                     }
@@ -2443,7 +2443,7 @@
             "sourceRoot": "packages/components-dev/timezone",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/timezone"
@@ -2460,7 +2460,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-timezone:build"
                     }
@@ -2473,7 +2473,7 @@
             "sourceRoot": "packages/components-dev/toast",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": "dist/components-dev/toast",
                         "tsConfig": "packages/components-dev/toast/tsconfig.app.json",
@@ -2488,7 +2488,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-toast:build"
                     }
@@ -2501,7 +2501,7 @@
             "sourceRoot": "packages/components-dev/toast-shadow-dom",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": "dist/components-dev/toast-shadow-dom",
                         "tsConfig": "packages/components-dev/toast-shadow-dom/tsconfig.app.json",
@@ -2516,7 +2516,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-toast-shadow-dom:build"
                     }
@@ -2529,7 +2529,7 @@
             "sourceRoot": "packages/components-dev/toggle",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/toggle"
@@ -2546,7 +2546,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-toggle:build"
                     }
@@ -2559,7 +2559,7 @@
             "sourceRoot": "packages/components-dev/top-bar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/top-bar"
@@ -2576,7 +2576,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-top-bar:build"
                     }
@@ -2589,7 +2589,7 @@
             "sourceRoot": "packages/components-dev/tooltip",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tooltip"
@@ -2606,7 +2606,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tooltip:build"
                     }
@@ -2619,7 +2619,7 @@
             "sourceRoot": "packages/components-dev/tree",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tree"
@@ -2636,7 +2636,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tree:build"
                     }
@@ -2649,7 +2649,7 @@
             "sourceRoot": "packages/components-dev/tree-select",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tree-select"
@@ -2666,7 +2666,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tree-select:build"
                     }
@@ -2679,7 +2679,7 @@
             "sourceRoot": "packages/components-dev/typography",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/typography"
@@ -2696,7 +2696,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-typography:build"
                     }
@@ -2709,7 +2709,7 @@
             "sourceRoot": "packages/components-dev/title",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/title"
@@ -2726,7 +2726,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-title:build"
                     }
@@ -2739,7 +2739,7 @@
             "sourceRoot": "packages/components-dev/username",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/username"
@@ -2756,7 +2756,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-username:build"
                     }
@@ -2769,7 +2769,7 @@
             "sourceRoot": "packages/components-dev/validation",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/validation"
@@ -2786,7 +2786,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-validation:build"
                     }
@@ -2799,7 +2799,7 @@
             "sourceRoot": "packages/components-dev/z-index",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/z-index"
@@ -2816,7 +2816,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-z-index:build"
                     }
