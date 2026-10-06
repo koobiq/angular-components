@@ -364,10 +364,9 @@ describe('locale data completeness', () => {
      */
     const knownDrift = ['datepicker.dateInput'];
 
-    // `SEPARATOR`/`LAST_PART_SEPARATOR` join the parts of a rendered duration and `timeRange.title.for` is
-    // the preposition before the period in the title; blank and whitespace-only values are meaningful
-    // there, unlike in any label or accessible name.
-    const mayBeBlank = (path: string) => /\.(LAST_PART_)?SEPARATOR$/.test(path) || path === 'timeRange.title.for';
+    // `SEPARATOR`/`LAST_PART_SEPARATOR` join the parts of a rendered duration; blank and whitespace-only
+    // values are meaningful there, unlike in any label or accessible name.
+    const isSeparator = (path: string) => /\.(LAST_PART_)?SEPARATOR$/.test(path);
 
     const keyPathsOf = (data: object): string[] =>
         collectEntries(data)
@@ -389,7 +388,7 @@ describe('locale data completeness', () => {
 
     it.each(locales)('should leave no label blank in %s', (_, data) => {
         const blank = collectEntries(data)
-            .filter(([path, value]) => typeof value === 'string' && value.trim() === '' && !mayBeBlank(path))
+            .filter(([path, value]) => typeof value === 'string' && value.trim() === '' && !isSeparator(path))
             .map(([path]) => path);
 
         expect(blank).toEqual([]);

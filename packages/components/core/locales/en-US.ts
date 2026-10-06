@@ -160,7 +160,6 @@ export const enUSLocaleData = {
     },
     timeRange: {
         title: {
-            for: '',
             placeholder: 'Period'
         },
         editor: {

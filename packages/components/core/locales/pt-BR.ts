@@ -162,7 +162,6 @@ export const ptBRLocaleData = {
     },
     timeRange: {
         title: {
-            for: 'para',
             placeholder: 'Selecione o período'
         },
         editor: {

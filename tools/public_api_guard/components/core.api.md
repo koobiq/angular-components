@@ -611,7 +611,6 @@ export const enUSLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -895,7 +894,6 @@ export const esLALocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -1447,7 +1445,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -1706,7 +1703,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -1961,7 +1957,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -2222,7 +2217,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -2479,7 +2473,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -4768,7 +4761,6 @@ export type KbqTimepickerLocaleConfiguration = {
 // @public
 export type KbqTimeRangeLocaleConfiguration = {
     title: {
-        for: string;
         placeholder: string;
     };
     editor: {
@@ -5408,7 +5400,6 @@ export const ptBRLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -5888,7 +5879,6 @@ export const ruRULocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -6277,7 +6267,6 @@ export const tkTMLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
