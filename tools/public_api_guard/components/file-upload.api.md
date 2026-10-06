@@ -313,7 +313,6 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     // (undocumented)
     protected readonly fileLoader: _angular_core.Signal<KbqFileLoader | undefined>;
     readonly fileRemoved: _angular_core.OutputEmitterRef<[KbqFileItem, number]>;
-    // (undocumented)
     get files(): KbqFileItem[];
     set files(currentFileList: KbqFileItem[]);
     readonly filesAdded: _angular_core.OutputEmitterRef<KbqFileItem[]>;
@@ -362,7 +361,6 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     deleteItem(event?: MouseEvent, origin?: FocusOrigin): void;
     protected readonly describedBy: _angular_core.Signal<string | null>;
     errorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
     get file(): KbqFileItem | null;
     set file(currentFile: KbqFileItem | null);
     readonly fileChange: _angular_core.OutputEmitterRef<KbqFileItem | null>;

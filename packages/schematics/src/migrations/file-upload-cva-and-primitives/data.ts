@@ -66,6 +66,15 @@ export const warnPatterns: WarnPattern[] = [
             'and nothing reads one.'
     },
     {
+        pattern: '\\[\\s*(?:file|files)\\s*\\]|\\[\\(\\s*(?:file|files)\\s*\\)\\]',
+        message:
+            'Writing [file]/[files] no longer notifies the form. The setter is the model→view half, like ' +
+            'writeValue(): it fills the list and stops there. This only matters when the same component ' +
+            'also carries formControl, formControlName or ngModel — two sources of truth for one value; ' +
+            'drop the binding and let the form own it. Without a form the binding is unchanged, and ' +
+            '[(file)]/[(files)] still report what the user does.'
+    },
+    {
         pattern: '<\\s*kbq-single-file-upload\\b[^>]*\\bmultiple\\b',
         message:
             'kbq-single-file-upload no longer forwards `multiple` to its hidden input. It used to put the ' +

@@ -67,9 +67,10 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                     <tr>
                         @for (cell of row; track $index) {
                             <td>
+                                <!-- ngModel alone: a [file] binding beside a form control would be two
+                                     sources of truth for one component, and the form is the one that wins. -->
                                 <kbq-file-upload
                                     [allowed]="cell.allowed ?? kbqFileUploadAllowedTypes.File"
-                                    [file]="cell.file"
                                     [class]="cell.className"
                                     [showFileSize]="cell.showFileSize ?? true"
                                     [disabled]="!!cell.disabled"

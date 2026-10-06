@@ -1521,6 +1521,7 @@ The review repaired the two contracts the component is judged on: the form contr
 | `hasFocus`                          | public, always `false`                      | removed                                          |
 | single uploader's hidden input      | `multiple`                                  | single-selection                                 |
 | `[multiple]` on the single uploader | forwarded to that input                     | not an input at all                              |
+| `[file]` / `[files]` setter         | wrote the list and notified the form        | writes the list only                             |
 | `KbqInputFileMultipleLabel`         | exported interface                          | removed                                          |
 
 | Pattern                             | Manual migration                                                               |
@@ -1529,7 +1530,10 @@ The review repaired the two contracts the component is judged on: the form contr
 | `.hasFocus`                         | Track focus with `cdkMonitorSubtreeFocus` or a `(focusin)`/`(focusout)` pair   |
 | `(fileChange)` / `(filesChange)`    | Subscribe to the control if the handler was meant to see programmatic writes   |
 | `KbqInputFileMultipleLabel`         | Use `KbqMultipleFileUploadLocaleConfiguration` from `@koobiq/components/core`  |
+| `[file]` / `[files]` beside a form  | Drop the binding — the form owns the value; without a form nothing changes     |
 | `<kbq-single-file-upload multiple>` | Drop the attribute, or switch to `<kbq-multiple-file-upload>`                  |
+
+**A `[file]` binding is no longer an edit.** The setter was the other half of the same defect: it wrote the list _and_ called `cvaOnChange`, so a template binding reached the view→model pipeline exactly as `writeValue()` did. Writing `file` or `files` now fills the list and stops there, which makes the setter symmetric with `writeValue()` — both are model→view — and leaves `cvaOnChange` with `(fileChange)`/`(filesChange)` on the paths a user drives. Without a form nothing changes: `cvaOnChange` is a no-op until `registerOnChange` runs, and `[(file)]`/`[(files)]` still report what the user does. It matters only when the same component also carries `formControl`, `formControlName` or `ngModel` — two sources of truth for one value, where the form is the one that should win.
 
 **An empty drop no longer destroys the list.** An empty directory unwraps to zero files, so the drop handler can be handed an empty array. The multiple uploader passed it straight through to the merge, and under `addStrategy="replace"` that meant `replace([])` — every file the user had already attached, gone, with `(filesChange)` reporting the empty list and the control left dirty. A selection that hands over nothing is now no selection at all: the list is untouched and no value is emitted, though the drop still counts as an interaction and marks the control touched. `removeAt()` carried the same defect one call down: an index past either end left `splice` with nothing to do, but the list was rewritten with a fresh array anyway — waking every `list()` consumer for a no-op — and `itemRemoved` fired carrying `undefined` in a tuple typed `[T, number]`.
 

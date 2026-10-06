@@ -719,6 +719,17 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.control.pristine).toBe(true);
         });
 
+        // Writing `files` is the model→view direction, the same as `writeValue()`. A template binding is
+        // not a user edit, so it must not reach `cvaOnChange` and dirty the control.
+        it('should leave the control pristine when files are written as an input', () => {
+            component.fileUpload().files = [{ file: createMockFile(FILE_NAME) }];
+            fixture.detectChanges();
+
+            expect(component.fileUpload().files).toHaveLength(1);
+            expect(component.control.pristine).toBe(true);
+            expect(component.control.value).toBeNull();
+        });
+
         it('should emit valueChanges once per programmatic value', () => {
             const valueChangesSpy = jest.fn();
             const subscription = component.control.valueChanges.subscribe(valueChangesSpy);
@@ -1456,6 +1467,17 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.control.setValue({ file: createMockFile(FILE_NAME) });
 
             expect(component.control.pristine).toBe(true);
+        });
+
+        // Writing `file` is the model→view direction, the same as `writeValue()`. A template binding is
+        // not a user edit, so it must not reach `cvaOnChange` and dirty the control.
+        it('should leave the control pristine when file is written as an input', () => {
+            component.fileUpload().file = { file: createMockFile(FILE_NAME) };
+            fixture.detectChanges();
+
+            expect(component.fileUpload().file).toBeTruthy();
+            expect(component.control.pristine).toBe(true);
+            expect(component.control.value).toBeNull();
         });
 
         it('should emit valueChanges once per programmatic value', () => {

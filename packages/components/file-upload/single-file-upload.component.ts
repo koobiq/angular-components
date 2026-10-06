@@ -104,8 +104,16 @@ export class KbqSingleFileUploadComponent
     //  is not migrated.
     @Input() errorStateMatcher: ErrorStateMatcher;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
+    /**
+     * The selected file, or `null`. Stays an accessor input rather than becoming a `model()`: the
+     * store is `KbqFileList.list`, a model on the host directive that the template reads and that
+     * `remove()`, `removeAt()` and `replace()` mutate. A `model()` here would be a second store to
+     * keep in sync with that one, not a replacement for it.
+     *
+     * Writing it is the model→view direction, same as `writeValue()`: it fills the list and tells
+     * nobody. `cvaOnChange` and `(fileChange)` belong to the paths a user drives — see `addFile()`
+     * and `deleteItem()` — so a `[file]` binding cannot make the form look edited.
+     */
     @Input()
     get file(): KbqFileItem | null {
         const files = this.fileList.list();
@@ -115,7 +123,6 @@ export class KbqSingleFileUploadComponent
 
     set file(currentFile: KbqFileItem | null) {
         this.setFileList(currentFile === null ? [] : [currentFile]);
-        this.cvaOnChange(currentFile);
     }
 
     /**
@@ -355,6 +362,7 @@ export class KbqSingleFileUploadComponent
         const removed = this.file;
 
         this.file = null;
+        this.cvaOnChange(null);
         this.fileChange.emit(this.file);
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();
@@ -388,6 +396,7 @@ export class KbqSingleFileUploadComponent
     /** Keeps the first file — the component holds one — and reports the rest as rejected. */
     private addFile(files: File[]): void {
         this.file = this.mapToFileItem(files[0]);
+        this.cvaOnChange(this.file);
         this.fileChange.emit(this.file);
 
         const config = this.localeConfiguration().a11y;

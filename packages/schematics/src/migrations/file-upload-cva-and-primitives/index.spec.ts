@@ -102,6 +102,18 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('KbqInputFileMultipleLabel was removed');
     });
 
+    it('reports a file binding that no longer notifies the form', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(ts, 'const template = `<kbq-file-upload [file]="draft" [formControl]="control" />`;\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('no longer notifies the form');
+    });
+
     it('reports multiple set on the single uploader', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

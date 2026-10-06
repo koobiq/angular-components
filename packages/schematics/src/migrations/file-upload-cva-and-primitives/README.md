@@ -17,6 +17,7 @@ primitive.
 | `hasFocus`                          | public, always `false`                      | removed                                          |
 | single uploader's hidden input      | `multiple`                                  | single-selection                                 |
 | `[multiple]` on the single uploader | forwarded to that input                     | not an input at all                              |
+| `[file]` / `[files]` setter         | wrote the list and notified the form        | writes the list only                             |
 | `KbqInputFileMultipleLabel`         | exported interface                          | removed                                          |
 
 `writeValue()` deserves a note. It assigned through the `file`/`files` setters, and those setters call
@@ -38,6 +39,7 @@ output handler was meant to run for a programmatic write is a decision, not a re
 | `.hasFocus`                         | Track focus with `cdkMonitorSubtreeFocus` or `(focusin)`/`(focusout)`          |
 | `(fileChange)` / `(filesChange)`    | Subscribe to the control if the handler was meant to see programmatic writes   |
 | `KbqInputFileMultipleLabel`         | Use `KbqMultipleFileUploadLocaleConfiguration` from `@koobiq/components/core`  |
+| `[file]` / `[files]` beside a form  | Drop the binding — the form owns the value; without a form nothing changes     |
 | `<kbq-single-file-upload multiple>` | Drop the attribute, or switch to `<kbq-multiple-file-upload>`                  |
 
 ## Notes with no call site to point at
