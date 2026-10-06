@@ -1507,6 +1507,36 @@ Two fixes with nothing to migrate. `empty-state.scss` loads its own token layer 
 
 Reported by `empty-state-error-color`.
 
+#### Filter bar
+
+The popover that saves and renames a filter was reworked, and so were the strings around it.
+
+**`filters.saveChanges` and `filters.saveAsNew` were split.** Each did two jobs: the label of a dropdown item and the header of the popover that item opens. The header now captions the unlabelled name field, which reads wrong on a dropdown item, so each key became two:
+
+| Removed key   | Popover header      | Dropdown item       |
+| ------------- | ------------------- | ------------------- |
+| `saveChanges` | `saveChangesHeader` | `saveChangesButton` |
+| `saveAsNew`   | `saveAsNewHeader`   | `saveAsNewButton`   |
+
+`KbqFilterSavePopover.popoverHeader` returns `saveAsNewHeader` when saving a new filter and `saveChangesHeader` when renaming one, and the name field takes its accessible name from it.
+
+**`filters.name` and `filters.error` were removed.** The popover no longer renders a caption above the name field — its header carries it — nor a message under the field when the name is taken: the alert above the field (`errorHint`) reports that alone, and the field is still marked invalid.
+
+**Renaming a filter no longer saves it.** A `KbqSaveFilterStatuses.NewName` save used to stamp `saved: true` / `changed: false` onto the payload, so renaming a filter with unsaved pipe edits declared them saved. The payload now keeps the filter's own flags and still carries the pipes shown in the bar, so persist the name only.
+
+The default wording changed too. In `en-US`: "Save as new" for the tooltip of the save button and for both "save as new" items, "Save" for the "save changes" item, "Rename" for the rename item, "New filter" and "New name" for the headers, and "A filter with this name already exists" for the alert of a failed save. That alert now defaults to the duplicate-name text, so pass your own `text` to `filterSavedUnsuccessfully()` for any other failure. Override the strings through `kbqFilterBarLocaleConfigurationProvider` if they do not fit.
+
+| Pattern                                                 | Manual migration                                                                                    |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| A read of `filters.saveChanges` / `filters.saveAsNew`   | Read `…Header` for the popover header or `…Button` for the dropdown item                            |
+| A `saveChanges` / `saveAsNew` key in a partial override | Replace it with `…Header` and/or `…Button` — the literal has too few keys for the schematic to know |
+| A read of `filters.name`                                | Drop it, or bind your own string if the field still needs a visible caption                         |
+| A read of `filters.error`                               | Drop it — the alert above the field reports a taken name                                            |
+| An `error` key in a partial override                    | Delete it — the literal has too few keys for the schematic to know                                  |
+| A handler of `KbqSaveFilterStatuses.NewName`            | Persist the name only — writing the whole payload back saves the pending pipe edits                 |
+
+Handled by `filter-bar-rename-action`: the `name` and `error` keys are removed and `saveChanges` / `saveAsNew` are split in `filters` locale literals, the rest is reported.
+
 #### Flag
 
 `[innerHTML]` on `<kbq-flag>` is no longer a supported way to pass a flag. The component renders `<ng-content />`, so the host element is where projected nodes land, and an `innerHTML` write from the parent targets that same element. The two only coexisted because the component's own view contributed no DOM; the review gave the string form a slot of its own, so `<kbq-flag [innerHTML]="flag" />` becomes `<kbq-flag [svg]="flag" />`.
@@ -1943,6 +1973,17 @@ Handled by `tags-signals`: reads of the members that moved are rewritten, includ
 **Generated ids come from the CDK `_IdGenerator`** instead of a module-level counter. The shape is unchanged for a default `APP_ID`: the CDK omits the app id when it is `ng`, and the per-prefix counter still starts at 0, so a real app keeps getting `kbq-textarea-0`. Only an app that sets `APP_ID` explicitly sees it in the id, and the counter is now shared per prefix rather than per module.
 
 Handled by `textarea-signals`: the value-safe reads are rewritten, the rest is reported.
+
+#### Time range
+
+**`title.for` was removed from `KbqTimeRangeLocaleConfiguration`.** The title used to prepend it to the selected period ("за последний час"); the period stands alone now ("последний час" / "Last hour"), and the duration templates of each locale carry whatever word it needs. A custom title template receives the period without a prefix in `formattedDate`; a word you prefixed through `title.for` belongs in your `durationTemplate.title` overrides.
+
+| Pattern                                                       | Manual migration                                   |
+| ------------------------------------------------------------- | -------------------------------------------------- |
+| A read of `title.for`                                         | Drop it — the title shows the period alone         |
+| A `for` key the schematic could not attribute to a time range | Remove it from the `title` section of the override |
+
+Handled by `time-range-title-for`: the key is removed from time-range locale literals, the rest is reported.
 
 #### Timepicker
 

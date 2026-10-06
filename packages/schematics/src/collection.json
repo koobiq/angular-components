@@ -115,7 +115,7 @@
             "schema": "./migrations/splitter-deprecated-path/schema.json"
         },
         "filter-bar-rename-action": {
-            "description": "Removes the `name` key from filter-bar locale configurations and reports the rename rework: renaming a filter no longer marks it saved, so it stops persisting the pending pipe edits",
+            "description": "Removes the `name` and `error` keys from filter-bar locale configurations, splits `saveChanges` / `saveAsNew` into `…Header` and `…Button` keys, and reports the rename rework: renaming a filter no longer marks it saved, so it stops persisting the pending pipe edits",
             "factory": "./migrations/filter-bar-rename-action/index",
             "schema": "./migrations/filter-bar-rename-action/schema.json"
         },
@@ -338,6 +338,11 @@
             "description": "Rewrites reads of the KbqNumberInput members that became input() signals — min, max, step and bigStep — to calls, scoped to a receiver the file annotates as KbqNumberInput and to template references bound through the directive's exportAs (#ref=\"kbqNumberInput\"); template bindings such as [min] are unchanged. Reports the rest. The KbqNumberInput members that disappeared with the KbqFormFieldControl surface it declared and never populated — ngControl, id, placeholder, empty, required and errorState, every one of them undefined for the lifetime of the directive because the private control field behind ngControl had no writer. The validator classes that gained a Kbq prefix (MinValidator/MaxValidator/MIN_VALIDATOR/MAX_VALIDATOR to KbqMinValidator/KbqMaxValidator/KBQ_MIN_VALIDATOR/KBQ_MAX_VALIDATOR, whose unprefixed names are the exact names @angular/forms exports). valueChange and disabledChange are RxJS Subjects rather than EventEmitters, so .emit() becomes .next(). KbqInputPassword mints its ids in a kbq-input-password- namespace instead of sharing the kbq-input- counter with KbqInput, which produced two elements with the same id on any page holding both controls and made the form field's <label for> resolve to the wrong one; a hand-written reference to a generated id is reported. And the two behaviors that changed with no call site: type=\"number\" on a kbqNumberInput is reset to type=\"text\" with a warning, because a native number field rejects every formatted value and blanked the field, and HTMLInputElement.prototype.valueAsNumber is no longer redefined for the whole application. Notes the parts with nothing to migrate: the validators no longer parseInt their bounds so a fractional [min]=\"0.5\" and a bound [min]=\"0\" both work, stepping runs in integer space so 1.005 + 0.001 renders 1,006, and the number input carries spinbutton ARIA. The legacy kebab-case big-step attribute is dropped in favour of the single bigStep input and renamed in templates, scoped to the <input> tag carrying the directive.",
             "factory": "./migrations/input-number-surface/index",
             "schema": "./migrations/input-number-surface/schema.json"
+        },
+        "time-range-title-for": {
+            "description": "Removes `title.for` from time-range locale configurations and reports its reads: the time-range title shows the selected period without a prefix",
+            "factory": "./migrations/time-range-title-for/index",
+            "schema": "./migrations/time-range-title-for/schema.json"
         }
     }
 }

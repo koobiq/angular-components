@@ -81,24 +81,25 @@ export const ruRULocaleData = {
         },
         filters: {
             defaultName: 'Фильтры',
-            saveNewFilterTooltip: 'Сохранить новый фильтр',
+            saveNewFilterTooltip: 'Сохранить как новый',
             searchPlaceholder: 'Поиск',
             searchEmptyResult: 'Ничего не найдено',
-            saveAsNewFilter: 'Сохранить как новый фильтр',
-            saveChanges: 'Сохранить изменения',
-            saveAsNew: 'Новое название',
+            saveAsNewFilter: 'Сохранить как новый',
+            saveChangesHeader: 'Новое название',
+            saveChangesButton: 'Сохранить',
+            saveAsNewHeader: 'Новый фильтр',
+            saveAsNewButton: 'Сохранить как новый',
             change: 'Переименовать',
             resetChanges: 'Сбросить изменения',
             remove: 'Удалить',
-            error: 'Поиск с таким названием уже существует',
-            errorHint: 'Не удалось сохранить фильтр. Попробуйте снова или сообщите администратору.',
+            errorHint: 'Такой фильтр уже есть',
             saveButton: 'Сохранить',
             cancelButton: 'Отмена',
             actionsTooltip: 'Действия с фильтром'
         },
         add: {
             tooltip: 'Добавить фильтр',
-            addedAnnouncement: 'Фильтр {{ name }} добавлен'
+            addedAnnouncement: 'Фильтр «{{ name }}» добавлен'
         },
         refresher: {
             refresh: 'Обновить',
@@ -153,22 +154,21 @@ export const ruRULocaleData = {
     },
     timeRange: {
         title: {
-            for: 'за',
-            placeholder: 'Выберите период'
+            placeholder: 'Период'
         },
         editor: {
             from: 'с',
             to: 'по',
             apply: 'Применить',
             cancel: 'Отмена',
-            rangeLabel: 'Период',
+            rangeLabel: 'период',
             outOfBoundsError: 'Допустимый период: {{ value }}',
-            allTime: 'за все время',
-            currentQuarter: 'за текущий квартал',
-            currentYear: 'за текущий год',
-            allTimeOption: 'Все время',
-            currentQuarterOption: 'Текущий квартал',
-            currentYearOption: 'Текущий год'
+            allTime: 'все время',
+            currentQuarter: 'текущий квартал',
+            currentYear: 'текущий год',
+            allTimeOption: 'все время',
+            currentQuarterOption: 'текущий квартал',
+            currentYearOption: 'текущий год'
         },
         durationTemplate: {
             title: {
@@ -185,7 +185,7 @@ export const ruRULocaleData = {
                 other {последние # месяцев}
             }`,
                 WEEKS: `{weeks, plural,
-                one {последнюю неделю}
+                one {последняя неделя}
                 few {последние # недели}
                 other {последние # недель}
             }`,
@@ -200,12 +200,12 @@ export const ruRULocaleData = {
                 other {последние # часов}
             }`,
                 MINUTES: `{minutes, plural,
-                one {последнюю минуту}
+                one {последняя минута}
                 few {последние # минуты}
                 other {последние # минут}
             }`,
                 SECONDS: `{seconds, plural,
-                one {последнюю секунду}
+                one {последняя секунда}
                 few {последние # секунды}
                 other {последние # секунд}
             }`,
@@ -216,39 +216,39 @@ export const ruRULocaleData = {
                 SEPARATOR: ' ',
                 LAST_PART_SEPARATOR: 'и',
                 YEARS: `{years, plural,
-                one {Последний год}
-                few {Последние # года}
-                other {Последние # лет}
+                one {последний год}
+                few {последние # года}
+                other {последние # лет}
             }`,
                 MONTHS: `{months, plural,
-                one {Последний месяц}
-                few {Последние # месяца}
-                other {Последние # месяцев}
+                one {последний месяц}
+                few {последние # месяца}
+                other {последние # месяцев}
             }`,
                 WEEKS: `{weeks, plural,
-                one {Последняя неделя}
-                few {Последние # недели}
-                other {Последние # недель}
+                one {последняя неделя}
+                few {последние # недели}
+                other {последние # недель}
             }`,
                 DAYS: `{days, plural,
-                one {Последний день}
-                few {Последние # дня}
-                other {Последние # дней}
+                one {последний день}
+                few {последние # дня}
+                other {последние # дней}
             }`,
                 HOURS: `{hours, plural,
-                one {Последний час}
-                few {Последние # часа}
-                other {Последние # часов}
+                one {последний час}
+                few {последние # часа}
+                other {последние # часов}
             }`,
                 MINUTES: `{minutes, plural,
-                one {Последняя минута}
-                few {Последние # минуты}
-                other {Последние # минут}
+                one {последняя минута}
+                few {последние # минуты}
+                other {последние # минут}
             }`,
                 SECONDS: `{seconds, plural,
-                one {Последняя секунда}
-                few {Последние # секунды}
-                other {Последние # секунд}
+                one {последняя секунда}
+                few {последние # секунды}
+                other {последние # секунд}
             }`,
                 YEARS_FRACTION: `{years} лет`,
                 MONTHS_FRACTION: `{months} месяцев`
@@ -259,10 +259,10 @@ export const ruRULocaleData = {
         notifications: 'Уведомления',
         remove: 'Удалить',
         removeAll: 'Удалить все',
-        doNotDisturb: 'Не беспокоить',
-        showPopUpNotifications: 'Показывать всплывающие уведомления',
+        doNotDisturb: 'Отключить уведомления',
+        showPopUpNotifications: 'Включить уведомления',
         noNotifications: 'Нет уведомлений',
-        failedToLoadNotifications: 'Не удалось загрузить уведомления',
+        failedToLoadNotifications: 'Не удалось загрузить уведомления.',
         repeat: 'Повторить',
         loadingMore: 'Загрузка уведомлений',
         unread: 'Не прочитано'

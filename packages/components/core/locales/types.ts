@@ -221,12 +221,17 @@ export type KbqFilterBarLocaleConfiguration = {
         searchPlaceholder: string;
         searchEmptyResult: string;
         saveAsNewFilter: string;
-        saveChanges: string;
-        saveAsNew: string;
+        /** Header of the rename popover; it also names the popover's name field. */
+        saveChangesHeader: string;
+        /** Label of the filter-actions item that saves the pending changes. */
+        saveChangesButton: string;
+        /** Header of the popover that saves a new filter; it also names the popover's name field. */
+        saveAsNewHeader: string;
+        /** Label of the filter-actions item that saves the current filter as a new one. */
+        saveAsNewButton: string;
         change: string;
         resetChanges: string;
         remove: string;
-        error: string;
         errorHint: string;
         saveButton: string;
         cancelButton: string;
@@ -326,7 +331,6 @@ export type KbqClampedTextLocaleConfiguration = {
 /** Locale configuration for `KbqTimeRange` */
 export type KbqTimeRangeLocaleConfiguration = {
     title: {
-        for: string;
         placeholder: string;
     };
     editor: {

@@ -87,12 +87,13 @@ export const ptBRLocaleData = {
             searchPlaceholder: 'Buscar',
             searchEmptyResult: 'Nada encontrado',
             saveAsNewFilter: 'Salve o filtro novo',
-            saveChanges: 'Salve as mudanças',
-            saveAsNew: 'Novo nome',
+            saveChangesHeader: 'Novo nome',
+            saveChangesButton: 'Salve as mudanças',
+            saveAsNewHeader: 'Novo filtro',
+            saveAsNewButton: 'Salve como novo',
             change: 'Renomear',
             resetChanges: 'Reconfigurar',
             remove: 'Deletar',
-            error: 'A busca com esse nome já existe',
             errorHint: 'O filtro não pôde ser salvo. Tente de novo ou entre em contato com o administrador.',
             saveButton: 'Salvar',
             cancelButton: 'Cancelar',
@@ -155,7 +156,6 @@ export const ptBRLocaleData = {
     },
     timeRange: {
         title: {
-            for: 'para',
             placeholder: 'Selecione o período'
         },
         editor: {

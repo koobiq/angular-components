@@ -39,7 +39,7 @@ export const enUSLocaleData = {
             captionText: 'Drag file here or {{ browseLink }}',
             captionTextOnlyFolder: 'Drag here or {{ browseLinkFolder }}',
             captionTextWithFolder: 'Drag here or {{ browseLink }} or {{ browseLinkFolderMixed }}',
-            browseLink: 'choose',
+            browseLink: 'choose file',
             browseLinkFolder: 'choose folder',
             browseLinkFolderMixed: 'folder'
         },
@@ -48,7 +48,7 @@ export const enUSLocaleData = {
             captionTextOnlyFolder: 'or {{ browseLinkFolder }}',
             captionTextWithFolder: 'or {{ browseLink }} or {{ browseLinkFolderMixed }}',
             captionTextWhenSelected: 'Drag more or {{ browseLink }}',
-            captionTextForCompactSize: 'Drag files or {{ browseLink }}',
+            captionTextForCompactSize: 'Drag here or {{ browseLink }}',
             browseLink: 'choose files',
             browseLinkFolder: 'choose folder',
             browseLinkFolderMixed: 'folder',
@@ -69,7 +69,7 @@ export const enUSLocaleData = {
         searchPlaceholder: 'City or time zone'
     },
     actionsPanel: {
-        closeTooltip: 'Deselect'
+        closeTooltip: 'Clear'
     },
     filterBar: {
         reset: {
@@ -81,24 +81,25 @@ export const enUSLocaleData = {
         },
         filters: {
             defaultName: 'Filters',
-            saveNewFilterTooltip: 'Save the new filter',
+            saveNewFilterTooltip: 'Save as new',
             searchPlaceholder: 'Search',
             searchEmptyResult: 'Nothing found',
-            saveAsNewFilter: 'Save as new filter',
-            saveChanges: 'Save changes',
-            saveAsNew: 'New name',
+            saveAsNewFilter: 'Save as new',
+            saveChangesHeader: 'New name',
+            saveChangesButton: 'Save',
+            saveAsNewHeader: 'New filter',
+            saveAsNewButton: 'Save as new',
             change: 'Rename',
             resetChanges: 'Reset',
             remove: 'Delete',
-            error: 'The search with such name already exists',
-            errorHint: 'Could not save the filter. Try again or contact the administrator.',
+            errorHint: 'A filter with this name already exists',
             saveButton: 'Save',
             cancelButton: 'Cancel',
             actionsTooltip: 'Filter actions'
         },
         add: {
             tooltip: 'Add filter',
-            addedAnnouncement: '{{ name }} filter added'
+            addedAnnouncement: 'The "{{ name }}" filter was added'
         },
         refresher: {
             refresh: 'Refresh',
@@ -153,8 +154,7 @@ export const enUSLocaleData = {
     },
     timeRange: {
         title: {
-            for: 'for',
-            placeholder: 'Select period'
+            placeholder: 'Period'
         },
         editor: {
             from: 'from',
@@ -163,51 +163,51 @@ export const enUSLocaleData = {
             cancel: 'Cancel',
             rangeLabel: 'Period',
             outOfBoundsError: 'Allowed period: {{ value }}',
-            allTime: 'for all time',
-            currentQuarter: 'for the current quarter',
-            currentYear: 'for the current year',
+            allTime: 'All time',
+            currentQuarter: 'This quarter',
+            currentYear: 'This year',
             allTimeOption: 'All time',
-            currentQuarterOption: 'Current quarter',
-            currentYearOption: 'Current year'
+            currentQuarterOption: 'This quarter',
+            currentYearOption: 'This year'
         },
         durationTemplate: {
             title: {
                 SEPARATOR: ' ',
-                LAST_PART_SEPARATOR: '',
+                LAST_PART_SEPARATOR: 'and',
                 YEARS: `{years, plural,
                 one {# year}
-                other {last # years}
+                other {Last # years}
             }`,
                 MONTHS: `{months, plural,
-                one {last month}
-                other {last # months}
+                one {Last month}
+                other {Last # months}
             }`,
                 WEEKS: `{weeks, plural,
-                one {last week}
-                other {last # weeks}
+                one {Last week}
+                other {Last # weeks}
             }`,
                 DAYS: `{days, plural,
-                one {last day}
-                other {last # days}
+                one {Last day}
+                other {Last # days}
             }`,
                 HOURS: `{hours, plural,
-                one {last hour}
-                other {last # hours}
+                one {Last hour}
+                other {Last # hours}
             }`,
                 MINUTES: `{minutes, plural,
-                one {last minute}
-                other {last # minutes}
+                one {Last minute}
+                other {Last # minutes}
             }`,
                 SECONDS: `{seconds, plural,
-                one {last second}
-                other {last # seconds}
+                one {Last second}
+                other {Last # seconds}
             }`,
                 YEARS_FRACTION: `{years} years`,
                 MONTHS_FRACTION: `{months} months`
             },
             option: {
                 SEPARATOR: ' ',
-                LAST_PART_SEPARATOR: '',
+                LAST_PART_SEPARATOR: 'and',
                 YEARS: `{years, plural,
                 one {Last year}
                 other {Last # years}
@@ -243,14 +243,14 @@ export const enUSLocaleData = {
     },
     notificationCenter: {
         notifications: 'Notifications',
-        remove: 'Remove',
-        removeAll: 'Remove all',
-        doNotDisturb: 'Do not disturb',
-        showPopUpNotifications: 'Show pop-up notifications',
-        noNotifications: 'No notifications',
-        failedToLoadNotifications: 'Failed to load notifications',
-        repeat: 'Repeat',
-        loadingMore: 'Loading more notifications',
+        remove: 'Delete',
+        removeAll: 'Delete all',
+        doNotDisturb: 'Turn off notifications',
+        showPopUpNotifications: 'Turn on notifications',
+        noNotifications: 'No notifications yet',
+        failedToLoadNotifications: 'Failed to load notifications.',
+        repeat: 'Try again',
+        loadingMore: 'Loading notifications',
         unread: 'Unread'
     }
 } satisfies KbqLocaleStringsData;

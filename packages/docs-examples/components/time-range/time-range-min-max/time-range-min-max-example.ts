@@ -19,12 +19,12 @@ type ExampleText = {
 const ExampleLocalizedData = new InjectionToken<Record<string | 'default', ExampleText>>('ExampleLocalizedData', {
     factory: () => ({
         'ru-RU': {
-            placeholder: 'Выбрать период',
+            placeholder: 'Период',
             withPresets: 'С предустановками',
             withoutPresets: 'Без предустановок'
         },
         default: {
-            placeholder: 'Select period',
+            placeholder: 'Period',
             withPresets: 'With presets',
             withoutPresets: 'Without presets'
         }
