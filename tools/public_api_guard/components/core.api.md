@@ -3127,7 +3127,7 @@ export type KbqFileUploadA11yLocaleConfiguration = {
     filesNotAdded: string;
 };
 
-// @public (undocumented)
+// @public
 export type KbqFileUploadLocaleConfiguration = {
     a11y: KbqFileUploadA11yLocaleConfiguration;
     single: KbqBaseFileUploadLocaleConfiguration;

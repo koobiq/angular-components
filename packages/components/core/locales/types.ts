@@ -383,9 +383,13 @@ export type KbqFileUploadA11yLocaleConfiguration = {
     filesNotAdded: string;
 };
 
+/** Labels of both upload flavours, and the announcements neither of them renders. */
 export type KbqFileUploadLocaleConfiguration = {
+    /** Announcements of file list changes, read out rather than rendered. */
     a11y: KbqFileUploadA11yLocaleConfiguration;
+    /** Labels of the uploader that holds one file. */
     single: KbqBaseFileUploadLocaleConfiguration;
+    /** Labels of the uploader that holds a list, including its title and compact caption. */
     multiple: KbqMultipleFileUploadLocaleConfiguration;
 };
 
