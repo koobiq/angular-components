@@ -234,7 +234,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const hideSpy = jest.spyOn(component.popover(), 'hide');
+            const hideSpy = vi.spyOn(component.popover(), 'hide');
 
             component.onApply();
             flush();
@@ -246,7 +246,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onApply();
             flush();
@@ -259,7 +259,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -281,7 +281,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ENTER, ctrlKey: true });
 
             component.onKeydown(event);
@@ -294,7 +294,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ENTER, metaKey: true });
 
             component.onKeydown(event);
@@ -307,7 +307,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ENTER, ctrlKey: true });
 
             component.onKeydown(event);
@@ -320,7 +320,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ESCAPE, ctrlKey: true });
 
             component.onKeydown(event);
@@ -333,7 +333,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ENTER });
 
             component.onKeydown(event);
@@ -375,7 +375,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClearPipe.subscribe(spy);
 
@@ -389,7 +389,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -410,7 +410,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const showSpy = jest.spyOn(component.popover(), 'show');
+            const showSpy = vi.spyOn(component.popover(), 'show');
 
             component.open();
 
@@ -429,7 +429,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClosePipe.subscribe(spy);
 
@@ -443,7 +443,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClosePipe.subscribe(spy);
 

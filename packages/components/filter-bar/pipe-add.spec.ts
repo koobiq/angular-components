@@ -285,7 +285,7 @@ describe('KbqPipeAdd', () => {
 
         it('should emit onAddPipe event with the template value', fakeAsync(() => {
             const pipeAdd = getPipeAdd();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             pipeAdd.onAddPipe.subscribe(spy);
 
@@ -305,7 +305,7 @@ describe('KbqPipeAdd', () => {
         it('should emit filterBar.filterChange', fakeAsync(() => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.filter.subscribe(spy);
 
@@ -324,7 +324,7 @@ describe('KbqPipeAdd', () => {
 
         it('should close the select after adding a pipe', fakeAsync(() => {
             const pipeAdd = getPipeAdd();
-            const closeSpy = jest.spyOn(pipeAdd.select(), 'close');
+            const closeSpy = vi.spyOn(pipeAdd.select(), 'close');
 
             pipeAdd.select().open();
             flush();
@@ -413,7 +413,7 @@ describe('KbqPipeAdd', () => {
         it('should call filterBar.openPipe.next when option is already selected', fakeAsync(() => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
-            const openPipeSpy = jest.spyOn(filterBar.openPipe, 'next');
+            const openPipeSpy = vi.spyOn(filterBar.openPipe, 'next');
 
             // First click — add the pipe
             pipeAdd.select().open();
@@ -527,7 +527,7 @@ describe('KbqPipeAdd', () => {
 
         it('should emit onAddPipe when Enter is pressed on a template option', fakeAsync(() => {
             const pipeAdd = getPipeAdd();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             pipeAdd.onAddPipe.subscribe(spy);
 
@@ -545,7 +545,7 @@ describe('KbqPipeAdd', () => {
         it('should call filterBar.openPipe.next when Enter is pressed on an already-added option', fakeAsync(() => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
-            const openPipeSpy = jest.spyOn(filterBar.openPipe, 'next');
+            const openPipeSpy = vi.spyOn(filterBar.openPipe, 'next');
 
             // First Enter — add the pipe
             pipeAdd.select().open();

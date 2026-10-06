@@ -185,7 +185,7 @@ describe('LuxonDateAdapter with KBQ_DATE_TIMEZONE override', () => {
     });
 
     it('should fall back to the host time zone when the zone is unknown', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const adapter = createAdapter('Bad/Zone');
 
         expect(formatInstant(adapter)).toBe(DateTime.fromISO(instant).toFormat(dateTimeFormat));

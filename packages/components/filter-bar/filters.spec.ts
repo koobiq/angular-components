@@ -83,10 +83,10 @@ class TestComponent {
         }
     ];
 
-    onSelectFilterSpy = jest.fn();
-    onSaveSpy = jest.fn();
-    onRemoveFilterSpy = jest.fn();
-    onResetFilterChangesSpy = jest.fn();
+    onSelectFilterSpy = vi.fn();
+    onSaveSpy = vi.fn();
+    onRemoveFilterSpy = vi.fn();
+    onResetFilterChangesSpy = vi.fn();
 }
 
 describe('KbqFilters', () => {
@@ -267,7 +267,7 @@ describe('KbqFilters', () => {
 
             initFixture(createFilter([]), [filter]);
 
-            const spy = jest.spyOn(getFilterBar().internalFilterChanges, 'next');
+            const spy = vi.spyOn(getFilterBar().internalFilterChanges, 'next');
 
             getFiltersComponent().selectFilter(filter);
 
@@ -322,7 +322,7 @@ describe('KbqFilters', () => {
 
             initFixture(filter);
 
-            const spy = jest.spyOn(getFilterBar().internalFilterChanges, 'next');
+            const spy = vi.spyOn(getFilterBar().internalFilterChanges, 'next');
 
             getFiltersComponent().saveChanges();
 
@@ -445,7 +445,7 @@ describe('KbqFilters', () => {
 
                 component.filterName.setValue('New');
                 const event = new Event('submit');
-                const preventSpy = jest.spyOn(event, 'preventDefault');
+                const preventSpy = vi.spyOn(event, 'preventDefault');
 
                 component.saveAsNew(event);
 
@@ -539,7 +539,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const setErrorsSpy = jest.spyOn(component.filterName, 'setErrors');
+            const setErrorsSpy = vi.spyOn(component.filterName, 'setErrors');
 
             component.showError({ nameAlreadyExists: true });
 
@@ -607,7 +607,7 @@ describe('KbqFilters', () => {
 
             initFixture(filter);
 
-            const spy = jest.spyOn(getFilterBar(), 'resetFilterChangedState');
+            const spy = vi.spyOn(getFilterBar(), 'resetFilterChangedState');
 
             getFiltersComponent().resetFilterChanges();
 
@@ -695,7 +695,7 @@ describe('KbqFilters', () => {
             component.saveFocusedElement(mainButton);
             expect(component.focusedElementBeforeIs(mainButton)).toBe(true);
 
-            const restoreSpy = jest.spyOn(component, 'restoreFocus');
+            const restoreSpy = vi.spyOn(component, 'restoreFocus');
 
             component.filterSavedSuccessfully();
 
@@ -758,7 +758,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const showErrorSpy = jest.spyOn(component, 'showError');
+            const showErrorSpy = vi.spyOn(component, 'showError');
 
             component.filterSavedUnsuccessfully({ text: 'Failed' });
 
@@ -778,7 +778,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             setInputModality(modality);
 
@@ -813,7 +813,7 @@ describe('KbqFilters', () => {
             flush();
 
             const popover = (component as any).savePopover();
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             popover.saveFilterButton = () => ({
                 disabled: true,
@@ -979,7 +979,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const closePopoverSpy = jest.spyOn(component, 'closePopover');
+            const closePopoverSpy = vi.spyOn(component, 'closePopover');
             const event = new KeyboardEvent('keydown', { key: 'Escape' });
 
             component.searchKeydownHandler(event);
@@ -992,7 +992,7 @@ describe('KbqFilters', () => {
 
             const component = getFiltersComponent();
             const event = new KeyboardEvent('keydown', { key: 'a' });
-            const stopSpy = jest.spyOn(event, 'stopPropagation');
+            const stopSpy = vi.spyOn(event, 'stopPropagation');
 
             component.searchKeydownHandler(event);
 
@@ -1066,7 +1066,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const hideSpy = jest.spyOn(getPopoverTrigger(), 'hide');
+            const hideSpy = vi.spyOn(getPopoverTrigger(), 'hide');
 
             component.closePopover(false);
             flush();
@@ -1104,7 +1104,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const restoreSpy = jest.spyOn(component, 'restoreFocus');
+            const restoreSpy = vi.spyOn(component, 'restoreFocus');
 
             component.closePopover(true);
             flush();
@@ -1123,7 +1123,7 @@ describe('KbqFilters', () => {
             fixture.detectChanges();
             flush();
 
-            const restoreSpy = jest.spyOn(component, 'restoreFocus');
+            const restoreSpy = vi.spyOn(component, 'restoreFocus');
 
             component.closePopover(false);
             flush();
@@ -1211,7 +1211,7 @@ describe('KbqFilters', () => {
             initFixture(filter);
 
             const component = getFiltersComponent();
-            const showSpy = jest.spyOn(getPopoverTrigger(), 'show');
+            const showSpy = vi.spyOn(getPopoverTrigger(), 'show');
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();

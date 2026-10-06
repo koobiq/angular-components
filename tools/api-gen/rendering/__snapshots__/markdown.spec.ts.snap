@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`renderApiAsMarkdown renders the groups of the API tab at the given depth and the entries below them 1`] = `
+exports[`renderApiAsMarkdown > renders the groups of the API tab at the given depth and the entries below them 1`] = `
 "### Components
 
 #### KbqAlert (component)

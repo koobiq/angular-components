@@ -3,7 +3,7 @@
 ## Unit tests
 
 Unit tests check individual modules and components of the application in isolation. They are run using
-[jest](https://jestjs.io/).
+[Vitest](https://vitest.dev/).
 
 ### Setup
 
@@ -14,6 +14,7 @@ yarn install
 ### Available commands
 
 ```bash
+yarn run unit:all
 yarn run unit:components
 yarn run unit:components-experimental
 yarn run unit:angular-moment-adapter

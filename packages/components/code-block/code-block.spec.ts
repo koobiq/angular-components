@@ -8,6 +8,7 @@ import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabNavBar } from '@koobiq/components/tabs';
 import { HLJSApi } from 'highlight.js';
 import { Observable, Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import {
     KBQ_CODE_BLOCK_FALLBACK_FILE_NAME,
     KbqCodeBlock,
@@ -463,7 +464,7 @@ describe(KbqCodeBlock.name, () => {
     });
 
     it('should set fallback file content language if is invalid', async () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
 
@@ -532,7 +533,7 @@ describe(KbqCodeBlock.name, () => {
     it('should toggle softWrap property by click', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
-        const toggleSoftWrapSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleSoftWrap');
+        const toggleSoftWrapSpy = vi.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleSoftWrap');
 
         componentInstance.canToggleSoftWrap = true;
         fixture.detectChanges();
@@ -554,7 +555,7 @@ describe(KbqCodeBlock.name, () => {
     it('should copy code content by click', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
-        const copyCodeSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'copyCode');
+        const copyCodeSpy = vi.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'copyCode');
 
         componentInstance.canCopy = true;
         fixture.detectChanges();
@@ -575,10 +576,10 @@ describe(KbqCodeBlock.name, () => {
     it('should download code content by click', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
-        const downloadCodeSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'downloadCode');
+        const downloadCodeSpy = vi.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'downloadCode');
         // Following the blob link is a navigation jsdom does not implement, and it reports that from a timer
         // that fires in whichever test runs next.
-        const linkClick = jest.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+        const linkClick = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
 
         try {
             componentInstance.canDownload = true;
@@ -604,7 +605,7 @@ describe(KbqCodeBlock.name, () => {
     it('should open link by click', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
-        const openLinkSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'openLink');
+        const openLinkSpy = vi.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'openLink');
 
         componentInstance.files = [{ content: 'koobiq', link: 'https://koobiq.io' }];
         fixture.detectChanges();
@@ -692,7 +693,7 @@ describe(KbqCodeBlock.name, () => {
     });
 
     it('should not track hover when alwaysShowActionbar is enabled', () => {
-        const addEventListenerSpy = jest.spyOn(HTMLElement.prototype, 'addEventListener');
+        const addEventListenerSpy = vi.spyOn(HTMLElement.prototype, 'addEventListener');
 
         try {
             TestBed.configureTestingModule({ imports: [BaseCodeBlock, NoopAnimationsModule] });
@@ -796,7 +797,7 @@ describe(KbqCodeBlock.name, () => {
             { provide: SharedResizeObserver, useValue: mockResizeObserver }
         ]);
         const { debugElement } = fixture;
-        const spy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleViewAll');
+        const spy = vi.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleViewAll');
 
         mockPreHeight(debugElement, 500);
         mockResizeObserver.triggerResize();
@@ -813,7 +814,7 @@ describe(KbqCodeBlock.name, () => {
             { provide: SharedResizeObserver, useValue: mockResizeObserver }
         ]);
         const { debugElement } = fixture;
-        const spy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleViewAll');
+        const spy = vi.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleViewAll');
 
         mockPreHeight(debugElement, 500);
         mockResizeObserver.triggerResize();
@@ -880,14 +881,14 @@ describe(KbqCodeBlock.name, () => {
     describe('with core (async highlight.js loading)', () => {
         const buildMockCore = () =>
             ({
-                getLanguage: jest.fn().mockReturnValue({}),
-                highlight: jest.fn().mockImplementation((_content: string, { language }: { language: string }) => ({
+                getLanguage: vi.fn().mockReturnValue({}),
+                highlight: vi.fn().mockImplementation((_content: string, { language }: { language: string }) => ({
                     value: `<span class="hljs-keyword">code</span>`,
                     language,
                     illegal: false,
                     relevance: 10
                 })),
-                registerLanguage: jest.fn()
+                registerLanguage: vi.fn()
             }) as unknown as HLJSApi;
 
         it('should defer highlighting until hljs core is loaded', async () => {
@@ -908,7 +909,7 @@ describe(KbqCodeBlock.name, () => {
         });
 
         it('should clear pending when the hljs core fails to load', async () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
             try {
                 const fixture = createComponent(BaseCodeBlock, [
@@ -935,8 +936,8 @@ describe(KbqCodeBlock.name, () => {
 
         it('should call registerLanguage for each provided language', async () => {
             const mockCore = buildMockCore();
-            const typescriptLoader = jest.fn().mockResolvedValue({ default: jest.fn() });
-            const cssLoader = jest.fn().mockResolvedValue({ default: jest.fn() });
+            const typescriptLoader = vi.fn().mockResolvedValue({ default: vi.fn() });
+            const cssLoader = vi.fn().mockResolvedValue({ default: vi.fn() });
 
             const fixture = createComponent(BaseCodeBlock, [
                 kbqCodeBlockHighlightJsConfigProvider({
@@ -975,8 +976,8 @@ describe(KbqCodeBlock.name, () => {
         it('should fall back to fallback language for unknown languages (async path)', async () => {
             const mockCore = buildMockCore();
 
-            (mockCore.getLanguage as jest.Mock).mockReturnValue(undefined);
-            (mockCore.highlight as jest.Mock).mockImplementation(
+            (mockCore.getLanguage as Mock).mockReturnValue(undefined);
+            (mockCore.highlight as Mock).mockImplementation(
                 (_content: string, { language: _lang }: { language: string }) => ({
                     value: `<span>code</span>`,
                     language: 'plaintext',
@@ -985,7 +986,7 @@ describe(KbqCodeBlock.name, () => {
                 })
             );
 
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = createComponent(BaseCodeBlock, [
                 kbqCodeBlockHighlightJsConfigProvider({
                     core: () => Promise.resolve({ default: mockCore })
@@ -1038,14 +1039,14 @@ describe(KbqCodeBlock.name, () => {
     describe('scrollTo', () => {
         const createMockCore = () =>
             ({
-                getLanguage: jest.fn().mockReturnValue({}),
-                highlight: jest.fn().mockImplementation((_content: string, { language }: { language: string }) => ({
+                getLanguage: vi.fn().mockReturnValue({}),
+                highlight: vi.fn().mockImplementation((_content: string, { language }: { language: string }) => ({
                     value: `<span class="hljs-keyword">code</span>`,
                     language,
                     illegal: false,
                     relevance: 10
                 })),
-                registerLanguage: jest.fn()
+                registerLanguage: vi.fn()
             }) as unknown as HLJSApi;
 
         it('should scroll immediately when highlighting is complete', async () => {
@@ -1058,7 +1059,7 @@ describe(KbqCodeBlock.name, () => {
             await fixture.whenStable();
 
             const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
-            const scrollSpy = jest.spyOn(getScrollbarViewport(fixture), 'scrollTo').mockImplementation(() => {});
+            const scrollSpy = vi.spyOn(getScrollbarViewport(fixture), 'scrollTo').mockImplementation(() => {});
 
             codeBlock.scrollTo({ top: 50 });
 
@@ -1078,7 +1079,7 @@ describe(KbqCodeBlock.name, () => {
             ]);
 
             const codeBlock = geCodeBlockDebugElement(fixture.debugElement).componentInstance as KbqCodeBlock;
-            const scrollSpy = jest.spyOn(getScrollbarViewport(fixture), 'scrollTo').mockImplementation(() => {});
+            const scrollSpy = vi.spyOn(getScrollbarViewport(fixture), 'scrollTo').mockImplementation(() => {});
 
             codeBlock.scrollTo({ top: 100 });
             expect(scrollSpy).not.toHaveBeenCalled();
@@ -1093,7 +1094,7 @@ describe(KbqCodeBlock.name, () => {
             let resolveCore!: (value: { default: HLJSApi }) => void;
             // Installed on the prototype, before the component exists: a spy taken off the instance
             // afterwards could not have recorded a premature flash, which is half of what this asserts.
-            const flashSpy = jest.spyOn(KbqScrollbarViewport.prototype, 'flashScrollIndicators');
+            const flashSpy = vi.spyOn(KbqScrollbarViewport.prototype, 'flashScrollIndicators');
 
             try {
                 const fixture = createComponent(BaseCodeBlock, [

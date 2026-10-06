@@ -17,12 +17,5 @@ jobs:
       - uses: ./.github/workflows/actions/setup-node
       # Build styles which are required for unit tests
       - run: yarn run styles:build-all
-      - run: |
-          yarn run unit:components
-          yarn run unit:angular-moment-adapter
-          yarn run unit:angular-luxon-adapter
-          yarn run unit:schematics
-          yarn run unit:cli
-          yarn run unit:koobiq-docs
-          yarn run unit:tools
-          yarn run unit:components-experimental
+      # One Vitest run for every package: the `angular` and `node` projects of vitest.config.mts.
+      - run: yarn run unit:all

@@ -457,7 +457,7 @@ describe('Date formatter (imports and providing)', () => {
 
             fixture.componentInstance.value.set(date);
 
-            const spy = jest.spyOn(dateFormatter, 'absoluteLongDate');
+            const spy = vi.spyOn(dateFormatter, 'absoluteLongDate');
 
             fixture.detectChanges();
             refresh(fixture);
@@ -472,7 +472,7 @@ describe('Date formatter (imports and providing)', () => {
             fixture.componentInstance.value.set(testAdapter.createDate(2024, 0, 15));
             fixture.detectChanges();
 
-            const spy = jest.spyOn(dateFormatter, 'absoluteLongDate');
+            const spy = vi.spyOn(dateFormatter, 'absoluteLongDate');
 
             fixture.componentInstance.value.set(testAdapter.createDate(2024, 5, 20));
             fixture.detectChanges();
@@ -811,7 +811,7 @@ describe('Date formatter (imports and providing)', () => {
             fixture.componentInstance.range.set([start, end]);
             fixture.detectChanges();
 
-            const spy = jest.spyOn(dateFormatter, 'durationLong');
+            const spy = vi.spyOn(dateFormatter, 'durationLong');
 
             refresh(fixture);
             refresh(fixture);
@@ -826,7 +826,7 @@ describe('Date formatter (imports and providing)', () => {
             fixture.componentInstance.range.set([start, end]);
             fixture.detectChanges();
 
-            const spy = jest.spyOn(dateFormatter, 'durationLong');
+            const spy = vi.spyOn(dateFormatter, 'durationLong');
 
             fixture.componentInstance.range.set([start, end.plus({ days: 1 })]);
             fixture.detectChanges();
@@ -1125,7 +1125,7 @@ describe('Date formatter (imports and providing)', () => {
             fixture.componentInstance.to = fixture.componentInstance.from.plus({ days: 2, hours: 4 });
             fixture.detectChanges();
 
-            const spy = jest.spyOn(dateFormatter, 'durationLong');
+            const spy = vi.spyOn(dateFormatter, 'durationLong');
 
             refresh(fixture);
             refresh(fixture);
@@ -1156,7 +1156,7 @@ describe('Date formatter (imports and providing)', () => {
             fixture.componentInstance.to = fixture.componentInstance.from.plus({ days: 2, hours: 4 });
             fixture.detectChanges();
 
-            const spy = jest.spyOn(dateFormatter, 'durationLong');
+            const spy = vi.spyOn(dateFormatter, 'durationLong');
 
             refresh(fixture);
             refresh(fixture);

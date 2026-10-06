@@ -486,8 +486,8 @@ describe('KbqSplitButton', () => {
             const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
             const triggerDebugEl = fixture.debugElement.query(By.directive(KbqDropdownTrigger));
 
-            jest.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({ width: 600 } as DOMRect);
-            jest.spyOn(triggerDebugEl.nativeElement, 'getBoundingClientRect').mockReturnValue({ width: 50 } as DOMRect);
+            vi.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({ width: 600 } as DOMRect);
+            vi.spyOn(triggerDebugEl.nativeElement, 'getBoundingClientRect').mockReturnValue({ width: 50 } as DOMRect);
 
             fixture.detectChanges();
 

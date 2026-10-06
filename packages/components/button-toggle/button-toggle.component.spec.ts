@@ -96,7 +96,7 @@ describe('KbqButtonToggle with forms', () => {
         });
 
         it('should register the on change callback', () => {
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             testComponent.control.registerOnChange(spy);
             testComponent.control.setValue('blue');
@@ -321,7 +321,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should emit a change event from button toggles', fakeAsync(() => {
             expect(buttonToggleInstances[0].checked).toBe(false);
 
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             buttonToggleInstances[0].change.subscribe(changeSpy);
 
@@ -341,7 +341,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should emit a change event from the button toggle group', fakeAsync(() => {
             expect(groupInstance.value).toBeFalsy();
 
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
 
@@ -647,7 +647,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should emit a change event for state changes', fakeAsync(() => {
             expect(buttonToggleInstances[0].checked).toBe(false);
 
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             buttonToggleInstances[0].change.subscribe(changeSpy);
 
@@ -726,7 +726,7 @@ describe('KbqButtonToggle without forms', () => {
         it('should emit a change event for state changes', fakeAsync(() => {
             expect(buttonToggleInstance.checked).toBe(false);
 
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             buttonToggleInstance.change.subscribe(changeSpy);
 
@@ -807,7 +807,7 @@ describe('KbqButtonToggle without forms', () => {
 /**
  * The label lives in a box of its own, because it has two jobs no single box can do at once: paint
  * `text-overflow: ellipsis`, which a flex box never does, and lay icons out beside it, which only a
- * flex box does exactly. Nothing here asserts computed styles — jest-preset-angular strips component
+ * flex box does exactly. Nothing here asserts computed styles — the unit tests load no component
  * styles — so what is pinned instead is the structure those styles are written against, and the
  * element `kbq-title` measures.
  */
@@ -1115,7 +1115,7 @@ describe('KbqButtonToggle accessibility', () => {
 
         it('should warn about an icon-only toggle with no accessible name', () => {
             // An icon glyph is `aria-hidden`, so such a button has no name at all (AXE `button-name`).
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(UnnamedIconOnlyButtonToggle);
 
             fixture.detectChanges();
@@ -1126,7 +1126,7 @@ describe('KbqButtonToggle accessibility', () => {
         });
 
         it('should stay quiet about an icon-only toggle that carries a name', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(ButtonToggleWithIconOnly);
 
             fixture.detectChanges();
@@ -1137,7 +1137,7 @@ describe('KbqButtonToggle accessibility', () => {
         });
 
         it('should not accept a title on the host, which never reaches the button it would name', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(TitledIconOnlyButtonToggle);
 
             fixture.detectChanges();
@@ -1335,8 +1335,8 @@ describe('KbqButtonToggle accessibility', () => {
 
         it('should monitor the host and stop on destroy', () => {
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const monitor = jest.spyOn(focusMonitor, 'monitor');
-            const stopMonitoring = jest.spyOn(focusMonitor, 'stopMonitoring');
+            const monitor = vi.spyOn(focusMonitor, 'monitor');
+            const stopMonitoring = vi.spyOn(focusMonitor, 'stopMonitoring');
             const fixture = TestBed.createComponent(StandaloneButtonToggle);
 
             fixture.detectChanges();
@@ -1360,7 +1360,7 @@ describe('KbqButtonToggle accessibility', () => {
             const group = fixture.debugElement
                 .query(By.directive(KbqButtonToggleGroup))
                 .injector.get(KbqButtonToggleGroup);
-            const valueChange = jest.fn();
+            const valueChange = vi.fn();
 
             group.valueChange.subscribe(valueChange);
 

@@ -18,7 +18,7 @@ import { DocsLocaleService } from './locale';
  * assertions are intentionally agnostic to HOW the string is produced (ternary vs `t()`).
  *
  * Scope is limited to components whose module graph does not reach `@koobiq/docs-examples`, which
- * the shared Jest config cannot yet resolve (see memory: docs Jest / docs-examples path gap).
+ * the unit test config cannot resolve.
  */
 
 const provideDocsLocale = (locale: DocsLocale) => {
@@ -115,7 +115,7 @@ describe('docs i18n strings (characterization)', () => {
 
     describe(`${DocsClipboardService.name} success toast`, () => {
         const showToastTitle = (locale: DocsLocale): string => {
-            const show = jest.fn();
+            const show = vi.fn();
 
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({

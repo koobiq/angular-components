@@ -40,7 +40,7 @@ const FIELD_AS_RECT = { x: FIELD.left, y: FIELD.top, width: FIELD.width, height:
 describe('caret rect', () => {
     afterEach(() => {
         document.body.innerHTML = '';
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     describe('input', () => {
@@ -48,7 +48,7 @@ describe('caret rect', () => {
 
         beforeEach(() => {
             // The ruler measures itself with `scrollWidth`, which jsdom reports as 0 for every element.
-            jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+            vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
                 return (this.textContent || '').length * CHAR_WIDTH;
             });
 
@@ -170,10 +170,10 @@ describe('caret rect', () => {
 
         beforeEach(() => {
             // jsdom lays nothing out and reports 0 for both offsets.
-            jest.spyOn(HTMLElement.prototype, 'offsetTop', 'get').mockImplementation(function (this: HTMLElement) {
+            vi.spyOn(HTMLElement.prototype, 'offsetTop', 'get').mockImplementation(function (this: HTMLElement) {
                 return PADDING + layOutMarker(this).row * LINE_HEIGHT;
             });
-            jest.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockImplementation(function (this: HTMLElement) {
+            vi.spyOn(HTMLElement.prototype, 'offsetLeft', 'get').mockImplementation(function (this: HTMLElement) {
                 return PADDING + layOutMarker(this).column * CHAR_WIDTH;
             });
 
@@ -224,7 +224,7 @@ describe('caret rect', () => {
         });
 
         it('should not wrap the rows of a field that does not wrap them', () => {
-            const appendChild = jest.spyOn(document.body, 'appendChild');
+            const appendChild = vi.spyOn(document.body, 'appendChild');
 
             textarea.style.whiteSpace = 'pre';
             kbqGetCaretRect(textarea);

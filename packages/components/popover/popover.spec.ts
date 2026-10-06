@@ -477,7 +477,7 @@ describe('KbqPopover', () => {
         it('Click emits confirm exactly once and closes the panel', fakeAsync(() => {
             const fixture = createComponent(PopoverConfirmTestComponent);
             const { componentInstance, debugElement } = fixture;
-            const onConfirmSpyFn = jest.spyOn(componentInstance, 'onConfirm');
+            const onConfirmSpyFn = vi.spyOn(componentInstance, 'onConfirm');
 
             readOverlayContainer();
 
@@ -689,7 +689,7 @@ describe('KbqPopover', () => {
         });
 
         it('should emit kbqPopoverVisibleChange once per state change', fakeAsync(() => {
-            const spy = jest.spyOn(closingInstance, 'onVisibleChange');
+            const spy = vi.spyOn(closingInstance, 'onVisibleChange');
 
             for (let i = 0; i < 3; i++) {
                 open();
@@ -1251,7 +1251,7 @@ describe('KbqPopover', () => {
         }));
 
         it('should emit the placement resolved by the position strategy', fakeAsync(() => {
-            const spy = jest.spyOn(placementInstance, 'onPlacementChange');
+            const spy = vi.spyOn(placementInstance, 'onPlacementChange');
 
             open();
 
@@ -1311,7 +1311,7 @@ describe('KbqPopover', () => {
         });
 
         it('should warn and fall back to the top placement on an unknown value', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
             const fixture = createComponent(PopoverFallbacks);
 
             readOverlayContainer();
@@ -1325,7 +1325,7 @@ describe('KbqPopover', () => {
         }));
 
         it('should warn and fall back to the medium size on an unknown value', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
             const fixture = createComponent(PopoverFallbacks);
 
             readOverlayContainer();
@@ -1345,7 +1345,7 @@ describe('KbqPopover', () => {
 
             const scrolled = new Subject<CdkScrollable | void>();
 
-            jest.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
+            vi.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
 
             const fixture = TestBed.createComponent(PopoverSimple);
 
@@ -1363,13 +1363,13 @@ describe('KbqPopover', () => {
 
             const scrolled = new Subject<CdkScrollable | void>();
 
-            jest.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
+            vi.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
 
             const fixture = TestBed.createComponent(PopoverSimple);
 
             fixture.detectChanges();
 
-            const measure = jest.spyOn(Element.prototype, 'getBoundingClientRect');
+            const measure = vi.spyOn(Element.prototype, 'getBoundingClientRect');
             const container = document.createElement('div');
 
             // A plain document scroll (`scrolled.next()`) never reaches the layout reads at all — the handler
@@ -1517,7 +1517,7 @@ describe('KbqPopover', () => {
         });
 
         it('should connect the panel to the origin it was opened with', fakeAsync(() => {
-            const flexibleConnectedTo = jest.spyOn(TestBed.inject(OverlayPositionBuilder), 'flexibleConnectedTo');
+            const flexibleConnectedTo = vi.spyOn(TestBed.inject(OverlayPositionBuilder), 'flexibleConnectedTo');
 
             originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
             originFixture.detectChanges();
@@ -1529,8 +1529,8 @@ describe('KbqPopover', () => {
         it('should move an open panel to a new origin', fakeAsync(() => {
             openPopover();
 
-            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
-            const updatePosition = jest.spyOn(originInstance.popoverTrigger().overlayRef!, 'updatePosition');
+            const setOrigin = vi.spyOn(positionStrategy(), 'setOrigin');
+            const updatePosition = vi.spyOn(originInstance.popoverTrigger().overlayRef!, 'updatePosition');
 
             originInstance.origin = { x: 40, y: 80, width: 0, height: 16 };
             originFixture.detectChanges();
@@ -1544,7 +1544,7 @@ describe('KbqPopover', () => {
             originFixture.detectChanges();
             openPopover();
 
-            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
+            const setOrigin = vi.spyOn(positionStrategy(), 'setOrigin');
 
             originInstance.origin = null;
             originFixture.detectChanges();
@@ -1555,7 +1555,7 @@ describe('KbqPopover', () => {
         it('should carry an origin bound between two opens into the strategy', fakeAsync(() => {
             openPopover();
 
-            const setOrigin = jest.spyOn(positionStrategy(), 'setOrigin');
+            const setOrigin = vi.spyOn(positionStrategy(), 'setOrigin');
 
             originInstance.visible = false;
             originFixture.detectChanges();
@@ -1572,7 +1572,7 @@ describe('KbqPopover', () => {
         // jsdom lays nothing out, so the focus trap finds nothing tabbable and `activeElement` never
         // moves either way; the call it makes is the only thing that separates the two modes here.
         it('should move the focus into the panel by default', fakeAsync(() => {
-            const focusFirstTabbableElement = jest.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
+            const focusFirstTabbableElement = vi.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
 
             openPopover();
 
@@ -1580,7 +1580,7 @@ describe('KbqPopover', () => {
         }));
 
         it('should leave the focus alone when autoFocus is off', fakeAsync(() => {
-            const focusFirstTabbableElement = jest.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
+            const focusFirstTabbableElement = vi.spyOn(FocusTrap.prototype, 'focusFirstTabbableElement');
 
             originInstance.autoFocus = false;
             originFixture.detectChanges();

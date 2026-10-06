@@ -508,7 +508,7 @@ describe(DocsMigrationGuide.name, () => {
     // The page has no anchors, which is what jumps to a linked heading on every other page.
     it('should scroll to the step a link points at once the guide has rendered', async () => {
         // jsdom lays nothing out and has no `scrollIntoView` to spy on.
-        const scrollIntoView = jest.fn();
+        const scrollIntoView = vi.fn();
 
         Element.prototype.scrollIntoView = scrollIntoView;
 

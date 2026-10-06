@@ -3,7 +3,7 @@
     "compilerOptions": {
         "types": [
             "node",
-            "jest"
+            "vitest/globals"
         ]
     },
     "angularCompilerOptions": {
@@ -12,6 +12,7 @@
         "compilationMode": "partial"
     },
     "include": [
-        "**/*.ts"
+        "**/*.ts",
+        "../../tools/vitest/*.d.ts"
     ]
 }

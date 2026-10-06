@@ -88,7 +88,7 @@ class TestTagInputDistinct {
     readonly distinct = signal(false);
     separatorKeyCodes: number[] = [ENTER];
     readonly tags: string[] = ['existing-tag'];
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -101,7 +101,7 @@ class TestTagInputDistinct {
 })
 class TestTagInputDefaultSeparators {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 
     addOnBlur = true;
 }
@@ -119,7 +119,7 @@ class TestTagInputDefaultSeparators {
 })
 class TestTagInputStandaloneWithoutModule {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -139,7 +139,7 @@ class TestTagInputStandaloneWithoutModule {
 })
 class TestTagInputWithDashSeparator {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -162,7 +162,7 @@ class TestTagInputWithDashSeparator {
 })
 class TestTagInputWithPasteOnlySpace {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -185,7 +185,7 @@ class TestTagInputWithPasteOnlySpace {
 })
 class TestTagInputWithKeylessWhitespaceSeparator {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -207,7 +207,7 @@ class TestTagInputSeparators {
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly separatorKeyCodes = signal<number[]>([ENTER]);
     readonly addOnPaste = signal(true);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -951,7 +951,7 @@ describe(KbqTagInput.name, () => {
             it('should keep triggerValidation() as a no-op', () => {
                 const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
                 const { componentInstance } = fixture;
-                const statusChangesSpy = jest.fn();
+                const statusChangesSpy = vi.fn();
 
                 componentInstance.inputControl.statusChanges.subscribe(statusChangesSpy);
                 componentInstance.tagInput().triggerValidation();
@@ -1005,7 +1005,7 @@ describe('KbqTagInput', () => {
         it('emits the (tagEnd) on enter keyup', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
 
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             tagInputDirective.onKeydown(ENTER_EVENT);
             expect(addSpyFn).toHaveBeenCalled();
@@ -1027,7 +1027,7 @@ describe('KbqTagInput', () => {
 
     describe('[addOnBlur]', () => {
         it('allows (tagEnd) when true', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnBlur = true;
             fixture.detectChanges();
@@ -1037,7 +1037,7 @@ describe('KbqTagInput', () => {
         });
 
         it('disallows (tagEnd) when false', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnBlur = false;
             fixture.detectChanges();
@@ -1057,7 +1057,7 @@ describe('KbqTagInput', () => {
         };
 
         it('allows (tagEnd) when true', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = true;
             fixture.detectChanges();
@@ -1067,7 +1067,7 @@ describe('KbqTagInput', () => {
         });
 
         it('disallows (tagEnd) when false', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = false;
             fixture.detectChanges();
@@ -1077,7 +1077,7 @@ describe('KbqTagInput', () => {
         });
 
         it('divide string by kbqTagInputSeparatorKeyCodes and add 4 item', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = true;
             testTagInput.separatorKeyCodes = [COMMA, SEMICOLON, SPACE, ENTER];
@@ -1103,7 +1103,7 @@ describe('KbqTagInput', () => {
     describe('[separatorKeyCodes]', () => {
         it('does not emit (tagEnd) when a non-separator key is pressed', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement);
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
@@ -1114,7 +1114,7 @@ describe('KbqTagInput', () => {
 
         it('emits (tagEnd) when a custom separator key was pressed', () => {
             const COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement, ',');
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
@@ -1134,7 +1134,7 @@ describe('KbqTagInput', () => {
                 createKeyboardEvent('keydown', keyCode, inputNativeElement, key)
             );
 
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.separatorKeyCodes = separators.map((separator) => separator.keyCode);
 
@@ -1152,7 +1152,7 @@ describe('KbqTagInput', () => {
             // emission for a non-default separator (COMMA in this case).
             testTagInput.separatorKeyCodes = [COMMA];
 
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             (inputNativeElement as HTMLInputElement).value = 'pending-tag';
             fixture.detectChanges();
@@ -1170,7 +1170,7 @@ describe('KbqTagInput', () => {
                 const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
 
                 Object.defineProperty(ENTER_EVENT, modifierKey, { get: () => true });
-                const addSpyFn = jest.spyOn(testTagInput, 'add');
+                const addSpyFn = vi.spyOn(testTagInput, 'add');
 
                 testTagInput.separatorKeyCodes = [ENTER];
                 (inputNativeElement as HTMLInputElement).value = 'tag-value';
@@ -1183,7 +1183,7 @@ describe('KbqTagInput', () => {
 
         it('should prevent default when a separator key is pressed with empty input', () => {
             const SPACE_EVENT = createKeyboardEvent('keydown', SPACE, inputNativeElement, ' ');
-            const preventDefaultSpy = jest.spyOn(SPACE_EVENT, 'preventDefault');
+            const preventDefaultSpy = vi.spyOn(SPACE_EVENT, 'preventDefault');
 
             testTagInput.separatorKeyCodes = [SPACE];
             (inputNativeElement as HTMLInputElement).value = '';
@@ -1195,7 +1195,7 @@ describe('KbqTagInput', () => {
 
         it('should not prevent default when TAB separator is pressed with empty input', () => {
             const TAB_EVENT = createKeyboardEvent('keydown', TAB, inputNativeElement, 'Tab');
-            const preventDefaultSpy = jest.spyOn(TAB_EVENT, 'preventDefault');
+            const preventDefaultSpy = vi.spyOn(TAB_EVENT, 'preventDefault');
 
             testTagInput.separatorKeyCodes = [TAB];
             (inputNativeElement as HTMLInputElement).value = '';
@@ -1431,7 +1431,7 @@ class TestTagInputWithDeprecatedInputControl {
     readonly listControl = new FormControl<string[]>(['a', 'b'], [maxTagCount(2)]);
     readonly inputControl = new FormControl('', [Validators.pattern(/^[a-z]*$/)]);
     readonly addOnBlur = signal(false);
-    readonly add = jest.fn(({ value, input }: KbqTagInputEvent) => {
+    readonly add = vi.fn(({ value, input }: KbqTagInputEvent) => {
         if (value) {
             this.listControl.setValue([...(this.listControl.value || []), value]);
         }

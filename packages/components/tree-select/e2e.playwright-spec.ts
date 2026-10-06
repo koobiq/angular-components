@@ -231,7 +231,7 @@ test.describe('KbqTreeSelectModule', () => {
     /*  Behaviour-only tests ported from tree-select.component.karma-spec.ts  */
     /*  and from xit blocks in tree-select.component.spec.ts. They rely on    */
     /*  real layout (bounding boxes, computed styles, CDK overlay flexible-   */
-    /*  position math) and so cannot run under Jest/JSDOM.                    */
+    /*  position math) and so cannot run under jsdom.                         */
     /* ---------------------------------------------------------------------- */
 
     test.describe('overlay panel', () => {
@@ -427,7 +427,7 @@ test.describe('KbqTreeSelectModule', () => {
     });
 
     /* ---------------------------------------------------------------------- */
-    /*  Behaviour-only tests replacing previously-xit'd jest tests in         */
+    /*  Behaviour-only tests replacing previously skipped unit tests in       */
     /*  tree-select.component.spec.ts. They cover existing tree-select        */
     /*  behaviour exercised in a real browser. Tests that depended on stale   */
     /*  data references (pizza-1, chips-4, etc. from the select fixture) or  */

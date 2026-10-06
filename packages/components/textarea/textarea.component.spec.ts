@@ -444,7 +444,7 @@ describe('KbqTextarea', () => {
 
             const textareaEl = getTextareaElement(fixture);
             const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
-            const spy = jest.spyOn(textarea.stateChanges, 'next');
+            const spy = vi.spyOn(textarea.stateChanges, 'next');
 
             textareaEl.value = 'changed value';
             dispatchFakeEvent(textareaEl, 'input');
@@ -460,7 +460,7 @@ describe('KbqTextarea', () => {
 
             const textareaEl = getTextareaElement(fixture);
             const textareaDir = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
-            const nextSpy = jest.spyOn(textareaDir.stateChanges, 'next');
+            const nextSpy = vi.spyOn(textareaDir.stateChanges, 'next');
 
             textareaEl.value = 'test\ntest\ntest\ntest\ntest';
             // (input) → dirtyCheckNativeValue() → previousNativeValue updated → stateChanges.next() [#1]
@@ -481,7 +481,7 @@ describe('KbqTextarea', () => {
             tick(); // flush setTimeout(grow, 0) from ngOnInit
 
             // Spy set up AFTER initial flushes — only captures subsequent grow() calls
-            const growSpy = jest.spyOn(textareaDir as any, 'grow');
+            const growSpy = vi.spyOn(textareaDir as any, 'grow');
 
             // observeOn(asapScheduler) defers grow to microtask (M2), NOT synchronous
             textareaDir.stateChanges.next();
@@ -522,7 +522,7 @@ describe('KbqTextarea', () => {
 
             it('should call errorStateMatcher and update errorState on blur', () => {
                 const fixture = createComponent(TextareaWithErrorStateMatcher);
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.textarea().errorState).toBe(false);
@@ -564,7 +564,7 @@ describe('KbqTextarea', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.textarea().errorState).toBe(false);
@@ -603,7 +603,7 @@ describe('KbqTextarea', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.textarea().errorState).toBe(false);

@@ -6,8 +6,8 @@ import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsNavbarComponent } from './navbar.component';
 
-// The search widget ships as ES modules, which Jest does not load, and it is not what these tests are about.
-jest.mock('@docsearch/js', () => ({ __esModule: true, default: () => ({ destroy: () => undefined }) }));
+// The search widget is not what these tests are about.
+vi.mock('@docsearch/js', () => ({ __esModule: true, default: () => ({ destroy: () => undefined }) }));
 
 const provideDocsLocale = (locale: DocsLocale) => {
     const changes = new BehaviorSubject<DocsLocale>(locale);
