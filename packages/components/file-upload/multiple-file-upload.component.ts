@@ -52,14 +52,6 @@ import { KbqFileDropDirective, KbqFileList, KbqFileLoader, KbqFileUploadContext 
 
 let nextMultipleFileUploadUniqueId = 0;
 
-/**
- * @deprecated Use {@link KbqMultipleFileUploadLocaleConfiguration}. The index signature only ever
- * widened the config so an unknown key could be passed along with the labels, and nothing reads one.
- */
-export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfiguration {
-    [k: string | number | symbol]: unknown;
-}
-
 export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUploadLocaleConfiguration =
     ruRULocaleData.fileUpload.multiple;
 

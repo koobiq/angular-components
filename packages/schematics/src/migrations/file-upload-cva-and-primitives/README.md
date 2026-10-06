@@ -17,7 +17,7 @@ primitive.
 | `hasFocus`                          | public, always `false`                      | removed                                          |
 | single uploader's hidden input      | `multiple`                                  | single-selection                                 |
 | `[multiple]` on the single uploader | forwarded to that input                     | not an input at all                              |
-| `KbqInputFileMultipleLabel`         | exported interface                          | deprecated                                       |
+| `KbqInputFileMultipleLabel`         | exported interface                          | removed                                          |
 
 `writeValue()` deserves a note. It assigned through the `file`/`files` setters, and those setters call
 `cvaOnChange` — the view→model half of the `ControlValueAccessor`. Angular's model→view callback
@@ -37,7 +37,7 @@ output handler was meant to run for a programmatic write is a decision, not a re
 | `.remove(item)`                     | The return value is the removed item now; use `removeAt(index)` for a position |
 | `.hasFocus`                         | Track focus with `cdkMonitorSubtreeFocus` or `(focusin)`/`(focusout)`          |
 | `(fileChange)` / `(filesChange)`    | Subscribe to the control if the handler was meant to see programmatic writes   |
-| `KbqInputFileMultipleLabel`         | Use `KbqMultipleFileUploadLocaleConfiguration`                                 |
+| `KbqInputFileMultipleLabel`         | Use `KbqMultipleFileUploadLocaleConfiguration` from `@koobiq/components/core`  |
 | `<kbq-single-file-upload multiple>` | Drop the attribute, or switch to `<kbq-multiple-file-upload>`                  |
 
 ## Notes with no call site to point at

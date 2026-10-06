@@ -1521,14 +1521,14 @@ The review repaired the two contracts the component is judged on: the form contr
 | `hasFocus`                          | public, always `false`                      | removed                                          |
 | single uploader's hidden input      | `multiple`                                  | single-selection                                 |
 | `[multiple]` on the single uploader | forwarded to that input                     | not an input at all                              |
-| `KbqInputFileMultipleLabel`         | exported interface                          | deprecated                                       |
+| `KbqInputFileMultipleLabel`         | exported interface                          | removed                                          |
 
 | Pattern                             | Manual migration                                                               |
 | ----------------------------------- | ------------------------------------------------------------------------------ |
 | `.remove(item)`                     | The return value is the removed item now; use `removeAt(index)` for a position |
 | `.hasFocus`                         | Track focus with `cdkMonitorSubtreeFocus` or a `(focusin)`/`(focusout)` pair   |
 | `(fileChange)` / `(filesChange)`    | Subscribe to the control if the handler was meant to see programmatic writes   |
-| `KbqInputFileMultipleLabel`         | Use `KbqMultipleFileUploadLocaleConfiguration`                                 |
+| `KbqInputFileMultipleLabel`         | Use `KbqMultipleFileUploadLocaleConfiguration` from `@koobiq/components/core`  |
 | `<kbq-single-file-upload multiple>` | Drop the attribute, or switch to `<kbq-multiple-file-upload>`                  |
 
 **An empty drop no longer destroys the list.** An empty directory unwraps to zero files, so the drop handler can be handed an empty array. The multiple uploader passed it straight through to the merge, and under `addStrategy="replace"` that meant `replace([])` — every file the user had already attached, gone, with `(filesChange)` reporting the empty list and the control left dirty. A selection that hands over nothing is now no selection at all: the list is untouched and no value is emitted, though the drop still counts as an interaction and marks the control touched. `removeAt()` carried the same defect one call down: an index past either end left `splice` with nothing to do, but the list was rewritten with a fresh array anyway — waking every `list()` consumer for a no-op — and `itemRemoved` fired carrying `undefined` in a tuple typed `[T, number]`.

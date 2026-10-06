@@ -281,12 +281,6 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     static ɵprov: _angular_core.ɵɵInjectableDeclaration<KbqFullScreenDropzoneService>;
 }
 
-// @public @deprecated (undocumented)
-export interface KbqInputFileMultipleLabel extends KbqMultipleFileUploadLocaleConfiguration {
-    // (undocumented)
-    [k: string | number | symbol]: unknown;
-}
-
 // @public
 export class KbqLocalDropzone extends KbqDrop {
     constructor();

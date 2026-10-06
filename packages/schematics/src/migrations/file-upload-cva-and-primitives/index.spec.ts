@@ -86,7 +86,7 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('no longer emits (fileChange)/(filesChange)');
     });
 
-    it('reports the deprecated locale interface', async () => {
+    it('reports the removed locale interface', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
         const messages = collectLogs();
@@ -99,7 +99,7 @@ describe(SCHEMATIC_NAME, () => {
 
         await run(first);
 
-        expect(messages.join('\n')).toContain('deprecated in favour of KbqMultipleFileUploadLocaleConfiguration');
+        expect(messages.join('\n')).toContain('KbqInputFileMultipleLabel was removed');
     });
 
     it('reports multiple set on the single uploader', async () => {

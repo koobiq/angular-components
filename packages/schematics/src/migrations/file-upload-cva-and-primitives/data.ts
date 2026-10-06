@@ -14,6 +14,8 @@
  *   files the component would discard; whatever a drop hands over past the first file is reported
  *   through the new `(rejected)` output.
  * - `KbqMultipleFileUploadComponent.hasFocus` is removed — it was public and read by nothing.
+ * - `KbqInputFileMultipleLabel` is removed. Its replacement lives in another entry point, so the
+ *   rename cannot be applied without also moving the import.
  *
  * Warn-only: which value a call site wanted from `remove()` and whether a consumer relied on the
  * output firing for a programmatic write are decisions, not renames.
@@ -58,9 +60,10 @@ export const warnPatterns: WarnPattern[] = [
     {
         pattern: '\\bKbqInputFileMultipleLabel\\b',
         message:
-            'KbqInputFileMultipleLabel is deprecated in favour of KbqMultipleFileUploadLocaleConfiguration. ' +
-            'Its index signature only widened the config so an unknown key could be passed along with the ' +
-            'labels, and nothing reads one.'
+            'KbqInputFileMultipleLabel was removed. Use KbqMultipleFileUploadLocaleConfiguration from ' +
+            '@koobiq/components/core — note the entry point, the import moves with the rename. The index ' +
+            'signature only widened the config so an unknown key could be passed along with the labels, ' +
+            'and nothing reads one.'
     },
     {
         pattern: '<\\s*kbq-single-file-upload\\b[^>]*\\bmultiple\\b',
