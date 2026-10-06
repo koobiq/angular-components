@@ -1,3 +1,5 @@
+@use '../core/styles/common/squircle' as *;
+
 .kbq-search-expandable {
     display: flex;
     flex-flow: row nowrap;
@@ -14,7 +16,7 @@
         align-items: center;
         justify-content: center;
 
-        border-radius: var(--kbq-search-expandable-close-button-border-radius);
+        @include kbq-squircle(var(--kbq-search-expandable-close-button-border-radius));
 
         height: var(--kbq-search-expandable-close-button-size);
     }

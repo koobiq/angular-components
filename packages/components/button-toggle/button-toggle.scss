@@ -3,6 +3,7 @@
 @use '../core/styles/common/tokens' as *;
 
 @use './button-toggle-theme' as *;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-button-toggle-group {
     box-sizing: border-box;
@@ -12,7 +13,7 @@
 
     gap: var(--kbq-button-toggle-size-container-content-gap-horizontal);
 
-    border-radius: var(--kbq-button-toggle-size-container-border-radius);
+    @include kbq-squircle(var(--kbq-button-toggle-size-container-border-radius));
 
     padding: var(--kbq-button-toggle-size-container-padding-vertical)
         var(--kbq-button-toggle-size-container-padding-horizontal);
@@ -49,7 +50,7 @@
         height: var(--kbq-button-toggle-size-item-height);
         min-height: var(--kbq-button-toggle-size-item-height);
 
-        border-radius: var(--kbq-button-toggle-size-item-border-radius);
+        @include kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
         border: var(--kbq-size-border-width) solid transparent;
 
         // `border-color` is the theme's to set, from the same token — declaring it here as well
@@ -62,7 +63,7 @@
         > .kbq-button-icon {
             height: inherit;
             min-height: inherit;
-            border-radius: var(--kbq-button-toggle-size-item-border-radius);
+            @include kbq-squircle(var(--kbq-button-toggle-size-item-border-radius));
             border-width: 0;
 
             padding: kbq-difference-series-css-variables(

@@ -1,3 +1,4 @@
+@use '../core/styles/common/squircle' as *;
 @use '../core/styles/common/tokens' as *;
 
 @use './table-theme' as *;
@@ -65,13 +66,17 @@
 .kbq-table:not(.kbq-table_bordered) {
     & > tbody > tr {
         & > :is(td, th):first-child {
-            border-start-start-radius: var(--kbq-table-size-row-border-radius);
-            border-end-start-radius: var(--kbq-table-size-row-border-radius);
+            @include kbq-squircle(
+                var(--kbq-table-size-row-border-radius),
+                border-start-start-radius border-end-start-radius
+            );
         }
 
         & > :is(td, th):last-child {
-            border-start-end-radius: var(--kbq-table-size-row-border-radius);
-            border-end-end-radius: var(--kbq-table-size-row-border-radius);
+            @include kbq-squircle(
+                var(--kbq-table-size-row-border-radius),
+                border-start-end-radius border-end-end-radius
+            );
         }
 
         &:first-child {

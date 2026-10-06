@@ -2,6 +2,7 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens' as *;
 @use '../core/styles/common/vendor-prefixes';
+@use '../core/styles/common/squircle' as *;
 
 .kbq-tree-option {
     @include vendor-prefixes.user-select(none);
@@ -21,7 +22,7 @@
     border-width: var(--kbq-tree-size-container-focus-outline-width);
     border-style: solid;
     border-color: transparent;
-    border-radius: var(--kbq-tree-option-border-radius);
+    @include kbq-squircle(var(--kbq-tree-option-border-radius));
 
     padding-top: kbq-difference-series-css-variables(
         [tree-size-container-padding-vertical,

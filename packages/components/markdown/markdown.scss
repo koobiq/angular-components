@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-markdown {
     display: block;
@@ -116,7 +117,7 @@
 
     .kbq-markdown__pre,
     .kbq-markdown__code {
-        border-radius: var(--kbq-markdown-code-size-border-radius);
+        @include kbq-squircle(var(--kbq-markdown-code-size-border-radius));
     }
 
     .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code) {

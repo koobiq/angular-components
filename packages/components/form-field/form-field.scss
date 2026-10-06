@@ -1,5 +1,6 @@
 @use '../core/forms/forms';
 @use './form-field-theme' as theme;
+@use '../core/styles/common/squircle' as *;
 
 // `:has()` is used across this file. It is Baseline Widely available (Chrome/Edge 105+, Safari 15.4+,
 // Firefox 121+); browsers without it simply keep the default spacing, so the layout degrades gracefully.
@@ -62,7 +63,7 @@
         border-width: var(--kbq-form-field-size-border-width);
         border-style: solid;
         border-color: transparent;
-        border-radius: var(--kbq-form-field-size-border-radius);
+        @include kbq-squircle(var(--kbq-form-field-size-border-radius));
 
         padding-left: var(--kbq-form-field-size-container-left-padding);
         padding-right: var(--kbq-form-field-size-container-right-padding);
@@ -105,7 +106,7 @@
 
     &,
     .kbq-textarea {
-        border-radius: var(--kbq-form-field-size-border-radius);
+        @include kbq-squircle(var(--kbq-form-field-size-border-radius));
     }
 
     &:hover {

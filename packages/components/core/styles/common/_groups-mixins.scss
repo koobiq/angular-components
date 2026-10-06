@@ -1,4 +1,5 @@
 @use 'sass:map';
+@use './squircle' as *;
 
 /* Logical corner pairs: the leading/trailing edges follow `dir`. */
 @mixin border-inline-end-radius($radius) {
@@ -59,13 +60,13 @@
             &:first-child:not(:last-child) {
                 @include border-block-end-radius(0);
 
-                border-start-end-radius: var(--kbq-size-border-radius);
+                @include kbq-squircle(var(--kbq-size-border-radius), border-start-end-radius);
             }
 
             &:last-child:not(:first-child) {
                 @include border-block-start-radius(0);
 
-                border-end-start-radius: var(--kbq-size-border-radius);
+                @include kbq-squircle(var(--kbq-size-border-radius), border-end-start-radius);
             }
 
             &:not(:first-child):not(:last-child) {

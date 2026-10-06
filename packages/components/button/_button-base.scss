@@ -2,6 +2,7 @@
 @use '../core/styles/common/list';
 
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/squircle' as *;
 
 %kbq-button-base {
     @include button.kbq-button-reset();
@@ -27,7 +28,7 @@
     vertical-align: baseline;
 
     border: var(--kbq-button-size-border-width) solid transparent;
-    border-radius: var(--kbq-button-size-border-radius);
+    @include kbq-squircle(var(--kbq-button-size-border-radius));
 
     &::-moz-focus-inner {
         border: 0;

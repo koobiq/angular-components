@@ -2,6 +2,7 @@
 @use '../core/styles/common/list';
 @use '../core/styles/common/vendor-prefixes';
 @use './list-theme' as theme;
+@use '../core/styles/common/squircle' as *;
 
 /// Squares off the corners between adjacent selected rows so a run of them reads as one block.
 /// Only `.kbq-list-option` is ever selectable, hence the option-only scope.
@@ -52,7 +53,7 @@
     // to the shared base mixin's own value in case it's ever rendered outside `.kbq-list`.
     // The horizontal padding subtracts the transparent focus border so the total stays on the grid.
     border-width: var(--kbq-list-size-container-focus-outline-width, var(--kbq-size-3xs));
-    border-radius: var(--kbq-size-border-radius);
+    @include kbq-squircle(var(--kbq-size-border-radius));
     gap: var(--kbq-list-size-container-content-gap-horizontal, var(--kbq-size-s));
     padding-top: var(--kbq-list-size-container-padding-vertical, var(--kbq-size-xxs));
     padding-right: calc(
@@ -200,7 +201,7 @@ body:has(.kbq-list-drag-preview) {
     // The cap is on the plate, not on the text inside it, and the page default here is `content-box`.
     box-sizing: border-box;
     max-inline-size: var(--kbq-list-size-drag-preview-max-width);
-    border-radius: var(--kbq-size-border-radius);
+    @include kbq-squircle(var(--kbq-size-border-radius));
     padding: var(--kbq-list-size-container-padding-vertical) var(--kbq-list-size-container-padding-right)
         var(--kbq-list-size-container-padding-vertical) var(--kbq-list-size-container-padding-left);
     background: var(--kbq-list-states-drag-preview-background);

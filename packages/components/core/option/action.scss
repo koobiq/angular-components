@@ -1,6 +1,7 @@
 @use '../styles/common/tokens' as *;
 
 @use './option-action-theme' as *;
+@use '../styles/common/squircle' as *;
 
 .kbq-option-action {
     display: flex;
@@ -19,7 +20,7 @@
     box-sizing: content-box;
 
     border: var(--kbq-size-3xs) solid transparent;
-    border-radius: var(--kbq-size-xs);
+    @include kbq-squircle(var(--kbq-size-xs));
 
     width: var(--kbq-size-xl);
     height: var(--kbq-size-xl);

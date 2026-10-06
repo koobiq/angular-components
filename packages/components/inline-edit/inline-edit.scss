@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens';
+@use '../core/styles/common/squircle' as *;
 
 @mixin _inline-edit-theme {
     background: var(--kbq-inline-edit-background);
@@ -88,7 +89,7 @@
     box-sizing: border-box;
 
     border: var(--kbq-size-border-width) solid transparent;
-    border-radius: var(--kbq-size-border-radius);
+    @include kbq-squircle(var(--kbq-size-border-radius));
     padding: var(--kbq-inline-edit-padding-vertical) var(--kbq-inline-edit-padding-horizontal);
     min-height: var(--kbq-inline-edit-height);
 
@@ -149,8 +150,7 @@
         opacity: 0;
         height: calc(100% + 2 * var(--kbq-size-border-width));
         justify-content: flex-end;
-        border-top-right-radius: var(--kbq-size-border-radius);
-        border-bottom-right-radius: var(--kbq-size-border-radius);
+        @include kbq-squircle(var(--kbq-size-border-radius), border-top-right-radius border-bottom-right-radius);
 
         &:has(.kbq-inline-edit__menu.kbq-pressed, .kbq-inline-edit__menu.cdk-keyboard-focused) {
             opacity: 1;
@@ -167,7 +167,7 @@
             display: flex;
             justify-content: flex-end;
             min-width: 40px;
-            border-radius: inherit;
+            @include kbq-squircle-inherit();
             background: var(--kbq-mask-background, transparent);
         }
 
@@ -200,6 +200,6 @@
     .kbq-inline-edit__action-button {
         box-shadow: var(--kbq-inline-edit-panel-shadow);
         background-color: var(--kbq-background-bg);
-        border-radius: var(--kbq-size-border-radius);
+        @include kbq-squircle(var(--kbq-size-border-radius));
     }
 }

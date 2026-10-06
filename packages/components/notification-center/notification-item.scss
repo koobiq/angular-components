@@ -1,4 +1,5 @@
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/squircle' as *;
 
 .kbq-notification-item {
     display: flex;
@@ -6,7 +7,7 @@
 
     position: relative;
 
-    border-radius: var(--kbq-size-s);
+    @include kbq-squircle(var(--kbq-size-s));
 
     height: auto;
 

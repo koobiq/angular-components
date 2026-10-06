@@ -4,6 +4,7 @@
 @use '../core/styles/common/tokens' as *;
 
 @use './popover-theme' as *;
+@use '../core/styles/common/squircle' as *;
 
 $arrow-size: 12px;
 
@@ -19,7 +20,7 @@ $z-index-above-content: 2;
 .kbq-popover {
     position: relative;
 
-    border-radius: var(--kbq-popover-size-container-border-radius);
+    @include kbq-squircle(var(--kbq-popover-size-container-border-radius));
 
     box-sizing: border-box;
 
@@ -64,7 +65,7 @@ $z-index-above-content: 2;
 
     max-height: var(--kbq-popover-size-container-max-height);
 
-    border-radius: var(--kbq-popover-size-container-border-radius);
+    @include kbq-squircle(var(--kbq-popover-size-container-border-radius));
 
     &.kbq-popover__container_with-header {
         .kbq-popover__content_default-paddings.kbq-popover__content {
@@ -142,7 +143,7 @@ $z-index-above-content: 2;
     z-index: $z-index-above-content;
     top: var(--kbq-size-s);
     inset-inline-end: var(--kbq-size-s);
-    border-radius: var(--kbq-size-border-radius);
+    @include kbq-squircle(var(--kbq-size-border-radius));
 }
 
 @include kbq-popover-theme();

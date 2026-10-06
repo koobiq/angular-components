@@ -1,0 +1,63 @@
+@use 'sass:list';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+
+// Squircle corners (`corner-shape: squircle`). A squircle looks smaller than a circular arc of the same radius, so
+// the radius is scaled: ×1.85 up to 8px, ×2 from 12px, linear in between. The three lines of `clamp()` avoid
+// dividing a length by a length, which some browsers that support `corner-shape` cannot do. Browsers without
+// `corner-shape` keep the radius as given.
+
+@function _kbq-squircle-corner($radius) {
+    @if meta.type-of($radius) == number {
+        @if math.is-unitless($radius) and $radius == 0 {
+            @return $radius;
+        }
+
+        @if math.unit($radius) == '%' {
+            @error 'kbq-squircle: a percentage radius (#{$radius}) would turn a circle into a squircle.';
+        }
+    } @else if meta.type-of($radius) == string and string.index($radius, 'var(') != 1 {
+        @error 'kbq-squircle: `#{$radius}` is not a length; use kbq-squircle-inherit() for `inherit`.';
+    }
+
+    @return clamp($radius * 1.85, $radius * 2.3 - 3.6px, $radius * 2);
+}
+
+// Scales every value of a `border-radius` list (1–4 lengths, no `/`) for a squircle corner.
+@function kbq-squircle-radius($radius) {
+    $result: ();
+
+    @each $value in $radius {
+        $result: list.append($result, _kbq-squircle-corner($value), space);
+    }
+
+    @return $result;
+}
+
+// Sets `$radius` on `$properties` and, where `corner-shape` is supported, a squircle with the scaled radius.
+// Pass corner longhands as `$properties` to round only some corners.
+@mixin kbq-squircle($radius, $properties: border-radius) {
+    @each $property in $properties {
+        #{$property}: $radius;
+    }
+
+    @supports (corner-shape: squircle) {
+        & {
+            corner-shape: squircle;
+
+            @each $property in $properties {
+                #{$property}: kbq-squircle-radius($radius);
+            }
+        }
+    }
+}
+
+// Takes both the radius and the corner shape from the parent: `corner-shape` is not inherited on its own.
+@mixin kbq-squircle-inherit($properties: border-radius) {
+    @each $property in $properties {
+        #{$property}: inherit;
+    }
+
+    corner-shape: inherit;
+}

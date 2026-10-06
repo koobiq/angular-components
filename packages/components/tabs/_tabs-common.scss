@@ -1,3 +1,4 @@
+@use '../core/styles/common/squircle' as *;
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/vendor-prefixes';
 
@@ -28,8 +29,9 @@
         width: var(--kbq-tabs-size-tab-item-focus-outline-width);
         style: solid;
         color: transparent;
-        radius: var(--kbq-tabs-size-tab-item-border-radius);
     }
+
+    @include kbq-squircle(var(--kbq-tabs-size-tab-item-border-radius));
 
     outline: none;
 
