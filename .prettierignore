@@ -35,3 +35,7 @@ apps/docs/src/app/seo-descriptions.ts
 
 # ignore the MCP planning page: a self-contained document with its own inline styles
 /packages/mcp/docs/plan.html
+
+# ignore the MCP server's generated indexes and build output
+/packages/mcp/data/
+/packages/mcp/dist/

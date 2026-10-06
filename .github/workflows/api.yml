@@ -14,6 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        # Full history and tags, for `build:mcp:data` below: it reads the guides and the API
+        # reports as they stood at each release tag. The default shallow checkout has neither, and
+        # the builders then have nothing to read — which is why they now refuse rather than write
+        # an empty index.
+        with:
+          fetch-depth: 0
       - uses: ./.github/workflows/actions/setup-node
       - uses: ./.github/workflows/actions/build-packages
       # Before check-api: marking a declaration `@internal` always changes the golden files, and a failed step
@@ -25,3 +31,8 @@ jobs:
       - run: yarn run check-api-docs
       # Reads the manifest docs:api-gen has just written, like check-api-docs.
       - run: yarn run check-llms
+      # The MCP server reads the built typings of @koobiq/components, so its suite belongs here
+      # rather than with the Jest ones: `units.yml` never builds the library, and without the build
+      # every test that checks what the server reports about the API would have nothing to read.
+      - run: yarn run build:mcp:data
+      - run: yarn run test:mcp
