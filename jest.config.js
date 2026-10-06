@@ -33,6 +33,29 @@ const UNIFIED_ESM_PACKAGES = [
     'zwitch'
 ];
 
+/**
+ * ESM-only packages that `@angular-devkit/schematics/testing` loads through `ora`: the migration specs
+ * never start its spinner, but the import is evaluated.
+ */
+const SCHEMATICS_ESM_PACKAGES = [
+    'ansi-regex',
+    'chalk',
+    'cli-cursor',
+    'cli-spinners',
+    'get-east-asian-width',
+    'is-interactive',
+    'is-unicode-supported',
+    'log-symbols',
+    'mimic-function',
+    'onetime',
+    'ora',
+    'restore-cursor',
+    'stdin-discarder',
+    'string-width',
+    'strip-ansi',
+    'yoctocolors'
+];
+
 /** @type {import('jest').Config} */
 const config = {
     rootDir: __dirname,
@@ -46,7 +69,9 @@ const config = {
         ...pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/' })
     },
     modulePathIgnorePatterns: ['/dist/', '/node_modules/'],
-    transformIgnorePatterns: [`node_modules/(?!(marked|(?:${UNIFIED_ESM_PACKAGES.join('|')})/|.*\\.mjs$))`],
+    transformIgnorePatterns: [
+        `node_modules/(?!(marked|(?:${[...UNIFIED_ESM_PACKAGES, ...SCHEMATICS_ESM_PACKAGES].join('|')})/|.*\\.mjs$))`
+    ],
     testMatch: ['<rootDir>/**/*.spec.ts'],
     testTimeout: 2000
 };

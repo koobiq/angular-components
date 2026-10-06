@@ -253,15 +253,15 @@ export class DocsStackblitzWriter {
             luxon: '^3.7.2',
             rxjs: '^7.8.2',
             tslib: '^2.8.1',
-            'zone.js': '~0.15.0'
+            'zone.js': '~0.16.0'
         };
 
         const devDependencies = {
-            '@angular-devkit/build-angular': ngVersion,
+            '@angular/build': ngVersion,
             '@angular/cli': ngVersion,
             '@angular/compiler-cli': ngVersion,
             '@types/luxon': '^3.7.1',
-            typescript: '5.8.3'
+            typescript: '~5.9.2'
         };
 
         for (const pattern of patterns) {

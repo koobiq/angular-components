@@ -56,11 +56,16 @@ export class KbqShadowDomOverlayContainer extends OverlayContainer {
         // Let CDK create the container (and run its test-environment cleanup). It is appended to `document.body`.
         super._createContainer();
 
+        const container = this._containerElement;
+
+        // CDK always assigns the element here; the field is optional only before the first creation.
+        if (!container) return;
+
         const shadowRoot = this.resolveShadowRoot();
 
         if (shadowRoot) {
             // Relocate the container into the shadow root and deliver the structural overlay styles alongside it.
-            shadowRoot.appendChild(this._containerElement);
+            shadowRoot.appendChild(container);
             this.deliverStructuralStyles(shadowRoot);
         } else if (this.host != null) {
             // An explicit host was provided but did not resolve to an open shadow root (wrong element, a closed

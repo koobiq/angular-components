@@ -27,6 +27,7 @@ import { KbqPanelWidthOrigin } from '@koobiq/components/core';
 import { KbqPoint } from '@koobiq/components/core';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
+import * as _koobiq_components_dropdown from '@koobiq/components/dropdown';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
@@ -306,7 +307,7 @@ export class KbqDropdownSearch implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     get ngControl(): _angular_forms.NgControl | null;
-    readonly panel: KbqDropdownPanel | null;
+    readonly panel: _koobiq_components_dropdown.KbqDropdownPanel | null;
     reset(): void;
     value(): string;
     // (undocumented)

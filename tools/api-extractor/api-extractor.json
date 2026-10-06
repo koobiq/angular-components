@@ -1,8 +1,20 @@
 {
     "$schema": "https://developer.microsoft.com/json-schemas/api-extractor/v7/api-extractor.schema.json",
-    "mainEntryPointFilePath": "<projectFolder>../../dist/components/button/index.d.ts",
+    "mainEntryPointFilePath": "<projectFolder>../../dist/components/types/koobiq-components-button.d.ts",
     "bundledPackages": [],
-    "compiler": {},
+    "compiler": {
+        // The typings import sibling entry points by the package's own name (`@koobiq/components/core`).
+        // NodeNext resolves such an import through the package's own `exports` map, so API Extractor
+        // would analyze the sibling as part of the report; Node10 resolution leaves it external, as it
+        // is for a consumer.
+        "overrideTsconfig": {
+            "extends": "./tsconfig.json",
+            "compilerOptions": {
+                "module": "es2022",
+                "moduleResolution": "node10"
+            }
+        }
+    },
     "apiReport": {
         "enabled": true,
         "reportFileName": "<unscopedPackageName>.api.md",

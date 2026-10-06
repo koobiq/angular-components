@@ -4,6 +4,7 @@ import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     Directive,
     ElementRef,
     OnDestroy,
@@ -126,7 +127,7 @@ export class KbqToastComponent implements OnDestroy {
     constructor() {
         this.animationState = 'visible';
 
-        this.runFocusMonitor();
+        this.runFocusMonitor(inject(DestroyRef));
 
         this.hovered.pipe(takeUntilDestroyed()).subscribe((hovered) => this.stack.setHovered(this.id, hovered));
 
@@ -166,10 +167,10 @@ export class KbqToastComponent implements OnDestroy {
         return value instanceof TemplateRef ? value : null;
     }
 
-    private runFocusMonitor() {
+    private runFocusMonitor(destroyRef: DestroyRef) {
         this.focusMonitor
             .monitor(this.elementRef.nativeElement, true)
-            .pipe(takeUntilDestroyed())
+            .pipe(takeUntilDestroyed(destroyRef))
             .subscribe((origin: FocusOrigin) => {
                 this.focused.next(!!origin);
                 this.stack.setFocused(this.id, origin);

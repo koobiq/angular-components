@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, effect, inject, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, effect, inject, Pipe, PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DurationUnit } from '@koobiq/date-adapter';
 import { DateTimeOptions } from '@koobiq/date-formatter';
@@ -120,7 +120,7 @@ export abstract class BaseLocaleAwareFormatterPipe<
     constructor() {
         super();
 
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => {
+        this.localeService?.changes.pipe(takeUntilDestroyed(inject(DestroyRef))).subscribe(() => {
             this.hasCache = false;
             this.changeDetectorRef.markForCheck();
         });

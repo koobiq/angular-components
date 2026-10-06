@@ -1,5 +1,5 @@
 import { provideHttpClient } from '@angular/common/http';
-import { enableProdMode, importProvidersFrom } from '@angular/core';
+import { enableProdMode, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -13,6 +13,7 @@ if (e2eEnvironment.production) enableProdMode();
 
 bootstrapApplication(E2eApp, {
     providers: [
+        provideZoneChangeDetection(),
         provideNoopAnimations(),
         provideRouter(e2eRoutes),
         provideHttpClient(),

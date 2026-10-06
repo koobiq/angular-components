@@ -66,6 +66,9 @@ export class KbqTimezoneModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimezoneModule>;
+    // Warning: (ae-forgotten-export) The symbol "UtcOffsetPipe" needs to be exported by the entry point koobiq-components-timezone.d.ts
+    // Warning: (ae-forgotten-export) The symbol "CitiesByFilterPipe" needs to be exported by the entry point koobiq-components-timezone.d.ts
+    //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger], [typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger, typeof i6.KbqOptionModule, typeof i7.KbqFormFieldModule]>;
 }
