@@ -3,10 +3,11 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CDK_DRAG_HANDLE, CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
-import { Platform } from '@angular/cdk/platform';
+import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -20,6 +21,7 @@ import {
     Directive,
     effect,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     forwardRef,
     inject,
@@ -784,6 +786,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this._tabIndex = -1;
+            // Written to the DOM right away, as `KbqTagList` does: the browser moves the focus as soon as this Tab is
+            // handled, and the binding is only applied by the change detection that runs after it.
+            this.elementRef.nativeElement.tabIndex = -1;
 
             setTimeout(() => {
                 this._tabIndex = this.userTabIndex || 0;
@@ -1621,12 +1626,23 @@ export class KbqListOptionCaption {}
 export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOption, KbqTitleTextRef {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetector = inject(ChangeDetectorRef);
-    private ngZone = inject(NgZone);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly drag = inject<CdkDrag<KbqListOptionDragData>>(CdkDrag, { host: true });
     private readonly destroyRef = inject(DestroyRef);
     listSelection: KbqListSelection<T> = inject(KbqListSelection);
     readonly group = inject(KbqOptgroup, { optional: true });
-    hasFocus: boolean = false;
+
+    get hasFocus(): boolean {
+        return this.focused();
+    }
+
+    set hasFocus(value: boolean) {
+        this.focused.set(value);
+    }
+
+    // A signal, as on `KbqTreeOption`: focus can arrive while a view is being checked, which a `markForCheck` misses.
+    private readonly focused = signal(false);
+
     preventBlur: boolean = false;
 
     readonly onFocus = new Subject<KbqOptionEvent<T>>();
@@ -2021,7 +2037,11 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     /** Moves DOM focus to this option, unless it is disabled or already focused. */
     focus(): void {
-        if (this.disabled || this.hasFocus || this.actionButton()?.hasFocus) {
+        // `hasFocus` alone lags behind the DOM until the deferred blur runs: a key pressed in that window would
+        // find the option "focused" and leave the focus where it was.
+        const focused = this.hasFocus && _getFocusedElementPierceShadowDom() === this.elementRef.nativeElement;
+
+        if (this.disabled || focused || this.actionButton()?.hasFocus) {
             return;
         }
 
@@ -2036,7 +2056,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         });
     }
 
-    /** Marks this option as blurred once the zone stabilizes, unless {@link preventBlur} is set. */
+    /** Marks this option as blurred after the next render, unless {@link preventBlur} is set. */
     blur(): void {
         if (this.preventBlur) {
             return;
@@ -2045,21 +2065,24 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         // When animations are enabled, Angular may end up removing the option from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the list
         // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until the next time the zone stabilizes.
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
-                this.ngZone.run(() => {
-                    this.hasFocus = false;
+        // as not focused until after the next render.
+        afterNextRender(
+            () => {
+                // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.
+                if (_getFocusedElementPierceShadowDom() === this.elementRef.nativeElement) return;
 
-                    if (this.actionButton()?.hasFocus) {
-                        return;
-                    }
+                this.hasFocus = false;
 
-                    this.onBlur.next({ option: this });
-                });
-            });
+                if (this.actionButton()?.hasFocus) {
+                    return;
+                }
+
+                this.onBlur.next({ option: this });
+            },
+            // The environment injector, not the option's: an option removed while focused is blurred as its view is
+            // destroyed, and the list still has to hear about it to move focus.
+            { injector: this.environmentInjector }
+        );
     }
 
     /** The option's host DOM element. */

@@ -12,7 +12,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    NgZone,
     Provider,
     TemplateRef,
     Type,
@@ -39,7 +38,6 @@ import {
     KbqOverlayOrigin,
     KbqPanelWidth,
     LEFT_ARROW,
-    MockNgZone,
     RIGHT_ARROW,
     SPACE,
     TAB,
@@ -783,13 +781,7 @@ describe('KbqDropdown', () => {
         }));
 
         it('should focus the first dropdown item when opening a lazy dropdown via keyboard', fakeAsync(() => {
-            let zone: MockNgZone;
-            const fixture = createComponent(SimpleLazyDropdown, [
-                {
-                    provide: NgZone,
-                    useFactory: () => (zone = new MockNgZone())
-                }
-            ]);
+            const fixture = createComponent(SimpleLazyDropdown);
 
             fixture.detectChanges();
 
@@ -797,7 +789,6 @@ describe('KbqDropdown', () => {
             fixture.componentInstance.triggerEl().nativeElement.click();
             fixture.detectChanges();
             tick(500);
-            zone!.simulateZoneExit();
 
             // Flush due to the additional tick that is necessary for the FocusMonitor.
             flush();
@@ -2834,75 +2825,52 @@ describe('KbqDropdown', () => {
             expect(panel.style.getPropertyValue('--kbq-dropdown-size-container-width-min')).toBe('200px');
         });
 
-        // The width lock runs on `ngZone.onStable`; `MockNgZone.simulateZoneExit()` fires it deterministically.
-        const provideMockZone = (): [Provider, () => MockNgZone] => {
-            let zone: MockNgZone;
-
-            return [{ provide: NgZone, useFactory: () => (zone = new MockNgZone()) }, () => zone];
-        };
-
-        it('should pin a search panel to its opened width so the cleaner cannot reflow it', () => {
-            const [provider, getZone] = provideMockZone();
-            const fixture = createComponent(SearchDropdown, [provider]);
-
-            fixture.detectChanges();
+        // The width lock measures the pane after the panel renders, so the measurement is stubbed before that render.
+        const openWithPaneWidth = (fixture: ComponentFixture<SearchDropdown | SimpleDropdown>): HTMLElement => {
             fixture.componentInstance.trigger().open();
-            fixture.detectChanges();
 
             const pane = getPane();
 
             vi.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
-            getZone().simulateZoneExit(); // fires ngZone.onStable -> the width lock measures the pane and freezes it
+            fixture.detectChanges();
+
+            return pane;
+        };
+
+        it('should pin a search panel to its opened width so the cleaner cannot reflow it', () => {
+            const fixture = createComponent(SearchDropdown);
+
+            fixture.detectChanges();
+            const pane = openWithPaneWidth(fixture);
 
             expect(pane.style.width).toBe('412px');
         });
 
         it('should not pin a dropdown without a search field', () => {
-            const [provider, getZone] = provideMockZone();
-            const fixture = createComponent(SimpleDropdown, [provider]);
+            const fixture = createComponent(SimpleDropdown);
 
             fixture.detectChanges();
-            fixture.componentInstance.trigger().open();
-            fixture.detectChanges();
-
-            const pane = getPane();
-
-            vi.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
-            getZone().simulateZoneExit();
+            const pane = openWithPaneWidth(fixture);
 
             expect(pane.style.width).toBe('');
         });
 
         it('should not override an explicit panelWidth on a search panel', () => {
-            const [provider, getZone] = provideMockZone();
-            const fixture = createComponent(SearchDropdown, [provider]);
+            const fixture = createComponent(SearchDropdown);
 
             fixture.componentInstance.panelWidth = 344;
             fixture.detectChanges();
-            fixture.componentInstance.trigger().open();
-            fixture.detectChanges();
-
-            const pane = getPane();
-
-            vi.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
-            getZone().simulateZoneExit();
+            const pane = openWithPaneWidth(fixture);
 
             expect(pane.style.width).toBe('344px');
         });
 
         it("should not override panelWidth='auto' on a search panel", () => {
-            const [provider, getZone] = provideMockZone();
-            const fixture = createComponent(SearchDropdown, [provider]);
+            const fixture = createComponent(SearchDropdown);
 
             fixture.componentInstance.panelWidth = 'auto';
             fixture.detectChanges();
-            fixture.componentInstance.trigger().open();
-            fixture.detectChanges();
-
-            const pane = getPane();
-
-            vi.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
-            getZone().simulateZoneExit();
+            const pane = openWithPaneWidth(fixture);
 
             // 'auto' resolves to the trigger floor (200 min against a 0-width jsdom trigger), never the 412 pane.
             expect(pane.style.width).toBe('200px');

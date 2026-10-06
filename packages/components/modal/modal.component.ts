@@ -282,12 +282,20 @@ export class KbqModalComponent<T = any, R = any>
     private readonly scrollbarViewports = viewChildren(KbqScrollbarViewport);
     private readonly trapFocus = viewChild.required(CdkTrapFocus);
 
-    private readonly uniqueId = uniqueIdCounter++;
+    get maskAnimationClassMap(): object | null {
+        return this._maskAnimationClassMap();
+    }
 
-    /** Id of the element that names the dialog. Rendered on the title of a composed modal too. */
-    readonly titleId = `kbq-modal-title-${this.uniqueId}`;
-    /** Id of the element that describes the dialog. Rendered on the caption of a composed modal too. */
-    readonly captionId = `kbq-modal-caption-${this.uniqueId}`;
+    set maskAnimationClassMap(value: object | null) {
+        this._maskAnimationClassMap.set(value);
+    }
+
+    // A signal: the control service moves the mask between modals while another modal's view is being checked.
+    private readonly _maskAnimationClassMap = signal<object | null>(null);
+
+    modalAnimationClassMap: object | null;
+    // The origin point that animation based on
+    transformOrigin = '0px 0px 0px';
 
     /**
      * Scroll-shadow state published by `KbqModalBody` when the modal content is composed

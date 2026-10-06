@@ -3953,6 +3953,8 @@ describe('KbqTreeSelection state saving', () => {
         const { dataSource, tree, treeControl } = fixture.componentInstance;
 
         treeControl.expand(dataSource.data[1]);
+        // Renders the expanded children while the tree is still there, rather than in a tick after the test.
+        fixture.detectChanges();
         tree.saveState();
 
         expect(store.store.size).toBe(0);

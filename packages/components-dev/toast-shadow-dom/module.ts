@@ -5,7 +5,6 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    NgZone,
     OnDestroy,
     TemplateRef,
     ViewEncapsulation,
@@ -60,7 +59,6 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
     private readonly toastService = inject(KbqToastService);
     private readonly modalService = inject(KbqModalService);
     private readonly sidepanelService = inject(KbqSidepanelService);
-    private readonly ngZone = inject(NgZone);
     private readonly parentToastBridge = inject(DEV_TOAST_BRIDGE, { optional: true });
 
     /**
@@ -70,11 +68,11 @@ export class DevMfeRoot implements AfterViewInit, OnDestroy {
     private readonly sharedOverlayContainer = inject(OverlayContainer);
 
     /**
-     * Bridge used to show toasts. The root MFE builds its own (zone-bound to its `NgZone` + `KbqToastService`);
-     * nested MFEs reuse the root's, so every toast lands in the single shared root stack.
+     * Bridge used to show toasts. The root MFE builds its own on its `KbqToastService`; nested MFEs reuse the root's,
+     * so every toast lands in the single shared root stack.
      */
     private readonly toastBridge: DevToastBridge =
-        this.parentToastBridge ?? ((data, duration) => this.ngZone.run(() => this.toastService.show(data, duration)));
+        this.parentToastBridge ?? ((data, duration) => this.toastService.show(data, duration));
 
     protected readonly config = inject(DEV_MFE_CONFIG);
     protected readonly toastStyle = KbqToastStyle;

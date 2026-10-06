@@ -323,6 +323,19 @@ ng update @angular/core@21 @angular/cli@21 @angular/cdk@21
 ng update @koobiq/components@21
 ```
 
+#### Zoneless change detection
+
+Koobiq components no longer depend on zone.js: they render in an application bootstrapped with `provideZonelessChangeDetection()` and keep working with `provideZoneChangeDetection()`. What used to wait for `NgZone.onStable` now runs after the next render.
+
+- **`MockNgZone` is removed** from `@koobiq/components/core`. It fired `onStable` on demand, and nothing in the library listens to it any more: drop the `NgZone` override, and replace `simulateZoneExit()` with `fixture.detectChanges()` or `await fixture.whenStable()`.
+- **A spec without zone.js renders only when told to.** A check made right after an event needs `fixture.detectChanges()` or `await fixture.whenStable()` first, and `whenStable()` no longer waits for timers the component started.
+
+`zoneless-change-detection` reports every use of `MockNgZone` and `simulateZoneExit()`:
+
+```bash
+ng g @koobiq/components:zoneless-change-detection --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

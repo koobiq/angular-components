@@ -860,6 +860,7 @@ export class KbqAppSwitcherTrigger
         this.instance.content = this.content;
         this.instance.arrow = this.arrow;
         this.instance.offset = this.offset;
+        this.instance.detectChanges();
 
         if (this.isOpen) {
             this.updatePosition(true);

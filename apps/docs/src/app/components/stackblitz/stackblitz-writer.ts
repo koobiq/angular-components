@@ -252,8 +252,7 @@ export class DocsStackblitzWriter {
             '@messageformat/core': '^3.4.0',
             luxon: '^3.7.2',
             rxjs: '^7.8.2',
-            tslib: '^2.8.1',
-            'zone.js': '~0.16.0'
+            tslib: '^2.8.1'
         };
 
         const devDependencies = {

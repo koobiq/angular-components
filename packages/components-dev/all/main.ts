@@ -1,4 +1,4 @@
-import { provideZoneChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
@@ -9,7 +9,7 @@ import { devAllRoutes } from './routes';
 
 bootstrapApplication(DevAllApp, {
     providers: [
-        provideZoneChangeDetection(),
+        provideZonelessChangeDetection(),
         provideAnimations()
     ]
 }).catch((error) => console.error(error));

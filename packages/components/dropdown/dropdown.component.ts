@@ -6,11 +6,13 @@ import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
+    AfterRenderRef,
     ChangeDetectionStrategy,
     Component,
     DestroyRef,
     Directive,
     ElementRef,
+    Injector,
     NgZone,
     OnDestroy,
     QueryList,
@@ -18,6 +20,7 @@ import {
     Signal,
     TemplateRef,
     ViewEncapsulation,
+    afterNextRender,
     booleanAttribute,
     computed,
     contentChild,
@@ -54,7 +57,7 @@ import {
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Observable, Subject, Subscription, merge, timer } from 'rxjs';
-import { delay, filter, map, startWith, switchMap, take, takeUntil } from 'rxjs/operators';
+import { delay, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 import { kbqDropdownAnimations } from './dropdown-animations';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { throwKbqDropdownInvalidPositionX, throwKbqDropdownInvalidPositionY } from './dropdown-errors';
@@ -115,6 +118,10 @@ export class KbqDropdownFooter {}
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestroy {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
+
+    /** The pending deferred initial focus, see `focusFirstItem`. */
+    private initialFocusRef: AfterRenderRef | null = null;
     private document = inject(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private defaultOptions = inject<KbqDropdownDefaultOptions>(KBQ_DROPDOWN_DEFAULT_OPTIONS);
@@ -346,7 +353,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
             // the new manager will not track, or on an input that is being destroyed. Hand it over the
             // same way opening does, deferred so the write lands outside this change detection pass.
             if (this.panelAnimationState === 'enter') {
-                this.ngZone.onStable.pipe(take(1)).subscribe(() => this.applyInitialFocus(this.focusOrigin));
+                this.applyInitialFocusAfterRender(this.focusOrigin);
             }
         });
 
@@ -639,10 +646,15 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     focusFirstItem(origin: FocusOrigin = 'program'): void {
         // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
         if (this.lazyContent()) {
-            this.ngZone.onStable.pipe(take(1)).subscribe(() => this.applyInitialFocus(origin));
+            this.applyInitialFocusAfterRender(origin);
         } else {
             this.applyInitialFocus(origin);
         }
+    }
+
+    private applyInitialFocusAfterRender(origin: FocusOrigin): void {
+        this.initialFocusRef?.destroy();
+        this.initialFocusRef = afterNextRender(() => this.applyInitialFocus(origin), { injector: this.injector });
     }
 
     /**

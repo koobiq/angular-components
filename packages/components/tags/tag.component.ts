@@ -2,6 +2,7 @@
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -16,6 +17,7 @@ import {
     ElementRef,
     forwardRef,
     inject,
+    Injector,
     Input,
     input,
     numberAttribute,
@@ -257,6 +259,7 @@ export class KbqTag
     private readonly tagList = inject(KbqTagList, { optional: true });
     private readonly drag: CdkDrag<KbqTagDragData> = inject(CdkDrag, { host: true });
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
 
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -670,14 +673,18 @@ export class KbqTag
         this.editing.set(true);
         this.editChange.emit({ tag: this, type: 'start', reason });
 
-        setTimeout(() => {
-            const input = this.editInputElementRef()?.nativeElement;
+        // The edit input exists once the editing state is rendered.
+        afterNextRender(
+            () => {
+                const input = this.editInputElementRef()?.nativeElement;
 
-            if (!input) throw getTagEditInputMissingError();
+                if (!input) throw getTagEditInputMissingError();
 
-            this.focusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
-            input.select();
-        });
+                this.focusMonitor.focusVia(this.elementRef.nativeElement, 'keyboard');
+                input.select();
+            },
+            { injector: this.injector }
+        );
     }
 
     /** @docs-private */

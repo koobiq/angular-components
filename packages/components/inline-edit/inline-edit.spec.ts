@@ -845,6 +845,7 @@ describe('KbqInlineEdit', () => {
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
 
             inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
 
             const overlay = getOverlayElement();
 

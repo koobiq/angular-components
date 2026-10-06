@@ -39,6 +39,8 @@ describe('DocsTokensOverview token value caching (PERF-02)', () => {
                     provide: KBQ_WINDOW,
                     useValue: {
                         getComputedStyle: () => ({ getPropertyValue }),
+                        addEventListener: () => {},
+                        removeEventListener: () => {},
                         matchMedia: () => ({
                             matches: false,
                             addEventListener: () => {},

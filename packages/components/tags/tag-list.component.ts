@@ -422,6 +422,7 @@ export class KbqTagList
     set tabIndex(value: number) {
         this.userTabIndex = value;
         this._tabIndex = value;
+        this.changeDetectorRef.markForCheck();
     }
 
     private _tabIndex = 0;

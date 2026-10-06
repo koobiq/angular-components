@@ -167,6 +167,8 @@ test.describe('KbqListModule', () => {
 
         test('opens the action dropdown with the keyboard alone', async ({ page }) => {
             await page.keyboard.press('Tab');
+            // The action shows once the option is rendered as keyboard-focused, a frame after the focus moves.
+            await expect(page.getByTestId('option-1')).toHaveClass(/kbq-focused/);
             // Second Tab moves focus from the option onto its now-visible action.
             await page.keyboard.press('Tab');
 
@@ -280,11 +282,11 @@ test.describe('KbqListModule', () => {
         });
 
         test('reorders options by dragging within one list', async ({ page }) => {
-            expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-1', 'source-2', 'source-3']);
+            await expect.poll(() => getLabels(page, 'e2eSourceList')).toEqual(['source-1', 'source-2', 'source-3']);
 
             await dragOnto(page, 'source-1', 'source-3');
 
-            expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-2', 'source-3', 'source-1']);
+            await expect.poll(() => getLabels(page, 'e2eSourceList')).toEqual(['source-2', 'source-3', 'source-1']);
         });
 
         test('never moves the surrounding options while dragging', async ({ page }) => {
@@ -402,7 +404,7 @@ test.describe('KbqListModule', () => {
             await pressAndMoveOnto(page, 'source-1', 'source-3');
 
             // The row stays where it was so the list does not jump when the drag begins.
-            expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-1', 'source-2', 'source-3']);
+            await expect.poll(() => getLabels(page, 'e2eSourceList')).toEqual(['source-1', 'source-2', 'source-3']);
             await expect(page.getByTestId('e2eSourceList').locator('.cdk-drag-placeholder')).toHaveCount(1);
 
             await page.mouse.up();
@@ -437,8 +439,8 @@ test.describe('KbqListModule', () => {
         test('moves an option into the connected list', async ({ page }) => {
             await dragOnto(page, 'source-1', 'target-1');
 
-            expect(await getLabels(page, 'e2eSourceList')).toEqual(['source-2', 'source-3']);
-            expect(await getLabels(page, 'e2eTargetList')).toContain('source-1');
+            await expect.poll(() => getLabels(page, 'e2eSourceList')).toEqual(['source-2', 'source-3']);
+            await expect.poll(() => getLabels(page, 'e2eTargetList')).toContain('source-1');
         });
     });
 
@@ -481,7 +483,7 @@ test.describe('KbqListModule', () => {
             await page.mouse.up();
             await expect(page.locator('.cdk-drag-preview')).toHaveCount(0);
 
-            expect(await getLabels(page)).toEqual(['handle-2', 'handle-3', 'handle-1']);
+            await expect.poll(() => getLabels(page)).toEqual(['handle-2', 'handle-3', 'handle-1']);
         });
 
         test('ignores a drag started from the rest of the row', async ({ page }) => {
@@ -492,7 +494,7 @@ test.describe('KbqListModule', () => {
 
             await page.mouse.up();
 
-            expect(await getLabels(page)).toEqual(['handle-1', 'handle-2', 'handle-3']);
+            await expect.poll(() => getLabels(page)).toEqual(['handle-1', 'handle-2', 'handle-3']);
         });
 
         test('advertises the grab on the handle rather than on the row', async ({ page }) => {
@@ -569,13 +571,17 @@ test.describe('KbqListModule', () => {
             // Past the midpoint of the second option inside the group, so row-1 lands between row-4 and row-5.
             await dragOnto(page, 'row-1', 'row-4');
 
-            expect(await getLabels(page)).toEqual(['row-2', 'row-3', 'row-4', 'row-1', 'row-5', 'row-6', 'row-7']);
+            await expect
+                .poll(() => getLabels(page))
+                .toEqual(['row-2', 'row-3', 'row-4', 'row-1', 'row-5', 'row-6', 'row-7']);
         });
 
         test('moves an option out of the group', async ({ page }) => {
             await dragOnto(page, 'row-3', 'row-6');
 
-            expect(await getLabels(page)).toEqual(['row-1', 'row-2', 'row-4', 'row-5', 'row-6', 'row-3', 'row-7']);
+            await expect
+                .poll(() => getLabels(page))
+                .toEqual(['row-1', 'row-2', 'row-4', 'row-5', 'row-6', 'row-3', 'row-7']);
         });
 
         test('does not pick up an option that opts out', async ({ page }) => {
@@ -593,7 +599,9 @@ test.describe('KbqListModule', () => {
 
             await page.mouse.up();
 
-            expect(await getLabels(page)).toEqual(['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6', 'row-7']);
+            await expect
+                .poll(() => getLabels(page))
+                .toEqual(['row-1', 'row-2', 'row-3', 'row-4', 'row-5', 'row-6', 'row-7']);
         });
     });
     test.describe('E2eListDragPreview', () => {

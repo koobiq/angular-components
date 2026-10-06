@@ -340,6 +340,8 @@ describe('KbqListSelection without forms', () => {
                 expect(listOptions[secondIndex].componentInstance.selected).toBe(false);
 
                 selectionList.componentInstance.onKeyDown(keyEvent);
+                // The newly focused option takes focus in a microtask, which a browser runs before rendering.
+                tick();
                 fixture.detectChanges();
 
                 expect(listOptions[firstIndex].componentInstance.selected).toBe(true);
@@ -699,7 +701,8 @@ describe('KbqListSelection without forms', () => {
             fixture.detectChanges();
             expect(option.className).toContain('kbq-focused');
 
-            dispatchFakeEvent(option, 'blur');
+            // A real blur: a blur event while the option still holds focus is not a loss of focus.
+            option.blur();
             fixture.detectChanges();
             expect(option.className).not.toContain('kbq-focused');
         }));
@@ -729,7 +732,7 @@ describe('KbqListSelection without forms', () => {
 
             expect(options[0].nativeElement.className).toContain('kbq-focused');
 
-            dispatchFakeEvent(options[0].nativeElement, 'blur');
+            options[0].nativeElement.blur();
             fixture.detectChanges();
 
             expect(options[0].nativeElement.className).not.toContain('kbq-focused');
@@ -1413,6 +1416,8 @@ describe('KbqListSelection with forms', () => {
                 listEl.dispatchEvent(
                     new KeyboardEvent('keydown', { keyCode, shiftKey: true, bubbles: true, cancelable: true })
                 );
+                tick();
+                fixture.detectChanges();
             };
 
             expect(ngModel.value.length).toBe(0);
@@ -1571,6 +1576,7 @@ describe('KbqListSelection range selection', () => {
         list.keyManager.setActiveItem(1);
         listOptions[1].componentInstance.selected = true;
         list.keyManager.setActiveItem(3);
+        tick();
         fixture.detectChanges();
 
         list.setSelectedOptionsByClick(listOptions[3].componentInstance, true, false);

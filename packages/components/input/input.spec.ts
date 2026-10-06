@@ -38,7 +38,12 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         providers: [{ provide: ComponentFixtureAutoDetect, useValue: true }, ...providers]
     }).compileComponents();
 
-    return TestBed.createComponent<T>(component);
+    const fixture = TestBed.createComponent<T>(component);
+
+    // Without zone.js, auto-detection renders on the next scheduled tick rather than inside `createComponent`.
+    fixture.detectChanges();
+
+    return fixture;
 }
 
 const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement =>
@@ -477,7 +482,7 @@ describe('KbqInput', () => {
             expect(formFieldElement.querySelectorAll('.kbq-form-field__hint')[0].textContent).toBe('Hint');
         }));
 
-        it('should render kbqPrefix icon', () => {
+        it('should render kbqPrefix icon', async () => {
             const fixture = createComponent(FormFieldWithPrefix, [KbqIconModule]);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
@@ -485,7 +490,7 @@ describe('KbqInput', () => {
             expect(formFieldElement.querySelectorAll('[kbq-icon]').length).toBe(1);
         });
 
-        it('should render kbqSuffix icon', () => {
+        it('should render kbqSuffix icon', async () => {
             const fixture = createComponent(FormFieldWithSuffix, [KbqIconModule]);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
@@ -511,15 +516,17 @@ describe('KbqInput', () => {
                 expect(fixture.componentInstance.input().errorState).toBe(true);
             });
 
-            it('should be in error state when form is submitted and control is invalid', () => {
+            it('should be in error state when form is submitted and control is invalid', async () => {
                 const fixture = createComponent(InputWithErrorStateMatcher);
 
                 getSubmitButton(fixture).click();
 
+                await fixture.whenStable();
+
                 expect(fixture.componentInstance.input().errorState).toBe(true);
             });
 
-            it('should call errorStateMatcher and update errorState on blur', () => {
+            it('should call errorStateMatcher and update errorState on blur', async () => {
                 const fixture = createComponent(InputWithErrorStateMatcher);
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
@@ -527,6 +534,8 @@ describe('KbqInput', () => {
                 expect(fixture.componentInstance.input().errorState).toBe(false);
 
                 dispatchFakeEvent(getInputElement(fixture), 'blur');
+
+                await fixture.whenStable();
 
                 expect(spy).toHaveBeenCalled();
                 expect(fixture.componentInstance.input().errorState).toBe(true);
@@ -543,17 +552,19 @@ describe('KbqInput', () => {
                 expect(fixture.componentInstance.input().errorState).toBe(false);
             });
 
-            it('should be in error state after form is submitted when invalid', () => {
+            it('should be in error state after form is submitted when invalid', async () => {
                 const fixture = createComponent(InputWithErrorStateMatcher);
 
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 
                 getSubmitButton(fixture).click();
 
+                await fixture.whenStable();
+
                 expect(fixture.componentInstance.input().errorState).toBe(true);
             });
 
-            it('should call errorStateMatcher and NOT update errorState on blur', () => {
+            it('should call errorStateMatcher and NOT update errorState on blur', async () => {
                 const fixture = createComponent(InputWithErrorStateMatcher);
 
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
@@ -564,6 +575,8 @@ describe('KbqInput', () => {
                 expect(fixture.componentInstance.input().errorState).toBe(false);
 
                 dispatchFakeEvent(getInputElement(fixture), 'blur');
+
+                await fixture.whenStable();
 
                 expect(spy).toHaveBeenCalled();
                 expect(fixture.componentInstance.input().errorState).toBe(false);
@@ -589,7 +602,7 @@ describe('KbqInput', () => {
                 expect(fixture.componentInstance.input().errorState).toBe(true);
             });
 
-            it('should call errorStateMatcher and NOT update errorState on blur', () => {
+            it('should call errorStateMatcher and NOT update errorState on blur', async () => {
                 const fixture = createComponent(InputWithErrorStateMatcher);
 
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
@@ -601,13 +614,15 @@ describe('KbqInput', () => {
 
                 dispatchFakeEvent(getInputElement(fixture), 'blur');
 
+                await fixture.whenStable();
+
                 expect(spy).toHaveBeenCalled();
                 expect(fixture.componentInstance.input().errorState).toBe(false);
             });
         });
 
         describe('custom ErrorStateMatcher', () => {
-            it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
+            it('should override errorStateMatcher by kbqErrorStateMatcherProvider', async () => {
                 const fixture = createComponent(InputWithDIErrorStateMatcher);
 
                 expect(fixture.componentInstance.input().errorState).toBe(true);
@@ -643,6 +658,7 @@ describe('KbqInput', () => {
             const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
 
             control.setValue('ab');
+            fixture.detectChanges();
 
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);

@@ -124,7 +124,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     readonly group: KbqOptgroup | null;
     protected handleClick($event: MouseEvent): void;
     // (undocumented)
-    hasFocus: boolean;
+    get hasFocus(): boolean;
+    set hasFocus(value: boolean);
     // (undocumented)
     listSelection: KbqListSelection<T>;
     // (undocumented)
