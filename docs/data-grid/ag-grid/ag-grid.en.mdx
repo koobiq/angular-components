@@ -83,7 +83,7 @@ The directive methods are available via `#rowDetail="kbqAgGridRowDetail"`:
 | `toggle(id)`    | Expands or collapses the row |
 | `collapseAll()` | Collapses all rows           |
 
-In the example, Enter on a row calls `toggle()`.
+In the example, a click on a cell and Enter on a row call `toggle()`. The expanded part is not a cell, so clicking it does not collapse the row, and clicking the selection checkbox does not expand it.
 
 The screen reader labels of the expand toggle are Russian by default. To switch the language, provide a labels provider:
 

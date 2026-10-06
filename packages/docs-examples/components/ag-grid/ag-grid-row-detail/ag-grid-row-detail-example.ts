@@ -13,11 +13,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     AllCommunityModule,
+    CellClickedEvent,
     CellKeyDownEvent,
     ColDef,
     FullWidthCellKeyDownEvent,
     GetRowIdFunc,
-    ModuleRegistry
+    ModuleRegistry,
+    RowSelectionOptions,
+    SELECTION_COLUMN_ID
 } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -109,8 +112,10 @@ export class ExampleRowDetailComponent {
             [kbqAgGridRowDetailSingleExpand]="!multipleExpand()"
             [kbqAgGridRowDetailFilled]="filled()"
             [getRowId]="getRowId"
+            [rowSelection]="rowSelection"
             [columnDefs]="columnDefs"
             [rowData]="rowData"
+            (cellClicked)="onCellClicked($event, rowDetail)"
             (cellKeyDown)="onCellKeyDown($event, rowDetail)"
         />
     `,
@@ -142,6 +147,12 @@ export class AgGridRowDetailExample {
     protected readonly rowDetailComponent = ExampleRowDetailComponent;
 
     protected readonly getRowId: GetRowIdFunc<ExampleRowData> = ({ data }) => data.id;
+
+    protected readonly rowSelection: RowSelectionOptions = {
+        mode: 'multiRow',
+        headerCheckbox: true,
+        checkboxes: true
+    };
 
     // Wider than the grid, so that scrolling it horizontally shows the expanded part staying in place.
     protected readonly columnDefs: ColDef<ExampleRowData>[] = [
@@ -269,6 +280,17 @@ export class AgGridRowDetailExample {
             description: 'PowerShell ran a Base64-encoded command that disables script logging.'
         }
     ];
+
+    /**
+     * Clicking a cell expands and collapses its row. The expanded part is not a cell, so clicking
+     * inside it never reaches this handler.
+     */
+    protected onCellClicked({ node, column }: CellClickedEvent, rowDetail: KbqAgGridRowDetail): void {
+        // Leave the selection checkbox to the selection column itself.
+        if (!node.id || column.getColId() === SELECTION_COLUMN_ID) return;
+
+        rowDetail.toggle(node.id);
+    }
 
     protected onCellKeyDown(
         { event, node }: CellKeyDownEvent | FullWidthCellKeyDownEvent,
