@@ -2,11 +2,10 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { DateAdapter, KbqReadStateDirective, PopUpPlacements } from '@koobiq/components/core';
+import { DateAdapter, KbqReadStateDirective } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToastStyle } from '@koobiq/components/toast';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
 import { KbqNotificationCenterService, KbqNotificationItem } from './notification-center.service';
 import { KBQ_NOTIFICATION_CENTER_PANEL } from './notification-center.tokens';
@@ -18,8 +17,7 @@ import { KBQ_NOTIFICATION_CENTER_PANEL } from './notification-center.tokens';
         NgTemplateOutlet,
         KbqIconModule,
         KbqTitleModule,
-        KbqButtonModule,
-        KbqTooltipTrigger
+        KbqButtonModule
     ],
     templateUrl: './notification-item.html',
     styleUrls: ['./notification-item.scss'],
@@ -37,8 +35,6 @@ export class KbqNotificationItemComponent {
     protected readonly service = inject(KbqNotificationCenterService);
     protected readonly readStateDirective = inject<KbqReadStateDirective>(KbqReadStateDirective, { host: true });
     protected readonly panel = inject(KBQ_NOTIFICATION_CENTER_PANEL);
-
-    protected popUpPlacements = PopUpPlacements;
 
     /** Time of day the notification happened; empty when its `date` could not be parsed. */
     protected time: string;
