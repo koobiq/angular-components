@@ -232,7 +232,6 @@ export type KbqFilterBarLocaleConfiguration = {
         change: string;
         resetChanges: string;
         remove: string;
-        error: string;
         errorHint: string;
         saveButton: string;
         cancelButton: string;

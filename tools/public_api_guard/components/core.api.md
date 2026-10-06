@@ -543,7 +543,6 @@ export const enUSLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -821,7 +820,6 @@ export const esLALocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -1367,7 +1365,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -1620,7 +1617,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -1869,7 +1865,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -2124,7 +2119,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -2375,7 +2369,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -3120,7 +3113,6 @@ export type KbqFilterBarLocaleConfiguration = {
         change: string;
         resetChanges: string;
         remove: string;
-        error: string;
         errorHint: string;
         saveButton: string;
         cancelButton: string;
@@ -5259,7 +5251,6 @@ export const ptBRLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -5733,7 +5724,6 @@ export const ruRULocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -6116,7 +6106,6 @@ export const tkTMLocaleData: {
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;

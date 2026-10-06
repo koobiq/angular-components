@@ -94,7 +94,6 @@ export const ptBRLocaleData = {
             change: 'Renomear',
             resetChanges: 'Reconfigurar',
             remove: 'Deletar',
-            error: 'A busca com esse nome já existe',
             errorHint: 'O filtro não pôde ser salvo. Tente de novo ou entre em contato com o administrador.',
             saveButton: 'Salvar',
             cancelButton: 'Cancelar',

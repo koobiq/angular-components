@@ -843,7 +843,7 @@ describe('KbqFilters', () => {
             expect(component.filterName.enabled).toBe(true);
         }));
 
-        it('should keep the inline "name already exists" error after re-enabling the control', fakeAsync(() => {
+        it('should keep the "name already exists" error after re-enabling the control', fakeAsync(() => {
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -858,7 +858,7 @@ describe('KbqFilters', () => {
             component.filterSavedUnsuccessfully({ nameAlreadyExists: true });
 
             // `enable()` re-runs the validators, so the custom error must be applied AFTER it — otherwise the
-            // inline `<kbq-error>` never renders. Reverting the showError/enable order fails this.
+            // field is never marked invalid. Reverting the showError/enable order fails this.
             expect(component.filterName.hasError('filterNameAlreadyExist')).toBe(true);
         }));
     });
@@ -895,7 +895,7 @@ describe('KbqFilters', () => {
             // 2. Host reports the save failed because the name already exists.
             component.filterSavedUnsuccessfully({ nameAlreadyExists: true });
 
-            // The inline error is shown, the saving state is released and the field is editable again.
+            // The error is shown, the saving state is released and the field is editable again.
             expect(component.showFilterSavingError).toBe(true);
             expect(component.filterSavingErrorText).toBe(KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.errorHint);
             expect(component.filterName.hasError('filterNameAlreadyExist')).toBe(true);
@@ -1341,6 +1341,30 @@ describe('KbqFilters', () => {
                 expect(document.querySelector('.kbq-popover__content input')?.getAttribute('aria-label')).toBe(text);
             })()
         );
+
+        it('should report a taken name in the alert alone, keeping the field invalid', fakeAsync(() => {
+            initFixture(createFilter([], { name: 'Existing', saved: true }));
+
+            const component = getFiltersComponent();
+
+            component.openSaveAsNewFilterPopover();
+            fixture.detectChanges();
+            flush();
+
+            // Touched, as after a click on the save button: the form field shows errors in that state only.
+            component.filterName.setValue('Existing');
+            component.filterName.markAsTouched();
+            component.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+            fixture.detectChanges();
+
+            const content = document.querySelector('.kbq-popover__content')!;
+
+            expect(content.querySelector('kbq-alert')?.textContent?.trim()).toBe(
+                KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.errorHint
+            );
+            expect(content.querySelector('input')?.getAttribute('aria-invalid')).toBe('true');
+            expect(content.querySelector('kbq-error')).toBeNull();
+        }));
     });
 
     describe('Template integration', () => {

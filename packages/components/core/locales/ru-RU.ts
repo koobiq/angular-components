@@ -92,7 +92,6 @@ export const ruRULocaleData = {
             change: 'Переименовать',
             resetChanges: 'Сбросить изменения',
             remove: 'Удалить',
-            error: 'Такой поиск уже есть',
             errorHint: 'Такой фильтр уже есть',
             saveButton: 'Сохранить',
             cancelButton: 'Отмена',

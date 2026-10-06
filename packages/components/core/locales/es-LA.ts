@@ -94,7 +94,6 @@ export const esLALocaleData = {
             change: 'Renombrar',
             resetChanges: 'Restablecer',
             remove: 'Eliminar',
-            error: 'Ya existe una búsqueda con ese nombre',
             errorHint: 'No se pudo guardar el filtro. Intente de nuevo o comuníquese con el administrador.',
             saveButton: 'Guardar',
             cancelButton: 'Cancelar',

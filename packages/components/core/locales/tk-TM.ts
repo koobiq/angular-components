@@ -95,7 +95,6 @@ export const tkTMLocaleData = {
             change: 'Adyny üýtget',
             resetChanges: 'Täzeden düz',
             remove: 'Poz',
-            error: 'Şeýle atly gözleg eýýäm bar',
             errorHint: 'Filtri ýazdyryp bolmady. Täzeden synanyň ýa-da administratora ýüz tutuň.',
             saveButton: 'Ýazdyr',
             cancelButton: 'Ýatyr',
