@@ -143,14 +143,6 @@ describe('KbqTimeRange', () => {
             expect(getTriggerNativeElement(debugElement).textContent).toMatchSnapshot();
         });
 
-        it('should prepend a non-empty title.for to the period', () => {
-            const { debugElement } = setup(TestComponent, [
-                kbqTimeRangeLocaleConfigurationProvider({ title: { for: 'за' } })
-            ]);
-
-            expect(getTriggerNativeElement(debugElement).textContent).toMatch(/^за \S/);
-        });
-
         it('should open popover when trigger is clicked', fakeAsync(() => {
             const fixture = setup(TestComponent);
             const { debugElement } = fixture;

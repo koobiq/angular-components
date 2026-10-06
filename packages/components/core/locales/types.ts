@@ -332,8 +332,6 @@ export type KbqClampedTextLocaleConfiguration = {
 /** Locale configuration for `KbqTimeRange` */
 export type KbqTimeRangeLocaleConfiguration = {
     title: {
-        /** Prepended to the selected period in the title. An empty string shows the period alone. */
-        for: string;
         placeholder: string;
     };
     editor: {

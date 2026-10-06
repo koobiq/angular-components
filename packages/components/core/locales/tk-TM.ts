@@ -158,7 +158,6 @@ export const tkTMLocaleData = {
     },
     timeRange: {
         title: {
-            for: 'soňky',
             placeholder: 'Möhleti saýla'
         },
         editor: {
@@ -180,35 +179,35 @@ export const tkTMLocaleData = {
                 SEPARATOR: ' ',
                 LAST_PART_SEPARATOR: '',
                 YEARS: `{years, plural,
-                one {# ýyl}
-                other {# ýyl}
+                one {soňky # ýyl}
+                other {soňky # ýyl}
             }`,
                 MONTHS: `{months, plural,
-                one {aý}
-                other {# aý}
+                one {soňky aý}
+                other {soňky # aý}
             }`,
                 WEEKS: `{weeks, plural,
-                one {hepde}
-                other {# hepde}
+                one {soňky hepde}
+                other {soňky # hepde}
             }`,
                 DAYS: `{days, plural,
-                one {gün}
-                other {# gün}
+                one {soňky gün}
+                other {soňky # gün}
             }`,
                 HOURS: `{hours, plural,
-                one {sagat}
-                other {# sagat}
+                one {soňky sagat}
+                other {soňky # sagat}
             }`,
                 MINUTES: `{minutes, plural,
-                one {minut}
-                other {# minut}
+                one {soňky minut}
+                other {soňky # minut}
             }`,
                 SECONDS: `{seconds, plural,
-                one {sekunt}
-                other {# sekunt}
+                one {soňky sekunt}
+                other {soňky # sekunt}
             }`,
-                YEARS_FRACTION: `{years} ýyl`,
-                MONTHS_FRACTION: `{months} aý`
+                YEARS_FRACTION: `soňky {years} ýyl`,
+                MONTHS_FRACTION: `soňky {months} aý`
             },
             option: {
                 SEPARATOR: ' ',

@@ -157,7 +157,6 @@ export const esLALocaleData = {
     },
     timeRange: {
         title: {
-            for: 'para',
             placeholder: 'Seleccione el período'
         },
         editor: {

@@ -1972,6 +1972,17 @@ Handled by `tags-signals`: reads of the members that moved are rewritten, includ
 
 Handled by `textarea-signals`: the value-safe reads are rewritten, the rest is reported.
 
+#### Time range
+
+**`title.for` was removed from `KbqTimeRangeLocaleConfiguration`.** The title used to prepend it to the selected period ("за последний час"); the period stands alone now ("последний час" / "Last hour"), and the duration templates of each locale carry whatever word it needs. A custom title template receives the period without a prefix in `formattedDate`; a word you prefixed through `title.for` belongs in your `durationTemplate.title` overrides.
+
+| Pattern                                                       | Manual migration                                   |
+| ------------------------------------------------------------- | -------------------------------------------------- |
+| A read of `title.for`                                         | Drop it — the title shows the period alone         |
+| A `for` key the schematic could not attribute to a time range | Remove it from the `title` section of the override |
+
+Handled by `time-range-title-for`: the key is removed from time-range locale literals, the rest is reported.
+
 #### Timepicker
 
 `KbqTimepicker` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — those stay plain accessors. The four inputs the timepicker owns moved.
