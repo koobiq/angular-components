@@ -1,46 +1,52 @@
-/// <reference types="jest" />
+import '@analogjs/vitest-angular/setup-serializers';
+import '@analogjs/vitest-angular/setup-zone';
+import '@angular/compiler';
 
-/** required to run tests without using @angular-builders/jest */
-if (!('Zone' in global)) {
-    require('jest-preset-angular/setup-env/zone').setupZoneTestEnv();
-}
-
+import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
+import { DebugNode, provideZoneChangeDetection } from '@angular/core';
 import { toHaveNoViolations } from 'jest-axe';
-import failOnConsole from 'jest-fail-on-console';
+import { expect, SnapshotSerializer, vi } from 'vitest';
+import './fail-on-console';
 
+// Zone-based change detection until the library is zoneless; `fakeAsync` needs zone.js either way.
+setupTestBed({ zoneless: false, providers: [provideZoneChangeDetection()] });
+
+// jest-axe has no runtime dependency on Jest: `axe()` wraps axe-core and the matcher only formats.
 expect.extend(toHaveNoViolations);
 
-failOnConsole({
-    silenceMessage: (message) =>
-        // jsdom reports every stylesheet it cannot parse as an error, and the message is that error's stack, so
-        // only its first line is stable: https://github.com/thymikee/jest-preset-angular/issues/2194
-        message.startsWith('Error: Could not parse CSS stylesheet') ||
-        // Angular's dev-mode performance hint for an `@for` that tracks by identity and had to re-create every
-        // item. Specs replace their inputs with fresh literals all the time, which is exactly what triggers it.
-        message.startsWith('NG0956:')
-});
+// Prints a `DebugElement` as the plain object it is, as Jest did: the fixture serializer of
+// `@analogjs/vitest-angular` claims anything with a `componentInstance` and fails on it.
+expect.addSnapshotSerializer({
+    test: (value) => value instanceof DebugNode,
+    serialize: (value, config, indentation, depth, refs, printer) =>
+        printer(
+            value,
+            { ...config, plugins: config.plugins.filter((plugin) => !plugin.test(value)) },
+            indentation,
+            depth,
+            refs
+        )
+} satisfies SnapshotSerializer);
 
-Object.defineProperty(global, '__jest__', { value: true });
+globalThis.open = vi.fn();
 
-global.open = jest.fn();
+globalThis.URL.createObjectURL = vi.fn();
 
-global.URL.createObjectURL = jest.fn();
+globalThis.ResizeObserverEntry = class {} as typeof ResizeObserverEntry;
 
-global.ResizeObserverEntry = class {} as typeof ResizeObserverEntry;
-
-global.ResizeObserver = class implements ResizeObserver {
+globalThis.ResizeObserver = class implements ResizeObserver {
     observe(_target: Element, _options?: ResizeObserverOptions): void {}
     unobserve(_target: Element): void {}
     disconnect(): void {}
 };
 
-global.DataTransferItem = class {
+globalThis.DataTransferItem = class {
     webkitGetAsEntry(): FileSystemEntry | null {
         return null;
     }
 } as typeof DataTransferItem;
 
-global.DataTransfer = class {
+globalThis.DataTransfer = class {
     files: File[] = [];
     items = {
         length: () => {
@@ -52,7 +58,7 @@ global.DataTransfer = class {
     };
 } as unknown as typeof DataTransfer;
 
-global.DragEvent = class extends MouseEvent {
+globalThis.DragEvent = class extends MouseEvent {
     dataTransfer: DataTransfer | null;
 
     constructor(type: string, eventInitDict: DragEventInit) {
@@ -61,8 +67,8 @@ global.DragEvent = class extends MouseEvent {
     }
 } as typeof DragEvent;
 
-global.CSS = {
-    supports: jest.fn().mockReturnValue(false) as typeof CSS.supports
+globalThis.CSS = {
+    supports: vi.fn().mockReturnValue(false) as typeof CSS.supports
 } as typeof CSS;
 
 if (!globalThis.structuredClone) {
@@ -70,12 +76,12 @@ if (!globalThis.structuredClone) {
 }
 
 if (!Element.prototype.scrollIntoView) {
-    Element.prototype.scrollIntoView = jest.fn();
+    Element.prototype.scrollIntoView = vi.fn();
 }
 
 // jsdom implements no scrolling at all (https://github.com/jsdom/jsdom/issues/1695), and components
 // scroll through `KbqScrollbarViewport`, which reaches `Element.prototype.scrollTo` via
-// `CdkScrollable`. A bare `jest.fn()` would make every such call silently do nothing, so this applies
+// `CdkScrollable`. A bare `vi.fn()` would make every such call silently do nothing, so this applies
 // the offsets the way a browser would — which is what a spec asserting a scroll position needs. No
 // clamping: jsdom has no layout to clamp against, so a spec that cares defines its own `scrollLeft`.
 if (!Element.prototype.scrollTo) {

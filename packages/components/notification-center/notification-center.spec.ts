@@ -334,8 +334,8 @@ describe('KbqNotificationCenter', () => {
                 'kbq-notification-item-remove-button'
             ];
 
-            // Whether they are in the tab order is a question about the stylesheet, which Jest never
-            // applies (jest-preset-angular drops `styleUrls` outright) — that is pinned by the
+            // Whether they are in the tab order is a question about the stylesheet, which the unit tests
+            // never apply (they load no `styleUrls`) — that is pinned by the
             // Playwright test "the delete buttons are reachable with the keyboard".
             deleteButtonTestIds.forEach((testId) => {
                 const button = queryPanel(`[data-testid="${testId}"]`)!;
@@ -561,7 +561,7 @@ describe('KbqNotificationCenter', () => {
             const push = (overrides: Partial<KbqNotificationItem>) => {
                 const item: KbqNotificationItem = { title: 'a', date: new Date().toISOString(), ...overrides };
 
-                jest.spyOn(TestBed.inject(KbqToastService), 'show').mockReturnValue({ id: 1, ref: {} as any });
+                vi.spyOn(TestBed.inject(KbqToastService), 'show').mockReturnValue({ id: 1, ref: {} as any });
 
                 getService().push(item);
 
@@ -749,7 +749,7 @@ describe('KbqNotificationCenter', () => {
 
         it('re-emits onNextPage and clears the error when the bottom retry button is clicked', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -767,7 +767,7 @@ describe('KbqNotificationCenter', () => {
 
         it('keeps paging when a completed load leaves the list still at the bottom', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -785,7 +785,7 @@ describe('KbqNotificationCenter', () => {
 
         it('requests the first page when the initial list does not fill the viewport', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -801,7 +801,7 @@ describe('KbqNotificationCenter', () => {
 
         it('does not request a page on its own when there is nothing more to load', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -817,7 +817,7 @@ describe('KbqNotificationCenter', () => {
 
         it('keeps the full-screen error path emitting onReload', fakeAsync(() => {
             const service = getService();
-            const reloadSpy = jest.spyOn(service.onReload, 'next');
+            const reloadSpy = vi.spyOn(service.onReload, 'next');
 
             openCenter();
 
@@ -856,7 +856,7 @@ describe('KbqNotificationCenter', () => {
 
         it('emits onNextPage when scrolled to the bottom with more to load', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -871,7 +871,7 @@ describe('KbqNotificationCenter', () => {
 
         it('does not emit onNextPage when there is nothing more to load', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -888,7 +888,7 @@ describe('KbqNotificationCenter', () => {
 
         it('does not emit onNextPage while a page is already loading', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -905,7 +905,7 @@ describe('KbqNotificationCenter', () => {
 
         it('does not emit onNextPage while the load-more error is shown', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -922,7 +922,7 @@ describe('KbqNotificationCenter', () => {
 
         it('emits onNextPage at the bottom when fractional zoom leaves a sub-pixel gap', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -938,7 +938,7 @@ describe('KbqNotificationCenter', () => {
 
         it('does not emit onNextPage while the list is still a few pixels from the bottom', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -953,7 +953,7 @@ describe('KbqNotificationCenter', () => {
 
         it('emits onNextPage within scrolledToBottomOffset of the bottom', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             componentInstance.scrolledToBottomOffset = 100;
             fixture.detectChanges();
@@ -970,7 +970,7 @@ describe('KbqNotificationCenter', () => {
 
         it('does not emit onNextPage when the distance exceeds scrolledToBottomOffset', fakeAsync(() => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             componentInstance.scrolledToBottomOffset = 100;
             fixture.detectChanges();
@@ -991,7 +991,7 @@ describe('KbqNotificationCenter', () => {
             openCenter();
             setAtBottomGeometry();
 
-            const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+            const scrollSpy = vi.spyOn(getCenter().scrollContainer(), 'scrollTo');
 
             service.setLoadingMore(true);
             fixture.detectChanges();
@@ -1007,7 +1007,7 @@ describe('KbqNotificationCenter', () => {
             openCenter();
             setAtBottomGeometry();
 
-            const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+            const scrollSpy = vi.spyOn(getCenter().scrollContainer(), 'scrollTo');
 
             service.setLoadMoreErrorMode(true);
             fixture.detectChanges();
@@ -1023,7 +1023,7 @@ describe('KbqNotificationCenter', () => {
             openCenter();
             setAtBottomGeometry();
 
-            const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+            const scrollSpy = vi.spyOn(getCenter().scrollContainer(), 'scrollTo');
 
             service.setLoadingMore(true);
             fixture.detectChanges();
@@ -1050,7 +1050,7 @@ describe('KbqNotificationCenter', () => {
             openCenter();
             setAtBottomGeometry();
 
-            const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+            const scrollSpy = vi.spyOn(getCenter().scrollContainer(), 'scrollTo');
 
             // The replayed BehaviorSubject value must not be treated as a fresh appearance: the panel
             // always opens scrolled to the top.
@@ -1156,7 +1156,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [item];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.remove(item);
 
@@ -1169,7 +1169,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [createItem('a')];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             // An equal but not identical object used to be filtered out silently while still reporting
             // a deletion the consumer would then replay against its backend.
@@ -1185,7 +1185,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [item];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.removeGroup({ id: 'group', title: 'group', items: [item] });
 
@@ -1198,7 +1198,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [createItem('a')];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             // A group reference kept from an earlier groupedItems emission, after the list was
             // replaced: nothing is removed locally, so nothing may be replayed against a backend.
@@ -1214,7 +1214,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [present];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.removeGroup({ id: 'group', title: 'group', items: [present, createItem('gone')] });
 
@@ -1227,7 +1227,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = items;
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.removeAll();
 
@@ -1237,7 +1237,7 @@ describe('KbqNotificationCenter', () => {
 
         it('stays silent when removeAll() runs on an already empty list', () => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.removeAll();
 
@@ -1269,7 +1269,7 @@ describe('KbqNotificationCenter', () => {
         it('ignores a push of a notification that is already in the list', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const showSpy = jest.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
+            const showSpy = vi.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
             const item = createItem('a');
 
             service.push(item);
@@ -1282,7 +1282,7 @@ describe('KbqNotificationCenter', () => {
         it('adds a pushed notification whose id is already taken, under a generated one', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const showSpy = jest.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
+            const showSpy = vi.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
             const date = new Date().toISOString();
 
             service.items = [{ id: 'n1', title: 'a', date }];
@@ -1329,7 +1329,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [item];
 
-            const onReadSpy = jest.spyOn(service.onRead, 'next');
+            const onReadSpy = vi.spyOn(service.onRead, 'next');
 
             toastService.read.next({ id: item.id });
 
@@ -1345,7 +1345,7 @@ describe('KbqNotificationCenter', () => {
         it('suppresses the toast of a pushed notification', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const showSpy = jest.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
+            const showSpy = vi.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
 
             service.setSilentMode(true);
             service.push(createItem('a'));
@@ -1425,7 +1425,7 @@ describe('KbqNotificationCenter', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
 
-            jest.spyOn(toastService, 'show').mockReturnValue({ id: 42, ref: createToastRef() });
+            vi.spyOn(toastService, 'show').mockReturnValue({ id: 42, ref: createToastRef() });
 
             const item = createItem('a');
 
@@ -1437,7 +1437,7 @@ describe('KbqNotificationCenter', () => {
         it('hides the toast by the stored toastId and clears it', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+            const hideSpy = vi.spyOn(toastService, 'hide').mockImplementation(() => {});
 
             const item: KbqNotificationItem = { ...createItem('a'), toastId: 42 };
 
@@ -1450,7 +1450,7 @@ describe('KbqNotificationCenter', () => {
         it('does nothing when the item has no toastId', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+            const hideSpy = vi.spyOn(toastService, 'hide').mockImplementation(() => {});
 
             service.hideToast(createItem('a'));
 
@@ -1461,8 +1461,8 @@ describe('KbqNotificationCenter', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
 
-            jest.spyOn(toastService, 'show').mockReturnValue({ id: 7, ref: createToastRef() });
-            const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+            vi.spyOn(toastService, 'show').mockReturnValue({ id: 7, ref: createToastRef() });
+            const hideSpy = vi.spyOn(toastService, 'hide').mockImplementation(() => {});
 
             const item = createItem('a');
 
@@ -1476,10 +1476,10 @@ describe('KbqNotificationCenter', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
 
-            jest.spyOn(toastService, 'show')
+            vi.spyOn(toastService, 'show')
                 .mockReturnValueOnce({ id: 1, ref: createToastRef() })
                 .mockReturnValueOnce({ id: 2, ref: createToastRef() });
-            const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+            const hideSpy = vi.spyOn(toastService, 'hide').mockImplementation(() => {});
 
             service.push(createItem('a'));
             service.push(createItem('b'));
@@ -1543,7 +1543,7 @@ describe('KbqNotificationCenter', () => {
 
             expect(itemElement).not.toBeNull();
 
-            const onReadSpy = jest.spyOn(service.onRead, 'next');
+            const onReadSpy = vi.spyOn(service.onRead, 'next');
 
             itemElement!.click();
             itemElement!.click();
@@ -1742,16 +1742,15 @@ describe('KbqNotificationCenter', () => {
             const pane = getOverlayPane();
             const panel = overlayContainer.getContainerElement().querySelector('.kbq-notification-center')!;
 
-            jest.spyOn(panel, 'getBoundingClientRect').mockReturnValue({ width: 400, height: 300 } as DOMRect);
-            jest.spyOn(
-                stickFixture.componentInstance.container().nativeElement,
-                'getBoundingClientRect'
-            ).mockReturnValue({
-                left: 0,
-                right: 800,
-                top: 0,
-                bottom: 500
-            } as DOMRect);
+            vi.spyOn(panel, 'getBoundingClientRect').mockReturnValue({ width: 400, height: 300 } as DOMRect);
+            vi.spyOn(stickFixture.componentInstance.container().nativeElement, 'getBoundingClientRect').mockReturnValue(
+                {
+                    left: 0,
+                    right: 800,
+                    top: 0,
+                    bottom: 500
+                } as DOMRect
+            );
 
             dispatchFakeEvent(window, 'resize');
             tick(20);

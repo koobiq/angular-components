@@ -73,7 +73,7 @@ describe(KbqSidebarModule.name, () => {
         });
 
         it('should fire change event', fakeAsync(() => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             sidebarComponent.stateChanged.subscribe(changeSpy);
 
@@ -88,7 +88,7 @@ describe(KbqSidebarModule.name, () => {
         }));
 
         it('should toggle on `BracketLeft` keypress', () => {
-            const toggleSpy = jest.spyOn(sidebarComponent, 'toggle');
+            const toggleSpy = vi.spyOn(sidebarComponent, 'toggle');
 
             expect(testComponent.position).toBe(SidebarPositions.Left);
 
@@ -98,7 +98,7 @@ describe(KbqSidebarModule.name, () => {
         });
 
         it('should NOT toggle on `BracketRight` keypress', () => {
-            const toggleSpy = jest.spyOn(sidebarComponent, 'toggle');
+            const toggleSpy = vi.spyOn(sidebarComponent, 'toggle');
 
             expect(testComponent.position).toBe(SidebarPositions.Left);
 
@@ -136,7 +136,7 @@ class TestSidebar {
 
     readonly sidebar = viewChild.required(KbqSidebar);
 
-    readonly onStateChanged = jest.fn();
+    readonly onStateChanged = vi.fn();
 }
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
@@ -181,7 +181,7 @@ class UncontrolledSidebar {
     /** An empty key leaves the sidebar on the key derived from its position in the document. */
     stateSavingKey = 'sidebar-key';
 
-    readonly onStateChanged = jest.fn();
+    readonly onStateChanged = vi.fn();
 }
 
 describe(`${KbqSidebarModule.name} state saving`, () => {
@@ -352,7 +352,7 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         const fixture = create(UncontrolledSidebar);
         const service = TestBed.inject(KbqStateSavingService);
 
-        // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+        // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
         // which throws while building the diff and hides the real failure.
         expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
             { name: 'kbq-sidebar', key: 'sidebar-key', enabled: true }
@@ -364,7 +364,7 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
     });
 
     it('persists nothing when the sidebar is not in the document as it initializes', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         store.setState('sidebar-key', { opened: false });
 

@@ -302,7 +302,7 @@ describe('KbqTimezoneSelect', () => {
 
             const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
                 width: fieldWidth,
                 height: 32,
                 top: 0,
@@ -689,7 +689,7 @@ describe('KbqTimezoneSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
             const subscription = fixture.componentInstance.select().optionSelectionChanges.subscribe(spy);
             const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
 
@@ -947,7 +947,7 @@ describe('KbqTimezoneSelect', () => {
             const optionInstances = fixture.componentInstance.options();
             const tooltipContentEl = optionInstances[2].tooltipContent().nativeElement;
 
-            jest.spyOn(tooltipContentEl, 'getClientRects').mockReturnValue([
+            vi.spyOn(tooltipContentEl, 'getClientRects').mockReturnValue([
                 {} as DOMRect,
                 {} as DOMRect,
                 {} as DOMRect,
@@ -980,7 +980,7 @@ describe('KbqTimezoneSelect', () => {
             // JSDOM defaults: getClientRects().length = 0 ≤ TOOLTIP_VISIBLE_ROWS_COUNT → disabled
             expect(directive.disabled).toBe(true);
 
-            jest.spyOn(tooltipContentEl, 'getClientRects').mockReturnValue(
+            vi.spyOn(tooltipContentEl, 'getClientRects').mockReturnValue(
                 new Array(TOOLTIP_VISIBLE_ROWS_COUNT + 1).fill({}) as unknown as DOMRectList
             );
             window.dispatchEvent(new Event('resize'));

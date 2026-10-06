@@ -49,7 +49,7 @@ Each component follows this structure, for example:
 packages/components/<component-name>/
 ├── <component-name>.ts                   # Main component (older components: <component-name>.component.ts)
 ├── <component-name>.module.ts            # Kbq<Name>Module — NgModule re-exporting the standalone pieces (legacy support; newer dirs name it module.ts)
-├── <component-name>.spec.ts              # Unit tests (Jest)
+├── <component-name>.spec.ts              # Unit tests (Vitest)
 ├── e2e.ts                                # E2e<Name><Scenario> components mounted by the e2e app
 ├── e2e.playwright-spec.ts                # Visual regression tests (Playwright)
 ├── __screenshots__/                      # Playwright baselines (Linux, threshold 0) — regenerate only via Docker or /approve-snapshots
@@ -103,23 +103,23 @@ A dev app lives in `packages/components-dev/<name>/` (`main.ts`, `module.ts`, `t
 
 There are two types of test files per component:
 
-- `*.spec.ts` — Jest unit tests
+- `*.spec.ts` — Vitest unit tests
 - `*.playwright-spec.ts` — Playwright E2E / visual regression tests
 
 ```bash
-# Unit tests (Jest)
+# Unit tests (Vitest)
 yarn run styles:build-all # CI does this before the unit suites; do the same before a full local run
-yarn run unit:all         # Every suite in one Jest process at --maxWorkers=100%
+yarn run unit:all         # Every suite in one Vitest run: the `angular` and `node` projects of vitest.config.mts
 yarn run unit:components  # Run component unit tests
 yarn run unit:components-experimental
 yarn run unit:angular-luxon-adapter
 yarn run unit:angular-moment-adapter
 yarn run unit:schematics # Run schematics tests
 yarn run unit:cli
-yarn run unit:koobiq-docs      # Docs app specs
-yarn run unit:tools            # Specs under tools/
-npx jest "<TEST_PATH_PATTERN>" # Run specific Jest tests (e.g., npx jest packages/components/button/button.component.spec.ts)
-npx jest "<TEST_PATH_PATTERN>" -t "<test name pattern>"
+yarn run unit:koobiq-docs            # Docs app specs
+yarn run unit:tools                  # Specs under tools/
+npx vitest run "<TEST_PATH_PATTERN>" # Run specific tests (e.g., npx vitest run packages/components/button/button.component.spec.ts)
+npx vitest run "<TEST_PATH_PATTERN>" -t "<test name pattern>"
 
 # E2E tests (Playwright)
 yarn run e2e:setup                        # Install Playwright browsers (run once)
@@ -144,11 +144,13 @@ absorb a known flake and `PLAYWRIGHT_WORKERS=<n>` to change the worker cap. `@pl
 pinned exactly because a patch release can change the bundled Chromium and invalidate every
 baseline — upgrade it on its own branch and refresh the baselines in the same PR.
 
-Jest setup (`jest.config.js`, `tools/jest/setup.ts`) that shapes how specs are written:
+Vitest setup (`vitest.config.mts`, `tools/vitest/`) that shapes how specs are written:
 
-- `jest-fail-on-console` is on: any `console.error` or `console.warn` during a test fails it.
-- `jest-axe` is registered, so `expect(element).toHaveNoViolations()` is available in every spec.
-- `testTimeout` is 2 seconds; `clearMocks` and `resetModules` are on.
+- The `angular` project compiles specs with `@analogjs/vite-plugin-angular` and runs each file in a jsdom VM context (`vmForks`); the `node` project runs schematics, the CLI and `tools/`. Globals (`describe`, `it`, `expect`, `vi`) are on.
+- `tools/vitest/fail-on-console.ts`: any `console.error` or `console.warn` during a test fails it.
+- `jest-axe` is registered (it has no runtime dependency on Jest), so `expect(element).toHaveNoViolations()` is available in every spec.
+- `testTimeout` is 2 seconds; `clearMocks` is on. Vitest also fails the run on an error thrown after a test, such as a listener left behind by a destroyed injector.
+- zone.js is loaded and TestBed uses zone change detection; `fakeAsync` and friends are restricted by ESLint to the specs that already use them, and new specs await `fixture.whenStable()` and use `vi.useFakeTimers()`.
 - Event and typing helpers (`dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `typeInElement`, ...) are exported from `@koobiq/components/core`.
 - Test host components carry no `Kbq` prefix (`TestApp`, `BasicSelect`); lint does not check this.
 

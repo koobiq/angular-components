@@ -529,7 +529,7 @@ describe('KbqTimeRange', () => {
             const fixture = setup(TestComponentWithRange);
             const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
             // A headless document is never focused, so the window-blur guard has to be taken out of play.
-            const hasFocus = jest.spyOn(document, 'hasFocus').mockReturnValue(true);
+            const hasFocus = vi.spyOn(document, 'hasFocus').mockReturnValue(true);
 
             // A mousedown on something unfocusable blurs the field and reports no `relatedTarget` at all.
             dispatchFocusOut(rangeElement, null);
@@ -543,7 +543,7 @@ describe('KbqTimeRange', () => {
             const fixture = setup(TestComponentWithRange);
             const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
             // Focused, so the gesture is the only thing that can be holding the swap back.
-            const hasFocus = jest.spyOn(document, 'hasFocus').mockReturnValue(true);
+            const hasFocus = vi.spyOn(document, 'hasFocus').mockReturnValue(true);
 
             // Safari does not focus a button on click, so the footer is recognised by the gesture instead.
             getApplyButton().dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
@@ -557,7 +557,7 @@ describe('KbqTimeRange', () => {
         it('should keep the fields while the whole window is out of focus', fakeAsync(() => {
             const fixture = setup(TestComponentWithRange);
             const { dateAdapter, form, rangeElement } = setupReversedRange(fixture);
-            const hasFocus = jest.spyOn(document, 'hasFocus').mockReturnValue(false);
+            const hasFocus = vi.spyOn(document, 'hasFocus').mockReturnValue(false);
 
             dispatchFocusOut(rangeElement, null);
             fixture.detectChanges();

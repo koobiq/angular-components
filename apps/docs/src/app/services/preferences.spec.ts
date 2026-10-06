@@ -1,17 +1,18 @@
 import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { KBQ_LOCALE_SERVICE, kbqLocaleServiceProvider } from '@koobiq/components/core';
+import type { Mock, MockInstance } from 'vitest';
 import { DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';
 import { DocsLanguagePreferences } from './preferences';
 
 describe(DocsLanguagePreferences.name, () => {
-    let setDocsLocale: jest.Mock;
-    let setExamplesLocale: jest.SpyInstance;
+    let setDocsLocale: Mock;
+    let setExamplesLocale: MockInstance;
 
     /** Configures the app at the given URL, the preferences not created yet. */
     const configure = (path: string): void => {
-        setDocsLocale = jest.fn();
+        setDocsLocale = vi.fn();
 
         TestBed.configureTestingModule({
             providers: [
@@ -28,14 +29,14 @@ describe(DocsLanguagePreferences.name, () => {
             ]
         });
 
-        setExamplesLocale = jest.spyOn(TestBed.inject(KBQ_LOCALE_SERVICE), 'setLocale');
+        setExamplesLocale = vi.spyOn(TestBed.inject(KBQ_LOCALE_SERVICE), 'setLocale');
     };
 
     const create = (): DocsLanguagePreferences => TestBed.inject(DocsLanguagePreferences);
 
     afterEach(() => {
         localStorage.clear();
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     // The example page has no footer to apply it.
@@ -89,8 +90,8 @@ describe(DocsLanguagePreferences.name, () => {
         };
 
         configure('/examples/select-overview');
-        jest.spyOn(Storage.prototype, 'getItem').mockImplementation(blocked);
-        jest.spyOn(Storage.prototype, 'setItem').mockImplementation(blocked);
+        vi.spyOn(Storage.prototype, 'getItem').mockImplementation(blocked);
+        vi.spyOn(Storage.prototype, 'setItem').mockImplementation(blocked);
 
         const preferences = create();
 

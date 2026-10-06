@@ -552,7 +552,7 @@ describe('KbqTooltip', () => {
         }));
 
         it('should emit kbqVisibleChange(false) for the automatically closed tooltip', fakeAsync(() => {
-            const visibleChangeSpy = jest.fn();
+            const visibleChangeSpy = vi.fn();
 
             component.hoverDirective()!.visibleChange.subscribe(visibleChangeSpy);
 
@@ -878,7 +878,7 @@ describe('KbqTooltip', () => {
 
             underlyingOverlay.attach(new ComponentPortal(OverlayPanel));
 
-            const keydown = jest.fn();
+            const keydown = vi.fn();
 
             underlyingOverlay.keydownEvents().subscribe(keydown);
 
@@ -1319,7 +1319,7 @@ describe('KbqTooltip', () => {
 
             trigger.createOverlay();
 
-            const setOrigin = jest.spyOn(trigger['strategy'], 'setOrigin');
+            const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
 
             showByHover(fixture, component.trigger().nativeElement);
 
@@ -1349,7 +1349,7 @@ describe('KbqTooltip', () => {
         const showAndSpy = (trigger: KbqTooltipTrigger) => {
             trigger.createOverlay();
 
-            const setOrigin = jest.spyOn(trigger['strategy'], 'setOrigin');
+            const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
 
             trigger.show();
             tick(tooltipDefaultEnterDelayWithDefer);
@@ -1448,8 +1448,8 @@ describe('KbqTooltip', () => {
 
             showAndSpy(trigger);
 
-            const updatePosition = jest.spyOn(trigger['overlayRef']!, 'updatePosition');
-            const withLockedPosition = jest.spyOn(trigger['strategy'], 'withLockedPosition');
+            const updatePosition = vi.spyOn(trigger['overlayRef']!, 'updatePosition');
+            const withLockedPosition = vi.spyOn(trigger['strategy'], 'withLockedPosition');
 
             dispatchFakeEvent(component.field().nativeElement, 'input');
 
@@ -1465,7 +1465,7 @@ describe('KbqTooltip', () => {
 
             showAndSpy(trigger);
 
-            const updatePosition = jest.spyOn(trigger['overlayRef']!, 'updatePosition');
+            const updatePosition = vi.spyOn(trigger['overlayRef']!, 'updatePosition');
 
             trigger.hide(0);
             flush();
@@ -1569,7 +1569,7 @@ describe('KbqTooltip', () => {
 
         it('should take precedence over kbqRelativeToPointer', fakeAsync(() => {
             const trigger = component.fieldTooltip();
-            const applyRelativeToPointer = jest.spyOn(trigger as never, 'applyRelativeToPointer');
+            const applyRelativeToPointer = vi.spyOn(trigger as never, 'applyRelativeToPointer');
 
             showAndSpy(trigger);
 
@@ -1620,7 +1620,7 @@ describe('KbqTooltip', () => {
 
             trigger.createOverlay();
 
-            const setOrigin = jest.spyOn(trigger['strategy'], 'setOrigin');
+            const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
 
             trigger.showForElement(host);
             tick(tooltipDefaultEnterDelayWithDefer);
@@ -1835,7 +1835,7 @@ describe('KbqTooltip', () => {
 
         it('should subscribe to the closing actions once per open', fakeAsync(() => {
             const trigger = component.tooltipTrigger();
-            const closingActions = jest.spyOn(trigger, 'closingActions');
+            const closingActions = vi.spyOn(trigger, 'closingActions');
 
             showByHover(fixture, component.triggerElementRef().nativeElement);
 

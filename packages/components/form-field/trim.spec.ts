@@ -162,7 +162,7 @@ describe(KbqTrim.name, () => {
     it('should leave the accessors untouched when the host has no form control', () => {
         const fixture = createComponent(NoControlTest);
         const accessor = fixture.debugElement.query(By.directive(TestAccessor)).injector.get(TestAccessor);
-        const onChange = jest.fn();
+        const onChange = vi.fn();
 
         accessor.registerOnChange(onChange);
         accessor.onChange('  koobiq  ');

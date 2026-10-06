@@ -92,7 +92,7 @@ describe(DocsIconsViewerComponent.name, () => {
     ])(
         'activates an icon cell on %s',
         fakeAsync((_name: string, createEvent: () => Event) => {
-            const navigate = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+            const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
             renderIcons();
             cells()[0].dispatchEvent(createEvent());
@@ -104,7 +104,7 @@ describe(DocsIconsViewerComponent.name, () => {
     // Typing is not navigation: pushing a history entry per debounced keystroke made "Back" walk the
     // query letter by letter instead of leaving the page.
     it('replaces the history entry when writing the search query to the URL', fakeAsync(() => {
-        const navigate = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+        const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
         renderIcons();
         fixture.componentInstance.searchControl.setValue('copy');

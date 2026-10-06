@@ -10,6 +10,7 @@ import {
     UrlSegment
 } from '@angular/router';
 import { BehaviorSubject, map, of } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DOCS_API_PAGES } from '../../services/page-resolver';
@@ -41,7 +42,7 @@ const provideDocsLocale = (locale: DocsLocale) => {
 
 describe(DocsComponentViewerComponent.name, () => {
     let url: BehaviorSubject<UrlSegment[]>;
-    let navigate: jest.SpyInstance;
+    let navigate: MockInstance;
 
     /**
      * Creates the viewer without rendering: the bogus-id case redirects away before the template is
@@ -59,7 +60,7 @@ describe(DocsComponentViewerComponent.name, () => {
             ]
         });
 
-        navigate = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+        navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
         return TestBed.createComponent(DocsComponentViewerComponent);
     };
@@ -100,7 +101,7 @@ describe(DocsComponentViewerComponent.name, () => {
 // The router waits for the page of a tab, so it starts loading while the pointer or the focus is on the link.
 describe('prefetching the page of a tab', () => {
     it.each(['mouseenter', 'focus'])('loads the API of the item on %s of its tab', (type) => {
-        const load = jest.fn(() => new Promise<never>(() => undefined));
+        const load = vi.fn(() => new Promise<never>(() => undefined));
 
         TestBed.configureTestingModule({
             imports: [DocsComponentViewerComponent],
@@ -136,7 +137,7 @@ describe('prefetching the page of a tab', () => {
 class DocsCompiledPage {}
 
 describe(DocsComponentPageComponent.name, () => {
-    let setScrollPosition: jest.SpyInstance;
+    let setScrollPosition: MockInstance;
 
     /** The tab reads the compiled page from `data`; the anchors it renders read `fragment`. */
     const createPage = (): ComponentFixture<DocsComponentPageComponent> => {
@@ -157,7 +158,7 @@ describe(DocsComponentPageComponent.name, () => {
     };
 
     beforeEach(() => {
-        setScrollPosition = jest.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation();
+        setScrollPosition = vi.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation(() => {});
     });
 
     afterEach(() => setScrollPosition.mockRestore());
@@ -203,8 +204,8 @@ const ALERT_API: DocsApiEntryPoint = {
 };
 
 describe(DocsComponentApiPageComponent.name, () => {
-    let setScrollPosition: jest.SpyInstance;
-    let scrollToElement: jest.SpyInstance;
+    let setScrollPosition: MockInstance;
+    let scrollToElement: MockInstance;
 
     /** The tab reads the API from `data` and the member a link points at from the query; the anchors read `fragment`. */
     let queryParamMap: BehaviorSubject<ParamMap>;
@@ -236,8 +237,8 @@ describe(DocsComponentApiPageComponent.name, () => {
     };
 
     beforeEach(() => {
-        setScrollPosition = jest.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation();
-        scrollToElement = jest.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation();
+        setScrollPosition = vi.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation(() => {});
+        scrollToElement = vi.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation(() => {});
     });
 
     afterEach(() => {

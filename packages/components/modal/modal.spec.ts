@@ -90,7 +90,7 @@ describe('KbqModal', () => {
         }));
 
         it('should trigger both afterOpen/kbqAfterOpen and have the correct openModals length', fakeAsync(() => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             const kbqAfterOpen = new EventEmitter<void>();
             const modalRef = modalService.create({ kbqAfterOpen });
 
@@ -140,7 +140,7 @@ describe('KbqModal', () => {
         }));
 
         it('should fire onClick events', fakeAsync(() => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             const onClickEmitter = new EventEmitter<void>();
 
             onClickEmitter.subscribe(spy);
@@ -171,7 +171,7 @@ describe('KbqModal', () => {
         }));
 
         it('should trigger both afterClose/kbqAfterClose and have the correct openModals length', fakeAsync(() => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             const kbqAfterClose = new EventEmitter<void>();
             const modalRef = modalService.create({ kbqAfterClose });
 
@@ -191,7 +191,7 @@ describe('KbqModal', () => {
         }));
 
         it('should return/receive with/without result data', fakeAsync(() => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             const modalRef = modalService.success();
 
             modalRef.afterClose.subscribe(spy);
@@ -205,7 +205,7 @@ describe('KbqModal', () => {
 
         it('should return/receive with result data', fakeAsync(() => {
             const result = { data: 'Fake Error' };
-            const spy = jest.fn();
+            const spy = vi.fn();
             const modalRef = modalService.delete();
 
             fixture.detectChanges();
@@ -218,7 +218,7 @@ describe('KbqModal', () => {
         }));
 
         it('should close all opened modals (include non-service modals)', fakeAsync(() => {
-            const spy = jest.fn();
+            const spy = vi.fn();
             const modalMethods = ['create', 'delete', 'success'];
             const uniqueId = (name: string) => `__${name}_ID_SUFFIX__`;
             const queryOverlayElement = (name: string) =>
@@ -270,8 +270,8 @@ describe('KbqModal', () => {
         }));
 
         it('should trigger nzOnOk/nzOnCancel', () => {
-            const spyOk = jest.fn();
-            const spyCancel = jest.fn();
+            const spyOk = vi.fn();
+            const spyCancel = vi.fn();
             const modalRef: KbqModalRef = modalService.create({
                 kbqOnOk: spyOk,
                 kbqOnCancel: spyCancel
@@ -341,7 +341,7 @@ describe('KbqModal', () => {
         }));
 
         it('should called function on hotkey ctrl+enter. kbqFooter is array ', fakeAsync(() => {
-            const spyOk = jest.fn();
+            const spyOk = vi.fn();
             const modalRef = modalService.create({
                 kbqContent: TestModalContentComponent,
                 kbqFooter: [
@@ -374,7 +374,7 @@ describe('KbqModal', () => {
         }));
 
         it('should called function on hotkey ctrl+enter. modal type is confirm ', () => {
-            const spyOk = jest.fn();
+            const spyOk = vi.fn();
             const modalRef = modalService.success({
                 kbqContent: 'Сохранить сделанные изменения?',
                 kbqOkText: 'Сохранить',
@@ -637,12 +637,15 @@ describe('KbqModal', () => {
 
     describe('with dynamic injectors', () => {
         it('should report an error if custom parent injector not provided for feature service', async () => {
-            const errorHandler = { handleError: jest.fn() };
+            const errorHandler = { handleError: vi.fn() };
             const fixture = createComponent(CustomComponent, [{ provide: ErrorHandler, useValue: errorHandler }]);
 
             fixture.componentInstance.modalService.open({ kbqComponent: CustomModalComponent });
             fixture.detectChanges();
             await fixture.whenStable();
+            // The opening animation ends in a timer that ticks the application again: let it fire while
+            // this test's ErrorHandler is still the one installed.
+            await new Promise((resolve) => setTimeout(resolve, MODAL_ANIMATE_DURATION));
 
             // The content component is created while the application ticks the modal's own view, so the
             // DI failure goes to the ErrorHandler rather than to the caller.
@@ -736,7 +739,7 @@ describe('KbqModal', () => {
 
         it('should emit afterAllClose when modal created without KbqModalModule is closed', fakeAsync(() => {
             const fixture = createComponent(ModalWithoutModuleComponent);
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             TestBed.inject(KbqModalService).afterAllClose.subscribe(spy);
 

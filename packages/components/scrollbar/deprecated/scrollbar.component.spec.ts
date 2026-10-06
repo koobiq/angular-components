@@ -44,7 +44,7 @@ describe(KbqScrollbarModule.name, () => {
         });
 
         it('should initialize OverlayScrollbars on ngAfterViewInit', () => {
-            const runOutsideAngularSpyFn = jest.spyOn(component['ngZone'], 'runOutsideAngular');
+            const runOutsideAngularSpyFn = vi.spyOn(component['ngZone'], 'runOutsideAngular');
 
             component.ngAfterViewInit();
             fixture.detectChanges();
@@ -209,7 +209,7 @@ class ScrollEventListener {
 
     readonly scrollbar = viewChild.required(KbqScrollbar);
 
-    scroll = jest.fn();
-    initialize = jest.fn();
-    update = jest.fn();
+    scroll = vi.fn();
+    initialize = vi.fn();
+    update = vi.fn();
 }

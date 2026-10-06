@@ -13,8 +13,8 @@ const jsdoc = require('eslint-plugin-jsdoc');
 // eslint-plugin-file-progress ships as ESM since v2 (the plugin object lives under `.default`)
 const progress = require('eslint-plugin-file-progress').default;
 const prettierRecommended = require('eslint-plugin-prettier/recommended');
-const jest = require('eslint-plugin-jest');
 const playwright = require('eslint-plugin-playwright');
+const vitest = require('@vitest/eslint-plugin');
 
 const isCI = !!process.env.CI;
 
@@ -499,15 +499,15 @@ module.exports = tseslint.config(
     // Override rules for specs
     {
         files: ['**/*.spec.ts', '**/*.spec-helper.ts'],
-        plugins: { jest },
+        plugins: { vitest },
         rules: {
-            // plugin:jest — the classes of defect this suite has actually shipped: a test with no
+            // plugin:vitest — the classes of defect this suite has actually shipped: a test with no
             // assertion at all, an assertion reachable only through a branch that may not be taken,
             // an assertion outside the test that is supposed to own it, and a focused test.
             // A helper that holds a test's assertions is listed by its exact name: a wildcard also matches
             // any call on a variable named the same way, such as `checkbox.click()`. A premise guard in a
             // hook is deliberate here, so no-standalone-expect stays off.
-            'jest/expect-expect': [
+            'vitest/expect-expect': [
                 2,
                 {
                     assertFunctionNames: [
@@ -525,11 +525,11 @@ module.exports = tseslint.config(
                     ]
                 }
             ],
-            'jest/no-conditional-expect': 2,
-            'jest/no-focused-tests': 2,
-            'jest/no-identical-title': 2,
-            'jest/valid-expect': [2, { alwaysAwait: true }],
-            'jest/no-commented-out-tests': 2,
+            'vitest/no-conditional-expect': 2,
+            'vitest/no-focused-tests': 2,
+            'vitest/no-identical-title': 2,
+            'vitest/valid-expect': [2, { alwaysAwait: true }],
+            'vitest/no-commented-out-tests': 2,
 
             // plugin:eslint
             // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
@@ -538,6 +538,107 @@ module.exports = tseslint.config(
             // plugin:@angular-eslint
             '@angular-eslint/use-component-selector': 0,
             '@angular-eslint/prefer-on-push-component-change-detection': 0
+        }
+    },
+
+    // zone.js leaves the tests along with the library: new specs await `fixture.whenStable()` and drive
+    // time with Vitest's fake timers. The list only shrinks — a spec leaves it once it no longer
+    // imports these.
+    {
+        files: ['**/*.spec.ts', '**/*.spec-helper.ts'],
+        ignores: [
+            'apps/docs/src/app/components/icons-viewer/icons-viewer.component.spec.ts',
+            'apps/docs/src/app/services/doc-states.spec.ts',
+            'packages/components/app-switcher/app-switcher.spec.ts',
+            'packages/components/autocomplete/autocomplete.spec.ts',
+            'packages/components/badge/badge.component.spec.ts',
+            'packages/components/breadcrumbs/breadcrumbs.spec.ts',
+            'packages/components/button-toggle/button-toggle.component.spec.ts',
+            'packages/components/checkbox/checkbox.component.spec.ts',
+            'packages/components/code-block/code-block.spec.ts',
+            'packages/components/core/common-behaviors/checkable.spec.ts',
+            'packages/components/core/common-behaviors/read-state.spec.ts',
+            'packages/components/core/formatters/number/formatter.spec.ts',
+            'packages/components/core/overflow-shadow/overflow-shadow.spec.ts',
+            'packages/components/core/pop-up/pop-up.spec.ts',
+            'packages/components/datepicker/datepicker.spec.ts',
+            'packages/components/dl/dl.component.spec.ts',
+            'packages/components/dropdown/dropdown.spec.ts',
+            'packages/components/ellipsis-center/ellipsis-center.directive.spec.ts',
+            'packages/components/file-upload/file-upload.spec.ts',
+            'packages/components/filter-bar/filters.spec.ts',
+            'packages/components/filter-bar/pipe-add.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-date.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-datetime.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-input.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-multi-select.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-multi-tree-select.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-no-options.spec-helper.ts',
+            'packages/components/filter-bar/pipes/pipe-select.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-state.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-text.spec.ts',
+            'packages/components/filter-bar/pipes/pipe-tree-select.spec.ts',
+            'packages/components/form-field/form-field.spec.ts',
+            'packages/components/form-field/password-hint.spec.ts',
+            'packages/components/inline-edit/inline-edit.spec.ts',
+            'packages/components/input/input-number-validators.spec.ts',
+            'packages/components/input/input-number.spec.ts',
+            'packages/components/input/input-password.spec.ts',
+            'packages/components/input/input.spec.ts',
+            'packages/components/list/list-selection.component.spec.ts',
+            'packages/components/modal/modal.spec.ts',
+            'packages/components/navbar/navbar.component.spec.ts',
+            'packages/components/notification-center/notification-center.spec.ts',
+            'packages/components/overflow-items/overflow-items.spec.ts',
+            'packages/components/popover/popover.spec.ts',
+            'packages/components/radio/radio.spec.ts',
+            'packages/components/scrollbar/scrollbar.spec.ts',
+            'packages/components/search-expandable/search-expandable.spec.ts',
+            'packages/components/select/select.component.spec.ts',
+            'packages/components/sidebar/sidebar.spec.ts',
+            'packages/components/sidepanel/sidepanel.spec.ts',
+            'packages/components/skeleton/skeleton.spec.ts',
+            'packages/components/split-button/split-button.spec.ts',
+            'packages/components/splitter/deprecated/splitter.spec.ts',
+            'packages/components/tabs/tab-group.spec.ts',
+            'packages/components/tabs/tab-header.spec.ts',
+            'packages/components/tabs/tab-nav-bar.spec.ts',
+            'packages/components/tags/tag-input.spec.ts',
+            'packages/components/tags/tag-list.component.spec.ts',
+            'packages/components/tags/tag.component.spec.ts',
+            'packages/components/textarea/textarea.component.spec.ts',
+            'packages/components/time-range/time-range.spec.ts',
+            'packages/components/timepicker/timepicker.spec.ts',
+            'packages/components/timezone/timezone-select.component.spec.ts',
+            'packages/components/title/title.directive.spec.ts',
+            'packages/components/toast/toast.spec.ts',
+            'packages/components/toggle/toggle.component.spec.ts',
+            'packages/components/tooltip/tooltip.spec.ts',
+            'packages/components/tree-select/tree-select.component.spec.ts',
+            'packages/components/tree/toggle.spec.ts',
+            'packages/components/tree/tree-selection.component.spec.ts'
+        ],
+        rules: {
+            'no-restricted-imports': [
+                2,
+                {
+                    paths: [
+                        {
+                            name: '@angular/core/testing',
+                            importNames: [
+                                'fakeAsync',
+                                'tick',
+                                'flush',
+                                'flushMicrotasks',
+                                'discardPeriodicTasks',
+                                'waitForAsync'
+                            ],
+                            message:
+                                'Await fixture.whenStable() and use vi.useFakeTimers() instead: zone.js is being removed.'
+                        }
+                    ]
+                }
+            ]
         }
     },
 

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`api manifest generation should generate a manifest from multiple collections 1`] = `
+exports[`api manifest generation > should generate a manifest from multiple collections 1`] = `
 [
   {
     "moduleName": "components",
@@ -31,7 +31,7 @@ exports[`api manifest generation should generate a manifest from multiple collec
 ]
 `;
 
-exports[`api manifest generation should should filter private entries 1`] = `
+exports[`api manifest generation > should should filter private entries 1`] = `
 [
   {
     "moduleName": "components-experimental",

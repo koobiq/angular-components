@@ -8,6 +8,7 @@ import {
     input,
     isDevMode,
     numberAttribute,
+    PendingTasks,
     Provider,
     Renderer2,
     SecurityContext,
@@ -93,6 +94,7 @@ export class KbqCodeBlockHighlight {
     private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
     private readonly window = inject(KBQ_WINDOW);
     private readonly config = inject(KBQ_CODE_BLOCK_HIGHLIGHT_JS_CONFIG, { optional: true });
+    private readonly pendingTasks = inject(PendingTasks);
     private hljs: HLJSApi | null = null;
     private hljsLoading: Promise<boolean> | null = null;
     private readonly _pending = signal(false);
@@ -129,11 +131,17 @@ export class KbqCodeBlockHighlight {
 
             onCleanup(() => (cancelled = true));
 
-            this.loadOnce().then((loaded) => {
-                if (loaded && !cancelled) {
-                    this.highlight(file, lineNumbers);
-                }
-            });
+            // A pending task, so the application is not stable before the code is highlighted: a dynamic
+            // `import()` is invisible to zone.js, and a server render would otherwise finish without it.
+            const removeTask = this.pendingTasks.add();
+
+            this.loadOnce()
+                .then((loaded) => {
+                    if (loaded && !cancelled) {
+                        this.highlight(file, lineNumbers);
+                    }
+                })
+                .finally(removeTask);
         });
     }
 

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`css-selectors should inform about deprecated colors in the file 1`] = `
+exports[`css-selectors > should inform about deprecated colors in the file 1`] = `
 [
   "
 -------------------------
@@ -73,7 +73,7 @@ Replace with specified rules:
 ]
 `;
 
-exports[`css-selectors should inform about deprecated selectors for fix = false (default, without params) 1`] = `
+exports[`css-selectors > should inform about deprecated selectors for fix = false (default, without params) 1`] = `
 [
   "
 -------------------------
@@ -180,7 +180,7 @@ Pay attention: overwriting is possible. Check the code after automatic replaceme
 ]
 `;
 
-exports[`css-selectors should run migration for specified project: project app: after changes 1`] = `
+exports[`css-selectors > should run migration for specified project > project app: after changes 1`] = `
 [
   "<div class="kbq-display-big-strong"></div>
 <div class="kbq-display-normal-strong"></div>
@@ -258,7 +258,7 @@ class TestApp {
 ]
 `;
 
-exports[`css-selectors should run migration for specified project: project app: before changes 1`] = `
+exports[`css-selectors > should run migration for specified project > project app: before changes 1`] = `
 [
   "<div class="kbq-display-1-strong"></div>
 <div class="kbq-display-2-strong"></div>
@@ -336,7 +336,7 @@ class TestApp {
 ]
 `;
 
-exports[`css-selectors should run migration for specified project: project second-app: after changes 1`] = `
+exports[`css-selectors > should run migration for specified project > project second-app: after changes 1`] = `
 [
   "<div class="kbq-display-1-strong"></div>
 <div class="kbq-display-2-strong"></div>
@@ -414,7 +414,7 @@ class TestApp {
 ]
 `;
 
-exports[`css-selectors should run migration for specified project: project second-app: before changes 1`] = `
+exports[`css-selectors > should run migration for specified project > project second-app: before changes 1`] = `
 [
   "<div class="kbq-display-1-strong"></div>
 <div class="kbq-display-2-strong"></div>
@@ -492,7 +492,7 @@ class TestApp {
 ]
 `;
 
-exports[`css-selectors should run migration for whole tree: project app: after changes 1`] = `
+exports[`css-selectors > should run migration for whole tree > project app: after changes 1`] = `
 [
   "<div class="kbq-display-big-strong"></div>
 <div class="kbq-display-normal-strong"></div>
@@ -570,7 +570,7 @@ class TestApp {
 ]
 `;
 
-exports[`css-selectors should run migration for whole tree: project app: before changes 1`] = `
+exports[`css-selectors > should run migration for whole tree > project app: before changes 1`] = `
 [
   "<div class="kbq-display-1-strong"></div>
 <div class="kbq-display-2-strong"></div>
@@ -648,7 +648,7 @@ class TestApp {
 ]
 `;
 
-exports[`css-selectors should run migration for whole tree: project second-app: after changes 1`] = `
+exports[`css-selectors > should run migration for whole tree > project second-app: after changes 1`] = `
 [
   "<div class="kbq-display-big-strong"></div>
 <div class="kbq-display-normal-strong"></div>
@@ -726,7 +726,7 @@ class TestApp {
 ]
 `;
 
-exports[`css-selectors should run migration for whole tree: project second-app: before changes 1`] = `
+exports[`css-selectors > should run migration for whole tree > project second-app: before changes 1`] = `
 [
   "<div class="kbq-display-1-strong"></div>
 <div class="kbq-display-2-strong"></div>

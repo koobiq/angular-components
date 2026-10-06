@@ -11,9 +11,10 @@
 | TypeScript                | 5.9.3     |
 | ng-packagr                | ^21.2.7   |
 | @angular/build            | 21.2.25   |
-| @angular-builders/jest    | 21.0.4    |
+| vitest                    | 4.1.11    |
+| @analogjs/vitest-angular  | 2.8.0     |
 | @angular-eslint/\*        | ^21.4.0   |
 | @schematics/angular       | 21.2.25   |
 | @angular-devkit/architect | 0.2102.25 |
 
-Приложения и библиотеки репозитория собираются сборщиками `@angular/build` (`application`, `dev-server`, `ng-packagr`), а корневой `tsconfig.json` использует `moduleResolution: "bundler"`.
+Приложения и библиотеки репозитория собираются сборщиками `@angular/build` (`application`, `dev-server`, `ng-packagr`), а корневой `tsconfig.json` использует `moduleResolution: "bundler"`. Юнит-тесты запускаются Vitest с `@analogjs/vitest-angular` вместо Jest.

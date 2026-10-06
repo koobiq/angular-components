@@ -559,7 +559,7 @@ describe(KbqFormField.name, () => {
     });
 
     it('should throw Error for KbqFormField without KbqFormFieldControl', () => {
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        vi.spyOn(console, 'error').mockImplementation(() => {});
 
         expect(() => createComponent(InputFormFieldWithoutFormFieldControl)).toThrow(
             getKbqFormFieldMissingControlError().message

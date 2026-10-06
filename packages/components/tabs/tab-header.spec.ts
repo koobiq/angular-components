@@ -363,7 +363,7 @@ describe('KbqTabHeader', () => {
                 Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
 
                 // Real browsers clamp `scrollLeft` to [0, scrollWidth - clientWidth]; the shared
-                // `scrollTo` polyfill in `tools/jest/setup.ts` doesn't, so an out-of-range target (e.g.
+                // `scrollTo` polyfill in `tools/vitest/setup-angular.ts` doesn't, so an out-of-range target (e.g.
                 // the overscroll below the first tab) would otherwise assert a value no browser
                 // actually produces.
                 let scrollLeft = 0;
@@ -419,7 +419,7 @@ describe('KbqTabHeader', () => {
                 // `ngAfterViewInit` (a view hook) has run and subscribed to it — a plain `Subject`
                 // would silently drop it, and `<kbq-tab-group [selectedIndex]="6">` would render
                 // with the selected tab off-screen and no scroll ever happening.
-                const scrollCorrectionSpy = jest.spyOn(KbqPaginatedTabHeader.prototype as any, 'scrollCorrection');
+                const scrollCorrectionSpy = vi.spyOn(KbqPaginatedTabHeader.prototype as any, 'scrollCorrection');
 
                 fixture = TestBed.createComponent(SimpleTabHeaderApp);
                 appComponent = fixture.componentInstance;
@@ -528,7 +528,7 @@ describe('KbqTabHeader', () => {
 
                 const header = fixture.componentInstance.tabHeader();
                 const mockResizeObserver = TestBed.inject(SharedResizeObserver) as unknown as MockResizeObserver;
-                const checkPaginationEnabledSpy = jest.spyOn(header, 'checkPaginationEnabled');
+                const checkPaginationEnabledSpy = vi.spyOn(header, 'checkPaginationEnabled');
 
                 mockResizeObserver.changes.next([]);
                 tick(RESIZE_AUDIT_TIME);
@@ -597,12 +597,12 @@ describe('KbqTabHeader', () => {
 
         beforeEach(() => {
             pendingFrame = null;
-            jest.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+            vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
                 pendingFrame = callback;
 
                 return 0;
             });
-            jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {
+            vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {
                 pendingFrame = null;
             });
 
@@ -624,7 +624,7 @@ describe('KbqTabHeader', () => {
         });
 
         afterEach(() => {
-            jest.restoreAllMocks();
+            vi.restoreAllMocks();
         });
 
         it('should toggle kbq-disabled on the previous/next arrows at each scroll bound without removing them from the DOM', () => {

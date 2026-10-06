@@ -68,7 +68,7 @@ const createResizeTrigger = (): { provider: Provider; triggerResize: () => void 
 };
 
 const setRect = (el: HTMLElement, rect: Partial<DOMRect>): void => {
-    jest.spyOn(el, 'getBoundingClientRect').mockReturnValue({
+    vi.spyOn(el, 'getBoundingClientRect').mockReturnValue({
         top: 0,
         left: 0,
         right: 0,
@@ -601,7 +601,7 @@ describe(KbqScrollbar.name, () => {
             setMetrics(viewportEl, { clientHeight: 50, clientWidth: 30 });
             const realGetComputedStyle = window.getComputedStyle.bind(window);
 
-            jest.spyOn(window, 'getComputedStyle').mockImplementation((el) =>
+            vi.spyOn(window, 'getComputedStyle').mockImplementation((el) =>
                 el === viewportEl
                     ? ({ paddingBlockStart: '8px', paddingInlineStart: '6px' } as CSSStyleDeclaration)
                     : realGetComputedStyle(el)
@@ -675,7 +675,7 @@ describe(KbqScrollbar.name, () => {
         class TestScrollbarClickSuppression {
             mode: KbqScrollbarMode = 'always';
             readonly scrollbar = viewChild.required(KbqScrollbar, { read: ElementRef<HTMLElement> });
-            readonly hostClick = jest.fn();
+            readonly hostClick = vi.fn();
         }
 
         const setup = (fixture: ComponentFixture<TestScrollbarClickSuppression>) => {
@@ -1120,7 +1120,7 @@ describe(KbqScrollbar.name, () => {
         }
 
         const spyOnScrollTo = (fixture: ComponentFixture<TestScrollbarScrollTo>) =>
-            jest.spyOn(getScrollable(fixture), 'scrollTo').mockImplementation();
+            vi.spyOn(getScrollable(fixture), 'scrollTo').mockImplementation(() => {});
 
         it('scrollTo delegates to CdkScrollable.scrollTo', () => {
             const fixture = createComponent(TestScrollbarScrollTo);
@@ -1246,7 +1246,7 @@ describe(KbqScrollbar.name, () => {
         it('emits on the native scroll event', () => {
             const fixture = createComponent(TestScrollbarScrollChanges);
             const scrollbar = fixture.componentInstance.scrollbar();
-            const handler = jest.fn();
+            const handler = vi.fn();
 
             scrollbar.scrollChanges.subscribe(handler);
             scrollbar.getNativeElement().dispatchEvent(new Event('scroll'));
@@ -1309,12 +1309,12 @@ describe(KbqScrollbar.name, () => {
         }
 
         const spyOnScrollTo = (fixture: ComponentFixture<TestStandaloneViewport>) =>
-            jest
+            vi
                 .spyOn(
                     fixture.debugElement.query(By.directive(KbqScrollbarViewport)).injector.get(CdkScrollable),
                     'scrollTo'
                 )
-                .mockImplementation();
+                .mockImplementation(() => {});
 
         describe('ScrollDispatcher registration', () => {
             @Component({
@@ -1352,7 +1352,7 @@ describe(KbqScrollbar.name, () => {
             it('emits once per scroll for a virtual-scroll viewport', () => {
                 const fixture = createComponent(TestVirtualViewportRegistration);
                 const el = fixture.componentInstance.viewportEl().nativeElement;
-                const scrolled = jest.fn();
+                const scrolled = vi.fn();
                 const subscription = TestBed.inject(ScrollDispatcher).scrolled(0).subscribe(scrolled);
 
                 dispatchFakeEvent(el, 'scroll');

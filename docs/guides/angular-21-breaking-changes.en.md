@@ -11,9 +11,10 @@ These changes are part of **Koobiq v21.0.0** — the move to Angular 21. The ste
 | TypeScript                | 5.9.3     |
 | ng-packagr                | ^21.2.7   |
 | @angular/build            | 21.2.25   |
-| @angular-builders/jest    | 21.0.4    |
+| vitest                    | 4.1.11    |
+| @analogjs/vitest-angular  | 2.8.0     |
 | @angular-eslint/\*        | ^21.4.0   |
 | @schematics/angular       | 21.2.25   |
 | @angular-devkit/architect | 0.2102.25 |
 
-The applications and libraries of the workspace are built with the `@angular/build` builders (`application`, `dev-server`, `ng-packagr`), and the root `tsconfig.json` uses `moduleResolution: "bundler"`.
+The applications and libraries of the workspace are built with the `@angular/build` builders (`application`, `dev-server`, `ng-packagr`), and the root `tsconfig.json` uses `moduleResolution: "bundler"`. Unit tests run on Vitest with `@analogjs/vitest-angular` instead of Jest.

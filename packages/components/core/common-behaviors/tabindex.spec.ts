@@ -1,11 +1,12 @@
+import type { MockInstance } from 'vitest';
 import { mixinTabIndex } from './tabindex';
 
 describe('mixinTabIndex', () => {
     // The mixin is deprecated and says so, in dev mode, every time it is instantiated.
-    let warn: jest.SpyInstance;
+    let warn: MockInstance;
 
     beforeEach(() => {
-        warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     });
 
     it('should warn that it is deprecated', () => {

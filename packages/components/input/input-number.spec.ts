@@ -39,6 +39,7 @@ import {
 import { axe } from 'jest-axe';
 import { BIG_STEP, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP, add, getPrecision } from './index';
 
+import type { Mock } from 'vitest';
 const defaultLocaleGroupSep = ruRUFormattersData.input.number.viewGroupSeparator;
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
@@ -79,8 +80,8 @@ class NumberInputTestComponent {
     value: number | null = null;
     disabled = false;
 
-    stepUp = jest.fn().mockImplementation(() => true);
-    stepDown = jest.fn().mockImplementation(() => false);
+    stepUp = vi.fn().mockImplementation(() => true);
+    stepDown = vi.fn().mockImplementation(() => false);
 }
 
 @Component({
@@ -101,8 +102,8 @@ class TestNumberInputConditional {
     isVisible = true;
     value: number | null = null;
 
-    stepUp = jest.fn().mockImplementation(() => true);
-    stepDown = jest.fn().mockImplementation(() => false);
+    stepUp = vi.fn().mockImplementation(() => true);
+    stepDown = vi.fn().mockImplementation(() => false);
 }
 
 @Component({
@@ -433,7 +434,7 @@ describe('KbqNumberInput', () => {
         // Override ComponentFixtureAutoDetect so CD doesn't run inside
         // TestBed.createComponent — that way the throw originates from our explicit
         // fixture.detectChanges() call, where expect-to-throw can capture it.
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        vi.spyOn(console, 'error').mockImplementation(() => {});
 
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
@@ -512,7 +513,7 @@ describe('KbqNumberInput', () => {
         it('should not have timers assigned on init', fakeAsync(() => {
             const fixture = createComponent(NumberInputTestComponent);
 
-            jest.spyOn(global, 'setTimeout');
+            vi.spyOn(global, 'setTimeout');
 
             fixture.detectChanges();
 
@@ -611,7 +612,7 @@ describe('KbqNumberInput', () => {
 
             expect(debugElement.query(By.directive(KbqFormField)).nativeElement).toBeTruthy();
 
-            const testLongPressFor = (queryIconFn, emitter: jest.Mock<any, any, any>) => {
+            const testLongPressFor = (queryIconFn, emitter: Mock) => {
                 const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
                 const icon = queryIconFn(stepper.queryAll(By.css('.kbq-icon')));
 
@@ -1412,7 +1413,7 @@ describe('KbqNumberInput', () => {
                 fixture.componentInstance.min = 0;
                 const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
                 const mockEvent: any = { preventDefault: () => true };
-                const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
+                const preventDefaultSpyFn = vi.spyOn(mockEvent, 'preventDefault');
 
                 fixture.detectChanges();
 
@@ -1430,7 +1431,7 @@ describe('KbqNumberInput', () => {
                 fixture.componentInstance.min = -5;
                 const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
                 const mockEvent: any = { preventDefault: () => true };
-                const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
+                const preventDefaultSpyFn = vi.spyOn(mockEvent, 'preventDefault');
 
                 fixture.detectChanges();
 
@@ -1646,7 +1647,7 @@ describe('KbqNumberInput', () => {
 
         it('should NOT allow duplicated fractional part sign', fakeAsync(() => {
             const mockEvent: any = { preventDefault: () => true, keyCode: COMMA, key: ',' };
-            const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
+            const preventDefaultSpyFn = vi.spyOn(mockEvent, 'preventDefault');
             const previousValue = '0,12345';
 
             inputElement.value = previousValue;
@@ -1759,7 +1760,7 @@ describe('KbqNumberInput', () => {
 
         it('nothing should happen when inserting a text value', fakeAsync(() => {
             const mockEvent: any = { preventDefault: () => true };
-            const preventDefault = jest.spyOn(mockEvent, 'preventDefault');
+            const preventDefault = vi.spyOn(mockEvent, 'preventDefault');
 
             expect(inputElement.value).toBe('');
 
@@ -1797,7 +1798,7 @@ describe('KbqNumberInput', () => {
         it('should paste negative value properly', fakeAsync(() => {
             const pasteValue = '-1234';
             const mockEvent: any = { preventDefault: () => true };
-            const preventDefault = jest.spyOn(mockEvent, 'preventDefault');
+            const preventDefault = vi.spyOn(mockEvent, 'preventDefault');
 
             expect(inputElement.value).toBe('');
 
@@ -1930,7 +1931,7 @@ describe('KbqNumberInput', () => {
 
     describe('with type="number"', () => {
         it('should reset the native type to text and warn', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
             try {
                 const fixture = createComponent(NumberInputWithNativeNumberType);
@@ -1948,7 +1949,7 @@ describe('KbqNumberInput', () => {
         }));
 
         it('should keep a fractional value in the field after a step', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
             try {
                 const fixture = createComponent(NumberInputWithNativeNumberType);
@@ -2201,7 +2202,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
-            const onChange = jest.fn();
+            const onChange = vi.fn();
 
             fixture.componentInstance.formControl.valueChanges.subscribe(onChange);
 

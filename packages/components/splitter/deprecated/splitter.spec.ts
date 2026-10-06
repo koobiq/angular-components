@@ -89,9 +89,9 @@ class KbqSplitterDirection {
     `
 })
 class KbqSplitterEvents {
-    gutterPositionChange = jest.fn();
-    areaASizeChange = jest.fn().mockImplementation((size: number) => size);
-    areaBSizeChange = jest.fn().mockImplementation((size: number) => size);
+    gutterPositionChange = vi.fn();
+    areaASizeChange = vi.fn().mockImplementation((size: number) => size);
+    areaBSizeChange = vi.fn().mockImplementation((size: number) => size);
     readonly areaA = viewChild.required('areaA', { read: KbqSplitterAreaDirective });
     readonly areaB = viewChild.required('areaB', { read: KbqSplitterAreaDirective });
 }

@@ -43,6 +43,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqModalModule, KbqModalService, MODAL_ANIMATE_DURATION } from '@koobiq/components/modal';
 import { DateTime } from 'luxon';
 import { map, Observable, timer } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import { KbqInputModule } from '../input/index';
 import { KbqDatepickerInput, KbqDatepickerInputEvent } from './datepicker-input.directive';
 import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
@@ -299,7 +300,7 @@ describe('KbqDatepicker', () => {
             }));
 
             it('clicking the currently selected date should close the calendar without firing selectedChanged', fakeAsync(() => {
-                const nextSpyFn = jest.spyOn(testComponent.datepicker().selectedChanged, 'next');
+                const nextSpyFn = vi.spyOn(testComponent.datepicker().selectedChanged, 'next');
 
                 for (let changeCount = 1; changeCount < 3; changeCount++) {
                     const currentDay = changeCount;
@@ -327,7 +328,7 @@ describe('KbqDatepicker', () => {
 
             // The calendar handles no keys: the input's keydown is the only listener, and it ignores ENTER.
             it.skip('pressing enter on the currently selected date should close the calendar without firing selectedChanged', async () => {
-                const nextSpyFn = jest.spyOn(testComponent.datepicker().selectedChanged, 'next');
+                const nextSpyFn = vi.spyOn(testComponent.datepicker().selectedChanged, 'next');
 
                 testComponent.datepicker().open();
                 fixture.detectChanges();
@@ -368,7 +369,7 @@ describe('KbqDatepicker', () => {
                 testComponent.datepicker().open();
                 fixture.detectChanges();
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = testComponent.datepicker().closedStream.subscribe(spy);
 
                 document.body.click();
@@ -475,7 +476,7 @@ describe('KbqDatepicker', () => {
 
             // jsdom lays nothing out, so the metrics the reveal reads have to be supplied.
             const stubMetrics = () => {
-                jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+                vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
                     return (this.textContent || '').length * charWidth;
                 });
                 Object.defineProperty(input, 'scrollWidth', {
@@ -502,7 +503,7 @@ describe('KbqDatepicker', () => {
             });
 
             // `clearMocks` only clears call records, so the prototype patch has to be undone by hand.
-            afterEach(() => jest.restoreAllMocks());
+            afterEach(() => vi.restoreAllMocks());
 
             it('should advance from the digit before a separator, not the one after it', fakeAsync(() => {
                 input.setSelectionRange(3, 3);
@@ -905,7 +906,7 @@ describe('KbqDatepicker', () => {
 
                     fixture.detectChanges();
 
-                    const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                    const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                     expect(spy).not.toHaveBeenCalled();
                     expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
@@ -951,7 +952,7 @@ describe('KbqDatepicker', () => {
                     fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                     fixture.detectChanges();
 
-                    const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                    const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                     expect(spy).not.toHaveBeenCalled();
                     expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
@@ -993,7 +994,7 @@ describe('KbqDatepicker', () => {
                     fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                     fixture.detectChanges();
 
-                    const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                    const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                     expect(spy).not.toHaveBeenCalled();
                     expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
@@ -1391,9 +1392,9 @@ describe('KbqDatepicker', () => {
             let fixture: ComponentFixture<DatepickerWithChangeAndInputEvents>;
             let testComponent: DatepickerWithChangeAndInputEvents;
             let inputEl: HTMLInputElement;
-            let onDateChangeSpyFn: jest.SpyInstance;
-            let onChangeSpyFn: jest.SpyInstance;
-            let onDateInputSpyFn: jest.SpyInstance;
+            let onDateChangeSpyFn: MockInstance;
+            let onChangeSpyFn: MockInstance;
+            let onDateInputSpyFn: MockInstance;
 
             beforeEach(() => {
                 fixture = createComponent(DatepickerWithChangeAndInputEvents, [KbqLuxonDateModule]);
@@ -1402,9 +1403,9 @@ describe('KbqDatepicker', () => {
                 testComponent = fixture.componentInstance;
                 inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
 
-                onChangeSpyFn = jest.spyOn(testComponent, 'onChange');
-                onDateInputSpyFn = jest.spyOn(testComponent, 'onDateInput');
-                onDateChangeSpyFn = jest.spyOn(testComponent, 'onDateChange');
+                onChangeSpyFn = vi.spyOn(testComponent, 'onChange');
+                onDateInputSpyFn = vi.spyOn(testComponent, 'onDateInput');
+                onDateChangeSpyFn = vi.spyOn(testComponent, 'onDateChange');
             });
 
             afterEach(() => {
@@ -1698,7 +1699,7 @@ describe('KbqDatepicker', () => {
     // @koobiq/luxon-date-adapter carries locale data for a fixed set of locales, and its base constructor
     // calls setLocale before the subclass field that would widen it exists. KBQ_DATE_LOCALE: 'de-DE' therefore
     // throws inside the adapter constructor, before any assertion here runs.
-    xdescribe('internationalization', () => {
+    describe.skip('internationalization', () => {
         let fixture: ComponentFixture<DatepickerWithi18n>;
         let testComponent: DatepickerWithi18n;
         let input: HTMLInputElement;
@@ -2006,8 +2007,8 @@ class DatepickerWithISOStrings {
 })
 class DatepickerWithEvents {
     selected: DateTime | null = null;
-    openedSpy = jest.fn();
-    closedSpy = jest.fn();
+    openedSpy = vi.fn();
+    closedSpy = vi.fn();
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
 }
 

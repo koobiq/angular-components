@@ -244,7 +244,7 @@ describe('KbqNavbar', () => {
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
-            const spy = jest.spyOn(navbarInstance.keyManager, 'onKeydown');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'onKeydown');
 
             dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', RIGHT_ARROW, navbarDebugEl.nativeElement);
 
@@ -260,7 +260,7 @@ describe('KbqNavbar', () => {
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
-            const spy = jest.spyOn(navbarInstance.keyManager, 'onKeydown');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'onKeydown');
 
             dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', LEFT_ARROW, navbarDebugEl.nativeElement);
 
@@ -1190,7 +1190,7 @@ describe('KbqNavbar', () => {
                 .injector.get(KbqNavbarRectangleElement);
             const title = fixture.debugElement.query(By.directive(KbqNavbarTitle)).injector.get(KbqNavbarTitle);
 
-            jest.spyOn(window, 'getComputedStyle').mockReturnValue({
+            vi.spyOn(window, 'getComputedStyle').mockReturnValue({
                 width: 'auto',
                 marginLeft: '',
                 marginRight: '10px'
@@ -1199,7 +1199,7 @@ describe('KbqNavbar', () => {
             expect(rect.getOuterElementWidth()).toBe(10);
             expect(title.getOuterElementWidth()).toBe(10);
 
-            jest.restoreAllMocks();
+            vi.restoreAllMocks();
         });
     });
 
@@ -1298,9 +1298,9 @@ describe('KbqNavbar', () => {
                 .query(By.directive(KbqNavbarFocusableItem))
                 .injector.get(KbqNavbarFocusableItem);
 
-            const fakeButton = { focusViaKeyboard: jest.fn(), hasFocus: false } as any;
+            const fakeButton = { focusViaKeyboard: vi.fn(), hasFocus: false } as any;
 
-            jest.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
+            vi.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
 
             focusableItem.focus('mouse');
 
@@ -1318,9 +1318,9 @@ describe('KbqNavbar', () => {
                 .query(By.directive(KbqNavbarFocusableItem))
                 .injector.get(KbqNavbarFocusableItem);
 
-            const fakeButton = { focusViaKeyboard: jest.fn(), hasFocus: false } as any;
+            const fakeButton = { focusViaKeyboard: vi.fn(), hasFocus: false } as any;
 
-            jest.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
+            vi.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
 
             focusableItem.focus('keyboard');
 
@@ -1339,7 +1339,7 @@ describe('KbqNavbar', () => {
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'mouse');
             tick();
@@ -1357,7 +1357,7 @@ describe('KbqNavbar', () => {
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'keyboard');
             tick();
@@ -1375,7 +1375,7 @@ describe('KbqNavbar', () => {
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'touch');
             tick();
@@ -1393,7 +1393,7 @@ describe('KbqNavbar', () => {
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqVerticalNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqVerticalNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'mouse');
             tick();
@@ -1411,7 +1411,7 @@ describe('KbqNavbar', () => {
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqVerticalNavbar));
             const navbarInstance = navbarDebugEl.componentInstance as KbqVerticalNavbar;
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
+            const spy = vi.spyOn(navbarInstance.keyManager, 'setFirstItemActive');
 
             focusMonitor.focusVia(navbarDebugEl.nativeElement, 'keyboard');
             tick();
@@ -1721,7 +1721,7 @@ describe('KbqNavbar', () => {
 
             const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
                 .componentInstance as KbqVerticalNavbar;
-            const spy = jest.spyOn(navbar, 'toggle');
+            const spy = vi.spyOn(navbar, 'toggle');
 
             fixture.destroy();
 
@@ -1890,7 +1890,7 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
-            const spy = jest.spyOn(navbar, 'updateExpandedStateForItems');
+            const spy = vi.spyOn(navbar, 'updateExpandedStateForItems');
 
             for (let i = 0; i < 20; i++) {
                 window.dispatchEvent(new Event('resize'));

@@ -158,7 +158,7 @@ describe('KbqMinValidator/KbqMaxValidator', () => {
             fixture.detectChanges();
             flush();
 
-            const onValidatorChange = jest.fn();
+            const onValidatorChange = vi.fn();
 
             fixture.componentInstance.minValidator().registerOnValidatorChange(onValidatorChange);
 

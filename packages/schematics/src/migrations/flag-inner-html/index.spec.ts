@@ -126,7 +126,7 @@ describe(SCHEMATIC_NAME, () => {
         // An opening tag with no `>` before the end of the file: every quote after it is a point the
         // tag pattern can resume from, so an alternation that lets two branches consume a quote
         // backtracks exponentially — 48 quotes took two minutes before the pattern was tightened.
-        // The match itself is synchronous, so jest's own timeout cannot interrupt it and the
+        // The match itself is synchronous, so the runner's own timeout cannot interrupt it and the
         // elapsed time has to be the assertion.
         const content = `<kbq-flag ${'a"'.repeat(48)}`;
         const started = Date.now();

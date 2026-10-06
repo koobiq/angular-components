@@ -173,7 +173,7 @@ describe('KbqPipeInputComponent', () => {
         });
 
         it('should not emit onClearPipe while seeding an empty pipe', () => {
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
@@ -243,7 +243,7 @@ describe('KbqPipeInputComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(spy);
 
@@ -270,7 +270,7 @@ describe('KbqPipeInputComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(spy);
 
@@ -296,7 +296,7 @@ describe('KbqPipeInputComponent', () => {
             // Raise the threshold above the typed length; the default of 1 would apply even a single character.
             component.minLength = 3;
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(spy);
 
@@ -316,7 +316,7 @@ describe('KbqPipeInputComponent', () => {
 
             component.minLength = 3;
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(spy);
 
@@ -369,7 +369,7 @@ describe('KbqPipeInputComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(spy);
 
@@ -404,7 +404,7 @@ describe('KbqPipeInputComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onClearPipe.subscribe(spy);
 
@@ -420,7 +420,7 @@ describe('KbqPipeInputComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onClearPipe.subscribe(spy);
 
@@ -435,7 +435,7 @@ describe('KbqPipeInputComponent', () => {
             ]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onClearPipe.subscribe(spy);
 
@@ -455,7 +455,7 @@ describe('KbqPipeInputComponent', () => {
             ]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(spy);
 
@@ -486,7 +486,7 @@ describe('KbqPipeInputComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             getFilterBar().onClearPipe.subscribe(spy);
 
@@ -509,7 +509,7 @@ describe('KbqPipeInputComponent', () => {
         });
 
         it('should not emit onClearPipe while disabling an empty pipe', () => {
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null, disabled: true })]);
             fixture.detectChanges();

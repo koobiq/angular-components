@@ -521,7 +521,7 @@ describe('KbqInput', () => {
 
             it('should call errorStateMatcher and update errorState on blur', () => {
                 const fixture = createComponent(InputWithErrorStateMatcher);
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.input().errorState).toBe(false);
@@ -558,7 +558,7 @@ describe('KbqInput', () => {
 
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.input().errorState).toBe(false);
@@ -594,7 +594,7 @@ describe('KbqInput', () => {
 
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.input().errorState).toBe(false);

@@ -457,8 +457,8 @@ describe('KbqAccordion', () => {
             const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
             const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
 
-            const openedSpy = jest.fn();
-            const expandedChangeSpy = jest.fn();
+            const openedSpy = vi.fn();
+            const expandedChangeSpy = vi.fn();
 
             item.opened.subscribe(openedSpy);
             item.expandedChange.subscribe(expandedChangeSpy);
@@ -477,8 +477,8 @@ describe('KbqAccordion', () => {
             const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
             const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
 
-            const closedSpy = jest.fn();
-            const expandedChangeSpy = jest.fn();
+            const closedSpy = vi.fn();
+            const expandedChangeSpy = vi.fn();
 
             item.closed.subscribe(closedSpy);
             item.expandedChange.subscribe(expandedChangeSpy);
@@ -500,7 +500,7 @@ describe('KbqAccordion', () => {
             const item = fixture.debugElement.query(By.directive(KbqAccordionItem)).injector.get(KbqAccordionItem);
             const trigger = fixture.debugElement.query(By.directive(KbqAccordionTrigger));
 
-            const valueChangeSpy = jest.fn();
+            const valueChangeSpy = vi.fn();
 
             accordion.valueChange.subscribe(valueChangeSpy);
 
@@ -846,7 +846,7 @@ describe('KbqAccordion', () => {
 
         it('header actions should be reachable and stay interactive on a disabled item', () => {
             const { items, disabledItemAction } = createInteractiveFixture();
-            const clicked = jest.fn();
+            const clicked = vi.fn();
 
             expect(items[2].nativeElement.getAttribute('data-disabled')).toBe('true');
 
@@ -1945,7 +1945,7 @@ describe('KbqAccordion', () => {
 
             store.setState('accordion-key', ['item-1']);
 
-            const setState = jest.spyOn(store, 'setState');
+            const setState = vi.spyOn(store, 'setState');
 
             createStateSaving(store);
 
@@ -2035,7 +2035,7 @@ describe('KbqAccordion', () => {
             const stateSavingFixture = createStateSaving(store);
             const service = TestBed.inject(KbqStateSavingService);
 
-            // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+            // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
             // which throws while building the diff and hides the real failure.
             expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
                 { name: 'kbq-accordion', key: 'accordion-key', enabled: true }
@@ -2082,13 +2082,13 @@ describe('KbqAccordion', () => {
 
         it('stops focus monitoring and completes openCloseAllActions on destroy', () => {
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const stopMonitoringSpy = jest.spyOn(focusMonitor, 'stopMonitoring');
+            const stopMonitoringSpy = vi.spyOn(focusMonitor, 'stopMonitoring');
 
             fixture = TestBed.createComponent(AccordionType);
             fixture.detectChanges();
 
             const accordion = fixture.debugElement.query(By.directive(KbqAccordion)).componentInstance as KbqAccordion;
-            const completeSpy = jest.spyOn(accordion.openCloseAllActions, 'complete');
+            const completeSpy = vi.spyOn(accordion.openCloseAllActions, 'complete');
 
             fixture.destroy();
 

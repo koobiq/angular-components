@@ -21,6 +21,7 @@ import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider 
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Subject, Subscription } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
@@ -617,7 +618,7 @@ describe('KbqToastService', () => {
         it('waits for the exit of the toast that emptied the stack, not for one dismissed earlier', fakeAsync(() => {
             const first = showRendered();
             const second = showRendered();
-            const detach = jest.spyOn(OverlayRef.prototype, 'detach');
+            const detach = vi.spyOn(OverlayRef.prototype, 'detach');
 
             // `first` starts leaving while `second` is still on screen, so its `done` lands after the
             // stack is already empty — and `second` is only halfway through its own slide-out.
@@ -824,7 +825,7 @@ describe('KbqToastService configuration', () => {
 
         const service = TestBed.inject(KbqToastService);
         const stale = service.show(createToastData(), 0);
-        const hide = jest.spyOn(service, 'hide');
+        const hide = vi.spyOn(service, 'hide');
 
         // A provided configuration is a plain object, so a consumer can move the stack while it is live.
         (provider.useValue as KbqToastConfig).position = KbqToastPosition.BOTTOM_LEFT;
@@ -995,7 +996,7 @@ describe('KbqToastService: global scroll notifications', () => {
     let service: KbqToastService;
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
-    let scrolled: jest.Mock;
+    let scrolled: Mock;
     let scrollSubscription: Subscription;
 
     /** Emulates what the animation callbacks of every toast push into `KbqToastService.animation`. */
@@ -1027,7 +1028,7 @@ describe('KbqToastService: global scroll notifications', () => {
         service = TestBed.inject(KbqToastService);
         overlayContainer = TestBed.inject(OverlayContainer);
         overlayContainerElement = overlayContainer.getContainerElement();
-        scrolled = jest.fn();
+        scrolled = vi.fn();
         scrollSubscription = TestBed.inject(ScrollDispatcher).scrolled(0).subscribe(scrolled);
     });
 
@@ -1095,7 +1096,7 @@ describe('KbqToastService: global scroll notifications', () => {
 
     it('still dispatches on the container when the deprecated `dispatchScrollEvent` is called explicitly', () => {
         const fixture = TestBed.createComponent(KbqToastContainerComponent);
-        const onScroll = jest.fn();
+        const onScroll = vi.fn();
 
         fixture.detectChanges();
         fixture.nativeElement.addEventListener('scroll', onScroll);
@@ -1175,7 +1176,7 @@ describe('KbqToastService: stack reflow', () => {
         // The strategy only subscribes once the overlay is actually attached.
         overlayRef.attach(new ComponentPortal(ToastOverlayContent));
 
-        const updatePosition = jest.spyOn(overlayRef, 'updatePosition');
+        const updatePosition = vi.spyOn(overlayRef, 'updatePosition');
 
         resized.next([]);
 

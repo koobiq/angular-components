@@ -233,7 +233,7 @@ describe('KbqPipeTreeSelectComponent', () => {
 
             const filterBar = getFilterBar();
             const component = getPipeComponent();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -265,7 +265,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const closeSpy = jest.spyOn(component.select(), 'close');
+            const closeSpy = vi.spyOn(component.select(), 'close');
             const mockItem = { value: SINGLE_VALUE } as KbqTreeOption;
 
             component.onSelect(mockItem);
@@ -280,7 +280,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             ]);
             fixture.detectChanges();
 
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onSelect({ value: SINGLE_VALUE } as KbqTreeOption);
             flush();
@@ -390,7 +390,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClearPipe.subscribe(spy);
 
@@ -406,7 +406,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -429,7 +429,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const expandAllSpy = jest.spyOn(component.treeControl, 'expandAll');
+            const expandAllSpy = vi.spyOn(component.treeControl, 'expandAll');
 
             component.onOpen();
 
@@ -473,7 +473,7 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const filterNodesSpy = jest.spyOn(component.treeControl, 'filterNodes');
+            const filterNodesSpy = vi.spyOn(component.treeControl, 'filterNodes');
 
             component.searchControl.setValue('Admin');
             flush();

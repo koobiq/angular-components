@@ -45,7 +45,7 @@ describe('KbqIconButton', () => {
         const testComponent = fixture.debugElement.componentInstance;
         const buttonDebugElement = fixture.debugElement.query(By.css('button'));
 
-        const spyFn = jest.spyOn(testComponent, 'onClick');
+        const spyFn = vi.spyOn(testComponent, 'onClick');
 
         expect(spyFn).not.toHaveBeenCalled();
 

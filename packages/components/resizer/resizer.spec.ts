@@ -83,8 +83,8 @@ export class TestResizer {
     readonly cursor = signal<string | null>(null);
     readonly disableSizeUpdate = signal(false);
 
-    readonly resizeStart = jest.fn();
-    readonly sizeChange = jest.fn();
+    readonly resizeStart = vi.fn();
+    readonly sizeChange = vi.fn();
 }
 
 describe(KbqResizer.name, () => {
@@ -247,8 +247,8 @@ describe(KbqResizer.name, () => {
     it('should capture only the active pointer and release it when the drag finishes', () => {
         const fixture = createComponent(TestResizer);
         const resizer = getResizerElement(fixture);
-        const setPointerCapture = jest.fn();
-        const releasePointerCapture = jest.fn();
+        const setPointerCapture = vi.fn();
+        const releasePointerCapture = vi.fn();
 
         Object.defineProperties(resizer, {
             hasPointerCapture: { value: () => true },
@@ -335,7 +335,7 @@ describe(KbqResizer.name, () => {
 
         const resizable = getResizableElement(fixture);
 
-        jest.spyOn(resizable, 'getBoundingClientRect').mockReturnValue(BORDER_BOX as DOMRect);
+        vi.spyOn(resizable, 'getBoundingClientRect').mockReturnValue(BORDER_BOX as DOMRect);
 
         getResizerElement(fixture).dispatchEvent(new MouseEvent('pointerdown'));
         document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 30, clientY: 20 }));

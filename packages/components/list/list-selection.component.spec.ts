@@ -50,6 +50,7 @@ import {
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
+import type { MockInstance } from 'vitest';
 import {
     KbqListCopyEvent,
     KbqListDragCursor,
@@ -155,7 +156,7 @@ describe('KbqListSelection without forms', () => {
         });
 
         it('should not emit a selectionChange event if an option changed programmatically', () => {
-            const onValueChangeSpyFn = jest.spyOn(fixture.componentInstance, 'onValueChange');
+            const onValueChangeSpyFn = vi.spyOn(fixture.componentInstance, 'onValueChange');
 
             expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(0);
 
@@ -166,7 +167,7 @@ describe('KbqListSelection without forms', () => {
         });
 
         it('should emit a selectionChange event if an option got clicked', () => {
-            const onValueChangeSpyFn = jest.spyOn(fixture.componentInstance, 'onValueChange');
+            const onValueChangeSpyFn = vi.spyOn(fixture.componentInstance, 'onValueChange');
 
             expect(fixture.componentInstance.onValueChange).toHaveBeenCalledTimes(0);
 
@@ -483,7 +484,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should emit onSelectAll event with non-disabled options when Ctrl+A is pressed', () => {
             const list: KbqListSelection = selectionList.componentInstance;
-            const onSelectAllSpy = jest.fn();
+            const onSelectAllSpy = vi.fn();
 
             list.onSelectAll.subscribe(onSelectAllSpy);
 
@@ -496,7 +497,7 @@ describe('KbqListSelection without forms', () => {
 
             expect(onSelectAllSpy).toHaveBeenCalledTimes(1);
 
-            const [event]: [KbqListSelectAllEvent<KbqListOption>] = onSelectAllSpy.mock.calls[0];
+            const [event] = onSelectAllSpy.mock.calls[0] as [KbqListSelectAllEvent<KbqListOption>];
 
             expect(event.source).toBe(list);
             expect(event.options.every((o) => !o.disabled)).toBe(true);
@@ -544,7 +545,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should update the form-control value when Ctrl+A is pressed', () => {
             const list: KbqListSelection = selectionList.componentInstance;
-            const onChangeSpy = jest.fn();
+            const onChangeSpy = vi.fn();
 
             list.registerOnChange(onChangeSpy);
 
@@ -565,7 +566,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should invoke a custom selectAllHandler on Ctrl+A instead of the default', () => {
             const list: KbqListSelection = selectionList.componentInstance;
-            const customHandler = jest.fn();
+            const customHandler = vi.fn();
 
             list.selectAllHandler = customHandler;
 
@@ -791,7 +792,7 @@ describe('KbqListSelection without forms', () => {
             // keyboard-focused, so `.focus()` is a no-op. jsdom ignores styles and would always focus it,
             // so neutralise the DOM call only — `KbqOptionActionComponent.focus()` itself must still run,
             // otherwise its `activeElement` check (the fix under test) is never exercised.
-            jest.spyOn(actionButtonDebugElement.nativeElement, 'focus').mockImplementation(() => {});
+            vi.spyOn(actionButtonDebugElement.nativeElement, 'focus').mockImplementation(() => {});
 
             const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
 
@@ -1163,7 +1164,7 @@ describe('KbqListSelection with forms', () => {
             expect(testComponent.optionInstances()[1].selected).toBe(true);
 
             const selectionList = fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
-            const changes = jest.fn();
+            const changes = vi.fn();
 
             selectionList.selectionModel.changed.subscribe(changes);
 
@@ -1293,7 +1294,7 @@ describe('KbqListSelection with forms', () => {
         }));
 
         it('should survive a comparator that throws and report it once per comparison', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(SelectionListWithThrowingComparator);
 
             expect(() => {
@@ -1336,7 +1337,7 @@ describe('KbqListSelection with forms', () => {
         }));
 
         it('should not let one option break the rest when the comparator cannot read its value', fakeAsync(() => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(SelectionListWithValuelessOption);
             const testComponent = fixture.componentInstance;
 
@@ -1513,7 +1514,7 @@ describe('KbqListSelection onCopy event', () => {
     }));
 
     it('should not call clipboard.copy when (onCopy) observer is attached', fakeAsync(() => {
-        const clipboardSpy = jest.fn();
+        const clipboardSpy = vi.fn();
         const fixture = setup(SelectionListWithOnCopyHandler, [
             { provide: Clipboard, useValue: { copy: clipboardSpy } }
         ]);
@@ -1627,7 +1628,7 @@ describe('KbqListSelection horizontal', () => {
     });
 
     it('should not compute a scroll size in horizontal mode', () => {
-        const withScrollSize = jest.spyOn(selectionList.componentInstance.keyManager, 'withScrollSize');
+        const withScrollSize = vi.spyOn(selectionList.componentInstance.keyManager, 'withScrollSize');
 
         selectionList.componentInstance.updateScrollSize();
 
@@ -1655,22 +1656,22 @@ describe('KbqListSelection layout measurement', () => {
     });
 
     it('should report zero height when the element is not laid out', () => {
-        jest.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects());
+        vi.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects());
         expect(list.getHeight()).toBe(0);
 
-        jest.spyOn(listElement, 'getClientRects').mockReturnValue(undefined as unknown as DOMRectList);
+        vi.spyOn(listElement, 'getClientRects').mockReturnValue(undefined as unknown as DOMRectList);
         expect(list.getHeight()).toBe(0);
     });
 
     it('should report the measured height when the element is laid out', () => {
-        jest.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects(120));
+        vi.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects(120));
 
         expect(list.getHeight()).toBe(120);
     });
 
     // jsdom never lays elements out, so `getClientRects()` is empty and the option height is 0.
     it('should skip updateScrollSize when the option height is unknown', () => {
-        const withScrollSize = jest.spyOn(list.keyManager, 'withScrollSize');
+        const withScrollSize = vi.spyOn(list.keyManager, 'withScrollSize');
 
         expect(list.options.first.getHeight()).toBe(0);
         expect(() => list.updateScrollSize()).not.toThrow();
@@ -1678,10 +1679,10 @@ describe('KbqListSelection layout measurement', () => {
     });
 
     it('should derive the scroll size from the rendered heights', () => {
-        const withScrollSize = jest.spyOn(list.keyManager, 'withScrollSize');
+        const withScrollSize = vi.spyOn(list.keyManager, 'withScrollSize');
 
-        jest.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects(100));
-        jest.spyOn(list.options.first.getHostElement(), 'getClientRects').mockReturnValue(clientRects(30));
+        vi.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects(100));
+        vi.spyOn(list.options.first.getHostElement(), 'getClientRects').mockReturnValue(clientRects(30));
 
         list.updateScrollSize();
 
@@ -1693,7 +1694,7 @@ describe('KbqListSelection layout measurement', () => {
     const RESIZE_AUDIT_TIME = 100;
 
     it('should recompute the scroll size on window resize, debounced', fakeAsync(() => {
-        const updateScrollSizeSpy = jest.spyOn(list, 'updateScrollSize');
+        const updateScrollSizeSpy = vi.spyOn(list, 'updateScrollSize');
 
         window.dispatchEvent(new Event('resize'));
         window.dispatchEvent(new Event('resize'));
@@ -1839,7 +1840,7 @@ describe('KbqListSelection drag and drop', () => {
      */
     const stubVerticalLayout = (fixture: ComponentFixture<unknown>, optionHeight = 20) => {
         fixture.debugElement.queryAll(By.directive(KbqListSelection)).forEach(({ nativeElement }) => {
-            jest.spyOn(nativeElement as HTMLElement, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(nativeElement as HTMLElement, 'getBoundingClientRect').mockReturnValue({
                 top: 0,
                 bottom: 1000,
                 left: 0,
@@ -1848,7 +1849,7 @@ describe('KbqListSelection drag and drop', () => {
         });
 
         getOptions(fixture).forEach((option, index) => {
-            jest.spyOn(option.getHostElement(), 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(option.getHostElement(), 'getBoundingClientRect').mockReturnValue({
                 top: index * optionHeight,
                 bottom: (index + 1) * optionHeight,
                 left: 0,
@@ -2144,7 +2145,7 @@ describe('KbqListSelection drag and drop', () => {
             stubVerticalLayout(fixture);
             // `stubVerticalLayout` stacks both lists on the same box, so separate them along x and aim
             // the pointer at the second one.
-            jest.spyOn(targetElement, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(targetElement, 'getBoundingClientRect').mockReturnValue({
                 top: 0,
                 bottom: 1000,
                 left: 200,
@@ -2295,10 +2296,10 @@ describe('KbqListSelection drag and drop', () => {
     });
 
     describe('virtual scroll', () => {
-        let warn: jest.SpyInstance;
+        let warn: MockInstance;
 
         beforeEach(() => {
-            warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         });
 
         afterEach(() => warn.mockRestore());
@@ -2373,7 +2374,7 @@ class SelectionListWithCustomComparator {
     // lookup inside the list would silently select nothing.
     formControl = new UntypedFormControl([{ id: 2, label: 'Two' }]);
 
-    compareWith = jest.fn((o1: any, o2: any) => o1 && o2 && o1.id === o2.id);
+    compareWith = vi.fn((o1: any, o2: any) => o1 && o2 && o1.id === o2.id);
 }
 
 @Component({
@@ -3669,7 +3670,7 @@ describe('KbqListSelection select all row', () => {
         });
 
         it('should not render the row under a virtual scroller, and say why', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = setup(SelectionListWithSelectAllInVirtualScroll);
 
             // The list only ever holds the rendered options there, so a master checkbox built on them
@@ -3809,7 +3810,7 @@ describe('KbqListSelection select all row', () => {
 
         it('should report the value once for the whole batch', () => {
             const fixture = setup(SelectionListWithSelectAll);
-            const onChange = jest.fn();
+            const onChange = vi.fn();
 
             getList(fixture).registerOnChange(onChange);
 
@@ -3829,7 +3830,7 @@ describe('KbqListSelection select all row', () => {
             fixture.componentInstance.disabledOptions.set(['opt1', 'opt2', 'opt3', 'opt4']);
             fixture.detectChanges();
 
-            const onChange = jest.fn();
+            const onChange = vi.fn();
 
             getList(fixture).registerOnChange(onChange);
 
@@ -3842,7 +3843,7 @@ describe('KbqListSelection select all row', () => {
 
         it('should not emit selectionChange for the batch', () => {
             const fixture = setup(SelectionListWithSelectAll);
-            const selectionChange = jest.spyOn(fixture.componentInstance, 'onSelectionChange');
+            const selectionChange = vi.spyOn(fixture.componentInstance, 'onSelectionChange');
 
             getRow(fixture)!.click();
             fixture.detectChanges();
@@ -3852,7 +3853,7 @@ describe('KbqListSelection select all row', () => {
 
         it('should emit onSelectAll with the options it could act on', () => {
             const fixture = setup(SelectionListWithSelectAll);
-            const onSelectAll = jest.spyOn(fixture.componentInstance, 'onSelectAll');
+            const onSelectAll = vi.spyOn(fixture.componentInstance, 'onSelectAll');
 
             getRow(fixture)!.click();
             fixture.detectChanges();
@@ -3928,7 +3929,7 @@ describe('KbqListSelection select all row', () => {
 
         it('should not copy the row, which carries no value', () => {
             const fixture = setup(SelectionListWithSelectAll);
-            const onCopy = jest.fn();
+            const onCopy = vi.fn();
 
             getList(fixture).onCopy.subscribe(onCopy);
             getList(fixture).keyManager.setFirstItemActive();
@@ -4075,7 +4076,7 @@ describe('KbqListSelection select all row', () => {
 
         it('should not emit onSelectAll while the list is disabled', () => {
             const fixture = setup(SelectionListWithSelectAll);
-            const onSelectAll = jest.spyOn(fixture.componentInstance, 'onSelectAll');
+            const onSelectAll = vi.spyOn(fixture.componentInstance, 'onSelectAll');
 
             fixture.componentInstance.disabled.set(true);
             fixture.detectChanges();

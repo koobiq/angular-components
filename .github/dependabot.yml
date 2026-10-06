@@ -23,15 +23,14 @@ updates:
       # accumulate advisories whose only fix lives in a newer major.
       - dependency-name: '@angular/*'
         update-types: ['version-update:semver-major']
-      - dependency-name: '@angular-builders/*'
-        update-types: ['version-update:semver-major']
       - dependency-name: '@angular-devkit/*'
         update-types: ['version-update:semver-major']
       - dependency-name: '@schematics/angular'
         update-types: ['version-update:semver-major']
       - dependency-name: 'angular-eslint'
         update-types: ['version-update:semver-major']
-      - dependency-name: 'jest-preset-angular'
+      # `@angular/build` 21 declares `vitest ^4` as its peer.
+      - dependency-name: 'vitest'
         update-types: ['version-update:semver-major']
       - dependency-name: 'ng-packagr'
         update-types: ['version-update:semver-major']
@@ -90,7 +89,6 @@ updates:
           - '@angular/*'
           - 'rxjs'
           - 'zone.js'
-          - '@angular-builders/*'
           - '@angular-devkit/*'
           - '@schematics/angular'
           - 'ng-packagr'
@@ -113,11 +111,12 @@ updates:
         patterns:
           - 'conventional-changelog*'
           - '@conventional-changelog/*'
-      jest:
+      vitest:
         patterns:
-          - 'jest*'
-          - '@types/jest'
-          - 'ts-jest'
+          - 'vitest'
+          - '@vitest/*'
+          - '@analogjs/*'
+          - 'jsdom'
       # The MDX compiler of the documentation pages (tools/docs-pages). The remark plugins and the
       # mdast utilities are released together and share the `mdast` types, so a version that lands
       # alone leaves the compiler with two incompatible node models.

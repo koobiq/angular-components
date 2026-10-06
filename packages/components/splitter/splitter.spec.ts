@@ -386,7 +386,7 @@ describe(KbqSplitter.name, () => {
     });
 
     it('should warn once in dev mode about a size in a unit it does not support, and ignore that size', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const fixture = createComponent(TestSplitter);
 
         fixture.componentInstance.panels.set([{ id: 'first', minSize: '10rem' }, { id: 'second' }]);

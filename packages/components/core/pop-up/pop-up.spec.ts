@@ -58,7 +58,7 @@ describe('KbqPopUp', () => {
 
     it('should bind the mouseleave hide listener once and remove it on destroy', fakeAsync(() => {
         const element: HTMLElement = popUp['elementRef'].nativeElement;
-        const addEventListener = jest.spyOn(element, 'addEventListener');
+        const addEventListener = vi.spyOn(element, 'addEventListener');
 
         popUp.show(0);
         tick();
@@ -67,7 +67,7 @@ describe('KbqPopUp', () => {
 
         expect(addEventListener.mock.calls.filter(([type]) => type === 'mouseleave')).toHaveLength(1);
 
-        const hide = jest.spyOn(popUp, 'hide');
+        const hide = vi.spyOn(popUp, 'hide');
 
         fixture.destroy();
         dispatchMouseEvent(element, 'mouseleave');

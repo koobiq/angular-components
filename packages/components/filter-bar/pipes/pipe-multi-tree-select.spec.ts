@@ -311,7 +311,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -419,7 +419,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         });
 
         it('should keep the value and emit nothing on Ctrl+A', fakeAsync(() => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(changeSpy);
             openSelect();
@@ -554,7 +554,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClearPipe.subscribe(spy);
 
@@ -570,7 +570,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -593,7 +593,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const expandAllSpy = jest.spyOn(component.treeControl, 'expandAll');
+            const expandAllSpy = vi.spyOn(component.treeControl, 'expandAll');
 
             component.onOpen();
 
@@ -641,7 +641,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             flush();
             fixture.detectChanges();
 
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onClose();
             flush();
@@ -729,7 +729,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const filterNodesSpy = jest.spyOn(component.treeControl, 'filterNodes');
+            const filterNodesSpy = vi.spyOn(component.treeControl, 'filterNodes');
 
             component.searchControl.setValue('Admin');
             flush();
@@ -755,9 +755,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const toggleSpy = jest.spyOn(component, 'toggleSelectAllNode');
+            const toggleSpy = vi.spyOn(component, 'toggleSelectAllNode');
             const event = new KeyboardEvent('keydown');
-            const preventSpy = jest.spyOn(event, 'preventDefault');
+            const preventSpy = vi.spyOn(event, 'preventDefault');
 
             component.selectAllHandler(event);
 
@@ -924,7 +924,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         }));
 
         it('should append the missing locked values without emitting a change', () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
@@ -950,7 +950,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
         });
 
         it('should emit the cleared value carrying the locked values', () => {
-            const clearSpy = jest.fn();
+            const clearSpy = vi.fn();
 
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [LOCKED_LEAF, 'value 2'] })

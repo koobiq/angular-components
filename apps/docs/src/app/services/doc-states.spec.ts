@@ -46,7 +46,7 @@ describe(DocsDocStates.name, () => {
         // Flush the `Promise.resolve().then(...)` initial checks queued by registration.
         tick();
 
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         service.viewerTopOverflown.subscribe(spy);
         spy.mockClear();
@@ -71,7 +71,7 @@ describe(DocsDocStates.name, () => {
         service.registerNavbarScrollContainer(first);
         service.registerNavbarScrollContainer(second);
 
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         service.navbarTopOverflown.subscribe(spy);
         spy.mockClear();

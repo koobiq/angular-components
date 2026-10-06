@@ -59,6 +59,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { axe } from 'jest-axe';
 import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
+import type { Mock } from 'vitest';
 import { KbqInputModule } from '../input/index';
 import {
     KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS,
@@ -1091,7 +1092,7 @@ describe('KbqAutocomplete', () => {
         it('should reposition the panel on scroll', () => {
             // jsdom implements no scrolling and logs every window.scroll call; the scroll this test needs is
             // the ScrollDispatcher emission below.
-            const scroll = jest.spyOn(window, 'scroll').mockImplementation(() => {});
+            const scroll = vi.spyOn(window, 'scroll').mockImplementation(() => {});
 
             const scrolledSubject = new Subject();
             const spacer = document.createElement('div');
@@ -1255,7 +1256,7 @@ describe('KbqAutocomplete', () => {
 
             const componentOptions = fixture.componentInstance.options();
 
-            componentOptions.forEach((option) => jest.spyOn(option, 'deselect'));
+            componentOptions.forEach((option) => vi.spyOn(option, 'deselect'));
 
             expect(componentOptions[0].selected).toBe(true);
 
@@ -1324,7 +1325,7 @@ describe('KbqAutocomplete', () => {
             fixture.destroy();
             fixture = TestBed.createComponent(SimpleAutocomplete);
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             expect(fixture.componentInstance.trigger().autocomplete()).toBeFalsy();
             expect(() => {
@@ -1381,7 +1382,7 @@ describe('KbqAutocomplete', () => {
         let fixture: ComponentFixture<SimpleAutocomplete>;
         let input: HTMLInputElement;
         let trigger: KbqAutocompleteTrigger;
-        let closingActionFn: jest.Mock;
+        let closingActionFn: Mock;
         let closingActionsSub: Subscription;
 
         beforeEach(fakeAsync(() => {
@@ -1395,7 +1396,7 @@ describe('KbqAutocomplete', () => {
             flush();
 
             trigger = fixture.componentInstance.trigger();
-            closingActionFn = jest.fn();
+            closingActionFn = vi.fn();
             closingActionsSub = trigger.panelClosingActions.subscribe(closingActionFn);
         }));
 
@@ -1736,7 +1737,7 @@ describe('KbqAutocomplete', () => {
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+        vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
 
         widthFixture.componentInstance.panelWidth = 'auto';
         widthFixture.detectChanges();
@@ -1948,7 +1949,7 @@ describe('KbqAutocomplete', () => {
         widthFixture.detectChanges();
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
-        const rectSpy = jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+        const rectSpy = vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -1977,7 +1978,7 @@ describe('KbqAutocomplete', () => {
         widthFixture.detectChanges();
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
-        const rectSpy = jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+        const rectSpy = vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -2006,7 +2007,7 @@ describe('KbqAutocomplete', () => {
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
         // Simulate the host being narrower when the panel first opens, e.g. when the trigger lives
         // inside another overlay (inline-edit) that hasn't reached its final width yet.
-        const rectSpy = jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+        const rectSpy = vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -2033,7 +2034,7 @@ describe('KbqAutocomplete', () => {
         widthFixture.detectChanges();
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
-        const rectSpy = jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+        const rectSpy = vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -2060,7 +2061,7 @@ describe('KbqAutocomplete', () => {
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
+        vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 300 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -2077,7 +2078,7 @@ describe('KbqAutocomplete', () => {
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+        vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -2095,7 +2096,7 @@ describe('KbqAutocomplete', () => {
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 400 } as DOMRect);
+        vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 400 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -2115,7 +2116,7 @@ describe('KbqAutocomplete', () => {
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+        vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -2135,7 +2136,7 @@ describe('KbqAutocomplete', () => {
 
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+        vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
 
         widthFixture.componentInstance.trigger().open();
         widthFixture.detectChanges();
@@ -2154,7 +2155,7 @@ describe('KbqAutocomplete', () => {
         const { trigger } = widthFixture.componentInstance;
         const connectedEl = widthFixture.debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-        jest.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+        vi.spyOn(connectedEl, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
 
         widthFixture.componentInstance.panelWidth = 300;
         widthFixture.detectChanges();
@@ -2642,7 +2643,7 @@ describe('KbqAutocomplete', () => {
             typeInElement('al', input);
             fixture.detectChanges();
 
-            const updatePosition = jest.spyOn(fixture.componentInstance.trigger()['overlayRef']!, 'updatePosition');
+            const updatePosition = vi.spyOn(fixture.componentInstance.trigger()['overlayRef']!, 'updatePosition');
 
             dispatchFakeEvent(input, 'keyup');
 
@@ -2653,7 +2654,7 @@ describe('KbqAutocomplete', () => {
             typeInElement('al', input);
             fixture.detectChanges();
 
-            const updatePosition = jest.spyOn(fixture.componentInstance.trigger()['overlayRef']!, 'updatePosition');
+            const updatePosition = vi.spyOn(fixture.componentInstance.trigger()['overlayRef']!, 'updatePosition');
 
             fixture.componentInstance.trigger().closePanel();
             dispatchFakeEvent(input, 'keyup');
@@ -2970,10 +2971,10 @@ describe('KbqAutocomplete', () => {
         }));
 
         describe('inline hint', () => {
-            afterEach(() => jest.restoreAllMocks());
+            afterEach(() => vi.restoreAllMocks());
 
             it('should not offer a hint that the field lays out on another row', fakeAsync(() => {
-                jest.spyOn(Element.prototype, 'getClientRects').mockImplementation(function (this: Element) {
+                vi.spyOn(Element.prototype, 'getClientRects').mockImplementation(function (this: Element) {
                     // The hint wraps to the row after the typed word, where accepting it would not continue the word.
                     const top = this.classList.contains('kbq-autocomplete-inline-hint__hint') ? 40 : 20;
 
@@ -3208,8 +3209,8 @@ class SimpleAutocomplete implements OnDestroy {
     kbqOptionWidth: number;
     autocompleteDisabled = false;
     displayWith: ((value: any) => string) | null = this.displayFn;
-    openedSpy = jest.fn();
-    closedSpy = jest.fn();
+    openedSpy = vi.fn();
+    closedSpy = vi.fn();
 
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
     readonly panel = viewChild.required(KbqAutocomplete);
@@ -3289,8 +3290,8 @@ class TestShadowDomAutocomplete implements OnDestroy {
     kbqOptionWidth: number;
     autocompleteDisabled = false;
     displayWith: ((value: any) => string) | null = this.displayFn;
-    openedSpy = jest.fn();
-    closedSpy = jest.fn();
+    openedSpy = vi.fn();
+    closedSpy = vi.fn();
 
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
     readonly panel = viewChild.required(KbqAutocomplete);
@@ -3572,7 +3573,7 @@ class AutocompleteWithoutPanel {
 class AutocompleteWithSelectEvent {
     selectedState: string;
     states = ['New York', 'Washington', 'Oregon'];
-    optionSelected = jest.fn();
+    optionSelected = vi.fn();
 
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
     readonly autocomplete = viewChild.required(KbqAutocomplete);
@@ -3779,7 +3780,7 @@ class AutocompleteWithOpenOnFocus {
 class AutocompleteWithCustomOnBlur {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 
-    customBlurSpy: jest.Mock<boolean, [FocusEvent]> = jest.fn().mockReturnValue(false);
+    customBlurSpy: Mock<(event: FocusEvent) => boolean> = vi.fn().mockReturnValue(false);
 }
 
 @Component({

@@ -79,6 +79,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { axe } from 'jest-axe';
 import { Observable, Subject, Subscription, merge, of, timer } from 'rxjs';
 import { map, take } from 'rxjs/operators';
+import type { MockInstance } from 'vitest';
 import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
 import { KbqOptionTooltip } from './select-option.directive';
 import {
@@ -489,9 +490,9 @@ class BasicEvents {
 
     readonly select = viewChild.required(KbqSelect);
 
-    openedChangeListener = jest.fn();
-    openedListener = jest.fn();
-    closedListener = jest.fn();
+    openedChangeListener = vi.fn();
+    openedListener = vi.fn();
+    closedListener = vi.fn();
 }
 
 @Component({
@@ -559,7 +560,7 @@ class SelectWithChangeEvent {
         'sushi-7'
     ];
 
-    changeListener = jest.fn();
+    changeListener = vi.fn();
 }
 
 @Component({
@@ -2313,7 +2314,7 @@ class MultiSelectWithConfigurableInputs {
     backdropClass = 'cdk-overlay-transparent-backdrop';
     hiddenItemsText: string | undefined = '+{{ number }}';
     multiline = false;
-    valueChangeListener = jest.fn();
+    valueChangeListener = vi.fn();
 
     readonly select = viewChild.required(KbqSelect);
 }
@@ -3189,7 +3190,7 @@ describe('KbqSelect', () => {
 
                 it('should consider the selection a result of a user action when closed', fakeAsync(() => {
                     const option = fixture.componentInstance.options().at(0)!;
-                    const spy = jest.fn();
+                    const spy = vi.fn();
                     const subscription = option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
@@ -3330,7 +3331,7 @@ describe('KbqSelect', () => {
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
                 // Use a spy since focus can be flaky in unit tests.
-                const focusSpyFn = jest.spyOn(select, 'focus');
+                const focusSpyFn = vi.spyOn(select, 'focus');
 
                 dispatchKeyboardEvent(trigger, 'keydown', TAB);
                 fixture.detectChanges();
@@ -3363,7 +3364,7 @@ describe('KbqSelect', () => {
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
 
                 const event = createKeyboardEvent('keydown', ESCAPE);
-                const stopPropagationSpy = jest.spyOn(event, 'stopPropagation');
+                const stopPropagationSpy = vi.spyOn(event, 'stopPropagation');
 
                 dispatchEvent(trigger, event);
                 fixture.detectChanges();
@@ -3751,7 +3752,7 @@ describe('KbqSelect', () => {
             // guard was then false, so the trigger showed the new value while the form control kept the old
             // one and nothing was emitted.
             it('should propagate a value replaced by shift + click', fakeAsync(() => {
-                const selectionChangeSpy = jest.fn();
+                const selectionChangeSpy = vi.fn();
                 const subscription = fixture.componentInstance.select().selectionChange.subscribe(selectionChangeSpy);
 
                 trigger.click();
@@ -3811,7 +3812,7 @@ describe('KbqSelect', () => {
                 fixture.detectChanges();
                 flush();
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = fixture.componentInstance.select().optionSelectionChanges.subscribe(spy);
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
@@ -3828,7 +3829,7 @@ describe('KbqSelect', () => {
                 fixture.destroy();
                 fixture = TestBed.createComponent(BasicSelect);
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 let subscription: Subscription;
 
                 expect(fixture.componentInstance.select().options).toBeFalsy();
@@ -3858,7 +3859,7 @@ describe('KbqSelect', () => {
             it('should focus itself after list closed by KeyBoard events', fakeAsync(() => {
                 const closeAndFocusKeys: number[] = [TAB, ESCAPE, DOWN_ARROW, UP_ARROW];
                 const selectInstance = fixture.componentInstance.select();
-                const focusSpyFn = jest.spyOn(selectInstance, 'focus');
+                const focusSpyFn = vi.spyOn(selectInstance, 'focus');
 
                 closeAndFocusKeys.forEach((keyCode) => {
                     trigger.click();
@@ -4275,7 +4276,7 @@ describe('KbqSelect', () => {
             }));
 
             it('should keep everything selected when the predicate throws', fakeAsync(() => {
-                const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+                const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
                 fixture.componentInstance.clearPredicate = () => {
                     throw new Error('boom');
@@ -4697,7 +4698,7 @@ describe('KbqSelect', () => {
 
         it('should select the search text (not options) when the text is only partially selected', () => {
             const input = getSearchInput();
-            const onSelectAll = jest.fn();
+            const onSelectAll = vi.fn();
 
             testInstance.select().onSelectAll.subscribe(onSelectAll);
 
@@ -4955,7 +4956,7 @@ describe('KbqSelect', () => {
 
             expect(activeItem).toBeTruthy();
 
-            const focusSpy = jest.spyOn(activeItem, 'focus');
+            const focusSpy = vi.spyOn(activeItem, 'focus');
             const inputElement = fixture.debugElement.query(By.css('input')).nativeElement;
 
             dispatchKeyboardEvent(inputElement, 'keydown', DOWN_ARROW);
@@ -5099,7 +5100,7 @@ describe('KbqSelect', () => {
             const debugElement = fixture.debugElement.query(By.directive(KbqSelect));
             const select = debugElement.componentInstance;
 
-            const spy = jest.fn();
+            const spy = vi.fn();
             const subscription = select.stateChanges.subscribe(undefined, undefined, spy);
 
             fixture.destroy();
@@ -5181,10 +5182,10 @@ describe('KbqSelect', () => {
         });
 
         describe('comparing by reference', () => {
-            let compareByReferenceSpyFn: jest.SpyInstance;
+            let compareByReferenceSpyFn: MockInstance;
 
             beforeEach(fakeAsync(() => {
-                compareByReferenceSpyFn = jest.spyOn(instance, 'compareByReference');
+                compareByReferenceSpyFn = vi.spyOn(instance, 'compareByReference');
 
                 instance.useCompareByReference();
                 fixture.detectChanges();
@@ -5292,7 +5293,7 @@ describe('KbqSelect', () => {
         }));
 
         it('should set proper form group validation state on ngSubmit handler, without setTimeout', fakeAsync(() => {
-            const submitReactiveSpyFn = jest.spyOn(fixture.componentInstance, 'submitReactive');
+            const submitReactiveSpyFn = vi.spyOn(fixture.componentInstance, 'submitReactive');
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
 
@@ -5313,7 +5314,7 @@ describe('KbqSelect', () => {
 
         it('should override error matching behavior via injection token', fakeAsync(() => {
             const errorStateMatcher: ErrorStateMatcher = {
-                isErrorState: jest.fn(() => true)
+                isErrorState: vi.fn(() => true)
             };
 
             fixture.destroy();
@@ -5342,7 +5343,7 @@ describe('KbqSelect', () => {
         it('should be able to override the error matching behavior via an @Input', fakeAsync(() => {
             const fixture = TestBed.createComponent(CustomErrorBehaviorSelect);
             const component = fixture.componentInstance;
-            const matcher = jest.fn(() => true);
+            const matcher = vi.fn(() => true);
 
             fixture.detectChanges();
 
@@ -5388,7 +5389,7 @@ describe('KbqSelect', () => {
 
         it('should support use inside a custom value accessor', fakeAsync(() => {
             const fixture = TestBed.createComponent(CompWithCustomSelect);
-            const writeValueSpyFn = jest.spyOn(fixture.componentInstance.customAccessor(), 'writeValue');
+            const writeValueSpyFn = vi.spyOn(fixture.componentInstance.customAccessor(), 'writeValue');
 
             fixture.detectChanges();
 
@@ -5779,7 +5780,7 @@ describe('KbqSelect', () => {
         it('should update the data binding before emitting the change event', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectWithoutForms);
             const instance = fixture.componentInstance;
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             fixture.detectChanges();
             instance.select().selectionChange.subscribe(() => spy(instance.selectedFood));
@@ -6457,7 +6458,7 @@ describe('KbqSelect', () => {
         it('should emit onSelectAll with selected=true on a no-op ctrl + a when everything is already selected', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
             const options = fixture.componentInstance.options();
-            const onSelectAll = jest.fn();
+            const onSelectAll = vi.fn();
 
             fixture.componentInstance.select().onSelectAll.subscribe(onSelectAll);
 
@@ -7188,7 +7189,7 @@ describe('KbqSelect', () => {
                 instance.control.setValue(instance.options[2]);
                 finishInit(fixture);
 
-                const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+                const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
                 // A comparator that only handles the values it considers equal, like a consumer
                 // reading a field that is absent on some of the items.
@@ -7316,7 +7317,7 @@ describe('KbqSelect', () => {
 
             it('should call errorStateMatcher and update errorState on blur', () => {
                 const fixture = createComponent(SelectWithErrorStateMatcher);
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.select().errorState).toBe(false);
@@ -7358,7 +7359,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.select().errorState).toBe(false);
@@ -7397,7 +7398,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.select().errorState).toBe(false);
@@ -7859,7 +7860,7 @@ describe('KbqSelect', () => {
             // connection container to return a known width (matching the template's style="width: 300px")
             const connectionContainer = debugElement.query(By.css('.kbq-form-field__container'))
                 .nativeElement as HTMLElement;
-            const spy = jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
+            const spy = vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
                 width: 300,
                 height: 40,
                 top: 0,
@@ -7943,7 +7944,7 @@ describe('KbqSelect', () => {
 
             const connectionContainer = debugElement.query(By.css('.kbq-form-field__container')).nativeElement;
 
-            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 150 } as DOMRect);
+            vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 150 } as DOMRect);
 
             getSelectDebugElement(debugElement).nativeElement.click();
             fixture.detectChanges();
@@ -7963,7 +7964,7 @@ describe('KbqSelect', () => {
             // Narrower than KBQ_PANEL_DEFAULT_MIN_WIDTH (200): if `defaultOptions.panelMinWidth: null`
             // were wrongly coalesced into the 200px default (a `??` treats `null` and "absent" the
             // same), the panel would floor at 200px instead of following the 100px trigger.
-            jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
+            vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({ width: 100 } as DOMRect);
 
             getSelectDebugElement(debugElement).nativeElement.click();
             fixture.detectChanges();
@@ -7975,7 +7976,7 @@ describe('KbqSelect', () => {
 
         describe('with search', () => {
             function mockPanelBoundingRect(width: number) {
-                return jest.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
+                return vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function (
                     this: Element
                 ): DOMRect {
                     const w = this.classList?.contains('kbq-select__panel') ? width : 0;
@@ -8052,7 +8053,7 @@ describe('KbqSelect', () => {
 
                 const connectionContainer = fixture.debugElement.query(By.css('.kbq-form-field__container'))
                     .nativeElement as HTMLElement;
-                const triggerSpy = jest.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
+                const triggerSpy = vi.spyOn(connectionContainer, 'getBoundingClientRect').mockReturnValue({
                     width: 300,
                     height: 40,
                     top: 0,
@@ -8357,7 +8358,7 @@ describe('KbqSelect', () => {
         }));
 
         it('should invoke a custom selectAllHandler on ctrl + a instead of the default', () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
 
             const select = testInstance.select();
 
@@ -8662,7 +8663,7 @@ describe('KbqSelect', () => {
             }));
 
             it('should emit a single selectionChange for the whole batch', fakeAsync(() => {
-                const selectionChange = jest.fn();
+                const selectionChange = vi.fn();
 
                 testInstance.select().selectionChange.subscribe(selectionChange);
 
@@ -8676,7 +8677,7 @@ describe('KbqSelect', () => {
             }));
 
             it('should emit onSelectAll on click', fakeAsync(() => {
-                const onSelectAll = jest.fn();
+                const onSelectAll = vi.fn();
 
                 testInstance.select().onSelectAll.subscribe(onSelectAll);
 
@@ -8718,7 +8719,7 @@ describe('KbqSelect', () => {
             }));
 
             it('should emit onSelectAll on ctrl + a', fakeAsync(() => {
-                const onSelectAll = jest.fn();
+                const onSelectAll = vi.fn();
 
                 testInstance.select().onSelectAll.subscribe(onSelectAll);
 
@@ -8827,7 +8828,7 @@ describe('KbqSelect', () => {
         it('should stop reacting to locale changes once destroyed', fakeAsync(() => {
             fixture.destroy();
 
-            const getParams = jest.spyOn(localeService, 'getParams');
+            const getParams = vi.spyOn(localeService, 'getParams');
 
             localeService.setLocale('en-US');
 
@@ -9109,7 +9110,7 @@ describe('KbqSelect', () => {
             afterEach(fakeAsync(() => flush()));
 
             it('emits when the viewport reaches the bottom', fakeAsync(() => {
-                jest.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(0);
+                vi.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(0);
 
                 dispatchFakeEvent(viewportEl, 'scroll');
                 tick(150);
@@ -9118,7 +9119,7 @@ describe('KbqSelect', () => {
             }));
 
             it('does not emit while the viewport has room to scroll', fakeAsync(() => {
-                jest.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(500);
+                vi.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(500);
 
                 dispatchFakeEvent(viewportEl, 'scroll');
                 tick(150);
@@ -9130,7 +9131,7 @@ describe('KbqSelect', () => {
                 testInstance.scrolledToBottomOffset = 64;
                 fixture.detectChanges();
 
-                jest.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(50);
+                vi.spyOn(testInstance.select().virtualScrollViewport()!, 'measureScrollOffset').mockReturnValue(50);
 
                 dispatchFakeEvent(viewportEl, 'scroll');
                 tick(150);
@@ -9153,7 +9154,7 @@ describe('KbqSelect', () => {
 
             fixture.detectChanges();
 
-            const changes = jest.fn();
+            const changes = vi.fn();
             const subscription = fixture.componentInstance.select().search()!.changes.subscribe(changes);
 
             fixture.destroy();
@@ -9590,7 +9591,7 @@ describe('KbqSelect', () => {
         let fixture: ComponentFixture<MultiSelectWithDefaultTags>;
         let testInstance: MultiSelectWithDefaultTags;
         let trigger: HTMLElement;
-        let measure: jest.SpyInstance;
+        let measure: MockInstance;
 
         const getTabIndexes = (): (string | null)[] =>
             Array.from(trigger.querySelectorAll<HTMLElement>('.kbq-tag-remove'), (control) =>
@@ -9609,7 +9610,7 @@ describe('KbqSelect', () => {
         beforeEach(fakeAsync(() => {
             // Every box measures zero under JSDOM, so the trigger geometry has to be dictated: two of the
             // three tags fit on the single line the trigger has room for.
-            measure = jest.spyOn(KbqSelectHiddenItemsMeasurer.prototype, 'measure').mockReturnValue({
+            measure = vi.spyOn(KbqSelectHiddenItemsMeasurer.prototype, 'measure').mockReturnValue({
                 totalItemsWidth: 300,
                 totalVisibleItemsWidth: 200,
                 visibleItems: 2
@@ -9794,7 +9795,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const setOverlayPosition = jest.spyOn(select as any, 'setOverlayPosition');
+            const setOverlayPosition = vi.spyOn(select as any, 'setOverlayPosition');
 
             testInstance.foods = [{ value: 'ramen-0', viewValue: 'Ramen' }];
             fixture.detectChanges();
@@ -9984,7 +9985,7 @@ describe('KbqSelect', () => {
         const shiftTab = (target: HTMLElement) => dispatchModifiedKeydown(target, TAB, 'shiftKey');
 
         /** Focus is flaky in unit tests, so a restore is asserted through the call rather than the result. */
-        const spyOnHostFocus = () => jest.spyOn(fixture.nativeElement.querySelector('.kbq-select'), 'focus');
+        const spyOnHostFocus = () => vi.spyOn(fixture.nativeElement.querySelector('.kbq-select'), 'focus');
 
         const setUp = (footer: FooterContent) => {
             configureKbqSelectTestingModule([SelectWithFooter]);
@@ -10240,7 +10241,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
             flush();
 
-            const setOverlayPosition = jest.spyOn(select, 'setOverlayPosition');
+            const setOverlayPosition = vi.spyOn(select, 'setOverlayPosition');
 
             select.reanchorPanel();
 

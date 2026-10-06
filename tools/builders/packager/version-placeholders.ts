@@ -2,8 +2,7 @@
  * Substitution of the `{{VERSION}}` / `{{NG_VERSION}}` placeholders a source manifest carries into
  * the manifest that gets published.
  *
- * Kept apart from `build.ts` so it can be unit tested: the builder imports chalk, which is ESM and
- * cannot be loaded by this repository's jest configuration.
+ * Kept apart from `build.ts`, which imports the whole builder toolchain, so it can be unit tested on its own.
  */
 
 export interface IPackageJson {

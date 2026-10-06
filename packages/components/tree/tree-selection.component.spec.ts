@@ -552,7 +552,7 @@ describe('KbqTreeSelection', () => {
             });
 
             it('should not select non-selectable option on click', () => {
-                const onSelectionChange = jest.spyOn(component, 'onSelectionChange');
+                const onSelectionChange = vi.spyOn(component, 'onSelectionChange');
                 const nodes = getNodes(treeElement);
 
                 dispatchEvent(nodes[2], createMouseEvent('click'));
@@ -680,7 +680,7 @@ describe('KbqTreeSelection', () => {
             }));
 
             it('should invoke a custom selectAllHandler on CTRL + A instead of the default', fakeAsync(() => {
-                const customHandler = jest.fn();
+                const customHandler = vi.fn();
 
                 component.tree.selectAllHandler = customHandler;
 
@@ -786,7 +786,7 @@ describe('KbqTreeSelection', () => {
                 // or keyboard-focused, so `.focus()` is a no-op. jsdom ignores styles and would always
                 // focus it, so neutralise the DOM call only — `KbqOptionActionComponent.focus()` itself
                 // must still run, otherwise its `activeElement` check (the fix under test) is never hit.
-                jest.spyOn(actionButtonDebugElement.nativeElement, 'focus').mockImplementation(() => {});
+                vi.spyOn(actionButtonDebugElement.nativeElement, 'focus').mockImplementation(() => {});
 
                 const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
 
@@ -1138,7 +1138,7 @@ describe('KbqTreeSelection', () => {
                 pressKey(DOWN_ARROW);
                 pressKey(DOWN_ARROW);
 
-                const spy = jest.fn();
+                const spy = vi.fn();
                 const subscription = component.tree.navigationChange.subscribe(spy);
 
                 pressKey(LEFT_ARROW);
@@ -1528,8 +1528,8 @@ describe('KbqTreeSelection', () => {
             it('should select all visible options and values', fakeAsync(() => {
                 expect(component.modelValue.length).toBe(0);
 
-                const onSelectionChange = jest.spyOn(component, 'onSelectionChange');
-                const onSelectAll = jest.spyOn(component, 'onSelectAll');
+                const onSelectionChange = vi.spyOn(component, 'onSelectionChange');
+                const onSelectAll = vi.spyOn(component, 'onSelectAll');
 
                 component.tree.onKeyDown(selectAllKeyEvent);
                 fixture.detectChanges();
@@ -1579,7 +1579,7 @@ describe('KbqTreeSelection', () => {
                 component.tree.onKeyDown(selectAllKeyEvent);
                 fixture.detectChanges();
 
-                const onSelectionChange = jest.spyOn(component, 'onSelectionChange');
+                const onSelectionChange = vi.spyOn(component, 'onSelectionChange');
 
                 component.savedSelectionChangeEvent = undefined;
 
@@ -2219,7 +2219,7 @@ describe('KbqTreeSelection', () => {
             });
 
             it('should notify the touched callback on blur', () => {
-                const onTouched = jest.fn();
+                const onTouched = vi.fn();
 
                 component.tree.registerOnTouched(onTouched);
                 component.tree.blur();
@@ -2293,7 +2293,7 @@ describe('KbqTreeSelection', () => {
             }));
 
             it('should stop monitoring the host', () => {
-                const stopMonitoring = jest.spyOn(TestBed.inject(FocusMonitor), 'stopMonitoring');
+                const stopMonitoring = vi.spyOn(TestBed.inject(FocusMonitor), 'stopMonitoring');
 
                 fixture.destroy();
 
@@ -2516,21 +2516,21 @@ describe('KbqTreeSelection', () => {
         it('should measure the clipping container, not the option host', () => {
             // The host is always wider and taller than the container it wraps (padding, border, checkbox),
             // so measuring the container against the host reported every option as truncated.
-            jest.spyOn(optionElement, 'scrollWidth', 'get').mockReturnValue(296);
-            jest.spyOn(optionElement, 'scrollHeight', 'get').mockReturnValue(28);
-            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(232);
-            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(232);
-            jest.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
-            jest.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(20);
+            vi.spyOn(optionElement, 'scrollWidth', 'get').mockReturnValue(296);
+            vi.spyOn(optionElement, 'scrollHeight', 'get').mockReturnValue(28);
+            vi.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(232);
+            vi.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(232);
+            vi.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
+            vi.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(20);
 
             expect(titleDirective.isOverflown).toBe(false);
         });
 
         it('should report overflow when the container is clipped', () => {
-            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(28);
-            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(70);
-            jest.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
-            jest.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(20);
+            vi.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(28);
+            vi.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(70);
+            vi.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
+            vi.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(20);
 
             expect(titleDirective.isOverflown).toBe(true);
         });
@@ -2538,10 +2538,10 @@ describe('KbqTreeSelection', () => {
         it('should report overflow when the container is clipped vertically', () => {
             // Two-line options (`.kbq-option-caption`) clamp vertically, so the height check must stay a
             // real signal and not just mirror the width one.
-            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(232);
-            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(232);
-            jest.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
-            jest.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(40);
+            vi.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(232);
+            vi.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(232);
+            vi.spyOn(containerElement, 'offsetHeight', 'get').mockReturnValue(20);
+            vi.spyOn(containerElement, 'scrollHeight', 'get').mockReturnValue(40);
 
             expect(titleDirective.isOverflown).toBe(true);
         });
@@ -2568,9 +2568,9 @@ describe('KbqTreeSelection', () => {
         it('should measure the projected text element, not the option container', () => {
             // Projected `#kbqTitleText` wins over the `KbqTitleTextRef` fallback, so the container stays the
             // measured parent while the child is the projected span. Consumers relying on this must keep working.
-            jest.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(200);
-            jest.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(200);
-            jest.spyOn(textElement, 'scrollWidth', 'get').mockReturnValue(400);
+            vi.spyOn(containerElement, 'offsetWidth', 'get').mockReturnValue(200);
+            vi.spyOn(containerElement, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(textElement, 'scrollWidth', 'get').mockReturnValue(400);
 
             expect(titleDirective.isOverflown).toBe(true);
         });
@@ -3454,7 +3454,7 @@ describe('KbqTreeSelection multiple mode', () => {
         flush();
 
         const options = getOptions();
-        const onChange = jest.fn();
+        const onChange = vi.fn();
 
         component.tree.registerOnChange(onChange);
         component.tree.selectionModel.select(options[1].data);
@@ -3916,7 +3916,7 @@ describe('KbqTreeSelection state saving', () => {
         const fixture = create(TreeStateSaving);
         const service = TestBed.inject(KbqStateSavingService);
 
-        // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+        // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
         // which throws while building the diff and hides the real failure.
         expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
             { name: 'kbq-tree-selection', key: 'tree-key', enabled: true }
@@ -3928,7 +3928,7 @@ describe('KbqTreeSelection state saving', () => {
     });
 
     it('persists nothing when the tree is not in the document as it initializes', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         store.setState('tree-key', ['Pictures']);
 
@@ -3947,7 +3947,7 @@ describe('KbqTreeSelection state saving', () => {
     });
 
     it('persists nothing when the tree control cannot identify a node by value', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = create(TreeNestedStateSaving);
         const { dataSource, tree, treeControl } = fixture.componentInstance;
@@ -3962,7 +3962,7 @@ describe('KbqTreeSelection state saving', () => {
     });
 
     it('leaves out a node whose value is not a string', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = create(TreeNumericValues);
 

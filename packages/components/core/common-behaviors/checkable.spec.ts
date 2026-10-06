@@ -128,7 +128,7 @@ describe(KbqCheckable.name, () => {
         });
 
         it('should notify the registered ControlValueAccessor change handler with the new value', () => {
-            const onChange = jest.fn();
+            const onChange = vi.fn();
 
             checkable.registerOnChange(onChange);
 
@@ -228,7 +228,7 @@ describe(KbqCheckable.name, () => {
         it('should be a no-op when transitioning to the same state', () => {
             checkable.transitionCheckState(TransitionCheckState.Checked);
 
-            const setSpy = jest.spyOn(checkable.currentCheckState, 'set');
+            const setSpy = vi.spyOn(checkable.currentCheckState, 'set');
 
             checkable.transitionCheckState(TransitionCheckState.Checked);
 
@@ -287,7 +287,7 @@ describe(KbqCheckable.name, () => {
         });
 
         it('registerOnChange should wire up notifyFormValueChange', () => {
-            const onChange = jest.fn();
+            const onChange = vi.fn();
 
             checkable.registerOnChange(onChange);
             checkable.notifyFormValueChange(true);
@@ -296,7 +296,7 @@ describe(KbqCheckable.name, () => {
         });
 
         it('registerOnTouched should wire up onTouched', () => {
-            const onTouched = jest.fn();
+            const onTouched = vi.fn();
 
             checkable.registerOnTouched(onTouched);
             checkable.onTouched();

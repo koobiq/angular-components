@@ -145,7 +145,7 @@ describe(KbqTimepicker.name, () => {
         const value = '12:18:28';
 
         // `clearMocks` only clears call records, so the prototype patch has to be undone by hand.
-        afterEach(() => jest.restoreAllMocks());
+        afterEach(() => vi.restoreAllMocks());
 
         it('should scroll the part the caret moves to into view', fakeAsync(() => {
             // Three parts, so the caret can land on one that is neither end of the value.
@@ -157,7 +157,7 @@ describe(KbqTimepicker.name, () => {
             expect(input.value).toBe(value);
 
             // jsdom lays nothing out, so the metrics the reveal reads have to be supplied.
-            jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+            vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
                 return (this.textContent || '').length * charWidth;
             });
             input.style.padding = `0 ${padding}px`;
@@ -759,7 +759,7 @@ describe(KbqTimepicker.name, () => {
 
             const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
 
-            jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
+            vi.spyOn(mockedAdapter, 'today').mockImplementation(() =>
                 mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
             );
 
@@ -839,7 +839,7 @@ describe(KbqTimepicker.name, () => {
 
             const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
 
-            jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
+            vi.spyOn(mockedAdapter, 'today').mockImplementation(() =>
                 mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
             );
 
@@ -1039,7 +1039,7 @@ describe(KbqTimepicker.name, () => {
 
             it('should call errorStateMatcher and update errorState on blur', () => {
                 const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.timepicker().errorState).toBe(false);
@@ -1084,7 +1084,7 @@ describe(KbqTimepicker.name, () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.timepicker().errorState).toBe(false);
@@ -1123,7 +1123,7 @@ describe(KbqTimepicker.name, () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
                 expect(fixture.componentInstance.timepicker().errorState).toBe(false);
@@ -1281,11 +1281,11 @@ describe(KbqTimepicker.name, () => {
             const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
             const { componentInstance } = fixture;
             const [first, second] = componentInstance.tooltips();
-            const firstShow = jest.spyOn(first, 'show').mockImplementation(() => {});
-            const secondShow = jest.spyOn(second, 'show').mockImplementation(() => {});
+            const firstShow = vi.spyOn(first, 'show').mockImplementation(() => {});
+            const secondShow = vi.spyOn(second, 'show').mockImplementation(() => {});
 
-            jest.spyOn(first, 'hide').mockImplementation(() => {});
-            jest.spyOn(second, 'hide').mockImplementation(() => {});
+            vi.spyOn(first, 'hide').mockImplementation(() => {});
+            vi.spyOn(second, 'hide').mockImplementation(() => {});
 
             componentInstance.timepicker().incorrectInput.emit();
 
@@ -1326,9 +1326,9 @@ describe(KbqTimepicker.name, () => {
             const { componentInstance } = fixture;
             const [first] = componentInstance.tooltips();
 
-            jest.spyOn(first, 'show').mockImplementation(() => {});
+            vi.spyOn(first, 'show').mockImplementation(() => {});
 
-            const hide = jest.spyOn(first, 'hide').mockImplementation(() => {});
+            const hide = vi.spyOn(first, 'hide').mockImplementation(() => {});
 
             componentInstance.timepicker().incorrectInput.emit();
 

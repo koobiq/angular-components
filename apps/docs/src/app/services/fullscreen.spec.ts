@@ -1,9 +1,10 @@
 import { TestBed } from '@angular/core/testing';
+import type { Mock } from 'vitest';
 import { DocsFullscreenService } from './fullscreen';
 
 describe(DocsFullscreenService.name, () => {
-    let requestFullscreen: jest.Mock<Promise<void>>;
-    let exitFullscreen: jest.Mock<Promise<void>>;
+    let requestFullscreen: Mock<() => Promise<void>>;
+    let exitFullscreen: Mock<() => Promise<void>>;
 
     const fullscreenEnabledDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenEnabled');
     const fullscreenElementDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenElement');
@@ -24,8 +25,8 @@ describe(DocsFullscreenService.name, () => {
     };
 
     beforeEach(() => {
-        requestFullscreen = jest.fn().mockResolvedValue(undefined);
-        exitFullscreen = jest.fn().mockResolvedValue(undefined);
+        requestFullscreen = vi.fn().mockResolvedValue(undefined);
+        exitFullscreen = vi.fn().mockResolvedValue(undefined);
 
         Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
         setFullscreenElement(null);
@@ -104,7 +105,7 @@ describe(DocsFullscreenService.name, () => {
     // The point of the service: an examples page holds dozens of viewers, and each one used to add
     // its own document listener.
     it('subscribes to fullscreenchange once no matter how many consumers inject it', () => {
-        const addEventListener = jest.spyOn(document, 'addEventListener');
+        const addEventListener = vi.spyOn(document, 'addEventListener');
 
         createService();
         TestBed.inject(DocsFullscreenService);
@@ -141,7 +142,7 @@ describe(DocsFullscreenService.name, () => {
     // A rejected request (a policy-blocked iframe, a gesture-less call) must not surface as an
     // unhandled rejection in the page the docs are embedded in.
     it('reports a rejected request instead of propagating it', async () => {
-        const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+        const error = vi.spyOn(console, 'error').mockImplementation(() => {});
         const reason = new Error('denied');
 
         requestFullscreen.mockRejectedValue(reason);

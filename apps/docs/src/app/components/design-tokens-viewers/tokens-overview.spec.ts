@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { BehaviorSubject, map, of } from 'rxjs';
+import type { Mock } from 'vitest';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsStructureTokensTab } from '../../structure';
@@ -26,7 +27,7 @@ const provideDocsLocale = (locale: DocsLocale) => {
 type TokensOverviewInternals = { calculateViewData(): unknown };
 
 describe('DocsTokensOverview token value caching (PERF-02)', () => {
-    const setup = (getPropertyValue: jest.Mock) => {
+    const setup = (getPropertyValue: Mock) => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             imports: [DocsTokensOverview],
@@ -56,7 +57,7 @@ describe('DocsTokensOverview token value caching (PERF-02)', () => {
     };
 
     it('reads each token via getComputedStyle only once per theme', () => {
-        const getPropertyValue = jest.fn((token: string) => `value-of-${token}`);
+        const getPropertyValue = vi.fn((token: string) => `value-of-${token}`);
         const component = setup(getPropertyValue);
 
         const first = component.calculateViewData();

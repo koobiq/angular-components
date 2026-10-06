@@ -145,7 +145,7 @@ describe(KbqBreadcrumbs.name, () => {
             // ASSERT
             // The Karma version asserted `findVisibleOverflowItems(...).length === max - 1`,
             // which depends on KbqOverflowItem.hidden() — driven by real widths + ResizeObserver,
-            // both of which are no-ops in jsdom (see tools/jest/setup.ts). Narrowed to the
+            // both of which are no-ops in jsdom (see tools/vitest/setup-angular.ts). Narrowed to the
             // observable contract: input is wired and the overflow render path is exercised.
             expect(componentInstance.items.length).toBeGreaterThan(componentInstance.max);
             expect(debugElement.queryAll(By.directive(KbqOverflowItem)).length).toBe(componentInstance.items.length);

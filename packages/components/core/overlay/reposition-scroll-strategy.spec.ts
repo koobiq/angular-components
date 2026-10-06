@@ -45,7 +45,7 @@ describe('KbqRepositionScrollStrategy', () => {
     it('should update the overlay position when the page is scrolled', () => {
         createOverlay();
         overlayRef.attach(componentPortal);
-        const spy = jest.spyOn(overlayRef, 'updatePosition');
+        const spy = vi.spyOn(overlayRef, 'updatePosition');
 
         scrolled.next();
         expect(spy).toHaveBeenCalledTimes(1);
@@ -57,7 +57,7 @@ describe('KbqRepositionScrollStrategy', () => {
     it('should not be updating the position after the overlay is detached', () => {
         createOverlay();
         overlayRef.attach(componentPortal);
-        const spy = jest.spyOn(overlayRef, 'updatePosition');
+        const spy = vi.spyOn(overlayRef, 'updatePosition');
 
         overlayRef.detach();
         scrolled.next();
@@ -68,7 +68,7 @@ describe('KbqRepositionScrollStrategy', () => {
     it('should not be updating the position after the overlay is destroyed', () => {
         createOverlay();
         overlayRef.attach(componentPortal);
-        const spy = jest.spyOn(overlayRef, 'updatePosition');
+        const spy = vi.spyOn(overlayRef, 'updatePosition');
 
         overlayRef.dispose();
         scrolled.next();
@@ -79,7 +79,7 @@ describe('KbqRepositionScrollStrategy', () => {
     it('should ignore scrolls originating inside the overlay by default', () => {
         createOverlay();
         overlayRef.attach(componentPortal);
-        const spy = jest.spyOn(overlayRef, 'updatePosition');
+        const spy = vi.spyOn(overlayRef, 'updatePosition');
 
         scrolled.next(makeScrollable(overlayRef.overlayElement));
 
@@ -89,7 +89,7 @@ describe('KbqRepositionScrollStrategy', () => {
     it('should reposition on inner scrolls when ignoreInnerScroll is false (CDK default behavior)', () => {
         createOverlay({ ignoreInnerScroll: false });
         overlayRef.attach(componentPortal);
-        const spy = jest.spyOn(overlayRef, 'updatePosition');
+        const spy = vi.spyOn(overlayRef, 'updatePosition');
 
         scrolled.next(makeScrollable(overlayRef.overlayElement));
 
@@ -99,7 +99,7 @@ describe('KbqRepositionScrollStrategy', () => {
     it('should reposition on scrolls from outside the overlay', () => {
         createOverlay();
         overlayRef.attach(componentPortal);
-        const spy = jest.spyOn(overlayRef, 'updatePosition');
+        const spy = vi.spyOn(overlayRef, 'updatePosition');
 
         scrolled.next(makeScrollable(document.createElement('div')));
 

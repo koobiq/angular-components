@@ -110,7 +110,7 @@ describe('KbqTabGroup', () => {
             const component = fixture.componentInstance;
             const tabComponent = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
-            const handleSelectionSpyFn = jest.spyOn(component, 'handleSelection');
+            const handleSelectionSpyFn = vi.spyOn(component, 'handleSelection');
 
             checkSelectedIndex(1, fixture);
 
@@ -189,7 +189,7 @@ describe('KbqTabGroup', () => {
         it('should fire animation done event', fakeAsync(() => {
             fixture.detectChanges();
 
-            const animationDoneSpyFn = jest.spyOn(fixture.componentInstance, 'animationDone');
+            const animationDoneSpyFn = vi.spyOn(fixture.componentInstance, 'animationDone');
             const tabLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1];
 
             tabLabel.nativeElement.click();
@@ -200,7 +200,7 @@ describe('KbqTabGroup', () => {
         }));
 
         it('should emit focusChange event on click', () => {
-            const handleFocusSpyFn = jest.spyOn(fixture.componentInstance, 'handleFocus');
+            const handleFocusSpyFn = vi.spyOn(fixture.componentInstance, 'handleFocus');
 
             fixture.detectChanges();
 
@@ -216,7 +216,7 @@ describe('KbqTabGroup', () => {
         });
 
         it('should emit focusChange on arrow key navigation', () => {
-            const handleFocusSpyFn = jest.spyOn(fixture.componentInstance, 'handleFocus');
+            const handleFocusSpyFn = vi.spyOn(fixture.componentInstance, 'handleFocus');
 
             fixture.detectChanges();
 
@@ -375,7 +375,7 @@ describe('KbqTabGroup', () => {
             fixture.componentInstance.selectedIndex = 1;
             fixture.detectChanges();
 
-            const handleSelectionSpyFn = jest.spyOn(fixture.componentInstance, 'handleSelection');
+            const handleSelectionSpyFn = vi.spyOn(fixture.componentInstance, 'handleSelection');
 
             fixture.componentInstance.tabs.unshift({ label: 'New tab', content: 'at the start' });
             fixture.detectChanges();
@@ -981,7 +981,7 @@ describe('KbqTabGroup state saving', () => {
     });
 
     it('persists by position alone when the tabs carry no id, and says so once', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = create(IdlessTabs);
 
@@ -1056,7 +1056,7 @@ describe('KbqTabGroup state saving', () => {
         const fixture = create(UncontrolledTabs);
         const service = TestBed.inject(KbqStateSavingService);
 
-        // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+        // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
         // which throws while building the diff and hides the real failure.
         expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
             { name: 'kbq-tab-group', key: 'tabs-key', enabled: true }
@@ -1068,7 +1068,7 @@ describe('KbqTabGroup state saving', () => {
     });
 
     it('persists nothing when the group is not in the document as it initializes', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         store.setState('tabs-key', { tabId: 'last', index: 2 });
 

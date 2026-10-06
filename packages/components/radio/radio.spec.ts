@@ -188,7 +188,7 @@ describe('KbqRadio', () => {
         it('should emit a change event from radio buttons', () => {
             expect(radioInstances[0].checked).toBe(false);
 
-            const spies = radioInstances.map(() => jest.fn());
+            const spies = radioInstances.map(() => vi.fn());
 
             spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
 
@@ -209,7 +209,7 @@ describe('KbqRadio', () => {
         it(`should not emit a change event from the radio group when change group value programmatically`, () => {
             expect(groupInstance.value).toBeFalsy();
 
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
 
@@ -255,7 +255,7 @@ describe('KbqRadio', () => {
         });
 
         it(`should update the group's selected radio to null when unchecking that radio programmatically`, () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
@@ -276,7 +276,7 @@ describe('KbqRadio', () => {
         });
 
         it('should not fire a change event from the group when a radio checked state changes', () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
@@ -296,7 +296,7 @@ describe('KbqRadio', () => {
         });
 
         it(`should update checked status if changed value to radio group's value`, () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             groupInstance.value = 'apple';

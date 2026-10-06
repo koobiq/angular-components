@@ -171,7 +171,7 @@ describe('KbqFilterBar', () => {
 
         it('should emit filterChange via internalFilterChanges subscription', () => {
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.filter.subscribe(spy);
             spy.mockClear();
@@ -193,7 +193,7 @@ describe('KbqFilterBar', () => {
 
         it('should emit internalTemplatesChanges when pipeTemplates are set', () => {
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.internalTemplatesChanges.subscribe(spy);
             spy.mockClear();
@@ -349,7 +349,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter.set(createFilter([pipe]));
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onRemovePipe.subscribe(spy);
             spy.mockClear();
@@ -365,7 +365,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter.set(createFilter([pipe]));
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onRemovePipe.subscribe(spy);
             spy.mockClear();
@@ -397,7 +397,7 @@ describe('KbqFilterBar', () => {
             // Saved, unmodified filter: a stale first emission (changed=false) would be observable here.
             filterBar.filter.set(createFilter([pipe], { saved: true, changed: false }));
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.filter.subscribe(spy);
             spy.mockClear();
@@ -534,7 +534,7 @@ describe('KbqFilterBar', () => {
 
             filterBar.filter.set(createFilter([]));
 
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.filter.subscribe(spy);
             spy.mockClear();

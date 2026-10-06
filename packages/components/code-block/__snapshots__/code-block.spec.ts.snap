@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`KbqCodeBlock should provide custom locale configuration 1`] = `
+exports[`KbqCodeBlock > should provide custom locale configuration 1`] = `
 {
   "copiedTooltip": "*unit_test* ✓ Copied",
   "copyTooltip": "*unit_test* Copy",

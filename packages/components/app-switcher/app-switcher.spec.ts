@@ -334,7 +334,7 @@ describe('KbqAppSwitcher', () => {
             });
 
             it('calls hide() when set to true', () => {
-                const hideSpy = jest.spyOn(trigger, 'hide');
+                const hideSpy = vi.spyOn(trigger, 'hide');
 
                 trigger.disabled = true;
                 expect(hideSpy).toHaveBeenCalled();
@@ -342,7 +342,7 @@ describe('KbqAppSwitcher', () => {
 
             it('sets _disabled to false without calling hide()', () => {
                 trigger.disabled = true;
-                const hideSpy = jest.spyOn(trigger, 'hide');
+                const hideSpy = vi.spyOn(trigger, 'hide');
 
                 trigger.disabled = false;
                 expect(trigger.disabled).toBe(false);
@@ -410,7 +410,7 @@ describe('KbqAppSwitcher', () => {
             });
 
             it('emits selectedAppChange with the selected app', () => {
-                const spy = jest.fn();
+                const spy = vi.fn();
 
                 trigger.selectedApp.subscribe(spy);
                 popup.selectAppInSite(SITE_B, APP_3);
@@ -418,7 +418,7 @@ describe('KbqAppSwitcher', () => {
             });
 
             it('emits selectedSiteChange with the selected site', () => {
-                const spy = jest.fn();
+                const spy = vi.fn();
 
                 trigger.selectedSite.subscribe(spy);
                 popup.selectAppInSite(SITE_B, APP_3);
@@ -608,8 +608,8 @@ describe('KbqAppSwitcher', () => {
             fixture.detectChanges();
 
             const event = new MouseEvent('click', { bubbles: true });
-            const stopSpy = jest.spyOn(event, 'stopPropagation');
-            const preventSpy = jest.spyOn(event, 'preventDefault');
+            const stopSpy = vi.spyOn(event, 'stopPropagation');
+            const preventSpy = vi.spyOn(event, 'preventDefault');
 
             getListItem().clickHandler(event);
 
@@ -953,7 +953,7 @@ describe('KbqAppSwitcher', () => {
         describe('close on focus-out', () => {
             it('hides when focus leaves the popup entirely', fakeAsync(() => {
                 const { popup } = open(AppSwitcherMultiSite);
-                const hideSpy = jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const outside = document.createElement('button');
 
                 document.body.appendChild(outside);
@@ -966,8 +966,8 @@ describe('KbqAppSwitcher', () => {
             it('returns focus to the trigger when focus leaves', fakeAsync(() => {
                 const { popup } = open(AppSwitcherMultiSite);
 
-                jest.spyOn(popup, 'hide').mockImplementation(() => {});
-                const focusSpy = jest.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
+                vi.spyOn(popup, 'hide').mockImplementation(() => {});
+                const focusSpy = vi.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
                 const outside = document.createElement('button');
 
                 document.body.appendChild(outside);
@@ -980,10 +980,10 @@ describe('KbqAppSwitcher', () => {
             it('closes and focuses the trigger on Tab, preventing the native focus move into browser chrome', fakeAsync(() => {
                 const { popup } = open(AppSwitcherMultiSite);
 
-                jest.spyOn(popup, 'hide').mockImplementation(() => {});
-                const focusSpy = jest.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
+                vi.spyOn(popup, 'hide').mockImplementation(() => {});
+                const focusSpy = vi.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
                 const event = createKeyboardEvent('keydown', TAB, getHost());
-                const preventSpy = jest.spyOn(event, 'preventDefault');
+                const preventSpy = vi.spyOn(event, 'preventDefault');
 
                 popup['keydownHandler'](event);
 
@@ -994,10 +994,10 @@ describe('KbqAppSwitcher', () => {
             it('stops Escape from bubbling into overlays opened earlier', fakeAsync(() => {
                 const { popup } = open(AppSwitcherMultiSite);
 
-                jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const event = createKeyboardEvent('keydown', ESCAPE, getHost());
-                const preventSpy = jest.spyOn(event, 'preventDefault');
-                const stopSpy = jest.spyOn(event, 'stopPropagation');
+                const preventSpy = vi.spyOn(event, 'preventDefault');
+                const stopSpy = vi.spyOn(event, 'stopPropagation');
 
                 popup['keydownHandler'](event);
 
@@ -1018,7 +1018,7 @@ describe('KbqAppSwitcher', () => {
 
             it('hides when focus is lost with no related target', fakeAsync(() => {
                 const { popup } = open(AppSwitcherMultiSite);
-                const hideSpy = jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
 
                 getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: null, bubbles: true }));
 
@@ -1027,7 +1027,7 @@ describe('KbqAppSwitcher', () => {
 
             it('stays open while focus moves between menu items', fakeAsync(() => {
                 const { popup } = open(AppSwitcherMultiSite);
-                const hideSpy = jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const item = getHost().querySelector('.kbq-app-switcher-list-item') as HTMLElement;
 
                 getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: item, bubbles: true }));
@@ -1037,7 +1037,7 @@ describe('KbqAppSwitcher', () => {
 
             it('stays open while focus moves into a site flyout overlay', fakeAsync(() => {
                 const { popup } = open(AppSwitcherMultiSite);
-                const hideSpy = jest.spyOn(popup, 'hide').mockImplementation(() => {});
+                const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const flyoutPane = document.createElement('div');
                 const flyoutItem = document.createElement('a');
 
@@ -1143,9 +1143,9 @@ describe('KbqAppSwitcher', () => {
                 const manager = keyManagerOf(popup);
 
                 manager.setActiveItem(0);
-                const clickSpy = jest.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
+                const clickSpy = vi.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
                 const event = createKeyboardEvent('keydown', ENTER, getHost());
-                const preventSpy = jest.spyOn(event, 'preventDefault');
+                const preventSpy = vi.spyOn(event, 'preventDefault');
 
                 getHost().dispatchEvent(event);
                 fixture.detectChanges();
@@ -1159,9 +1159,9 @@ describe('KbqAppSwitcher', () => {
                 const manager = keyManagerOf(popup);
 
                 manager.setActiveItem(0);
-                const clickSpy = jest.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
+                const clickSpy = vi.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
 
-                jest.spyOn(manager, 'isTyping').mockReturnValue(true);
+                vi.spyOn(manager, 'isTyping').mockReturnValue(true);
 
                 dispatchKeyboardEvent(getHost(), 'keydown', SPACE);
                 fixture.detectChanges();
@@ -1174,7 +1174,7 @@ describe('KbqAppSwitcher', () => {
                 const manager = keyManagerOf(popup);
 
                 manager.setActiveItem(1);
-                const clickSpy = jest.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
+                const clickSpy = vi.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
 
                 dispatchKeyboardEvent(getHost(), 'keydown', SPACE);
                 fixture.detectChanges();
@@ -1184,7 +1184,7 @@ describe('KbqAppSwitcher', () => {
 
             it('closes the popup on Escape from a focused item', fakeAsync(() => {
                 const { fixture, popup } = open(AppSwitcherMultiSite);
-                const hideSpy = jest.spyOn(popup, 'hide');
+                const hideSpy = vi.spyOn(popup, 'hide');
 
                 keyManagerOf(popup).setActiveItem(0);
                 dispatchKeyboardEvent(getHost(), 'keydown', ESCAPE);
@@ -1338,7 +1338,7 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
                 expect(manager.activeItemIndex).toBe(0);
 
-                const clickSpy = jest.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
+                const clickSpy = vi.spyOn(manager.activeItem!.getHostElement(), 'click').mockImplementation(() => {});
                 const cleaner = overlayContainerElement.querySelector('.kbq-cleaner') as HTMLElement;
 
                 expect(cleaner).toBeTruthy();
@@ -1587,8 +1587,8 @@ describe('KbqAppSwitcher', () => {
             overlayContainerElement = overlayContainer.getContainerElement();
 
             const trigger = getTrigger(fixture);
-            const appSpy = jest.fn();
-            const siteSpy = jest.fn();
+            const appSpy = vi.fn();
+            const siteSpy = vi.fn();
 
             trigger.selectedApp.subscribe(appSpy);
             trigger.selectedSite.subscribe(siteSpy);

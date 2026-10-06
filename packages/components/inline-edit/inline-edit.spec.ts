@@ -151,7 +151,7 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestComponent);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+        const spyFn = vi.spyOn(componentInstance, 'onModeChange');
 
         const resetToInitialMode = () => {
             dispatchEvent(getOverlayElement()!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
@@ -211,7 +211,7 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestComponent);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'update');
+        const spyFn = vi.spyOn(componentInstance, 'update');
 
         inlineEditDebugElement.nativeElement.click();
         fixture.detectChanges();
@@ -226,7 +226,7 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestComponent);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'update');
+        const spyFn = vi.spyOn(componentInstance, 'update');
 
         componentInstance.showActions.set(true);
         fixture.detectChanges();
@@ -247,7 +247,7 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestComponent);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'update');
+        const spyFn = vi.spyOn(componentInstance, 'update');
 
         inlineEditDebugElement.nativeElement.click();
         fixture.detectChanges();
@@ -332,7 +332,7 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestWithTextareaControl);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'update');
+        const spyFn = vi.spyOn(componentInstance, 'update');
 
         inlineEditDebugElement.nativeElement.click();
         fixture.detectChanges();
@@ -362,7 +362,7 @@ describe('KbqInlineEdit', () => {
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
         const maskDebugElement = getMaskDebugElement(inlineEditDebugElement);
-        const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+        const spyFn = vi.spyOn(componentInstance, 'onModeChange');
 
         maskDebugElement.query(By.css(componentCssClasses.menu)).nativeElement.click();
 
@@ -373,7 +373,7 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestWithValidatedControl);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'update');
+        const spyFn = vi.spyOn(componentInstance, 'update');
 
         componentInstance.showActions.set(true);
         fixture.detectChanges();
@@ -404,7 +404,7 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestComponent);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'update');
+        const spyFn = vi.spyOn(componentInstance, 'update');
 
         inlineEditDebugElement.nativeElement.click();
         fixture.detectChanges();
@@ -420,7 +420,7 @@ describe('KbqInlineEdit', () => {
         const fixture = setup(TestWithValidatedControl);
         const { componentInstance, debugElement } = fixture;
         const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
-        const spyFn = jest.spyOn(componentInstance, 'update');
+        const spyFn = vi.spyOn(componentInstance, 'update');
 
         inlineEditDebugElement.nativeElement.click();
         fixture.detectChanges();
@@ -449,7 +449,7 @@ describe('KbqInlineEdit', () => {
         fixture.detectChanges();
 
         const overlayRef = (inlineEdit as unknown as { overlayDir: () => CdkConnectedOverlay }).overlayDir().overlayRef;
-        const updatePositionSpy = jest.spyOn(overlayRef, 'updatePosition');
+        const updatePositionSpy = vi.spyOn(overlayRef, 'updatePosition');
 
         resize$.next();
         fixture.detectChanges();
@@ -461,7 +461,7 @@ describe('KbqInlineEdit', () => {
         it('should not toggle mode when clicking on a built-in interactive element', () => {
             const fixture = setup(TestWithClickableContent);
             const { componentInstance, debugElement } = fixture;
-            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+            const spyFn = vi.spyOn(componentInstance, 'onModeChange');
 
             debugElement.query(By.css('[data-testid="link"]')).nativeElement.click();
 
@@ -471,7 +471,7 @@ describe('KbqInlineEdit', () => {
         it('should toggle mode when clicking on plain text', () => {
             const fixture = setup(TestWithClickableContent);
             const { componentInstance, debugElement } = fixture;
-            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+            const spyFn = vi.spyOn(componentInstance, 'onModeChange');
 
             debugElement.query(By.css('[data-testid="text"]')).nativeElement.click();
             fixture.detectChanges();
@@ -482,7 +482,7 @@ describe('KbqInlineEdit', () => {
         it('should not toggle mode when clicking on element matching custom interactiveSelectors', () => {
             const fixture = setup(TestWithClickableContent);
             const { componentInstance, debugElement } = fixture;
-            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+            const spyFn = vi.spyOn(componentInstance, 'onModeChange');
 
             componentInstance.interactiveSelectors.set(['a', 'kbq-tag', 'button']);
             fixture.detectChanges();
@@ -553,7 +553,7 @@ describe('KbqInlineEdit', () => {
         it('should open edit mode on Enter keydown on focus anchor', fakeAsync(() => {
             const fixture = setup(TestWithTagContent);
             const { componentInstance, debugElement } = fixture;
-            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+            const spyFn = vi.spyOn(componentInstance, 'onModeChange');
 
             tick();
             fixture.detectChanges();
@@ -902,12 +902,12 @@ describe('KbqInlineEdit', () => {
             const inlineEdit = inlineEditDebugElement.componentInstance as any;
             const overlayOrigin: HTMLElement = inlineEdit.overlayOrigin();
 
-            jest.spyOn(overlayOrigin, 'getBoundingClientRect').mockReturnValue(offscreenRect);
+            vi.spyOn(overlayOrigin, 'getBoundingClientRect').mockReturnValue(offscreenRect);
 
-            const scrollIntoViewSpy = jest.spyOn(overlayOrigin, 'scrollIntoView');
+            const scrollIntoViewSpy = vi.spyOn(overlayOrigin, 'scrollIntoView');
             const tooltipTrigger = inlineEdit.tooltipTrigger();
-            const updatePositionSpy = jest.spyOn(tooltipTrigger, 'updatePosition');
-            const showSpy = jest.spyOn(tooltipTrigger, 'show');
+            const updatePositionSpy = vi.spyOn(tooltipTrigger, 'updatePosition');
+            const showSpy = vi.spyOn(tooltipTrigger, 'show');
 
             return { scrollIntoViewSpy, updatePositionSpy, showSpy };
         };
@@ -920,7 +920,7 @@ describe('KbqInlineEdit', () => {
 
             const inlineEditDebugElement = openEditAndInvalidate(fixture);
             const tooltipTrigger = (inlineEditDebugElement.componentInstance as any).tooltipTrigger();
-            const showSpy = jest.spyOn(tooltipTrigger, 'show');
+            const showSpy = vi.spyOn(tooltipTrigger, 'show');
 
             clickSave();
 
@@ -942,7 +942,7 @@ describe('KbqInlineEdit', () => {
             tick(tooltipTrigger.enterDelay + 10);
             expect(tooltipTrigger.isOpen).toBe(true);
 
-            const hideSpy = jest.spyOn(tooltipTrigger, 'hide');
+            const hideSpy = vi.spyOn(tooltipTrigger, 'hide');
 
             componentInstance.control.setValue('Some text');
             componentInstance.control.updateValueAndValidity();
@@ -974,10 +974,10 @@ describe('KbqInlineEdit', () => {
             const inlineEditDebugElement = openEditAndInvalidate(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as any;
 
-            jest.spyOn(inlineEdit.overlayOrigin(), 'getBoundingClientRect').mockReturnValue(onscreenRect);
+            vi.spyOn(inlineEdit.overlayOrigin(), 'getBoundingClientRect').mockReturnValue(onscreenRect);
 
-            const scrollIntoViewSpy = jest.spyOn(inlineEdit.overlayOrigin(), 'scrollIntoView');
-            const showSpy = jest.spyOn(inlineEdit.tooltipTrigger(), 'show');
+            const scrollIntoViewSpy = vi.spyOn(inlineEdit.overlayOrigin(), 'scrollIntoView');
+            const showSpy = vi.spyOn(inlineEdit.tooltipTrigger(), 'show');
 
             clickSave();
 
@@ -1081,7 +1081,7 @@ describe('KbqInlineEdit', () => {
             // removes it, and `cancel()` is reachable only through the handle the fallback used to drop.
             tick(800);
 
-            const removeListenerSpy = jest.spyOn(window, 'removeEventListener');
+            const removeListenerSpy = vi.spyOn(window, 'removeEventListener');
 
             dispatchEvent(getOverlayElement()!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
             fixture.detectChanges();
@@ -1092,7 +1092,7 @@ describe('KbqInlineEdit', () => {
 
         it('should register exactly one scrollend listener across two rejected saves', fakeAsync(() => {
             const fixture = setup(TestWithDynamicValidationTooltip);
-            const addListenerSpy = jest.spyOn(window, 'addEventListener');
+            const addListenerSpy = vi.spyOn(window, 'addEventListener');
 
             setupOffscreen(fixture);
 
@@ -1302,7 +1302,7 @@ describe('KbqInlineEdit', () => {
             const middle = getNamedButton(debugElement, 'middle');
 
             // A hidden control passes `isTabbable` and then takes no focus; jsdom focuses one happily, hence the stub.
-            jest.spyOn(middle, 'focus').mockImplementation(() => {});
+            vi.spyOn(middle, 'focus').mockImplementation(() => {});
 
             const input = openEditor(fixture);
 
@@ -1506,7 +1506,7 @@ describe('KbqInlineEdit', () => {
             const fixture = setup(TestWithValidatedControl);
             const { componentInstance, debugElement } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
-            const spyFn = jest.spyOn(componentInstance, 'update');
+            const spyFn = vi.spyOn(componentInstance, 'update');
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
@@ -1524,7 +1524,7 @@ describe('KbqInlineEdit', () => {
             const fixture = setup(TestWithValidatedControl);
             const { componentInstance, debugElement } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
-            const spyFn = jest.spyOn(componentInstance, 'update');
+            const spyFn = vi.spyOn(componentInstance, 'update');
 
             componentInstance.showActions.set(true);
             fixture.detectChanges();
@@ -1595,7 +1595,7 @@ describe('KbqInlineEdit', () => {
         it('should not treat an interactive ancestor outside the component as interactive content', () => {
             const fixture = setup(TestWithInteractiveAncestor);
             const { componentInstance, debugElement } = fixture;
-            const spyFn = jest.spyOn(componentInstance, 'onModeChange');
+            const spyFn = vi.spyOn(componentInstance, 'onModeChange');
 
             debugElement.query(By.css('[data-testid="text"]')).nativeElement.click();
             fixture.detectChanges();
@@ -1615,7 +1615,7 @@ describe('KbqInlineEdit', () => {
         getInlineEditDebugElement(debugElement).nativeElement.click();
         fixture.detectChanges();
 
-        jest.spyOn(inlineEdit.overlayOrigin(), 'offsetHeight', 'get').mockReturnValue(64);
+        vi.spyOn(inlineEdit.overlayOrigin(), 'offsetHeight', 'get').mockReturnValue(64);
 
         resize$.next();
         fixture.detectChanges();
@@ -1734,7 +1734,7 @@ describe('KbqInlineEdit', () => {
         }));
 
         it('should report a failed save and keep the unsaved value marked', fakeAsync(() => {
-            const saveErrorHandler = jest.fn();
+            const saveErrorHandler = vi.fn();
             const fixture = setup(TestWithSaveHandler, [
                 { provide: KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, useValue: saveErrorHandler }
             ]);
@@ -1762,7 +1762,7 @@ describe('KbqInlineEdit', () => {
         }));
 
         it('should let saveErrorHandler override the handler provided for the application', fakeAsync(() => {
-            const providedHandler = jest.fn();
+            const providedHandler = vi.fn();
             const fixture = setup(TestWithSaveErrorHandler, [
                 { provide: KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, useValue: providedHandler }
             ]);
@@ -1934,7 +1934,7 @@ describe('KbqInlineEdit', () => {
         }));
 
         it('should finish a failed save after the inline edit is destroyed', fakeAsync(() => {
-            const saveErrorHandler = jest.fn();
+            const saveErrorHandler = vi.fn();
             const fixture = setup(TestWithSaveHandler, [
                 { provide: KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, useValue: saveErrorHandler }
             ]);
@@ -1963,7 +1963,7 @@ describe('KbqInlineEdit', () => {
             componentInstance.request$.next();
             tick(kbqInlineEditSaveProgressMinimumDuration);
 
-            // jest-fail-on-console is what guards the point here: emitting `saved` on a destroyed output would
+            // The fail-on-console hook is what guards the point here: emitting `saved` on a destroyed output would
             // log NG0953 and fail this test.
             expect(componentInstance.subscriptions).toBe(1);
         }));
@@ -2245,7 +2245,7 @@ describe('KbqInlineEdit', () => {
             const { componentInstance, debugElement } = fixture;
             const inlineEdit = getInlineEditDebugElement(debugElement).componentInstance as any;
 
-            jest.spyOn(inlineEdit.overlayOrigin(), 'offsetHeight', 'get').mockReturnValue(48);
+            vi.spyOn(inlineEdit.overlayOrigin(), 'offsetHeight', 'get').mockReturnValue(48);
 
             let offsetAtAttach: number | null = null;
 
@@ -2335,7 +2335,7 @@ export class TestComponent extends BaseTestComponent {
         this.currentMode.set($event);
     }
 
-    cancel = jest.fn();
+    cancel = vi.fn();
 }
 @Component({
     selector: 'name',
@@ -2445,7 +2445,7 @@ export class TestWithTextareaControl extends BaseTestComponent {
         this.currentMode.set($event);
     }
 
-    cancel = jest.fn();
+    cancel = vi.fn();
 }
 
 @Component({
@@ -2631,7 +2631,7 @@ export class TestWithSelect extends BaseTestComponent {
         this.currentMode.set($event);
     }
 
-    cancel = jest.fn();
+    cancel = vi.fn();
 }
 
 @Component({
@@ -2747,8 +2747,8 @@ export class TestWithMultipleFormFields extends BaseTestComponent {
         lastName: new FormControl('Doe', Validators.required)
     });
 
-    update = jest.fn();
-    cancel = jest.fn();
+    update = vi.fn();
+    cancel = vi.fn();
 
     onModeChange(_$event: 'edit' | 'view') {}
 }
@@ -2779,7 +2779,7 @@ export class TestWithSaveHandler {
     request$ = new Subject<void>();
     subscriptions = 0;
 
-    readonly saveHandler = jest.fn(() =>
+    readonly saveHandler = vi.fn(() =>
         defer(() => {
             this.subscriptions++;
 
@@ -2787,8 +2787,8 @@ export class TestWithSaveHandler {
         })
     );
 
-    update = jest.fn();
-    onSaveError = jest.fn();
+    update = vi.fn();
+    onSaveError = vi.fn();
 }
 
 @Component({
@@ -2807,7 +2807,7 @@ export class TestWithSaveErrorHandler {
     readonly control = new FormControl('Initial', { nonNullable: true });
     readonly request$ = new Subject<void>();
     readonly saveHandler = () => this.request$;
-    readonly ownHandler = jest.fn();
+    readonly ownHandler = vi.fn();
 }
 
 @Component({
@@ -2873,7 +2873,7 @@ export class TestWithSaveHandlerList {
 export class TestWithCanSaveOnEnter {
     readonly control = new FormControl('Initial', { nonNullable: true });
     readonly canSaveOnEnter = () => true;
-    saved = jest.fn();
+    saved = vi.fn();
 }
 
 @Component({
@@ -2917,7 +2917,7 @@ export class TestWithDefaultCompareWith {
 
     request$ = new Subject<void>();
 
-    readonly saveHandler = jest.fn(() => defer(() => this.request$));
+    readonly saveHandler = vi.fn(() => defer(() => this.request$));
 }
 
 @Component({

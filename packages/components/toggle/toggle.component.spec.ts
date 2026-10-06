@@ -142,7 +142,7 @@ describe('KbqToggle', () => {
         });
 
         it('should not trigger the click event multiple times', () => {
-            const onToggleClickSpyFn = jest.spyOn(testComponent, 'onToggleClick');
+            const onToggleClickSpyFn = vi.spyOn(testComponent, 'onToggleClick');
 
             expect(inputElement.checked).toBe(false);
 
@@ -155,7 +155,7 @@ describe('KbqToggle', () => {
         });
 
         it('should trigger a change event when the native input does', fakeAsync(() => {
-            const onToggleChangeSpyFn = jest.spyOn(testComponent, 'onToggleChange');
+            const onToggleChangeSpyFn = vi.spyOn(testComponent, 'onToggleChange');
 
             expect(inputElement.checked).toBe(false);
 
@@ -171,7 +171,7 @@ describe('KbqToggle', () => {
         }));
 
         it('should not trigger the change event by changing the native value', fakeAsync(() => {
-            const onToggleChangeSpyFn = jest.spyOn(testComponent, 'onToggleChange');
+            const onToggleChangeSpyFn = vi.spyOn(testComponent, 'onToggleChange');
 
             expect(inputElement.checked).toBe(false);
 

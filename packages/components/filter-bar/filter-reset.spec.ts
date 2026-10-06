@@ -23,7 +23,7 @@ class TestComponent {
         pipes: []
     };
 
-    onResetFilter = jest.fn();
+    onResetFilter = vi.fn();
 }
 
 describe('KbqFilterReset', () => {

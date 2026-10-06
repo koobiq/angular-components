@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`KbqMarkdown should generate html from markdown inline template 1`] = `
+exports[`KbqMarkdown > should generate html from markdown inline template 1`] = `
 DebugElement {
   "nativeNode": <kbq-markdown
     class="kbq-native-scrollbar kbq-markdown kbq-native-scrollbar_descendants"
@@ -482,7 +482,7 @@ npm install jquery
 }
 `;
 
-exports[`KbqMarkdown should generate html from markdown string 1`] = `
+exports[`KbqMarkdown > should generate html from markdown string 1`] = `
 DebugElement {
   "nativeNode": <kbq-markdown
     class="kbq-native-scrollbar kbq-markdown kbq-native-scrollbar_descendants"

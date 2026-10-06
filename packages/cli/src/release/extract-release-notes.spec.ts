@@ -1,7 +1,10 @@
-import fs, { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { extractReleaseNotes, parseTag, resolveChangelogPath } from './extract-release-notes';
+
+// The module under test imports `readFileSync` by name, which a spy on the `fs` object cannot reach.
+vi.mock('fs', { spy: true });
 
 describe(extractReleaseNotes.name, () => {
     it('should extract release notes for a version between two other versions', () => {
@@ -63,11 +66,11 @@ source code didn't change.
  * bumped package to 15.10.0`;
 
         beforeEach(() => {
-            jest.spyOn(fs, 'readFileSync').mockReturnValue(CHANGELOG_CONTENT);
+            vi.mocked(readFileSync).mockReturnValue(CHANGELOG_CONTENT);
         });
 
         afterEach(() => {
-            jest.restoreAllMocks();
+            vi.mocked(readFileSync).mockReset();
         });
 
         it('should extract properly if release notes contains only simple string', () => {
@@ -105,11 +108,11 @@ source code didn't change.
  * notes for 1.2.3`;
 
         beforeEach(() => {
-            jest.spyOn(fs, 'readFileSync').mockReturnValue(CHANGELOG_CONTENT);
+            vi.mocked(readFileSync).mockReturnValue(CHANGELOG_CONTENT);
         });
 
         afterEach(() => {
-            jest.restoreAllMocks();
+            vi.mocked(readFileSync).mockReset();
         });
 
         it('should match the exact version heading, not a heading that merely contains it as a substring', () => {

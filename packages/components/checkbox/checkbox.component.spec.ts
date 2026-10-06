@@ -306,7 +306,7 @@ describe('KbqCheckbox', () => {
             // Since we're using a label element and a visual hidden input, this behavior can led
             // to an issue, where the click events on the checkbox are getting executed twice.
 
-            const onCheckboxClickSpyFn = jest.spyOn(testComponent, 'onCheckboxClick');
+            const onCheckboxClickSpyFn = vi.spyOn(testComponent, 'onCheckboxClick');
 
             expect(inputElement.checked).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
@@ -321,7 +321,7 @@ describe('KbqCheckbox', () => {
         });
 
         it('should trigger a change event when the native input does', fakeAsync(() => {
-            const onCheckboxChangeSpyFn = jest.spyOn(testComponent, 'onCheckboxChange');
+            const onCheckboxChangeSpyFn = vi.spyOn(testComponent, 'onCheckboxChange');
 
             expect(inputElement.checked).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
@@ -341,7 +341,7 @@ describe('KbqCheckbox', () => {
         }));
 
         it('should not trigger the change event by changing the native value', fakeAsync(() => {
-            const onCheckboxChangeSpyFn = jest.spyOn(testComponent, 'onCheckboxChange');
+            const onCheckboxChangeSpyFn = vi.spyOn(testComponent, 'onCheckboxChange');
 
             expect(inputElement.checked).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
@@ -594,7 +594,7 @@ describe('KbqCheckbox', () => {
         });
 
         it('should emit the event to the change observable', () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             checkboxInstance.change.subscribe(changeSpy);
 

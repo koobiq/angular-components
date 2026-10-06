@@ -1,6 +1,7 @@
 import { Location } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
 import { DefaultUrlSerializer, Router, RouterStateSnapshot } from '@angular/router';
+import type { Mock } from 'vitest';
 import { DocsLocale } from '../constants/locale';
 import { DocsLocaleService } from './locale';
 import { DocsSeoService } from './seo';
@@ -9,16 +10,16 @@ import { DocsTitleStrategy } from './title-strategy';
 describe(DocsTitleStrategy.name, () => {
     let strategy: DocsTitleStrategy;
     let localeService: DocsLocaleService;
-    let seo: { update: jest.Mock };
-    let router: { url: string; navigate: jest.Mock; parseUrl: DefaultUrlSerializer['parse'] };
+    let seo: { update: Mock };
+    let router: { url: string; navigate: Mock; parseUrl: DefaultUrlSerializer['parse'] };
 
     beforeEach(() => {
         const serializer = new DefaultUrlSerializer();
 
-        seo = { update: jest.fn() };
+        seo = { update: vi.fn() };
         router = {
             url: '/en/components/alert/overview',
-            navigate: jest.fn(),
+            navigate: vi.fn(),
             parseUrl: (url) => serializer.parse(url)
         };
 
@@ -56,7 +57,7 @@ describe(DocsTitleStrategy.name, () => {
     });
 
     it('passes the title of the route, and keeps it when the locale changes', () => {
-        jest.spyOn(strategy, 'buildTitle').mockReturnValue('Basic select');
+        vi.spyOn(strategy, 'buildTitle').mockReturnValue('Basic select');
 
         navigate('/examples/basic-select');
         router.url = '/examples/basic-select';

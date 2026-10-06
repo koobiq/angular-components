@@ -233,7 +233,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -249,7 +249,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -281,8 +281,8 @@ describe('KbqPipeSelectComponent', () => {
 
             const component = getPipeComponent();
             const filterBar = getFilterBar();
-            const changeSpy = jest.fn();
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const changeSpy = vi.fn();
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             filterBar.onChangePipe.subscribe(changeSpy);
 
@@ -784,7 +784,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const openSpy = jest.spyOn(component.select(), 'open');
+            const openSpy = vi.spyOn(component.select(), 'open');
 
             component.open();
 
@@ -989,7 +989,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClearPipe.subscribe(spy);
 
@@ -1005,7 +1005,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -1028,7 +1028,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClosePipe.subscribe(spy);
 

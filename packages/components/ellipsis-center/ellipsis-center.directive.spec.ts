@@ -49,8 +49,8 @@ class SimpleTestComponent {
 const refreshAt = (fixture: ComponentFixture<SimpleTestComponent>, clientWidth: number, textWidth: number) => {
     const nativeElement: HTMLElement = getEllipsisDirectiveDebugElement(fixture.debugElement).nativeElement;
 
-    jest.spyOn(nativeElement, 'clientWidth', 'get').mockReturnValue(clientWidth);
-    jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(textWidth);
+    vi.spyOn(nativeElement, 'clientWidth', 'get').mockReturnValue(clientWidth);
+    vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(textWidth);
 
     fixture.componentInstance.ellipsisCenterDirective().refresh();
     tick();
@@ -62,7 +62,7 @@ const refreshAt = (fixture: ComponentFixture<SimpleTestComponent>, clientWidth: 
 };
 
 describe(KbqEllipsisCenterDirective.name, () => {
-    afterEach(() => jest.restoreAllMocks());
+    afterEach(() => vi.restoreAllMocks());
 
     it('should create the directive', () => {
         const { debugElement } = createComponent(SimpleTestComponent);
@@ -189,7 +189,7 @@ describe(KbqEllipsisCenterDirective.name, () => {
 
         expect(directive.disabled).toBe(false);
 
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
         refreshAt(fixture, 420, 420);
 
         expect(directive.disabled).toBe(true);

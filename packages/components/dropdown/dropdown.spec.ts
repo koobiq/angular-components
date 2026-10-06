@@ -60,6 +60,7 @@ import { KbqTitleDirective } from '@koobiq/components/title';
 import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER, KbqToolTipModule } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
+import type { MockInstance } from 'vitest';
 import {
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_SCROLL_STRATEGY,
@@ -489,7 +490,7 @@ describe('KbqDropdown', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
-        const focusSpyFn = jest.spyOn(fixture.componentInstance.items().at(0)!, 'focus');
+        const focusSpyFn = vi.spyOn(fixture.componentInstance.items().at(0)!, 'focus');
 
         const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
 
@@ -509,7 +510,7 @@ describe('KbqDropdown', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
-        const focusSpyFn = jest.spyOn(fixture.componentInstance.items().at(0)!, 'focus');
+        const focusSpyFn = vi.spyOn(fixture.componentInstance.items().at(0)!, 'focus');
 
         const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
 
@@ -531,7 +532,7 @@ describe('KbqDropdown', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
-        const focusSpyFn = jest.spyOn(fixture.componentInstance.items().at(0)!, 'focus');
+        const focusSpyFn = vi.spyOn(fixture.componentInstance.items().at(0)!, 'focus');
 
         const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
 
@@ -1044,10 +1045,10 @@ describe('KbqDropdown', () => {
     });
 
     describe('y-position offsetY', () => {
-        afterEach(() => jest.restoreAllMocks());
+        afterEach(() => vi.restoreAllMocks());
 
         it('should pass negative offsetY for primary positions when yPosition is above', () => {
-            const withPositionsSpy = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'withPositions');
+            const withPositionsSpy = vi.spyOn(FlexibleConnectedPositionStrategy.prototype, 'withPositions');
             const fixture = createComponent(PositionedDropdown); // yPosition='above' by default
 
             fixture.detectChanges();
@@ -1072,7 +1073,7 @@ describe('KbqDropdown', () => {
         });
 
         it('should pass positive offsetY for primary positions when yPosition is below', () => {
-            const withPositionsSpy = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'withPositions');
+            const withPositionsSpy = vi.spyOn(FlexibleConnectedPositionStrategy.prototype, 'withPositions');
             const fixture = createComponent(SimpleDropdown); // yPosition='below' by default
 
             fixture.detectChanges();
@@ -1226,7 +1227,7 @@ describe('KbqDropdown', () => {
         });
 
         it('should emit once when the dropdown is destroyed', () => {
-            const emitCallback = jest.fn();
+            const emitCallback = vi.fn();
 
             // `closed` is an `output()`, which has no completion notification of its own: Angular tears
             // the subscription down with the panel's injector instead.
@@ -1403,7 +1404,7 @@ describe('KbqDropdown', () => {
         it('should not clone the item subtree to read its label', () => {
             const fixture = openSimple();
             const item = fixture.componentInstance.items()[0];
-            const cloneSpy = jest.spyOn(item.getHostElement(), 'cloneNode');
+            const cloneSpy = vi.spyOn(item.getHostElement(), 'cloneNode');
 
             item.getLabel();
             item.getLabel();
@@ -1543,7 +1544,7 @@ describe('KbqDropdown', () => {
 
         it('should still focus the host when the item has an action', () => {
             const item = fixture.componentInstance.dropdown().items()[0];
-            const hostFocusSpy = jest.spyOn(item.getHostElement(), 'focus');
+            const hostFocusSpy = vi.spyOn(item.getHostElement(), 'focus');
 
             item.focus();
 
@@ -1553,7 +1554,7 @@ describe('KbqDropdown', () => {
         it('should not open a disabled nested trigger when a guarded click reaches the overlay', () => {
             const item = getItems()[4];
             const overlay = item.querySelector('.kbq-dropdown-item-overlay') as HTMLElement;
-            const openSpy = jest.spyOn(fixture.componentInstance.disabledNestedTrigger(), 'open');
+            const openSpy = vi.spyOn(fixture.componentInstance.disabledNestedTrigger(), 'open');
 
             overlay.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
             fixture.detectChanges();
@@ -1630,7 +1631,7 @@ describe('KbqDropdown', () => {
             instance.rootTrigger().open();
             fixture.detectChanges();
 
-            const spy = jest.fn();
+            const spy = vi.fn();
             const subscription = instance.rootDropdown().hovered().subscribe(spy);
             const dropdownItems = overlay.querySelectorAll('[kbq-dropdown-item]');
 
@@ -1768,7 +1769,7 @@ describe('KbqDropdown', () => {
                 const overlayPanes = overlay.querySelectorAll('.cdk-overlay-pane');
                 const nestedPane = overlayPanes[overlayPanes.length - 1] as HTMLElement;
 
-                jest.spyOn(nestedPane, 'getBoundingClientRect').mockReturnValue({
+                vi.spyOn(nestedPane, 'getBoundingClientRect').mockReturnValue({
                     left: 300,
                     right: 500,
                     top: 50,
@@ -1838,7 +1839,7 @@ describe('KbqDropdown', () => {
                 fixture.detectChanges();
 
                 // An ancestor scroll moves the submenu while the pointer is still on its way to it.
-                jest.spyOn(nestedPane, 'getBoundingClientRect').mockReturnValue({
+                vi.spyOn(nestedPane, 'getBoundingClientRect').mockReturnValue({
                     left: 300,
                     right: 500,
                     top: 400,
@@ -2253,7 +2254,7 @@ describe('KbqDropdown', () => {
             const event = createMouseEvent('mousedown');
 
             Object.defineProperty(event, 'buttons', { get: () => 1 });
-            event.preventDefault = jest.fn();
+            event.preventDefault = vi.fn();
 
             dispatchMouseEvent(overlay.querySelector('[kbq-dropdown-item]')!, 'mousedown', 0, 0, event);
             expect(event.preventDefault).toHaveBeenCalled();
@@ -2545,7 +2546,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             // JSDOM does not lay out, so the anchor the trigger sits on has to report a width of its own.
-            jest.spyOn(fixture.componentInstance.triggerEl().nativeElement, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(fixture.componentInstance.triggerEl().nativeElement, 'getBoundingClientRect').mockReturnValue({
                 width: 300
             } as DOMRect);
 
@@ -2554,7 +2555,7 @@ describe('KbqDropdown', () => {
 
         it('should connect the panel to the origin it was opened with', () => {
             const fixture = createOriginFixture();
-            const flexibleConnectedTo = jest.spyOn(TestBed.inject(OverlayPositionBuilder), 'flexibleConnectedTo');
+            const flexibleConnectedTo = vi.spyOn(TestBed.inject(OverlayPositionBuilder), 'flexibleConnectedTo');
 
             fixture.componentInstance.origin = caret;
             fixture.detectChanges();
@@ -2565,7 +2566,7 @@ describe('KbqDropdown', () => {
         });
 
         it('should move an open panel to the current origin', () => {
-            const setOrigin = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
+            const setOrigin = vi.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
             const fixture = createOriginFixture();
 
             fixture.componentInstance.trigger().open();
@@ -2579,7 +2580,7 @@ describe('KbqDropdown', () => {
         });
 
         it('should leave a closed panel alone', () => {
-            const setOrigin = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
+            const setOrigin = vi.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
             const fixture = createOriginFixture();
 
             fixture.componentInstance.trigger().updatePosition();
@@ -2588,7 +2589,7 @@ describe('KbqDropdown', () => {
         });
 
         it('should anchor the panel to the trigger element when there is no origin', () => {
-            const setOrigin = jest.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
+            const setOrigin = vi.spyOn(FlexibleConnectedPositionStrategy.prototype, 'setOrigin');
             const fixture = createOriginFixture();
 
             fixture.componentInstance.trigger().open();
@@ -2625,7 +2626,7 @@ describe('KbqDropdown', () => {
 
         it('should move the focus into the panel by default', () => {
             const fixture = createOriginFixture();
-            const focusFirstItem = jest.spyOn(fixture.componentInstance.dropdown(), 'focusFirstItem');
+            const focusFirstItem = vi.spyOn(fixture.componentInstance.dropdown(), 'focusFirstItem');
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
@@ -2635,7 +2636,7 @@ describe('KbqDropdown', () => {
 
         it('should leave the focus alone when autoFocus is off', () => {
             const fixture = createOriginFixture();
-            const focusFirstItem = jest.spyOn(fixture.componentInstance.dropdown(), 'focusFirstItem');
+            const focusFirstItem = vi.spyOn(fixture.componentInstance.dropdown(), 'focusFirstItem');
 
             fixture.componentInstance.autoFocus = false;
             fixture.detectChanges();
@@ -2661,7 +2662,7 @@ describe('KbqDropdown', () => {
     describe('panel min-width', () => {
         /** JSDOM does not lay out, so the trigger's border-box width has to be mocked. */
         const mockTriggerWidth = (fixture: ComponentFixture<SimpleDropdown>, width: number) =>
-            jest
+            vi
                 .spyOn(fixture.componentInstance.triggerEl().nativeElement, 'getBoundingClientRect')
                 .mockReturnValue({ width } as DOMRect);
 
@@ -2713,7 +2714,7 @@ describe('KbqDropdown', () => {
 
             const widthOrigin = document.createElement('div');
 
-            jest.spyOn(widthOrigin, 'getBoundingClientRect').mockReturnValue({ width: 500 } as DOMRect);
+            vi.spyOn(widthOrigin, 'getBoundingClientRect').mockReturnValue({ width: 500 } as DOMRect);
             fixture.componentInstance.trigger().widthOrigin = widthOrigin;
 
             fixture.componentInstance.trigger().open();
@@ -2850,7 +2851,7 @@ describe('KbqDropdown', () => {
 
             const pane = getPane();
 
-            jest.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
+            vi.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
             getZone().simulateZoneExit(); // fires ngZone.onStable -> the width lock measures the pane and freezes it
 
             expect(pane.style.width).toBe('412px');
@@ -2866,7 +2867,7 @@ describe('KbqDropdown', () => {
 
             const pane = getPane();
 
-            jest.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
+            vi.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
             getZone().simulateZoneExit();
 
             expect(pane.style.width).toBe('');
@@ -2883,7 +2884,7 @@ describe('KbqDropdown', () => {
 
             const pane = getPane();
 
-            jest.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
+            vi.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
             getZone().simulateZoneExit();
 
             expect(pane.style.width).toBe('344px');
@@ -2900,7 +2901,7 @@ describe('KbqDropdown', () => {
 
             const pane = getPane();
 
-            jest.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
+            vi.spyOn(pane, 'getBoundingClientRect').mockReturnValue({ width: 412 } as DOMRect);
             getZone().simulateZoneExit();
 
             // 'auto' resolves to the trigger floor (200 min against a 0-width jsdom trigger), never the 412 pane.
@@ -2927,11 +2928,11 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
         };
 
-        // `tools/jest/setup.ts` installs the jsdom polyfill; this only records the calls.
-        let scrollIntoView: jest.SpyInstance;
+        // `tools/vitest/setup-angular.ts` installs the jsdom polyfill; this only records the calls.
+        let scrollIntoView: MockInstance;
 
         beforeEach(() => {
-            scrollIntoView = jest.spyOn(Element.prototype, 'scrollIntoView');
+            scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
         });
 
         it('should focus the search field instead of the first item when opened', fakeAsync(() => {
@@ -3042,7 +3043,7 @@ describe('KbqDropdown', () => {
         it('should keep the horizontal arrows in the field while the caret can still move', fakeAsync(() => {
             open();
 
-            const panelSpy = jest.fn();
+            const panelSpy = vi.fn();
             const input = getInput();
 
             getPanel().addEventListener('keydown', panelSpy);
@@ -3203,7 +3204,7 @@ describe('KbqDropdown', () => {
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
             fixture.detectChanges();
 
-            const containerSpy = jest.fn();
+            const containerSpy = vi.fn();
 
             overlayContainerElement.addEventListener('keydown', containerSpy);
 
@@ -3459,7 +3460,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             const item = overlayContainerElement.querySelector(ITEM_SELECTOR) as HTMLElement;
-            const clickSpy = jest.spyOn(item, 'click');
+            const clickSpy = vi.spyOn(item, 'click');
 
             dispatchKeyboardEvent(item, 'keydown', ENTER);
             fixture.detectChanges();
@@ -3534,7 +3535,7 @@ describe('KbqDropdown', () => {
             const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
             const items = Array.from(overlayContainerElement.querySelectorAll<HTMLElement>(ENABLED_ITEM_SELECTOR));
             const lastItem = items[items.length - 1];
-            const scrollSpy = jest.spyOn(lastItem, 'scrollIntoView');
+            const scrollSpy = vi.spyOn(lastItem, 'scrollIntoView');
 
             dispatchKeyboardEvent(panel, 'keydown', END);
             fixture.detectChanges();
@@ -3599,7 +3600,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
-            const focusViaSpy = jest.spyOn(focusMonitor, 'focusVia');
+            const focusViaSpy = vi.spyOn(focusMonitor, 'focusVia');
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
@@ -3898,7 +3899,7 @@ class SimpleDropdown {
     readonly dropdown = viewChild.required(KbqDropdown);
     readonly items = viewChildren(KbqDropdownItem);
     extraItems: string[] = [];
-    closeCallback = jest.fn((name: string | undefined) => name);
+    closeCallback = vi.fn((name: string | undefined) => name);
     backdropClass: string;
     hasBackdrop = true;
 }
@@ -3965,9 +3966,9 @@ class ActionDropdown {
     readonly dropdown = viewChild.required(KbqDropdown);
     readonly nestedTrigger = viewChild.required<KbqDropdownTrigger>('nestedTrigger');
     readonly disabledNestedTrigger = viewChild.required<KbqDropdownTrigger>('disabledNestedTrigger');
-    closeCallback = jest.fn();
-    primaryClick = jest.fn();
-    actionClick = jest.fn((event: MouseEvent) => event.preventDefault());
+    closeCallback = vi.fn();
+    primaryClick = vi.fn();
+    actionClick = vi.fn((event: MouseEvent) => event.preventDefault());
 }
 
 @Component({
@@ -4384,15 +4385,15 @@ class NestedDropdown {
     readonly rootTrigger = viewChild.required<KbqDropdownTrigger>('rootTrigger');
     readonly rootTriggerEl = viewChild.required<ElementRef<HTMLElement>>('rootTriggerEl');
     readonly alternateTrigger = viewChild.required<KbqDropdownTrigger>('alternateTrigger');
-    readonly rootCloseCallback = jest.fn();
+    readonly rootCloseCallback = vi.fn();
 
     readonly levelOneDropdown = viewChild.required<KbqDropdown>('levelOne');
     readonly levelOneTrigger = viewChild.required<KbqDropdownTrigger>('levelOneTrigger');
-    readonly levelOneCloseCallback = jest.fn();
+    readonly levelOneCloseCallback = vi.fn();
 
     readonly levelTwoDropdown = viewChild.required<KbqDropdown>('levelTwo');
     readonly levelTwoTrigger = viewChild.required<KbqDropdownTrigger>('levelTwoTrigger');
-    readonly levelTwoCloseCallback = jest.fn();
+    readonly levelTwoCloseCallback = vi.fn();
 
     readonly lazyDropdown = viewChild.required<KbqDropdown>('lazy');
     readonly lazyTrigger = viewChild.required<KbqDropdownTrigger>('lazyTrigger');
@@ -4694,7 +4695,7 @@ class AccessibleSearchDropdown {
 })
 class RoleOwningItemDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
-    primaryClick = jest.fn();
+    primaryClick = vi.fn();
 }
 
 @Component({
@@ -4708,7 +4709,7 @@ class RoleOwningItemDropdown {
 })
 class RoleButtonItemDropdown {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
-    primaryClick = jest.fn();
+    primaryClick = vi.fn();
 }
 
 @Component({
