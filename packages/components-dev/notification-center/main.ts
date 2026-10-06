@@ -1,4 +1,4 @@
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -7,6 +7,7 @@ import { DevApp } from './module';
 
 bootstrapApplication(DevApp, {
     providers: [
+        provideZoneChangeDetection(),
         provideAnimations(),
         // `KbqNotificationCenterService` is `providedIn: 'root'` and injects `DateAdapter` and
         // `DateFormatter`, so both have to reach the root injector. Importing these modules into

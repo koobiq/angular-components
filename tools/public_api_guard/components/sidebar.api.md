@@ -12,7 +12,7 @@ import { OnDestroy } from '@angular/core';
 // @public (undocumented)
 export class KbqSidebar implements OnDestroy, AfterContentInit {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point koobiq-components-sidebar.d.ts
     get animationState(): KbqSidebarAnimationState;
     clearSavedState(): void;
     readonly closedContent: i0.Signal<KbqSidebarClosed | undefined>;
@@ -29,7 +29,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     get opened(): boolean;
     set opened(value: boolean);
     readonly openedContent: i0.Signal<KbqSidebarOpened | undefined>;
-    // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point koobiq-components-sidebar.d.ts
     params: KbqSidebarParams;
     // (undocumented)
     readonly position: i0.InputSignal<SidebarPositions>;

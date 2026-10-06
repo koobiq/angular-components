@@ -782,8 +782,8 @@ export class KbqTag
         '[attr.tabindex]': 'tabIndex()',
         '(click)': 'handleClick($event)',
         '(focus)': 'focus($event)',
-        '(keydown.enter)': 'handleKeydown($event)',
-        '(keydown.space)': 'handleKeydown($event)'
+        '(keydown.enter)': 'handleKeydown($any($event))',
+        '(keydown.space)': 'handleKeydown($any($event))'
     },
     hostDirectives: [KbqTagSuffix]
 })

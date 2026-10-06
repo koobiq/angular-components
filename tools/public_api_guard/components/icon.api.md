@@ -13,6 +13,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
+import * as _koobiq_components_icon from '@koobiq/components/icon';
 import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -41,7 +42,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly errorStateContext: KbqIconErrorStateContext | null;
+    protected readonly errorStateContext: _koobiq_components_icon.KbqIconErrorStateContext | null;
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)

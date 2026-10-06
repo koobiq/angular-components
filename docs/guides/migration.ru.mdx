@@ -10,6 +10,7 @@
 - **20.0.0**: переход на Angular 20: удаление устаревших API и переименование пакетов.
 - **20.2.0**: переход API filter-bar на сигналы.
 - **20.2.0**: единый механизм ширины выпадающей панели.
+- **21.0.0**: переход на Angular 21.
 - **21.0.0**: контейнер оверлея панели действий.
 - **21.0.0**: устаревание прежнего splitter.
 - **21.0.0**: удаление механизма понижения оверлея.
@@ -310,6 +311,17 @@ const w = this.select.panelWidth();
 **`KbqDropdown.triggerWidth`** устарел и ни на что не влияет (не используется с 20.0.0). Чтобы панель Dropdown совпадала не с триггером, а с другим элементом, задайте `KbqDropdownTrigger.widthOrigin`. У `kbq-split-button` это делает `panelAutoWidth` — и теперь он работает, а раньше писал в `triggerWidth` и ничего не делал.
 
 **Минимальная ширина `kbq-dropdown` теперь измеряется через `getBoundingClientRect()`** (полный border-box триггера) вместо `getComputedStyle().width` минус границы (старый, некорректно считавшийся content-box). У триггера с отступами или границей панель станет шире, чем раньше, ровно на эту величину; триггер без границ и отступов это не затрагивает.
+
+### Обновление до Angular 21
+
+{/* migration-step-version(21.0.0) */}
+
+В версии 21.0.0 библиотека переведена на Angular 21. Требования: **Angular 21+**, **TypeScript 5.9** и **Node.js 20.19, 22.12 или 24+**. Сначала обновите Angular, затем Koobiq:
+
+```bash
+ng update @angular/core@21 @angular/cli@21 @angular/cdk@21
+ng update @koobiq/components@21
+```
 
 ### Контейнер оверлея панели действий (21.0.0)
 
@@ -2563,4 +2575,4 @@ ng g @koobiq/components:tag-list-cleaner --project "<your project>" --fix=false
 
 ### После миграции
 
-Миграция работает на регулярных выражениях и не переписывает алиасные импорты, локальные переменные и ре-экспорты — **проверьте диф перед коммитом**, пересоберите проект и прогоните тесты. Полный список ломающих изменений — на странице [Ломающие изменения — Angular 20](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.ru.md).
+Миграция работает на регулярных выражениях и не переписывает алиасные импорты, локальные переменные и ре-экспорты — **проверьте диф перед коммитом**, пересоберите проект и прогоните тесты. Полные списки ломающих изменений — на страницах [Ломающие изменения — Angular 21](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-21-breaking-changes.ru.md) и [Ломающие изменения — Angular 20](https://github.com/koobiq/angular-components/blob/main/docs/guides/angular-20-breaking-changes.ru.md).

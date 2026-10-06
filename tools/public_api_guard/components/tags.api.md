@@ -164,7 +164,7 @@ export type KbqTagFocusEvent = KbqTagEvent & {
     origin: FocusOrigin;
 };
 
-// Warning: (ae-forgotten-export) The symbol "KbqTagTextControl" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqTagTextControl" needs to be exported by the entry point koobiq-components-tags.d.ts
 //
 // @public
 export class KbqTagInput implements KbqTagTextControl, OnChanges {

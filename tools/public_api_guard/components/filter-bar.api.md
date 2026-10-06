@@ -38,6 +38,7 @@ import { KbqTreeOption } from '@koobiq/components/tree';
 import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { KbqTreeSelection } from '@koobiq/components/tree';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import * as _koobiq_components_filter_bar from '@koobiq/components/filter-bar';
 import { ModelSignal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
@@ -90,7 +91,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected destroyed: boolean;
     protected readonly destroyRef: DestroyRef;
     protected readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly filterBar: KbqFilterBarHost | null;
+    protected readonly filterBar: _koobiq_components_filter_bar.KbqFilterBarHost | null;
     protected readonly focusMonitor: FocusMonitor;
     protected focusTrigger(): void;
     get isEmpty(): boolean;
@@ -422,7 +423,7 @@ export class KbqPipeAdd {
     addPipeFromTemplate(option: KbqOption): void;
     protected readonly announcement: _angular_core.WritableSignal<string>;
     compareWith(o1: KbqPipe, o2: string): boolean;
-    protected readonly filterBar: KbqFilterBarHost;
+    protected readonly filterBar: _koobiq_components_filter_bar.KbqFilterBarHost;
     readonly filterTemplate: _angular_core.InputSignal<KbqFilter>;
     readonly onAddPipe: _angular_core.OutputEmitterRef<KbqPipeTemplate>;
     readonly select: _angular_core.Signal<KbqSelect>;
@@ -436,7 +437,7 @@ export class KbqPipeAdd {
 export class KbqPipeButton {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    protected readonly filterBar: KbqFilterBarHost;
+    protected readonly filterBar: _koobiq_components_filter_bar.KbqFilterBarHost;
     protected readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqFilterBarLocaleConfiguration>;
     protected readonly pipe: KbqBasePipe<any>;
     readonly readonly: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -579,7 +580,7 @@ export class KbqPipeMinWidth {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly filterBar: KbqFilterBarHost | null;
+    protected readonly filterBar: _koobiq_components_filter_bar.KbqFilterBarHost | null;
     maxSymbolsForFitContent: number;
     protected minWidth: string;
     get textLength(): number;

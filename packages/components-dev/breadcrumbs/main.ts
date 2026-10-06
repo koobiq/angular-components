@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, Routes } from '@angular/router';
@@ -37,4 +37,7 @@ export const devAppConfig: ApplicationConfig = {
     ]
 };
 
-bootstrapApplication(DevApp, devAppConfig).catch((error) => console.error(error));
+bootstrapApplication(DevApp, {
+    ...devAppConfig,
+    providers: [provideZoneChangeDetection(), ...devAppConfig.providers]
+}).catch((error) => console.error(error));

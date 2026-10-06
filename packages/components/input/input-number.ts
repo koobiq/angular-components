@@ -191,7 +191,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
         '(focus)': 'focusChanged(true)',
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)',
-        '(input)': 'onInput($event)'
+        '(input)': 'onInput($any($event))'
     },
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }

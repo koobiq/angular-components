@@ -223,8 +223,8 @@ export interface CanDisable {
     disabled: boolean;
 }
 
-// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point koobiq-components-core.d.ts
+// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public
 export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
@@ -1085,7 +1085,7 @@ export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudo
 // @public (undocumented)
 export const H = 72;
 
-// Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public (undocumented)
 export function hasModifierKey(event: KeyboardEvent | MouseEvent, ...modifiers: ModifierKey[]): boolean;
@@ -2562,7 +2562,7 @@ export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
 // @public
 export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
 
-// Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public (undocumented)
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
@@ -4334,7 +4334,7 @@ export const kbqRevealSelection: (element: HTMLInputElement) => void;
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point koobiq-components-core.d.ts
     //
     // (undocumented)
     roundingOptions: RoundDecimalOptions;
@@ -4956,7 +4956,7 @@ export const META = 91;
 // @public
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
 
-// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public
 export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;

@@ -6,6 +6,7 @@ import {
     computed,
     contentChild,
     contentChildren,
+    DestroyRef,
     Directive,
     inject,
     input,
@@ -131,6 +132,7 @@ export class KbqOverflowItem extends ElementVisibilityManager {
 })
 export class KbqOverflowItems {
     private readonly element = kbqInjectNativeElement();
+    private readonly destroyRef = inject(DestroyRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly renderer = inject(Renderer2);
     private readonly document = inject(DOCUMENT);
@@ -269,7 +271,7 @@ export class KbqOverflowItems {
             toObservable(this.orientation).pipe(skip(1)),
             resizeObservers
         )
-            .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
+            .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 const hiddenItems = this.getHiddenItems(
                     this.sortItemsByOrder(this.items()),
@@ -332,7 +334,7 @@ export class KbqOverflowItems {
         this.renderer.setStyle(this.element, 'flex-grow', '1');
 
         toObservable(this.orientation)
-            .pipe(takeUntilDestroyed())
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((orientation) => {
                 const { flexDirection } = this.orientationConfig[orientation];
 
@@ -340,7 +342,7 @@ export class KbqOverflowItems {
             });
 
         toObservable(this.wrap)
-            .pipe(takeUntilDestroyed())
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((wrap) => this.renderer.setStyle(this.element, 'flex-wrap', wrap));
     }
 

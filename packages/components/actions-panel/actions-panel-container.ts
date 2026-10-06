@@ -121,7 +121,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         '[@state]': 'animationState',
         '(@state.start)': 'onAnimationStart($event)',
         '(@state.done)': 'onAnimationDone($event)',
-        '(keydown.escape)': 'handleEscape($event)'
+        '(keydown.escape)': 'handleEscape($any($event))'
     },
     // Carrier only: the container is created through the overlay, so there is no element for a consumer to
     // bind on, and it lets the container read its strings through `read()`. Unlike the pop-up panels it

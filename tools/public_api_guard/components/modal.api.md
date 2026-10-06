@@ -101,7 +101,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     get afterClose(): Observable<R | undefined>;
     // (undocumented)
     get afterOpen(): Observable<void>;
-    // Warning: (ae-forgotten-export) The symbol "AnimationState" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "AnimationState" needs to be exported by the entry point koobiq-components-modal.d.ts
     animateMaskTo(state: AnimationState): void;
     // (undocumented)
     readonly autoFocusedButtons: i0.Signal<readonly ElementRef<any>[]>;
@@ -278,7 +278,7 @@ export class KbqModalModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqModalModule>;
-    // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point koobiq-components-modal.d.ts
     //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2$1.A11yModule, typeof i3$1.KbqButtonModule, typeof i4.KbqIconModule, typeof i2.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;

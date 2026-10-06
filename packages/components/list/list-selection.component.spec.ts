@@ -8,6 +8,7 @@ import {
     Component,
     DebugElement,
     inject,
+    isSignal,
     Provider,
     signal,
     Type,
@@ -3213,7 +3214,7 @@ describe('KbqListSelection option action', () => {
 
         const trigger = fixture.debugElement.query(By.directive(KbqDropdownTrigger)).injector.get(KbqDropdownTrigger);
 
-        expect(typeof trigger.restoreFocus).toBe('function');
+        expect(isSignal(trigger.restoreFocus)).toBe(true);
         expect(trigger.restoreFocus()).toBe(false);
     });
 

@@ -238,7 +238,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, never>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqPaginatedTabHeader" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqPaginatedTabHeader" needs to be exported by the entry point koobiq-components-tabs.d.ts
 //
 // @public
 export class KbqTabHeader extends KbqPaginatedTabHeader {

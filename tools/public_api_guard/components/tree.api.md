@@ -486,7 +486,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     set selected(value: boolean);
     readonly selectionChange: i0.OutputEmitterRef<KbqTreeOptionChange>;
     // (undocumented)
-    selectViaInteraction($event?: KeyboardEvent): void;
+    selectViaInteraction($event?: KeyboardEvent | MouseEvent): void;
     // (undocumented)
     setSelected(selected: boolean): void;
     // (undocumented)
@@ -661,7 +661,7 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>;
-    // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point koobiq-components-tree.d.ts
     selectionModel: SelectionModel<SelectionModelOption>;
     setDisabledState(isDisabled: boolean): void;
     protected setFocusedOption(option: KbqTreeOption): void;

@@ -54,6 +54,7 @@ const angularRange = ngNewRange(angularVersion);
  * A fresh `ng new` application: `@angular/router` is written by the CLI, `@angular/animations` and
  * `@angular/cdk` are not. Getting this shape wrong is what made an earlier version of this check
  * pass — pre-installing the two peers at the monorepo's exact pins hides every conflict they cause.
+ * Since Angular 21 the application is zoneless by default, so `zone.js` is not written either.
  */
 const ngNewApp = () => ({
     name: 'fixture',
@@ -67,8 +68,7 @@ const ngNewApp = () => ({
         '@angular/platform-browser': angularRange,
         '@angular/router': angularRange,
         rxjs: '~7.8.0',
-        tslib: '^2.8.1',
-        'zone.js': '~0.15.0'
+        tslib: '^2.8.1'
     }
 });
 
@@ -144,13 +144,13 @@ const fixtures = [
         extraInstalls: documentedInstalls
     },
     {
-        name: 'angular-20-app',
+        name: 'angular-app',
         description: 'an application already depending on @angular/animations and @angular/cdk',
         packageJson: angularAppWithPeers(),
         extraInstalls: [] as string[]
     },
     {
-        name: 'angular-20-app-ng-add-icons',
+        name: 'angular-app-ng-add-icons',
         description: 'an existing application with the @koobiq/icons range `ng add` installs',
         packageJson: angularAppWithPeers(),
         // The range comes from the root manifest, the way the schematic resolves it at build time —
