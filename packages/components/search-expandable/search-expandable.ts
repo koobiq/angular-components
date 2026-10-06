@@ -234,6 +234,9 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
             this.control.enable({ emitEvent: false });
             this.runFocusMonitor();
         }
+
+        // `setDisabledState` reaches here from the forms API, outside any binding of this view.
+        this.changeDetectorRef.markForCheck();
     }
 
     private _disabled: boolean = false;

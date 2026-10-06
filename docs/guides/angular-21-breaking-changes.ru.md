@@ -18,3 +18,9 @@
 | @angular-devkit/architect | 0.2102.25 |
 
 Приложения и библиотеки репозитория собираются сборщиками `@angular/build` (`application`, `dev-server`, `ng-packagr`), а корневой `tsconfig.json` использует `moduleResolution: "bundler"`. Юнит-тесты запускаются Vitest с `@analogjs/vitest-angular` вместо Jest.
+
+### Обнаружение изменений без zone.js
+
+Компоненты больше не зависят от zone.js: они работают в приложении, запущенном с `provideZonelessChangeDetection()`, и по-прежнему работают с `provideZoneChangeDetection()`. То, что ждало `NgZone.onStable`, теперь выполняется после следующей отрисовки. Сайт документации, шаблон StackBlitz и приложения для разработки в репозитории работают без zone.js.
+
+`MockNgZone` удален из `@koobiq/components/core`: библиотека больше не ждет `onStable`, и его `simulateZoneExit()` нечего выполнять. Чем заменить его в тестах, описано в [руководстве по миграции](/ru/main/migration), а схематик `zoneless-change-detection` сообщает о каждом использовании.

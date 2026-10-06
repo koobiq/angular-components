@@ -253,6 +253,7 @@ export abstract class KbqAbstractSelect {
 
         if (measuredPanelWidth) {
             this.overlayWidth = measuredPanelWidth;
+            this.changeDetectorRef.markForCheck();
         }
     }
 

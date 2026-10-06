@@ -1,6 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
-import { Platform } from '@angular/cdk/platform';
+import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     afterNextRender,
@@ -20,7 +20,6 @@ import {
     Injector,
     Input,
     input,
-    NgZone,
     OnDestroy,
     Signal,
     signal,
@@ -44,7 +43,6 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { getOuterWidth } from './outer-width';
 
 /** Orientation of the navbar an element belongs to. */
@@ -184,7 +182,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetector = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
-    private ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
@@ -336,23 +334,27 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         // When animations are enabled, Angular may end up removing the option from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the list
         // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until the next time the zone stabilizes.
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.ngZone.run(() => {
-                    this._hasFocus = false;
+        // as not focused until after the next render. An item blurred by its own destruction has nothing to update.
+        if (this.destroyRef.destroyed) return;
 
-                    this.tooltip?.hide();
+        afterNextRender(
+            () => {
+                // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.
+                if (_getFocusedElementPierceShadowDom() === this.elementRef.nativeElement) return;
 
-                    if (this.button()?.hasFocus) {
-                        return;
-                    }
+                this._hasFocus = false;
+                this.changeDetector.markForCheck();
 
-                    this.onBlur.next({ item: this });
-                });
-            });
+                this.tooltip?.hide();
+
+                if (this.button()?.hasFocus) {
+                    return;
+                }
+
+                this.onBlur.next({ item: this });
+            },
+            { injector: this.injector }
+        );
     }
 
     /** @docs-private */

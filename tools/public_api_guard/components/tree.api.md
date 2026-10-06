@@ -14,6 +14,7 @@ import { CollectionViewer } from '@angular/cdk/collections';
 import { ControlValueAccessor } from '@angular/forms';
 import { DataSource } from '@angular/cdk/collections';
 import { DestroyRef } from '@angular/core';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/components/core';
@@ -414,7 +415,7 @@ export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirectiv
 }
 
 // @public (undocumented)
-export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
+export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, DoCheck, KbqTitleTextRef {
     constructor();
     // (undocumented)
     readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
@@ -463,6 +464,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     markForCheck(): void;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngDoCheck(): void;
     readonly onBlur: Observable<KbqTreeOptionEvent>;
     readonly onFocus: Observable<KbqTreeOptionEvent>;
     // (undocumented)

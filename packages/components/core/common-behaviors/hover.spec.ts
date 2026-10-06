@@ -32,32 +32,42 @@ class TestByAttrDirective {}
 class TestByHostDirective {}
 
 describe(KbqHover.name, () => {
-    it('should toggle selector by attribute directive', () => {
-        const { debugElement } = createComponent(TestByAttrDirective);
+    it('should toggle selector by attribute directive', async () => {
+        const fixture = createComponent(TestByAttrDirective);
+        const { debugElement } = fixture;
         const element = debugElement.query(By.css('div')).nativeElement as HTMLElement;
 
         expect(element.classList).not.toContain('kbq-hovered');
 
         element.dispatchEvent(new MouseEvent('mouseenter'));
 
+        await fixture.whenStable();
+
         expect(element.classList).toContain('kbq-hovered');
 
         element.dispatchEvent(new MouseEvent('mouseleave'));
 
+        await fixture.whenStable();
+
         expect(element.classList).not.toContain('kbq-hovered');
     });
 
-    it('should toggle selector by host directive', () => {
-        const { debugElement } = createComponent(TestByHostDirective);
+    it('should toggle selector by host directive', async () => {
+        const fixture = createComponent(TestByHostDirective);
+        const { debugElement } = fixture;
         const element = debugElement.nativeElement as HTMLElement;
 
         expect(element.classList).not.toContain('kbq-hovered');
 
         element.dispatchEvent(new MouseEvent('mouseenter'));
 
+        await fixture.whenStable();
+
         expect(element.classList).toContain('kbq-hovered');
 
         element.dispatchEvent(new MouseEvent('mouseleave'));
+
+        await fixture.whenStable();
 
         expect(element.classList).not.toContain('kbq-hovered');
     });

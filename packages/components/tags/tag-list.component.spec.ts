@@ -8,7 +8,6 @@ import {
     Component,
     DebugElement,
     model,
-    NgZone,
     Provider,
     QueryList,
     signal,
@@ -44,7 +43,6 @@ import {
     FocusKeyManager,
     HOME,
     LEFT_ARROW,
-    MockNgZone,
     RIGHT_ARROW,
     SPACE,
     TAB,
@@ -312,7 +310,6 @@ describe(KbqTagList.name, () => {
     let testComponent: StandardTagList;
     let tags: QueryList<KbqTag>;
     let manager: FocusKeyManager<KbqTag>;
-    let zone: MockNgZone;
     let dirChange: Subject<Direction>;
 
     describe('StandardTagList', () => {
@@ -480,7 +477,6 @@ describe(KbqTagList.name, () => {
                     // Focus and blur the middle item
                     midItem.focus();
                     midItem.blur();
-                    zone.simulateZoneExit();
 
                     // Destroy the middle item
                     testComponent.tags.splice(2, 1);
@@ -937,7 +933,6 @@ describe(KbqTagList.name, () => {
 
                 nativeTags[0].blur();
                 fixture.detectChanges();
-                zone.simulateZoneExit();
                 fixture.detectChanges();
 
                 expect(formField.classList).not.toContain('cdk-focused');
@@ -1218,7 +1213,6 @@ describe(KbqTagList.name, () => {
                 component
             ],
             providers: [
-                { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
                 ...providers
             ]
         }).compileComponents();
@@ -1257,7 +1251,7 @@ describe(KbqTagList.name, () => {
         tags = tagListInstance.tags;
     }
 
-    it('should select all on Ctrl + A', () => {
+    it('should select all on Ctrl + A', async () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1266,33 +1260,42 @@ describe(KbqTagList.name, () => {
         Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
         getTagListElement(debugElement).dispatchEvent(event);
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(componentInstance.tags().length);
     });
 
-    it('should select a tag range on Shift + click', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select a tag range on Shift + click', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
         expect(componentInstance.tagList().selected).toEqual(componentInstance.tagList().tags.toArray());
     });
 
-    it('should select a tag range in reverse order on Shift + click', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select a tag range in reverse order on Shift + click', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[0].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
         expect(componentInstance.tagList().selected).toEqual(componentInstance.tagList().tags.toArray());
     });
 
-    it('should select a tag range when the anchor tag was deselected', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select a tag range when the anchor tag was deselected', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
@@ -1300,55 +1303,71 @@ describe(KbqTagList.name, () => {
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
         expect(componentInstance.tagList().selected).toEqual(componentInstance.tagList().tags.toArray());
     });
 
-    it('should select only the clicked tag on Shift + click without an anchor', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select only the clicked tag on Shift + click without an anchor', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[2]]);
         expect(componentInstance.tagList().selected).toEqual([componentInstance.tagList().tags.get(2)]);
     });
 
-    it('should shrink a tag range from the same anchor on repeated Shift + click', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should shrink a tag range from the same anchor on repeated Shift + click', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
         nativeTags[1].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
     });
 
-    it('should move a tag range to the opposite side of the anchor on Shift + click', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should move a tag range to the opposite side of the anchor on Shift + click', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[1].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
         nativeTags[0].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
     });
 
-    it('should reset the range anchor when all tags are unselected', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should reset the range anchor when all tags are unselected', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
+
+        await fixture.whenStable();
         componentInstance.tagList().unselectAll();
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[2]]);
         expect(componentInstance.tagList().selected).toEqual([componentInstance.tagList().tags.get(2)]);
     });
 
-    it('should skip disabled tags when selecting a range on Shift + click', () => {
+    it('should skip disabled tags when selecting a range on Shift + click', async () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1363,6 +1382,8 @@ describe(KbqTagList.name, () => {
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[2]]);
         expect(componentInstance.tagList().selected).toEqual([
@@ -1398,18 +1419,22 @@ describe(KbqTagList.name, () => {
         );
     });
 
-    it('should use a tag selected with SPACE as the range anchor', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should use a tag selected with SPACE as the range anchor', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
     });
 
     it('should expand and shrink a tag range on Shift + Arrow', fakeAsync(() => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].focus();
@@ -1418,6 +1443,7 @@ describe(KbqTagList.name, () => {
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
@@ -1425,6 +1451,7 @@ describe(KbqTagList.name, () => {
         nativeTags[1].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(2);
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
@@ -1432,13 +1459,15 @@ describe(KbqTagList.name, () => {
         nativeTags[2].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: LEFT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
     }));
 
     it('should continue a pointer range with Shift + Arrow after Shift is released', fakeAsync(() => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
@@ -1449,12 +1478,14 @@ describe(KbqTagList.name, () => {
         nativeTags[2].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: LEFT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
     }));
 
     it('should continue a keyboard range with Shift + click', fakeAsync(() => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].focus();
@@ -1463,12 +1494,14 @@ describe(KbqTagList.name, () => {
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+        fixture.detectChanges();
 
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
     }));
 
     it('should start a new range after moving focus without Shift', fakeAsync(() => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
@@ -1478,18 +1511,22 @@ describe(KbqTagList.name, () => {
         nativeTags[1].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[1], nativeTags[2]]);
     }));
 
-    it('should not restore a previous selected state after a range shrinks', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should not restore a previous selected state after a range shrinks', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[0].dispatchEvent(new MouseEvent('click'));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
         nativeTags[1].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
     });
@@ -1509,6 +1546,7 @@ describe(KbqTagList.name, () => {
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: LEFT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
@@ -1546,6 +1584,7 @@ describe(KbqTagList.name, () => {
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(2);
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[2]]);
@@ -1944,7 +1983,7 @@ describe(KbqTagList.name, () => {
         expect(free.removable()).toBe(true);
     });
 
-    it('should unselect tags when focus move to tag input', () => {
+    it('should unselect tags when focus move to tag input', async () => {
         const fixture = createStandaloneComponent(TestFormFieldTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1960,10 +1999,12 @@ describe(KbqTagList.name, () => {
 
         getFocusMonitor().focusVia(getTagInputElement(debugElement), 'mouse');
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(0);
     });
 
-    it('should unselect tags on blur', () => {
+    it('should unselect tags on blur', async () => {
         const fixture = createStandaloneComponent(TestFormFieldTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1979,10 +2020,12 @@ describe(KbqTagList.name, () => {
 
         getTagListElement(debugElement).dispatchEvent(new Event('blur'));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(0);
     });
 
-    it('should prevent focusout on editing tag click', () => {
+    it('should prevent focusout on editing tag click', async () => {
         const fixture = createStandaloneComponent(TestFormFieldTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1993,6 +2036,8 @@ describe(KbqTagList.name, () => {
 
         tag.dispatchEvent(new Event('dblclick'));
 
+        await fixture.whenStable();
+
         expect(tag.classList.contains('kbq-tag_editing')).toBe(true);
 
         const input = tag.querySelector('.kbq-tag-edit-input') as HTMLInputElement;
@@ -2000,10 +2045,12 @@ describe(KbqTagList.name, () => {
         input.focus();
         input.click();
 
+        await fixture.whenStable();
+
         expect(tag.classList.contains('kbq-tag_editing')).toBe(true);
     });
 
-    it('should select tags on SPACE keydown', () => {
+    it('should select tags on SPACE keydown', async () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement } = fixture;
 
@@ -2011,13 +2058,19 @@ describe(KbqTagList.name, () => {
 
         getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(1);
 
         getFirstTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(2);
 
         getFirstTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement).length).toBe(1);
     });

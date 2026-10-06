@@ -17,11 +17,7 @@ export interface DevMfeConfig {
 
 export const DEV_MFE_CONFIG = new InjectionToken<DevMfeConfig>('DEV_MFE_CONFIG');
 
-/**
- * Zone-bound function that shows a toast through the ROOT MFE's `KbqToastService`, so every MFE shares one stack.
- * It must run `show()` inside the root app's `NgZone` (a nested MFE's click runs in its own zone and would not tick
- * the root app, leaving the toast unrendered).
- */
+/** Shows a toast through the ROOT MFE's `KbqToastService`, so every MFE shares one stack. */
 export type DevToastBridge = (data: KbqToastData, duration?: number) => void;
 
 export const DEV_TOAST_BRIDGE = new InjectionToken<DevToastBridge>('DEV_TOAST_BRIDGE');
@@ -76,7 +72,7 @@ export async function devMountMfe(
     });
 
     appRef.attachView(componentRef.hostView);
-    // The component was created outside this app's NgZone, so render its initial view explicitly.
+    // Rendered right away rather than on the tick the attach schedules, so a nested MFE finds its host.
     appRef.tick();
 
     return { appRef };

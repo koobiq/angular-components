@@ -1,8 +1,10 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import {
     AfterContentInit,
+    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -10,13 +12,14 @@ import {
     ContentChild,
     contentChild,
     DestroyRef,
+    DoCheck,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     inject,
     InjectionToken,
     Input,
     input,
-    NgZone,
     output,
     QueryList,
     signal,
@@ -39,7 +42,6 @@ import {
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeToggleBaseDirective, KbqTreeNodeToggleComponent, KbqTreeNodeToggleDirective } from './toggle';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
@@ -139,9 +141,9 @@ let uniqueIdCounter: number = 0;
     },
     exportAs: 'kbqTreeOption'
 })
-export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
+export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, DoCheck, KbqTitleTextRef {
     private changeDetectorRef = inject(ChangeDetectorRef);
-    private ngZone = inject(NgZone);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly destroyRef = inject(DestroyRef);
     // Intersected with the rendering base because `KbqTreeNode` resolves its level and expansion state
     // through it; the option itself only ever touches the `KbqTreeOptionParent` half.
@@ -210,10 +212,14 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
         if (newValue !== this._disabled) {
             this._disabled = newValue;
+            this.changeDetectorRef.markForCheck();
         }
     }
 
     private _disabled: boolean = false;
+
+    /** `disabled` as this view last saw it: the tree control's `isDisabled` predicate gives no notice of a change. */
+    private checkedDisabled = false;
 
     /**
      * Whether the option can be selected by user interaction (click, keyboard, select all).
@@ -363,6 +369,15 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         this.tree = tree;
     }
 
+    ngDoCheck(): void {
+        const disabled = this.disabled;
+
+        if (disabled !== this.checkedDisabled) {
+            this.checkedDisabled = disabled;
+            this.changeDetectorRef.markForCheck();
+        }
+    }
+
     ngAfterContentInit(): void {
         if (this.selectAllRow()) return;
 
@@ -479,21 +494,25 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         // When animations are enabled, Angular may end up removing the option from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the tree
         // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until the next time the zone stabilizes.
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
-                this.ngZone.run(() => {
-                    if (this.actionButton()?.hasFocus || this.tree.optionShouldHoldFocusOnBlur) {
-                        return;
-                    }
+        // as not focused until after the next render.
+        afterNextRender(
+            () => {
+                // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.
+                if (_getFocusedElementPierceShadowDom() === this.elementRef.nativeElement) return;
 
-                    this.hasFocus = false;
+                if (this.actionButton()?.hasFocus || this.tree.optionShouldHoldFocusOnBlur) {
+                    return;
+                }
 
-                    this.blurEvents.next({ option: this });
-                });
-            });
+                this.hasFocus = false;
+                this.markForCheck();
+
+                this.blurEvents.next({ option: this });
+            },
+            // The environment injector, not the option's: an option removed while focused is blurred as its view is
+            // destroyed, and the tree still has to hear about it to move focus.
+            { injector: this.environmentInjector }
+        );
     }
 
     /** @docs-private */

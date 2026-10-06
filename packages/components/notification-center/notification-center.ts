@@ -737,6 +737,7 @@ export class KbqNotificationCenterTrigger
         this.instance.scrolledToBottomOffset = this.scrolledToBottomOffset();
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
+        this.instance.detectChanges();
 
         if (this.isOpen) {
             this.updatePosition(true);

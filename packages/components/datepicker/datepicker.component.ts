@@ -5,6 +5,7 @@ import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
+    afterNextRender,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -12,9 +13,9 @@ import {
     ComponentRef,
     inject,
     InjectionToken,
+    Injector,
     Input,
     input,
-    NgZone,
     OnDestroy,
     output,
     viewChild,
@@ -145,8 +146,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 })
 export class KbqDatepicker<D> implements OnDestroy {
     private overlay = inject(Overlay);
-    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
-    private ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private viewContainerRef = inject(ViewContainerRef);
     private readonly dateAdapter = injectRequiredDateAdapter<D>();
     private dir = inject(Directionality, { optional: true })!;
@@ -447,10 +447,7 @@ export class KbqDatepicker<D> implements OnDestroy {
             this.popupComponentRef.instance.datepicker = this;
 
             // Update the position once the calendar has rendered.
-            this.ngZone.onStable
-                .asObservable()
-                .pipe(take(1))
-                .subscribe(() => this.popupRef?.updatePosition());
+            afterNextRender(() => this.popupRef?.updatePosition(), { injector: this.injector });
         }
     }
 

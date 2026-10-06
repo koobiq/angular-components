@@ -850,6 +850,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.instance.ariaLabel = this.ariaLabel;
 
         this.instance.updateTrapFocus(this.trigger !== PopUpTriggers.Focus);
+        // As the tooltip does: this mostly runs from an input setter, while the trigger's view is being checked,
+        // and the panel renders in an overlay of its own that nothing else would check.
+        this.instance.detectChanges();
 
         if (this.isOpen) {
             this.scheduleReposition();

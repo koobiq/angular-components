@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Injectable, provideZoneChangeDetection } from '@angular/core';
+import { Injectable, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
@@ -21,7 +21,7 @@ export class DevCustomOverlayContainer extends OverlayContainer {
 
 bootstrapApplication(DevApp, {
     providers: [
-        provideZoneChangeDetection(),
+        provideZonelessChangeDetection(),
         provideAnimations(),
         provideRouter([
             { path: '', redirectTo: 'page-1', pathMatch: 'full' },

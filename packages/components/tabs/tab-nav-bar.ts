@@ -118,6 +118,9 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         return !!this.items.get(this.selectedIndex)?.disabled;
     }
 
+    /** `activeTabDisabled` as this view last rendered it: a link's `disabled` input gives this view no notice. */
+    private checkedActiveTabDisabled = false;
+
     override ngAfterContentInit() {
         // We need this to run before the `changes` subscription in parent to ensure that the `selectedIndex` is
         // up-to-date by the time the `KbqPaginatedTabHeader` starts looking for it.
@@ -126,6 +129,17 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         });
 
         super.ngAfterContentInit();
+    }
+
+    override ngAfterContentChecked(): void {
+        super.ngAfterContentChecked();
+
+        const activeTabDisabled = this.activeTabDisabled;
+
+        if (activeTabDisabled !== this.checkedActiveTabDisabled) {
+            this.checkedActiveTabDisabled = activeTabDisabled;
+            this.changeDetectorRef.markForCheck();
+        }
     }
 
     protected itemSelected() {}

@@ -48,7 +48,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         ]
     }).compileComponents();
 
-    return TestBed.createComponent<T>(component);
+    const fixture = TestBed.createComponent<T>(component);
+
+    // Without zone.js, auto-detection renders on the next scheduled tick rather than inside `createComponent`.
+
+    fixture.detectChanges();
+
+    return fixture;
 }
 
 /**
@@ -511,7 +517,7 @@ describe('KbqTextarea', () => {
                 expect(fixture.componentInstance.textarea().errorState).toBe(true);
             });
 
-            it('should be in error state when form is submitted and control is invalid', () => {
+            it('should be in error state when form is submitted and control is invalid', async () => {
                 const fixture = createComponent(TextareaWithErrorStateMatcher);
 
                 getSubmitButton(fixture).click();
@@ -520,7 +526,7 @@ describe('KbqTextarea', () => {
                 expect(fixture.componentInstance.textarea().errorState).toBe(true);
             });
 
-            it('should call errorStateMatcher and update errorState on blur', () => {
+            it('should call errorStateMatcher and update errorState on blur', async () => {
                 const fixture = createComponent(TextareaWithErrorStateMatcher);
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
@@ -617,7 +623,7 @@ describe('KbqTextarea', () => {
         });
 
         describe('custom ErrorStateMatcher', () => {
-            it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
+            it('should override errorStateMatcher by kbqErrorStateMatcherProvider', async () => {
                 const fixture = createComponent(TextareaWithDIErrorStateMatcher);
 
                 expect(fixture.componentInstance.textarea().errorState).toBe(true);
@@ -653,6 +659,7 @@ describe('KbqTextarea', () => {
             const subscription = control.statusChanges.subscribe((status) => statuses.push(status));
 
             control.setValue('ab');
+            fixture.detectChanges();
 
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);

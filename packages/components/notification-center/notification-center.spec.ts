@@ -53,7 +53,8 @@ describe('KbqNotificationCenter', () => {
         Object.defineProperty(global.window, 'getComputedStyle', {
             configurable: true,
             value: () => ({
-                getPropertyValue: (_property: string) => ''
+                getPropertyValue: (_property: string) => '',
+                textOverflow: ''
             })
         });
     });

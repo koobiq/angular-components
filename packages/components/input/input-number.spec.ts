@@ -61,7 +61,13 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
         ]
     }).compileComponents();
 
-    return TestBed.createComponent<T>(component);
+    const fixture = TestBed.createComponent<T>(component);
+
+    // Without zone.js, auto-detection renders on the next scheduled tick rather than inside `createComponent`.
+
+    fixture.detectChanges();
+
+    return fixture;
 }
 
 @Component({
@@ -513,11 +519,13 @@ describe('KbqNumberInput', () => {
         it('should not have timers assigned on init', fakeAsync(() => {
             const fixture = createComponent(NumberInputTestComponent);
 
-            vi.spyOn(global, 'setTimeout');
+            const setTimeoutSpy = vi.spyOn(global, 'setTimeout');
+            // Change detection schedules itself with an undelayed timer; the long press waits for its own delay.
+            const longPressTimers = () => setTimeoutSpy.mock.calls.filter(([, delay]) => !!delay);
 
             fixture.detectChanges();
 
-            expect(global.setTimeout).not.toHaveBeenCalled();
+            expect(longPressTimers()).toHaveLength(0);
 
             const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
             const [iconUp] = stepper.queryAll(By.css('.kbq-icon'));
@@ -525,7 +533,7 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
             fixture.detectChanges();
 
-            expect(global.setTimeout).toHaveBeenCalledTimes(1);
+            expect(longPressTimers()).toHaveLength(1);
         }));
 
         it('should emit once before initial delay', fakeAsync(() => {

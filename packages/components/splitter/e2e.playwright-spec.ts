@@ -89,8 +89,8 @@ test.describe('KbqSplitter', () => {
         });
 
         test('should give the panels an equal share of the splitter', async ({ page }) => {
-            expect(await widthOf(getPanel(page, 'First'))).toBe(300);
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(300);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(300);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(300);
         });
 
         test('should run the separator line to both ends of the boundary', async ({ page }) => {
@@ -100,8 +100,8 @@ test.describe('KbqSplitter', () => {
         test('should move the boundary with the pointer', async ({ page }) => {
             await dragSeparator(page, -80);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(220);
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(380);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(220);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(380);
         });
 
         test('should size the panels through the grid rather than an inline size on them', async ({ page }) => {
@@ -119,15 +119,15 @@ test.describe('KbqSplitter', () => {
         test('should stop at the minimum of the panel being shrunk', async ({ page }) => {
             await dragSeparator(page, -400);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(100);
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(500);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(100);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(500);
         });
 
         test('should stop at the maximum of the panel being grown', async ({ page }) => {
             await dragSeparator(page, 400);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(400);
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(200);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(400);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(200);
         });
 
         test('should advertise the direction that is still available through the cursor', async ({ page }) => {
@@ -147,15 +147,15 @@ test.describe('KbqSplitter', () => {
             await page.keyboard.press('ArrowRight');
             await page.keyboard.press('ArrowRight');
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(316);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(316);
 
             await page.keyboard.press('Home');
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(100);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(100);
 
             await page.keyboard.press('End');
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(400);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(400);
         });
 
         test('should keep the focus frame hidden while the separator is dragged with a pointer', async ({ page }) => {
@@ -192,18 +192,18 @@ test.describe('KbqSplitter', () => {
             // Pointer at 100px, inside the gap between the 40px collapsed size and the 160px minimum: the panel
             // waits at the minimum rather than following it into a size it can never settle at.
             await page.mouse.move(x - 200, y, { steps: 10 });
-            expect(await widthOf(panel)).toBe(160);
+            await expect.poll(() => widthOf(panel)).toBe(160);
 
             // Past the 80px midpoint it flips to the other side of the gap in one step.
             await page.mouse.move(x - 240, y, { steps: 5 });
-            expect(await widthOf(panel)).toBe(40);
+            await expect.poll(() => widthOf(panel)).toBe(40);
 
             // And back at the same point, because the midpoint decides the same way whichever way it is crossed.
             await page.mouse.move(x - 200, y, { steps: 5 });
-            expect(await widthOf(panel)).toBe(160);
+            await expect.poll(() => widthOf(panel)).toBe(160);
 
             await page.mouse.up();
-            expect(await widthOf(panel)).toBe(160);
+            await expect.poll(() => widthOf(panel)).toBe(160);
         });
 
         test('should report the collapsed state to the host while the drag is still held', async ({ page }) => {
@@ -224,7 +224,7 @@ test.describe('KbqSplitter', () => {
             // moment the panel lands on its strip, rather than catching up on release.
             await page.mouse.move(x - 240, y, { steps: 10 });
             await expect(state).toHaveText('true');
-            expect(await widthOf(getPanel(page, 'First'))).toBe(40);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(40);
 
             // Back above the midpoint, still held: the binding follows the reversal too.
             await page.mouse.move(x - 200, y, { steps: 5 });
@@ -237,13 +237,13 @@ test.describe('KbqSplitter', () => {
         test('should collapse when the drag is released below half the minimum', async ({ page }) => {
             await dragSeparator(page, -222);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(40);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(40);
         });
 
         test('should open at the minimum when the drag is released above half the minimum', async ({ page }) => {
             await dragSeparator(page, -218);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(160);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(160);
         });
 
         test('should decide the same way whichever side the drag came from', async ({ page }) => {
@@ -253,52 +253,52 @@ test.describe('KbqSplitter', () => {
             // directions: 100px from 300px open and 100px from 40px collapsed are the same gesture end.
             await dragSeparator(page, -200);
 
-            expect(await widthOf(panel)).toBe(160);
+            await expect.poll(() => widthOf(panel)).toBe(160);
 
             await dragSeparator(page, -260);
 
-            expect(await widthOf(panel)).toBe(40);
+            await expect.poll(() => widthOf(panel)).toBe(40);
 
             await dragSeparator(page, 60);
 
-            expect(await widthOf(panel)).toBe(160);
+            await expect.poll(() => widthOf(panel)).toBe(160);
         });
 
         test('should keep a collapsed panel closed when the drag falls short of the midpoint', async ({ page }) => {
             await dragSeparator(page, -300);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(40);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(40);
 
             // 40 + 30 is still under the 80px midpoint, so releasing here leaves the panel where it was.
             await dragSeparator(page, 30);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(40);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(40);
 
             await dragSeparator(page, 220);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(260);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(260);
         });
 
         test('should collapse and expand from the keyboard', async ({ page }) => {
             await getSeparator(page).focus();
             await page.keyboard.press('Enter');
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(40);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(40);
 
             await page.keyboard.press('Enter');
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(300);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(300);
         });
 
         test('should give a drag-collapsed panel its size back when the keyboard expands it', async ({ page }) => {
             await dragSeparator(page, -300);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(40);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(40);
 
             await getSeparator(page).focus();
             await page.keyboard.press('Enter');
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(300);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(300);
         });
     });
 
@@ -310,13 +310,13 @@ test.describe('KbqSplitter', () => {
         test('should pull the boundary onto a snap size it stops near', async ({ page }) => {
             await dragSeparator(page, 85);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(400);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(400);
         });
 
         test('should leave a boundary that stops far from every snap size', async ({ page }) => {
             await dragSeparator(page, 40);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(340);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(340);
         });
 
         test('should settle the initial layout onto a snap size', async ({ page }) => {
@@ -324,7 +324,7 @@ test.describe('KbqSplitter', () => {
 
             // An equal share would open the splitter at 300px — a size that, with points pulling this far,
             // no release can reach either.
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(200);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(200);
         });
 
         test('should reach further when the panel widens its threshold', async ({ page }) => {
@@ -334,7 +334,7 @@ test.describe('KbqSplitter', () => {
             // well inside the 150px this panel asks for.
             await dragSeparator(page, -140);
 
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(400);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(400);
         });
 
         test('should still leave a release beyond the widened threshold alone', async ({ page }) => {
@@ -343,7 +343,7 @@ test.describe('KbqSplitter', () => {
             // 160px from the nearer snap point, so even the widened pull does not reach.
             await dragSeparator(page, 160);
 
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(40);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(40);
         });
 
         test('should follow the pointer exactly until the drag is released', async ({ page }) => {
@@ -351,11 +351,11 @@ test.describe('KbqSplitter', () => {
             // mid-drag, which would freeze the panel and then jump once the pointer broke free.
             await dragSeparator(page, 85, { release: false });
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(385);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(385);
 
             await page.mouse.up();
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(400);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(400);
         });
     });
 
@@ -376,7 +376,7 @@ test.describe('KbqSplitter', () => {
             // The drag has to have started for the assertion below to mean anything.
             await expect(getSeparator(page, 1)).toBeFocused();
             expect(await content.evaluate((element) => element.scrollTop)).toBe(0);
-            expect(await heightOf(editor)).toBe(height);
+            await expect.poll(() => heightOf(editor)).toBe(height);
         });
     });
 
@@ -387,7 +387,7 @@ test.describe('KbqSplitter', () => {
             // 750px of minimums in a 600px splitter. Written as ratios the tracks would be normalised to ~199px
             // each, breaking every declared minimum while the layout and `aria-valuenow` still said 250.
             for (const name of ['First', 'Second', 'Third'] as const) {
-                expect(await widthOf(getPanel(page, name))).toBe(250);
+                await expect.poll(() => widthOf(getPanel(page, name))).toBe(250);
             }
         });
     });
@@ -399,27 +399,27 @@ test.describe('KbqSplitter', () => {
         });
 
         test('should open at the declared percentage', async ({ page }) => {
-            expect(await widthOf(getPanel(page, 'First'))).toBe(150);
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(450);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(150);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(450);
         });
 
         test('should stop at a percentage maximum', async ({ page }) => {
             await dragSeparator(page, 300);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(300);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(300);
         });
 
         test('should stop at a percentage minimum', async ({ page }) => {
             await dragSeparator(page, -200);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(60);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(60);
         });
 
         test('should pull the boundary onto a percentage snap size', async ({ page }) => {
             // Released 20px short of the 40% mark — inside the default 32px tolerance.
             await dragSeparator(page, 70);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(240);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(240);
         });
     });
 
@@ -444,7 +444,7 @@ test.describe('KbqSplitter', () => {
 
             await dragSeparator(page, 60);
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(width + 60);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(width + 60);
         });
     });
 
@@ -459,8 +459,8 @@ test.describe('KbqSplitter', () => {
             // is in progress, and that strip is shorter than the content it holds.
             await dragSeparator(page, 60, { axis: 'y', separator: 1, release: false });
 
-            expect(await heightOf(getPanel(page, 'Second'))).toBe(20);
-            expect(await heightOf(nested)).toBe(before);
+            await expect.poll(() => heightOf(getPanel(page, 'Second'))).toBe(20);
+            await expect.poll(() => heightOf(nested)).toBe(before);
 
             await page.mouse.up();
         });
@@ -475,22 +475,22 @@ test.describe('KbqSplitter', () => {
 
         test('should still let the boundary move, handing the delta to the panel further out', async ({ page }) => {
             // The middle panel starts pinned at its 200px maximum.
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(200);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(200);
 
             const first = await widthOf(getPanel(page, 'First'));
             const third = await widthOf(getThird(page));
 
             await dragSeparator(page, 60, { separator: 1 });
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(first + 60);
-            expect(await widthOf(getPanel(page, 'Second'))).toBe(200);
-            expect(await widthOf(getThird(page))).toBe(third - 60);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(first + 60);
+            await expect.poll(() => widthOf(getPanel(page, 'Second'))).toBe(200);
+            await expect.poll(() => widthOf(getThird(page))).toBe(third - 60);
         });
 
         test('should stop the trailing panel at its own minimum', async ({ page }) => {
             await dragSeparator(page, 400, { separator: 1 });
 
-            expect(await widthOf(getThird(page))).toBe(125);
+            await expect.poll(() => widthOf(getThird(page))).toBe(125);
         });
 
         test('should keep the resize cursor on a boundary that only the outward walk can move', async ({ page }) => {
@@ -522,7 +522,7 @@ test.describe('KbqSplitter', () => {
 
             await dragSeparator(page, -30);
 
-            expect(await widthOf(first)).toBe(before - 30);
+            await expect.poll(() => widthOf(first)).toBe(before - 30);
         });
     });
 
@@ -555,7 +555,7 @@ test.describe('KbqSplitter', () => {
 
             await dragSeparator(page, -80, { force: true });
 
-            expect(await widthOf(getPanel(page, 'First'))).toBe(before);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(before);
         });
 
         test('should light up under the pointer when the splitter is enabled', async ({ page }) => {
@@ -596,7 +596,7 @@ test.describe('KbqSplitter', () => {
             await dragSeparator(page, -60, { release: false });
 
             expect(await lineOpacity(page)).toBe('0');
-            expect(await widthOf(getPanel(page, 'First'))).toBe(240);
+            await expect.poll(() => widthOf(getPanel(page, 'First'))).toBe(240);
 
             await page.mouse.up();
 
@@ -638,8 +638,8 @@ test.describe('KbqSplitter', () => {
 
             await dragSeparator(page, -30, { axis: 'y' });
 
-            expect(await heightOf(getPanel(page, 'First'))).toBe(70);
-            expect(await heightOf(getPanel(page, 'Second'))).toBe(130);
+            await expect.poll(() => heightOf(getPanel(page, 'First'))).toBe(70);
+            await expect.poll(() => heightOf(getPanel(page, 'Second'))).toBe(130);
         });
     });
 });

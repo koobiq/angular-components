@@ -1,6 +1,5 @@
 ﻿import { Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import {
-    ApplicationRef,
     ChangeDetectionStrategy,
     Component,
     InjectionToken,
@@ -595,11 +594,6 @@ describe('KbqSidepanelService', () => {
             sidepanelRef.instance.showHeader.set(true);
             rootComponentFixture.detectChanges();
             flush();
-
-            // The container's host bindings run before its content, so the header that appeared in the pass
-            // above is named in the next one. The overlay host view hangs off the application, not off the
-            // fixture, so that pass is an application tick.
-            TestBed.inject(ApplicationRef).tick();
 
             const labelledBy = container.getAttribute('aria-labelledby')!;
 

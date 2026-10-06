@@ -1809,7 +1809,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             const onFileDroppedSpy = vi.spyOn(component.fileUpload(), 'onFileDropped');
 
-            dropzoneService.filesDropped.emit([{ ...createMockFile('test1.txt'), fullPath: 'test1.txt' }]);
+            dropzoneService.filesDropped.emit([createDroppedFile('test1.txt')]);
 
             expect(onFileDroppedSpy).toHaveBeenCalledTimes(1);
             flush();

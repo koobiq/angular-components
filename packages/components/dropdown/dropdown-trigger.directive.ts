@@ -11,11 +11,13 @@ import {
     ScrollStrategy,
     VerticalConnectionPos
 } from '@angular/cdk/overlay';
-import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
+import { _getEventTarget, normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
+    afterNextRender,
+    AfterRenderRef,
     booleanAttribute,
     ChangeDetectorRef,
     Directive,
@@ -23,9 +25,9 @@ import {
     ElementRef,
     inject,
     InjectionToken,
+    Injector,
     input,
     model,
-    NgZone,
     numberAttribute,
     OnDestroy,
     output,
@@ -154,7 +156,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private focusMonitor = inject(FocusMonitor);
     private readonly document = inject(DOCUMENT);
 
-    private readonly ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
 
     protected readonly isBrowser = inject(Platform).isBrowser;
     lastDestroyReason: DropdownCloseReason;
@@ -278,7 +280,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private hoverSubscription = Subscription.EMPTY;
 
-    private widthLockSubscription = Subscription.EMPTY;
+    private widthLockRef: AfterRenderRef | null = null;
 
     /** Waits for the exit animation to finish a close; must not outlive the trigger, or it emits once destroyed. */
     private readonly closeAnimationSubscriptions = new Subscription();
@@ -523,7 +525,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.dropdown().resetActiveItem();
 
         this.closingActionsSubscription.unsubscribe();
-        this.widthLockSubscription.unsubscribe();
+        this.widthLockRef?.destroy();
 
         // Read before detaching the overlay.
         const focusIsOurs = this.overlayHoldsFocus();
@@ -783,14 +785,18 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private cleanUpSubscriptions(): void {
         this.closingActionsSubscription.unsubscribe();
         this.hoverSubscription.unsubscribe();
-        this.widthLockSubscription.unsubscribe();
+        this.widthLockRef?.destroy();
         this.closeAnimationSubscriptions.unsubscribe();
     }
 
     /** Returns a stream that emits whenever an action that should close the dropdown occurs. */
     private closingActions() {
         const backdrop = this.overlayRef!.backdropClick();
-        const outsidePointerEvents = this.overlayRef!.outsidePointerEvents();
+        // A press on the trigger is the trigger's own: it toggles a top-level panel and keeps a nested one open. Taken for
+        // an outside press, it closed the nested panel before the click reached the trigger.
+        const outsidePointerEvents = this.overlayRef!.outsidePointerEvents().pipe(
+            filter((event) => !this.elementRef.nativeElement.contains(_getEventTarget<Node>(event)))
+        );
         const detachments = this.overlayRef!.detachments();
         const parentClose = this.parent ? outputToObservable(this.parent.closed) : observableOf();
         const hover = this.parent
@@ -897,10 +903,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             return;
         }
 
-        this.widthLockSubscription = this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => this.pinOverlayWidth());
+        this.widthLockRef = afterNextRender(() => this.pinOverlayWidth(), { injector: this.injector });
     }
 
     /** Freezes the overlay pane at its rendered width. */

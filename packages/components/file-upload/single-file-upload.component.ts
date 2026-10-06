@@ -1,6 +1,7 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { AsyncPipe, isPlatformBrowser, NgTemplateOutlet } from '@angular/common';
 import {
+    afterNextRender,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -11,6 +12,7 @@ import {
     effect,
     ElementRef,
     inject,
+    Injector,
     input,
     Input,
     output,
@@ -230,6 +232,7 @@ export class KbqSingleFileUploadComponent
     });
 
     private readonly focusMonitor = inject(FocusMonitor);
+    private readonly injector = inject(Injector);
     private readonly platformId = inject(PLATFORM_ID);
 
     constructor() {
@@ -371,13 +374,17 @@ export class KbqSingleFileUploadComponent
             this.announce(this.withFileName(this.localeConfiguration().a11y.fileRemoved, removed.file.name));
         }
 
-        setTimeout(() => {
-            const input = this.input?.nativeElement;
+        // The input to focus is rendered in place of the file.
+        afterNextRender(
+            () => {
+                const input = this.input?.nativeElement;
 
-            if (input) {
-                this.focusMonitor.focusVia(input, origin ?? 'keyboard');
-            }
-        });
+                if (input) {
+                    this.focusMonitor.focusVia(input, origin ?? 'keyboard');
+                }
+            },
+            { injector: this.injector }
+        );
     }
 
     /**

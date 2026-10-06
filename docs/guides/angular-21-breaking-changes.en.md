@@ -18,3 +18,9 @@ These changes are part of **Koobiq v21.0.0** — the move to Angular 21. The ste
 | @angular-devkit/architect | 0.2102.25 |
 
 The applications and libraries of the workspace are built with the `@angular/build` builders (`application`, `dev-server`, `ng-packagr`), and the root `tsconfig.json` uses `moduleResolution: "bundler"`. Unit tests run on Vitest with `@analogjs/vitest-angular` instead of Jest.
+
+### Zoneless change detection
+
+The components no longer depend on zone.js: they render in an application bootstrapped with `provideZonelessChangeDetection()` and keep working with `provideZoneChangeDetection()`. Work that waited for `NgZone.onStable` now runs after the next render. The documentation site, the StackBlitz template and the development applications of the repository are zoneless.
+
+`MockNgZone` is removed from `@koobiq/components/core`: nothing in the library listens to `onStable` any more, so its `simulateZoneExit()` has nothing to flush. The [migration guide](/en/main/migration) describes what a spec uses instead, and the `zoneless-change-detection` schematic reports each use.

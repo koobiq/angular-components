@@ -215,7 +215,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     markForCheck(): void;
     // (undocumented)
-    maskAnimationClassMap: object | null;
+    get maskAnimationClassMap(): object | null;
+    set maskAnimationClassMap(value: object | null);
     // (undocumented)
     modalAnimationClassMap: object | null;
     // (undocumented)

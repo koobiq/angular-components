@@ -1,9 +1,11 @@
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     computed,
     DestroyRef,
+    effect,
     inject,
     output,
     OutputEmitterRef,
@@ -100,6 +102,7 @@ export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true });
     private readonly document = inject(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /** Emitted when the stepper is incremented. */
     readonly stepUp = output<void>();
@@ -148,6 +151,13 @@ export class KbqStepper {
 
     constructor() {
         this.destroyRef.onDestroy(() => this.mouseUp.complete());
+
+        // The template reads plain properties of the control (`disabled`): re-check when it reports a change.
+        effect((onCleanup) => {
+            const subscription = this.control().stateChanges.subscribe(() => this.changeDetectorRef.markForCheck());
+
+            onCleanup(() => subscription.unsubscribe());
+        });
     }
 
     /**

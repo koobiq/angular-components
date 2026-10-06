@@ -94,6 +94,9 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.tabIndex.set(-1);
+            // Also written to the DOM right away: the browser moves the focus as soon as this Tab is handled, and
+            // the binding is only applied by the change detection that runs after it.
+            this.elementRef.nativeElement.tabIndex = -1;
 
             // Restored on a macrotask so the browser has moved focus out of the navbar first. Bound to the
             // component's lifetime: without it the callback can run against a destroyed view.

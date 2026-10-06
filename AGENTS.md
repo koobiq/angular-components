@@ -150,7 +150,9 @@ Vitest setup (`vitest.config.mts`, `tools/vitest/`) that shapes how specs are wr
 - `tools/vitest/fail-on-console.ts`: any `console.error` or `console.warn` during a test fails it.
 - `jest-axe` is registered (it has no runtime dependency on Jest), so `expect(element).toHaveNoViolations()` is available in every spec.
 - `testTimeout` is 2 seconds; `clearMocks` is on. Vitest also fails the run on an error thrown after a test, such as a listener left behind by a destroyed injector.
-- zone.js is loaded and TestBed uses zone change detection; `fakeAsync` and friends are restricted by ESLint to the specs that already use them, and new specs await `fixture.whenStable()` and use `vi.useFakeTimers()`.
+- TestBed is zoneless, with the exhaustive `checkNoChanges`: a binding that changed without notifying change detection fails the spec, OnPush views included. State a view reads that is written while change detection runs has to be a signal — a `markForCheck()` made then does not reach a view already checked.
+- Without zone.js nothing renders on its own: a check made right after an event needs `fixture.detectChanges()` or `await fixture.whenStable()`, and `whenStable()` does not wait for a bare `setTimeout` (use `PendingTasks` for library work worth waiting for). `fixture.detectChanges()` also marks the test host for check, so plain fields of a test wrapper still render.
+- zone.js stays loaded only for `fakeAsync`, which ESLint restricts to the specs that already use it; new specs await `fixture.whenStable()` and use `vi.useFakeTimers()`.
 - Event and typing helpers (`dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `typeInElement`, ...) are exported from `@koobiq/components/core`.
 - Test host components carry no `Kbq` prefix (`TestApp`, `BasicSelect`); lint does not check this.
 

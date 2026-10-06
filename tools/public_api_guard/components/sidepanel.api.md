@@ -120,7 +120,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         bottomPanel: string;
         becomingNormal: string;
     };
-    ariaLabelledBy: string | null;
+    get ariaLabelledBy(): string | null;
+    set ariaLabelledBy(value: string | null);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
     enter(): void;

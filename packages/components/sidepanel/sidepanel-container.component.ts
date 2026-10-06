@@ -12,6 +12,7 @@ import {
     inject,
     InjectionToken,
     OnDestroy,
+    signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -74,7 +75,17 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
      *
      * @docs-private
      */
-    ariaLabelledBy: string | null = this.sidepanelConfig.ariaLabelledBy ?? null;
+    get ariaLabelledBy(): string | null {
+        return this._ariaLabelledBy();
+    }
+
+    /** @docs-private */
+    set ariaLabelledBy(value: string | null) {
+        this._ariaLabelledBy.set(value);
+    }
+
+    // A signal: the header reports its title while this view is being checked, which a `markForCheck` would miss.
+    private readonly _ariaLabelledBy = signal(this.sidepanelConfig.ariaLabelledBy ?? null);
 
     /** The portal outlet inside of this container into which the content will be loaded. */
     readonly portalOutlet = viewChild.required(CdkPortalOutlet);
@@ -205,7 +216,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         if (this.ariaLabelledBy !== null) return;
 
         this.ariaLabelledBy = id;
-        this.changeDetectorRef.markForCheck();
     }
 
     private setAnimation() {

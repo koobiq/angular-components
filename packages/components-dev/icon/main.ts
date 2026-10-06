@@ -1,5 +1,5 @@
 import { provideHttpClient } from '@angular/common/http';
-import { provideZoneChangeDetection } from '@angular/core';
+import { provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { kbqIconsResolverProvider } from '@koobiq/components/icon';
@@ -7,7 +7,7 @@ import { DevApp } from './module';
 
 bootstrapApplication(DevApp, {
     providers: [
-        provideZoneChangeDetection(),
+        provideZonelessChangeDetection(),
         provideAnimations(),
         provideHttpClient(),
         // kbqIconsProvider({ spriteUrl: '/assets/svg-icons/sprite/sprite.symbol.svg', namespace: 'kbq' }),

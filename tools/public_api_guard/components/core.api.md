@@ -4964,23 +4964,6 @@ export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(ba
 // @public
 export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;
 
-// @public
-export class MockNgZone extends NgZone {
-    constructor();
-    // (undocumented)
-    onStable: EventEmitter<any>;
-    // (undocumented)
-    run(fn: () => void): any;
-    // (undocumented)
-    runOutsideAngular(fn: () => void): any;
-    // (undocumented)
-    simulateZoneExit(): void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MockNgZone, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MockNgZone>;
-}
-
 // @public (undocumented)
 export enum MultipleMode {
     // (undocumented)

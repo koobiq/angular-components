@@ -25,6 +25,7 @@ import {
     forwardRef,
     inject,
     InjectionToken,
+    Injector,
     input,
     NgZone,
     OnDestroy,
@@ -172,6 +173,7 @@ export class KbqAutocompleteTrigger
     private overlay = inject(Overlay);
     private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private zone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private dir = inject(Directionality, { optional: true })!;
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
     private viewportRuler = inject(ViewportRuler);
@@ -187,11 +189,10 @@ export class KbqAutocompleteTrigger
 
         // If there are any subscribers before `ngAfterViewInit`, the `autocomplete` will be undefined.
         // Return a stream that we'll replace with the real one once everything is in place.
-        return this.zone.onStable.asObservable().pipe(
-            take(1),
-            switchMap(() => this.optionSelections)
-        );
+        return this.viewInitialized.pipe(switchMap(() => this.optionSelections));
     });
+
+    private readonly viewInitialized = new Subject<void>();
 
     /** The currently active option, coerced to MatOption type. */
     get activeOption(): KbqOption | null {
@@ -393,6 +394,9 @@ export class KbqAutocompleteTrigger
     }
 
     ngAfterViewInit(): void {
+        this.viewInitialized.next();
+        this.viewInitialized.complete();
+
         const autocomplete = this.autocomplete();
 
         if (autocomplete) {
@@ -554,6 +558,17 @@ export class KbqAutocompleteTrigger
             return;
         }
 
+        // The active option is re-resolved a task after the options change, so an Enter right after a keystroke can
+        // find it pointing at an option the new query filtered out: resolve it now rather than pick a stale one.
+        if (
+            keyCode === ENTER &&
+            this.panelOpen &&
+            this.activeOption &&
+            !autocomplete.options.toArray().includes(this.activeOption)
+        ) {
+            this.resetActiveItem();
+        }
+
         if (this.activeOption && keyCode === ENTER && this.panelOpen) {
             this.activeOption.selectViaInteraction();
             this.resetActiveItem();
@@ -681,7 +696,11 @@ export class KbqAutocompleteTrigger
      * stream every time the option list changes.
      */
     private subscribeToClosingActions(): Subscription {
-        const firstStable = this.zone.onStable.asObservable().pipe(take(1));
+        const firstRender = new Observable<void>((subscriber) => {
+            const ref = afterNextRender(() => subscriber.next(), { injector: this.injector });
+
+            return () => ref.destroy();
+        });
         const optionChanges = this.autocomplete().options.changes.pipe(
             tap(() => this.positionStrategy.reapplyLastPosition()),
             // Defer emitting to the stream until the next tick, because changing
@@ -689,9 +708,9 @@ export class KbqAutocompleteTrigger
             delay(0)
         );
 
-        // When the zone is stable initially, and when the option list changes...
+        // When the options are initially rendered, and when the option list changes...
         return (
-            merge(firstStable, optionChanges)
+            merge(firstRender, optionChanges)
                 .pipe(
                     // create a new stream of panelClosingActions, replacing any previous streams
                     // that were created, and flatten it so our stream only emits closing events...
@@ -855,17 +874,17 @@ export class KbqAutocompleteTrigger
             autocomplete.opened.emit();
         }
 
-        this.zone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
+        afterNextRender(
+            () => {
                 this.resetActiveItem();
 
-                // Overlay width may not be final on first open, so re-measure when the layout is stable.
+                // Overlay width may not be final on first open, so re-measure once the panel is rendered.
                 if (this.panelOpen && this.overlayRef) {
                     this.overlayRef.updateSize(this.getOverlaySize());
                 }
-            });
+            },
+            { injector: this.injector }
+        );
     }
 
     private getOverlayConfig(): OverlayConfig {

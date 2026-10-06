@@ -291,7 +291,17 @@ export class KbqModalComponent<T = any, R = any>
     // Only aim to focus the ok button that needs to be auto focused
     readonly autoFocusedButtons = viewChildren('autoFocusedButton', { read: ElementRef });
 
-    maskAnimationClassMap: object | null;
+    get maskAnimationClassMap(): object | null {
+        return this._maskAnimationClassMap();
+    }
+
+    set maskAnimationClassMap(value: object | null) {
+        this._maskAnimationClassMap.set(value);
+    }
+
+    // A signal: the control service moves the mask between modals while another modal's view is being checked.
+    private readonly _maskAnimationClassMap = signal<object | null>(null);
+
     modalAnimationClassMap: object | null;
     // The origin point that animation based on
     transformOrigin = '0px 0px 0px';

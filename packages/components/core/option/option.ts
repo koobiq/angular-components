@@ -247,7 +247,14 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     set disabled(value: any) {
-        this._disabled = coerceBooleanProperty(value);
+        const disabled = coerceBooleanProperty(value);
+
+        if (disabled === this._disabled) return;
+
+        this._disabled = disabled;
+        // Read by this view and by the parent's: the select trigger renders the selected options.
+        this.changeDetectorRef.markForCheck();
+        this.stateChanges.next();
     }
 
     private _disabled = false;

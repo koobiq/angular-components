@@ -365,6 +365,8 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     // (undocumented)
     readonly nextPaginator: ElementRef<HTMLElement>;
     // (undocumented)
+    ngAfterContentChecked(): void;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     readonly onSurface: i0.InputSignalWithTransform<boolean, unknown>;

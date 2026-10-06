@@ -461,6 +461,16 @@ module.exports = tseslint.config(
             'no-restricted-globals': [
                 1,
                 ...noRestrictedGlobalsOptionsForSSR
+            ],
+            // Components render without zone.js, where these events never fire.
+            'no-restricted-syntax': [
+                1,
+                {
+                    selector: 'MemberExpression[property.name=/^(onStable|onUnstable|onMicrotaskEmpty)$/]',
+                    message:
+                        'NgZone never emits this without zone.js: run the work in afterNextRender, or notify change ' +
+                        'detection with a signal or markForCheck().'
+                }
             ]
         }
     },

@@ -23,6 +23,7 @@ import {
     ElementRef,
     EventEmitter,
     InjectionToken,
+    Injector,
     Input,
     NgZone,
     OnDestroy,
@@ -295,6 +296,7 @@ export class KbqSelect
 {
     private readonly _changeDetectorRef = inject(ChangeDetectorRef);
     private readonly _ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private readonly hiddenItemsMeasurer = inject(KbqSelectHiddenItemsMeasurer);
     private readonly interactivityChecker = inject(InteractivityChecker);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
@@ -619,11 +621,11 @@ export class KbqSelect
             );
         }
 
-        return this._ngZone.onStable.asObservable().pipe(
-            take(1),
-            switchMap(() => this.optionSelectionChanges)
-        );
+        return this.contentInitialized.pipe(switchMap(() => this.optionSelectionChanges));
     }) as Observable<KbqOptionSelectionChange>;
+
+    /** Emits once the content queries are resolved, for subscribers that arrive before `options` exist. */
+    private readonly contentInitialized = new Subject<void>();
 
     /**
      * Event emitted when the select panel has been toggled. Emits true when opened, false when closed.
@@ -1279,6 +1281,10 @@ export class KbqSelect
 
         this.watchReducedMotion();
 
+        // The template reads the state `stateChanges` reports (placeholder, error state, focus), and this view is
+        // OnPush: every report re-checks it.
+        this.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => this._changeDetectorRef.markForCheck());
+
         // The "select all" row only exists while the panel is attached, so the key manager's list has to
         // be rebuilt whenever the view query resolves or drops it — `options.changes` alone never fires
         // for it.
@@ -1384,6 +1390,8 @@ export class KbqSelect
             this.syncNavigableOptions();
             this.resetOptions();
             this.initializeSelection();
+            // The panel renders states derived from the option count (busy, empty search result).
+            this._changeDetectorRef.markForCheck();
         });
 
         this.search()
@@ -1397,6 +1405,9 @@ export class KbqSelect
                 filter(() => this.panelOpen && this.isActiveItemStale())
             )
             .subscribe(() => this.keyManager.setFirstItemActive());
+
+        this.contentInitialized.next();
+        this.contentInitialized.complete();
     }
 
     /** Lifecycle hook when component is destroyed. Cleans up subscriptions. */
@@ -1578,10 +1589,8 @@ export class KbqSelect
         this._changeDetectorRef.markForCheck();
 
         // Set the font size on the panel element once it exists.
-        this._ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
+        afterNextRender(
+            () => {
                 this.scrollActiveOptionIntoView();
 
                 if (this.triggerFontSize && this.overlayDir.overlayRef && this.overlayDir.overlayRef.overlayElement) {
@@ -1591,7 +1600,9 @@ export class KbqSelect
                 if (this.search()) {
                     this.lockOverlayWidthForSearch(this.panel());
                 }
-            });
+            },
+            { injector: this.injector }
+        );
     }
 
     /** Closes the overlay panel. */

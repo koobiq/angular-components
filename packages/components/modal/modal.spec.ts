@@ -641,14 +641,10 @@ describe('KbqModal', () => {
             const fixture = createComponent(CustomComponent, [{ provide: ErrorHandler, useValue: errorHandler }]);
 
             fixture.componentInstance.modalService.open({ kbqComponent: CustomModalComponent });
-            fixture.detectChanges();
-            await fixture.whenStable();
-            // The opening animation ends in a timer that ticks the application again: let it fire while
-            // this test's ErrorHandler is still the one installed.
-            await new Promise((resolve) => setTimeout(resolve, MODAL_ANIMATE_DURATION));
 
-            // The content component is created while the application ticks the modal's own view, so the
-            // DI failure goes to the ErrorHandler rather than to the caller.
+            // The content component is created while the application ticks the modal's own view, so the DI failure
+            // goes to the ErrorHandler rather than to the caller; TestBed then rejects `whenStable` with it.
+            await expect(fixture.whenStable()).rejects.toThrow(/TestComponentLevelService/);
             expect(errorHandler.handleError).toHaveBeenCalledWith(
                 expect.objectContaining({ message: expect.stringContaining('TestComponentLevelService') })
             );

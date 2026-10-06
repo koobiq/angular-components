@@ -53,13 +53,9 @@ test.describe('KbqTreeModule', () => {
         });
 
         test('reveals the action of the keyboard-focused option', async ({ page }) => {
-            // Tab focuses the tree itself; the roving focus only enters an option on the first arrow.
+            // Tab focuses the tree, which hands the roving focus to its first option, as the list does.
             await page.keyboard.press('Tab');
             await expect(page.getByTestId('e2eTree')).toHaveClass(/cdk-keyboard-focused/);
-            await expect(getOptionAction(page, 'node-1')).toBeHidden();
-
-            await page.keyboard.press('ArrowDown');
-
             await expect(page.getByTestId('node-1')).toHaveClass(/kbq-focused/);
             await expect(getOptionAction(page, 'node-1')).toBeVisible();
 
@@ -85,7 +81,8 @@ test.describe('KbqTreeModule', () => {
 
         test('opens the action dropdown with the keyboard alone', async ({ page }) => {
             await page.keyboard.press('Tab');
-            await page.keyboard.press('ArrowDown');
+            // The action shows once the option is rendered as keyboard-focused, a frame after the focus moves.
+            await expect(page.getByTestId('node-1')).toHaveClass(/kbq-focused/);
             // Second Tab moves focus from the option onto its now-visible action.
             await page.keyboard.press('Tab');
 

@@ -186,12 +186,15 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getOverlayPaneElement().style.minWidth).toBe('50%');
     });
 
-    it('should close on ESCAPE', () => {
-        const { componentInstance } = createComponent(ActionsPanelController);
+    it('should close on ESCAPE', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const { componentInstance } = fixture;
 
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelContainerElement().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+        await fixture.whenStable();
         expect(getActionsPanelContainerElement()).toBeNull();
     });
 
