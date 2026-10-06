@@ -155,6 +155,7 @@ export const ruRULocaleData = {
     },
     timeRange: {
         title: {
+            for: '',
             placeholder: 'Период'
         },
         editor: {
