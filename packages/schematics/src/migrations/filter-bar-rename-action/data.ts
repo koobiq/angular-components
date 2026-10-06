@@ -3,10 +3,11 @@
  *
  * The `filters.name` key was removed from the filter-bar locale configuration: the save/rename
  * popover no longer renders a separate caption above its name field, because its header now
- * carries that caption itself. `filters.saveChanges` and `filters.saveAsNew` each served as both a
- * popover header and a dropdown item label, so each was split into a `…Header` and a `…Button` key.
- * Renaming a filter also stopped writing `saved: true` / `changed: false` onto the emitted payload,
- * so it no longer persists the filter's pending pipe edits as a side effect.
+ * carries that caption itself. `filters.error` went too: a taken name is reported by the alert above
+ * the field (`filters.errorHint`) alone. `filters.saveChanges` and `filters.saveAsNew` each served as
+ * both a popover header and a dropdown item label, so each was split into a `…Header` and a `…Button`
+ * key. Renaming a filter also stopped writing `saved: true` / `changed: false` onto the emitted
+ * payload, so it no longer persists the filter's pending pipe edits as a side effect.
  */
 
 export interface WarnPattern {
@@ -14,18 +15,18 @@ export interface WarnPattern {
     message: string;
 }
 
-/** The locale key removed from the `filters` section of the filter-bar configuration. */
-export const REMOVED_KEY = 'name';
+/** The locale keys removed from the `filters` section of the filter-bar configuration. */
+export const REMOVED_KEYS = ['name', 'error'];
 
 /**
  * Cheap pre-check gating the AST parse.
  *
- * Searching for `name` alone would match `className`, `fileName` and most of a project, so the parse
- * is gated on the shapes the key can take inside an object literal: `name:`, a quoted `'name':`, and
- * the shorthand `name` standing between a brace or comma and the next one. A preceding word
- * character or dot rules out both longer identifiers and property reads, which are warn-only.
+ * Searching for `name` or `error` alone would match `className`, `errorState` and most of a project,
+ * so the parse is gated on the shapes a key can take inside an object literal: `name:`, a quoted
+ * `'name':`, and the shorthand `name` standing between a brace or comma and the next one. A preceding
+ * word character or dot rules out both longer identifiers and property reads, which are warn-only.
  */
-export const NAME_MEMBER_PATTERN = /(?:^|[^.\w])(['"]?)name\1\s*[:,}]/;
+export const REMOVED_MEMBER_PATTERN = /(?:^|[^.\w])(['"]?)(?:name|error)\1\s*[:,}]/;
 
 /** Keys split in two: the popover header (`…Header`) and the dropdown item label (`…Button`). */
 export const SPLIT_KEYS = new Map<string, readonly [string, string]>([
@@ -36,9 +37,9 @@ export const SPLIT_KEYS = new Map<string, readonly [string, string]>([
 /** The same pre-check for the split keys; `saveAsNewFilter` does not match. */
 export const SPLIT_MEMBER_PATTERN = /(?:^|[^.\w])(['"]?)(?:saveChanges|saveAsNew)\1\s*[:,}]/;
 
-/** Reported for a shorthand `name` the fix deliberately leaves in place. */
-export const SHORTHAND_MESSAGE =
-    'This filter-bar locale literal carries `name` as a shorthand property. It was left in place — ' +
+/** Reported for a shorthand removed key the fix deliberately leaves in place. */
+export const shorthandMessage = (key: string): string =>
+    `This filter-bar locale literal carries \`${key}\` as a shorthand property. It was left in place — ` +
     'deleting it would drop a reference to a variable the file still declares — so remove it by hand, ' +
     'together with the variable if nothing else reads it.';
 
@@ -46,9 +47,10 @@ export const SHORTHAND_MESSAGE =
  * Sibling keys that identify a `filters` locale literal.
  *
  * A full locale literal carries the whole key set — matching on a handful of them keeps an unrelated
- * object that merely has a `name`, `saveChanges` or `saveAsNew` property from being touched. Both the
- * old and the split keys count, so a literal is recognised before and after the split. No type
- * resolution is involved: the schematic's virtual tree has no `@koobiq` types to resolve against.
+ * object that merely has a `name`, `error`, `saveChanges` or `saveAsNew` property from being
+ * touched. Both the old and the split keys count, so a literal is recognised before and after the
+ * split. No type resolution is involved: the schematic's virtual tree has no `@koobiq` types to
+ * resolve against.
  */
 export const FINGERPRINT_KEYS = [
     'defaultName',
@@ -110,6 +112,20 @@ export const templateWarnPatterns: WarnPattern[] = [
             'Drop this binding, or bind your own string if the field still needs a visible caption.'
     },
     {
+        pattern: '\\b(?:filters|localeData)\\.error\\b',
+        message:
+            'The `error` key was removed from the filters section of the filter-bar locale configuration: ' +
+            'a taken name is reported by the alert above the name field (`errorHint`) alone. Drop this ' +
+            'read or binding. Manual migration required.'
+    },
+    {
+        pattern: '\\bfilters\\s*:\\s*\\{[^{}]*\\berror\\s*:',
+        message:
+            'An `error` key the fix did not rewrite: a filter-bar locale override with too few keys to be ' +
+            'recognised, or one bound in a template. The key was removed — delete it, or ignore this if ' +
+            'the object is not a filter-bar locale override.'
+    },
+    {
         // The lookahead skips calls of the KbqFilters methods that share these names.
         pattern: '\\b(?:filters|localeData)\\.(?:saveChanges|saveAsNew)\\b(?!\\s*\\()',
         message:
@@ -138,5 +154,8 @@ export const BEHAVIOUR_NOTE = [
     '    `…Button` key (the dropdown item: "Сохранить" / "Сохранить как новый"). The fix copies an',
     '    overridden value into both; re-check the headers — an action-shaped string reads wrong there.',
     '  - The popover no longer renders a caption above the name field; its header carries it.',
+    '  - A taken name is reported by the alert above the name field alone ("Такой фильтр уже есть",',
+    '    `filters.errorHint`): the field is still marked invalid, but `filters.error` no longer repeats',
+    '    the message underneath.',
     'Override these strings through kbqFilterBarLocaleConfigurationProvider if the new wording does not fit.'
 ];

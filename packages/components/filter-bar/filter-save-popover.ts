@@ -66,10 +66,6 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuse
                             [formControl]="filterName"
                             (keydown.enter)="saveAsNew($event)"
                         />
-
-                        @if (filterName.hasError('filterNameAlreadyExist')) {
-                            <kbq-error>{{ strings.error }}</kbq-error>
-                        }
                     </kbq-form-field>
                 </div>
             </div>

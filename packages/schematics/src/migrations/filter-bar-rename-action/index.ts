@@ -7,9 +7,9 @@ import {
     BEHAVIOUR_NOTE,
     FINGERPRINT_KEYS,
     MIN_FINGERPRINT_MATCHES,
-    NAME_MEMBER_PATTERN,
-    REMOVED_KEY,
-    SHORTHAND_MESSAGE,
+    REMOVED_KEYS,
+    REMOVED_MEMBER_PATTERN,
+    shorthandMessage,
     SPLIT_KEYS,
     SPLIT_MEMBER_PATTERN,
     templateWarnPatterns,
@@ -43,10 +43,10 @@ function propertyName(property: ts.ObjectLiteralElementLike): string | null {
 
 /** What the AST pass found in one file. */
 interface Findings {
-    /** Deletions of `name` properties and rewrites of split keys. */
+    /** Deletions of removed keys and rewrites of split keys. */
     edits: Edit[];
-    /** Whether a matched literal carries `name` as a shorthand, which the fix leaves alone. */
-    shorthand: boolean;
+    /** Removed keys a matched literal carries as a shorthand, which the fix leaves alone. */
+    shorthand: Set<string>;
 }
 
 /**
@@ -92,9 +92,9 @@ function splitProperty(
     return { start, end, text: missing.map((target) => `${key.replace(name, target)}: ${value}`).join(separator) };
 }
 
-/** Every edit across the file, plus whether a shorthand `name` was left behind. */
+/** Every edit across the file, plus the shorthand removed keys left behind. */
 function collectFindings(sourceFile: ts.SourceFile): Findings {
-    const findings: Findings = { edits: [], shorthand: false };
+    const findings: Findings = { edits: [], shorthand: new Set() };
 
     const visit = (node: ts.Node) => {
         if (ts.isObjectLiteralExpression(node) && isFiltersSection(node)) {
@@ -104,16 +104,19 @@ function collectFindings(sourceFile: ts.SourceFile): Findings {
                 if (!ts.isPropertyAssignment(property) && !ts.isShorthandPropertyAssignment(property)) continue;
 
                 const name = propertyName(property);
-                const targets = name === null ? undefined : SPLIT_KEYS.get(name);
 
-                if (name !== null && targets) {
+                if (name === null) continue;
+
+                const targets = SPLIT_KEYS.get(name);
+
+                if (targets) {
                     findings.edits.push(splitProperty(property, name, targets, existing, sourceFile));
-                } else if (name === REMOVED_KEY && ts.isPropertyAssignment(property)) {
+                } else if (REMOVED_KEYS.includes(name) && ts.isPropertyAssignment(property)) {
                     findings.edits.push({ start: property.getStart(sourceFile), end: property.getEnd(), text: null });
-                } else if (name === REMOVED_KEY) {
-                    // A shorthand `name`: deleting it would also drop a reference to a variable the
-                    // file still declares, which is a different edit from removing a dead string.
-                    findings.shorthand = true;
+                } else if (REMOVED_KEYS.includes(name)) {
+                    // A shorthand: deleting it would also drop a reference to a variable the file
+                    // still declares, which is a different edit from removing a dead string.
+                    findings.shorthand.add(name);
                 }
             }
         }
@@ -200,17 +203,19 @@ export default function filterBarRenameAction(options: Schema): Rule {
 
             let content = originalContent;
 
-            // Parsing every .ts of the project is not free, and a file that carries no `name`,
+            // Parsing every .ts of the project is not free, and a file that carries no `name`, `error`,
             // `saveChanges` or `saveAsNew` member at all cannot hold a literal to fix.
             if (
                 filePath.endsWith(TS_EXT) &&
-                (NAME_MEMBER_PATTERN.test(content) || SPLIT_MEMBER_PATTERN.test(content))
+                (REMOVED_MEMBER_PATTERN.test(content) || SPLIT_MEMBER_PATTERN.test(content))
             ) {
                 const { edits, shorthand } = collectFindings(createSourceFile(filePath, content));
 
                 content = applyEdits(content, edits);
 
-                if (shorthand) logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${SHORTHAND_MESSAGE}`]);
+                for (const key of shorthand) {
+                    logMessage(context.logger, [`${LABEL} ${filePath}`, `  ${shorthandMessage(key)}`]);
+                }
             }
 
             // Warn on what is left over, so an auto-fixed literal does not also produce a

@@ -97,7 +97,6 @@ export const enUSLocaleData = {
             change: 'Rename',
             resetChanges: 'Reset',
             remove: 'Delete',
-            error: 'A search with this name already exists',
             errorHint: 'A filter with this name already exists',
             saveButton: 'Save',
             cancelButton: 'Cancel',

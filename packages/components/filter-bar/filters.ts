@@ -283,7 +283,7 @@ export class KbqFilters implements OnInit {
     filterSavedUnsuccessfully(error?: KbqSaveFilterError) {
         // Re-enable the name control FIRST: `enable()` re-runs the control's validators and would wipe a
         // custom `filterNameAlreadyExist` error set beforehand, so apply the error AFTER re-enabling —
-        // otherwise the inline "name already exists" message never renders.
+        // otherwise the name field is never marked invalid.
         this.savePopover().savedUnsuccessfully();
 
         this.showError(error);

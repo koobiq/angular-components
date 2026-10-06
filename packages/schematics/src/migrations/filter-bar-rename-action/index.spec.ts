@@ -123,11 +123,60 @@ describe(SCHEMATIC_NAME, () => {
             expect((await run(first)).readText(ts)).not.toContain('name');
         });
 
+        it('removes the error key together with name and does not report it', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                ts,
+                'export const configuration = {\n' +
+                    '    filters: {\n' +
+                    "        saveAsNewFilter: 'Save as new filter',\n" +
+                    "        name: 'Name',\n" +
+                    "        error: 'A search with this name already exists',\n" +
+                    "        errorHint: 'A filter with this name already exists',\n" +
+                    "        saveButton: 'Save'\n" +
+                    '    }\n' +
+                    '};\n'
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                'export const configuration = {\n' +
+                    '    filters: {\n' +
+                    "        saveAsNewFilter: 'Save as new filter',\n" +
+                    "        errorHint: 'A filter with this name already exists',\n" +
+                    "        saveButton: 'Save'\n" +
+                    '    }\n' +
+                    '};\n'
+            );
+            expect(messages.join('\n')).not.toContain('did not rewrite');
+        });
+
+        it('removes the error key from a section that has no name key', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+
+            appTree.overwrite(
+                ts,
+                "export const filters = { saveAsNewFilter: 'S', errorHint: 'H', error: 'E', saveButton: 'B' };\n"
+            );
+
+            expect((await run(first)).readText(ts)).toBe(
+                "export const filters = { saveAsNewFilter: 'S', errorHint: 'H', saveButton: 'B' };\n"
+            );
+        });
+
         it('leaves an object that only looks similar alone', async () => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
             const source =
-                'export const user = {\n' + "    name: 'Ada',\n" + "    saveChanges: 'yes',\n" + '    id: 1\n' + '};\n';
+                'export const user = {\n' +
+                "    name: 'Ada',\n" +
+                "    error: 'none',\n" +
+                "    saveChanges: 'yes',\n" +
+                '    id: 1\n' +
+                '};\n';
 
             appTree.overwrite(ts, source);
 
@@ -135,23 +184,23 @@ describe(SCHEMATIC_NAME, () => {
             expect((await run(first)).readText(ts)).toBe(source);
         });
 
-        it('leaves a shorthand name alone and reports it', async () => {
+        it.each(['name', 'error'])('leaves a shorthand %s alone and reports it', async (key) => {
             const [first] = projects.keys();
             const { ts } = paths(projects.get(first)!);
             const messages = collectLogs();
             const source =
-                "const name = 'Name';\n" +
+                `const ${key} = 'Text';\n` +
                 'export const filters = {\n' +
                 "    saveAsNewFilter: 'Save as new filter',\n" +
                 "    change: 'Edit',\n" +
                 "    actionsTooltip: 'Filter actions',\n" +
-                '    name\n' +
+                `    ${key}\n` +
                 '};\n';
 
             appTree.overwrite(ts, source);
 
             expect((await run(first)).readText(ts)).toBe(source);
-            expect(messages.join('\n')).toContain('carries `name` as a shorthand property');
+            expect(messages.join('\n')).toContain(`carries \`${key}\` as a shorthand property`);
         });
 
         it('does not report a shorthand name outside a filters literal', async () => {
@@ -398,6 +447,33 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages.join('\n')).toContain('Persist the name only');
         });
 
+        it('reports a read of the removed error key', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, 'export const message = configuration.filters.error;\n');
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('The `error` key was removed');
+        });
+
+        it('reports an error key left in a partial override', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+            const source =
+                'export const providers = [\n' +
+                "    kbqFilterBarLocaleConfigurationProvider({ filters: { error: 'Taken' } })\n" +
+                '];\n';
+
+            appTree.overwrite(ts, source);
+
+            expect((await run(first)).readText(ts)).toBe(source);
+            expect(messages.join('\n')).toContain('An `error` key the fix did not rewrite');
+        });
+
         it('reports a read of the removed key left in a template', async () => {
             const [first] = projects.keys();
             const { html } = paths(projects.get(first)!);
@@ -421,6 +497,7 @@ describe(SCHEMATIC_NAME, () => {
             expect(note).toContain('only renames');
             expect(note).toContain('survives a rename');
             expect(note).toContain('split into a `…Header` key');
+            expect(note).toContain('reported by the alert above the name field alone');
         });
     });
 
