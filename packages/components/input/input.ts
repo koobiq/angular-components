@@ -1,13 +1,16 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { _IdGenerator } from '@angular/cdk/a11y';
 import { getSupportedInputTypes } from '@angular/cdk/platform';
-import { Directive, DoCheck, ElementRef, Input, OnChanges, OnDestroy, inject } from '@angular/core';
+import { booleanAttribute, Directive, DoCheck, ElementRef, inject, Input, OnChanges, OnDestroy } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-import { getKbqInputUnsupportedTypeError } from './input-errors';
+import { getKbqInputUnsupportedTypeError, KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE } from './input-errors';
 import { KbqNumberInput } from './input-number';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
+
+// `typeof ngDevMode` is the guard the build optimizer folds away in production bundles.
+declare const ngDevMode: boolean | undefined;
 
 const KBQ_INPUT_INVALID_TYPES = [
     'button',
@@ -20,8 +23,6 @@ const KBQ_INPUT_INVALID_TYPES = [
     'reset',
     'submit'
 ];
-
-let nextUniqueId = 0;
 
 @Directive({
     selector: `input[kbqInput],input[kbqNumberInput]`,
@@ -97,7 +98,7 @@ export class KbqInput
     //  is not migrated.
     @Input() placeholder: string;
 
-    protected uid = `kbq-input-${nextUniqueId++}`;
+    protected uid = inject(_IdGenerator).getId('kbq-input-');
     protected previousNativeValue: any;
     protected neverEmptyInputTypes = [
         'date',
@@ -114,7 +115,7 @@ export class KbqInput
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         if (this.ngControl && this.ngControl.disabled !== null) {
             return this.ngControl.disabled;
@@ -124,7 +125,7 @@ export class KbqInput
     }
 
     set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this._disabled = value;
 
         // Browsers may not fire the blur event if the input is disabled too quickly.
         // Reset from here to ensure that the element doesn't become stuck.
@@ -159,13 +160,13 @@ export class KbqInput
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required;
     }
 
     set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
+        this._required = value;
     }
 
     private _required = false;
@@ -307,6 +308,19 @@ export class KbqInput
         if (KBQ_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
             throw getKbqInputUnsupportedTypeError(this._type);
         }
+
+        // A native number field runs the value sanitization algorithm on assignment and drops anything that
+        // is not a valid floating-point number — which is every value `kbqNumberInput` renders once a group
+        // separator or a comma fraction separator is in it. It also reports `selectionStart` as `null`,
+        // disabling caret preservation. Reset rather than throw, so an existing consumer keeps working.
+        if (this.numberInput && this._type === 'number') {
+            this._type = 'text';
+
+            if (typeof ngDevMode === 'undefined' || ngDevMode) {
+                // eslint-disable-next-line no-console
+                console.warn(KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE);
+            }
+        }
     }
 
     /** Checks whether the input type is one of the types that are never empty. */
@@ -326,6 +340,6 @@ export class KbqInput
 @Directive({
     selector: 'input[kbqInputMonospace]',
     host: { class: 'kbq-input_monospace' },
-    exportAs: 'KbqInputMonospace'
+    exportAs: 'kbqInputMonospace, KbqInputMonospace'
 })
 export class KbqInputMono {}

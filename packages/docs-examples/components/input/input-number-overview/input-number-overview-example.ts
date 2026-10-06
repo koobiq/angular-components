@@ -18,14 +18,14 @@ import { KbqInputModule } from '@koobiq/components/input';
         <div class="kbq-text-big">
             <div class="kbq-form-horizontal">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-40">
+                    <label class="kbq-form__label flex-40" for="number-with-bounds">
                         С разделением групп разрядов, с мин. и макс. ограничением
                     </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
+                            id="number-with-bounds"
                             kbqNumberInput
                             kbqNormalizeWhitespace
-                            placeholder="Allowed number from -7 to 7"
                             [max]="12000"
                             [min]="-12000"
                             [(ngModel)]="value"
@@ -37,17 +37,22 @@ import { KbqInputModule } from '@koobiq/components/input';
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-40">С разделителем групп разрядов</label>
+                    <label class="kbq-form__label flex-40" for="number-with-separator">
+                        С разделителем групп разрядов
+                    </label>
                     <kbq-form-field class="kbq-form__control flex-60">
-                        <input kbqNumberInput kbqNormalizeWhitespace [(ngModel)]="value" />
+                        <input id="number-with-separator" kbqNumberInput kbqNormalizeWhitespace [(ngModel)]="value" />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-40">Без разделителя групп разрядов</label>
+                    <label class="kbq-form__label flex-40" for="number-without-separator">
+                        Без разделителя групп разрядов
+                    </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
+                            id="number-without-separator"
                             kbqNumberInput
                             kbqNormalizeWhitespace
                             [withThousandSeparator]="false"
@@ -58,9 +63,15 @@ import { KbqInputModule } from '@koobiq/components/input';
                 </div>
 
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label flex-40">Целочисленное значение</label>
+                    <label class="kbq-form__label flex-40" for="number-integer">Целочисленное значение</label>
                     <kbq-form-field class="kbq-form__control flex-60">
-                        <input kbqNumberInput kbqNormalizeWhitespace [integer]="true" [(ngModel)]="integerValue" />
+                        <input
+                            id="number-integer"
+                            kbqNumberInput
+                            kbqNormalizeWhitespace
+                            [integer]="true"
+                            [(ngModel)]="integerValue"
+                        />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>

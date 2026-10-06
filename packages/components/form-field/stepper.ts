@@ -7,6 +7,7 @@ import {
     inject,
     output,
     OutputEmitterRef,
+    Signal,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,7 +23,8 @@ import type { KbqFormFieldControl } from './form-field-control';
  */
 type KbqStepperControl = KbqFormFieldControl<unknown> & {
     readonly controlType: 'input-number';
-    readonly step: number;
+    /** A signal since the input review: `step` is an `input()` on `KbqNumberInput`. */
+    readonly step: Signal<number>;
     stepUp: (step: number) => void;
     /** Decreases the value by `step`. */
     stepDown: (step: number) => void;
@@ -156,12 +158,12 @@ export class KbqStepper {
 
     /** @docs-private */
     onStepUp(event: MouseEvent): void {
-        this.handleStep(event, (control) => control.stepUp(control.step), this.stepUp);
+        this.handleStep(event, (control) => control.stepUp(control.step()), this.stepUp);
     }
 
     /** @docs-private */
     onStepDown(event: MouseEvent): void {
-        this.handleStep(event, (control) => control.stepDown(control.step), this.stepDown);
+        this.handleStep(event, (control) => control.stepDown(control.step()), this.stepDown);
     }
 
     private handleStep(

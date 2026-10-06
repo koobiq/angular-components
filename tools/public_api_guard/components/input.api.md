@@ -5,14 +5,13 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
+import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
-import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
-import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/a11y';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/forms';
@@ -25,6 +24,7 @@ import { KbqInputLocaleConfiguration } from '@koobiq/components/core';
 import { KbqInputNumberLocaleConfiguration } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
+import { NumberInput } from '@angular/cdk/coercion';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -33,22 +33,22 @@ import { Subject } from 'rxjs';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
 
-// @public (undocumented)
+// @public
 export function add(value1: number, value2: number): number;
 
-// @public (undocumented)
+// @public
 export const BIG_STEP = 10;
 
-// @public (undocumented)
+// @public
 export function getPrecision(value: number): number;
 
-// @public (undocumented)
+// @public
 export function isDigit(value: string): boolean;
 
-// @public (undocumented)
+// @public
 export function isFloat(value: string): boolean;
 
-// @public (undocumented)
+// @public
 export function isInt(value: string): boolean;
 
 // @public
@@ -57,7 +57,7 @@ export const KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION: KbqInputLocaleConfiguration
 // @public
 export const KBQ_INPUT_LOCALE_CONFIGURATION: InjectionToken<KbqInputLocaleConfiguration>;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: {
     groupSeparator: string[];
     fractionSeparator: string;
@@ -71,12 +71,18 @@ export const KBQ_INPUT_VALUE_ACCESSOR: InjectionToken<{
 }>;
 
 // @public (undocumented)
+export const KBQ_MAX_VALIDATOR: Provider;
+
+// @public (undocumented)
+export const KBQ_MIN_VALIDATOR: Provider;
+
+// @public (undocumented)
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
 export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
     constructor();
-    readonly autofilled: i0.Signal<boolean>;
+    readonly autofilled: _angular_core.Signal<boolean>;
     controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -97,6 +103,10 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     protected isNeverEmpty(): boolean;
     // (undocumented)
     protected neverEmptyInputTypes: string[];
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
     // (undocumented)
     ngControl: NgControl | null;
     // (undocumented)
@@ -130,9 +140,9 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     get value(): string;
     set value(value: string);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInput, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInput, never>;
 }
 
 // @public
@@ -141,28 +151,26 @@ export const kbqInputLocaleConfigurationProvider: (configuration: KbqDeepPartial
 // @public (undocumented)
 export class KbqInputModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInputModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqInputModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqInputModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1$1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator], [typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof MinValidator, typeof MaxValidator, typeof i8.KbqFormFieldModule]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqInputModule, never, [typeof i1$1.A11yModule, typeof i2.FormsModule, typeof i3.KbqIconModule, typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof KbqMinValidator, typeof KbqMaxValidator], [typeof KbqInput, typeof KbqNumberInput, typeof KbqInputPassword, typeof KbqInputMono, typeof KbqMinValidator, typeof KbqMaxValidator, typeof i8.KbqFormFieldModule]>;
 }
 
 // @public (undocumented)
 export class KbqInputMono {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInputMono, "input[kbqInputMonospace]", ["KbqInputMonospace"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInputMono, "input[kbqInputMonospace]", ["kbqInputMonospace", "KbqInputMonospace"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputMono, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInputMono, never>;
 }
 
 // @public (undocumented)
 export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
     constructor();
-    readonly autofilled: i0.Signal<boolean>;
-    // (undocumented)
+    readonly autofilled: _angular_core.Signal<boolean>;
     readonly checkRule: Subject<void>;
-    // (undocumented)
     checkRules(): void;
     controlType: string;
     // (undocumented)
@@ -183,6 +191,10 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     get id(): string;
     set id(value: string);
     protected isBadInput(): boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_required: unknown;
     // (undocumented)
     ngControl: NgControl | null;
     // (undocumented)
@@ -214,25 +226,55 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     get value(): string;
     set value(value: string);
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputPassword, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInputPassword, never>;
+}
+
+// @public
+export class KbqMaxValidator implements Validator, OnChanges {
+    protected readonly coercedMax: _angular_core.Signal<number | null>;
+    readonly max: _angular_core.InputSignalWithTransform<number, NumberInput>;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    registerOnValidatorChange(fn: () => void): void;
+    // (undocumented)
+    validate(c: AbstractControl): ValidationErrors | null;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqMaxValidator, "[max][formControlName],[max][formControl],[max][ngModel]", never, { "max": { "alias": "max"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqMaxValidator, never>;
+}
+
+// @public
+export class KbqMinValidator implements Validator, OnChanges {
+    protected readonly coercedMin: _angular_core.Signal<number | null>;
+    readonly min: _angular_core.InputSignalWithTransform<number, NumberInput>;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    registerOnValidatorChange(fn: () => void): void;
+    // (undocumented)
+    validate(c: AbstractControl): ValidationErrors | null;
+    // (undocumented)
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqMinValidator, "[min][formControlName],[min][formControl],[min][ngModel]", never, { "min": { "alias": "min"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqMinValidator, never>;
 }
 
 // @public (undocumented)
-export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
+export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     constructor();
     // (undocumented)
-    bigStep: number;
+    protected readonly ariaValueMax: _angular_core.Signal<number | null>;
+    protected readonly ariaValueMin: _angular_core.Signal<number | null>;
+    readonly bigStep: _angular_core.InputSignalWithTransform<number, NumberInput>;
     controlType: string;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
-    disabledChange: EventEmitter<boolean>;
-    // (undocumented)
-    empty: boolean;
-    // (undocumented)
-    errorState: boolean;
+    readonly disabledChange: Subject<boolean>;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -243,17 +285,13 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     protected get fractionSeparator(): KbqInputNumberLocaleConfiguration['fractionSeparator'];
     // (undocumented)
     protected get groupSeparator(): KbqInputNumberLocaleConfiguration['groupSeparator'];
-    // (undocumented)
-    id: string;
-    readonly integer: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    max: number;
-    // (undocumented)
-    min: number;
+    readonly integer: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly max: _angular_core.InputSignalWithTransform<number, NumberInput>;
+    readonly min: _angular_core.InputSignalWithTransform<number, NumberInput>;
     // (undocumented)
     get nativeElement(): HTMLInputElement;
     // (undocumented)
-    get ngControl(): any;
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -266,20 +304,14 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     onPaste(event: ClipboardEvent): void;
     onTouched: () => void;
     // (undocumented)
-    placeholder: string;
-    // (undocumented)
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)
     registerOnTouched(fn: () => void): void;
     // (undocumented)
-    required: boolean;
-    // (undocumented)
     setDisabledState(isDisabled: boolean): void;
-    readonly startFormattingFrom: i0.InputSignal<number | undefined>;
-    // (undocumented)
+    readonly startFormattingFrom: _angular_core.InputSignal<number | undefined>;
     readonly stateChanges: Subject<void>;
-    // (undocumented)
-    step: number;
+    readonly step: _angular_core.InputSignalWithTransform<number, NumberInput>;
     // (undocumented)
     stepDown(step: number): void;
     // (undocumented)
@@ -287,61 +319,24 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     get value(): number | null;
     set value(value: number | null);
-    valueChange: EventEmitter<number | null>;
+    get valueAsNumber(): number | null;
+    readonly valueChange: Subject<number | null>;
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    readonly withThousandSeparator: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly withThousandSeparator: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     writeValue(value: number | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumberInput", "kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; "isSignal": true; }; "step": { "alias": "step"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }
-
-// @public (undocumented)
-export const MAX_VALIDATOR: Provider;
 
 // @public
-export class MaxValidator implements Validator, OnChanges {
-    // (undocumented)
-    readonly max: i0.InputSignal<string | number>;
-    // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
-    registerOnValidatorChange(fn: () => void): void;
-    // (undocumented)
-    validate(c: AbstractControl): ValidationErrors | null;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MaxValidator, "[max][formControlName],[max][formControl],[max][ngModel]", never, { "max": { "alias": "max"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MaxValidator, never>;
-}
-
-// @public (undocumented)
-export const MIN_VALIDATOR: Provider;
-
-// @public
-export class MinValidator implements Validator, OnChanges {
-    // (undocumented)
-    readonly min: i0.InputSignal<number>;
-    // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
-    registerOnValidatorChange(fn: () => void): void;
-    // (undocumented)
-    validate(c: AbstractControl): ValidationErrors | null;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MinValidator, "[min][formControlName],[min][formControl],[min][ngModel]", never, { "min": { "alias": "min"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MinValidator, never>;
-}
-
-// @public (undocumented)
 export function normalizeSplitter(value: string): string;
 
-// @public (undocumented)
+// @public
 export const SMALL_STEP = 1;
 
 // (No @packageDocumentation comment for this package)
