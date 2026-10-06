@@ -335,7 +335,7 @@ export class KbqSelect
      * A `kbq-select` is not a native labelable element, so the form-field's `<label for>` cannot
      * associate with it. The select is named through `aria-labelledby` instead.
      */
-    readonly labelable = false;
+    readonly isNativeLabelSupported = false;
 
     hiddenItems: number = 0;
 

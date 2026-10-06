@@ -206,7 +206,7 @@ export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
     required = false;
     disabled = false;
     errorState = false;
-    readonly labelable = false;
+    readonly isNativeLabelSupported = false;
     onContainerClick(): void {}
     focus(): void {}
 }

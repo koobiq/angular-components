@@ -239,7 +239,7 @@ export class KbqTreeSelectChange<T = any> {
         '[attr.aria-expanded]': 'panelOpen',
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
         '[attr.aria-label]': 'ariaLabelText',
-        '[attr.aria-labelledby]': 'ariaLabelledby()',
+        '[attr.aria-labelledby]': 'resolvedAriaLabelledby()',
         '[attr.aria-invalid]': 'errorState',
         '[attr.aria-required]': 'required',
         '[attr.aria-disabled]': 'disabled || null',
@@ -300,7 +300,7 @@ export class KbqTreeSelect
      * A `kbq-tree-select` is not a native labelable element, so the form-field's `<label for>` cannot
      * associate with it. The control is named through `aria-labelledby` instead.
      */
-    readonly labelable = false;
+    readonly isNativeLabelSupported = false;
 
     /** Number of the selected items that do not fit into the trigger. */
     readonly hiddenItems = signal(0);
@@ -478,6 +478,18 @@ export class KbqTreeSelect
      * at whatever visible text names the control.
      */
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+
+    /**
+     * The `aria-labelledby` the control actually exposes: an explicit input wins, otherwise a wrapping
+     * `kbq-form-field` names the control through its caption.
+     *
+     * The form field renders a `<span>` caption for this control (`isNativeLabelSupported: false`), so
+     * `label for` cannot associate with it — the relationship is expressed from the control to the label.
+     * @docs-private
+     */
+    protected readonly resolvedAriaLabelledby = computed(
+        () => this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null
+    );
 
     /** Object used to control when error messages are shown. */
     // Stays a decorator input: `CanUpdateErrorState` declares it as a plain property.
@@ -893,7 +905,7 @@ export class KbqTreeSelect
      * repository is in. Left off while `aria-labelledby` is set, which outranks `aria-label` anyway.
      */
     protected get ariaLabelText(): string | null {
-        return this.ariaLabelledby() ? null : this.ariaLabel() || this.placeholder || null;
+        return this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder || null;
     }
 
     isEmptySearchResult: boolean;

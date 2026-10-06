@@ -127,7 +127,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     isEmptySearchResult: boolean;
     // (undocumented)
     protected isPanelOpen(): boolean;
-    readonly labelable = false;
+    readonly isNativeLabelSupported = false;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get multiple(): boolean;

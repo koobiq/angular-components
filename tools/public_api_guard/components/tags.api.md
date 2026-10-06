@@ -245,7 +245,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     get id(): string;
     keydown(event: KeyboardEvent): void;
     keyManager: FocusKeyManager<KbqTag>;
-    readonly labelable = false;
+    readonly isNativeLabelSupported = false;
     markAsTouched(): void;
     markForCheck(): void;
     // (undocumented)

@@ -65,7 +65,7 @@ export abstract class KbqFormFieldControl<T> {
      * invalid, so the form field renders the caption as a `<span>` instead and the control is named
      * through `aria-labelledby`.
      */
-    readonly labelable?: boolean;
+    readonly isNativeLabelSupported?: boolean;
 
     /**
      * Sets the ids of the elements (hints, errors) that describe the control.

@@ -139,7 +139,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     hovered: boolean;
     readonly inOverlay: i0.ModelSignal<boolean | undefined>;
     get invalid(): boolean;
-    readonly labelable: Signal<boolean>;
+    readonly isNativeLabelSupported: Signal<boolean>;
     readonly labelClass: i0.InputSignal<string | string[] | Set<string> | undefined>;
     readonly labelId: Signal<string | null>;
     // (undocumented)
@@ -180,7 +180,7 @@ export abstract class KbqFormFieldControl<T> {
     abstract focus(options?: FocusOptions): void;
     readonly focused: boolean;
     readonly id: string;
-    readonly labelable?: boolean;
+    readonly isNativeLabelSupported?: boolean;
     readonly ngControl: NgControl | null;
     abstract onContainerClick(event: MouseEvent): void;
     open?: () => void;

@@ -222,6 +222,21 @@ export class TestFormFieldTagList {
     );
 }
 
+/** Tag list named by the caption of its wrapping `kbq-form-field`. */
+@Component({
+    imports: [KbqFormFieldModule, KbqTagsModule, CdkMonitorFocus, KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Tags</kbq-label>
+            <kbq-tag-list #tagList="kbqTagList">
+                <kbq-tag value="1">1</kbq-tag>
+                <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListWithFormFieldLabel {}
+
 @Component({
     imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
     template: `
@@ -788,6 +803,22 @@ describe(KbqTagList.name, () => {
             expect(label.getAttribute('for')).toBeTruthy();
             expect(label.getAttribute('for')).toBe(input.getAttribute('id'));
             expect(label.getAttribute('aria-owns')).toBe(input.getAttribute('id'));
+        });
+    });
+
+    describe('accessible name', () => {
+        // A tag list is not a native labelable element, so the form-field renders a `<span>` caption it
+        // `for` cannot point at; the list is named from the label side instead.
+        it('should be named by the form-field caption', () => {
+            fixture = createComponent(TagListWithFormFieldLabel);
+            fixture.detectChanges();
+
+            const list: HTMLElement = fixture.nativeElement.querySelector('kbq-tag-list');
+            const caption: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field__label');
+
+            expect(caption.tagName).toBe('SPAN');
+            expect(caption.getAttribute('for')).toBeNull();
+            expect(list.getAttribute('aria-labelledby')).toBe(caption.id);
         });
     });
 
