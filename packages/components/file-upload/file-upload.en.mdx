@@ -88,4 +88,4 @@ A selection the component itself discards is reported through `(rejected)`: file
 
 The tab order is the browse link, then the remove control of every selected file, in list order. `Delete` and `Backspace` remove the file whose control has focus; after a removal focus moves to the control that took its place, or to the file input when the list is empty.
 
-Projected `kbq-hint` messages are linked to the file input through `aria-describedby`, and the input carries `aria-invalid` while the control is in an error state. Additions and removals are announced in a live region owned by the component; the wording follows the active locale and is overridden through `[localeOverrides]` or `kbqFileUploadLocaleConfigurationProvider`.
+The component announces additions and removals in a live region of its own, in the wording of the active locale; to replace that wording, use `[localeOverrides]` or `kbqFileUploadLocaleConfigurationProvider`.
