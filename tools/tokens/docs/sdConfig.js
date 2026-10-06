@@ -1,10 +1,10 @@
-const { BASE_PATH, BUILD_PATH } = require('./config');
+const { BASE_PATH, OUTPUT_PATH } = require('./config');
 
 module.exports = {
     source: [`${BASE_PATH}/properties/!(colors.v1|shadows.v1).json5`],
     platforms: {
         css: {
-            buildPath: BUILD_PATH,
+            buildPath: OUTPUT_PATH,
             transformGroup: 'kbq/css-extended',
             files: [
                 {
