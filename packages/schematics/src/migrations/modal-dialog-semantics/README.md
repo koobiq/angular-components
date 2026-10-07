@@ -9,12 +9,12 @@ declarative path. It never writes to the tree.
 
 The dialog is a real dialog now, and its two entry paths behave the same.
 
-| Member                                                                                                                                                                               | Before | After       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ----------- |
-| `transformOrigin`, `getKbqFooter()`, `getContainerClasses()`, `autoFocusedButtons`                                                                                                   | public | removed     |
-| `ModalUtil`, `modalUtilObject`, `IClickPosition`                                                                                                                                     | public | removed     |
-| `handleCloseResult`, `getButtonCallableProp`, `isModalType`, `isTemplateRef`, `isNonEmptyString`, `isComponent`, `isModalButtons`, `onClickMask`, `onClickOkCancel`, `onButtonClick` | public | `protected` |
-| `maskAnimationClassMap`, `modalAnimationClassMap`                                                                                                                                    | public | `protected` |
+| Member                                                                                                                                                                                            | Before | After       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----------- |
+| `transformOrigin`, `getKbqFooter()`, `getContainerClasses()`, `autoFocusedButtons`                                                                                                                | public | removed     |
+| `ModalUtil`, `modalUtilObject`, `IClickPosition`                                                                                                                                                  | public | removed     |
+| `handleCloseResult`, `getButtonCallableProp`, `isModalType`, `isTemplateRef`, `isNonEmptyString`, `isComponent`, `isModalButtons`, `onClickMask`, `onClickOkCancel`, `onButtonClick`, `onKeyDown` | public | `protected` |
+| `maskAnimationClassMap`, `modalAnimationClassMap`                                                                                                                                                 | public | `protected` |
 
 `transformOrigin` deserves a note. It was recomputed on every open from the last document click
 position, which starts at `{x: -1, y: -1}` and was never reset, and it was applied against keyframes

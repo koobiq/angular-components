@@ -1721,13 +1721,13 @@ readonly wide = input(false);                              // без транс�
 
 Опции `kbqAfterOpen`/`kbqAfterClose` теперь дублируются на диалог, а не подменяют его собственные эмиттеры: `afterOpen`/`afterClose` у возвращённого ref продолжают работать рядом с ними, а разрушение оверлея больше не висит на эмиттере, который вызывающая сторона может завершить. Кроме того, объявленная в разметке модалка перестала один раз отправлять `kbqBeforeClose`/`kbqAfterClose` при инициализации, ещё ни разу не показавшись.
 
-| Член                                                                                                                                                                                 | Было   | Стало       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ----------- |
-| `transformOrigin`, `getKbqFooter()`, `getContainerClasses()`, `autoFocusedButtons`                                                                                                   | public | удалены     |
-| `ModalUtil`, `modalUtilObject`, `IClickPosition`                                                                                                                                     | public | удалены     |
-| `handleCloseResult`, `getButtonCallableProp`, `isModalType`, `isTemplateRef`, `isNonEmptyString`, `isComponent`, `isModalButtons`, `onClickMask`, `onClickOkCancel`, `onButtonClick` | public | `protected` |
-| `maskAnimationClassMap`, `modalAnimationClassMap`                                                                                                                                    | public | `protected` |
-| `ModalOptions.data`                                                                                                                                                                  | `any`  | `unknown`   |
+| Элемент API                                                                                                                                                                                       | Было   | Стало       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----------- |
+| `transformOrigin`, `getKbqFooter()`, `getContainerClasses()`, `autoFocusedButtons`                                                                                                                | public | удалены     |
+| `ModalUtil`, `modalUtilObject`, `IClickPosition`                                                                                                                                                  | public | удалены     |
+| `handleCloseResult`, `getButtonCallableProp`, `isModalType`, `isTemplateRef`, `isNonEmptyString`, `isComponent`, `isModalButtons`, `onClickMask`, `onClickOkCancel`, `onButtonClick`, `onKeyDown` | public | `protected` |
+| `maskAnimationClassMap`, `modalAnimationClassMap`                                                                                                                                                 | public | `protected` |
+| `ModalOptions.data`                                                                                                                                                                               | `any`  | `unknown`   |
 
 `transformOrigin` вычислялся из последней позиции клика по документу — она инициализировалась как `{x: -1, y: -1}` и возвращалась безусловно, так что открытый с клавиатуры диалог получал origin из `-1`, — и применялся к keyframes, которые заканчиваются на `transform: scale(1)`, а для них `transform-origin` не значит ничего. Ничего из того, что он считал, никогда не было видно, а слушатель кликов по всему документу, который его питал, вешался при загрузке модуля и не снимался никогда.
 

@@ -244,7 +244,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     onClickCloseBtn(): void;
     protected onClickMask($event: MouseEvent): void;
     protected onClickOkCancel(type: 'ok' | 'cancel'): void;
-    onKeyDown(event: KeyboardEvent): void;
+    protected onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     open(): void;
     registerCaption(): void;
