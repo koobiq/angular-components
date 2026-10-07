@@ -20,12 +20,15 @@
 
 # Yarn 4 and the manifests. .yarn/releases holds the committed Yarn binary that .yarnrc.yml points
 # at; without it the image has only the base image's Yarn 1, which cannot read a Berry lockfile.
+# .yarn/patches holds the `patch:` dependencies package.json refers to, which `yarn install` applies.
 !.nvmrc
 !.yarnrc.yml
 !package.json
 !yarn.lock
 !.yarn/releases/
 !.yarn/releases/**
+!.yarn/patches/
+!.yarn/patches/**
 
 # Workspace and TypeScript configuration: the image builds `dev-e2e` out of angular.json, and
 # playwright.config.ts compiles the specs against tsconfig.playwright-spec.json.
