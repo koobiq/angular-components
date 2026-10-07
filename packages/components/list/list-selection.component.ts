@@ -1733,7 +1733,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         const listSelectionDisabled = this.listSelection && this.listSelection.disabled;
-        const groupDisabled = this.group && this.group.disabled;
+        const groupDisabled = !!this.group?.disabled();
 
         return listSelectionDisabled || groupDisabled || this._disabled;
     }

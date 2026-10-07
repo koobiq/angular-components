@@ -374,6 +374,20 @@ ng g @koobiq/components:color-signals --project "<your project>"
 ng g @koobiq/components:core-mixins-removal --project "<your project>"
 ```
 
+#### Options
+
+`KbqOption`, `KbqOptgroup`, the option action and `KbqTimezoneOption` keep their state in signal inputs. The state of an option is still read as a property — `event.option.value`, `select.selected.disabled`, `option.viewValue` in a `kbqSelectTagContent` template — so those reads are unchanged.
+
+- **Programmatic writes are gone**: `option.value`, `viewValue`, `disabled`, `showCheckbox` and `KbqTimezoneOption.timezone` are bound in the template.
+- **`KbqOptgroup.disabled` and `KbqOptionActionComponent.disabled` are signals**: `group.disabled()`.
+- **`KbqOption.stateChanges` no longer emits for `disabled`**, and `textElement` is typed `ElementRef | undefined`.
+
+`option-signals` rewrites the reads of the group and the action, and reports the writes:
+
+```bash
+ng g @koobiq/components:option-signals --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}
