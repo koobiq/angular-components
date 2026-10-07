@@ -70,6 +70,15 @@ export interface KbqModal {
 /** Injection token exposing the dialog to the directives composed inside it. */
 export const KBQ_MODAL = new InjectionToken<KbqModal>('KBQ_MODAL');
 
+/**
+ * Options `KbqModalService` passes to the dialog it creates. The dialog reads them as the initial
+ * values of its inputs, which is how the imperative path reaches signal inputs at all: a dialog
+ * created by the service has no template bindings, so an input keeps its initial value for life.
+ * Never provided on the declarative path, where the bindings carry the same values.
+ * @docs-private
+ */
+export const KBQ_MODAL_OPTIONS = new InjectionToken<ModalOptions>('KBQ_MODAL_OPTIONS');
+
 // Public options for using by service
 export interface ModalOptions<C = any, R = any> {
     /** Layout the dialog renders. Default is `'default'`. */
