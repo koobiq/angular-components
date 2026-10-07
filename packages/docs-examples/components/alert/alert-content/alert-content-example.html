@@ -54,30 +54,34 @@
 
 <div class="layout-row example-row layout-gap-l flex-100">
     <div class="layout-column example-column">
-        <kbq-alert [@hideShowAnimator]="firstState" (closed)="firstState = false">
-            <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
-            The module is configured in the policy
-            <a href="https://koobiq.io" kbq-link>Hypervisors</a>
-            <button
-                kbq-alert-close-button
-                kbq-icon-button="kbq-xmark-s_16"
-                aria-label="Close"
-                [color]="colors.ContrastFade"
-            ></button>
-        </kbq-alert>
+        @if (firstState) {
+            <kbq-alert animate.leave="example-alert_leave" (closed)="firstState = false">
+                <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
+                The module is configured in the policy
+                <a href="https://koobiq.io" kbq-link>Hypervisors</a>
+                <button
+                    kbq-alert-close-button
+                    kbq-icon-button="kbq-xmark-s_16"
+                    aria-label="Close"
+                    [color]="colors.ContrastFade"
+                ></button>
+            </kbq-alert>
+        }
     </div>
     <div class="layout-column example-column">
-        <kbq-alert [@hideShowAnimator]="secondState" [compact]="true" (closed)="secondState = false">
-            <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
-            The module is configured in the policy
-            <a href="https://koobiq.io" kbq-link>Hypervisors</a>
-            <button
-                kbq-alert-close-button
-                kbq-icon-button="kbq-xmark-s_16"
-                aria-label="Close"
-                [color]="colors.ContrastFade"
-            ></button>
-        </kbq-alert>
+        @if (secondState) {
+            <kbq-alert animate.leave="example-alert_leave" [compact]="true" (closed)="secondState = false">
+                <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
+                The module is configured in the policy
+                <a href="https://koobiq.io" kbq-link>Hypervisors</a>
+                <button
+                    kbq-alert-close-button
+                    kbq-icon-button="kbq-xmark-s_16"
+                    aria-label="Close"
+                    [color]="colors.ContrastFade"
+                ></button>
+            </kbq-alert>
+        }
     </div>
 </div>
 

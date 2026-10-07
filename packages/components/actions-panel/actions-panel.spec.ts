@@ -14,7 +14,6 @@ import {
     viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { lastValueFrom } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
@@ -24,7 +23,7 @@ import { KbqActionsPanelModule } from './module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers: [{ provide: Location, useClass: SpyLocation }, ...providers]
     });
     const fixture = TestBed.createComponent<T>(component);

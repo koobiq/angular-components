@@ -1,4 +1,3 @@
-export * from './dropdown-animations';
 export * from './dropdown-content.directive';
 export * from './dropdown-errors';
 export {

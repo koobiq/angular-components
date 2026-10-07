@@ -1,7 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ApplicationRef, EnvironmentProviders, InjectionToken, Provider, Type, createComponent } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToastData, KbqToastPosition, kbqToastConfigurationProvider } from '@koobiq/components/toast';
 
@@ -41,7 +40,6 @@ export async function devMountMfe(
     sharedOverlayContainer?: OverlayContainer
 ): Promise<DevMountedMfe> {
     const providers: (Provider | EnvironmentProviders)[] = [
-        provideAnimations(),
         kbqToastConfigurationProvider({ position: KbqToastPosition.TOP_RIGHT }),
         { provide: DEV_MFE_CONFIG, useValue: config }
     ];

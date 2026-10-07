@@ -1,12 +1,11 @@
 import { Component, DebugElement, model, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqContentPanelContainer } from './content-panel';
 import { KbqContentPanelModule } from './module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    TestBed.configureTestingModule({ imports: [component], providers });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();

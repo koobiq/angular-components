@@ -7,7 +7,6 @@
     [class]="datepicker.panelClass()"
     [selected]="datepicker.selected"
     [startAt]="datepicker.startAt"
-    [@fadeInCalendar]="'enter'"
     (monthSelected)="datepicker.selectMonth($event)"
     (selectedChange)="datepicker.select($event)"
     (userSelection)="datepicker.close()"

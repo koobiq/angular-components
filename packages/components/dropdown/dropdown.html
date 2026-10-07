@@ -7,9 +7,6 @@
         [class]="classList()"
         [style.max-width.px]="panelMaxWidth()"
         [style.--kbq-dropdown-size-container-width-min]="panelMinWidthToken()"
-        [@transformDropdown]="panelAnimationState"
-        (@transformDropdown.done)="onAnimationDone($event)"
-        (@transformDropdown.start)="onAnimationStart($event)"
         (keydown)="handleKeydown($event)"
     >
         <!-- Scoped to the options content: a click on a footer control must not close the panel. -->

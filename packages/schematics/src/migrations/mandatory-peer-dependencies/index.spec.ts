@@ -37,15 +37,12 @@ describe(SCHEMATIC_NAME, () => {
         // in this suite; only the presence of the entry is meaningful.
         expect(dependencies['overlayscrollbars']).toBeDefined();
         expect(dependencies['@koobiq/date-adapter']).toBeDefined();
-        expect(dependencies['@angular/animations']).toBeDefined();
     });
 
-    it(`should take '@angular/animations' from the project's own '@angular/core'`, async () => {
-        const angularCore = getDependencies(appTree)['@angular/core'];
+    it(`should not add '@angular/animations', which the components no longer need`, async () => {
         const tree = await runner.runSchematic(SCHEMATIC_NAME, {}, appTree);
 
-        expect(angularCore).toBeDefined();
-        expect(getDependencies(tree)['@angular/animations']).toBe(angularCore);
+        expect(getDependencies(tree)['@angular/animations']).toBeUndefined();
     });
 
     it('should leave a dependency the project already declares untouched', async () => {

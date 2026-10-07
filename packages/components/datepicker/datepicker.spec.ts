@@ -16,7 +16,6 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_LUXON_DATE_FORMATS, KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     createKeyboardEvent,
@@ -166,7 +165,6 @@ describe('KbqDatepicker', () => {
                 KbqDatepickerModule,
                 KbqFormFieldModule,
                 KbqInputModule,
-                NoopAnimationsModule,
                 ReactiveFormsModule,
                 ...imports,
                 component,
@@ -1663,7 +1661,7 @@ describe('KbqDatepicker', () => {
             // Only the app-level date wiring is registered here. `KbqDatepickerModule` deliberately stays a
             // standalone import of the modal content component, which is where the reported app had it.
             TestBed.configureTestingModule({
-                imports: [KbqLuxonDateModule, NoopAnimationsModule, DatepickerInModalHost],
+                imports: [KbqLuxonDateModule, DatepickerInModalHost],
                 providers: [{ provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS }]
             });
         });

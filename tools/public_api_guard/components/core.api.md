@@ -9,8 +9,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_forms from '@angular/forms';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
@@ -39,6 +37,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InjectOptions } from '@angular/core';
+import { Injector } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { MonoTypeOperatorFunction } from 'rxjs';
@@ -999,9 +998,6 @@ export const F8 = 119;
 export const F9 = 120;
 
 // @public (undocumented)
-export const fadeAnimation: AnimationTriggerMetadata;
-
-// @public (undocumented)
 export const FF_EQUALS = 61;
 
 // @public (undocumented)
@@ -1207,6 +1203,9 @@ export const K = 75;
 
 // @public
 export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
+
+// @public
+export const KBQ_ANIMATIONS_CONFIG: InjectionToken<KbqAnimationsConfig>;
 
 // @public
 export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
@@ -2802,6 +2801,11 @@ export type KbqActionsPanelLocaleConfiguration = {
 };
 
 // @public
+export function kbqAfterAnimations(element: () => Element | null | undefined, callback: () => void, injector: Injector): {
+    destroy(): void;
+};
+
+// @public
 export enum KbqAnimationCurves {
     // (undocumented)
     AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
@@ -2832,6 +2836,17 @@ export enum KbqAnimationDurations {
     // (undocumented)
     Rapid = "100ms"
 }
+
+// @public
+export interface KbqAnimationsConfig {
+    animationsDisabled?: boolean;
+}
+
+// @public
+export function kbqAnimationsDisabled(): boolean;
+
+// @public
+export function kbqAnimationsSettled(element: Element | null | undefined): Promise<void> | null;
 
 // @public
 export type KbqAppSwitcherLocaleConfiguration = {
@@ -3978,9 +3993,8 @@ export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDe
 export abstract class KbqPopUp implements OnDestroy {
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
-    animationDone(input: AnimationEvent_2): void;
-    // (undocumented)
-    animationStart(): void;
+    protected afterShowAnimation(): void;
+    protected readonly animationsDisabled: boolean;
     // (undocumented)
     arrow: boolean;
     // (undocumented)
@@ -4397,12 +4411,6 @@ export class KbqSelectAllEvent<T, S = unknown> {
     readonly selected: boolean;
     readonly source: S;
 }
-
-// @public
-export const kbqSelectAnimations: {
-    readonly transformPanel: AnimationTriggerMetadata;
-    readonly fadeInContent: AnimationTriggerMetadata;
-};
 
 // @public (undocumented)
 export class KbqSelectFooter {

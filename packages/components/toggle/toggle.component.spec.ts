@@ -3,14 +3,13 @@ import { Component, DebugElement, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
 import { KBQ_CHECKABLE_CLICK_ACTION, KbqCheckedState } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleComponent, KbqToggleModule } from './index';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers }).compileComponents();
+    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();

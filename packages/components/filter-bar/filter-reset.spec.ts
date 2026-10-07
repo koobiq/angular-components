@@ -1,7 +1,6 @@
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqFilter, KbqFilterBarModule, KbqFilterReset } from '@koobiq/components/filter-bar';
 
 @Component({
@@ -32,7 +31,7 @@ describe('KbqFilterReset', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestComponent);

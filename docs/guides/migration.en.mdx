@@ -336,6 +336,22 @@ Koobiq components no longer depend on zone.js: they render in an application boo
 ng g @koobiq/components:zoneless-change-detection --project "<your project>"
 ```
 
+#### Animations without @angular/animations
+
+Koobiq components no longer use `@angular/animations`, which Angular deprecated: they animate with CSS and wait for the end of an animation themselves. `@angular/animations` is no longer a peer dependency, and the components no longer need `provideAnimations()`: remove it, and the package, unless the components of your application declare `animations: [...]` themselves.
+
+- **The motion is off under `prefers-reduced-motion: reduce`.** To turn it off in the whole application, for example in an end-to-end suite, provide `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` from `@koobiq/components/core`. `provideNoopAnimations()` still turns it off, but it belongs to the deprecated package.
+- **The exported triggers are removed**: `fadeAnimation` and `kbqSelectAnimations` from `core`, `kbqDropdownAnimations`, `fadeInItems` and `transformDropdown` from `dropdown`, `kbqTabsAnimations` from `tabs`. `KbqSidepanelAnimationState` is no longer exported from `sidepanel`.
+- **The members that carried an `AnimationEvent` are removed.** `KbqPopUp.animationStart()` and `animationDone()`: a subclass overrides the protected `afterShowAnimation()`. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` and `onAnimationDone()`: a custom trigger calls `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` and `onAnimationDone()`: listen to `stateChanged`. `KbqTabBody.onTranslateTabStarted()` and `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` and `onAnimation()`, and the `animationStateChanged` of the sidepanel and actions panel containers: follow a panel through its ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`.
+- **The dropdown panel no longer fades out**: it is closed, and its lazy content detached, as soon as the trigger reports it.
+- **In a spec, what waited for an animation callback now waits for the next render**: `fixture.detectChanges()` or `await fixture.whenStable()`. jsdom has no Web Animations API, so nothing animates there.
+
+`angular-animations-removal` reports every use of the removed triggers and members:
+
+```bash
+ng g @koobiq/components:angular-animations-removal --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

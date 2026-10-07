@@ -1,7 +1,6 @@
 import { Component, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqResizable, KbqResizer, KbqResizerDirection } from './resizer';
 
@@ -17,7 +16,7 @@ const CONTENT_BOX = { width: 100, height: 50 };
 const BORDER_BOX = { width: 122, height: 72 };
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    TestBed.configureTestingModule({ imports: [component], providers });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();

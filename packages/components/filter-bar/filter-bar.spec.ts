@@ -2,7 +2,6 @@ import { ChangeDetectorRef, Component, computed, DebugElement, inject } from '@a
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     KBQ_LOCALE_SERVICE,
     KBQ_STATE_STORE,
@@ -99,7 +98,7 @@ describe('KbqFilterBar', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         }).compileComponents();
     });
 
@@ -579,7 +578,7 @@ describe('KbqFilterBar', () => {
             // Render <kbq-filter-bar> WITHOUT binding the input, so this exercises the declared `input(true)`
             // default rather than a round-tripped binding.
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponentDefaultSelectAll]
+                imports: [KbqFilterBarModule, TestComponentDefaultSelectAll]
             });
 
             const defaultFixture = TestBed.createComponent(TestComponentDefaultSelectAll);
@@ -613,7 +612,6 @@ describe('KbqFilterBar', () => {
         it('should project <kbq-search-expandable> into the kbq-filter-bar__right slot', () => {
             TestBed.configureTestingModule({
                 imports: [
-                    NoopAnimationsModule,
                     KbqFilterBarModule,
                     KbqSearchExpandableModule,
                     ReactiveFormsModule,
@@ -678,7 +676,7 @@ describe('KbqFilterBar', () => {
             const localeService = new MockLocaleService();
 
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                imports: [KbqFilterBarModule, TestComponent],
                 providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: localeService }]
             });
 
@@ -702,7 +700,7 @@ describe('KbqFilterBar', () => {
             const localeService = new MockLocaleService();
 
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                imports: [KbqFilterBarModule, TestComponent],
                 providers: [
                     { provide: KBQ_LOCALE_SERVICE, useValue: localeService },
                     kbqFilterBarLocaleConfigurationProvider({ filters: { defaultName: 'External name' } })
@@ -729,7 +727,7 @@ describe('KbqFilterBar', () => {
 
         it('should take the strings from KBQ_FILTER_BAR_LOCALE_CONFIGURATION when no locale service is provided', () => {
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                imports: [KbqFilterBarModule, TestComponent],
                 providers: [{ provide: KBQ_FILTER_BAR_LOCALE_CONFIGURATION, useValue: externalConfiguration }]
             });
 
@@ -747,7 +745,7 @@ describe('KbqFilterBar', () => {
             const localeService = new MockLocaleService();
 
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent],
+                imports: [KbqFilterBarModule, TestComponent],
                 providers: [{ provide: KBQ_LOCALE_SERVICE, useValue: localeService }]
             });
 
@@ -884,7 +882,7 @@ describe(`${KbqFilterBarModule.name} state saving`, () => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, StateSavingFilterBar, FilterBarWithoutFilterList]
+            imports: [KbqFilterBarModule, StateSavingFilterBar, FilterBarWithoutFilterList]
         }).compileComponents();
     });
 

@@ -1,7 +1,6 @@
 import { provideLocationMocks } from '@angular/common/testing';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { ActivatedRouteSnapshot, Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { KbqStateSavingService } from '@koobiq/components/core';
@@ -166,7 +165,6 @@ describe(DocsMigrationGuide.name, () => {
                     { path: 'elsewhere', children: [] }
                 ]),
                 provideLocationMocks(),
-                provideNoopAnimations(),
                 provideDocsLocale()
             ]
         });

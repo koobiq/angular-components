@@ -29,7 +29,6 @@ import {
 } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DOWN_ARROW,
     ENTER,
@@ -81,7 +80,6 @@ describe('KbqAutocomplete', () => {
                 KbqInputModule,
                 FormsModule,
                 ReactiveFormsModule,
-                NoopAnimationsModule,
                 KbqLocaleServiceModule,
                 component
             ],

@@ -37,7 +37,8 @@ import {
     numberAttribute,
     output,
     signal,
-    viewChild
+    viewChild,
+    type AfterRenderRef
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -84,7 +85,6 @@ import {
     isSelectAll,
     isUndefined,
     kbqResolvePanelMaxHeightToken,
-    kbqSelectAnimations,
     kbqSiblingPopupProvider,
     runClearPredicate,
     shouldSelectSearchText
@@ -254,9 +254,6 @@ export class KbqTreeSelectChange<T = any> {
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
-    animations: [
-        kbqSelectAnimations.fadeInContent
-    ],
     exportAs: 'kbqTreeSelect'
 })
 export class KbqTreeSelect
@@ -316,8 +313,10 @@ export class KbqTreeSelect
     /** Deals with the selection logic. */
     selectionModel: SelectionModel<any>;
 
-    /** Emits when the panel element is finished transforming in. */
+    /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     protected readonly panelDoneAnimatingStream = new Subject<string>();
+
+    private panelRender?: AfterRenderRef;
 
     /** Strategy that will be used to handle scrolling while the select panel is open. */
     scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
@@ -1295,6 +1294,8 @@ export class KbqTreeSelect
             },
             { injector: this.injector }
         );
+
+        this.reportPanelRendered('showing');
     }
 
     /** Closes the overlay panel and focuses the host element. */
@@ -1317,6 +1318,23 @@ export class KbqTreeSelect
         if (search) {
             search.reset();
         }
+
+        this.reportPanelRendered('void');
+    }
+
+    /**
+     * Reports the panel rendered or removed once the next render has applied `panelOpen`; only the latest
+     * report of a frame is delivered.
+     */
+    private reportPanelRendered(state: 'showing' | 'void'): void {
+        this.panelRender?.destroy();
+
+        // The overlay detaching while the select is destroyed closes it too.
+        if (this.destroyRef.destroyed) return;
+
+        this.panelRender = afterNextRender(() => this.panelDoneAnimatingStream.next(state), {
+            injector: this.injector
+        });
     }
 
     /**

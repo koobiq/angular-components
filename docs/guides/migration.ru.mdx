@@ -336,6 +336,22 @@ ng update @koobiq/components@21
 ng g @koobiq/components:zoneless-change-detection --project "<your project>"
 ```
 
+#### Анимации без @angular/animations
+
+Компоненты Koobiq больше не используют `@angular/animations`, который Angular объявил устаревшим: их анимации работают на CSS, а окончания анимации компоненты дожидаются сами. `@angular/animations` больше не входит в peer-зависимости, и компонентам больше не нужен `provideAnimations()`: удалите его вместе с пакетом, если компоненты вашего приложения сами не объявляют `animations: [...]`.
+
+- **Движение отключается при `prefers-reduced-motion: reduce`.** Чтобы отключить его во всем приложении, например в end-to-end тестах, предоставьте `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` из `@koobiq/components/core`. `provideNoopAnimations()` по-прежнему его отключает, но относится к устаревшему пакету.
+- **Экспортируемые триггеры удалены**: `fadeAnimation` и `kbqSelectAnimations` из `core`, `kbqDropdownAnimations`, `fadeInItems` и `transformDropdown` из `dropdown`, `kbqTabsAnimations` из `tabs`. `KbqSidepanelAnimationState` больше не экспортируется из `sidepanel`.
+- **Члены, принимавшие или отдававшие `AnimationEvent`, удалены.** `KbqPopUp.animationStart()` и `animationDone()`: наследник переопределяет защищенный `afterShowAnimation()`. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` и `onAnimationDone()`: собственный триггер вызывает `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` и `onAnimationDone()`: подпишитесь на `stateChanged`. `KbqTabBody.onTranslateTabStarted()` и `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` и `onAnimation()`, а также `animationStateChanged` контейнеров sidepanel и панели действий: следите за панелью через ее ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`.
+- **Панель dropdown больше не угасает при закрытии**: она закрывается, а ее ленивое содержимое открепляется, как только об этом сообщает триггер.
+- **В тесте то, что ждало обработчика анимации, теперь ждет следующей отрисовки**: `fixture.detectChanges()` или `await fixture.whenStable()`. В jsdom нет Web Animations API, поэтому анимаций там нет.
+
+Схематик `angular-animations-removal` сообщает обо всех использованиях удаленных триггеров и членов:
+
+```bash
+ng g @koobiq/components:angular-animations-removal --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

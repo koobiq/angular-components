@@ -5,7 +5,6 @@ import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqMomentDateModule } from '@koobiq/angular-moment-adapter/adapter';
 import {
@@ -68,7 +67,7 @@ describe('KbqNotificationCenter', () => {
 
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
-            imports: [component, NoopAnimationsModule, KbqLuxonDateModule, KbqFormattersModule],
+            imports: [component, KbqLuxonDateModule, KbqFormattersModule],
             providers
         });
         const componentFixture = TestBed.createComponent<T>(component);

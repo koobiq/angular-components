@@ -5,7 +5,6 @@ import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
@@ -23,7 +22,7 @@ import { KbqTagsModule } from './tag.module';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers
     });
     const fixture = TestBed.createComponent<T>(component);

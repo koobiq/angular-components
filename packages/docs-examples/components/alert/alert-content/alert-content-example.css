@@ -41,3 +41,13 @@ p + p {
         width: 100%;
     }
 }
+
+.example-alert_leave {
+    animation: example-alert-fade-out 0.2s forwards;
+}
+
+@keyframes example-alert-fade-out {
+    to {
+        opacity: 0;
+    }
+}

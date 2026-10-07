@@ -1,5 +1,4 @@
-﻿import { animate, style, transition, trigger } from '@angular/animations';
-import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { A } from '@angular/cdk/keycodes';
@@ -30,7 +29,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAutocompleteModule, KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
     BACKSPACE,
@@ -64,7 +62,7 @@ import { KbqTag, KbqTagEvent } from './tag.component';
 
 const createStandaloneComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers
     });
     const fixture = TestBed.createComponent<T>(component);
@@ -486,7 +484,7 @@ describe(KbqTagList.name, () => {
                     expect(tagListInstance.keyManager.activeItemIndex).toEqual(-1);
                 });
 
-                it('should move focus to the last tag when the focused tag was deleted inside a component with animations', fakeAsync(() => {
+                it('should move focus to the last tag when the focused tag was deleted with a leave animation', fakeAsync(() => {
                     fixture.destroy();
                     TestBed.resetTestingModule();
                     fixture = createComponent(StandardTagListWithAnimations, []);
@@ -1209,7 +1207,6 @@ describe(KbqTagList.name, () => {
                 KbqTagsModule,
                 KbqFormFieldModule,
                 KbqInputModule,
-                NoopAnimationsModule,
                 component
             ],
             providers: [
@@ -3017,22 +3014,12 @@ class TagListWithFormErrorMessages {
     template: `
         <kbq-tag-list>
             @for (i of numbers; track i) {
-                <kbq-tag (removed)="remove(i)">
+                <kbq-tag animate.leave="tag-leave" (removed)="remove(i)">
                     {{ i }}
                 </kbq-tag>
             }
         </kbq-tag-list>
-    `,
-    animations: [
-        // For the case we're testing this animation doesn't
-        // have to be used anywhere, it just has to be defined.
-        trigger('dummyAnimation', [
-            transition(':leave', [
-                style({ opacity: 0 }),
-                animate('500ms', style({ opacity: 1 }))
-            ])
-        ])
-    ]
+    `
 })
 class StandardTagListWithAnimations {
     numbers = [0, 1, 2, 3, 4];

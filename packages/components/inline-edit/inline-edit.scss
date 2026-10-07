@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/squircle' as *;
 
@@ -192,6 +193,12 @@
         padding: var(--kbq-size-xxs) var(--kbq-size-s) var(--kbq-size-s);
     }
 
+    .kbq-inline-edit__action-buttons_enter {
+        animation: kbq-inline-edit-action-buttons-enter 50ms cubic-bezier(0, 0, 0.2, 1);
+
+        @include animation.kbq-animations-off();
+    }
+
     &.kbq-inline-edit__panel_select .kbq-inline-edit__control-container {
         display: none;
     }
@@ -201,5 +208,12 @@
         box-shadow: var(--kbq-inline-edit-panel-shadow);
         background-color: var(--kbq-background-bg);
         @include kbq-squircle(var(--kbq-size-border-radius));
+    }
+}
+
+@keyframes kbq-inline-edit-action-buttons-enter {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
     }
 }

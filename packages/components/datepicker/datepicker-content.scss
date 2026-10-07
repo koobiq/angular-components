@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use './datepicker-theme' as *;
 @use '../core/styles/common/squircle' as *;
 
@@ -23,6 +24,36 @@ $kbq-datepicker-non-touch-calendar-height: 270px;
         padding-top: var(--kbq-datepicker-size-container-padding-vertical);
 
         padding-bottom: var(--kbq-datepicker-size-container-padding-vertical);
+
+        animation: kbq-datepicker-calendar-enter 120ms 100ms cubic-bezier(0.55, 0, 0.55, 0.2) backwards;
+    }
+
+    &.kbq-datepicker__content_leave {
+        animation: kbq-datepicker-content-leave 100ms linear forwards;
+
+        @include animation.kbq-animations-off();
+    }
+
+    &.kbq-animations-disabled .kbq-calendar {
+        animation: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kbq-calendar {
+            animation: none;
+        }
+    }
+}
+
+@keyframes kbq-datepicker-calendar-enter {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes kbq-datepicker-content-leave {
+    to {
+        opacity: 0;
     }
 }
 

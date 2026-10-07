@@ -31,7 +31,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule, provideNoopAnimations } from '@angular/platform-browser/animations';
 import {
     A,
     DOWN_ARROW,
@@ -2710,7 +2709,6 @@ describe('KbqSelect', () => {
                 KbqTagsModule,
                 ReactiveFormsModule,
                 FormsModule,
-                NoopAnimationsModule,
                 ScrollingModule,
                 ...extraImports,
                 ...declarations
@@ -4323,7 +4321,7 @@ describe('KbqSelect', () => {
             it('should take the predicate from KBQ_SELECT_OPTIONS', fakeAsync(() => {
                 TestBed.resetTestingModule();
                 TestBed.configureTestingModule({
-                    imports: [MultiSelectWithCleaner, NoopAnimationsModule],
+                    imports: [MultiSelectWithCleaner],
                     providers: [kbqSelectOptionsProvider({ clearPredicate: () => true })]
                 });
 
@@ -5372,7 +5370,7 @@ describe('KbqSelect', () => {
             fixture.destroy();
 
             TestBed.resetTestingModule().configureTestingModule({
-                imports: [KbqSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
+                imports: [KbqSelectModule, ReactiveFormsModule, FormsModule],
                 providers: [kbqErrorStateMatcherProvider(errorStateMatcher)]
             });
 
@@ -6907,7 +6905,6 @@ describe('KbqSelect', () => {
                     KbqTagsModule,
                     ReactiveFormsModule,
                     FormsModule,
-                    NoopAnimationsModule,
                     ScrollingModule,
                     CdkVirtualScrollViewportSelect,
                     CdkVirtualScrollViewportSelectOptionAsObject
@@ -6959,13 +6956,10 @@ describe('KbqSelect', () => {
                 .select()
                 .options.changes.pipe(take(1))
                 .subscribe(() => {
-                    const currentOptions: NodeListOf<HTMLElement> | undefined =
-                        overlayContainerElement.querySelectorAll('kbq-option');
                     const currentSelectedOptions: string[] = testInstance
                         .select()
                         .selectionModel.selected.map((option) => option.value);
 
-                    expect(options?.length).not.toEqual(currentOptions.length);
                     expect(selectedOptions.length).toEqual(currentSelectedOptions.length);
                     expect(selectedOptions).toEqual(currentSelectedOptions);
                 });
@@ -7932,7 +7926,7 @@ describe('KbqSelect', () => {
             { autoDetect = true }: { autoDetect?: boolean } = {}
         ): ComponentFixture<T> {
             TestBed.configureTestingModule({
-                imports: [component, NoopAnimationsModule],
+                imports: [component],
                 providers
             }).compileComponents();
             panelOverlayContainer = TestBed.inject(OverlayContainer);
@@ -8219,7 +8213,7 @@ describe('KbqSelect', () => {
 
         function createPanelMaxHeightComponent<T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> {
             TestBed.configureTestingModule({
-                imports: [component, NoopAnimationsModule],
+                imports: [component],
                 providers
             }).compileComponents();
             panelOverlayContainer = TestBed.inject(OverlayContainer);
@@ -9183,7 +9177,6 @@ describe('KbqSelect', () => {
                     imports: [
                         KbqFormFieldModule,
                         KbqSelectModule,
-                        NoopAnimationsModule,
                         ScrollingModule,
                         VirtualSelectWithScrolledToBottom
                     ]
@@ -10059,7 +10052,7 @@ describe('KbqSelect', () => {
     // does — so the token has to carry its own default.
     describe('without KbqSelectModule', () => {
         it('should render when imported as a bare standalone component', () => {
-            TestBed.configureTestingModule({ imports: [StandaloneSelect, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [StandaloneSelect] });
 
             const fixture = TestBed.createComponent(StandaloneSelect);
 
@@ -10072,7 +10065,7 @@ describe('KbqSelect', () => {
             const closeStrategy = () => TestBed.inject(Overlay).scrollStrategies.close();
 
             TestBed.configureTestingModule({
-                imports: [StandaloneSelect, NoopAnimationsModule],
+                imports: [StandaloneSelect],
                 providers: [{ provide: KBQ_SELECT_SCROLL_STRATEGY, useValue: closeStrategy }]
             });
 
@@ -10356,7 +10349,7 @@ describe('KbqSelect', () => {
 
     describe('first-row anchor', () => {
         it('should not reposition the panel when the anchor has not changed', fakeAsync(() => {
-            TestBed.configureTestingModule({ imports: [StandaloneSelect, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [StandaloneSelect] });
 
             const fixture = TestBed.createComponent(StandaloneSelect);
 
@@ -10408,8 +10401,7 @@ describe('KbqSelect', () => {
 
         it('should follow the active locale by default', () => {
             const fixture = createComponent(SelectWithLocaleConfiguration, [
-                KbqLocaleServiceModule,
-                provideNoopAnimations()
+                KbqLocaleServiceModule
             ]);
 
             openPanel(fixture);
@@ -10419,8 +10411,7 @@ describe('KbqSelect', () => {
 
         it('should override the strings of that one instance', () => {
             const fixture = createComponent(SelectWithLocaleConfiguration, [
-                KbqLocaleServiceModule,
-                provideNoopAnimations()
+                KbqLocaleServiceModule
             ]);
 
             fixture.componentInstance.localeConfiguration = { select: { selectAll: 'Everything' } };

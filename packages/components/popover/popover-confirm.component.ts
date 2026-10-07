@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectPopoverConfirmLocaleConfiguration, kbqSiblingPopupProvider } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-import { kbqPopoverAnimations } from './popover-animations';
 import { KBQ_POPOVER_FOCUS_TRAP_PROVIDERS, KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
 
 /**
@@ -43,7 +42,6 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('KbqPo
     providers: KBQ_POPOVER_FOCUS_TRAP_PROVIDERS,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    animations: [kbqPopoverAnimations.popoverState],
     preserveWhitespaces: false
 })
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {

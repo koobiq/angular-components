@@ -2,7 +2,6 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -107,7 +106,7 @@ describe('KbqPipeMultiSelectComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         })
             .overrideComponent(KbqPipeMultiSelectComponent, {
                 set: {

@@ -17,13 +17,12 @@ import { firstValueFrom } from 'rxjs';
 import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
 import { setKoobiqThemeBodyClass } from '../utils/html-config';
 import { logMessage } from '../utils/messages';
-import { addPackageToPackageJson, getPackageVersionFromPackageJson } from '../utils/package-config';
+import { addPackageToPackageJson } from '../utils/package-config';
 import { applyKoobiqWorkspaceStyles, KoobiqTheme } from '../utils/workspace-styles';
 import * as messages from './messages';
 import { Schema } from './schema';
 
 const VERSIONS = {
-    ANGULAR_ANIMATIONS: '^0.0.0',
     ANGULAR_CDK: '^0.0.0',
     KOOBIQ_ANGULAR_LUXON_ADAPTER: '^0.0.0',
     KOOBIQ_LUXON_DATE_ADAPTER: '^0.0.0',
@@ -172,13 +171,6 @@ function themeServiceInitializerRule(projectName: string): Rule {
     });
 }
 
-/** `addRootProvider` rule inserting `provideAnimations()`. */
-function animationsRule(projectName: string): Rule {
-    return addRootProvider(projectName, ({ code, external }) => {
-        return code`${external('provideAnimations', '@angular/platform-browser/animations')}()`;
-    });
-}
-
 /**
  * This is executed when `ng add @koobiq/components` is run.
  * It adds all dependencies to the 'package.json' and schedules their installation, wires the
@@ -189,7 +181,6 @@ export default function ngAdd(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
         const { project } = options;
         const theme: KoobiqTheme = options.theme ?? 'auto';
-        const animations = options.animations ?? true;
 
         // `readWorkspace` only ever looks at `/angular.json`, even though the Angular CLI itself
         // also accepts `/.angular.json` — a real, if rare, workspace shape. Reading it once, up
@@ -209,17 +200,6 @@ export default function ngAdd(options: Schema): Rule {
         }
 
         // Installing dependencies
-        // `@angular/animations` is a mandatory peer: the components declare `animations: [...]`
-        // metadata and bind synthetic `[@state]` properties, which throw NG05105 without it.
-        //
-        // Its range has to come from the application, not from this repository: every
-        // `@angular/animations` release pins `@angular/core` EXACTLY, so the version installed here
-        // must line up with the Angular the application is already on. Writing the range this
-        // monorepo happens to build with would produce `ERESOLVE` for every consumer on a different
-        // patch — including ones well inside the `peerDependencies` range of `@koobiq/components`.
-        const angularCoreRange = getPackageVersionFromPackageJson(tree, '@angular/core');
-
-        addPackageToPackageJson(tree, '@angular/animations', angularCoreRange || VERSIONS.ANGULAR_ANIMATIONS);
         addPackageToPackageJson(tree, '@angular/cdk', VERSIONS.ANGULAR_CDK);
         addPackageToPackageJson(tree, '@koobiq/angular-luxon-adapter', VERSIONS.KOOBIQ_ANGULAR_LUXON_ADAPTER);
         // `@koobiq/angular-luxon-adapter` is a wrapper: it extends `LuxonDateAdapter` from the base
@@ -250,12 +230,6 @@ export default function ngAdd(options: Schema): Rule {
 
         if (wiredProjects.length === 0) {
             logMessage(context.logger, messages.noWiredProjects());
-
-            // The unconditional warning this replaced fired for every project; now that "no
-            // application project was found" is possible (e.g. `--project` names a library), the
-            // animations instruction has to be repeated here too, or it never reaches the user at
-            // all on that path.
-            if (animations) logMessage(context.logger, messages.animationsManualSetup());
         }
 
         const providerRules: Rule[] = [];
@@ -299,10 +273,6 @@ export default function ngAdd(options: Schema): Rule {
                 if (theme === 'auto' && !hasThemeServiceInitializer(resolved)) {
                     providerRules.push(themeServiceInitializerRule(wired.projectName));
                 }
-
-                if (animations && !findProviderCall(resolved, 'provideAnimations')) {
-                    providerRules.push(animationsRule(wired.projectName));
-                }
             } else {
                 // The bootstrap couldn't be statically analyzed (a non-standalone/custom
                 // bootstrap, a missing `build` target, ...) — `addRootProvider` is expected to fail
@@ -323,17 +293,7 @@ export default function ngAdd(options: Schema): Rule {
                         )
                     );
                 }
-
-                if (animations) {
-                    providerRules.push(
-                        safeRule(animationsRule(wired.projectName), messages.animationsManualSetup(wired.projectName))
-                    );
-                }
             }
-        }
-
-        if (!animations) {
-            logMessage(context.logger, messages.animationsManualSetup());
         }
 
         if (sawSsrProject) {

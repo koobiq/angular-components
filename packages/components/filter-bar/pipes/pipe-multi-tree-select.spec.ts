@@ -3,7 +3,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_LOCALE_SERVICE, KbqFilterBarLocaleConfiguration } from '@koobiq/components/core';
 import {
     KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION,
@@ -120,7 +119,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         })
             .overrideComponent(KbqPipeMultiTreeSelectComponent, {
                 set: {

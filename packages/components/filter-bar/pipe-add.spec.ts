@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { createKeyboardEvent, dispatchEvent, ENTER, SPACE } from '@koobiq/components/core';
 import {
     KbqFilter,
@@ -97,7 +96,7 @@ describe('KbqPipeAdd', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         }).compileComponents();
     });
 

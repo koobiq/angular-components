@@ -1,4 +1,7 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/common/squircle' as *;
+
+$easing: cubic-bezier(0.4, 0, 0.2, 1);
 
 .kbq-actions-panel-container {
     background: var(--kbq-actions-panel-background-color);
@@ -12,6 +15,18 @@
     align-items: center;
     overflow: hidden;
     box-sizing: border-box;
+
+    transform: translateY(100%);
+    transition: transform 150ms $easing;
+
+    @include animation.kbq-animations-off();
+
+    &.kbq-actions-panel-container_visible {
+        transform: none;
+        animation: kbq-actions-panel-enter 125ms $easing;
+
+        @include animation.kbq-animations-off();
+    }
 
     .kbq-actions-panel-container__content {
         display: flex;
@@ -35,4 +50,10 @@
 
 .kbq-actions-panel-overlay {
     margin: var(--kbq-actions-panel-margin);
+}
+
+@keyframes kbq-actions-panel-enter {
+    from {
+        transform: translateY(100%);
+    }
 }

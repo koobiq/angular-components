@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
 import { DOWN_ARROW, ENTER, UP_ARROW } from '@angular/cdk/keycodes';
@@ -58,7 +57,6 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Observable, Subject, Subscription, merge, timer } from 'rxjs';
 import { delay, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
-import { kbqDropdownAnimations } from './dropdown-animations';
 import { KbqDropdownContent } from './dropdown-content.directive';
 import { throwKbqDropdownInvalidPositionX, throwKbqDropdownInvalidPositionY } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
@@ -112,7 +110,6 @@ export class KbqDropdownFooter {}
         // Remove the TemplatePortal host box from layout while keeping kbqDropdownStaticContent in the document flow.
         style: 'display: contents'
     },
-    animations: [kbqDropdownAnimations.transformDropdown],
     exportAs: 'kbqDropdown'
 })
 export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestroy {
@@ -206,17 +203,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         return classes;
     });
 
-    /** Current state of the panel animation. */
-    panelAnimationState: 'void' | 'enter' = 'void';
+    /** Whether a trigger has the panel attached, see `setOpened`. */
+    private opened = false;
 
-    /** Emits whenever an animation on the dropdown completes. */
-    animationDone = new Subject<AnimationEvent>();
-
-    /** Whether the dropdown is animating. */
-    isAnimating: boolean;
-
-    /** The panel element this instance is currently rendered into, see `hidePanelReplacedBy`. */
-    private livePanelElement: HTMLElement | null = null;
+    private openedRender?: AfterRenderRef;
 
     /** Parent dropdown of the current dropdown panel. */
     parent: KbqDropdownPanel | undefined;
@@ -352,7 +342,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
             // A flip while the panel is open leaves focus wherever the previous mode put it: on an item
             // the new manager will not track, or on an input that is being destroyed. Hand it over the
             // same way opening does, deferred so the write lands outside this change detection pass.
-            if (this.panelAnimationState === 'enter') {
+            if (this.opened) {
                 this.applyInitialFocusAfterRender(this.focusOrigin);
             }
         });
@@ -740,66 +730,32 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
         this.positionOverride.set({ posX, posY });
     }
 
-    /** Starts the enter animation. */
-    startAnimation() {
-        this.panelAnimationState = 'enter';
-    }
+    /**
+     * Called by the trigger when it attaches the panel and when it detaches it.
+     * @docs-private
+     */
+    setOpened(opened: boolean): void {
+        this.opened = opened;
+        this.openedRender?.destroy();
 
-    /** Resets the panel animation to its initial state. */
-    resetAnimation() {
-        this.panelAnimationState = 'void';
-    }
+        if (!opened) return;
 
-    /** Callback that is invoked when the panel animation completes. */
-    onAnimationDone(event: AnimationEvent) {
-        if (event.toState === 'enter') {
-            this.scrollbarViewport()?.flashScrollIndicators();
-        }
+        this.openedRender = afterNextRender(
+            () => {
+                // Focus moves to the first item before the panel has rendered, which can throw the browser off
+                // when it determines the scroll position.
+                if (this.keyManager.activeItemIndex <= 0) {
+                    this.scrollbarViewport()?.scrollToTop();
+                }
 
-        if (event.toState === 'void' && event.element === this.livePanelElement) {
-            this.livePanelElement = null;
-        }
-
-        this.animationDone.next(event);
-        this.isAnimating = false;
-    }
-
-    onAnimationStart(event: AnimationEvent) {
-        this.isAnimating = true;
-
-        if (event.toState === 'enter') {
-            this.hidePanelReplacedBy(event.element);
-        }
-
-        // Scroll the content element to the top as soon as the animation starts. This is necessary,
-        // because we move focus to the first item while it's still being animated, which can throw
-        // the browser off when it determines the scroll position. Alternatively we can move focus
-        // when the animation is done, however moving focus asynchronously will interrupt screen
-        // readers which are in the process of reading out the dropdown already.
-        if (event.toState === 'enter' && this.keyManager.activeItemIndex <= 0) {
-            this.scrollbarViewport()?.scrollToTop();
-        }
+                this.scrollbarViewport()?.flashScrollIndicators();
+            },
+            { injector: this.injector }
+        );
     }
 
     close() {
         this.closed.emit(this.focusOrigin === 'keyboard' ? 'keydown' : 'click');
-    }
-
-    /**
-     * Hides the panel the incoming one replaces.
-     *
-     * Several triggers can share a single `<kbq-dropdown>`, and its items reach the panel through
-     * `<ng-content>` — one set of nodes, rendered in one place. Opening the panel from a sibling
-     * trigger re-projects them into the new overlay in the same change detection flush that destroys
-     * the previous one, so what the exit animation is left fading out is an empty shell. `visibility`
-     * is what hides it, because the animation player owns `opacity` until that exit completes.
-     */
-    private hidePanelReplacedBy(incoming: HTMLElement): void {
-        if (this.livePanelElement && this.livePanelElement !== incoming) {
-            this.livePanelElement.style.visibility = 'hidden';
-        }
-
-        this.livePanelElement = incoming;
     }
 
     /**
