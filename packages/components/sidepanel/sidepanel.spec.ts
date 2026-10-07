@@ -895,6 +895,19 @@ describe('KbqSidepanelService', () => {
 
             expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
         }));
+
+        it('should render the header close button once the header becomes closeable', async () => {
+            const sidepanelRef = sidepanelService.open(SidepanelWithToggleableHeader);
+            const closeButton = () =>
+                overlayContainerElement.querySelector('kbq-sidepanel-header button[kbq-sidepanel-close]');
+
+            await rootComponentFixture.whenStable();
+            expect(closeButton()).toBeNull();
+
+            sidepanelRef.instance.closeable.set(true);
+            await rootComponentFixture.whenStable();
+            expect(closeButton()).not.toBeNull();
+        });
     });
 
     describe('config defaults', () => {
@@ -1151,6 +1164,18 @@ class SidepanelWithLateHeader {
 }
 
 @Component({
+    imports: [KbqSidepanelModule],
+    template: `
+        <kbq-sidepanel-header [closeable]="closeable()">Title</kbq-sidepanel-header>
+        <kbq-sidepanel-body>Body</kbq-sidepanel-body>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SidepanelWithToggleableHeader {
+    readonly closeable = signal(false);
+}
+
+@Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
         <ng-template>
@@ -1277,6 +1302,7 @@ const TEST_COMPONENTS = [
     SidepanelWithFocusInitial,
     SidepanelWithCloseResults,
     SidepanelWithLateHeader,
+    SidepanelWithToggleableHeader,
     SidepanelTrigger,
     ComponentWithTemplateForSidepanel,
     ComponentWithCloseButtonTemplate,

@@ -79,9 +79,9 @@ export const kbqActionsPanelLocaleConfigurationProvider = (
         './actions-panel-tokens.scss',
         './actions-panel-container.scss'
     ],
-    // Uses the `Default` change detection strategy as parent `CdkDialogContainer`:
-    // https://github.com/angular/components/blob/18.2.14/src/cdk/dialog/dialog-container.ts#L60
-    changeDetection: ChangeDetectionStrategy.Default,
+    // Unlike the parent `CdkDialogContainer`, and like the sidepanel container: the attached content is
+    // checked when its own view is marked, not on every application tick.
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-actions-panel-container',
