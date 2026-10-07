@@ -381,6 +381,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             lazyContent.attach(this.data());
         }
 
+        // The overlay positions the pane once its content has rendered, which without zone.js happens in a later
+        // task: the browser can paint a frame in between with the pane at the viewport origin, where the item
+        // under the pointer takes the hover and focus. Placed now, it is re-placed after the render.
+        overlayRef.updatePosition();
+
         this.closingActionsSubscription.unsubscribe();
         this.closingActionsSubscription = this.closingActions().subscribe(() => this.close());
 
