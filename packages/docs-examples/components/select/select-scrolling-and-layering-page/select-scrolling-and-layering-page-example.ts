@@ -24,14 +24,6 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
         </kbq-top-bar>
 
         <div class="example-text-container layout-padding-left-xxl" cdk-scrollable kbqOverlayLayer>
-            <p>
-                The &lt;select> HTML element represents a control that provides a menu of options. The above example
-                shows typical &lt;select> usage. It is given an id attribute to enable it to be associated with a
-                &lt;label> for accessibility purposes, as well as a name attribute to represent the name of the
-                associated data point submitted to the server. Each menu option is defined by an &lt;option> element
-                nested inside the &lt;select>.
-            </p>
-
             <kbq-form-field>
                 <kbq-select [value]="'Network Watcher'">
                     <kbq-option [value]="'Network Watcher'">Network Watcher</kbq-option>
@@ -44,6 +36,14 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
                     <kbq-option [value]="'Endpoint Defender'">Endpoint Defender</kbq-option>
                 </kbq-select>
             </kbq-form-field>
+
+            <p>
+                The &lt;select> HTML element represents a control that provides a menu of options. The above example
+                shows typical &lt;select> usage. It is given an id attribute to enable it to be associated with a
+                &lt;label> for accessibility purposes, as well as a name attribute to represent the name of the
+                associated data point submitted to the server. Each menu option is defined by an &lt;option> element
+                nested inside the &lt;select>.
+            </p>
 
             <p>
                 The &lt;select> element has some unique attributes you can use to control it, such as multiple to
@@ -107,6 +107,8 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
         .kbq-form-field {
             width: 320px;
             align-self: center;
+
+            margin-top: var(--kbq-size-l);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
