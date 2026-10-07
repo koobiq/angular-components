@@ -16,15 +16,17 @@ import {
     forwardRef,
     inject,
     Injector,
-    Input,
+    input,
     isDevMode,
     linkedSignal,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     Renderer2,
     signal,
+    SimpleChanges,
     untracked,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -323,7 +325,7 @@ export class KbqButtonCssStyler implements AfterContentInit {
 })
 export class KbqButton
     extends KbqColorDirective<KbqButtonColor>
-    implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef
+    implements OnChanges, OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef
 {
     private focusMonitor = inject(FocusMonitor);
     protected styler = inject(KbqButtonCssStyler);
@@ -339,10 +341,18 @@ export class KbqButton
 
     hasFocus: boolean = false;
 
-    @ViewChild('kbqTitleText') textElement: ElementRef<HTMLElement>;
+    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
+    private readonly parentText = viewChild<ElementRef<HTMLElement>>('parentTextElement');
+
+    /** The text box of the button, measured by `kbq-title`. Always rendered by the template. */
+    get textElement(): ElementRef<HTMLElement> {
+        return this.titleText()!;
+    }
 
     /** The flex row that lays out the icons and text, used as the overflow width constraint. */
-    @ViewChild('parentTextElement') parentTextElement: ElementRef<HTMLElement>;
+    get parentTextElement(): ElementRef<HTMLElement> {
+        return this.parentText()!;
+    }
 
     /**
      * Visual style of the button. Setting it to a value marks that value as owned by the button, so
@@ -351,9 +361,6 @@ export class KbqButton
      * Reads back as the resulting host class rather than the value that was set, because the host
      * `[class]` binding is what consumes it.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get kbqStyle(): string {
         return this._kbqStyleClassName;
     }
@@ -383,9 +390,6 @@ export class KbqButton
      * Whether the button is disabled. A surrounding `KbqButtonGroupRoot` can disable the button in
      * addition to this input, but never re-enables a button disabled through it.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.disabledSignal();
     }
@@ -408,9 +412,6 @@ export class KbqButton
     /** @docs-private */
     readonly disabledSignal = signal(false);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
     }
@@ -442,6 +443,42 @@ export class KbqButton
         if (this.disabled) return -1;
 
         return this.hostSupportsNativeDisabled && this._tabIndex === 0 ? null : this._tabIndex;
+    }
+
+    /** @docs-private */
+    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['kbqStyleInput']) {
+            const kbqStyle = this.kbqStyleInput();
+
+            if (kbqStyle !== undefined) this.kbqStyle = kbqStyle;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
     }
 
     constructor() {

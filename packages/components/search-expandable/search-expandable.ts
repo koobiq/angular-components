@@ -10,12 +10,13 @@ import {
     ElementRef,
     inject,
     InjectionToken,
-    Input,
     input,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     output,
     Provider,
+    SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -110,7 +111,9 @@ class BoundControlErrorStateMatcher implements ErrorStateMatcher {
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
-export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
+export class KbqSearchExpandable
+    implements OnChanges, ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy
+{
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */
@@ -178,18 +181,13 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private focusMonitorSubscription: Subscription | null = null;
 
     /** state of component. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) isOpened = false;
+    isOpened = false;
     /** Emit event by enter or not. Default is false */
     readonly isEmitValueByEnterEnabled = input(false, { transform: booleanAttribute });
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
     readonly emitValueTimeout = input(defaultEmitValueTimeout, { transform: numberAttribute });
 
     /** Tooltip text for the search button. When set, overrides the locale tooltip */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get tooltipText(): string {
         return this._tooltipText ?? this.localeConfiguration().tooltip;
     }
@@ -201,9 +199,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private _tooltipText: string | null;
 
     /** Placeholder for input when expanded */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get placeholder(): string {
         return this._placeholder ?? this.localeConfiguration().placeholder;
     }
@@ -215,9 +210,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private _placeholder: string | null = null;
 
     /** Whether the component is disabled. Also set by the bound control through `setDisabledState`. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
@@ -242,9 +234,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private _disabled: boolean = false;
 
     /** Tab index of the collapsed button and of the expanded input. Always `-1` while disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
     }
@@ -259,6 +248,68 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     readonly isOpenedChange = output<boolean>();
 
     private lastEmittedValue = defaultValue;
+
+    /** @docs-private */
+    readonly isOpenedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'isOpened',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tooltipTextInput = input<string | null | undefined>(undefined, { alias: 'tooltipText' });
+
+    /** @docs-private */
+    readonly placeholderInput = input<string | null | undefined>(undefined, { alias: 'placeholder' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['isOpenedInput']) {
+            const isOpened = this.isOpenedInput();
+
+            // A form directive on the element writes its value before this hook runs, and expands the field when the
+            // value is not empty: a first binding of `false` must not collapse it again. A decorator input was
+            // applied before that write, so it never could.
+            if (isOpened !== undefined && (isOpened || !changes['isOpenedInput'].firstChange)) {
+                this.isOpened = isOpened;
+            }
+        }
+
+        if (changes['tooltipTextInput']) {
+            const tooltipText = this.tooltipTextInput();
+
+            if (tooltipText !== undefined) this.tooltipText = tooltipText;
+        }
+
+        if (changes['placeholderInput']) {
+            const placeholder = this.placeholderInput();
+
+            if (placeholder !== undefined) this.placeholder = placeholder;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+    }
 
     constructor() {
         if (!this.ngControl) {

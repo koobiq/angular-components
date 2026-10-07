@@ -9,11 +9,12 @@ import {
     effect,
     ElementRef,
     inject,
-    Input,
     input,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     output,
+    SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -69,7 +70,10 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
     hostDirectives: [KbqCheckable],
     exportAs: 'kbqToggle'
 })
-export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
+export class KbqToggleComponent
+    extends KbqColorDirective
+    implements OnChanges, AfterViewInit, ControlValueAccessor, OnDestroy
+{
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
@@ -83,9 +87,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     readonly ariaLabel = input<string>('', { alias: 'aria-label' });
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
 
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() id: string;
+    id: string;
 
     get inputId(): string {
         return `${this.id || this.uniqueId}-input`;
@@ -95,9 +97,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     readonly value = input<string>(undefined!);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get disabled() {
         return this.checkable.disabled();
     }
@@ -106,9 +105,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.checkable.disabled.set(value);
     }
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.checkable.effectiveTabIndex();
     }
@@ -121,9 +117,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         return this.checkable.checked();
     }
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     set checked(value: boolean) {
         if (value !== this.checkable.checked()) {
             this.checkable.checked.set(value);
@@ -137,9 +130,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
      * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
      * set to false.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get indeterminate(): boolean {
         return this.checkable.indeterminate();
     }
@@ -172,11 +162,78 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Defines the behavior when a user clicks on the toggle. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() clickAction: KbqToggleClickAction = inject(KBQ_CHECKABLE_CLICK_ACTION, { optional: true }) || undefined;
+    clickAction: KbqToggleClickAction = inject(KBQ_CHECKABLE_CLICK_ACTION, { optional: true }) || undefined;
 
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly indeterminateInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'indeterminate',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly clickActionInput = input<KbqToggleClickAction | undefined>(undefined, { alias: 'clickAction' });
+
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+
+        if (changes['checkedInput']) {
+            const checked = this.checkedInput();
+
+            if (checked !== undefined) this.checked = checked;
+        }
+
+        if (changes['indeterminateInput']) {
+            const indeterminate = this.indeterminateInput();
+
+            if (indeterminate !== undefined) this.indeterminate = indeterminate;
+        }
+
+        if (changes['clickActionInput']) {
+            const clickAction = this.clickActionInput();
+
+            if (clickAction !== undefined) this.clickAction = clickAction;
+        }
+
+        if (changes['idInput']) {
+            const id = this.idInput();
+
+            if (id !== undefined) this.id = id;
+        }
+    }
 
     constructor() {
         super();

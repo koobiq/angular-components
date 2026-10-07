@@ -164,6 +164,11 @@
             "factory": "./migrations/list-signals/index",
             "schema": "./migrations/list-signals/schema.json"
         },
+        "controls-signal-inputs": {
+            "description": "Reports subclasses of KbqCheckbox, KbqToggleComponent, KbqRadioGroup, KbqRadioButton, KbqButtonToggleGroup, KbqButtonToggle, KbqButton, KbqButtonGroupRoot, KbqSplitButton, KbqIcon, KbqIconButton, KbqIconItem and KbqSearchExpandable: their decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, so a subclass has to call super.ngOnChanges and override <member>Input instead of redeclaring an @Input. Reads and writes of the members are unchanged. Warn-only.",
+            "factory": "./migrations/controls-signal-inputs/index",
+            "schema": "./migrations/controls-signal-inputs/schema.json"
+        },
         "zoneless-change-detection": {
             "description": "Reports the uses of MockNgZone and its simulateZoneExit(), removed from @koobiq/components/core: the library no longer depends on zone.js and nothing in it waits for NgZone.onStable, so a spec renders with fixture.detectChanges() or waits with fixture.whenStable() instead. Warn-only: which of the two depends on what the spec waited for.",
             "factory": "./migrations/zoneless-change-detection/index",

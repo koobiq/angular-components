@@ -404,6 +404,19 @@ ng g @koobiq/components:input-signals --project "<your project>"
 ng g @koobiq/components:list-signals --project "<your project>"
 ```
 
+#### Чекбокс, переключатель, радиокнопки, группа кнопок, кнопки, иконки и поиск
+
+Их инпуты стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `checkbox.checked`, `button.disabled` или `icon.iconName` работают как раньше.
+
+- **Наследник**, реализующий `ngOnChanges`, вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `iconNameInput`.
+- **Булев инпут** принимает в шаблоне `boolean | string | null | undefined`, а не любое значение.
+
+Схематик `controls-signal-inputs` сообщает о каждом наследнике:
+
+```bash
+ng g @koobiq/components:controls-signal-inputs --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

@@ -134,7 +134,7 @@
                                 [attr.kbq-modal-main-action]="button.kbqModalMainAction"
                                 [class.kbq-progress]="getButtonCallableProp(button, 'loading')"
                                 [color]="button.type"
-                                [disabled]="getButtonCallableProp(button, 'disabled')"
+                                [disabled]="!!getButtonCallableProp(button, 'disabled')"
                                 (click)="onButtonClick(button)"
                             >
                                 {{ button.label }}

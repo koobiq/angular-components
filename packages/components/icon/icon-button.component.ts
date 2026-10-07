@@ -7,10 +7,10 @@ import {
     computed,
     effect,
     inject,
-    Input,
     input,
     OnDestroy,
     signal,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -53,14 +53,9 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly isCompact = computed(() => this.size() === 'compact' || this.small());
 
-    /** Name of an icon within a `@koobiq/icons`. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ alias: 'kbq-icon-button' }) iconName: string;
+    /** @docs-private */
+    override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-button' });
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get tabindex() {
         return this.disabled ? null : this._tabindex;
     }
@@ -73,9 +68,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
@@ -91,6 +83,32 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     readonly disabledSignal = signal(false);
 
     override name = 'KbqIconButton';
+
+    /** @docs-private */
+    readonly tabindexInput = input<number | string | null | undefined>(undefined, { alias: 'tabindex' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['tabindexInput']) {
+            const tabindex = this.tabindexInput();
+
+            if (tabindex !== undefined) this.tabindex = tabindex;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     constructor() {
         super();

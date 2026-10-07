@@ -5,45 +5,49 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonColor } from '@koobiq/components/button';
 import { KbqButtonStyleInput } from '@koobiq/components/button';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { OnChanges } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public (undocumented)
-export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements AfterContentInit {
+export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements OnChanges, AfterContentInit {
     constructor();
-    protected readonly buttons: i0.Signal<readonly KbqButton[]>;
+    protected readonly buttons: _angular_core.Signal<readonly KbqButton[]>;
     get disabled(): boolean | undefined;
     set disabled(value: boolean);
     // (undocumented)
     protected _disabled: boolean | undefined;
-    protected readonly dropdownTrigger: i0.Signal<KbqDropdownTrigger | undefined>;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
+    protected readonly dropdownTrigger: _angular_core.Signal<KbqDropdownTrigger | undefined>;
     get firstDisabled(): boolean;
     get kbqStyle(): string;
     set kbqStyle(value: KbqButtonStyleInput | null | undefined);
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
+    readonly kbqStyleInput: _angular_core.InputSignal<KbqButtonStyleInput | null | undefined>;
     // (undocumented)
     ngAfterContentInit(): void;
-    readonly panelAutoWidth: i0.InputSignal<boolean>;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    readonly panelAutoWidth: _angular_core.InputSignal<boolean>;
     get secondDisabled(): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button, [kbq-split-button]", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; "isSignal": true; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["buttons", "dropdownTrigger"], ["[kbq-button]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button, [kbq-split-button]", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; "isSignal": true; }; "kbqStyleInput": { "alias": "kbqStyle"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["buttons", "dropdownTrigger"], ["[kbq-button]"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitButton, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSplitButton, never>;
 }
 
 // @public (undocumented)
 export class KbqSplitButtonModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitButtonModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSplitButtonModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqSplitButtonModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqSplitButtonModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSplitButtonModule, never, [typeof KbqSplitButton], [typeof KbqSplitButton]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSplitButtonModule, never, [typeof KbqSplitButton], [typeof KbqSplitButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

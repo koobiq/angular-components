@@ -126,6 +126,11 @@
             "description": "Reports programmatic writes to the signal inputs of KbqListSelection (autoSelect, noUnselectLast, multiple, tabIndex, selectAllHandler, disabled, draggable) and KbqListOption (value, disabled, draggable, showCheckbox): a read is unchanged, a write no longer compiles. KbqListOption.selected and KbqListSelection.multipleMode stay writable. Warn-only.",
             "factory": "./migrations/list-signals/index"
         },
+        "controls-signal-inputs": {
+            "version": "21.0.0-0",
+            "description": "Reports subclasses of KbqCheckbox, KbqToggleComponent, KbqRadioGroup, KbqRadioButton, KbqButtonToggleGroup, KbqButtonToggle, KbqButton, KbqButtonGroupRoot, KbqSplitButton, KbqIcon, KbqIconButton, KbqIconItem and KbqSearchExpandable: their decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, so a subclass has to call super.ngOnChanges and override <member>Input instead of redeclaring an @Input. Reads and writes of the members are unchanged. Warn-only.",
+            "factory": "./migrations/controls-signal-inputs/index"
+        },
         "zoneless-change-detection": {
             "version": "21.0.0-0",
             "description": "Reports the uses of MockNgZone and its simulateZoneExit(), removed from @koobiq/components/core: the library no longer depends on zone.js and nothing in it waits for NgZone.onStable, so a spec renders with fixture.detectChanges() or waits with fixture.whenStable() instead. Warn-only: which of the two depends on what the spec waited for.",

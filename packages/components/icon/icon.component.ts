@@ -6,7 +6,6 @@ import {
     DestroyRef,
     ElementRef,
     inject,
-    Input,
     input,
     OnChanges,
     SimpleChanges,
@@ -44,9 +43,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly destroyRef = inject(DestroyRef);
 
     readonly small = input(false);
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() autoColor = false;
+    autoColor = false;
 
     hasError: boolean = false;
 
@@ -59,11 +56,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
-    // TODO: Skipped for migration because:
-    //  Subclass KbqIconButton overrides this input with `@Input({ alias: 'kbq-icon-button' })`
-    //  using a plain string, which is incompatible with InputSignal<string>.
-    //  Migrate KbqIconButton.iconName together as a follow-up.
-    @Input({ alias: 'kbq-icon' }) iconName: string;
+    iconName: string;
+
+    /** @docs-private */
+    readonly autoColorInput = input<boolean | undefined>(undefined, { alias: 'autoColor' });
+
+    /** @docs-private */
+    readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon' });
 
     protected name = 'KbqIcon';
 
@@ -104,8 +103,17 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.iconName) {
-            this.svgIconName.next(changes['iconName'].currentValue);
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['autoColorInput']) {
+            const autoColor = this.autoColorInput();
+
+            if (autoColor !== undefined) this.autoColor = autoColor;
+        }
+
+        if (changes['iconNameInput']) {
+            const iconName = this.iconNameInput();
+
+            if (iconName !== undefined) this.setIconName(iconName);
         }
     }
 

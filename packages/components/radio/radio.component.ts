@@ -14,15 +14,16 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     OnInit,
     output,
     Provider,
     QueryList,
     signal,
+    SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -85,7 +86,7 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
     },
     exportAs: 'kbqRadioGroup'
 })
-export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit, ControlValueAccessor {
+export class KbqRadioGroup extends KbqColorDirective implements OnChanges, AfterContentInit, ControlValueAccessor {
     private readonly changeDetector = inject(ChangeDetectorRef);
 
     readonly big = input<boolean>(false);
@@ -102,7 +103,6 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     });
 
     /** Value of the radio button. */
-    @Input()
     get value(): any {
         return this._value();
     }
@@ -118,7 +118,6 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     }
 
     /** Whether the radio button is selected. */
-    @Input()
     get selected() {
         return this._selected();
     }
@@ -130,7 +129,6 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     }
 
     /** Whether the radio group is disabled */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled();
     }
@@ -141,6 +139,39 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     }
 
     private readonly _disabled = signal(false);
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly selectedInput = input<KbqRadioButton | null | undefined>(undefined, { alias: 'selected' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            const value = this.valueInput();
+
+            if (value !== undefined) this.value = value;
+        }
+
+        if (changes['selectedInput']) {
+            const selected = this.selectedInput();
+
+            if (selected !== undefined) this.selected = selected;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     /** Whether the radio group is required */
     readonly required = input(false, { transform: booleanAttribute });
@@ -304,13 +335,12 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     },
     exportAs: 'kbqRadioButton'
 })
-export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
+export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnInit, AfterViewInit, OnDestroy {
     private readonly changeDetector = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly radioDispatcher = inject(UniqueSelectionDispatcher);
 
     /** Whether this radio button is checked. */
-    @Input({ transform: booleanAttribute })
     get checked(): boolean {
         return this._checked();
     }
@@ -337,7 +367,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     }
 
     /** The value of this radio button. */
-    @Input()
     get value(): any {
         return this._value();
     }
@@ -360,7 +389,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     }
 
     /** Whether the radio button is disabled. A button inside a disabled group is disabled as well. */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled() || !!this.radioGroup?.disabled;
     }
@@ -375,7 +403,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     private readonly _disabled = signal(false);
 
     /** Tabindex of the native input. A disabled button is taken out of the tab order. */
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex();
     }
@@ -387,7 +414,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     private readonly _tabIndex = signal(0);
 
     /** Whether the radio button is required. A button inside a required group is required as well. */
-    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required() || !!this.radioGroup?.required();
     }
@@ -400,7 +426,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     private readonly _required = signal(false);
 
     /** Whether the label should appear after or before the radio button. Defaults to 'after' */
-    @Input()
     get labelPosition(): 'before' | 'after' {
         return this._labelPosition() || this.radioGroup?.labelPosition() || 'after';
     }
@@ -417,7 +442,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     // listeners by name alone, so a button that resolved to `undefined` would share one selection
     // group with every other unnamed radio button in the application. Resolving the group's name here
     // rather than copying it in `ngOnInit` is also what keeps an explicitly bound `[name]` alive.
-    @Input()
     get name(): string {
         return this._name() ?? this.radioGroup?.name() ?? this.uniqueId;
     }
@@ -476,6 +500,84 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     private readonly _labelPosition = signal<'before' | 'after' | undefined>(undefined);
 
     private readonly _name = signal<string | undefined>(undefined);
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
+    /** @docs-private */
+    readonly requiredInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'required',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly labelPositionInput = input<'before' | 'after' | undefined>(undefined, { alias: 'labelPosition' });
+
+    /** @docs-private */
+    readonly nameInput = input<string | undefined>(undefined, { alias: 'name' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            const value = this.valueInput();
+
+            if (value !== undefined) this.value = value;
+        }
+
+        if (changes['checkedInput']) {
+            const checked = this.checkedInput();
+
+            if (checked !== undefined) this.checked = checked;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+
+        if (changes['requiredInput']) {
+            const required = this.requiredInput();
+
+            if (required !== undefined) this.required = required;
+        }
+
+        if (changes['labelPositionInput']) {
+            const labelPosition = this.labelPositionInput();
+
+            if (labelPosition !== undefined) this.labelPosition = labelPosition;
+        }
+
+        if (changes['nameInput']) {
+            const name = this.nameInput();
+
+            if (name !== undefined) this.name = name;
+        }
+    }
 
     /** Whether this radio is checked. */
     private readonly _checked = signal(false);
