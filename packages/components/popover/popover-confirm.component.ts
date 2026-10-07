@@ -3,13 +3,14 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    InjectionToken,
-    Input,
-    ViewEncapsulation,
     effect,
     inject,
+    InjectionToken,
+    input,
     output,
-    signal
+    signal,
+    SimpleChanges,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -87,9 +88,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
      * Input (`kbqPopoverConfirmText`) — question rendered in the panel. Falls back to
      * {@link KBQ_POPOVER_CONFIRM_TEXT} and then to the `popoverConfirm` section of the active locale.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverConfirmText')
     get confirmText(): string {
         return this._confirmText() ?? this.externalConfirmText ?? this.localeConfiguration().confirmText;
     }
@@ -106,9 +104,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
      * Input (`kbqPopoverConfirmButtonText`) — caption of the confirm button. Falls back to
      * {@link KBQ_POPOVER_CONFIRM_BUTTON_TEXT} and then to the `popoverConfirm` section of the active locale.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverConfirmButtonText')
     get confirmButtonText(): string {
         return (
             this._confirmButtonText() ?? this.externalConfirmButtonText ?? this.localeConfiguration().confirmButtonText
@@ -125,6 +120,29 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     /** Panel the confirm handler is currently wired to, so it is wired once per attach. */
     private wiredInstance: KbqPopoverConfirmComponent | null = null;
+
+    /** @docs-private */
+    readonly confirmTextInput = input<string | undefined>(undefined, { alias: 'kbqPopoverConfirmText' });
+
+    /** @docs-private */
+    readonly confirmButtonTextInput = input<string | undefined>(undefined, { alias: 'kbqPopoverConfirmButtonText' });
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['confirmTextInput']) {
+            const confirmText = this.confirmTextInput();
+
+            if (confirmText !== undefined) this.confirmText = confirmText;
+        }
+
+        if (changes['confirmButtonTextInput']) {
+            const confirmButtonText = this.confirmButtonTextInput();
+
+            if (confirmButtonText !== undefined) this.confirmButtonText = confirmButtonText;
+        }
+    }
 
     constructor() {
         super();
