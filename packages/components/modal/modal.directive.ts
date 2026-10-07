@@ -40,6 +40,7 @@ import { KbqModalComponent } from './modal.component';
             </button>
         }
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-modal-header',
         '[style.box-shadow]': 'modal.bodyOverflow().top ? "var(--kbq-shadow-overflow-normal-bottom)" : null'

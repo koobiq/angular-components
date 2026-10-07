@@ -164,6 +164,11 @@
             "factory": "./migrations/list-signals/index",
             "schema": "./migrations/list-signals/schema.json"
         },
+        "modal-signals": {
+            "description": "Reports subclasses of KbqModalComponent and direct calls of its ngOnChanges: its decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, and its outputs are <member>Output over the unchanged emitters, so a subclass has to call super.ngOnChanges and override <member>Input or <member>Output instead of redeclaring an @Input or @Output, and a hand-made SimpleChanges is keyed by the <member>Input names. Reads and writes of the members and the options of KbqModalService are unchanged. Warn-only.",
+            "factory": "./migrations/modal-signals/index",
+            "schema": "./migrations/modal-signals/schema.json"
+        },
         "datepicker-signals": {
             "description": "Reports subclasses of KbqDatepicker, KbqDatepickerInput, KbqDatepickerToggleIconComponent, KbqCalendar, KbqCalendarHeader and KbqMonthView, and direct calls of their ngOnChanges: their decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, so a subclass has to call super.ngOnChanges and override <member>Input instead of redeclaring an @Input, and a hand-made SimpleChanges is keyed by the <member>Input names. Reads and writes of the members are unchanged. Warn-only.",
             "factory": "./migrations/datepicker-signals/index",

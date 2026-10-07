@@ -433,6 +433,20 @@ The inputs of `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconCom
 ng g @koobiq/components:datepicker-signals --project "<your project>"
 ```
 
+#### Modal
+
+The inputs of `KbqModalComponent` are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`, and `kbqAfterOpen`, `kbqAfterClose`, `kbqBeforeClose`, `kbqOnOk` and `kbqOnCancel` are outputs named `<member>Output` over the unchanged emitters. Bindings, the options of `KbqModalService`, and reads and writes through `getInstance()` work as before.
+
+- **A subclass** that implements `ngOnChanges` calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` or `@Output()` overrides `<member>Input` or `<member>Output` instead, e.g. `kbqTitleInput`. `kbqVisible`, `kbqMask`, `kbqMaskClosable`, `kbqOkLoading` and `kbqCancelLoading` are fields rather than getters and setters.
+- **A `SimpleChanges` passed to `ngOnChanges` by hand** is keyed by the `<member>Input` names: `kbqVisibleInput`, not `kbqVisible`.
+- **A bound `undefined`** leaves the member as it is: hide the modal with `false`.
+
+`modal-signals` reports every subclass and every direct call of `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:modal-signals --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

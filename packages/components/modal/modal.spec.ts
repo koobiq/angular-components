@@ -9,7 +9,9 @@ import {
     Injector,
     NgModule,
     Provider,
-    Type
+    signal,
+    Type,
+    viewChild
 } from '@angular/core';
 import {
     ComponentFixture,
@@ -27,6 +29,8 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent,
     ENTER,
+    ESCAPE,
+    KbqComponentColors,
     ruRULocaleData,
     TAB,
     ThemePalette
@@ -34,11 +38,14 @@ import {
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
+import { KbqModalComponent } from './modal.component';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
-import { MODAL_ANIMATE_DURATION, ModalSize } from './modal.type';
+import { MODAL_ANIMATE_DURATION, ModalSize, OnClickCallback } from './modal.type';
 
 const ANIMATION_DURATION = MODAL_ANIMATE_DURATION * 2;
+
+const animationEnd = () => new Promise((resolve) => setTimeout(resolve, MODAL_ANIMATE_DURATION));
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers });
@@ -671,6 +678,118 @@ describe('KbqModal', () => {
         });
     });
 
+    describe('declared in a template', () => {
+        // One input per modal, so a member fed from the wrong input stays at its default.
+        const boundInputs: [keyof KbqModalComponent, unknown][] = [
+            ['kbqModalType', 'confirm'],
+            ['kbqComponent', TestModalContentComponent],
+            ['kbqContent', 'Content'],
+            ['kbqFooter', 'Footer'],
+            ['kbqWidth', 320],
+            ['kbqSize', ModalSize.Large],
+            ['kbqWrapClassName', 'wrap-class'],
+            ['kbqClassName', 'container-class'],
+            ['kbqStyle', { width: '1px' }],
+            ['kbqTitle', 'Title'],
+            ['kbqCaption', 'Caption'],
+            ['kbqCloseByESC', false],
+            ['kbqClosable', false],
+            ['kbqMask', false],
+            ['kbqMaskClosable', true],
+            ['kbqMaskStyle', { opacity: '0' }],
+            ['kbqBodyStyle', { padding: '0' }],
+            ['kbqOkText', 'OK'],
+            ['kbqOkType', KbqComponentColors.Theme],
+            ['kbqRestoreFocus', false],
+            ['kbqOkLoading', true],
+            ['kbqOnOk', () => false],
+            ['kbqCancelText', 'Cancel'],
+            ['kbqCancelLoading', true],
+            ['kbqOnCancel', () => false],
+            ['kbqGetContainer', document.createElement('div')]
+        ];
+
+        it.each(boundInputs)('should hand a bound %s over to its member', async (name, value) => {
+            const fixture = TestBed.createComponent(KbqModalComponent);
+
+            fixture.componentRef.setInput(name, value);
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance[name]).toBe(value);
+        });
+
+        it('should open and close through [(kbqVisible)]', async () => {
+            const fixture = TestBed.createComponent(ModalInTemplate);
+            const host = fixture.componentInstance;
+
+            await fixture.whenStable();
+
+            const modal = host.modal();
+            const wrap = modal.getElement().querySelector<HTMLElement>('.kbq-modal-wrap')!;
+
+            expect(wrap.style.display).toBe('none');
+
+            host.visible.set(true);
+            await fixture.whenStable();
+
+            expect(modal.kbqVisible).toBe(true);
+            expect(wrap.style.display).toBe('');
+
+            await animationEnd();
+            expect(host.afterOpen).toHaveBeenCalled();
+            host.beforeClose.mockClear();
+            host.afterClose.mockClear();
+
+            dispatchKeyboardEvent(modal.getElement(), 'keydown', ESCAPE);
+
+            expect(host.visible()).toBe(false);
+            expect(host.beforeClose).toHaveBeenCalled();
+
+            await fixture.whenStable();
+            await animationEnd();
+            await fixture.whenStable();
+
+            expect(host.afterClose).toHaveBeenCalled();
+            expect(wrap.style.display).toBe('none');
+        });
+
+        it('should emit kbqOnOk and kbqOnCancel when no callback is bound', async () => {
+            const fixture = TestBed.createComponent(ModalInTemplate);
+            const host = fixture.componentInstance;
+
+            host.visible.set(true);
+            await fixture.whenStable();
+
+            const [ok, cancel] = Array.from(host.modal().getKbqFooter().querySelectorAll('button'));
+
+            ok.click();
+            cancel.click();
+
+            expect(host.ok).toHaveBeenCalledTimes(1);
+            expect(host.cancel).toHaveBeenCalledTimes(1);
+            expect(host.visible()).toBe(true);
+        });
+
+        it('should call a bound kbqOnOk callback instead of emitting, and close', async () => {
+            const fixture = TestBed.createComponent(ModalInTemplate);
+            const host = fixture.componentInstance;
+            const callback = vi.fn();
+
+            host.okCallback.set(callback);
+            host.visible.set(true);
+            await fixture.whenStable();
+
+            host.modal().getKbqFooter().querySelector('button')!.click();
+
+            expect(callback).toHaveBeenCalled();
+            expect(host.ok).not.toHaveBeenCalled();
+            expect(host.visible()).toBe(false);
+
+            await fixture.whenStable();
+            await animationEnd();
+        });
+    });
+
     describe('with manually composed content', () => {
         const closeModal = (fixture: ComponentFixture<unknown>, modalRef: KbqModalRef) => {
             modalRef.close();
@@ -714,6 +833,22 @@ describe('KbqModal', () => {
 
             closeModal(fixture, modalRef);
         }));
+
+        it('should drop the close button of the title once kbqClosable is cleared', async () => {
+            const fixture = createComponent(ModalWithCaptionComponent);
+            const modalRef = fixture.componentInstance.open();
+
+            await fixture.whenStable();
+
+            expect(modalRef.getElement().querySelector('.kbq-modal-header .kbq-modal-close')).not.toBeNull();
+
+            modalRef.getInstance().kbqClosable = false;
+            await fixture.whenStable();
+
+            expect(modalRef.getElement().querySelector('.kbq-modal-header .kbq-modal-close')).toBeNull();
+
+            await animationEnd();
+        });
     });
 
     describe('KbqModalService providedIn root', () => {
@@ -875,6 +1010,37 @@ class ModalByServiceFromDropdownComponent {
             kbqCancelText: 'Cancel'
         });
     }
+}
+
+@Component({
+    selector: 'modal-in-template',
+    imports: [KbqModalModule],
+    template: `
+        <kbq-modal
+            kbqTitle="Title"
+            kbqOkText="OK"
+            kbqCancelText="Cancel"
+            [kbqOnOk]="okCallback()"
+            [(kbqVisible)]="visible"
+            (kbqAfterOpen)="afterOpen()"
+            (kbqBeforeClose)="beforeClose()"
+            (kbqAfterClose)="afterClose()"
+            (kbqOnOk)="ok()"
+            (kbqOnCancel)="cancel()"
+        >
+            Content
+        </kbq-modal>
+    `
+})
+class ModalInTemplate {
+    readonly modal = viewChild.required(KbqModalComponent);
+    readonly visible = signal(false);
+    readonly okCallback = signal<OnClickCallback<unknown> | undefined>(undefined);
+    readonly afterOpen = vi.fn();
+    readonly beforeClose = vi.fn();
+    readonly afterClose = vi.fn();
+    readonly ok = vi.fn();
+    readonly cancel = vi.fn();
 }
 
 @Component({
