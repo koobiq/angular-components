@@ -10,11 +10,13 @@ import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { SimpleChanges } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -126,7 +128,7 @@ export class KbqBreadcrumbView {
 export type KbqRovingFocusOrientation = 'horizontal' | 'vertical';
 
 // @public
-export class RdxRovingFocusGroupDirective {
+export class RdxRovingFocusGroupDirective implements OnChanges {
     readonly currentTabStopId: _angular_core.WritableSignal<string | null>;
     // (undocumented)
     readonly currentTabStopIdChange: _angular_core.OutputEmitterRef<string | null>;
@@ -139,9 +141,12 @@ export class RdxRovingFocusGroupDirective {
     handleBlur(): void;
     handleFocus(event: FocusEvent): void;
     readonly loop: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     onItemFocus(tabStopId: string): void;
     onItemShiftTab(): void;
     orientation: KbqRovingFocusOrientation | undefined;
+    readonly orientationInput: _angular_core.InputSignal<KbqRovingFocusOrientation | undefined>;
     // (undocumented)
     readonly preventScrollOnEntryFocus: _angular_core.InputSignalWithTransform<boolean, unknown>;
     registerItem(item: HTMLElement, tabStopId?: string): void;
@@ -149,7 +154,7 @@ export class RdxRovingFocusGroupDirective {
     get tabIndex(): 0 | -1;
     unregisterItem(item: HTMLElement): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<RdxRovingFocusGroupDirective, "[rdxRovingFocusGroup]", never, { "orientation": { "alias": "orientation"; "required": false; }; "dir": { "alias": "dir"; "required": false; "isSignal": true; }; "loop": { "alias": "loop"; "required": false; "isSignal": true; }; "preventScrollOnEntryFocus": { "alias": "preventScrollOnEntryFocus"; "required": false; "isSignal": true; }; }, { "entryFocus": "entryFocus"; "currentTabStopIdChange": "currentTabStopIdChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<RdxRovingFocusGroupDirective, "[rdxRovingFocusGroup]", never, { "orientationInput": { "alias": "orientation"; "required": false; "isSignal": true; }; "dir": { "alias": "dir"; "required": false; "isSignal": true; }; "loop": { "alias": "loop"; "required": false; "isSignal": true; }; "preventScrollOnEntryFocus": { "alias": "preventScrollOnEntryFocus"; "required": false; "isSignal": true; }; }, { "entryFocus": "entryFocus"; "currentTabStopIdChange": "currentTabStopIdChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<RdxRovingFocusGroupDirective, never>;
 }

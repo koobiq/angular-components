@@ -18,11 +18,12 @@ import {
     ElementRef,
     inject,
     Injector,
-    Input,
     input,
+    OnChanges,
     OnDestroy,
     Signal,
     signal,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -178,7 +179,7 @@ export class KbqNavbarDivider {
         '(blur)': 'blur()'
     }
 })
-export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
+export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetector = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
@@ -230,7 +231,6 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
      * through its default skip predicate, and a signal would always read truthy there — the manager would then
      * skip every item and arrow navigation would stop working entirely.
      */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
@@ -250,6 +250,21 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
      */
     get tabIndex(): number {
         return -1;
+    }
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
     }
 
     constructor() {

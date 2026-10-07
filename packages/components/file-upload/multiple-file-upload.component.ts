@@ -12,9 +12,10 @@ import {
     ElementRef,
     inject,
     input,
-    Input,
+    OnChanges,
     output,
     PLATFORM_ID,
+    SimpleChanges,
     TemplateRef,
     viewChild,
     viewChildren,
@@ -92,7 +93,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqMultipleFileUplo
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, ControlValueAccessor, DoCheck
+    implements OnChanges, AfterViewInit, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -107,10 +108,7 @@ export class KbqMultipleFileUploadComponent
     readonly inputId = input<string>(`kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher: ErrorStateMatcher;
 
     /**
      * The selected files. Stays an accessor input rather than becoming a `model()`: the store is
@@ -126,7 +124,6 @@ export class KbqMultipleFileUploadComponent
         return this.fileList.list();
     }
 
-    @Input()
     set files(currentFileList: KbqFileItem[]) {
         this.setFileList(currentFileList);
     }
@@ -270,6 +267,27 @@ export class KbqMultipleFileUploadComponent
 
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly platformId = inject(PLATFORM_ID);
+
+    /** @docs-private */
+    readonly errorStateMatcherInput = input<ErrorStateMatcher | undefined>(undefined, { alias: 'errorStateMatcher' });
+
+    /** @docs-private */
+    readonly filesInput = input<KbqFileItem[] | undefined>(undefined, { alias: 'files' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['errorStateMatcherInput']) {
+            const errorStateMatcher = this.errorStateMatcherInput();
+
+            if (errorStateMatcher !== undefined) this.errorStateMatcher = errorStateMatcher;
+        }
+
+        if (changes['filesInput']) {
+            const files = this.filesInput();
+
+            if (files !== undefined) this.files = files;
+        }
+    }
 
     constructor() {
         super();

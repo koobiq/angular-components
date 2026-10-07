@@ -7,12 +7,12 @@ import {
     ElementRef,
     inject,
     InjectionToken,
-    Input,
     input,
     OnChanges,
     output,
     Provider,
-    signal
+    signal,
+    SimpleChanges
 } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
@@ -213,7 +213,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     // Stays an accessor: it folds in the tag list's state, which comes from the list's form control when
     // there is one. That is a plain property rather than a signal, so a `computed` would cache it and
     // miss `control.disable()`.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled() || (this._tagList && this._tagList.disabled());
     }
@@ -232,11 +231,24 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     /** The native input element to which this directive is attached. */
     private inputElement: HTMLInputElement;
 
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     constructor() {
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
     }
 
-    ngOnChanges(): void {
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
         const tagList = this.tagList();
 
         // Registered here rather than in an effect or a computed. The tag list has no content query for its

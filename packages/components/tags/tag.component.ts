@@ -18,7 +18,6 @@ import {
     forwardRef,
     inject,
     Injector,
-    Input,
     input,
     numberAttribute,
     OnChanges,
@@ -363,7 +362,6 @@ export class KbqTag
 
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
     // Stays an accessor: it falls back to the projected text content, which is DOM state.
-    @Input()
     get value(): any {
         return this._value ?? this.elementRef.nativeElement.textContent?.trim();
     }
@@ -409,7 +407,6 @@ export class KbqTag
     /** Tab order of the tag. */
     // Stays an accessor: it folds in `disabled`, which reads the tag list's form control - a plain property
     // a `computed` would not see change.
-    @Input()
     get tabindex() {
         if (this.disabled) return null;
         if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
@@ -426,7 +423,6 @@ export class KbqTag
     /** Whether the tag is disabled. */
     // Stays a plain boolean: the focus key manager skips items by reading `item.disabled` as a value, so a
     // signal - a function, always truthy - would skip every tag. It also folds in the tag list's form control.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled() || (this.tagList?.disabled() ?? false);
     }
@@ -448,6 +444,18 @@ export class KbqTag
         return (this.tagList?.draggable ?? false) && !this.disabled;
     }
 
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly tabindexInput = input<number | null | undefined>(undefined, { alias: 'tabindex' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     constructor() {
         super();
 
@@ -458,6 +466,25 @@ export class KbqTag
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            const value = this.valueInput();
+
+            if (value !== undefined) this.value = value;
+        }
+
+        if (changes['tabindexInput']) {
+            const tabindex = this.tabindexInput();
+
+            if (tabindex !== undefined) this.tabindex = tabindex;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
         // Only a change of this binding: `ngOnChanges` also fires for every other input, and re-applying the
         // bound value then would undo a selection the user made by clicking.
         if (changes['selectedInput']) {
