@@ -186,6 +186,19 @@ describe('KbqOption component', () => {
         expect(scrollSpy).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
     });
 
+    it('should select an option without a parent on shift + click', () => {
+        const fixture = TestBed.createComponent(OptionWithDisable);
+
+        fixture.detectChanges();
+
+        const option = fixture.debugElement.query(By.directive(KbqOption));
+
+        option.nativeElement.dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+        fixture.detectChanges();
+
+        expect((option.componentInstance as KbqOption).selected).toBe(true);
+    });
+
     it('should not emit to `onSelectionChange` if selecting an already-selected option', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
 

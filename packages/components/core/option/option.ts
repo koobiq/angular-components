@@ -48,7 +48,11 @@ export interface KbqOptionParentComponent {
     multiSelection?: boolean;
     withVirtualScroll?: boolean;
     keyManager?: ActiveDescendantKeyManager<KbqOption>;
-    setSelectedOptionsByClick: (option: KbqOption) => void;
+    /**
+     * Handles a Shift+click on `option`, e.g. by selecting the range up to it. Without it, the click selects the
+     * option alone.
+     */
+    setSelectedOptionsByClick?(option: KbqOption): void;
 }
 
 /**
@@ -169,7 +173,7 @@ export class KbqVirtualOption extends KbqOptionBase {
 })
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    protected readonly parent = inject<KbqOptionParentComponent>(KBQ_OPTION_PARENT_COMPONENT, { optional: true })!;
+    protected readonly parent = inject<KbqOptionParentComponent>(KBQ_OPTION_PARENT_COMPONENT, { optional: true });
     readonly group = inject(KbqOptgroup, { optional: true });
 
     private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
@@ -346,7 +350,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** @docs-private */
     handleClick(event: MouseEvent): void {
-        if (hasModifierKey(event, 'shiftKey')) {
+        if (hasModifierKey(event, 'shiftKey') && this.parent?.setSelectedOptionsByClick) {
             this.parent.setSelectedOptionsByClick(this);
         } else {
             this.selectViaInteraction();

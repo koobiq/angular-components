@@ -562,6 +562,19 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.stateCtrl.value).toEqual({ code: 'CA', name: 'California' });
         }));
 
+        it('should select an option on shift + click', () => {
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            fixture.detectChanges();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
+            options[1].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.stateCtrl.value).toEqual({ code: 'CA', name: 'California' });
+        });
+
         it('should update the control back to a string if user types after an option is selected', fakeAsync(() => {
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();

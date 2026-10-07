@@ -15,6 +15,7 @@ import * as i2 from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
+import { KbqOptionParentComponent } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KbqPanelMaxWidth } from '@koobiq/components/core';
 import { KbqPanelWidth } from '@koobiq/components/core';
@@ -55,7 +56,7 @@ export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider;
 
 // @public (undocumented)
-export class KbqAutocomplete implements AfterContentInit {
+export class KbqAutocomplete implements AfterContentInit, KbqOptionParentComponent {
     constructor();
     readonly attached: _angular_core.WritableSignal<boolean>;
     readonly autoActiveFirstOption: _angular_core.InputSignalWithTransform<boolean, unknown>;

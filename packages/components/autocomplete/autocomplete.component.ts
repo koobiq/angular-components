@@ -31,6 +31,7 @@ import {
     kbqInjectNativeElement,
     KbqOptgroup,
     KbqOption,
+    KbqOptionParentComponent,
     KbqPanelMaxWidth,
     KbqPanelWidth
 } from '@koobiq/components/core';
@@ -107,7 +108,7 @@ function normalizeClassInput(
     },
     exportAs: 'kbqAutocomplete'
 })
-export class KbqAutocomplete implements AfterContentInit {
+export class KbqAutocomplete implements AfterContentInit, KbqOptionParentComponent {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
