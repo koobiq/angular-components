@@ -3836,7 +3836,7 @@ describe('KbqSelect', () => {
                 const spy = vi.fn();
                 let subscription: Subscription;
 
-                expect(fixture.componentInstance.select().options).toBeFalsy();
+                expect(fixture.componentInstance.select().options.length).toBe(0);
                 expect(() => {
                     subscription = fixture.componentInstance.select().optionSelectionChanges.subscribe(spy);
                 }).not.toThrow();

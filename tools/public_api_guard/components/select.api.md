@@ -5,7 +5,9 @@
 ```ts
 
 import { ActiveDescendantKeyManager } from '@koobiq/components/core';
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
@@ -105,7 +107,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 }
 
 // @public (undocumented)
-export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState, KbqSiblingPopup, KbqOptionParentComponent {
+export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, AfterContentChecked, AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState, KbqSiblingPopup, KbqOptionParentComponent {
     constructor();
     get allOptionsSelected(): boolean;
     readonly ariaLabel: _angular_core.InputSignal<string | null>;
@@ -185,7 +187,11 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly multipleInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     get multiSelection(): boolean;
     readonly navigableOptions: QueryList<KbqOption>;
+    // (undocumented)
+    ngAfterContentChecked(): void;
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewChecked(): void;
     // (undocumented)
     ngControl: NgControl | null;
     ngDoCheck(): void;
@@ -209,7 +215,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     readonly openedStream: Observable<void>;
     openPanel(): void;
     readonly optionGroups: _angular_core.Signal<readonly KbqOptgroup[]>;
-    options: QueryList<KbqOption>;
+    get options(): QueryList<KbqOption>;
     readonly optionsContainer: _angular_core.Signal<ElementRef<any>>;
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange>;
     protected get overlayDir(): CdkConnectedOverlay;
@@ -266,7 +272,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     // (undocumented)
     get tabIndex(): number;
     readonly tabIndexInput: _angular_core.InputSignalWithTransform<number, string | number | null | undefined>;
-    tags: QueryList<KbqTag>;
+    get tags(): QueryList<KbqTag>;
     toggle(): void;
     protected toggleSelectAll(): void;
     transformOrigin: string;
@@ -286,7 +292,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     withVirtualScroll: boolean;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; "isSignal": true; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThresholdInput": { "alias": "searchMinOptionsThreshold"; "required": false; "isSignal": true; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "multipleInput": { "alias": "multiple"; "required": false; "isSignal": true; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "clearPredicate": { "alias": "clearPredicate"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; "isSignal": true; }; "selectAllHandlerInput": { "alias": "selectAllHandler"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "panelMaxHeight": { "alias": "panelMaxHeight"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "openedChangeOutput": "openedChange"; "beforeOpened": "beforeOpened"; "openedOutput": "opened"; "closedOutput": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["projectedScrollbarViewport", "footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionGroups", "search", "searchEmpty", "options"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, [{ directive: typeof i2.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelect, "kbq-select", ["kbqSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; "isSignal": true; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "showPreselectedValues": { "alias": "showPreselectedValues"; "required": false; "isSignal": true; }; "triggerValuesLimit": { "alias": "triggerValuesLimit"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "searchMinOptionsThresholdInput": { "alias": "searchMinOptionsThreshold"; "required": false; "isSignal": true; }; "scrolledToBottomOffset": { "alias": "scrolledToBottomOffset"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "multipleInput": { "alias": "multiple"; "required": false; "isSignal": true; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "virtualOptionFactory": { "alias": "virtualOptionFactory"; "required": false; "isSignal": true; }; "clearPredicate": { "alias": "clearPredicate"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; "isSignal": true; }; "selectAllHandlerInput": { "alias": "selectAllHandler"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "panelMaxHeight": { "alias": "panelMaxHeight"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "openedChangeOutput": "openedChange"; "beforeOpened": "beforeOpened"; "openedOutput": "opened"; "closedOutput": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; "valueChange": "valueChange"; "scrolledToBottom": "scrolledToBottom"; }, ["projectedScrollbarViewport", "footer", "cdkVirtualForOf", "virtualScrollViewport", "customTrigger", "customMatcher", "customTagTemplateRef", "cleaner", "optionsQuery", "optionGroups", "search", "searchEmpty"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, [{ directive: typeof i2.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSelect, never>;
 }

@@ -5,6 +5,7 @@ import { Platform, _getEventTarget } from '@angular/cdk/platform';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewChecked,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -21,7 +22,6 @@ import {
     QueryList,
     Renderer2,
     TemplateRef,
-    ViewChildren,
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
@@ -35,6 +35,7 @@ import {
     output,
     signal,
     viewChild,
+    viewChildren,
     type AfterRenderRef
 } from '@angular/core';
 import { outputFromObservable, outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -81,6 +82,7 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqQueryListFrom,
     kbqResolvePanelMaxHeightToken,
     kbqSiblingPopupProvider,
     runClearPredicate,
@@ -256,6 +258,7 @@ export class KbqTreeSelectChange<T = any> {
 export class KbqTreeSelect
     extends KbqAbstractSelect
     implements
+        AfterViewChecked,
         AfterContentInit,
         AfterViewInit,
         OnDestroy,
@@ -377,7 +380,12 @@ export class KbqTreeSelect
         return this.overlayDirQuery()!;
     }
 
-    @ViewChildren(KbqTag) protected tags: QueryList<KbqTag>;
+    private readonly tagsQuery = viewChildren(KbqTag);
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+
+    protected get tags(): QueryList<KbqTag> {
+        return this.tagsList();
+    }
 
     /**
      * Reference to the optional cleaner element for clearing selection.
@@ -1130,6 +1138,11 @@ export class KbqTreeSelect
         tree.treeControl.expansionModel.changed
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.setOverlayPosition());
+    }
+
+    ngAfterViewChecked(): void {
+        // Emits `changes` where a decorator query did: once this view is checked.
+        this.tagsList();
     }
 
     ngOnDestroy() {

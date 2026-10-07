@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import * as _angular_platform_browser from '@angular/platform-browser';
@@ -87,11 +88,11 @@ export interface KbqAppSwitcherApp {
 }
 
 // @public
-export class KbqAppSwitcherComponent extends KbqPopUp implements OnChanges, AfterViewInit, OnDestroy {
+export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecked, OnChanges, AfterViewInit, OnDestroy {
     constructor();
     protected activeApp: KbqAppSwitcherApp | undefined;
     protected activeSite: KbqAppSwitcherSite | undefined;
-    protected allItems: QueryList<KbqDropdownItem>;
+    protected get allItems(): QueryList<KbqDropdownItem>;
     escapeHandler(): void;
     filteredSites: KbqAppSwitcherSite[];
     protected focusinHandler(event: FocusEvent): void;
@@ -101,6 +102,8 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements OnChanges, Afte
     protected keyManager: FocusKeyManager<KbqDropdownItem>;
     readonly localeConfiguration: _angular_core.Signal<KbqAppSwitcherLocaleConfiguration>;
     protected readonly nestedAliasClass = "kbq-app-switcher-site_nested";
+    // (undocumented)
+    ngAfterViewChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

@@ -90,7 +90,7 @@ export class KbqCodeBlock implements AfterViewInit {
     readonly softWrap: _angular_core.WritableSignal<boolean>;
     readonly softWrapChange: _angular_core.OutputEmitterRef<boolean>;
     readonly softWrapInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
+    protected readonly tabLinkTemplate: _angular_core.Signal<TemplateRef<KbqTabLinkTemplateContext> | undefined>;
     readonly tabsHidden: _angular_core.Signal<boolean>;
     toggleSoftWrap(): void;
     toggleViewAll(): void;

@@ -25,7 +25,7 @@ import {
     output,
     signal,
     SimpleChanges,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -316,10 +316,14 @@ export class KbqTag
      */
     protected readonly editing = signal(false);
 
+    private readonly textElementQuery = viewChild<ElementRef<HTMLSpanElement>>('kbqTitleText');
+
     /**
      * @docs-private
      */
-    @ViewChild('kbqTitleText') readonly textElement: ElementRef<HTMLSpanElement>;
+    get textElement(): ElementRef<HTMLSpanElement> {
+        return this.textElementQuery()!;
+    }
 
     readonly contentChildren = contentChildren_1(KbqIcon);
 

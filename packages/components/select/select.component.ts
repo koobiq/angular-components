@@ -12,11 +12,12 @@ import { Platform, _getFocusedElementPierceShadowDom } from '@angular/cdk/platfo
 import { CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
+    AfterContentChecked,
     AfterContentInit,
+    AfterViewChecked,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
     DestroyRef,
     DoCheck,
     ElementRef,
@@ -29,7 +30,6 @@ import {
     Provider,
     QueryList,
     TemplateRef,
-    ViewChildren,
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
@@ -45,6 +45,7 @@ import {
     signal,
     untracked,
     viewChild,
+    viewChildren,
     type AfterRenderRef
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -108,6 +109,7 @@ import {
     isSelectAll,
     isUndefined,
     kbqGetElementHeight,
+    kbqQueryListFrom,
     kbqResolvePanelMaxHeightToken,
     kbqSiblingPopupProvider,
     runClearPredicate,
@@ -281,6 +283,8 @@ export const minimumTimeToDisplayLoading = 300;
 export class KbqSelect
     extends KbqAbstractSelect
     implements
+        AfterViewChecked,
+        AfterContentChecked,
         AfterContentInit,
         OnDestroy,
         OnInit,
@@ -453,8 +457,13 @@ export class KbqSelect
     /** Reference to the CDK virtual scroll viewport for tracking scroll position in virtual mode. */
     readonly virtualScrollViewport = contentChild(CdkVirtualScrollViewport);
 
+    private readonly tagsQuery = viewChildren(KbqTag);
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+
     /** Query list of tags displayed in multiple selection mode. */
-    @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
+    get tags(): QueryList<KbqTag> {
+        return this.tagsList();
+    }
 
     /** User-supplied override of the trigger element for custom rendering. */
     readonly customTrigger = contentChild(KbqSelectTrigger);
@@ -471,8 +480,16 @@ export class KbqSelect
      */
     readonly cleaner = contentChild(KbqCleaner, { descendants: false });
 
+    private readonly optionsQuery = contentChildren(KbqOption, { descendants: true });
+    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
+
     /** All of the defined select options. */
-    @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
+    get options(): QueryList<KbqOption> {
+        return this.optionsList();
+    }
+
+    /** Whether `ngAfterContentInit` has run. The options are not settled before that, so nothing reads them. */
+    private contentReady = false;
 
     /**
      * Everything the key manager navigates: the built-in "select all" row first, then `options`.
@@ -590,7 +607,7 @@ export class KbqSelect
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
-        if (this.options) {
+        if (this.contentReady) {
             return merge(
                 ...this.options.map((option) => option.onSelectionChange),
                 this.options.changes.pipe(
@@ -1251,7 +1268,8 @@ export class KbqSelect
         effect(() => {
             this.selectAllOption();
 
-            this.syncNavigableOptions();
+            // Untracked: the options are read here too, and their changes are handled by `options.changes`.
+            untracked(() => this.syncNavigableOptions());
         });
 
         if (this.ngControl) {
@@ -1339,6 +1357,7 @@ export class KbqSelect
 
     /** Lifecycle hook after content initialization. Sets up key manager and option subscriptions. */
     ngAfterContentInit() {
+        this.contentReady = true;
         this.withVirtualScroll = !!this.cdkVirtualForOf();
         this.initKeyManager();
 
@@ -1369,6 +1388,16 @@ export class KbqSelect
 
         this.contentInitialized.next();
         this.contentInitialized.complete();
+    }
+
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.optionsList();
+    }
+
+    ngAfterViewChecked(): void {
+        // Emits `changes` where a decorator query did: once this view is checked.
+        this.tagsList();
     }
 
     /** Lifecycle hook when component is destroyed. Cleans up subscriptions. */
@@ -1601,7 +1630,7 @@ export class KbqSelect
      * @param value New value to be written to the model.
      */
     writeValue(value: any): void {
-        if (this.options) {
+        if (this.contentReady) {
             this.setSelectionByValue(value);
         }
     }

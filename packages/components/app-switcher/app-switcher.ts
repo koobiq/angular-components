@@ -4,6 +4,7 @@ import { CdkScrollable, Overlay, OverlayConfig, ScrollStrategy } from '@angular/
 
 import {
     AfterContentInit,
+    AfterViewChecked,
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
@@ -18,7 +19,6 @@ import {
     SimpleChanges,
     TemplateRef,
     Type,
-    ViewChildren,
     ViewEncapsulation,
     booleanAttribute,
     computed,
@@ -27,7 +27,8 @@ import {
     model,
     numberAttribute,
     signal,
-    viewChild
+    viewChild,
+    viewChildren
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -56,6 +57,7 @@ import {
     UP_ARROW,
     applyPopupMargins,
     kbqLocaleConfigurationOverrideProvider,
+    kbqQueryListFrom,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -281,7 +283,7 @@ export function kbqAppSwitcherProvider(): Provider[] {
     hostDirectives: [KbqLocaleOverridesDirective],
     preserveWhitespaces: false
 })
-export class KbqAppSwitcherComponent extends KbqPopUp implements OnChanges, AfterViewInit, OnDestroy {
+export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecked, OnChanges, AfterViewInit, OnDestroy {
     /** Strings currently rendered by the popup. */
     readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'appSwitcher',
@@ -317,8 +319,13 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements OnChanges, Afte
      */
     readonly otherSites = viewChild<KbqDropdown>('otherSites');
 
+    private readonly allItemsQuery = viewChildren(KbqDropdownItem);
+    private readonly allItemsList = kbqQueryListFrom(this.allItemsQuery);
+
     /** @docs-private */
-    @ViewChildren(KbqDropdownItem) protected allItems: QueryList<KbqDropdownItem>;
+    protected get allItems(): QueryList<KbqDropdownItem> {
+        return this.allItemsList();
+    }
 
     /** Roving-focus manager over the inline menu items (flat app rows and other-site rows). */
     protected keyManager: FocusKeyManager<KbqDropdownItem>;
@@ -405,6 +412,11 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements OnChanges, Afte
                 // drop any stale active item so navigation restarts from the top.
                 this.keyManager?.setActiveItem(-1);
             });
+    }
+
+    ngAfterViewChecked(): void {
+        // Emits `changes` where a decorator query did: once this view is checked.
+        this.allItemsList();
     }
 
     /** Releases the internal roving-focus menu QueryList. */

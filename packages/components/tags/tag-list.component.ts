@@ -3,6 +3,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
+    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
@@ -11,7 +12,7 @@ import {
     Component,
     computed,
     contentChild,
-    ContentChildren,
+    contentChildren,
     DestroyRef,
     DoCheck,
     effect,
@@ -37,6 +38,7 @@ import {
     FocusKeyManager,
     isNull,
     isSelectAll,
+    kbqQueryListFrom,
     runClearPredicate
 } from '@koobiq/components/core';
 import { KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -115,6 +117,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
 })
 export class KbqTagList
     implements
+        AfterContentChecked,
         OnChanges,
         KbqFormFieldControl<any>,
         ControlValueAccessor,
@@ -427,17 +430,20 @@ export class KbqTagList
     /** @docs-private */
     readonly cleaner = contentChild(KbqCleaner, { descendants: false });
 
+    private readonly tagsQuery = contentChildren<KbqTag>(
+        forwardRef(() => KbqTag),
+        { descendants: true }
+    );
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+
     /**
      * The tag components contained within this tag list.
      *
      * @docs-private
      */
-    @ContentChildren(forwardRef(() => KbqTag), {
-        // Need to use `descendants: true`,
-        // Ivy will no longer match indirect descendants if it's left as false.
-        descendants: true
-    })
-    tags: QueryList<KbqTag>;
+    get tags(): QueryList<KbqTag> {
+        return this.tagsList();
+    }
 
     /**
      * Whether the component is in an error state.
@@ -596,6 +602,11 @@ export class KbqTagList
                     }
                 });
             });
+    }
+
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.tagsList();
     }
 
     ngAfterViewInit(): void {
@@ -990,15 +1001,12 @@ export class KbqTagList
     }
 
     private listenToTagsRemoved(): void {
-        this.tagRemoveChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe((event) => {
-            const tag = event.tag;
-            const tagIndex = this.tags.toArray().indexOf(event.tag);
-
+        this.tagRemoveChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(({ tag }) => {
             // In case the tag that will be removed is currently focused, we temporarily store
             // the index in order to be able to determine an appropriate sibling tag that will
-            // receive focus.
-            if (this.isValidIndex(tagIndex) && tag.hasFocus) {
-                this.lastDestroyedTagIndex = tagIndex;
+            // receive focus. Taken from the key manager: `tags` no longer holds a destroyed tag.
+            if (tag.hasFocus && this.keyManager.activeItem === tag) {
+                this.lastDestroyedTagIndex = this.keyManager.activeItemIndex;
             }
         });
 

@@ -463,6 +463,20 @@ The inputs of `KbqTabGroup`, `KbqTab`, `KbqTabNavBar`, `KbqTabLink` and of the h
 ng g @koobiq/components:tabs-signals --project "<your project>"
 ```
 
+#### Query lists
+
+The `options` of `KbqSelect`, `KbqAutocomplete` and `KbqListSelection`, the `tags` of `KbqSelect` and `KbqTagList`, `KbqListItem.lines`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, the `focusableItems` of `KbqNavbar` and `KbqVerticalNavbar`, and the `textElement` of `KbqTag` and `KbqDropdownItem` are getters over signal queries. They keep their types — a `QueryList` whose `changes` emit as before, or an `ElementRef` — so reading them works as before. Before the content is initialized a `QueryList` is empty rather than `undefined`.
+
+- **A subclass** that redeclared one of them, with a query decorator or as a field, removes the redeclaration or overrides the getter.
+- **A write** to one of them no longer compiles: render the items in the template.
+- **`KbqCodeBlock.tabLinkTemplate`**, which is protected, is a signal: a subclass reads `this.tabLinkTemplate()`.
+
+`query-list-signals` reports every redeclaration and write:
+
+```bash
+ng g @koobiq/components:query-list-signals --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}
@@ -1659,7 +1673,7 @@ What the schematic reports instead of fixing:
 | `panel.classList`                           | `protected` now. It is one `computed`; set `class` on `<kbq-dropdown>` to add your own            |
 | A class implementing `KbqDropdownPanel`     | Every member changed shape. `adoptItems` is optional and replaces the `items.reset(…)` on it      |
 
-One member did not move: `KbqDropdownItem.textElement` stays a `@ViewChild`, because it implements `KbqTitleTextRef` and five other components implement it the same way.
+One member is still read as a property: `KbqDropdownItem.textElement` is a getter typed `ElementRef`, because it implements `KbqTitleTextRef` and five other components implement it the same way.
 
 `KbqOptionActionParent` in `@koobiq/components/core` describes the trigger structurally, so TypeScript never checks it against `KbqDropdownTrigger`. It follows the trigger here: `restoreFocus` is a `WritableSignal<boolean>` and `dropdownClosed` an `OutputRef<void>`. A host that implements that contract by hand has to follow too — the mismatch surfaces at runtime, not at compile time.
 

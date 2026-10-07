@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
@@ -102,7 +103,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnCha
     get tabindex(): any;
     set tabindex(value: any);
     readonly tabindexInput: _angular_core.InputSignal<number | null | undefined>;
-    readonly textElement: ElementRef<HTMLSpanElement>;
+    get textElement(): ElementRef<HTMLSpanElement>;
     toggleSelected(isUserInput?: boolean): boolean;
     readonly trailingIcon: _angular_core.Signal<KbqTagTrailingIcon | undefined>;
     get value(): any;
@@ -216,7 +217,7 @@ export interface KbqTagInputEvent {
 }
 
 // @public (undocumented)
-export class KbqTagList implements OnChanges, KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
+export class KbqTagList implements AfterContentChecked, OnChanges, KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
     constructor();
     readonly autofilled: _angular_core.Signal<boolean>;
     blur(): void;
@@ -250,6 +251,8 @@ export class KbqTagList implements OnChanges, KbqFormFieldControl<any>, ControlV
     keyManager: FocusKeyManager<KbqTag>;
     markAsTouched(): void;
     markForCheck(): void;
+    // (undocumented)
+    ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -290,7 +293,7 @@ export class KbqTagList implements OnChanges, KbqFormFieldControl<any>, ControlV
     get tagEditChanges(): Observable<KbqTagEditChange>;
     get tagFocusChanges(): Observable<KbqTagFocusEvent>;
     get tagRemoveChanges(): Observable<KbqTagEvent>;
-    tags: QueryList<KbqTag>;
+    get tags(): QueryList<KbqTag>;
     get tagSelectionChanges(): Observable<KbqTagSelectionChange>;
     readonly uid: string;
     unselectAll(): void;
@@ -303,7 +306,7 @@ export class KbqTagList implements OnChanges, KbqFormFieldControl<any>, ControlV
     readonly valueInput: _angular_core.InputSignal<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "editable": { "alias": "editable"; "required": false; "isSignal": true; }; "clearPredicate": { "alias": "clearPredicate"; "required": false; "isSignal": true; }; "removable": { "alias": "removable"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "draggableInput": { "alias": "draggable"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tags"], ["*", "kbq-cleaner"], true, [{ directive: typeof i2.CdkDropList; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTagList, "kbq-tag-list", ["kbqTagList"], { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "editable": { "alias": "editable"; "required": false; "isSignal": true; }; "clearPredicate": { "alias": "clearPredicate"; "required": false; "isSignal": true; }; "removable": { "alias": "removable"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "draggableInput": { "alias": "draggable"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, { "dropped": "dropped"; "valueChange": "valueChange"; "change": "change"; }, ["cleaner", "tagsQuery"], ["*", "kbq-cleaner"], true, [{ directive: typeof i2.CdkDropList; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTagList, never>;
 }

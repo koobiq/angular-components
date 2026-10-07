@@ -463,6 +463,20 @@ ng g @koobiq/components:modal-signals --project "<your project>"
 ng g @koobiq/components:tabs-signals --project "<your project>"
 ```
 
+#### Списки запросов
+
+`options` у `KbqSelect`, `KbqAutocomplete` и `KbqListSelection`, `tags` у `KbqSelect` и `KbqTagList`, `KbqListItem.lines`, `KbqRadioGroup.radios`, `KbqTreeSelection.unorderedOptions`, `focusableItems` у `KbqNavbar` и `KbqVerticalNavbar`, а также `textElement` у `KbqTag` и `KbqDropdownItem` стали геттерами поверх сигнальных запросов. Их типы не изменились — это `QueryList`, чей `changes` срабатывает как раньше, или `ElementRef`, — поэтому чтение работает как раньше. До инициализации содержимого `QueryList` пуст, а не равен `undefined`.
+
+- **Наследник**, который объявлял один из них заново через декоратор запроса или как поле, убирает это объявление или переопределяет геттер.
+- **Запись** в любой из них больше не компилируется: элементы задаются в шаблоне.
+- **`KbqCodeBlock.tabLinkTemplate`**, защищенный член, стал сигналом: наследник читает `this.tabLinkTemplate()`.
+
+Схематик `query-list-signals` сообщает о каждом повторном объявлении и каждой записи:
+
+```bash
+ng g @koobiq/components:query-list-signals --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}
@@ -1661,7 +1675,7 @@ readonly wide = input(false);                              // без транс�
 | `panel.classList`                           | Теперь `protected`. Это один `computed`; свои классы задавайте через `class` на `<kbq-dropdown>`        |
 | Класс, реализующий `KbqDropdownPanel`       | Изменились все свойства. Необязательный `adoptItems` заменяет `items.reset(…)`, который вызывал триггер |
 
-На месте осталось одно свойство: `KbqDropdownItem.textElement` — это по-прежнему `@ViewChild`, потому что он реализует `KbqTitleTextRef`, а также его реализуют ещё пять компонентов.
+Одно свойство читается как раньше: `KbqDropdownItem.textElement` — это геттер с типом `ElementRef`, потому что он реализует `KbqTitleTextRef`, а также его реализуют ещё пять компонентов.
 
 `KbqOptionActionParent` в `@koobiq/components/core` описывает триггер структурно, поэтому TypeScript не сверяет его с настоящим классом. Здесь он приведён в соответствие: `restoreFocus` стал `WritableSignal<boolean>`, а `dropdownClosed` — `OutputRef<void>`. Тому, кто реализует этот контракт вручную, нужно сделать то же самое: расхождение проявится во время работы, а не при компиляции.
 

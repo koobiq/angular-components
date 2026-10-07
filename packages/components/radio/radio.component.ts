@@ -1,6 +1,7 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import {
+    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
@@ -9,7 +10,7 @@ import {
     Component,
     computed,
     contentChild,
-    ContentChildren,
+    contentChildren,
     Directive,
     ElementRef,
     forwardRef,
@@ -28,7 +29,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqColorDirective, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 
 // Increasing integer for generating unique ids for radio components.
@@ -86,7 +87,10 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
     },
     exportAs: 'kbqRadioGroup'
 })
-export class KbqRadioGroup extends KbqColorDirective implements OnChanges, AfterContentInit, ControlValueAccessor {
+export class KbqRadioGroup
+    extends KbqColorDirective
+    implements AfterContentChecked, OnChanges, AfterContentInit, ControlValueAccessor
+{
     private readonly changeDetector = inject(ChangeDetectorRef);
 
     readonly big = input<boolean>(false);
@@ -183,9 +187,16 @@ export class KbqRadioGroup extends KbqColorDirective implements OnChanges, After
      */
     readonly change = output<KbqRadioChange>();
 
+    private readonly radiosQuery = contentChildren<KbqRadioButton>(
+        forwardRef(() => KbqRadioButton),
+        { descendants: true }
+    );
+    private readonly radiosList = kbqQueryListFrom(this.radiosQuery);
+
     /** Child radio buttons. */
-    @ContentChildren(forwardRef(() => KbqRadioButton), { descendants: true })
-    radios: QueryList<KbqRadioButton>;
+    get radios(): QueryList<KbqRadioButton> {
+        return this.radiosList();
+    }
 
     /**
      * Selected value for group. Should equal the value of the selected radio button if there *is*
@@ -225,6 +236,11 @@ export class KbqRadioGroup extends KbqColorDirective implements OnChanges, After
      * Initialize properties once content children are available.
      * This allows us to propagate relevant attributes to associated buttons.
      */
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.radiosList();
+    }
+
     ngAfterContentInit() {
         // Mark this component as initialized in AfterContentInit because the initial value can
         // possibly be set by NgModel on KbqRadioGroup, and it is possible that the OnInit of the
@@ -306,7 +322,8 @@ export class KbqRadioGroup extends KbqColorDirective implements OnChanges, After
         const selected = this._selected();
         const isAlreadySelected = selected !== null && selected.value === this._value();
 
-        if (this.radios != null && !isAlreadySelected) {
+        // Before the content is initialized the buttons are not bound yet; each one reads the group value itself.
+        if (this.isInitialized && !isAlreadySelected) {
             this._selected.set(null);
 
             this.radios.forEach((radio) => {
