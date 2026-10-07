@@ -191,8 +191,11 @@ export class E2eModalScrollbarFlash {
         // a pointer parked outside the dialogs, and that wrap must not be the one asserted.
         this.modal.create({
             kbqWidth: '320px',
+            // The dialog caps itself at the viewport, so outgrowing it takes lifting that cap on the
+            // dialog element; a body taller than the dialog is only a body that scrolls.
+            kbqStyle: { maxHeight: 'none' },
             // Fixed rather than overflowing, so the wrap is the only thing in this modal that scrolls.
-            kbqBodyStyle: { height: '1000px', maxHeight: 'none' },
+            kbqBodyStyle: { height: '1000px' },
             kbqClassName: 'e2e-modal-flash-tall',
             kbqTitle: 'Tall modal',
             kbqContent: 'Short content',
@@ -300,12 +303,12 @@ export class E2eModalDynamicContent {
         });
     }
 
-    // Unbounded body, so growing content outgrows the viewport and the wrap around the dialog is what
-    // starts scrolling.
+    // Unbounded dialog, so growing content outgrows the viewport and the wrap around the dialog is
+    // what starts scrolling. Lifting the cap on the body instead would only make the body scroll.
     protected openTall(): void {
         this.modal.create({
             kbqWidth: '400px',
-            kbqBodyStyle: { maxHeight: 'none' },
+            kbqStyle: { maxHeight: 'none' },
             kbqTitle: 'Tall modal',
             kbqContent: E2eModalDynamicContentBody,
             kbqOkText: 'Ok'

@@ -94,7 +94,10 @@ with a matching `kbqVisibleChange` output — but it is written from `changeProp
   once on creation.
 - The dialog is a flex column capped at the viewport minus `--kbq-modal-size-viewport-inset`, so only
   the body scrolls. A host that overrode the old `max-height: calc(100vh - 260px)` on
-  `.kbq-modal-body` can drop that override.
+  `.kbq-modal-body` can drop that override. One that used `kbqBodyStyle: { maxHeight: 'none' }` to let
+  the dialog outgrow the viewport has to move the override onto the dialog element —
+  `kbqStyle: { maxHeight: 'none' }` — because the cap lives there now; lifting it on the body only
+  makes the body scroll.
 
 ## Running it manually
 
