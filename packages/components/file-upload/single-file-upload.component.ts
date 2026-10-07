@@ -14,9 +14,10 @@ import {
     inject,
     Injector,
     input,
-    Input,
+    OnChanges,
     output,
     PLATFORM_ID,
+    SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -90,7 +91,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqFileUploadLocaleCo
 })
 export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, ControlValueAccessor, DoCheck
+    implements OnChanges, AfterViewInit, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -101,10 +102,7 @@ export class KbqSingleFileUploadComponent
     readonly inputId = input<string>(`kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`);
 
     /** An object used to control the error state of the component. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    errorStateMatcher: ErrorStateMatcher;
 
     /**
      * The selected file, or `null`. Stays an accessor input rather than becoming a `model()`: the
@@ -116,7 +114,6 @@ export class KbqSingleFileUploadComponent
      * nobody. `cvaOnChange` and `(fileChange)` belong to the paths a user drives — see `addFile()`
      * and `deleteItem()` — so a `[file]` binding cannot make the form look edited.
      */
-    @Input()
     get file(): KbqFileItem | null {
         const files = this.fileList.list();
 
@@ -234,6 +231,27 @@ export class KbqSingleFileUploadComponent
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly injector = inject(Injector);
     private readonly platformId = inject(PLATFORM_ID);
+
+    /** @docs-private */
+    readonly errorStateMatcherInput = input<ErrorStateMatcher | undefined>(undefined, { alias: 'errorStateMatcher' });
+
+    /** @docs-private */
+    readonly fileInput = input<KbqFileItem | null | undefined>(undefined, { alias: 'file' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['errorStateMatcherInput']) {
+            const errorStateMatcher = this.errorStateMatcherInput();
+
+            if (errorStateMatcher !== undefined) this.errorStateMatcher = errorStateMatcher;
+        }
+
+        if (changes['fileInput']) {
+            const file = this.fileInput();
+
+            if (file !== undefined) this.file = file;
+        }
+    }
 
     constructor() {
         super();

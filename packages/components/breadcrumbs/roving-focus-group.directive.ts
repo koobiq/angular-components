@@ -1,5 +1,16 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
-import { booleanAttribute, computed, Directive, ElementRef, inject, Input, input, output, signal } from '@angular/core';
+import {
+    booleanAttribute,
+    computed,
+    Directive,
+    ElementRef,
+    inject,
+    input,
+    OnChanges,
+    output,
+    signal,
+    SimpleChanges
+} from '@angular/core';
 import { ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, KbqRovingFocusOrientation } from './utils';
 
 /**
@@ -18,15 +29,26 @@ import { ENTRY_FOCUS, EVENT_OPTIONS, focusFirst, KbqRovingFocusOrientation } fro
         '(focusout)': 'handleBlur()'
     }
 })
-export class RdxRovingFocusGroupDirective {
+export class RdxRovingFocusGroupDirective implements OnChanges {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly directionality = inject(Directionality, { optional: true });
 
+    /** @docs-private */
+    readonly orientationInput = input<KbqRovingFocusOrientation | undefined>(undefined, { alias: 'orientation' });
+
     /**
-     * Axis the arrow keys navigate along. Kept as a decorator input because the host component writes it
-     * directly, once, from its own constructor — a signal input cannot be assigned to.
+     * Axis the arrow keys navigate along. A plain field the input feeds: the host component also writes it
+     * directly, once, from its own constructor.
      */
-    @Input() orientation: KbqRovingFocusOrientation | undefined;
+    orientation: KbqRovingFocusOrientation | undefined;
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['orientationInput']) {
+            const orientation = this.orientationInput();
+
+            if (orientation !== undefined) this.orientation = orientation;
+        }
+    }
     /**
      * Reading direction the arrow keys are mapped against, written onto the host as `dir`. Left unset,
      * no attribute is emitted — the element inherits the document direction, and the key mapping follows
