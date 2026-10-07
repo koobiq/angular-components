@@ -6,8 +6,9 @@ import {
     contentChildren,
     Directive,
     effect,
-    Input,
     input,
+    OnChanges,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqColorDirective, KbqComponentColors, KbqOrientation } from '@koobiq/components/core';
@@ -23,15 +24,12 @@ import { KbqButton, KbqButtonColor, KbqButtonStyleInput, KbqButtonStyles } from 
         '[class]': 'kbqStyle'
     }
 })
-export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> {
+export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implements OnChanges {
     private readonly buttons = contentChildren(KbqButton);
     /**
      * Style applied to the group and propagated to every nested button.
      * A button that sets its own `kbqStyle` keeps it.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get kbqStyle(): string {
         return this._kbqStyle && `kbq-button-group-root_${this._kbqStyle}`;
     }
@@ -62,9 +60,6 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> {
      *
      * Stays `undefined` while the input is unbound so that nested buttons are not force-enabled.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean | undefined {
         return this._disabled;
     }
@@ -77,6 +72,30 @@ export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> {
 
     /** @docs-private */
     protected _disabled: boolean | undefined;
+
+    /** @docs-private */
+    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['kbqStyleInput']) {
+            const kbqStyle = this.kbqStyleInput();
+
+            if (kbqStyle !== undefined) this.kbqStyle = kbqStyle;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     constructor() {
         super();

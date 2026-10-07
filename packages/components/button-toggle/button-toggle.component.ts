@@ -16,14 +16,15 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
     isDevMode,
+    OnChanges,
     OnDestroy,
     OnInit,
     output,
     Provider,
     signal,
+    SimpleChanges,
     untracked,
     viewChild,
     ViewEncapsulation
@@ -98,7 +99,7 @@ export class KbqButtonToggleChange {
     },
     exportAs: 'kbqButtonToggleGroup'
 })
-export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDestroy {
+export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, OnInit, OnDestroy {
     private _changeDetector = inject(ChangeDetectorRef);
 
     /** Whether the toggle group is vertical. */
@@ -120,7 +121,6 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
      * to a toggle rendered later — the same contract as `KbqRadioGroup`. It follows that `value` can
      * name a toggle `selected` does not hold: `selected` only ever reports toggles that exist.
      */
-    @Input()
     get value(): any {
         return this.currentValue();
     }
@@ -152,7 +152,6 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
     readonly buttonToggles = contentChildren<KbqButtonToggle>(forwardRef(() => KbqButtonToggle));
 
     /** Whether the whole button toggle group is disabled. */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled();
     }
@@ -264,6 +263,30 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
      * @docs-private
      */
     onTouched: () => void = () => {};
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            const value = this.valueInput();
+
+            if (value !== undefined) this.value = value;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     ngOnInit() {
         this.selectionModel = new SelectionModel<KbqButtonToggle>(this.multiple(), undefined, false);
@@ -491,7 +514,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
     },
     exportAs: 'kbqButtonToggle'
 })
-export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     /** Group the toggle belongs to, or `null` for a standalone toggle. */
     protected readonly buttonToggleGroup = inject(KbqButtonToggleGroup, { optional: true });
 
@@ -505,7 +528,6 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     private readonly button = viewChild.required(KbqButton);
 
     /** Whether the button is checked. */
-    @Input({ transform: booleanAttribute })
     get checked(): boolean {
         return this.checkedState();
     }
@@ -543,7 +565,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     }
 
     /** KbqButtonToggleGroup reads this to assign its own value. */
-    @Input() value: any;
+    value: any;
 
     /** Tabindex for the toggle. `null` leaves the toggle at its default position in the tab order. */
     readonly tabIndex = input<number | null>(null);
@@ -555,7 +577,6 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
 
     /** Whether the toggle is disabled. A toggle inside a disabled group is disabled as well. */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.disabledState();
     }
@@ -612,6 +633,42 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
 
     /** Pressed state of a toggle button; `null` in a single-selection group, where `aria-checked` says it. */
     protected readonly ariaPressed = computed(() => (this.isSingleSelector() ? null : this.checkedState()));
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            const value = this.valueInput();
+
+            if (value !== undefined) this.value = value;
+        }
+
+        if (changes['checkedInput']) {
+            const checked = this.checkedInput();
+
+            if (checked !== undefined) this.checked = checked;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     constructor() {
         // The content query only tracks KbqIcon instances, while `iconType` also depends on the text

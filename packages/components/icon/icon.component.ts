@@ -7,7 +7,6 @@ import {
     computed,
     DestroyRef,
     inject,
-    Input,
     input,
     numberAttribute,
     OnChanges,
@@ -54,16 +53,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly destroyRef = inject(DestroyRef);
     protected readonly renderer = inject(Renderer2);
 
-    /**
-     * Whether the icon is hidden from assistive technology. Left unbound, it falls back to
-     * `defaultAriaHidden`, which is `true` for a decorative icon and `false` for an interactive one.
-     */
-    readonly ariaHidden = input<boolean | undefined, unknown>(undefined, {
-        alias: 'aria-hidden',
-        // `null` is how a template says "leave it unset" (`cond ? true : null`), so it means the default
-        // rather than `false` — `booleanAttribute(null)` would turn it into an explicit opt-out.
-        transform: (value) => (value == null ? undefined : booleanAttribute(value))
-    });
+    readonly small = input(false);
+    autoColor = false;
 
     /** Whether an icon of this kind is decorative when the caller says nothing. Overridden by subclasses. */
     protected readonly defaultAriaHidden: boolean = true;
@@ -132,11 +123,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
-    // TODO: Skipped for migration because:
-    //  Subclass KbqIconButton overrides this input with `@Input({ alias: 'kbq-icon-button' })`
-    //  using a plain string, which is incompatible with InputSignal<string>.
-    //  Migrate KbqIconButton.iconName together as a follow-up.
-    @Input({ alias: 'kbq-icon' }) iconName: string | undefined;
+    iconName: string;
+
+    /** @docs-private */
+    readonly autoColorInput = input<boolean | undefined>(undefined, { alias: 'autoColor' });
+
+    /** @docs-private */
+    readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon' });
 
     /**
      * Whether the host gets an inline `max-height` matching the icon size. Only the bare icon does: the
@@ -186,8 +179,17 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.iconName) {
-            this.svgIconName.next(changes['iconName'].currentValue);
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['autoColorInput']) {
+            const autoColor = this.autoColorInput();
+
+            if (autoColor !== undefined) this.autoColor = autoColor;
+        }
+
+        if (changes['iconNameInput']) {
+            const iconName = this.iconNameInput();
+
+            if (iconName !== undefined) this.setIconName(iconName);
         }
 
         // A name change reaches `updateMaxHeight` through the resolution stream; an explicit size does not.
