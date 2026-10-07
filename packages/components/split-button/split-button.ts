@@ -35,7 +35,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
         '[class.kbq-split-button_second-disabled]': 'secondDisabled'
     }
 })
-export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
+export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements AfterContentInit {
     private readonly nativeElement = kbqInjectNativeElement();
 
     /** @docs-private */
@@ -69,30 +69,15 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
 
     /**
-     * component color, will be set for nested buttons
-     *
-     * Left unbound, nothing is propagated and every nested button follows the default color of the
-     * current style.
+     * Color propagated to every nested button: a bound `color`, or one set in code other than the
+     * split button's own default. Nothing is propagated otherwise, and every nested button follows the
+     * default color of its style. A button that sets its own `color` keeps it.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get color(): KbqButtonColor {
-        return this._color as KbqButtonColor;
-    }
+    private readonly propagatedColor = computed(() => {
+        const color = this.color();
 
-    set color(value: KbqButtonColor | null | undefined) {
-        this.colorSetExplicitly = !!value;
-
-        // A falsy value means the input is (back to being) unbound: it falls back to `defaultColor`,
-        // the split button's own color, which is not propagated — see the constructor.
-        super.color = value!;
-
-        this.updateColor(this.buttons?.());
-    }
-
-    /** Whether `color` was bound from the outside rather than left at the split button's own default. */
-    private colorSetExplicitly = false;
+        return this.colorInput() || color !== this.defaultColor() ? color : undefined;
+    });
 
     /**
      * Whether the split button is disabled. Disabling it disables every nested button; re-enabling it
@@ -138,22 +123,20 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     constructor() {
         super();
 
-        // `KbqColorDirective`'s constructor assigns `this.color`, which dispatches to the setter
-        // above and flips the flag. Reset it here rather than relying on the field initializer
-        // happening to run after `super()`.
-        this.colorSetExplicitly = false;
-
-        // Applied through `super` so that the split button's own default does not count as an
-        // explicit color: it styles the host element but is not propagated, so every nested button
-        // is free to follow the default color of the current style.
-        super.color = KbqComponentColors.ContrastFade;
+        // The split button's own default styles the host element but is not propagated, so every
+        // nested button is free to follow the default color of the current style.
         this.setDefaultColor(KbqComponentColors.ContrastFade);
+
+        effect(() => {
+            const color = this.propagatedColor();
+
+            this.buttons().forEach((button: KbqButton) => button.setColorFromGroup(color));
+        });
 
         effect(() => {
             const buttons = this.buttons();
 
             this.updateClasses(buttons);
-            this.updateColor(buttons);
             this.updateStyle(this._kbqStyle, buttons);
             this.updateDisabledState(this._disabled, buttons);
             this.updateDropdownParams();
@@ -178,16 +161,6 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
         buttons.forEach((button: KbqButton) => {
             button.getHostElement().classList.add('kbq-split-button_item');
         });
-    }
-
-    /**
-     * Propagates the split button's color, or — while the input is unbound — releases every nested
-     * button back to the default color of the current style.
-     */
-    private updateColor(buttons?: readonly KbqButton[]) {
-        const color = this.colorSetExplicitly ? this.color : undefined;
-
-        buttons?.forEach((button: KbqButton) => button.setColorFromGroup(color));
     }
 
     private updateStyle(style: KbqButtonStyleInput, buttons?: readonly KbqButton[]) {

@@ -815,7 +815,7 @@ export class KbqTreeSelect
     /** Full set of classes for the panel: base class, form-field theme and custom `panelClass`. */
     protected readonly panelClasses = computed<string>(() => {
         const panelClass = this.panelClass();
-        const formFieldColor = this.formFieldColor();
+        const formFieldColor = this.parentFormField?.color();
         const classes = ['kbq-tree-select__panel', formFieldColor ? `kbq-${formFieldColor}` : ''];
 
         if (typeof panelClass === 'string') {
@@ -872,9 +872,6 @@ export class KbqTreeSelect
 
     /** Reactive mirror of the state the error colour is derived from. */
     private readonly invalidState = signal(false);
-
-    /** Reactive mirror of the wrapping form field's colour, which is a plain input on `KbqColorDirective`. */
-    private readonly formFieldColor = signal<string | undefined>(this.parentFormField?.color);
 
     // Used for storing the values that were assigned before the options were initialized.
     private tempValues: string | string[] | null;
@@ -990,11 +987,9 @@ export class KbqTreeSelect
             this.updateErrorState();
         }
 
-        // The two values below are read through plain properties — `KbqColorDirective.color` is a
-        // decorator input, and the legacy `kbqValidate` directive marks the host with a class. Mirroring
-        // them here is what lets everything derived from them be a `computed()` instead of a getter
+        // The legacy `kbqValidate` directive marks the host with a class, which no signal observes.
+        // Mirroring it here is what lets everything derived from it be a `computed()` instead of a getter
         // re-evaluated by every binding on every pass.
-        this.formFieldColor.set(this.parentFormField?.color);
         // A disjunction, not a choice between the two: `errorState` still colours the control when the
         // legacy directive is present, which is how `KbqSelect` reads it. A consumer matcher that reports
         // an error for a valid control is the state the two forms disagree on.
