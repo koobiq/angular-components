@@ -144,6 +144,11 @@
             "factory": "./migrations/color-signals/index",
             "schema": "./migrations/color-signals/schema.json"
         },
+        "core-mixins-removal": {
+            "description": "Reports the uses of mixinDisabled, CanDisable, CanDisableCtor, mixinTabIndex, HasTabIndex and HasTabIndexCtor, removed from @koobiq/components/core: they were deprecated, unused inside the library, and logged a dev-mode warning on every instance. Warn-only: a class built on them declares the members itself.",
+            "factory": "./migrations/core-mixins-removal/index",
+            "schema": "./migrations/core-mixins-removal/schema.json"
+        },
         "zoneless-change-detection": {
             "description": "Reports the uses of MockNgZone and its simulateZoneExit(), removed from @koobiq/components/core: the library no longer depends on zone.js and nothing in it waits for NgZone.onStable, so a spec renders with fixture.detectChanges() or waits with fixture.whenStable() instead. Warn-only: which of the two depends on what the spec waited for.",
             "factory": "./migrations/zoneless-change-detection/index",
