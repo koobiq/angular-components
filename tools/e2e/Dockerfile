@@ -88,6 +88,7 @@ RUN set -eux; \
 
 COPY .yarnrc.yml package.json yarn.lock ./
 COPY .yarn/releases/ .yarn/releases/
+COPY .yarn/patches/ .yarn/patches/
 
 # The base image has Yarn 1 classic on PATH from its own `npm install -g yarn`. It cannot read a
 # Berry lockfile, and the container command (`yarn run e2e:components`) shells out to whatever `yarn`

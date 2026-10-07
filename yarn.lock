@@ -683,6 +683,87 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@angular/build@patch:@angular/build@npm%3A21.2.25#~/.yarn/patches/@angular-build-npm-21.2.25-2e1422ba47.patch":
+  version: 21.2.25
+  resolution: "@angular/build@patch:@angular/build@npm%3A21.2.25#~/.yarn/patches/@angular-build-npm-21.2.25-2e1422ba47.patch::version=21.2.25&hash=bfe50e"
+  dependencies:
+    "@ampproject/remapping": "npm:2.3.0"
+    "@angular-devkit/architect": "npm:0.2102.25"
+    "@babel/core": "npm:7.29.7"
+    "@babel/helper-annotate-as-pure": "npm:7.27.3"
+    "@babel/helper-split-export-declaration": "npm:7.24.7"
+    "@inquirer/confirm": "npm:5.1.21"
+    "@vitejs/plugin-basic-ssl": "npm:2.1.4"
+    beasties: "npm:0.4.1"
+    browserslist: "npm:^4.26.0"
+    esbuild: "npm:0.28.1"
+    https-proxy-agent: "npm:7.0.6"
+    istanbul-lib-instrument: "npm:6.0.3"
+    jsonc-parser: "npm:3.3.1"
+    listr2: "npm:9.0.5"
+    lmdb: "npm:3.5.1"
+    magic-string: "npm:0.30.21"
+    mrmime: "npm:2.0.1"
+    parse5-html-rewriting-stream: "npm:8.0.0"
+    picomatch: "npm:4.0.4"
+    piscina: "npm:5.3.2"
+    rolldown: "npm:1.0.0-rc.4"
+    sass: "npm:1.97.3"
+    semver: "npm:7.7.4"
+    source-map-support: "npm:0.5.21"
+    tinyglobby: "npm:0.2.15"
+    undici: "npm:7.29.1"
+    vite: "npm:7.3.6"
+    watchpack: "npm:2.5.1"
+  peerDependencies:
+    "@angular/compiler": ^21.0.0
+    "@angular/compiler-cli": ^21.0.0
+    "@angular/core": ^21.0.0
+    "@angular/localize": ^21.0.0
+    "@angular/platform-browser": ^21.0.0
+    "@angular/platform-server": ^21.0.0
+    "@angular/service-worker": ^21.0.0
+    "@angular/ssr": ^21.2.25
+    karma: ^6.4.0
+    less: ^4.2.0
+    ng-packagr: ^21.0.0
+    postcss: ^8.4.0
+    tailwindcss: ^2.0.0 || ^3.0.0 || ^4.0.0
+    tslib: ^2.3.0
+    typescript: ">=5.9 <6.0"
+    vitest: ^4.0.8
+  dependenciesMeta:
+    lmdb:
+      optional: true
+  peerDependenciesMeta:
+    "@angular/core":
+      optional: true
+    "@angular/localize":
+      optional: true
+    "@angular/platform-browser":
+      optional: true
+    "@angular/platform-server":
+      optional: true
+    "@angular/service-worker":
+      optional: true
+    "@angular/ssr":
+      optional: true
+    karma:
+      optional: true
+    less:
+      optional: true
+    ng-packagr:
+      optional: true
+    postcss:
+      optional: true
+    tailwindcss:
+      optional: true
+    vitest:
+      optional: true
+  checksum: 10c0/01792c6c03d79909181552812ac7ccfbd42cd9be76a54618c84f2c2b8f7eb747c60a0b75e1c9c8a2cb1afe8b263224993d8e89f0cb5f35b419a407450f4871df
+  languageName: node
+  linkType: hard
+
 "@angular/cdk@npm:21.2.14":
   version: 21.2.14
   resolution: "@angular/cdk@npm:21.2.14"
@@ -10528,7 +10609,7 @@ __metadata:
     "@angular-devkit/architect-cli": "npm:0.2102.25"
     "@angular-devkit/core": "npm:21.2.25"
     "@angular-devkit/schematics": "npm:21.2.25"
-    "@angular/build": "npm:21.2.25"
+    "@angular/build": "patch:@angular/build@npm%3A21.2.25#~/.yarn/patches/@angular-build-npm-21.2.25-2e1422ba47.patch"
     "@angular/cdk": "npm:21.2.14"
     "@angular/cli": "npm:21.2.25"
     "@angular/common": "npm:21.2.25"
