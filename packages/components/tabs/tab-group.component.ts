@@ -8,23 +8,24 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
+    contentChildren,
     Directive,
     ElementRef,
     forwardRef,
     inject,
     InjectionToken,
-    Input,
     input,
     isDevMode,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     output,
     QueryList,
+    SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_PARENT_ANIMATION_COMPONENT, KbqStateSaving } from '@koobiq/components/core';
+import { KBQ_PARENT_ANIMATION_COMPONENT, kbqQueryListFrom, KbqStateSaving } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -138,7 +139,7 @@ const normalizeTabsState = (parsed: unknown): KbqTabsState | null => {
     ],
     exportAs: 'kbqTabGroup'
 })
-export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
+export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /**
@@ -149,7 +150,13 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     readonly resizeStream = new Subject<Event>();
 
-    @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
+    private readonly tabsQuery = contentChildren(KbqTab);
+    private readonly tabsList = kbqQueryListFrom(this.tabsQuery);
+
+    /** The tabs of the group. */
+    get tabs(): QueryList<KbqTab> {
+        return this.tabsList();
+    }
 
     readonly tabBodyWrapper = viewChild.required<ElementRef>('tabBodyWrapper');
 
@@ -163,10 +170,28 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     /** Whether the tab group should grow to the size of the active tab. */
     readonly dynamicHeight = input<boolean, unknown>(false, { transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly selectedIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'selectedIndex',
+        transform: numberAttribute
+    });
+
+    /** @docs-private */
+    readonly activeTabInput = input<KbqTabSelectBy | null | undefined>(undefined, { alias: 'activeTab' });
+
+    /** @docs-private */
+    readonly headerPositionInput = input<KbqTabHeaderPosition | undefined>(undefined, { alias: 'headerPosition' });
+
+    /** @docs-private */
+    readonly animationDurationInput = input<string | undefined>(undefined, { alias: 'animationDuration' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     /** The index of the active tab. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get selectedIndex(): number {
         return this._selectedIndex;
     }
@@ -177,9 +202,6 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     private _selectedIndex: number;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get activeTab(): KbqTab | null {
         switch (typeof this.attributeToSelectBy) {
             case 'number':
@@ -209,18 +231,11 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     /** Position of the tab header. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() headerPosition: KbqTabHeaderPosition = 'above';
+    headerPosition: KbqTabHeaderPosition = 'above';
 
     /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() animationDuration: string;
+    animationDuration: string;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
@@ -287,6 +302,39 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         this.stateSaving.keyChanges.subscribe(() => this.applySavedState());
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['selectedIndexInput']) {
+            const selectedIndex = this.selectedIndexInput();
+
+            if (selectedIndex !== undefined) this.selectedIndex = selectedIndex;
+        }
+
+        // A bound `undefined` is handed over too: binding `activeTab` at all lets the application drive the
+        // selection, which turns the state saving off.
+        if (changes['activeTabInput']) {
+            this.activeTab = this.activeTabInput() ?? null;
+        }
+
+        if (changes['headerPositionInput']) {
+            const headerPosition = this.headerPositionInput();
+
+            if (headerPosition !== undefined) this.headerPosition = headerPosition;
+        }
+
+        if (changes['animationDurationInput']) {
+            const animationDuration = this.animationDurationInput();
+
+            if (animationDuration !== undefined) this.animationDuration = animationDuration;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
+
     ngAfterContentInit() {
         this.subscribeToTabLabels();
 
@@ -327,6 +375,10 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      * a new selected tab should transition in (from the left or right).
      */
     ngAfterContentChecked() {
+        // Brings `tabs` up to date first, so that its `changes` subscribers run before the selection is computed, as
+        // they did with a decorator query.
+        this.tabsList();
+
         // Don't clamp the `indexToSelect` immediately in the setter because it can happen that
         // the amount of tabs changes before the actual change detection runs.
         const indexToSelect = this.getTabIndexToSelect();

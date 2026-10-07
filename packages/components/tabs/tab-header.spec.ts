@@ -13,6 +13,9 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 /** Audit interval (ms) the header waits before re-checking pagination after a scroll-box resize. See `RESIZE_AUDIT_TIME`. */
 const RESIZE_AUDIT_TIME = 100;
 
+/** How long (ms) a scroll waits before the header renders the arrows again. See `SCROLL_CD_THROTTLE`. */
+const SCROLL_CD_THROTTLE = 48;
+
 @Injectable()
 class MockResizeObserver extends SharedResizeObserver {
     // A plain `Subject`, not a `BehaviorSubject`: the latter replays its initial `[]` to every new
@@ -30,6 +33,16 @@ describe('KbqTabHeader', () => {
     let change: Subject<Direction>;
     let fixture: ComponentFixture<SimpleTabHeaderApp>;
     let appComponent: SimpleTabHeaderApp;
+
+    /** Scrolls the strip, and renders the header once the re-render the scroll asks for is due. */
+    const scrollStrip = (container: HTMLElement, scrollLeft: number): void => {
+        vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+        container.scrollLeft = scrollLeft;
+        container.dispatchEvent(new Event('scroll'));
+        vi.advanceTimersByTime(SCROLL_CD_THROTTLE);
+        vi.useRealTimers();
+        fixture.detectChanges();
+    };
 
     beforeEach(() => {
         change = new Subject();
@@ -280,9 +293,7 @@ describe('KbqTabHeader', () => {
 
                 expect(header.disableScrollAfter).toBe(false);
 
-                container.scrollLeft = 820;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 820);
 
                 expect(header.disableScrollAfter).toBe(true);
             });
@@ -300,15 +311,11 @@ describe('KbqTabHeader', () => {
                 header.updatePagination();
                 fixture.detectChanges();
 
-                container.scrollLeft = 297;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 297);
 
                 expect(header.disableScrollAfter).toBe(false);
 
-                container.scrollLeft = 299;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 299);
 
                 expect(header.disableScrollAfter).toBe(true);
             });
@@ -327,9 +334,7 @@ describe('KbqTabHeader', () => {
 
                 expect(header.disableScrollBefore).toBe(true);
 
-                container.scrollLeft = 1;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 1);
 
                 expect(header.disableScrollBefore).toBe(false);
             });
@@ -494,9 +499,7 @@ describe('KbqTabHeader', () => {
 
                 // Native RTL `scrollLeft` runs from 0 to -(scrollWidth - clientWidth) as the user
                 // scrolls towards the end of the (reading-order) list.
-                container.scrollLeft = -300;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, -300);
 
                 expect(header.disableScrollBefore).toBe(false);
                 expect(header.disableScrollAfter).toBe(true);
@@ -507,15 +510,11 @@ describe('KbqTabHeader', () => {
                 Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 1139 });
                 Object.defineProperty(container, 'clientWidth', { configurable: true, value: 318 });
 
-                container.scrollLeft = 0;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 0);
 
                 expect(header.disableScrollAfter).toBe(false);
 
-                container.scrollLeft = -820;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, -820);
 
                 expect(header.disableScrollAfter).toBe(true);
             });
@@ -635,9 +634,7 @@ describe('KbqTabHeader', () => {
             expect(after.classList.contains('kbq-disabled')).toBe(false);
 
             // scrollWidth(400) - clientWidth(100) = 300, i.e. the max scrollLeft a real browser would allow.
-            header.tabListContainer.nativeElement.scrollLeft = 300;
-            header.tabListContainer.nativeElement.dispatchEvent(new Event('scroll'));
-            fixture.detectChanges();
+            scrollStrip(header.tabListContainer.nativeElement, 300);
 
             expect(before.classList.contains('kbq-disabled')).toBe(false);
             expect(after.classList.contains('kbq-disabled')).toBe(true);
@@ -868,6 +865,27 @@ describe('KbqTabHeader', () => {
 
             appComponent = fixture.componentInstance;
             header = appComponent.tabHeader();
+        });
+
+        it('renders the underline again when the active label resizes without notice', () => {
+            const underline = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+            Object.defineProperty(header.items.get(0)!.elementRef.nativeElement, 'offsetWidth', {
+                configurable: true,
+                value: 120
+            });
+            fixture.detectChanges();
+
+            expect(underline.style.width).toBe('96px');
+        });
+
+        it('renders the underline as disabled when the active tab gets disabled', () => {
+            const underline = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+            appComponent.tabs[0].disabled = true;
+            fixture.detectChanges();
+
+            expect(underline.classList).toContain('kbq-disabled');
         });
 
         describe('activeTabOffsetWidth', () => {

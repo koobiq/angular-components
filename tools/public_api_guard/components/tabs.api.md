@@ -7,6 +7,7 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { CdkPortal } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ChangeDetectorRef } from '@angular/core';
@@ -15,7 +16,6 @@ import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
-import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/portal';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/a11y';
@@ -44,25 +44,25 @@ export const KBQ_TABS_CONFIG: InjectionToken<KbqTabsConfig>;
 // @public (undocumented)
 export class KbqAlignTabsCenterCssStyler {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAlignTabsCenterCssStyler, "kbq-tab-group[kbq-align-tabs-center], [kbq-tab-nav-bar][kbq-align-tabs-center], [kbqTabNavBar][kbq-align-tabs-center]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAlignTabsCenterCssStyler, "kbq-tab-group[kbq-align-tabs-center], [kbq-tab-nav-bar][kbq-align-tabs-center], [kbqTabNavBar][kbq-align-tabs-center]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlignTabsCenterCssStyler, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlignTabsCenterCssStyler, never>;
 }
 
 // @public (undocumented)
 export class KbqAlignTabsEndCssStyler {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAlignTabsEndCssStyler, "kbq-tab-group[kbq-align-tabs-end], [kbq-tab-nav-bar][kbq-align-tabs-end], [kbqTabNavBar][kbq-align-tabs-end]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAlignTabsEndCssStyler, "kbq-tab-group[kbq-align-tabs-end], [kbq-tab-nav-bar][kbq-align-tabs-end], [kbqTabNavBar][kbq-align-tabs-end]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAlignTabsEndCssStyler, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAlignTabsEndCssStyler, never>;
 }
 
 // @public (undocumented)
 export class KbqStretchTabsCssStyler {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqStretchTabsCssStyler, "kbq-tab-group[kbq-stretch-tabs], [kbq-tab-nav-bar][kbq-stretch-tabs], [kbqTabNavBar][kbq-stretch-tabs]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqStretchTabsCssStyler, "kbq-tab-group[kbq-stretch-tabs], [kbq-tab-nav-bar][kbq-stretch-tabs], [kbqTabNavBar][kbq-stretch-tabs]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqStretchTabsCssStyler, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqStretchTabsCssStyler, never>;
 }
 
 // @public (undocumented)
@@ -71,16 +71,15 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
-    readonly empty: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly explicitContent: i0.Signal<TemplateRef<any> | undefined>;
+    readonly empty: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly explicitContent: _angular_core.Signal<TemplateRef<any> | undefined>;
     get iconOnlyLabel(): boolean;
-    readonly implicitContent: i0.Signal<TemplateRef<any>>;
+    readonly implicitContent: _angular_core.Signal<TemplateRef<any>>;
     isActive: boolean;
     // (undocumented)
     get isOverflown(): boolean;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
@@ -95,46 +94,52 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     protected setTemplateLabelInput(value: KbqTabLabel): void;
     readonly stateChanges: Subject<void>;
     // (undocumented)
-    readonly tabId: i0.InputSignal<string>;
-    // (undocumented)
+    readonly tabId: _angular_core.InputSignal<string>;
     get templateLabel(): KbqTabLabel;
     set templateLabel(value: KbqTabLabel);
-    readonly textLabel: i0.InputSignal<string>;
+    readonly textLabel: _angular_core.InputSignal<string>;
     // (undocumented)
-    readonly tooltipPlacement: i0.InputSignal<"left" | "right" | "top" | "topLeft" | "topRight" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottom" | "bottomLeft" | "bottomRight">;
+    readonly tooltipPlacement: _angular_core.InputSignal<"left" | "right" | "top" | "topLeft" | "topRight" | "rightTop" | "rightBottom" | "leftTop" | "leftBottom" | "bottom" | "bottomLeft" | "bottomRight">;
     // (undocumented)
     get tooltipTitle(): string;
     set tooltipTitle(value: string);
+    readonly tooltipTitleInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTab, "kbq-tab", ["kbqTab"], { "tooltipTitle": { "alias": "tooltipTitle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "textLabel": { "alias": "label"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "tabId": { "alias": "tabId"; "required": false; "isSignal": true; }; }, {}, ["explicitContent", "templateLabel"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTab, "kbq-tab", ["kbqTab"], { "tooltipTitleInput": { "alias": "tooltipTitle"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "textLabel": { "alias": "label"; "required": false; "isSignal": true; }; "empty": { "alias": "empty"; "required": false; "isSignal": true; }; "tabId": { "alias": "tabId"; "required": false; "isSignal": true; }; }, {}, ["templateLabelQuery", "explicitContent"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTab, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTab, never>;
 }
 
 // @public
-export class KbqTabBody implements OnInit, OnDestroy {
+export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     constructor();
     readonly afterLeavingCenter: EventEmitter<boolean>;
-    readonly animationDuration: i0.InputSignal<string>;
+    readonly afterLeavingCenterOutput: _angular_core.OutputRef<boolean>;
+    readonly animationDuration: _angular_core.InputSignal<string>;
     protected readonly animationsDisabled: boolean;
     readonly beforeCentering: EventEmitter<boolean>;
+    readonly beforeCenteringOutput: _angular_core.OutputRef<boolean>;
     bodyPosition: KbqTabBodyPositionState;
-    readonly content: i0.InputSignal<TemplatePortal<any>>;
-    protected readonly cssAnimationDuration: i0.Signal<string>;
+    readonly content: _angular_core.InputSignal<TemplatePortal<any>>;
+    protected readonly cssAnimationDuration: _angular_core.Signal<string>;
     getLayoutDirection(): Direction;
     isCenterPosition(position: KbqTabBodyPositionState | string): boolean;
     // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
     ngOnDestroy(): void;
     ngOnInit(): void;
-    readonly onCentered: i0.OutputEmitterRef<void>;
-    readonly onCentering: i0.OutputEmitterRef<number>;
+    readonly onCentered: _angular_core.OutputEmitterRef<void>;
+    readonly onCentering: _angular_core.OutputEmitterRef<number>;
     origin: number;
-    readonly portalHost: i0.Signal<CdkPortalOutlet>;
+    readonly originInput: _angular_core.InputSignal<number | undefined>;
+    readonly portalHost: _angular_core.Signal<CdkPortalOutlet>;
     set position(position: number);
+    readonly positionInput: _angular_core.InputSignal<number | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabBody, "kbq-tab-body", never, { "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; "isSignal": true; }; "origin": { "alias": "origin"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; "isSignal": true; }; }, { "onCentering": "onCentering"; "beforeCentering": "beforeCentering"; "afterLeavingCenter": "afterLeavingCenter"; "onCentered": "onCentered"; }, never, never, true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTabBody, "kbq-tab-body", never, { "positionInput": { "alias": "position"; "required": false; "isSignal": true; }; "originInput": { "alias": "origin"; "required": false; "isSignal": true; }; "content": { "alias": "content"; "required": false; "isSignal": true; }; "animationDuration": { "alias": "animationDuration"; "required": false; "isSignal": true; }; }, { "onCentering": "onCentering"; "beforeCenteringOutput": "beforeCentering"; "afterLeavingCenterOutput": "afterLeavingCenter"; "onCentered": "onCentered"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabBody, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabBody, never>;
 }
 
 // @public
@@ -145,9 +150,9 @@ export class KbqTabBodyPortal extends CdkPortalOutlet implements OnInit, OnDestr
     ngOnDestroy(): void;
     ngOnInit(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabBodyPortal, "[kbqTabBodyHost]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTabBodyPortal, "[kbqTabBodyHost]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabBodyPortal, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabBodyPortal, never>;
 }
 
 // @public
@@ -164,26 +169,29 @@ export class KbqTabContent {
     // (undocumented)
     template: TemplateRef<any>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabContent, "[kbqTabContent]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTabContent, "[kbqTabContent]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabContent, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabContent, never>;
 }
 
 // @public
-export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
+export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     constructor();
     // (undocumented)
     get activeTab(): KbqTab | null;
     set activeTab(value: KbqTabSelectBy | null);
-    readonly activeTabChange: i0.OutputEmitterRef<string | number | KbqTab>;
-    readonly animationDone: i0.OutputEmitterRef<void>;
+    readonly activeTabChange: _angular_core.OutputEmitterRef<string | number | KbqTab>;
+    readonly activeTabInput: _angular_core.InputSignal<KbqTabSelectBy | null | undefined>;
+    readonly animationDone: _angular_core.OutputEmitterRef<void>;
     animationDuration: string;
+    readonly animationDurationInput: _angular_core.InputSignal<string | undefined>;
     clearSavedState(): void;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
-    readonly dynamicHeight: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly focusChange: i0.OutputEmitterRef<KbqTabChangeEvent>;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
+    readonly dynamicHeight: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly focusChange: _angular_core.OutputEmitterRef<KbqTabChangeEvent>;
     // (undocumented)
     focusChanged(index: number): void;
     getTabContentId(i: number): string;
@@ -192,46 +200,45 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     handleClick(tab: KbqTab, tabHeader: KbqTabHeader, index: number): void;
     get hasSavedState(): boolean;
     headerPosition: KbqTabHeaderPosition;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_selectedIndex: unknown;
+    readonly headerPositionInput: _angular_core.InputSignal<KbqTabHeaderPosition | undefined>;
     ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     onSelectFocusedIndex($event: number): void;
     // (undocumented)
-    readonly onSurface: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly onSurface: _angular_core.InputSignalWithTransform<boolean, unknown>;
     removeTabBodyWrapperHeight(): void;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
     saveState(): void;
     get selectedIndex(): number;
     set selectedIndex(value: number);
-    readonly selectedIndexChange: i0.OutputEmitterRef<number>;
-    readonly selectedTabChange: i0.OutputEmitterRef<KbqTabChangeEvent>;
+    readonly selectedIndexChange: _angular_core.OutputEmitterRef<number>;
+    readonly selectedIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
+    readonly selectedTabChange: _angular_core.OutputEmitterRef<KbqTabChangeEvent>;
     setTabBodyWrapperHeight(tabHeight: number): void;
     // (undocumented)
-    readonly tabBodyWrapper: i0.Signal<ElementRef<any>>;
+    readonly tabBodyWrapper: _angular_core.Signal<ElementRef<any>>;
     // (undocumented)
-    readonly tabHeader: i0.Signal<KbqTabHeader>;
+    readonly tabHeader: _angular_core.Signal<KbqTabHeader>;
+    get tabs(): QueryList<KbqTab>;
     // (undocumented)
-    tabs: QueryList<KbqTab>;
+    readonly transparent: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    readonly transparent: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly underlined: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    readonly underlined: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly vertical: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    readonly vertical: i0.InputSignalWithTransform<boolean, unknown>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; "isSignal": true; }; "selectedIndexInput": { "alias": "selectedIndex"; "required": false; "isSignal": true; }; "activeTabInput": { "alias": "activeTab"; "required": false; "isSignal": true; }; "headerPositionInput": { "alias": "headerPosition"; "required": false; "isSignal": true; }; "animationDurationInput": { "alias": "animationDuration"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabsQuery"], never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; "isSignal": true; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabGroup, never>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "KbqPaginatedTabHeader" needs to be exported by the entry point koobiq-components-tabs.d.ts
@@ -244,25 +251,22 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     protected get activeTabOffsetLeft(): number | undefined;
     // (undocumented)
     protected get activeTabOffsetWidth(): number | undefined;
-    // (undocumented)
-    readonly items: QueryList<KbqTabLabelWrapper>;
+    get items(): QueryList<KbqTabLabelWrapper>;
     // (undocumented)
     protected itemSelected(event: KeyboardEvent): void;
+    get nextPaginator(): ElementRef<HTMLElement>;
     // (undocumented)
-    readonly nextPaginator: ElementRef<HTMLElement>;
+    ngAfterContentChecked(): void;
+    get previousPaginator(): ElementRef<HTMLElement>;
     // (undocumented)
-    readonly previousPaginator: ElementRef<HTMLElement>;
+    protected get scrollbarViewport(): KbqScrollbarViewport;
+    get tabList(): ElementRef;
+    get tabListContainer(): ElementRef;
+    readonly underlined: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    protected readonly scrollbarViewport: KbqScrollbarViewport;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTabHeader, "kbq-tab-header", never, { "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["itemsQuery"], ["*"], true, never>;
     // (undocumented)
-    readonly tabList: ElementRef;
-    // (undocumented)
-    readonly tabListContainer: ElementRef;
-    readonly underlined: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabHeader, "kbq-tab-header", never, { "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["items"], ["*"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabHeader, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabHeader, never>;
 }
 
 // @public
@@ -270,20 +274,21 @@ export type KbqTabHeaderPosition = 'above' | 'below';
 
 // @public
 export class KbqTabLabel extends CdkPortal {
-    readonly iconOnly: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly iconOnly: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, { "iconOnly": { "alias": "iconOnly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTabLabel, "[kbq-tab-label], [kbqTabLabel]", never, { "iconOnly": { "alias": "iconOnly"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabLabel, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabLabel, never>;
 }
 
 // @public
-export class KbqTabLabelWrapper implements AfterViewInit {
+export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
     // (undocumented)
     checkOverflow(): void;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
     focus(): void;
@@ -295,55 +300,55 @@ export class KbqTabLabelWrapper implements AfterViewInit {
     getOffsetWidth(): number;
     // (undocumented)
     isOverflown(): boolean;
-    // (undocumented)
-    labelContent: ElementRef;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
+    get labelContent(): ElementRef;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
     tab: KbqTab;
+    readonly tabInput: _angular_core.InputSignal<KbqTab | undefined>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabelWrapper, "[kbqTabLabelWrapper]", never, { "tab": { "alias": "tab"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["labelContent"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTabLabelWrapper, "[kbqTabLabelWrapper]", never, { "tabInput": { "alias": "tab"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["labelContentQuery"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabLabelWrapper, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabLabelWrapper, never>;
 }
 
 // @public
-export class KbqTabLink implements OnDestroy, AfterViewInit {
+export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
     get active(): boolean;
     set active(value: boolean);
+    readonly activeInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     protected get ariaControls(): string | null;
     protected get ariaCurrent(): string | null;
     protected get ariaSelected(): string | null;
     disabled: boolean;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
     readonly elementRef: ElementRef<HTMLElement>;
     focus(): void;
     protected handleFocus(): void;
     protected handleKeydown(event: KeyboardEvent): void;
     id: string;
-    // (undocumented)
-    static ngAcceptInputType_active: unknown;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: unknown;
+    readonly idInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     protected get role(): string | null;
     get tabIndex(): number;
     set tabIndex(value: number);
+    readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     // (undocumented)
     get underlined(): boolean;
     // (undocumented)
     get vertical(): boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLink, "[kbqTabLink], [kbq-tab-link]", ["kbqTabLink"], { "id": { "alias": "id"; "required": false; }; "active": { "alias": "active"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTabLink, "[kbqTabLink], [kbq-tab-link]", ["kbqTabLink"], { "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "activeInput": { "alias": "active"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabLink, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabLink, never>;
 }
 
 // @public
@@ -354,46 +359,41 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     protected get activeTabOffsetLeft(): number | undefined;
     // (undocumented)
     protected get activeTabOffsetWidth(): number | undefined;
-    // (undocumented)
-    readonly items: QueryList<KbqTabLink>;
+    get items(): QueryList<KbqTabLink>;
     // (undocumented)
     protected itemSelected(): void;
-    // (undocumented)
-    readonly nextPaginator: ElementRef<HTMLElement>;
+    get nextPaginator(): ElementRef<HTMLElement>;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    readonly onSurface: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    readonly previousPaginator: ElementRef<HTMLElement>;
+    readonly onSurface: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    get previousPaginator(): ElementRef<HTMLElement>;
     // (undocumented)
     get role(): string | null;
     // (undocumented)
-    protected readonly scrollbarViewport: KbqScrollbarViewport;
-    // (undocumented)
-    readonly tabList: ElementRef;
-    // (undocumented)
-    readonly tabListContainer: ElementRef;
-    readonly tabNavPanel: i0.InputSignal<KbqTabNavPanel | undefined>;
-    readonly transparent: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly underlined: i0.InputSignalWithTransform<boolean, unknown>;
+    protected get scrollbarViewport(): KbqScrollbarViewport;
+    get tabList(): ElementRef;
+    get tabListContainer(): ElementRef;
+    readonly tabNavPanel: _angular_core.InputSignal<KbqTabNavPanel | undefined>;
+    readonly transparent: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly underlined: _angular_core.InputSignalWithTransform<boolean, unknown>;
     updateActiveLink(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabNavBar, "[kbqTabNavBar], [kbq-tab-nav-bar]", ["kbqTabNavBar"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "tabNavPanel": { "alias": "tabNavPanel"; "required": false; "isSignal": true; }; }, {}, ["items"], ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTabNavBar, "[kbqTabNavBar], [kbq-tab-nav-bar]", ["kbqTabNavBar"], { "transparent": { "alias": "transparent"; "required": false; "isSignal": true; }; "onSurface": { "alias": "onSurface"; "required": false; "isSignal": true; }; "underlined": { "alias": "underlined"; "required": false; "isSignal": true; }; "tabNavPanel": { "alias": "tabNavPanel"; "required": false; "isSignal": true; }; }, {}, ["itemsQuery"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabNavBar, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabNavBar, never>;
 }
 
 // @public
 export class KbqTabNavPanel {
     activeTabId?: string;
-    readonly id: i0.InputSignal<string>;
+    readonly id: _angular_core.InputSignal<string>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabNavPanel, "[kbqTabNavPanel]", ["kbqTabNavPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTabNavPanel, "[kbqTabNavPanel]", ["kbqTabNavPanel"], { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabNavPanel, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabNavPanel, never>;
 }
 
 // @public
@@ -407,11 +407,11 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
 // @public (undocumented)
 export class KbqTabsModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabsModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTabsModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTabsModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTabsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1$1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel, typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler], [typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTabsModule, never, [typeof i1$1.PortalModule, typeof i2.A11yModule, typeof i3.CdkScrollableModule, typeof i4.KbqIconModule, typeof i5.KbqToolTipModule, typeof i6.CdkObserveContent, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel, typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler], [typeof KbqTabGroup, typeof KbqTabLabel, typeof KbqTab, typeof KbqTabLabelWrapper, typeof KbqTabBody, typeof KbqTabBodyPortal, typeof KbqTabHeader, typeof KbqTabContent, typeof KbqAlignTabsCenterCssStyler, typeof KbqAlignTabsEndCssStyler, typeof KbqStretchTabsCssStyler, typeof KbqVerticalTabsCssStyler, typeof KbqTabNavBar, typeof KbqTabLink, typeof KbqTabNavPanel]>;
 }
 
 // @public
@@ -425,9 +425,9 @@ export interface KbqTabsState {
 // @public (undocumented)
 export class KbqVerticalTabsCssStyler {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqVerticalTabsCssStyler, "kbq-tab-group[vertical], [kbq-tab-nav-bar][vertical], [kbqTabNavBar][vertical]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqVerticalTabsCssStyler, "kbq-tab-group[vertical], [kbq-tab-nav-bar][vertical], [kbqTabNavBar][vertical]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalTabsCssStyler, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqVerticalTabsCssStyler, never>;
 }
 
 // @public

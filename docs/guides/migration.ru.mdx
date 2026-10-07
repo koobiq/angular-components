@@ -447,6 +447,22 @@ ng g @koobiq/components:datepicker-signals --project "<your project>"
 ng g @koobiq/components:modal-signals --project "<your project>"
 ```
 
+#### Вкладки
+
+Инпуты `KbqTabGroup`, `KbqTab`, `KbqTabNavBar`, `KbqTabLink`, а также заголовка, меток и тел внутри группы вкладок стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `tabGroup.selectedIndex`, `tabGroup.headerPosition`, `tab.disabled` или `tabLink.active` работают как раньше. Их запросы стали сигнальными запросами за геттерами: `KbqTabGroup.tabs` и `KbqTabNavBar.items` остаются `QueryList`, и их `changes` срабатывают как раньше.
+
+- **Наследник**, реализующий `ngOnChanges`, помечает его `override` и вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `headerPositionInput`. Запрос, который наследник объявлял заново через `@ContentChildren` или `@ViewChild`, — `tabs`, `items`, `templateLabel` — переопределяется геттером.
+- **`SimpleChanges`, переданный в `ngOnChanges` вручную**, использует ключи `<член>Input`: `disabledInput`, а не `disabled`.
+- **Булев инпут** — `disabled`, `active`, `vertical`, `disablePagination` — принимает в шаблоне `boolean | string | null | undefined`.
+- **Привязанное значение `undefined`** оставляет член как есть: `[animationDuration]` сохраняет длительность из `KBQ_TABS_CONFIG`, а `KbqTabLink` — сгенерированный `id`.
+- **`KbqTab.templateLabel` следует за `kbqTabLabel` в содержимом вкладки**: когда его убирают, вкладка показывает текстовую метку, а не удаленный шаблон.
+
+Схематик `tabs-signals` сообщает о каждом наследнике и каждом прямом вызове `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:tabs-signals --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

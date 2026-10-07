@@ -14,15 +14,16 @@ import {
     forwardRef,
     inject,
     Injector,
-    Input,
     input,
+    OnChanges,
     OnDestroy,
     OnInit,
-    Output,
     output,
+    SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { kbqAnimationsDisabled, kbqAnimationsSettled } from '@koobiq/components/core';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { Subscription } from 'rxjs';
@@ -63,7 +64,7 @@ export type KbqTabBodyOriginState = 'left' | 'right';
         class: 'kbq-tab-body'
     }
 })
-export class KbqTabBody implements OnInit, OnDestroy {
+export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly dir = inject(Directionality, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
@@ -72,10 +73,13 @@ export class KbqTabBody implements OnInit, OnDestroy {
     /** Whether the tab body translates without motion. */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
+    /** @docs-private */
+    readonly positionInput = input<number | undefined>(undefined, { alias: 'position' });
+
+    /** @docs-private */
+    readonly originInput = input<number | undefined>(undefined, { alias: 'origin' });
+
     /** The shifted index position of the tab body, where zero represents the active center tab. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     set position(position: number) {
         this.positionIndex = position;
         this.computePositionAnimationState();
@@ -88,10 +92,16 @@ export class KbqTabBody implements OnInit, OnDestroy {
     readonly onCentering = output<number>();
 
     /** Event emitted before the centering of the tab begins. */
-    @Output() readonly beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly beforeCenteringOutput = outputFromObservable(this.beforeCentering, { alias: 'beforeCentering' });
 
     /** Event emitted before the centering of the tab begins. */
-    @Output() readonly afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly afterLeavingCenterOutput = outputFromObservable(this.afterLeavingCenter, { alias: 'afterLeavingCenter' });
 
     /** Event emitted when the tab completes its animation towards the center. */
     readonly onCentered = output<void>();
@@ -103,9 +113,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
     readonly content = input<TemplatePortal>(undefined!);
 
     /** Position that will be used when the tab is immediately becoming visible after creation. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() origin: number;
+    origin: number;
 
     /** Duration for the tab's animation. */
     readonly animationDuration = input<string>('0ms');
@@ -138,6 +146,21 @@ export class KbqTabBody implements OnInit, OnDestroy {
                 this.computePositionAnimationState(direction);
                 changeDetectorRef.markForCheck();
             });
+        }
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['positionInput']) {
+            const position = this.positionInput();
+
+            if (position !== undefined) this.position = position;
+        }
+
+        if (changes['originInput']) {
+            const origin = this.originInput();
+
+            if (origin !== undefined) this.origin = origin;
         }
     }
 
