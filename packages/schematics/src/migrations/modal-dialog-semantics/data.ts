@@ -107,7 +107,9 @@ export const SUMMARY = [
         'modal no longer emits kbqBeforeClose/kbqAfterClose once on creation.',
     '  The dialog is a flex column capped at the viewport minus its inset, so only the body scrolls ' +
         'and the header and the footer stay on screen. A modal that overrode the old ' +
-        'max-height: calc(100vh - 260px) on .kbq-modal-body can drop that override.',
+        'max-height: calc(100vh - 260px) on .kbq-modal-body can drop that override; one that used ' +
+        'kbqBodyStyle: { maxHeight: none } to let the dialog outgrow the viewport has to move that ' +
+        'override onto the dialog element, kbqStyle: { maxHeight: none }, because the cap lives there now.',
     '  A manually composed dialog is named and described by its own kbq-modal-title and ' +
         'kbq-modal-caption, on the same aria-labelledby/aria-describedby the service path uses, so ' +
         'both entry paths are announced alike. kbq-modal-title also projects a [kbqModalTitleActions] ' +

@@ -882,25 +882,27 @@ describe('KbqModal', () => {
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        const expectNoViolations = async (options: IModalOptionsForService) => {
+        const render = (options: IModalOptionsForService) => {
             modalService.create(options);
             fixture.detectChanges();
-
-            expect(await axe(overlayContainerElement)).toHaveNoViolations();
         };
 
         it('should have no violations for a default dialog', async () => {
-            await expectNoViolations({
+            render({
                 kbqTitle: 'Default',
                 kbqCaption: 'Caption',
                 kbqContent: 'text',
                 kbqOkText: 'Ok',
                 kbqCancelText: 'Cancel'
             });
+
+            expect(await axe(overlayContainerElement)).toHaveNoViolations();
         });
 
         it('should have no violations for an untitled dialog named by kbqAriaLabel', async () => {
-            await expectNoViolations({ kbqContent: 'text', kbqAriaLabel: 'Simple dialog' });
+            render({ kbqContent: 'text', kbqAriaLabel: 'Simple dialog' });
+
+            expect(await axe(overlayContainerElement)).toHaveNoViolations();
         });
 
         it('should have no violations for a confirm dialog', async () => {

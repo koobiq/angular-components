@@ -59,8 +59,9 @@ test.describe('KbqModalModule', () => {
             await component.scrollIntoViewIfNeeded();
             await getMultipleModalsButton(page).click();
             await page.mouse.move(0, 0);
-            // Two dialogs, so two bodies, and each flashes its own track as it opens.
-            await e2eWaitForSettledScrollbars(page, 2);
+            // Two dialogs, each with a track on its wrap and one on its body, and every one of them
+            // is revealed as the dialog opens.
+            await e2eWaitForSettledScrollbars(page, 4);
 
             await expect(component).toHaveScreenshot('02-light.png');
         });
