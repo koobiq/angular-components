@@ -54,7 +54,7 @@
         "@angular-devkit/architect-cli": "0.2102.25",
         "@angular-devkit/core": "21.2.25",
         "@angular-devkit/schematics": "21.2.25",
-        "@angular/build": "21.2.25",
+        "@angular/build": "patch:@angular/build@npm%3A21.2.25#~/.yarn/patches/@angular-build-npm-21.2.25-2e1422ba47.patch",
         "@angular/cli": "21.2.25",
         "@angular/compiler-cli": "21.2.25",
         "@angular/platform-browser-dynamic": "21.2.25",
