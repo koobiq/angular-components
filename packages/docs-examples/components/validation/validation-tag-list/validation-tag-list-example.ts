@@ -63,7 +63,7 @@ const latinValidator = (): ValidatorFn => {
                     />
                 </kbq-tag-list>
 
-                @if (inputTagList.errorState) {
+                @if (inputTagList.errorState()) {
                     @if (tags.hasError('required')) {
                         <kbq-error>Required</kbq-error>
                     }

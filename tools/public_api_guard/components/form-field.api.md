@@ -174,21 +174,19 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
 export abstract class KbqFormFieldControl<T> {
     readonly autofilled?: Signal<boolean>;
     readonly controlType?: string;
-    readonly disabled: boolean;
-    readonly empty: boolean;
-    readonly errorState: boolean;
+    readonly disabled: Signal<boolean>;
+    readonly empty: Signal<boolean>;
+    readonly errorState: Signal<boolean>;
     abstract focus(options?: FocusOptions): void;
-    readonly focused: boolean;
-    readonly id: string;
-    readonly isNativeLabelSupported?: boolean;
+    readonly focused: Signal<boolean>;
+    readonly id: Signal<string>;
     readonly ngControl: NgControl | null;
     abstract onContainerClick(event: MouseEvent): void;
     open?: () => void;
-    readonly placeholder: string;
-    readonly required: boolean;
+    readonly placeholder: Signal<string | null | undefined>;
+    readonly required: Signal<boolean>;
     setDescribedByIds?: (ids: string[]) => void;
-    readonly stateChanges: Observable<void>;
-    value: T | null;
+    readonly value: Signal<T | null>;
 }
 
 // @public
@@ -265,7 +263,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 }
 
 // @public
-export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
+export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
     protected get accessibleName(): string;
     // (undocumented)
@@ -275,15 +273,13 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     // (undocumented)
-    protected hasError: boolean;
+    protected readonly hasError: Signal<boolean>;
     get hidden(): boolean;
-    readonly icon: i0.Signal<KbqIconButton>;
+    readonly icon: Signal<KbqIconButton>;
     get iconClass(): string;
     readonly kbqTooltipHidden: i0.InputSignal<string | TemplateRef<any>>;
     // (undocumented)
     protected readonly nativeElement: HTMLElement;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

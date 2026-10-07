@@ -296,6 +296,86 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).not.toContain('cfg.hint()');
     });
 
+    it('rewrites reads of a control state to calls and a write to its writable disabled to .set()', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqSelect } from '@koobiq/components/select';\n" +
+                'class Demo {\n' +
+                '    apply(select: KbqSelect) {\n' +
+                '        const empty = select.empty;\n' +
+                '        select.disabled = true;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('const empty = select.empty();');
+        expect(updated).toContain('select.disabled.set(true);');
+    });
+
+    it('rewrites a KbqInput value write to .set() and warns about a write to its read-only placeholder', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqInput } from '@koobiq/components/input';\n" +
+                'class Demo {\n' +
+                '    apply(input: KbqInput) {\n' +
+                "        input.value = 'koobiq';\n" +
+                "        input.placeholder = 'Name';\n" +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain("input.value.set('koobiq');");
+        // left untouched — the consumer has to replace it with a binding
+        expect(updated).toContain("input.placeholder = 'Name';");
+        expect(messages.join('\n')).toContain('can no longer be assigned');
+    });
+
+    it('rewrites reads via a template reference variable on <kbq-select>', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-select #select></kbq-select>\n<span>{{ select.disabled }}</span>\n');
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('{{ select.disabled() }}');
+    });
+
+    it('warns about a custom KbqFormFieldControl implementation', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFormFieldControl } from '@koobiq/components/form-field';\n" +
+                'export abstract class CustomControl implements KbqFormFieldControl<string> {}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('`KbqFormFieldControl` is signal-based');
+    });
+
+    it('warns about the changed KbqErrorStateTracker', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqErrorStateTracker } from '@koobiq/components/core';\n" +
+                'export const tracker = KbqErrorStateTracker;\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('no longer takes a `stateChanges` subject');
+    });
+
     it('is idempotent — a second run does not double the call', async () => {
         const ts = firstTsPath();
 

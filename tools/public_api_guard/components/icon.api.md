@@ -21,6 +21,7 @@ import { Renderer2 } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
 // @public
@@ -34,10 +35,9 @@ export const KBQ_ICONS_CONFIG: InjectionToken<KbqIconsConfig[]>;
 
 // @public
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
-    protected readonly appliesMaxHeight: boolean;
-    readonly ariaHidden: i0.InputSignalWithTransform<boolean | undefined, unknown>;
-    get autoColor(): boolean;
-    set autoColor(value: boolean);
+    // (undocumented)
+    autoColor: boolean;
+    protected get autoColorError(): boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly defaultAriaHidden: boolean;
@@ -108,8 +108,7 @@ export type KbqIconButtonSize = 'compact' | 'normal';
 
 // @public
 export interface KbqIconErrorStateContext {
-    readonly errorState: boolean;
-    readonly stateChanges: Observable<void>;
+    readonly errorState: Signal<boolean>;
 }
 
 // @public

@@ -1253,7 +1253,7 @@ describe('KbqTagInput', () => {
             // The CDK `_IdGenerator` omits the default `ng`, so a normal app keeps `kbq-tag-list-input-0`;
             // only an explicit APP_ID surfaces, right before the counter. The deleted module counter never
             // included it, so this is the one shape the switch actually changes.
-            expect(directive.id).toMatch(/^kbq-tag-list-input-custom\d+$/);
+            expect(directive.id()).toMatch(/^kbq-tag-list-input-custom\d+$/);
         });
 
         it('should tolerate a tag list that resolves after the first pass', () => {
@@ -1268,7 +1268,7 @@ describe('KbqTagInput', () => {
             const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
 
             // The list reports the registered input's id as its own, so this is the registration landing.
-            expect(host.tagListInstance().id).toBe(directive.id);
+            expect(host.tagListInstance().id()).toBe(directive.id());
         });
     });
 });

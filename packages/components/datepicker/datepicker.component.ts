@@ -6,7 +6,6 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
-    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -30,7 +29,6 @@ import {
     kbqAnimationsDisabled,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
@@ -88,7 +86,7 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     },
     exportAs: 'kbqDatepickerContent'
 })
-export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
+export class KbqDatepickerContent<D> implements OnDestroy {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
@@ -109,14 +107,6 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     readonly calendar = viewChild.required(KbqCalendar);
 
     private subscriptions = new Subscription();
-
-    ngAfterViewInit() {
-        this.subscriptions.add(
-            this.datepicker.stateChanges.subscribe(() => {
-                this.changeDetectorRef.markForCheck();
-            })
-        );
-    }
 
     ngOnDestroy() {
         this.subscriptions.unsubscribe();
@@ -142,7 +132,6 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 @Component({
     selector: 'kbq-datepicker',
     template: '',
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     // The calendar is created through this component's `ViewContainerRef`, so this is the element whose
@@ -181,7 +170,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     get startAt(): D | null {
         // If an explicit startAt is set we start there, otherwise we start at whatever the currently
         // selected value is.
-        return this._startAt || this.datepickerInput?.value;
+        return this._startAt || this.datepickerInput?.value();
     }
 
     set startAt(value: D | null) {
@@ -200,7 +189,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input()
     get disabled(): boolean {
-        return this._disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled : this._disabled;
+        return this._disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled() : this._disabled;
     }
 
     set disabled(value: boolean) {
@@ -280,8 +269,6 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     /** Emits when the datepicker has been closed. */
     readonly closedStream = output<void>({ alias: 'closed' });
-
-    readonly stateChanges: Subject<void> = new Subject<void>();
 
     /** Emits when the datepicker is disabled. */
     readonly disabledChange = new Subject<boolean>();

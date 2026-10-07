@@ -442,7 +442,7 @@ describe('KbqTextarea', () => {
     });
 
     describe('grow behavior', () => {
-        it('should call stateChanges.next when input event fires with a changed value', fakeAsync(() => {
+        it('should update the value when an input event fires with a changed value', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
@@ -450,47 +450,48 @@ describe('KbqTextarea', () => {
 
             const textareaEl = getTextareaElement(fixture);
             const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
-            const spy = vi.spyOn(textarea.stateChanges, 'next');
 
             textareaEl.value = 'changed value';
             dispatchFakeEvent(textareaEl, 'input');
 
-            expect(spy).toHaveBeenCalled();
+            expect(textarea.value()).toBe('changed value');
         }));
 
-        it('should emit stateChanges once per input change: dirtyCheckNativeValue in (input) prevents ngDoCheck from re-emitting', fakeAsync(() => {
+        it('should grow once per input change: dirtyCheckNativeValue in (input) leaves ngDoCheck nothing to report', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
+            flushMicrotasks();
             tick(); // flush initial setTimeout(grow, 0) from ngOnInit
 
             const textareaEl = getTextareaElement(fixture);
             const textareaDir = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
-            const nextSpy = vi.spyOn(textareaDir.stateChanges, 'next');
+            const growSpy = vi.spyOn(textareaDir as any, 'grow');
 
             textareaEl.value = 'test\ntest\ntest\ntest\ntest';
-            // (input) → dirtyCheckNativeValue() → previousNativeValue updated → stateChanges.next() [#1]
-            // Zone.js auto-CD → ngDoCheck → dirtyCheckNativeValue: previousNativeValue === value → no emit
             dispatchFakeEvent(textareaEl, 'input');
-            fixture.detectChanges(); // explicit CD: no further changes
+            fixture.detectChanges(); // explicit CD: the value is already read back
+            flushMicrotasks();
 
-            expect(nextSpy).toHaveBeenCalledTimes(1);
+            expect(growSpy).toHaveBeenCalledTimes(1);
         }));
 
         it('should defer grow to microtask so lineHeight is initialized before first grow call', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaGrowWithMaxRows);
 
+            const textareaEl = getTextareaElement(fixture);
             const textareaDir = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
 
-            fixture.detectChanges(); // ngOnInit queues M1 (lineHeight init); stateChanges may emit → grow microtasks pending
+            fixture.detectChanges(); // ngOnInit queues M1 (lineHeight init); the value effect queues a grow
             flushMicrotasks(); // drain M1 + any grow microtasks queued during detectChanges
             tick(); // flush setTimeout(grow, 0) from ngOnInit
 
             // Spy set up AFTER initial flushes — only captures subsequent grow() calls
             const growSpy = vi.spyOn(textareaDir as any, 'grow');
 
-            // observeOn(asapScheduler) defers grow to microtask (M2), NOT synchronous
-            textareaDir.stateChanges.next();
+            textareaEl.value = 'changed value';
+            dispatchFakeEvent(textareaEl, 'input');
+            fixture.detectChanges(); // the effect schedules grow on the asap scheduler (M2), not synchronously
 
             expect(growSpy).not.toHaveBeenCalled(); // M2 still pending
 
@@ -505,7 +506,7 @@ describe('KbqTextarea', () => {
             it('should not be in error state initially when invalid but untouched', () => {
                 const fixture = createComponent(TextareaWithErrorStateMatcher);
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and touched', () => {
@@ -514,7 +515,7 @@ describe('KbqTextarea', () => {
                 fixture.componentInstance.form.controls.textarea.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(true);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(true);
             });
 
             it('should be in error state when form is submitted and control is invalid', async () => {
@@ -523,7 +524,7 @@ describe('KbqTextarea', () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(true);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and update errorState on blur', async () => {
@@ -531,13 +532,13 @@ describe('KbqTextarea', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
 
                 dispatchFakeEvent(getTextareaElement(fixture), 'blur');
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.textarea().errorState).toBe(true);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(true);
             });
         });
 
@@ -549,7 +550,7 @@ describe('KbqTextarea', () => {
                 fixture.componentInstance.form.controls.textarea.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
             });
 
             it('should be in error state after form is submitted when invalid', () => {
@@ -561,7 +562,7 @@ describe('KbqTextarea', () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(true);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -573,13 +574,13 @@ describe('KbqTextarea', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
 
                 dispatchFakeEvent(getTextareaElement(fixture), 'blur');
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
             });
         });
 
@@ -590,7 +591,7 @@ describe('KbqTextarea', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and dirty', () => {
@@ -600,7 +601,7 @@ describe('KbqTextarea', () => {
                 fixture.componentInstance.form.controls.textarea.markAsDirty();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(true);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -612,13 +613,13 @@ describe('KbqTextarea', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
 
                 dispatchFakeEvent(getTextareaElement(fixture), 'blur');
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
             });
         });
 
@@ -626,12 +627,12 @@ describe('KbqTextarea', () => {
             it('should override errorStateMatcher by kbqErrorStateMatcherProvider', async () => {
                 const fixture = createComponent(TextareaWithDIErrorStateMatcher);
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(true);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.textarea.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
             });
 
             it('should use custom errorStateMatcher logic', () => {
@@ -640,12 +641,12 @@ describe('KbqTextarea', () => {
                 fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(true);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.textarea.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.textarea().errorState).toBe(false);
+                expect(fixture.componentInstance.textarea().errorState()).toBe(false);
             });
         });
     });

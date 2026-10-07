@@ -7,7 +7,6 @@
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CanUpdateErrorState } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
@@ -194,8 +193,7 @@ export enum KbqFileUploadAllowedType {
 export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedType>;
 
 // @public
-export abstract class KbqFileUploadBase implements CanUpdateErrorState {
-    protected readonly a11yNames: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+export abstract class KbqFileUploadBase {
     protected announce(...messages: string[]): void;
     protected readonly announcement: _angular_core.WritableSignal<string>;
     protected readonly cdr: ChangeDetectorRef;

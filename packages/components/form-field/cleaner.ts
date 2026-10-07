@@ -102,7 +102,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
 
         const { control } = context;
 
-        return !control.disabled && !control.empty && (context.canClear?.() ?? true);
+        return !control.disabled() && !control.empty() && (context.canClear?.() ?? true);
     }
 
     private readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
@@ -163,7 +163,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
      * Clears the focused control when Escape handling is enabled.
      */
     private onKeyDown(event: KeyboardEvent): void {
-        if (event.keyCode === ESCAPE && this.context?.clearByEscape && this.context.control.focused && this.canShow) {
+        if (event.keyCode === ESCAPE && this.context?.clearByEscape && this.context.control.focused() && this.canShow) {
             this.clear(event);
         }
     }

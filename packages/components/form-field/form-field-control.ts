@@ -1,41 +1,39 @@
 import { Signal } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 
-/** An interface which allows a control to work inside of a `KbqFormField`. */
+/**
+ * An interface which allows a control to work inside of a `KbqFormField`.
+ *
+ * Every state member is a signal: the form field derives its own state from them and runs `OnPush`, so a
+ * change of the control reaches it without any notification of the control's own.
+ */
 export abstract class KbqFormFieldControl<T> {
     /** The value of the control. */
-    value: T | null;
-
-    /**
-     * Stream that emits whenever the state of the control changes such that the parent `KbqFormField`
-     * needs to run change detection.
-     */
-    readonly stateChanges: Observable<void>;
+    readonly value: Signal<T | null>;
 
     /** The element ID for this control. */
-    readonly id: string;
+    readonly id: Signal<string>;
 
     /** The placeholder for this control. */
-    readonly placeholder: string;
+    readonly placeholder: Signal<string | null | undefined>;
 
     /** Gets the NgControl for this control. */
     readonly ngControl: NgControl | null;
 
     /** Whether the control is focused. */
-    readonly focused: boolean;
+    readonly focused: Signal<boolean>;
 
     /** Whether the control is empty. */
-    readonly empty: boolean;
+    readonly empty: Signal<boolean>;
 
     /** Whether the control is required. */
-    readonly required: boolean;
+    readonly required: Signal<boolean>;
 
     /** Whether the control is disabled. */
-    readonly disabled: boolean;
+    readonly disabled: Signal<boolean>;
 
     /** Whether the control is in an error state. */
-    readonly errorState: boolean;
+    readonly errorState: Signal<boolean>;
 
     /**
      * Whether the control's value was filled in by the browser.
@@ -43,9 +41,6 @@ export abstract class KbqFormFieldControl<T> {
      * Implement it only where autofill is reachable: on a control that is itself a text input or a
      * textarea, or — like `KbqTagList` — on a wrapper that forwards the state of the input it hosts.
      * Leave it out on controls the browser never fills.
-     *
-     * A signal rather than a plain property because the form field reads it from a host binding and
-     * runs `OnPush`: a signal read there marks the form field dirty on its own.
      */
     readonly autofilled?: Signal<boolean>;
 

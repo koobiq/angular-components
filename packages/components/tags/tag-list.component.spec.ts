@@ -323,12 +323,12 @@ describe(KbqTagList.name, () => {
             it('should toggle the tags disabled state based on whether it is disabled', () => {
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(false);
 
-                tagListInstance.disabled = true;
+                tagListInstance.disabled.set(true);
                 fixture.detectChanges();
 
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(true);
 
-                tagListInstance.disabled = false;
+                tagListInstance.disabled.set(false);
                 fixture.detectChanges();
 
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(false);
@@ -337,7 +337,7 @@ describe(KbqTagList.name, () => {
             it('should disable a tag that is added after the list became disabled', fakeAsync(() => {
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(false);
 
-                tagListInstance.disabled = true;
+                tagListInstance.disabled.set(true);
                 fixture.detectChanges();
 
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(true);
@@ -402,21 +402,21 @@ describe(KbqTagList.name, () => {
             }));
 
             it('should be able to become focused when disabled', () => {
-                expect(tagListInstance.focused).toBe(false);
+                expect(tagListInstance.focused()).toBe(false);
 
-                tagListInstance.disabled = true;
+                tagListInstance.disabled.set(true);
                 fixture.detectChanges();
 
                 tagListInstance.focus();
                 fixture.detectChanges();
 
-                expect(tagListInstance.focused).toBe(false);
+                expect(tagListInstance.focused()).toBe(false);
             });
 
             it('should remove the tabindex from the list if it is disabled', () => {
                 expect(tagListNativeElement.getAttribute('tabindex')).toBeTruthy();
 
-                tagListInstance.disabled = true;
+                tagListInstance.disabled.set(true);
                 fixture.detectChanges();
 
                 expect(tagListNativeElement.hasAttribute('tabindex')).toBeFalsy();
@@ -777,16 +777,6 @@ describe(KbqTagList.name, () => {
 
             expect(formFieldElement.getBoundingClientRect().height).toBe(32);
         });
-
-        it('should complete the stateChanges stream on destroy', () => {
-            const spy = vi.fn();
-            const subscription = tagListInstance.stateChanges.subscribe({ complete: spy });
-
-            fixture.destroy();
-            expect(spy).toHaveBeenCalled();
-            subscription.unsubscribe();
-        });
-    });
 
         // The form field renders <label [attr.for]="control().id"> and no aria-owns, so the label points at
         // the kbq-tag-list host rather than at the inner input. Wiring it to the input is a form-field change.
@@ -2204,7 +2194,7 @@ describe(KbqTagList.name, () => {
             it('should not be in error state initially when invalid but untouched', () => {
                 const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and touched', () => {
@@ -2213,7 +2203,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.form.controls.tagList.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             });
 
             it('should be in error state when form is submitted and control is invalid', () => {
@@ -2222,7 +2212,7 @@ describe(KbqTagList.name, () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and update errorState on blur', fakeAsync(() => {
@@ -2230,14 +2220,14 @@ describe(KbqTagList.name, () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
 
                 getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
                 tick();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             }));
         });
 
@@ -2249,7 +2239,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.form.controls.tagList.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
 
             it('should be in error state after form is submitted when invalid', () => {
@@ -2261,7 +2251,7 @@ describe(KbqTagList.name, () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', fakeAsync(() => {
@@ -2273,14 +2263,14 @@ describe(KbqTagList.name, () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
 
                 getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
                 tick();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             }));
         });
 
@@ -2291,7 +2281,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and dirty', () => {
@@ -2301,7 +2291,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.form.controls.tagList.markAsDirty();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', fakeAsync(() => {
@@ -2313,14 +2303,14 @@ describe(KbqTagList.name, () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
 
                 getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
                 tick();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             }));
         });
 
@@ -2328,12 +2318,12 @@ describe(KbqTagList.name, () => {
             it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
                 const fixture = createStandaloneComponent(TagListWithDIErrorStateMatcher);
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.tagList.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
 
             it('should use custom errorStateMatcher logic', () => {
@@ -2342,12 +2332,12 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.tagList.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
         });
     });

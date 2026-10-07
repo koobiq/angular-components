@@ -428,7 +428,7 @@ export class KbqTag
     // signal - a function, always truthy - would skip every tag. It also folds in the tag list's form control.
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled() || (this.tagList?.disabled ?? false);
+        return this._disabled() || (this.tagList?.disabled() ?? false);
     }
 
     set disabled(value: boolean) {

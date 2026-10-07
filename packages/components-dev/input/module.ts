@@ -1,5 +1,4 @@
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     inject,
@@ -16,7 +15,7 @@ import {
     KbqLocaleServiceModule,
     KbqNormalizeWhitespace
 } from '@koobiq/components/core';
-import { hasPasswordStrengthError, KbqFormField, KbqPasswordHint, PasswordRules } from '@koobiq/components/form-field';
+import { KbqFormField, KbqPasswordHint, PasswordRules } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleComponent } from '@koobiq/components/toggle';
@@ -27,7 +26,6 @@ import {
     InputPasswordOverviewExample,
     InputWithMaskExample
 } from 'packages/docs-examples/components/input';
-import { startWith } from 'rxjs';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
@@ -74,7 +72,7 @@ export class DevDocsExamples {}
         class: 'layout-column layout-align-center-center'
     }
 })
-export class DevApp implements AfterViewInit {
+export class DevApp {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
 
     passwordRules = PasswordRules;
@@ -96,17 +94,6 @@ export class DevApp implements AfterViewInit {
 
     constructor() {
         this.locales = Object.keys(this.localeService.locales).filter((key) => key !== 'items');
-    }
-
-    ngAfterViewInit() {
-        this.formField()
-            .control()
-            .stateChanges.pipe(startWith())
-            .subscribe((state: any) => {
-                if (!state?.focused && hasPasswordStrengthError(this.passwordHints())) {
-                    this.formField().control().ngControl?.control?.setErrors({ passwordStrength: true });
-                }
-            });
     }
 
     atLeastNCapitalLetters = (n: number): ((value: string) => boolean) => {

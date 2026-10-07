@@ -23,8 +23,6 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -218,25 +216,19 @@ export class KbqTimeRangeTitle {
 }
 
 // @public
-export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRangeRange>, DoCheck, OnDestroy {
-    constructor();
-    protected readonly ariaLabelledby: _angular_core.Signal<string | null>;
+export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     readonly controlType = "select";
-    get disabled(): boolean;
-    get empty(): boolean;
-    get errorState(): boolean;
-    focus(options?: FocusOptions): void;
-    focused: boolean;
-    readonly id: string;
-    readonly isNativeLabelSupported = false;
+    readonly disabled: _angular_core.Signal<boolean>;
+    readonly empty: _angular_core.Signal<boolean>;
+    readonly errorState: _angular_core.Signal<boolean>;
+    focus(_options?: FocusOptions): void;
+    readonly focused: _angular_core.Signal<boolean>;
+    readonly id: _angular_core.Signal<string>;
     readonly ngControl: NgControl | null;
-    ngDoCheck(): void;
-    ngOnDestroy(): void;
     onContainerClick(_event: MouseEvent): void;
-    readonly placeholder = "";
-    get required(): boolean;
-    readonly stateChanges: Observable<void>;
-    get value(): KbqTimeRangeRange | null;
+    readonly placeholder: _angular_core.Signal<string | undefined>;
+    readonly required: _angular_core.Signal<boolean>;
+    readonly value: _angular_core.Signal<any>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRangeTitleAsControl, "kbq-time-range-title-as-control", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
