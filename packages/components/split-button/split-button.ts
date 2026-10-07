@@ -7,9 +7,10 @@ import {
     contentChild,
     contentChildren,
     effect,
-    Input,
     input,
     isDevMode,
+    OnChanges,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButton, KbqButtonColor, KbqButtonStyleInput, KbqButtonStyles } from '@koobiq/components/button';
@@ -35,7 +36,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
         '[class.kbq-split-button_second-disabled]': 'secondDisabled'
     }
 })
-export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements AfterContentInit {
+export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements OnChanges, AfterContentInit {
     private readonly nativeElement = kbqInjectNativeElement();
 
     /** @docs-private */
@@ -53,9 +54,6 @@ export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements
      * Reads back as the resulting host class rather than the value that was set, because the host
      * `[class]` binding is what consumes it.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get kbqStyle(): string {
         return `kbq-button_${this._kbqStyle}`;
     }
@@ -83,9 +81,6 @@ export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements
      * Whether the split button is disabled. Disabling it disables every nested button; re-enabling it
      * leaves buttons that are disabled through their own input untouched.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean | undefined {
         return this._disabled;
     }
@@ -119,6 +114,30 @@ export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements
 
         return buttons.length > 1 && !!buttons.at(-1)?.disabled;
     });
+
+    /** @docs-private */
+    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['kbqStyleInput']) {
+            const kbqStyle = this.kbqStyleInput();
+
+            if (kbqStyle !== undefined) this.kbqStyle = kbqStyle;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     constructor() {
         super();

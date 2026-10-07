@@ -10,11 +10,12 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     output,
+    SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -79,7 +80,10 @@ export class KbqCheckboxChange {
     hostDirectives: [KbqCheckable],
     exportAs: 'kbqCheckbox'
 })
-export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class KbqCheckbox
+    extends KbqColorDirective
+    implements OnChanges, ControlValueAccessor, AfterViewInit, OnDestroy
+{
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
@@ -130,13 +134,62 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     /** Whether the checkbox is required. */
     readonly required = input(false, { transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
+    /** @docs-private */
+    readonly indeterminateInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'indeterminate',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['checkedInput']) {
+            const checked = this.checkedInput();
+
+            if (checked !== undefined) this.checked = checked;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+
+        if (changes['indeterminateInput']) {
+            const indeterminate = this.indeterminateInput();
+
+            if (indeterminate !== undefined) this.indeterminate = indeterminate;
+        }
+    }
+
     /**
      * Whether the checkbox is checked.
      */
     // `checked` is two-way state: the component writes it on click and the `ControlValueAccessor` writes it
-    // through `KbqCheckable`. A `model()` cannot carry a transform, so this stays an accessor input over the
-    // shared signal — the same shape the reviewed `KbqButtonToggle` settled on.
-    @Input({ transform: booleanAttribute })
+    // through `KbqCheckable`, so the property stays an accessor over the shared signal and `checkedInput` feeds it.
     get checked(): boolean {
         return this.checkable.checked();
     }
@@ -146,7 +199,6 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     }
 
     /** Whether the checkbox is disabled. */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.checkable.disabled();
     }
@@ -156,7 +208,6 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     }
 
     /** Tab order of the native input. A disabled checkbox is taken out of the tab order regardless. */
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.checkable.effectiveTabIndex();
     }
@@ -171,7 +222,6 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
      * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
      * set to false.
      */
-    @Input({ transform: booleanAttribute })
     get indeterminate(): boolean {
         return this.checkable.indeterminate();
     }

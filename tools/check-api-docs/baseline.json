@@ -6,7 +6,7 @@
     "components-autocomplete": 20,
     "components-badge": 11,
     "components-breadcrumbs": 7,
-    "components-button": 17,
+    "components-button": 16,
     "components-button-toggle": 1,
     "components-checkbox": 2,
     "components-code-block": 2,
@@ -22,7 +22,7 @@
     "components-icon": 32,
     "components-inline-edit": 4,
     "components-input": 38,
-    "components-list": 48,
+    "components-list": 47,
     "components-modal": 164,
     "components-navbar": 17,
     "components-notification-center": 3,
@@ -46,7 +46,7 @@
     "components-toast": 52,
     "components-toggle": 21,
     "components-tooltip": 28,
-    "components-tree": 164,
+    "components-tree": 160,
     "components-tree-select": 28,
     "components-username": 1
 }

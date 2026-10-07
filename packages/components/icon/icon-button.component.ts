@@ -7,12 +7,12 @@ import {
     computed,
     effect,
     inject,
-    Input,
     input,
     isDevMode,
     numberAttribute,
     OnDestroy,
     signal,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -75,28 +75,10 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly isCompact = computed(() => this.size() === 'compact' || this.small());
 
-    /** Name of an icon within a `@koobiq/icons`. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ alias: 'kbq-icon-button' }) override iconName: string | undefined;
+    /** @docs-private */
+    override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-button' });
 
-    /**
-     * Position of the button in the tab order. A disabled button is taken out of it entirely.
-     */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    // `numberAttribute` returns NaN for anything it cannot parse, and `tabindex="NaN"` is an invalid
-    // attribute the browser ignores — which silently takes the button out of the tab order.
-    @Input({
-        transform: (value: unknown): number | null => {
-            if (value == null) return null;
-
-            const tabindex = numberAttribute(value);
-
-            return Number.isNaN(tabindex) ? null : tabindex;
-        }
-    })
-    get tabindex(): number | null {
+    get tabindex() {
         return this.disabled ? null : this._tabindex;
     }
 
@@ -108,9 +90,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
@@ -127,6 +106,32 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     /** The button sizes itself through its own padding, so it never gets the bare icon's `max-height`. */
     protected override readonly appliesMaxHeight: boolean = false;
+
+    /** @docs-private */
+    readonly tabindexInput = input<number | string | null | undefined>(undefined, { alias: 'tabindex' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['tabindexInput']) {
+            const tabindex = this.tabindexInput();
+
+            if (tabindex !== undefined) this.tabindex = tabindex;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     constructor() {
         super();

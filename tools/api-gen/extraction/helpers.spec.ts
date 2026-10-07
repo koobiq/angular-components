@@ -593,6 +593,43 @@ describe('member source metadata', () => {
             defaultValue: 'false'
         });
     });
+
+    // An accessor kept writable for code: the bound input feeds its setter, and all three are one member.
+    it('folds the setter of a public accessor into the merged member', () => {
+        const members = membersOf(
+            updateEntries(
+                [
+                    classEntry('KbqCheckbox', [
+                        member({
+                            name: 'checkedInput',
+                            memberTags: [MemberTags.Input],
+                            inputAlias: 'checked',
+                            jsdocTags: [{ name: 'docs-private', comment: '' }]
+                        }),
+                        member({ name: 'checked', memberType: MemberType.Getter }),
+                        member({
+                            name: 'checked',
+                            memberType: MemberType.Setter,
+                            description: 'Whether it is checked.'
+                        })
+                    ])
+                ],
+                {
+                    KbqCheckbox: classMetadata({
+                        members: { checkedInput: { signalApi: 'input' }, checked: { declaredType: 'boolean' } }
+                    })
+                }
+            )
+        );
+
+        expect(members.filter(({ name }) => name === 'checked')).toEqual([
+            expect.objectContaining({
+                memberType: MemberType.Property,
+                memberTags: [MemberTags.Input],
+                description: 'Whether it is checked.'
+            })
+        ]);
+    });
 });
 
 describe('reading exported constants and functions from source', () => {

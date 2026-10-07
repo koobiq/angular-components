@@ -404,6 +404,19 @@ The inputs of `KbqListSelection` and `KbqListOption` are signal inputs read thro
 ng g @koobiq/components:list-signals --project "<your project>"
 ```
 
+#### Checkbox, toggle, radio, button toggle, buttons, icons and search
+
+Their inputs are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `checkbox.checked`, `button.disabled` or `icon.iconName` works as before.
+
+- **A subclass** that implements `ngOnChanges` calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `iconNameInput`.
+- **A boolean input** accepts `boolean | string | null | undefined` in a template, rather than anything.
+
+`controls-signal-inputs` reports every subclass:
+
+```bash
+ng g @koobiq/components:controls-signal-inputs --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}
