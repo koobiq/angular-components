@@ -99,7 +99,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 
         form {
             width: 100%;
-            padding: 1px;
         }
 
         .example-alert__container {
@@ -137,8 +136,8 @@ export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy 
     protected readonly showServerErrors = signal(false);
     protected readonly inProgress = signal(false);
     protected readonly globalErrorForm = new FormGroup({
-        firstName: new FormControl('', [Validators.required]),
-        lastName: new FormControl('')
+        firstName: new FormControl('John', [Validators.required]),
+        lastName: new FormControl('Smith')
     });
 
     protected readonly focusMonitor = inject(FocusMonitor);
@@ -163,6 +162,7 @@ export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy 
 
     submitForm(): void {
         if (this.globalErrorForm.invalid) {
+            this.showServerErrors.set(false);
             this.focusFirstInvalidControl();
 
             return;
@@ -172,11 +172,11 @@ export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy 
 
         setTimeout(() => {
             this.inProgress.set(false);
-            this.showServerErrors.set(Math.random() > 0.5);
+            this.showServerErrors.set(true);
 
             const alert = this.alertContainer();
 
-            if (this.showServerErrors() && alert) {
+            if (alert) {
                 this.focusMonitor.focusVia(alert.nativeElement, this.submitOrigin);
                 this.submitOrigin = null;
             }
