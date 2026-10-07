@@ -25,6 +25,12 @@ The components no longer depend on zone.js: they render in an application bootst
 
 `MockNgZone` is removed from `@koobiq/components/core`: nothing in the library listens to `onStable` any more, so its `simulateZoneExit()` has nothing to flush. The [migration guide](/en/main/migration) describes what a spec uses instead, and the `zoneless-change-detection` schematic reports each use.
 
+In a zoneless application a select opened with the pointer moves the focus to its search field or active option, as it does when opened from the keyboard, so the form field drops its focus outline while the panel is open. With zone.js, the form field took the focus back within the same click.
+
+### Overlays
+
+The CDK 21 shows overlays as popovers in the browser's top layer by default, and the components keep that default: their panels are drawn above the whole page, whatever stacking contexts surround the trigger. The `z-index` of `.cdk-overlay-container` no longer orders them against the application's own fixed elements; an application that relied on it can opt out with `OVERLAY_DEFAULT_CONFIG` (`usePopover: false`) from `@angular/cdk/overlay`. A `KbqActionsPanel` opened with an `overlayContainer` still renders inside that container.
+
 ### Animations
 
 The components no longer use `@angular/animations`, which Angular deprecated: their motion is CSS — animations and transitions the components wait for themselves, and `animate.enter` / `animate.leave` in their templates. `@angular/animations` is no longer a peer dependency, `ng add` no longer installs it or adds `provideAnimations()`, and none of the applications of the repository depends on it. The motion is off under `prefers-reduced-motion: reduce` and with `KBQ_ANIMATIONS_CONFIG` (`animationsDisabled: true`).
