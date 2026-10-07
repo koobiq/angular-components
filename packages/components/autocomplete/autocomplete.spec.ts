@@ -593,12 +593,14 @@ describe('KbqAutocomplete', () => {
         });
 
         it('should fill the text field with value if displayWith is not set', () => {
-            fixture.componentInstance.trigger().open();
-            fixture.detectChanges();
+            fixture.componentInstance.displayWith = null;
+            fixture.componentInstance.filteredStates = fixture.componentInstance.filteredStates.map((state, index) =>
+                index === 1 ? 'test value' : state
+            );
             fixture.detectChanges();
 
-            fixture.componentInstance.displayWith = null;
-            fixture.componentInstance.options()[1].value = 'test value';
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
             fixture.detectChanges();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
