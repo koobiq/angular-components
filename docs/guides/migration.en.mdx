@@ -396,6 +396,14 @@ ng g @koobiq/components:option-signals --project "<your project>"
 ng g @koobiq/components:input-signals --project "<your project>"
 ```
 
+#### List
+
+The inputs of `KbqListSelection` and `KbqListOption` are signal inputs read through a getter: a read is unchanged, a programmatic write no longer compiles. Bind them in the template, and disable the list through its form control. `KbqListOption.selected` and `KbqListSelection.multipleMode` stay writable. `list-signals` reports every write:
+
+```bash
+ng g @koobiq/components:list-signals --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

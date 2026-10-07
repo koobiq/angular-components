@@ -396,6 +396,14 @@ ng g @koobiq/components:option-signals --project "<your project>"
 ng g @koobiq/components:input-signals --project "<your project>"
 ```
 
+#### Список
+
+Инпуты `KbqListSelection` и `KbqListOption` стали сигналами `input()` с геттером для чтения: чтение не меняется, а программная запись больше не компилируется. Задавайте их привязкой в шаблоне, а список отключайте через контрол формы. `KbqListOption.selected` и `KbqListSelection.multipleMode` по-прежнему доступны для записи. Схематик `list-signals` сообщает о каждой записи:
+
+```bash
+ng g @koobiq/components:list-signals --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}
