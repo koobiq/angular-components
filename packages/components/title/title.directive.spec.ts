@@ -14,7 +14,6 @@ import {
 } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     dispatchMouseEvent,
     KBQ_TITLE_TEXT_REF,
@@ -46,7 +45,7 @@ const getResizeObserver = (): MockResizeObserver => TestBed.inject(SharedResizeO
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers
     }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);

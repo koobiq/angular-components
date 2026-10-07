@@ -10,7 +10,6 @@ import { Component, DebugElement, model, Provider, signal, Type } from '@angular
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     createKeyboardEvent,
     dispatchEvent,
@@ -45,7 +44,7 @@ const AXE_TIMEOUT = 15000;
 
 const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers: [...providers]
     });
     const fixture = TestBed.createComponent<T>(component);

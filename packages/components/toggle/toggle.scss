@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use './toggle-theme' as theme;
 
 // The `.kbq-progress` loading state used by this component is emitted globally by `kbq-core()`.
@@ -9,6 +10,7 @@ $toggle-thumb-offset: 8px;
 
     .kbq-toggle__circle {
         position: absolute;
+        left: 3px;
 
         border-radius: 50%;
 
@@ -16,6 +18,19 @@ $toggle-thumb-offset: 8px;
 
         height: 10px;
         width: 10px;
+
+        transition: left 100ms;
+
+        @include animation.kbq-animations-off();
+
+        &.kbq-toggle__circle_checked {
+            left: calc(100% - 11px);
+        }
+
+        &.kbq-toggle__circle_indeterminate {
+            left: 10px;
+            visibility: hidden;
+        }
     }
 
     .kbq-toggle-layout {

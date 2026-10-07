@@ -62,3 +62,18 @@
         }
     }
 }
+
+/// Takes the motion off an element a component animates: while the component has animations disabled
+/// (`kbqAnimationsDisabled()`, bound as `.kbq-animations-disabled`) and while the user asks for reduced
+/// motion. A component that waits for the animation to end then finds none and goes on at once.
+@mixin kbq-animations-off() {
+    &.kbq-animations-disabled {
+        animation: none;
+        transition: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        transition: none;
+    }
+}

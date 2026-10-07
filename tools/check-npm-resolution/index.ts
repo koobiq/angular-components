@@ -7,12 +7,7 @@
  * against the project shapes consumers actually have.
  *
  * The fixtures are the installation paths the documentation supports: `ng add`, the manual install
- * line, and an application that already carries the Angular packages. A bare
- * `npm install @koobiq/components` into an application without `@angular/animations` is deliberately
- * NOT a fixture — it cannot resolve, and no peer range can make it. Every `@angular/animations`
- * release pins `@angular/core` exactly, and npm picks the highest version in a peer range without
- * backtracking to the one matching the application's Angular, so the package has to be installed by
- * `ng add` (which reads the application's own `@angular/core` range) or by the documented command.
+ * line, and an application that already carries the Angular packages.
  *
  * Runs on ubuntu in CI. Node >= 20.12 refuses to spawn `npm.cmd` without a shell, so on Windows the
  * calls go through one — hence the quoting in `npm()`.
@@ -51,9 +46,9 @@ const ngNewRange = (version: string): string => {
 const angularRange = ngNewRange(angularVersion);
 
 /**
- * A fresh `ng new` application: `@angular/router` is written by the CLI, `@angular/animations` and
- * `@angular/cdk` are not. Getting this shape wrong is what made an earlier version of this check
- * pass — pre-installing the two peers at the monorepo's exact pins hides every conflict they cause.
+ * A fresh `ng new` application: `@angular/router` is written by the CLI, `@angular/cdk` is not. Getting
+ * this shape wrong is what made an earlier version of this check pass — pre-installing a peer at the
+ * monorepo's exact pin hides every conflict it causes.
  * Since Angular 21 the application is zoneless by default, so `zone.js` is not written either.
  */
 const ngNewApp = () => ({
@@ -75,17 +70,13 @@ const ngNewApp = () => ({
 /**
  * An application that already depends on the Angular packages `@koobiq/components` peers on.
  *
- * The two extra peers carry the same range shape as the rest of the fixture, not this repository's
- * exact pins. Mixing the two makes the fixture contradict itself the moment Angular publishes a
- * patch: everything inherited from `ngNewApp()` floats to the new version, while an exact
- * `@angular/animations` holds `@angular/core` back — `@angular/animations@x.y.z` peers on
- * `@angular/core@x.y.z` exactly — and npm fails on a conflict no `@koobiq/*` package takes part in.
+ * The extra peer carries the same range shape as the rest of the fixture, not this repository's exact
+ * pin, so that the fixture keeps floating with Angular patches as a whole.
  */
 const angularAppWithPeers = () => ({
     ...ngNewApp(),
     dependencies: {
         ...ngNewApp().dependencies,
-        '@angular/animations': angularRange,
         '@angular/cdk': ngNewRange(cdkVersion)
     }
 });
@@ -96,8 +87,6 @@ const angularAppWithPeers = () => ({
  * the ranges behind it drift apart.
  */
 const ngAddInstalls = [
-    // Derived from the application's own `@angular/core`, not from this repository.
-    `@angular/animations@${angularRange}`,
     `@angular/cdk@${caret(cdkVersion)}`,
     `@koobiq/luxon-date-adapter@${caret(rootPackageJson.devDependencies!['@koobiq/luxon-date-adapter'])}`,
     `@koobiq/date-formatter@${caret(rootPackageJson.dependencies!['@koobiq/date-formatter'])}`,
@@ -119,7 +108,6 @@ const ngAddInstalls = [
  */
 const documentedInstalls = [
     `@angular/cdk@${ngNewRange(cdkVersion)}`,
-    `@angular/animations@${angularRange}`,
     // The guide pins this one, because the scrollbar relies on a specific build of it.
     `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`,
     '@koobiq/icons',
@@ -145,7 +133,7 @@ const fixtures = [
     },
     {
         name: 'angular-app',
-        description: 'an application already depending on @angular/animations and @angular/cdk',
+        description: 'an application already depending on @angular/cdk',
         packageJson: angularAppWithPeers(),
         extraInstalls: [] as string[]
     },

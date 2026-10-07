@@ -14,7 +14,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     KbqAutocompleteModule,
     KbqAutocompleteSelectedEvent,
@@ -39,7 +38,7 @@ import { KbqTagList } from './tag-list.component';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers
     });
 
@@ -976,7 +975,6 @@ describe('KbqTagInput', () => {
                 PlatformModule,
                 KbqTagsModule,
                 KbqFormFieldModule,
-                NoopAnimationsModule,
                 TestTagInput
             ],
             providers: [

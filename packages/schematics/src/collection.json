@@ -95,7 +95,7 @@
             "schema": "./migrations/button-supported-colors/schema.json"
         },
         "mandatory-peer-dependencies": {
-            "description": "Adds @angular/animations, overlayscrollbars and @koobiq/date-adapter, which became mandatory peers of @koobiq/components, to projects whose package manager does not install new peers on upgrade",
+            "description": "Adds overlayscrollbars and @koobiq/date-adapter, which became mandatory peers of @koobiq/components, to projects whose package manager does not install new peers on upgrade",
             "factory": "./migrations/mandatory-peer-dependencies/index",
             "schema": "./migrations/mandatory-peer-dependencies/schema.json"
         },
@@ -133,6 +133,11 @@
             "description": "Rewrites the reworked multiple input of kbq-list-selection and kbq-tree-selection in ts and html",
             "factory": "./migrations/list-tree-multiple-input/index",
             "schema": "./migrations/list-tree-multiple-input/schema.json"
+        },
+        "angular-animations-removal": {
+            "description": "Reports the uses of the animation triggers @koobiq/components exported (fadeAnimation, kbqSelectAnimations, kbqDropdownAnimations, kbqTabsAnimations, KbqSidepanelAnimationState) and of the members that carried an AnimationEvent (KbqPopUp.animationStart/animationDone, the animation members of KbqDropdown, the animation callbacks of KbqSidebar, KbqTabBody, KbqToastComponent and the sidepanel and actions panel containers, KbqToastService.animation), and the providers of @angular/animations the components no longer need. Warn-only: what replaces a member depends on what the code did with the event.",
+            "factory": "./migrations/angular-animations-removal/index",
+            "schema": "./migrations/angular-animations-removal/schema.json"
         },
         "zoneless-change-detection": {
             "description": "Reports the uses of MockNgZone and its simulateZoneExit(), removed from @koobiq/components/core: the library no longer depends on zone.js and nothing in it waits for NgZone.onStable, so a spec renders with fixture.detectChanges() or waits with fixture.whenStable() instead. Warn-only: which of the two depends on what the spec waited for.",

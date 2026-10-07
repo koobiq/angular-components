@@ -2,7 +2,6 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import { AfterContentInit, Component, TemplateRef, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { KbqTabBody, KbqTabBodyPortal } from './tab-body.component';
 import { KbqTabsModule } from './tabs.module';
@@ -18,7 +17,7 @@ describe('KbqTabBody', () => {
     beforeEach(() => {
         dir = 'ltr';
         TestBed.configureTestingModule({
-            imports: [PortalModule, NoopAnimationsModule, KbqTabBody, KbqTabBodyPortal, SimpleTabBodyApp],
+            imports: [PortalModule, KbqTabBody, KbqTabBodyPortal, SimpleTabBodyApp],
             providers: [
                 { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }
             ]

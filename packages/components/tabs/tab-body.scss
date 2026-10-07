@@ -1,8 +1,56 @@
+@use '../core/styles/common/animation';
+
+$easing: cubic-bezier(0.35, 0, 0.25, 1);
+
 .kbq-tab-body__content {
     height: 100%;
     overflow: auto;
 
+    // `none` rather than a zero translation, which some browsers render blurred.
+    transform: none;
+    transition: transform var(--kbq-tab-body-animation-duration) $easing;
+
     .kbq-tab-group_dynamic-height {
         overflow: hidden;
+    }
+
+    // A side body keeps a height before it moves: Chrome skips the transition of an element without one in RTL.
+    &.kbq-tab-body__content_left {
+        transform: translate3d(-100%, 0, 0);
+        min-height: 1px;
+    }
+
+    &.kbq-tab-body__content_right {
+        transform: translate3d(100%, 0, 0);
+        min-height: 1px;
+    }
+
+    &.kbq-tab-body__content_left-origin-center {
+        animation: kbq-tab-body-from-left var(--kbq-tab-body-animation-duration) $easing;
+    }
+
+    &.kbq-tab-body__content_right-origin-center {
+        animation: kbq-tab-body-from-right var(--kbq-tab-body-animation-duration) $easing;
+    }
+
+    &.kbq-tab-body__content_left,
+    &.kbq-tab-body__content_right,
+    &.kbq-tab-body__content_left-origin-center,
+    &.kbq-tab-body__content_right-origin-center {
+        @include animation.kbq-animations-off();
+    }
+
+    @include animation.kbq-animations-off();
+}
+
+@keyframes kbq-tab-body-from-left {
+    from {
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+@keyframes kbq-tab-body-from-right {
+    from {
+        transform: translate3d(100%, 0, 0);
     }
 }

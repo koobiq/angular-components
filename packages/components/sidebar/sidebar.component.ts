@@ -7,10 +7,10 @@ import {
     ChangeDetectorRef,
     Component,
     contentChild,
-    DestroyRef,
     Directive,
     ElementRef,
     inject,
+    Injector,
     Input,
     input,
     NgZone,
@@ -19,8 +19,15 @@ import {
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
-import { isControl, isInput, isLeftBracket, isRightBracket, KbqStateSaving } from '@koobiq/components/core';
-import { kbqSidebarAnimations, KbqSidebarAnimationState } from './sidebar-animations';
+import {
+    isControl,
+    isInput,
+    isLeftBracket,
+    isRightBracket,
+    kbqAfterAnimations,
+    kbqAnimationsDisabled,
+    KbqStateSaving
+} from '@koobiq/components/core';
 
 export enum SidebarPositions {
     Left = 'left',
@@ -70,7 +77,7 @@ export interface KbqSidebarState {
  * Coerces a raw persisted payload into a `KbqSidebarState`, returning `null` for anything unrecognizable.
  *
  * Web storage is origin-wide and user-writable, so a payload is never trusted — without this, an entry
- * such as `{"opened": "yes"}` would reach the animation params and break the host binding.
+ * such as `{"opened": "yes"}` would reach the width bindings and break them.
  */
 const normalizeSidebarState = (parsed: unknown): KbqSidebarState | null => {
     if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) return null;
@@ -90,18 +97,16 @@ const normalizeSidebarState = (parsed: unknown): KbqSidebarState | null => {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-sidebar',
-        '[@state]': `{
-            value: animationState,
-            params: params
-        }`,
-        '(@state.start)': 'onAnimationStart()',
-        '(@state.done)': 'onAnimationDone()'
+        '[class.kbq-sidebar_opened]': 'opened',
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
+        '[style.min-width]': 'opened ? params.openedStateMinWidth : params.closedStateWidth',
+        '[style.width]': 'opened ? params.openedStateWidth : params.closedStateWidth',
+        '[style.max-width]': 'opened ? params.openedStateMaxWidth : params.closedStateWidth'
     },
     // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the sidebar.
     hostDirectives: [
         { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
     ],
-    animations: [kbqSidebarAnimations.sidebarState],
     exportAs: 'kbqSidebar'
 })
 export class KbqSidebar implements OnDestroy, AfterContentInit {
@@ -114,8 +119,16 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     protected readonly document = inject<Document>(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly isBrowser = inject(Platform).isBrowser;
+    private readonly injector = inject(Injector);
+
+    /**
+     * Whether the sidebar opens and closes without motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    private stateAnimation?: { destroy(): void };
 
     /**
      * Persistence of the opened state and width, applied as a host directive. `useStateSaving` and
@@ -137,7 +150,18 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
             this.saveWidth();
         }
 
+        const changed = value !== this._opened;
+
         this._opened = value;
+
+        if (changed) {
+            // The opened content is in place while the sidebar widens, the closed one once it has narrowed.
+            if (value) {
+                this.internalState = true;
+            }
+
+            this.waitForStateAnimation();
+        }
 
         // The single choke point for `toggle()` and the bracket shortcut alike. Writing is a no-op until
         // the state has been read, so the input binding that runs before initialization cannot overwrite
@@ -184,13 +208,6 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     /**
      * @docs-private
      */
-    get animationState(): KbqSidebarAnimationState {
-        return this._opened ? KbqSidebarAnimationState.Opened : KbqSidebarAnimationState.Closed;
-    }
-
-    /**
-     * @docs-private
-     */
     internalState: boolean = true;
 
     private unbindKeydownListener: ReturnType<Renderer2['listen']> | null = null;
@@ -218,6 +235,10 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
         this.controlled = this.openedWritten;
 
         this.restoreState();
+
+        // The first render shows the content of the initial state; `stateChanged` reports it once rendered.
+        this.internalState = this._opened;
+        this.waitForStateAnimation();
     }
 
     /** Reads the persisted state and applies it. Runs while initializing, and again on a key change. */
@@ -233,8 +254,7 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
             // would overwrite the width being restored on the line below.
             this._opened = savedState.opened;
 
-            // `internalState` only catches up in `onAnimationDone`, so without this a sidebar restored
-            // closed renders its opened content until the first animation finishes.
+            // `internalState` otherwise only catches up once the width transition ends.
             this.internalState = savedState.opened;
 
             if (savedState.width) {
@@ -283,25 +303,18 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
         this.changeDetectorRef.markForCheck();
     }
 
-    /**
-     * @docs-private
-     */
-    onAnimationStart() {
-        if (this._opened) {
-            this.internalState = this._opened;
-        }
-    }
-
-    /**
-     * @docs-private
-     */
-    onAnimationDone() {
-        // The animation still reports done when the sidebar is destroyed before it finishes.
-        if (this.destroyRef.destroyed) return;
-
-        this.internalState = this._opened;
-
-        this.stateChanged.emit(this._opened);
+    /** Switches the content and reports the state once the width transition has ended. */
+    private waitForStateAnimation(): void {
+        this.stateAnimation?.destroy();
+        this.stateAnimation = kbqAfterAnimations(
+            () => this.elementRef.nativeElement,
+            () => {
+                this.internalState = this._opened;
+                this.stateChanged.emit(this._opened);
+                this.changeDetectorRef.markForCheck();
+            },
+            this.injector
+        );
     }
 
     private registerKeydownListener(): void {

@@ -2,7 +2,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import {
     KbqButton,
@@ -27,7 +26,6 @@ describe('KbqSplitButton', () => {
                 KbqSplitButtonModule,
                 KbqButtonModule,
                 KbqDropdownModule,
-                NoopAnimationsModule,
                 TestApp,
                 TestAppEnabled,
                 TestAppInputs,

@@ -1,4 +1,3 @@
-import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkMonitorFocus, CdkTrapFocus, FocusMonitor, FocusOrigin, InteractivityChecker } from '@angular/cdk/a11y';
 import { hasModifierKey } from '@angular/cdk/keycodes';
 import { ContentObserver } from '@angular/cdk/observers';
@@ -39,8 +38,7 @@ import {
     KBQ_CONNECTED_OVERLAY_ORIGIN,
     KBQ_OVERLAY_LAYERS,
     KBQ_WINDOW,
-    KbqAnimationCurves,
-    KbqAnimationDurations,
+    kbqAnimationsDisabled,
     KbqComponentColors,
     KbqConnectedOverlayOriginProvider,
     KbqLocaleOverridesDirective,
@@ -54,16 +52,6 @@ import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { concat, debounceTime, merge, Observable, of, startWith, timer } from 'rxjs';
 import { catchError, concatMap, defaultIfEmpty, ignoreElements, map, take, takeUntil, takeWhile } from 'rxjs/operators';
-
-const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
-    transition(':enter', [
-        style({ transform: 'translateY(100%)', opacity: 0 }),
-        animate(
-            `${KbqAnimationDurations.Instant} ${KbqAnimationCurves.DecelerationCurve}`,
-            style({ transform: 'translateY(0%)', opacity: 1 })
-        )
-    ])
-]);
 
 const baseClass = 'kbq-inline-edit';
 
@@ -199,7 +187,6 @@ export class KbqInlineEditMenu {
         CdkMonitorFocus,
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
-    animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     exportAs: 'kbqInlineEdit'
 })
 export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInlineEditSaveRecovery {
@@ -416,6 +403,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
     /** @docs-private */
     protected readonly placements = PopUpPlacements;
+
+    /** @docs-private */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** @docs-private */
     protected readonly colors = KbqComponentColors;

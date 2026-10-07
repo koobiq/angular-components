@@ -11,6 +11,7 @@ import {
     ChangeDetectorRef,
     Component,
     ComponentRef,
+    ElementRef,
     inject,
     InjectionToken,
     Injector,
@@ -25,7 +26,8 @@ import {
 import {
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
-    KBQ_OVERLAY_LAYERS,
+    kbqAfterAnimations,
+    kbqAnimationsDisabled,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -33,7 +35,6 @@ import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendar } from './calendar.component';
-import { kbqDatepickerAnimations } from './datepicker-animations';
 import { injectRequiredDateAdapter } from './datepicker-errors';
 import { KbqDatepickerInput } from './datepicker-input.directive';
 
@@ -82,19 +83,20 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-datepicker__content',
-        '[@transformPanel]': 'animationState',
-        '(@transformPanel.done)': 'animationDone.next()'
+        '[class.kbq-datepicker__content_leave]': "animationState === 'void'",
+        '[class.kbq-animations-disabled]': 'animationsDisabled'
     },
-    animations: [
-        kbqDatepickerAnimations.transformPanel,
-        kbqDatepickerAnimations.fadeInCalendar
-    ],
     exportAs: 'kbqDatepickerContent'
 })
 export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     private changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
 
-    /** Emits when an animation has finished. */
+    /** Whether the panel opens and closes without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** Emits when the exit animation has finished. */
     readonly animationDone = new Subject<void>();
 
     /** Reference to the datepicker that created the overlay. */
@@ -124,6 +126,12 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     startExitAnimation() {
         this.animationState = 'void';
         this.changeDetectorRef.markForCheck();
+
+        kbqAfterAnimations(
+            () => this.elementRef.nativeElement,
+            () => this.animationDone.next(),
+            this.injector
+        );
     }
 }
 
@@ -313,12 +321,12 @@ export class KbqDatepicker<D> implements OnDestroy {
     }
 
     ngOnDestroy() {
+        // Before `close()`: a datepicker going away takes its popup along without playing the exit animation.
+        this.destroyOverlay();
         this.close();
         this.inputSubscription.unsubscribe();
         this.closeSubscription.unsubscribe();
         this.disabledChange.complete();
-
-        this.destroyOverlay();
     }
 
     /** Selects the given date */
@@ -391,7 +399,10 @@ export class KbqDatepicker<D> implements OnDestroy {
             return;
         }
 
-        if (this.popupComponentRef) {
+        // A popup the overlay has already taken down, e.g. on scroll, has nothing left to animate.
+        if (this.popupComponentRef?.hostView.destroyed) {
+            this.destroyOverlay();
+        } else if (this.popupComponentRef) {
             const instance = this.popupComponentRef.instance;
 
             instance.startExitAnimation();

@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { CdkObserveContent } from '@angular/cdk/observers';
 import {
@@ -22,8 +21,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
 import {
     KBQ_CHECKABLE_CLICK_ACTION,
-    KbqAnimationCurves,
-    KbqAnimationDurations,
+    kbqAnimationsDisabled,
     KbqCheckable,
     KbqCheckableClickAction,
     KbqCheckedState,
@@ -69,26 +67,6 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
         '[class.kbq-indeterminate]': 'indeterminate'
     },
     hostDirectives: [KbqCheckable],
-    animations: [
-        trigger('switch', [
-            state(TransitionCheckState.Init, style({ left: '3px' })),
-            state(TransitionCheckState.Unchecked, style({ left: '3px' })),
-            state(TransitionCheckState.Indeterminate, style({ left: '10px', visibility: 'hidden' })),
-            state(TransitionCheckState.Checked, style({ left: 'calc(100% - 11px)' })),
-            transition(
-                `${TransitionCheckState.Init} => ${TransitionCheckState.Checked}`,
-                animate(KbqAnimationDurations.Entering)
-            ),
-            transition(
-                `${TransitionCheckState.Checked} <=> ${TransitionCheckState.Unchecked}`,
-                animate(KbqAnimationDurations.Rapid)
-            ),
-            transition(
-                `${TransitionCheckState.Indeterminate} => *`,
-                animate(`${KbqAnimationDurations.Instant} ${KbqAnimationCurves.EaseInOut}`)
-            )
-        ])
-    ],
     exportAs: 'kbqToggle'
 })
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
@@ -190,6 +168,9 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     /** @docs-private */
     protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
+    /** @docs-private */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
     /** Defines the behavior when a user clicks on the toggle. */
     // TODO: Skipped for migration because:
     //  Your application code writes to the input. This prevents migration.
@@ -203,7 +184,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.id = this.uniqueId;
 
         // `writeValue` (ngModel/formControl) now runs on `KbqCheckable`, bypassing the `checked`/`indeterminate`
-        // setters below, so this keeps the `[@switch]` animation state in sync for form-driven value changes too.
+        // setters below, so this keeps the switch position in sync for form-driven value changes too.
         effect(() => this.setTransitionCheckState());
     }
 

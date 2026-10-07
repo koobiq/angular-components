@@ -4,7 +4,6 @@ import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
 import { Component, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DOWN_ARROW,
     END,
@@ -67,7 +66,7 @@ const AXE_TIMEOUT = 15000;
 describe('KbqAppSwitcher', () => {
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
-            imports: [component, NoopAnimationsModule],
+            imports: [component],
             providers
         });
         const fixture = TestBed.createComponent<T>(component);

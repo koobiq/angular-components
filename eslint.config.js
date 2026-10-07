@@ -70,6 +70,24 @@ const makeNamingConventionOptions = (prefix) => {
 };
 
 /**
+ * `@angular/animations` is deprecated: the components animate with CSS, waited for with `kbqAfterAnimations`, and
+ * templates with `animate.enter`/`animate.leave`.
+ *
+ * @see https://eslint.org/docs/latest/rules/no-restricted-imports
+ */
+const noAngularAnimationsImports = [
+    {
+        group: [
+            '@angular/animations',
+            '@angular/animations/*',
+            '@angular/platform-browser/animations',
+            '@angular/platform-browser/animations/*'
+        ],
+        message: 'Animate with CSS and `animate.enter`/`animate.leave`: @angular/animations is deprecated.'
+    }
+];
+
+/**
  * @see https://eslint.org/docs/latest/rules/no-restricted-globals
  */
 const noRestrictedGlobalsOptionsForSSR = (() => {
@@ -253,6 +271,8 @@ module.exports = tseslint.config(
             }
         },
         rules: {
+            'no-restricted-imports': [2, { patterns: noAngularAnimationsImports }],
+
             // plugin:@typescript-eslint
             '@typescript-eslint/no-explicit-any': 0,
             '@typescript-eslint/no-var-requires': 0,
@@ -632,6 +652,7 @@ module.exports = tseslint.config(
             'no-restricted-imports': [
                 2,
                 {
+                    patterns: noAngularAnimationsImports,
                     paths: [
                         {
                             name: '@angular/core/testing',

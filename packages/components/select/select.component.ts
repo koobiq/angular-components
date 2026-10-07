@@ -46,7 +46,8 @@ import {
     numberAttribute,
     output,
     signal,
-    viewChild
+    viewChild,
+    type AfterRenderRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -109,7 +110,6 @@ import {
     isUndefined,
     kbqGetElementHeight,
     kbqResolvePanelMaxHeightToken,
-    kbqSelectAnimations,
     kbqSiblingPopupProvider,
     runClearPredicate,
     runCompareWith,
@@ -277,9 +277,6 @@ export const minimumTimeToDisplayLoading = 300;
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
-    animations: [
-        kbqSelectAnimations.fadeInContent
-    ],
     exportAs: 'kbqSelect'
 })
 export class KbqSelect
@@ -377,8 +374,10 @@ export class KbqSelect
     /** The value of the select panel's transform-origin property for animations. */
     transformOrigin: string = 'top';
 
-    /** Emits when the panel element is finished transforming in. */
+    /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     panelDoneAnimatingStream = new Subject<string>();
+
+    private panelRender?: AfterRenderRef;
 
     /** Strategy that will be used to handle scrolling while the select panel is open. */
     scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
@@ -1270,16 +1269,8 @@ export class KbqSelect
     /** Accessible names of the controls the select renders itself. */
     private readonly a11yLocaleConfiguration = this.carrier.read('a11y', KBQ_A11Y_LOCALE_CONFIGURATION);
 
-    /**
-     * Whether the panel opens without motion because the user asked for reduced motion.
-     * @docs-private
-     */
-    protected readonly animationsDisabled = signal(false);
-
     constructor() {
         super();
-
-        this.watchReducedMotion();
 
         // The template reads the state `stateChanges` reports (placeholder, error state, focus), and this view is
         // OnPush: every report re-checks it.
@@ -1414,7 +1405,7 @@ export class KbqSelect
     ngOnDestroy() {
         this.stateChanges.complete();
         this.visibleChanges.complete();
-        // Before `openedChange`: the panel animation stream is what emits into it.
+        // Before `openedChange`: the panel stream is what emits into it.
         this.panelDoneAnimatingStream.complete();
         this.openedChange.complete();
 
@@ -1603,6 +1594,8 @@ export class KbqSelect
             },
             { injector: this.injector }
         );
+
+        this.reportPanelRendered('showing');
     }
 
     /** Closes the overlay panel. */
@@ -1620,6 +1613,22 @@ export class KbqSelect
 
         this._changeDetectorRef.markForCheck();
         this.onTouched();
+        this.reportPanelRendered('void');
+    }
+
+    /**
+     * Reports the panel rendered or removed once the next render has applied `panelOpen`; only the latest
+     * report of a frame is delivered.
+     */
+    private reportPanelRendered(state: 'showing' | 'void'): void {
+        this.panelRender?.destroy();
+
+        // The overlay detaching while the select is destroyed closes it too.
+        if (this.destroyRef.destroyed) return;
+
+        this.panelRender = afterNextRender(() => this.panelDoneAnimatingStream.next(state), {
+            injector: this.injector
+        });
     }
 
     /**
@@ -2058,24 +2067,9 @@ export class KbqSelect
         this.destroyRef.onDestroy(() => observer.disconnect());
     }
 
-    /** Keeps the panel's animation in step with the user's motion preference. */
-    private watchReducedMotion(): void {
-        if (!this.isBrowser || typeof this.window.matchMedia !== 'function') return;
-
-        const query = this.window.matchMedia('(prefers-reduced-motion: reduce)');
-        const onChange = (event: MediaQueryListEvent) => this.animationsDisabled.set(event.matches);
-
-        this.animationsDisabled.set(query.matches);
-
-        query.addEventListener('change', onChange);
-        this.destroyRef.onDestroy(() => query.removeEventListener('change', onChange));
-    }
-
-    /** Whether a modal paints over the panel, so that clicks inside the modal leave the panel open. */
-    private isCoveredByModal(): boolean {
-        const host = this.overlayDir.overlayRef.hostElement;
-        const overlays = Array.from(this.overlayContainer.getContainerElement().children);
-        const modalIndex = overlays.findIndex((overlay) => overlay.classList.contains('kbq-modal-overlay'));
+    /** Gets the current overlay position index in the container. */
+    private currentOverlayPosition(): number {
+        const element = this.overlayDir.overlayRef.hostElement;
 
         if (modalIndex === -1) {
             return false;

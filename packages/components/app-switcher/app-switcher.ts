@@ -65,7 +65,6 @@ import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { merge } from 'rxjs';
 import { auditTime, distinctUntilChanged, filter, startWith } from 'rxjs/operators';
-import { kbqAppSwitcherAnimations } from './app-switcher-animations';
 import { KbqAppSwitcherDropdownApp } from './app-switcher-dropdown-app';
 import { KbqAppSwitcherDropdownSite } from './app-switcher-dropdown-site';
 import { KbqAppSwitcherListItem } from './app-switcher-list-item';
@@ -279,7 +278,6 @@ export function kbqAppSwitcherProvider(): Provider[] {
     // Carrier only: the popup is created through the overlay, so there is no element for a consumer to bind
     // on. It re-merges the carriers above the trigger and lets the popup read its strings through `read()`.
     hostDirectives: [KbqLocaleOverridesDirective],
-    animations: [kbqAppSwitcherAnimations.state],
     preserveWhitespaces: false
 })
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {

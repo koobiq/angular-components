@@ -6,7 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { DestroyRef } from '@angular/core';
@@ -66,7 +65,7 @@ export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
-    animationDone(event: AnimationEvent_2): void;
+    protected afterShowAnimation(): void;
     ariaLabel: string | undefined;
     // (undocumented)
     readonly cdkTrapFocus: i0.Signal<CdkTrapFocus>;
@@ -94,7 +93,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     panelId: string;
     // (undocumented)
     prefix: string;
-    protected readonly reducedMotion: boolean;
     // (undocumented)
     trigger: KbqPopoverTrigger;
     // (undocumented)

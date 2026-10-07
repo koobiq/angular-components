@@ -53,7 +53,7 @@
         },
         "mandatory-peer-dependencies": {
             "version": "21.0.0-0",
-            "description": "Adds the packages that became mandatory peerDependencies of @koobiq/components — @angular/animations (at the range the project uses for @angular/core, because every animations release pins core exactly), overlayscrollbars and @koobiq/date-adapter — and schedules an install. npm adds a newly mandatory peer on upgrade by itself, but Yarn does not and pnpm only does with auto-install-peers, so those projects would otherwise upgrade into 'Cannot find module' at build time. Warns when @koobiq/date-adapter is already present, since an existing entry is left untouched and anything below 3.4.0 lacks the addCalendarUnits()/startOf() the date components call.",
+            "description": "Adds the packages that became mandatory peerDependencies of @koobiq/components — overlayscrollbars and @koobiq/date-adapter — and schedules an install. npm adds a newly mandatory peer on upgrade by itself, but Yarn does not and pnpm only does with auto-install-peers, so those projects would otherwise upgrade into 'Cannot find module' at build time. Warns when @koobiq/date-adapter is already present, since an existing entry is left untouched and anything below 3.4.0 lacks the addCalendarUnits()/startOf() the date components call.",
             "factory": "./migrations/mandatory-peer-dependencies/index"
         },
         "tag-slots": {
@@ -95,6 +95,11 @@
             "version": "21.0.0-0",
             "description": "Migrates consumers of the reworked `multiple` input of kbq-list-selection and kbq-tree-selection. The attribute used to be read once in the constructor, where every value other than \"checkbox\" and \"keyboard\" fell through to multiple selection with checkboxes — so multiple=\"false\" meant multiple. It is now a real input with a closed set of values, and an unrecognized one means single selection. Deletes multiple=\"false\" and multiple=\"single\" (single selection is what an absent attribute already means, and \"single\" is no longer an accepted spelling), which is the one rewrite that changes behaviour and is reported as such, and rewrites every other unrecognized value to multiple=\"checkbox\", which preserves it. Both external .html and inline templates are covered; a dynamic [multiple] binding is skipped with a warning. Warns — without auto-fixing — on assignments to multipleMode, which is now an accessor that rebuilds the SelectionModel and throws inside a kbq-tree-select, and on selectionModel.changed subscriptions, which a mode change strands on the discarded model instance.",
             "factory": "./migrations/list-tree-multiple-input/index"
+        },
+        "angular-animations-removal": {
+            "version": "21.0.0-0",
+            "description": "Reports the uses of the animation triggers @koobiq/components exported (fadeAnimation, kbqSelectAnimations, kbqDropdownAnimations, kbqTabsAnimations, KbqSidepanelAnimationState) and of the members that carried an AnimationEvent (KbqPopUp.animationStart/animationDone, the animation members of KbqDropdown, the animation callbacks of KbqSidebar, KbqTabBody, KbqToastComponent and the sidepanel and actions panel containers, KbqToastService.animation), and the providers of @angular/animations the components no longer need. Warn-only: what replaces a member depends on what the code did with the event.",
+            "factory": "./migrations/angular-animations-removal/index"
         },
         "zoneless-change-detection": {
             "version": "21.0.0-0",

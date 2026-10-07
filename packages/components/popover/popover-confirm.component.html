@@ -7,9 +7,8 @@
     [class.kbq-popover_arrowless]="!arrow"
     [cdkTrapFocus]="isTrapFocus"
     [class]="classMap"
-    [@state]="visibility"
-    (@state.done)="animationDone($event)"
-    (@state.start)="animationStart()"
+    [class.kbq-animations-disabled]="animationsDisabled"
+    [class.kbq-popover_visible]="isVisible()"
 >
     <div class="kbq-popover__container">
         <div class="kbq-popover__content" [class.kbq-popover__content_default-paddings]="defaultPaddings">

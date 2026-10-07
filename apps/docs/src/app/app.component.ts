@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { AsyncPipe, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -25,37 +24,7 @@ import { DocsDocStates, DocsNavbarState } from './services/doc-states';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'docs-app'
-    },
-    animations: [
-        trigger('openCloseSidenav', [
-            state('open', style({ right: '0' })),
-            state('closed', style({ right: '-100%' })),
-            transition('open => closed', [animate('300ms ease-out')]),
-            transition('closed => open', [animate('300ms ease-out')])
-        ]),
-        trigger('fadeInOutSidenav', [
-            state(
-                'fadeIn',
-                style({
-                    opacity: '1',
-                    display: 'block'
-                })
-            ),
-            state(
-                'fadeOut',
-                style({
-                    opacity: '0',
-                    display: 'none'
-                })
-            ),
-            transition('fadeIn => fadeOut', [
-                animate('300ms ease-out')
-            ]),
-            transition('fadeOut => fadeIn', [
-                animate('300ms ease-out')
-            ])
-        ])
-    ]
+    }
 })
 export class DocsAppComponent {
     readonly docStates = inject(DocsDocStates);

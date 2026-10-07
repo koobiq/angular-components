@@ -234,7 +234,6 @@ export class DocsStackblitzWriter {
         const ngVersion = `^${VERSION.major}`;
         const koobiqVersion = `^${docsKoobiqVersion}`;
         const dependencies = {
-            '@angular/animations': ngVersion,
             '@angular/cdk': ngVersion,
             '@angular/common': ngVersion,
             '@angular/compiler': ngVersion,

@@ -10,7 +10,6 @@ import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
     ENTER,
@@ -68,7 +67,7 @@ describe('KbqPopover', () => {
 
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
-            imports: [component, NoopAnimationsModule],
+            imports: [component],
             providers: [
                 // The shared pop-up base still polls with `interval(leaveDelay, scheduler)` while a
                 // hover-triggered pop-up is open, which spins the CPU when `leaveDelay` is 0. Substituting a
@@ -1341,7 +1340,7 @@ describe('KbqPopover', () => {
 
     describe('leaks', () => {
         it('should unsubscribe from the global scroll stream on destroy', () => {
-            TestBed.configureTestingModule({ imports: [PopoverSimple, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [PopoverSimple] });
 
             const scrolled = new Subject<CdkScrollable | void>();
 
@@ -1359,7 +1358,7 @@ describe('KbqPopover', () => {
         });
 
         it('should not measure anything on scroll while closed', () => {
-            TestBed.configureTestingModule({ imports: [PopoverSimple, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [PopoverSimple] });
 
             const scrolled = new Subject<CdkScrollable | void>();
 

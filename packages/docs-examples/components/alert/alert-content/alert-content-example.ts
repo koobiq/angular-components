@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAlert, KbqAlertCloseButton, KbqAlertControl, KbqAlertTitle } from '@koobiq/components/alert';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
@@ -25,15 +24,7 @@ import { KbqLink } from '@koobiq/components/link';
     ],
     templateUrl: 'alert-content-example.html',
     styleUrls: ['alert-content-example.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [
-        trigger('hideShowAnimator', [
-            state('true', style({ opacity: 1, display: '' })),
-            state('false', style({ opacity: 0, display: 'none' })),
-            transition('false => true', animate('.5s')),
-            transition('true => false', animate('.2s'))
-        ])
-    ]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertContentExample {
     colors = KbqComponentColors;

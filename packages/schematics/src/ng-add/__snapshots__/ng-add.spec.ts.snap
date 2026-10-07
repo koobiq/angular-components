@@ -2,7 +2,6 @@
 
 exports[`ng add '@koobiq/components' > should add missing dependencies to 'package.json' > after running schematics 1`] = `
 {
-  "@angular/animations": "^21.2.0",
   "@angular/cdk": "^0.0.0",
   "@angular/common": "^21.2.0",
   "@angular/compiler": "^21.2.0",

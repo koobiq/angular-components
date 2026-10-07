@@ -107,7 +107,6 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState, KbqSiblingPopup {
     constructor();
     get allOptionsSelected(): boolean;
-    protected readonly animationsDisabled: _angular_core.WritableSignal<boolean>;
     readonly ariaLabel: _angular_core.InputSignal<string | null>;
     protected get ariaLabelledby(): string | null;
     readonly backdropClass: _angular_core.InputSignal<string>;

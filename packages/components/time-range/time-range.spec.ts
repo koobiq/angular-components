@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, DebugElement, inject, Provider, sig
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -33,7 +32,7 @@ import { KbqCustomTimeRangeType, KbqTimeRangeRange, KbqTimeRangeType } from './t
 
 const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule, KbqLuxonDateModule, KbqFormattersModule],
+        imports: [component, KbqLuxonDateModule, KbqFormattersModule],
         providers: [...providers]
     });
     const fixture = TestBed.createComponent<T>(component);

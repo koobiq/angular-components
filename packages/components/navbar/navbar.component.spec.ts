@@ -5,7 +5,6 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
@@ -98,7 +97,6 @@ describe('KbqNavbar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqNavbarModule,
                 KbqIconModule,
                 TestApp,
@@ -1558,7 +1556,7 @@ describe('KbqNavbar', () => {
         it('configuration should follow the locale service', fakeAsync(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [NoopAnimationsModule, KbqNavbarModule, KbqIconModule, TestVerticalApp],
+                imports: [KbqNavbarModule, KbqIconModule, TestVerticalApp],
                 providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
             });
 

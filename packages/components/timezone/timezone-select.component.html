@@ -79,8 +79,6 @@
             [attr.aria-label]="resolvedAriaLabel"
             [attr.aria-labelledby]="ariaLabelledby"
             [attr.aria-busy]="isOptionsListBusy || null"
-            [@fadeInContent]="'showing'"
-            (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >
             @if (isEmptySearchResult) {
                 <ng-content select="[kbq-select-search-empty-result]" />

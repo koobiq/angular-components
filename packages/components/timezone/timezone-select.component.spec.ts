@@ -4,7 +4,6 @@ import { Component, OnInit, Type, getDebugNode, viewChild, viewChildren } from '
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DOWN_ARROW,
     ESCAPE,
@@ -263,7 +262,6 @@ describe('KbqTimezoneSelect', () => {
                 KbqInputModule,
                 ReactiveFormsModule,
                 FormsModule,
-                NoopAnimationsModule,
                 ...declarations
             ],
             providers: [
@@ -998,7 +996,7 @@ describe('KbqTimezoneSelect', () => {
     // `KbqSelectModule`, which hides the gap.
     describe('without KbqSelectModule', () => {
         beforeEach(() => {
-            TestBed.configureTestingModule({ imports: [StandaloneTimezoneSelect, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [StandaloneTimezoneSelect] });
 
             overlayContainer = TestBed.inject(OverlayContainer);
         });
@@ -1017,7 +1015,7 @@ describe('KbqTimezoneSelect', () => {
     // re-declaring them would match the same directive twice and raise NG0309.
     describe('locale configuration', () => {
         beforeEach(() => {
-            TestBed.configureTestingModule({ imports: [TimezoneSelectWithLocaleConfiguration, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [TimezoneSelectWithLocaleConfiguration] });
 
             overlayContainer = TestBed.inject(OverlayContainer);
         });

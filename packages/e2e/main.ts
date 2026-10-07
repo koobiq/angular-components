@@ -1,10 +1,9 @@
 import { provideHttpClient } from '@angular/common/http';
 import { enableProdMode, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KBQ_STATE_SAVING_ENABLED, KbqFormattersModule } from '@koobiq/components/core';
+import { KBQ_ANIMATIONS_CONFIG, KBQ_STATE_SAVING_ENABLED, KbqFormattersModule } from '@koobiq/components/core';
 import { e2eEnvironment } from './environments/environment';
 import { E2eApp } from './module';
 import { e2eRoutes } from './routes';
@@ -14,7 +13,8 @@ if (e2eEnvironment.production) enableProdMode();
 bootstrapApplication(E2eApp, {
     providers: [
         provideZonelessChangeDetection(),
-        provideNoopAnimations(),
+        // A baseline is taken of the settled state, never of a frame of the motion leading to it.
+        { provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } },
         provideRouter(e2eRoutes),
         provideHttpClient(),
         // `KbqNotificationCenterService` is `providedIn: 'root'` and injects `DateAdapter` and

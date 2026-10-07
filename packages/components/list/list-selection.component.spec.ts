@@ -18,7 +18,6 @@ import {
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     A,
     C,
@@ -66,7 +65,7 @@ const getFocusMonitor = () => TestBed.inject(FocusMonitor);
 
 const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers: [...providers]
     });
     const fixture = TestBed.createComponent<T>(component);

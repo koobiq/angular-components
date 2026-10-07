@@ -1,7 +1,6 @@
 import { Component, DebugElement, EnvironmentProviders, Provider, Type, viewChildren } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -171,16 +170,10 @@ describe(KbqBreadcrumbs.name, () => {
         });
 
         it('should open dropdown on ArrowDown if item is Dropdown trigger', fakeAsync(() => {
-            const fixture = createComponent(
-                DropdownBreadcrumbs,
-                [
-                    provideRouter([]),
-                    customBreadcrumbsProvider
-                ],
-                [
-                    NoopAnimationsModule
-                ]
-            );
+            const fixture = createComponent(DropdownBreadcrumbs, [
+                provideRouter([]),
+                customBreadcrumbsProvider
+            ]);
             const { debugElement } = fixture;
 
             fixture.detectChanges();
@@ -624,11 +617,7 @@ describe(KbqBreadcrumbs.name, () => {
 
     describe('collapsed items dropdown', () => {
         it('should render the custom template of a hidden item instead of a blank row', fakeAsync(() => {
-            const fixture = createComponent(
-                CollapsibleCustomViewBreadcrumbs,
-                [provideRouter([])],
-                [NoopAnimationsModule]
-            );
+            const fixture = createComponent(CollapsibleCustomViewBreadcrumbs, [provideRouter([])]);
 
             fixture.detectChanges();
             tick();
@@ -647,11 +636,7 @@ describe(KbqBreadcrumbs.name, () => {
         }));
 
         it('should not register a hidden item a second time when its dropdown copy renders', fakeAsync(() => {
-            const fixture = createComponent(
-                CollapsibleCustomViewBreadcrumbs,
-                [provideRouter([])],
-                [NoopAnimationsModule]
-            );
+            const fixture = createComponent(CollapsibleCustomViewBreadcrumbs, [provideRouter([])]);
 
             fixture.detectChanges();
             tick();
@@ -677,7 +662,7 @@ describe(KbqBreadcrumbs.name, () => {
 
     describe('inside a form', () => {
         function createFixture(): ComponentFixture<BreadcrumbsInForm> {
-            return createComponent(BreadcrumbsInForm, [provideRouter([])], [NoopAnimationsModule]);
+            return createComponent(BreadcrumbsInForm, [provideRouter([])]);
         }
 
         function query(debugElement: DebugElement, selector: string): HTMLButtonElement {

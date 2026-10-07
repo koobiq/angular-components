@@ -28,7 +28,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     A,
     DOWN_ARROW,
@@ -2091,7 +2090,6 @@ describe('KbqTreeSelect', () => {
                 KbqInputModule,
                 ReactiveFormsModule,
                 FormsModule,
-                NoopAnimationsModule,
                 KbqPseudoCheckboxModule,
                 KbqLocaleServiceModule,
                 ...declarations
@@ -3528,7 +3526,7 @@ describe('KbqTreeSelect', () => {
             it('should take the predicate from KBQ_TREE_SELECT_OPTIONS', fakeAsync(() => {
                 TestBed.resetTestingModule();
                 TestBed.configureTestingModule({
-                    imports: [MultiTreeSelectWithCleaner, NoopAnimationsModule],
+                    imports: [MultiTreeSelectWithCleaner],
                     providers: [kbqTreeSelectOptionsProvider({ clearPredicate: () => true })]
                 });
 
@@ -4278,7 +4276,6 @@ describe('KbqTreeSelect', () => {
                     KbqTreeSelectModule,
                     ReactiveFormsModule,
                     FormsModule,
-                    NoopAnimationsModule,
                     SelectInsideFormGroup
                 ],
                 providers: [kbqErrorStateMatcherProvider(errorStateMatcher)]
@@ -6473,7 +6470,7 @@ describe('KbqTreeSelect first-row panel anchor', () => {
 
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
-            imports: [MultilineTreeSelect, NoopAnimationsModule],
+            imports: [MultilineTreeSelect],
             providers: [{ provide: Directionality, useFactory: () => ({ value: 'ltr' }) }]
         });
 
@@ -6638,7 +6635,7 @@ describe('KbqTreeSelect without options', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [TreeSelectWithoutOptions, NoopAnimationsModule],
+            imports: [TreeSelectWithoutOptions],
             providers: [{ provide: Directionality, useFactory: () => ({ value: 'ltr' }) }]
         });
 

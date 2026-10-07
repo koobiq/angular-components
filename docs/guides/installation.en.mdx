@@ -9,12 +9,11 @@ Angular packages at the version your application is already on:
 ng add @koobiq/components
 ```
 
-Manual installation. First install the Angular packages, using the same range your `package.json`
-already has for `@angular/core` — `@angular/animations` requires an exactly matching
-`@angular/core`, so a mismatched range fails with `ERESOLVE unable to resolve dependency tree`:
+Manual installation. First install `@angular/cdk` at the version your `package.json` already has for
+`@angular/core`:
 
 ```bash
-npm install @angular/animations@^20.3.0 @angular/cdk@^20.2.0
+npm install @angular/cdk@^21.2.0
 ```
 
 Then install the library and the rest of its dependencies:
@@ -35,20 +34,20 @@ base package on its own, Yarn and pnpm do not, so install it explicitly. Install
 [code-block](/en/components/code-block), and `@angular/router` if you use
 [breadcrumbs](/en/components/breadcrumbs).
 
-### Setting up animations
+### Animations
 
-The components use Angular animations, so the application must provide them:
+The components animate with CSS and need no setup: neither `@angular/animations` nor
+`provideAnimations()`. The motion is off when the operating system asks for reduced motion
+(`prefers-reduced-motion: reduce`). To turn it off in the whole application, for example in an
+end-to-end suite, provide `KBQ_ANIMATIONS_CONFIG`:
 
 ```typescript
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 
 bootstrapApplication(AppComponent, {
-    providers: [provideAnimations()]
+    providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
 });
 ```
-
-Without this provider, opening a component that animates — dropdown, select, tooltip, toast,
-datepicker — fails with `NG05105: Unexpected synthetic property @state found`.
 
 ### Setting up styles
 

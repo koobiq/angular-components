@@ -55,7 +55,7 @@ import {
     SPACE
 } from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
-import { delay, filter, map, take, takeUntil } from 'rxjs/operators';
+import { delay, filter, map } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdown } from './dropdown.component';
@@ -282,9 +282,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     private widthLockRef: AfterRenderRef | null = null;
 
-    /** Waits for the exit animation to finish a close; must not outlive the trigger, or it emits once destroyed. */
-    private readonly closeAnimationSubscriptions = new Subscription();
-
     constructor() {
         const elementRef = this.elementRef;
         const dropdownItemInstance = this.dropdownItemInstance;
@@ -390,7 +387,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.init();
 
         if (this.dropdown() instanceof KbqDropdown) {
-            (this.dropdown() as KbqDropdown).startAnimation();
+            (this.dropdown() as KbqDropdown).setOpened(true);
         }
 
         this.lockOverlayWidthForSearch();
@@ -539,38 +536,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.openedBy = undefined;
 
         const dropdown = this.dropdown();
-        const lazyContent = dropdown.lazyContent?.();
 
         if (dropdown instanceof KbqDropdown) {
-            dropdown.resetAnimation();
-
-            const animationSubscription = dropdown.animationDone.pipe(
-                filter((event) => event.toState === 'void'),
-                take(1)
-            );
-
-            if (lazyContent) {
-                // Wait for the exit animation to finish before detaching the content.
-                this.closeAnimationSubscriptions.add(
-                    animationSubscription
-                        .pipe(
-                            // Interrupt if the content got re-attached.
-                            takeUntil(lazyContent.attached)
-                        )
-                        .subscribe({
-                            next: () => lazyContent.detach(),
-                            // No matter whether the content got re-attached, reset the dropdown.
-                            complete: () => this.setIsOpened(false)
-                        })
-                );
-            } else {
-                this.closeAnimationSubscriptions.add(animationSubscription.subscribe(() => this.setIsOpened(false)));
-            }
-        } else {
-            this.setIsOpened(false);
-
-            lazyContent?.detach();
+            dropdown.setOpened(false);
         }
+
+        this.setIsOpened(false);
+
+        dropdown.lazyContent?.()?.detach();
     }
 
     /**
@@ -786,7 +759,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.closingActionsSubscription.unsubscribe();
         this.hoverSubscription.unsubscribe();
         this.widthLockRef?.destroy();
-        this.closeAnimationSubscriptions.unsubscribe();
     }
 
     /** Returns a stream that emits whenever an action that should close the dropdown occurs. */
@@ -850,20 +822,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
                 this.parent.deactivateSafeArea();
 
                 this.openedBy = 'mouse';
-
-                // If the same dropdown is used between multiple triggers, it might still be animating
-                // while the new trigger tries to re-open it. Wait for the animation to finish
-                // before doing so. Also interrupt if the user moves to another item.
-                if (this.dropdown() instanceof KbqDropdown && (this.dropdown() as KbqDropdown).isAnimating) {
-                    // We need the `delay(0)` here in order to avoid
-                    // 'changed after checked' errors in some cases. See #12194.
-                    (this.dropdown() as KbqDropdown).animationDone
-                        .pipe(take(1), delay(0, asapScheduler), takeUntil(this.parent.hovered()))
-                        // eslint-disable-next-line rxjs-x/no-nested-subscribe
-                        .subscribe(() => this.open());
-                } else {
-                    this.open();
-                }
+                this.open();
             });
     }
 

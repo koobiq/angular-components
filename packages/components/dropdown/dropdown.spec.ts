@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import {
@@ -25,7 +24,6 @@ import {
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     A,
     B,
@@ -92,7 +90,7 @@ describe('KbqDropdown', () => {
         declarations: any[] = []
     ): ComponentFixture<T> {
         TestBed.configureTestingModule({
-            imports: [KbqDropdownModule, NoopAnimationsModule, component, ...declarations],
+            imports: [KbqDropdownModule, component, ...declarations],
             providers
         }).compileComponents();
 
@@ -548,7 +546,7 @@ describe('KbqDropdown', () => {
         // declares its own provider for KBQ_DROPDOWN_SCROLL_STRATEGY, which shadows
         // TestBed-level providers. TestBed.overrideProvider bypasses that scoping.
         TestBed.configureTestingModule({
-            imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown]
+            imports: [KbqDropdownModule, SimpleDropdown]
         });
         TestBed.overrideProvider(ScrollDispatcher, {
             useFactory: () => ({ scrolled: () => scrolledSubject, register: () => {}, deregister: () => {} })
@@ -756,7 +754,7 @@ describe('KbqDropdown', () => {
             expect(overlayContainerElement.querySelectorAll('.kbq-dropdown__panel').length).toBe(0);
         }));
 
-        it('should wait for the close animation to finish before considering the panel as closed', fakeAsync(() => {
+        it('should consider the panel closed at once, with no exit animation to wait for', fakeAsync(() => {
             const fixture = createComponent(SimpleLazyDropdown);
 
             fixture.detectChanges();
@@ -771,11 +769,6 @@ describe('KbqDropdown', () => {
             expect(trigger.opened).toBe(true);
 
             trigger.close();
-            fixture.detectChanges();
-
-            expect(trigger.opened).toBe(true);
-            tick(500);
-            fixture.detectChanges();
 
             expect(trigger.opened).toBe(false);
         }));
@@ -2294,37 +2287,6 @@ describe('KbqDropdown', () => {
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
         }));
 
-        it('should hide the panel that a sibling trigger takes over from', fakeAsync(() => {
-            const repeaterFixture = createComponent(NestedDropdownRepeater);
-
-            overlay = overlayContainerElement;
-
-            repeaterFixture.detectChanges();
-            repeaterFixture.componentInstance.rootTriggerEl().nativeElement.click();
-            repeaterFixture.detectChanges();
-            tick(500);
-
-            dispatchMouseEvent(overlay.querySelectorAll('.level-one-trigger')[0], 'mouseenter');
-            repeaterFixture.detectChanges();
-            tick(500);
-
-            const dropdown = repeaterFixture.componentInstance.levelOneDropdown();
-            const panel = overlay.querySelectorAll<HTMLElement>(PANEL_SELECTOR)[1];
-            const enter = (element: HTMLElement) =>
-                dropdown.onAnimationStart({ toState: 'enter', element } as unknown as AnimationEvent);
-
-            // Two panels only ever overlap while the outgoing one plays its exit animation, and this
-            // suite runs without animations — so neither the callback that records the open panel nor
-            // the one the sibling's panel arrives on fires here. Both are replayed instead.
-            enter(panel);
-
-            expect(panel.style.visibility).toBe('');
-
-            enter(document.createElement('div'));
-
-            expect(panel.style.visibility).toBe('hidden');
-        }));
-
         it('should close the initial dropdown if the user moves away while animating', fakeAsync(() => {
             const repeaterFixture = createComponent(NestedDropdownRepeater);
 
@@ -3799,7 +3761,7 @@ describe('KbqDropdown', () => {
 describe('KbqDropdown default overrides', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown],
+            imports: [KbqDropdownModule, SimpleDropdown],
             providers: [
                 {
                     provide: KBQ_DROPDOWN_DEFAULT_OPTIONS,
@@ -3824,7 +3786,7 @@ describe('KbqDropdown default overrides', () => {
 describe('KbqDropdown safe area default override', () => {
     it('should honor a `safeArea: true` default without setting the input explicitly', () => {
         TestBed.configureTestingModule({
-            imports: [KbqDropdownModule, NoopAnimationsModule, SimpleDropdown],
+            imports: [KbqDropdownModule, SimpleDropdown],
             providers: [{ provide: KBQ_DROPDOWN_DEFAULT_OPTIONS, useValue: { safeArea: true } }]
         }).compileComponents();
 

@@ -21,7 +21,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DELETE,
     KBQ_LOCALE_SERVICE,
@@ -205,7 +204,6 @@ describe(KbqMultipleFileUploadComponent.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqFileUploadModule,
                 FormsModule,
                 ReactiveFormsModule,
@@ -1074,7 +1072,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqFileUploadModule,
                 FormsModule,
                 ReactiveFormsModule,

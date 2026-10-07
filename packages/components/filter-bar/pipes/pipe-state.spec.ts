@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     KbqFilterBarModule,
     KbqPipe,
@@ -91,7 +90,7 @@ describe('KbqPipeState', () => {
     beforeEach(() => {
         // The pipe components alias themselves to `KbqBasePipe` with `useExisting: this`, which does not
         // resolve here. Every `[kbqPipeState]` injects that alias, so the specs restore it.
-        TestBed.configureTestingModule({ imports: [NoopAnimationsModule, KbqFilterBarModule, TestApp] })
+        TestBed.configureTestingModule({ imports: [KbqFilterBarModule, TestApp] })
             .overrideComponent(KbqPipeSelectComponent, {
                 set: { providers: [{ provide: KbqBasePipe, useExisting: KbqPipeSelectComponent }] }
             })

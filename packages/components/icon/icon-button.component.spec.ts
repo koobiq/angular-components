@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
 import { KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
@@ -9,7 +8,7 @@ import { KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
 describe('KbqIconButton', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, TestApp, SizeTestApp]
+            imports: [TestApp, SizeTestApp]
         }).compileComponents();
     });
 

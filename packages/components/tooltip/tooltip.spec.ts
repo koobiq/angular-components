@@ -5,7 +5,6 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
     ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
@@ -71,7 +70,6 @@ describe('KbqTooltip', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqToolTipModule,
-                NoopAnimationsModule,
                 KbqTooltipTestWrapperComponent,
                 KbqTooltipDisabledComponent,
                 KbqTooltipWithTemplateRefContent,
@@ -365,7 +363,7 @@ describe('KbqTooltip', () => {
         beforeEach(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [KbqToolTipModule, NoopAnimationsModule, KbqTooltipReactiveInputsComponent]
+                imports: [KbqToolTipModule, KbqTooltipReactiveInputsComponent]
             });
             inject([OverlayContainer], (oc: OverlayContainer) => {
                 overlayContainer = oc;
@@ -431,7 +429,7 @@ describe('KbqTooltip', () => {
         beforeEach(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [KbqToolTipModule, NoopAnimationsModule, KbqTooltipSingleInstanceComponent]
+                imports: [KbqToolTipModule, KbqTooltipSingleInstanceComponent]
             });
             inject([OverlayContainer], (oc: OverlayContainer) => {
                 overlayContainer = oc;
@@ -603,7 +601,7 @@ describe('KbqTooltip', () => {
         beforeEach(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [KbqToolTipModule, NoopAnimationsModule, KbqTooltipSingleInstanceComponent],
+                imports: [KbqToolTipModule, KbqTooltipSingleInstanceComponent],
                 providers: [{ provide: KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, useValue: false }]
             });
             inject([OverlayContainer], (oc: OverlayContainer) => {
@@ -1026,7 +1024,7 @@ describe('KbqTooltip', () => {
         beforeEach(() => {
             TestBed.resetTestingModule();
             TestBed.configureTestingModule({
-                imports: [KbqToolTipModule, NoopAnimationsModule, TooltipPair],
+                imports: [KbqToolTipModule, TooltipPair],
                 providers: [{ provide: KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, useValue: 0 }]
             });
             inject([OverlayContainer], (oc: OverlayContainer) => {

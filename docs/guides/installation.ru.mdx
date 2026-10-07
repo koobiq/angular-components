@@ -9,13 +9,11 @@ Angular-пакеты будут установлены той версии, на
 ng add @koobiq/components
 ```
 
-Ручная установка. Сначала установите Angular-пакеты, указав тот же диапазон, который уже стоит
-в `package.json` для `@angular/core`: `@angular/animations` требует точно совпадающий
-`@angular/core`, поэтому несовпадающий диапазон приведёт к ошибке
-`ERESOLVE unable to resolve dependency tree`:
+Ручная установка. Сначала установите `@angular/cdk` той версии, которая уже стоит в `package.json`
+для `@angular/core`:
 
 ```bash
-npm install @angular/animations@^20.3.0 @angular/cdk@^20.2.0
+npm install @angular/cdk@^21.2.0
 ```
 
 Затем установите библиотеку и остальные её зависимости:
@@ -36,20 +34,20 @@ npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/des
 если используете [code-block](/ru/components/code-block), и `@angular/router`, если используете
 [breadcrumbs](/ru/components/breadcrumbs).
 
-### Настройка анимаций
+### Анимации
 
-Компоненты используют анимации Angular, поэтому приложение должно их предоставить:
+Анимации компонентов работают на CSS и не требуют настройки: не нужны ни `@angular/animations`, ни
+`provideAnimations()`. Движение отключается, когда операционная система просит сократить анимацию
+(`prefers-reduced-motion: reduce`). Чтобы отключить его во всем приложении, например в end-to-end
+тестах, предоставьте `KBQ_ANIMATIONS_CONFIG`:
 
 ```typescript
-import { provideAnimations } from '@angular/platform-browser/animations';
+import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 
 bootstrapApplication(AppComponent, {
-    providers: [provideAnimations()]
+    providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
 });
 ```
-
-Без этого провайдера открытие компонента с анимацией — dropdown, select, tooltip, toast,
-datepicker — завершится ошибкой `NG05105: Unexpected synthetic property @state found`.
 
 ### Настройка стилей
 

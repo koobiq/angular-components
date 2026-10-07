@@ -7,8 +7,6 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkPortal } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ChangeDetectorRef } from '@angular/core';
@@ -118,9 +116,11 @@ export class KbqTabBody implements OnInit, OnDestroy {
     constructor();
     readonly afterLeavingCenter: EventEmitter<boolean>;
     readonly animationDuration: i0.InputSignal<string>;
+    protected readonly animationsDisabled: boolean;
     readonly beforeCentering: EventEmitter<boolean>;
     bodyPosition: KbqTabBodyPositionState;
     readonly content: i0.InputSignal<TemplatePortal<any>>;
+    protected readonly cssAnimationDuration: i0.Signal<string>;
     getLayoutDirection(): Direction;
     isCenterPosition(position: KbqTabBodyPositionState | string): boolean;
     // (undocumented)
@@ -128,10 +128,6 @@ export class KbqTabBody implements OnInit, OnDestroy {
     ngOnInit(): void;
     readonly onCentered: i0.OutputEmitterRef<void>;
     readonly onCentering: i0.OutputEmitterRef<number>;
-    // (undocumented)
-    onTranslateTabComplete(e: AnimationEvent_2): void;
-    // (undocumented)
-    onTranslateTabStarted(e: AnimationEvent_2): void;
     origin: number;
     readonly portalHost: i0.Signal<CdkPortalOutlet>;
     set position(position: number);
@@ -399,11 +395,6 @@ export class KbqTabNavPanel {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabNavPanel, never>;
 }
-
-// @public (undocumented)
-export const kbqTabsAnimations: {
-    readonly translateTab: AnimationTriggerMetadata;
-};
 
 // @public
 export interface KbqTabsConfig {

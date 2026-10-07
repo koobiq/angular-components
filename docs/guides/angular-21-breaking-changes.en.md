@@ -24,3 +24,9 @@ The applications and libraries of the workspace are built with the `@angular/bui
 The components no longer depend on zone.js: they render in an application bootstrapped with `provideZonelessChangeDetection()` and keep working with `provideZoneChangeDetection()`. Work that waited for `NgZone.onStable` now runs after the next render. The documentation site, the StackBlitz template and the development applications of the repository are zoneless.
 
 `MockNgZone` is removed from `@koobiq/components/core`: nothing in the library listens to `onStable` any more, so its `simulateZoneExit()` has nothing to flush. The [migration guide](/en/main/migration) describes what a spec uses instead, and the `zoneless-change-detection` schematic reports each use.
+
+### Animations
+
+The components no longer use `@angular/animations`, which Angular deprecated: their motion is CSS — animations and transitions the components wait for themselves, and `animate.enter` / `animate.leave` in their templates. `@angular/animations` is no longer a peer dependency, `ng add` no longer installs it or adds `provideAnimations()`, and none of the applications of the repository depends on it. The motion is off under `prefers-reduced-motion: reduce` and with `KBQ_ANIMATIONS_CONFIG` (`animationsDisabled: true`).
+
+The triggers the components exported and the members that carried an `AnimationEvent` are removed. The [migration guide](/en/main/migration) lists them with their replacements, and the `angular-animations-removal` schematic reports each use.

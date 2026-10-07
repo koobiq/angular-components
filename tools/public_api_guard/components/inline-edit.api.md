@@ -32,6 +32,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly accessibleName: _angular_core.Signal<string>;
     protected readonly anchorFocused: _angular_core.WritableSignal<boolean>;
+    protected readonly animationsDisabled: boolean;
     readonly ariaLabel: _angular_core.InputSignal<string | null>;
     protected cancel(): void;
     readonly canceled: _angular_core.OutputEmitterRef<void>;

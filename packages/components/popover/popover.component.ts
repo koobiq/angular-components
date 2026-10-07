@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import {
     CdkTrapFocus,
     ConfigurableFocusTrapFactory,
@@ -46,8 +45,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     EmptyFocusTrapStrategy,
-    KBQ_OVERLAY_LAYERS,
-    KBQ_WINDOW,
     KbqComponentColors,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,
@@ -61,7 +58,6 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpSizes,
     PopUpTriggers,
-    PopUpVisibility,
     applyPopupMargins,
     kbqInjectA11yLocaleConfiguration,
     kbqRepositionScrollStrategyFactory,
@@ -70,7 +66,6 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { NEVER, merge } from 'rxjs';
-import { kbqPopoverAnimations } from './popover-animations';
 
 export const defaultOffsetYWithArrow = 8;
 
@@ -117,19 +112,13 @@ export const KBQ_POPOVER_FOCUS_TRAP_PROVIDERS: Provider[] = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        '(keydown.esc)': 'onEscape()',
-        '[@.disabled]': 'reducedMotion'
+        '(keydown.esc)': 'onEscape()'
     },
-    animations: [kbqPopoverAnimations.popoverState],
     preserveWhitespaces: false
 })
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
-
-    /** Whether the opening/closing animation must be skipped because the user asked for reduced motion. */
-    protected readonly reducedMotion: boolean =
-        inject(KBQ_WINDOW).matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
     /** Debounce shared by the mutation observer and the scroll-shadow container (both expose `debounce`). */
     protected readonly contentObserverDebounce = contentObserverDebounce;
@@ -247,12 +236,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         return top || bottom;
     }
 
-    override animationDone(event: AnimationEvent): void {
-        super.animationDone(event);
-
-        if (event.toState === PopUpVisibility.Visible) {
-            this.scrollbarViewport()?.flashScrollIndicators();
-        }
+    protected override afterShowAnimation(): void {
+        this.scrollbarViewport()?.flashScrollIndicators();
     }
 
     protected readonly componentColors = KbqComponentColors;

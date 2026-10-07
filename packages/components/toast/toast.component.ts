@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -7,18 +6,24 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
+    Injector,
     OnDestroy,
     TemplateRef,
     ViewEncapsulation,
-    inject
+    inject,
+    signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, KbqReadStateDirective, kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
+import {
+    KbqReadStateDirective,
+    kbqAfterAnimations,
+    kbqAnimationsDisabled,
+    kbqInjectA11yLocaleConfiguration
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { BehaviorSubject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { kbqToastAnimations } from './toast-animations';
 import { KBQ_TOAST_STACK, KbqToastData, KbqToastStyle } from './toast.type';
 
 @Directive({
@@ -63,16 +68,14 @@ const assertiveStyles: string[] = [KbqToastStyle.Warning, KbqToastStyle.Error];
         // wrapper has to be in the accessibility tree before its content changes.
         '[attr.role]': 'role',
         'aria-atomic': 'true',
-        '[@state]': 'animationState',
-        '[@.disabled]': 'reducedMotion',
-        '(@state.start)': 'onAnimation($event)',
-        '(@state.done)': 'onAnimation($event)',
+        '[class.kbq-toast_leaving]': 'leavingHeight() !== null',
+        '[style.--kbq-toast-leaving-height.px]': 'leavingHeight()',
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)',
         '(keydown.esc)': 'close()'
     },
-    hostDirectives: [KbqReadStateDirective],
-    animations: [kbqToastAnimations.toastState]
+    hostDirectives: [KbqReadStateDirective]
 })
 export class KbqToastComponent implements OnDestroy {
     readonly data = inject(KbqToastData);
@@ -80,18 +83,16 @@ export class KbqToastComponent implements OnDestroy {
     private readonly stack = inject(KBQ_TOAST_STACK);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly focusMonitor = inject(FocusMonitor);
-    private readonly window = inject(KBQ_WINDOW);
+    private readonly injector = inject(Injector);
 
     protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
-    /**
-     * Animations are the only motion a toast carries, so disabling them honors the user's system setting.
-     * `matchMedia` is absent outside a real browser (server-side rendering, jsdom), where nothing animates anyway.
-     */
-    protected readonly reducedMotion = this.window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    /** Whether the toast appears and leaves without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
-    animationState = 'void';
+    /** Height the exit animation collapses from, set once the toast leaves. */
+    protected readonly leavingHeight = signal<number | null>(null);
 
     readonly hovered = new BehaviorSubject<boolean>(false);
     readonly focused = new BehaviorSubject<boolean>(false);
@@ -125,8 +126,6 @@ export class KbqToastComponent implements OnDestroy {
     }
 
     constructor() {
-        this.animationState = 'visible';
-
         this.runFocusMonitor(inject(DestroyRef));
 
         this.hovered.pipe(takeUntilDestroyed()).subscribe((hovered) => this.stack.setHovered(this.id, hovered));
@@ -150,8 +149,15 @@ export class KbqToastComponent implements OnDestroy {
         this.stack.hide(this.id);
     }
 
-    onAnimation($event: AnimationEvent) {
-        this.stack.animation.next($event);
+    /**
+     * Plays the exit animation of a toast taken off the stack, then calls `done`.
+     * @docs-private
+     */
+    leave(done: () => void): void {
+        // `auto` does not animate, so the collapse starts from the measured height.
+        this.leavingHeight.set(this.elementRef.nativeElement.offsetHeight);
+
+        kbqAfterAnimations(() => this.elementRef.nativeElement, done, this.injector);
     }
 
     private markAsRead(): void {
