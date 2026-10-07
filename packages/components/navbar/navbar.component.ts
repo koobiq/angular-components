@@ -1,6 +1,7 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Platform } from '@angular/cdk/platform';
 import {
+    AfterContentChecked,
     AfterContentInit,
     afterNextRender,
     AfterViewInit,
@@ -8,7 +9,6 @@ import {
     ChangeDetectorRef,
     Component,
     contentChildren,
-    ContentChildren,
     DestroyRef,
     Directive,
     effect,
@@ -28,7 +28,7 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KBQ_WINDOW,
-    KbqOverlayLayerExclude,
+    kbqQueryListFrom,
     LEFT_ARROW,
     RIGHT_ARROW,
     TAB
@@ -44,7 +44,7 @@ import {
 import { getOuterWidth } from './outer-width';
 
 @Directive()
-export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqFocusableComponent implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
@@ -54,9 +54,16 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
+    private readonly focusableItemsQuery = contentChildren<KbqNavbarFocusableItem>(
+        forwardRef(() => KbqNavbarFocusableItem),
+        { descendants: true }
+    );
+    private readonly focusableItemsList = kbqQueryListFrom(this.focusableItemsQuery);
+
     /** @docs-private */
-    @ContentChildren(forwardRef(() => KbqNavbarFocusableItem), { descendants: true })
-    focusableItems: QueryList<KbqNavbarFocusableItem>;
+    get focusableItems(): QueryList<KbqNavbarFocusableItem> {
+        return this.focusableItemsList();
+    }
 
     /** @docs-private */
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
@@ -123,6 +130,11 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
      * origin to pass on — the key manager would move its active item while nothing moved in the DOM.
      * @docs-private
      */
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.focusableItemsList();
+    }
+
     ngAfterViewInit(): void {
         this.focusMonitor
             .monitor(this.elementRef, true)

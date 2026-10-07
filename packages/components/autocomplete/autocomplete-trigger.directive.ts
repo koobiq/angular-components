@@ -184,7 +184,8 @@ export class KbqAutocompleteTrigger
     readonly optionSelections: Observable<KbqOptionSelectionChange> = defer(() => {
         const autocomplete = this.autocomplete();
 
-        if (autocomplete && autocomplete.options) {
+        // The key manager is created over the options in `ngAfterContentInit`, before which they are not settled.
+        if (autocomplete?.keyManager) {
             return merge(...autocomplete.options.map((option) => option.onSelectionChange));
         }
 

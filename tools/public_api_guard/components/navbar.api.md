@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -49,7 +50,7 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION: InjectionToken<KbqNavbarLocaleCo
 export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION: KbqNavbarLocaleConfiguration;
 
 // @public (undocumented)
-export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqFocusableComponent implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     readonly ariaLabel: i0.InputSignal<string | null>;
     blur(): void;
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -57,11 +58,13 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     protected dropSubscriptions(): void;
     protected readonly elementRef: ElementRef<HTMLElement>;
     focus(): void;
-    focusableItems: QueryList<KbqNavbarFocusableItem>;
+    get focusableItems(): QueryList<KbqNavbarFocusableItem>;
     protected readonly focusMonitor: FocusMonitor;
     getNativeElement(): HTMLElement;
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
+    ngAfterContentChecked(): void;
     ngAfterContentInit(): void;
+    // (undocumented)
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
     get optionBlurChanges(): Observable<KbqNavbarFocusableItemEvent>;
@@ -69,7 +72,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     protected resetOptions(): void;
     readonly tabIndex: i0.ModelSignal<number>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusableComponent, never, never, { "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, { "tabIndex": "tabIndexChange"; }, ["focusableItems"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFocusableComponent, never, never, { "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, { "tabIndex": "tabIndexChange"; }, ["focusableItemsQuery"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusableComponent, never>;
 }

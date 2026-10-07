@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
@@ -64,7 +65,7 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
 }>>;
 
 // @public (undocumented)
-export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState, KbqSiblingPopup {
+export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked, AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState, KbqSiblingPopup {
     constructor();
     readonly ariaLabel: _angular_core.InputSignal<string | null>;
     readonly ariaLabelledby: _angular_core.InputSignal<string | null>;
@@ -130,6 +131,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get multiSelection(): boolean;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -209,7 +212,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get tabIndex(): number | null;
     readonly tabIndexInput: _angular_core.InputSignal<number | null>;
     // (undocumented)
-    protected tags: QueryList<KbqTag>;
+    protected get tags(): QueryList<KbqTag>;
     // (undocumented)
     toggle(): void;
     // (undocumented)

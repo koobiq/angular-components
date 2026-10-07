@@ -193,8 +193,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     resetStyles(): void;
     setActiveStyles(): void;
     setInactiveStyles(): void;
-    // (undocumented)
-    textElement: ElementRef;
+    get textElement(): ElementRef;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon", "itemAction"], ["[kbq-icon]", "*", "[kbqDropdownItemAction]"], true, never>;
     // (undocumented)

@@ -10,9 +10,9 @@
                         [style.pointer-events]="$count === 1 ? 'none' : null"
                         (click)="onSelectedTabChange($index)"
                     >
-                        @if (tabLinkTemplate) {
+                        @if (tabLinkTemplate(); as linkTemplate) {
                             <ng-container
-                                *ngTemplateOutlet="tabLinkTemplate; context: { $implicit: file, fallbackFileName }"
+                                *ngTemplateOutlet="linkTemplate; context: { $implicit: file, fallbackFileName }"
                             />
                         } @else {
                             {{ file.filename || fallbackFileName }}

@@ -11,7 +11,7 @@ import {
     ChangeDetectorRef,
     Component,
     computed,
-    ContentChild,
+    contentChild,
     DestroyRef,
     Directive,
     effect,
@@ -171,8 +171,10 @@ export class KbqCodeBlock implements AfterViewInit {
     protected readonly contentExceedsMaxHeight = signal(false);
 
     /** @docs-private */
-    @ContentChild(KbqCodeBlockTabLinkContent, { read: TemplateRef })
-    protected readonly tabLinkTemplate: TemplateRef<KbqTabLinkTemplateContext>;
+    protected readonly tabLinkTemplate = contentChild<
+        KbqCodeBlockTabLinkContent,
+        TemplateRef<KbqTabLinkTemplateContext>
+    >(KbqCodeBlockTabLinkContent, { read: TemplateRef });
 
     /** Whether to display line numbers. */
     readonly lineNumbers = input(false, { transform: booleanAttribute });
