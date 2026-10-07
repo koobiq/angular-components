@@ -606,6 +606,8 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     readonly navigationChange: _angular_core.OutputEmitterRef<KbqTreeNavigationChange<KbqTreeOption>>;
     // (undocumented)
+    ngAfterContentChecked(): void;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -677,14 +679,14 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     set typeAhead(value: boolean);
     readonly typeAheadInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
-    unorderedOptions: QueryList<KbqTreeOption>;
+    get unorderedOptions(): QueryList<KbqTreeOption>;
     updateScrollSize(): void;
     // (undocumented)
     userTabIndex: number | null;
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "autoSelectInput": { "alias": "autoSelect"; "required": false; "isSignal": true; }; "multipleInput": { "alias": "multiple"; "required": false; "isSignal": true; }; "noUnselectLastInput": { "alias": "noUnselectLast"; "required": false; "isSignal": true; }; "typeAheadInput": { "alias": "typeAhead"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllInput": { "alias": "selectAll"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "selectAllHandlerInput": { "alias": "selectAllHandler"; "required": false; "isSignal": true; }; }, { "navigationChange": "navigationChange"; "selectionChangeOutput": "selectionChange"; "selectAllChange": "selectAllChange"; "onSelectAll": "onSelectAll"; "copyChangeOutput": "copyChange"; "onCopyOutput": "onCopy"; }, ["unorderedOptions"], never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }, { directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "autoSelectInput": { "alias": "autoSelect"; "required": false; "isSignal": true; }; "multipleInput": { "alias": "multiple"; "required": false; "isSignal": true; }; "noUnselectLastInput": { "alias": "noUnselectLast"; "required": false; "isSignal": true; }; "typeAheadInput": { "alias": "typeAhead"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllInput": { "alias": "selectAll"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "selectAllHandlerInput": { "alias": "selectAllHandler"; "required": false; "isSignal": true; }; }, { "navigationChange": "navigationChange"; "selectionChangeOutput": "selectionChange"; "selectAllChange": "selectAllChange"; "onSelectAll": "onSelectAll"; "copyChangeOutput": "copyChange"; "onCopyOutput": "onCopy"; }, ["unorderedOptionsQuery"], never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }, { directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelection, never>;
 }

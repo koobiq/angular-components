@@ -1,14 +1,15 @@
 import {
+    AfterContentChecked,
     AfterContentInit,
     ChangeDetectionStrategy,
     Component,
-    ContentChildren,
     ElementRef,
     QueryList,
     ViewEncapsulation,
+    contentChildren,
     inject
 } from '@angular/core';
-import { KbqLine, KbqLineSetter } from '@koobiq/components/core';
+import { KbqLine, KbqLineSetter, kbqQueryListFrom } from '@koobiq/components/core';
 
 /**
  * A plain, non-selectable list container.
@@ -40,13 +41,23 @@ export class KbqList {}
     },
     preserveWhitespaces: false
 })
-export class KbqListItem implements AfterContentInit {
+export class KbqListItem implements AfterContentChecked, AfterContentInit {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    @ContentChildren(KbqLine) lines: QueryList<KbqLine>;
+    private readonly linesQuery = contentChildren(KbqLine);
+    private readonly linesList = kbqQueryListFrom(this.linesQuery);
+
+    get lines(): QueryList<KbqLine> {
+        return this.linesList();
+    }
 
     ngAfterContentInit(): void {
         new KbqLineSetter(this.lines, this.elementRef);
+    }
+
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.linesList();
     }
 
     getHostElement(): HTMLElement {

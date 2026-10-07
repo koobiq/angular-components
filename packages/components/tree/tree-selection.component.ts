@@ -10,7 +10,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChildren,
+    contentChildren,
     effect,
     ElementRef,
     EventEmitter,
@@ -50,6 +50,7 @@ import {
     KbqMultipleInput,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
+    kbqQueryListFrom,
     KbqSelectAllAdapter,
     KbqStateSaving,
     LEFT_ARROW,
@@ -266,7 +267,12 @@ export class KbqTreeSelection
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
     readonly selectAllOption = viewChild(KbqTreeOption);
 
-    @ContentChildren(KbqTreeOption) unorderedOptions: QueryList<KbqTreeOption>;
+    private readonly unorderedOptionsQuery = contentChildren(KbqTreeOption);
+    private readonly unorderedOptionsList = kbqQueryListFrom(this.unorderedOptionsQuery);
+
+    get unorderedOptions(): QueryList<KbqTreeOption> {
+        return this.unorderedOptionsList();
+    }
 
     /** Controls the expanded state and holds the data nodes of the tree. A flat tree is the only kind it renders. */
     override get treeControl(): FlatTreeControl<any> {
@@ -643,7 +649,8 @@ export class KbqTreeSelection
             this.selectAllOption();
 
             if (this.renderedOptions) {
-                this.updateRenderedOptions();
+                // Untracked: the options are read too, and their changes come through `unorderedOptions.changes`.
+                untracked(() => this.updateRenderedOptions());
             }
         });
     }
@@ -829,6 +836,13 @@ export class KbqTreeSelection
         this.selectionModel = selectionModel;
 
         this.bindSelectionModel();
+    }
+
+    override ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.unorderedOptionsList();
+
+        super.ngAfterContentChecked();
     }
 
     ngAfterViewInit(): void {

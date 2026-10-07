@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
@@ -85,7 +86,7 @@ export class KbqRadioChange {
 }
 
 // @public
-export class KbqRadioGroup extends KbqColorDirective implements OnChanges, AfterContentInit, ControlValueAccessor {
+export class KbqRadioGroup extends KbqColorDirective implements AfterContentChecked, OnChanges, AfterContentInit, ControlValueAccessor {
     // (undocumented)
     readonly big: _angular_core.InputSignal<boolean>;
     readonly change: _angular_core.OutputEmitterRef<KbqRadioChange>;
@@ -101,11 +102,13 @@ export class KbqRadioGroup extends KbqColorDirective implements OnChanges, After
     // (undocumented)
     markRadiosForCheck(): void;
     readonly name: _angular_core.InputSignal<string>;
+    ngAfterContentChecked(): void;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     onTouched: () => any;
-    radios: QueryList<KbqRadioButton>;
+    get radios(): QueryList<KbqRadioButton>;
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: any): void;
     readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -119,7 +122,7 @@ export class KbqRadioGroup extends KbqColorDirective implements OnChanges, After
     readonly valueInput: _angular_core.InputSignal<{} | null | undefined>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqRadioGroup, "kbq-radio-group", ["kbqRadioGroup"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "selectedInput": { "alias": "selected"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; }, { "change": "change"; }, ["radios"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqRadioGroup, "kbq-radio-group", ["kbqRadioGroup"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "selectedInput": { "alias": "selected"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; }, { "change": "change"; }, ["radiosQuery"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqRadioGroup, never>;
 }

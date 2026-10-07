@@ -5,6 +5,7 @@ import { CDK_DRAG_HANDLE, CdkDrag, CdkDragDrop, CdkDragPreview, CdkDropList } fr
 import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
+    AfterContentChecked,
     AfterContentInit,
     afterNextRender,
     AfterViewInit,
@@ -15,7 +16,6 @@ import {
     computed,
     contentChild,
     contentChildren,
-    ContentChildren,
     DestroyRef,
     Directive,
     effect,
@@ -29,7 +29,6 @@ import {
     NgZone,
     OnDestroy,
     OnInit,
-    Output,
     output,
     Provider,
     QueryList,
@@ -38,7 +37,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     DOWN_ARROW,
@@ -66,6 +65,7 @@ import {
     KbqOptionActionComponent,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
+    kbqQueryListFrom,
     KbqSelectAllAdapter,
     KbqTitleTextRef,
     LEFT_ARROW,
@@ -238,7 +238,9 @@ export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<KbqListSelection>, '
     exportAs: 'kbqListSelection',
     preserveWhitespaces: false
 })
-export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class KbqListSelection<T = any>
+    implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor
+{
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
     private clipboard = inject(Clipboard, { optional: true });
@@ -246,17 +248,30 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
     keyManager: FocusKeyManager<KbqListOption<T>>;
 
-    @ContentChildren(forwardRef(() => KbqListOption), { descendants: true }) options: QueryList<KbqListOption<T>>;
+    private readonly optionsQuery = contentChildren<KbqListOption<T>>(
+        forwardRef(() => KbqListOption),
+        { descendants: true }
+    );
+    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
+
+    get options(): QueryList<KbqListOption<T>> {
+        return this.optionsList();
+    }
+
+    /** Whether `ngAfterContentInit` has run. The options are not settled before that, so nothing reads them. */
+    private contentReady = false;
 
     readonly onSelectAll = output<KbqListSelectAllEvent<KbqListOption<T>>>();
 
     /**
-     * Kept as a decorator `@Output()`/`EventEmitter` on purpose: `copyActiveOption` branches on
-     * `onCopy.observed` to decide between the consumer handler and the built-in clipboard copy.
-     * `output()` exposes no subscriber introspection, so migrating it would silently run both
-     * paths for every existing `(onCopy)` consumer. Mirrors `KbqTreeSelection.onCopy`.
+     * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in clipboard
+     * copy, so the event stays an `EventEmitter`: the decision is made by reading `observed`, which
+     * `OutputEmitterRef` does not have. A template listener subscribes to it through the output below.
      */
-    @Output() readonly onCopy = new EventEmitter<KbqListCopyEvent<KbqListOption<T>>>();
+    readonly onCopy = new EventEmitter<KbqListCopyEvent<KbqListOption<T>>>();
+
+    /** @docs-private */
+    readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });
 
     /** @docs-private */
     readonly autoSelectInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -590,7 +605,8 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         effect(() => {
             this.selectAllOption();
 
-            this.syncNavigableOptions();
+            // Untracked: the options are read here too, and their changes are handled by `options.changes`.
+            untracked(() => this.syncNavigableOptions());
         });
 
         this.setupDropListInitialProperties();
@@ -781,6 +797,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     }
 
     ngAfterContentInit(): void {
+        this.contentReady = true;
         this.keyManager = new FocusKeyManager<KbqListOption<T>>(this.navigableOptions)
             .withTypeAhead()
             .withVerticalOrientation(!this.horizontal())
@@ -833,6 +850,11 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
                 .pipe(auditTime(RESIZE_AUDIT_TIME), takeUntilDestroyed(this.destroyRef))
                 .subscribe(() => this.updateScrollSize());
         });
+    }
+
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.optionsList();
     }
 
     ngAfterViewInit(): void {
@@ -986,7 +1008,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
         // `_value` always matches its declared type and stays safe to iterate over.
         this._value = values == null ? null : Array.isArray(values) ? values : [values];
 
-        if (this.options) {
+        if (this.contentReady) {
             this.setOptionsFromValues(this._value ?? []);
         }
     }
@@ -1143,7 +1165,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
 
     // Reports a value change to the ControlValueAccessor
     reportValueChange(): void {
-        if (this.options) {
+        if (this.contentReady) {
             const value = this.getSelectedOptionValues();
 
             this.onChange(value);
@@ -1174,7 +1196,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
             // Once a form control has written, an empty value applies as an empty selection instead of
             // being skipped, so that swapping the comparator also clears what the previous one matched.
             // Without a control the list has no model to speak for, and `[selected]` options stand.
-            if (this.options && (this._value || this.hasWrittenValue)) {
+            if (this.contentReady && (this._value || this.hasWrittenValue)) {
                 this.setOptionsFromValues(this._value ?? []);
             }
         });
