@@ -1,4 +1,4 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, Input, input, ViewEncapsulation } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
 
 let uniqueOptgroupIdCounter = 0;
 
@@ -16,27 +16,15 @@ let uniqueOptgroupIdCounter = 0;
         class: 'kbq-optgroup',
         role: 'group',
         '[attr.aria-labelledby]': 'labelId',
-        '[class.kbq-disabled]': 'disabled'
+        '[class.kbq-disabled]': 'disabled()'
     },
     exportAs: 'kbqOptgroup'
 })
 export class KbqOptgroup {
     readonly label = input<string>(undefined!);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
-    private _disabled: boolean = false;
+    /** Whether the group, and every option in it, is disabled. */
+    readonly disabled = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /** Unique id for the underlying label. */
     labelId: string = `kbq-optgroup-label-${uniqueOptgroupIdCounter++}`;

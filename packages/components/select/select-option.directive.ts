@@ -34,7 +34,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     get textElement(): HTMLElement {
-        return this.option.textElement.nativeElement;
+        return this.option.textElement!.nativeElement;
     }
 
     get isOverflown(): boolean {

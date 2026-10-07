@@ -374,6 +374,20 @@ ng g @koobiq/components:color-signals --project "<your project>"
 ng g @koobiq/components:core-mixins-removal --project "<your project>"
 ```
 
+#### Опции
+
+`KbqOption`, `KbqOptgroup`, действие опции и `KbqTimezoneOption` хранят состояние в сигналах `input()`. Состояние опции по-прежнему читается как свойство — `event.option.value`, `select.selected.disabled`, `option.viewValue` в шаблоне `kbqSelectTagContent`, — поэтому такие чтения не меняются.
+
+- **Программной записи больше нет**: `option.value`, `viewValue`, `disabled`, `showCheckbox` и `KbqTimezoneOption.timezone` задаются привязкой в шаблоне.
+- **`KbqOptgroup.disabled` и `KbqOptionActionComponent.disabled` стали сигналами**: `group.disabled()`.
+- **`KbqOption.stateChanges` больше не срабатывает на `disabled`**, а `textElement` типизирован как `ElementRef | undefined`.
+
+Схематик `option-signals` переписывает чтения у группы и действия и сообщает о записях:
+
+```bash
+ng g @koobiq/components:option-signals --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

@@ -860,7 +860,7 @@ class BasicSelectOnPushPreselected {
                 [selectAllToggle]="selectAllToggle"
             >
                 @for (food of foods; track food) {
-                    <kbq-option [value]="food.value">
+                    <kbq-option [value]="food.value" [disabled]="!!food.disabled">
                         {{ food.viewValue }}
                     </kbq-option>
                 }
@@ -947,7 +947,7 @@ class MultiSelectWithNonSelectableOption {
                 [sortComparator]="sortComparator"
             >
                 @for (food of foods; track food) {
-                    <kbq-option [value]="food.value">
+                    <kbq-option [value]="food.value" [disabled]="!!food.disabled">
                         {{ food.viewValue }}
                     </kbq-option>
                 }
@@ -6216,7 +6216,7 @@ describe('KbqSelect', () => {
             testInstance.control.setValue(['tacos-2']);
             fixture.detectChanges();
 
-            testInstance.options()[2].disabled = true;
+            testInstance.foods[2].disabled = true;
             fixture.detectChanges();
 
             trigger.click();
@@ -6320,11 +6320,12 @@ describe('KbqSelect', () => {
 
         it('should skip disabled options when using ctrl + a', () => {
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
-            const options = fixture.componentInstance.options();
 
             for (let i = 0; i < 3; i++) {
-                options[i].disabled = true;
+                fixture.componentInstance.foods[i].disabled = true;
             }
+
+            fixture.detectChanges();
 
             expect(testInstance.control.value).toBeFalsy();
 

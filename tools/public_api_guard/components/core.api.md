@@ -3648,16 +3648,12 @@ export interface KbqNumericPipe {
 
 // @public
 export class KbqOptgroup {
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     readonly label: i0.InputSignal<string>;
     labelId: string;
     // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroup, never>;
 }
@@ -3667,9 +3663,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     get active(): boolean;
     // (undocumented)
     deselect(emitEvent?: boolean): void;
-    // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    readonly disabledInput: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     focus(): void;
     protected getAriaSelected(): boolean | null;
     getHeight(): number;
@@ -3700,22 +3695,22 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     readonly selectable: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get selected(): boolean;
+    readonly selectionChangeOutput: i0.OutputRef<KbqOptionSelectionChange<KbqOption>>;
     selectViaInteraction(): void;
     setActiveStyles(): void;
     setInactiveStyles(): void;
-    // (undocumented)
     get showCheckbox(): boolean;
-    set showCheckbox(value: boolean);
+    readonly showCheckboxInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly stateChanges: Subject<void>;
-    // (undocumented)
-    textElement: ElementRef;
+    get textElement(): ElementRef<HTMLElement> | undefined;
     // (undocumented)
     readonly userSelect: i0.InputSignalWithTransform<boolean, unknown>;
-    value: any;
+    get value(): any;
+    readonly valueInput: i0.InputSignal<any>;
     get viewValue(): string;
-    set viewValue(value: string);
+    readonly viewValueInput: i0.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "userSelect": { "alias": "userSelect"; "required": false; "isSignal": true; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "viewValue": { "alias": "viewValue"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "userSelect": { "alias": "userSelect"; "required": false; "isSignal": true; }; "showCheckboxInput": { "alias": "showCheckbox"; "required": false; "isSignal": true; }; "viewValueInput": { "alias": "viewValue"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "selectionChangeOutput": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, never>;
 }
@@ -3725,15 +3720,11 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
     readonly ariaLabel: i0.InputSignal<string>;
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     // (undocumented)
     hasFocus: boolean;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -3744,7 +3735,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onKeyDown($event: any): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
@@ -3777,14 +3768,13 @@ export abstract class KbqOptionBase {
     abstract deselect(): void;
     // (undocumented)
     abstract get disabled(): boolean;
-    abstract set disabled(value: any);
     protected emitSelectionChangeEvent(isUserInput?: boolean): void;
     // (undocumented)
     abstract readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<any>>;
     // (undocumented)
     abstract select(): void;
     // (undocumented)
-    value: any;
+    abstract get value(): any;
     // (undocumented)
     abstract get viewValue(): string;
 }
