@@ -18,11 +18,13 @@ import {
     EventEmitter,
     inject,
     Injector,
-    Input,
+    input,
     NgZone,
     numberAttribute,
+    OnChanges,
     OnDestroy,
-    QueryList
+    QueryList,
+    SimpleChanges
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -118,11 +120,28 @@ export type KbqPaginatedTabHeaderItem = FocusableOption & { elementRef: ElementR
  * @docs-private
  */
 @Directive()
-export abstract class KbqPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
+export abstract class KbqPaginatedTabHeader
+    implements OnChanges, AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy
+{
+    /** @docs-private */
+    readonly selectedIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'selectedIndex',
+        transform: numberAttribute
+    });
+
+    /** @docs-private */
+    readonly disablePaginationInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disablePagination',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly verticalInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'vertical',
+        transform: booleanAttribute
+    });
+
     /** The index of the active tab. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get selectedIndex(): number {
         return this._selectedIndex;
     }
@@ -156,13 +175,13 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         this.keyManager.setActiveItem(value);
     }
 
-    abstract readonly items: QueryList<KbqPaginatedTabHeaderItem>;
-    abstract readonly tabListContainer: ElementRef<HTMLElement>;
+    abstract get items(): QueryList<KbqPaginatedTabHeaderItem>;
+    abstract get tabListContainer(): ElementRef<HTMLElement>;
     /** The strip's scroll viewport — the same element as {@link tabListContainer}. */
-    protected abstract readonly scrollbarViewport: KbqScrollbarViewport;
-    abstract readonly tabList: ElementRef<HTMLElement>;
-    abstract readonly nextPaginator: ElementRef<HTMLElement>;
-    abstract readonly previousPaginator: ElementRef<HTMLElement>;
+    protected abstract get scrollbarViewport(): KbqScrollbarViewport;
+    abstract get tabList(): ElementRef<HTMLElement>;
+    abstract get nextPaginator(): ElementRef<HTMLElement>;
+    abstract get previousPaginator(): ElementRef<HTMLElement>;
 
     /** Event emitted when the option is selected. */
     readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
@@ -186,23 +205,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * A vertical header never paginates, so `vertical` forces this on without overwriting the value
      * the consumer set — turning `vertical` back off restores it.
      */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute })
-    get disablePagination(): boolean {
-        return this._disablePagination || this._vertical;
-    }
-
-    set disablePagination(value: boolean) {
-        this._disablePagination = value;
-    }
-
-    private _disablePagination = false;
+    disablePagination: boolean = false;
 
     /** Whether the tabs should be displayed vertically. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     set vertical(value: boolean) {
         this._vertical = value;
     }
@@ -339,6 +344,28 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
                     }
                 });
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['selectedIndexInput']) {
+            const selectedIndex = this.selectedIndexInput();
+
+            if (selectedIndex !== undefined) this.selectedIndex = selectedIndex;
+        }
+
+        // Before `vertical`, which turns pagination off.
+        if (changes['disablePaginationInput']) {
+            const disablePagination = this.disablePaginationInput();
+
+            if (disablePagination !== undefined) this.disablePagination = disablePagination;
+        }
+
+        if (changes['verticalInput']) {
+            const vertical = this.verticalInput();
+
+            if (vertical !== undefined) this.vertical = vertical;
+        }
     }
 
     /** Called when the user has selected an item via the keyboard. */
