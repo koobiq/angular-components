@@ -45,7 +45,16 @@ A dialog may open from a user action. The system can also block the user with a 
 
 The dialog closes on a left mouse button click only: the right and middle buttons open the browser's context menu or trigger its own actions and leave the window alone. The [side panel](/en/components/sidepanel) behaves the same way.
 
-All of these close the dialog the same way whether it was opened with `KbqModalService` or declared as `<kbq-modal [(kbqVisible)]>`. `kbqOnOk` and `kbqOnCancel` run first: bound as an output, `(kbqOnCancel)`, they are a notification and the dialog closes; passed as a function that returns `false` (or a promise of `false`), they keep it open.
+All of these close the dialog the same way whether it was opened with `KbqModalService` or declared as `<kbq-modal [(kbqVisible)]>`, and each runs the OK or the Cancel flow first.
+
+Each flow has an input and an output, and you bind one or the other:
+
+| Member                              | What it does                                                                                          |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `[kbqOkClick]` / `[kbqCancelClick]` | Decides. Returning `false` — or a promise of `false` — keeps the dialog open; anything else closes it |
+| `(kbqOnOk)` / `(kbqOnCancel)`       | Notifies. The dialog closes either way                                                                |
+
+Binding both on the same dialog does not combine them: the handler decides the close, so the event is never emitted. Development mode reports it.
 
 Do not close a modal window automatically by timeout, as the user may not have had time to read the information inside.
 

@@ -80,10 +80,6 @@ export interface IModalButtonOptions<T = any> {
 // @public (undocumented)
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
     injector?: Injector;
-    // (undocumented)
-    kbqOnCancel?: OnClickCallback<T>;
-    // (undocumented)
-    kbqOnOk?: OnClickCallback<T>;
 }
 
 // @public
@@ -183,6 +179,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     kbqAutoFocus: KbqModalAutoFocus;
     readonly kbqBeforeClose: EventEmitter<R | undefined>;
     kbqBodyStyle: object;
+    kbqCancelClick?: OnClickCallback<T>;
     kbqCancelLoading: boolean;
     kbqCancelText: string;
     kbqCaption: string | TemplateRef<{}>;
@@ -197,11 +194,12 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     kbqMaskClosable: boolean;
     kbqMaskStyle: object;
     kbqModalType: ModalType;
+    kbqOkClick?: OnClickCallback<T>;
     kbqOkLoading: boolean;
     kbqOkText: string;
     kbqOkType: KbqButtonColor;
-    readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T>;
-    readonly kbqOnOk: EventEmitter<T> | OnClickCallback<T>;
+    readonly kbqOnCancel: EventEmitter<T>;
+    readonly kbqOnOk: EventEmitter<T>;
     kbqRestoreFocus: boolean;
     kbqSize: ModalSize;
     kbqStyle: object;
@@ -257,7 +255,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     triggerOk(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; }; "kbqContent": { "alias": "kbqContent"; "required": false; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; }; "kbqSize": { "alias": "kbqSize"; "required": false; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; }; "kbqCaption": { "alias": "kbqCaption"; "required": false; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; }; "kbqAutoFocus": { "alias": "kbqAutoFocus"; "required": false; }; "kbqAriaLabel": { "alias": "kbqAriaLabel"; "required": false; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; }; "kbqMask": { "alias": "kbqMask"; "required": false; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; }; "kbqOnOk": { "alias": "kbqOnOk"; "required": false; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; }; "kbqOnCancel": { "alias": "kbqOnCancel"; "required": false; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; }; }, { "kbqVisibleChange": "kbqVisibleChange"; "kbqAfterOpen": "kbqAfterOpen"; "kbqAfterClose": "kbqAfterClose"; "kbqBeforeClose": "kbqBeforeClose"; "kbqOnOk": "kbqOnOk"; "kbqOnCancel": "kbqOnCancel"; }, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; }; "kbqContent": { "alias": "kbqContent"; "required": false; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; }; "kbqSize": { "alias": "kbqSize"; "required": false; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; }; "kbqCaption": { "alias": "kbqCaption"; "required": false; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; }; "kbqAutoFocus": { "alias": "kbqAutoFocus"; "required": false; }; "kbqAriaLabel": { "alias": "kbqAriaLabel"; "required": false; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; }; "kbqMask": { "alias": "kbqMask"; "required": false; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; }; "kbqOkClick": { "alias": "kbqOkClick"; "required": false; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; }; "kbqCancelClick": { "alias": "kbqCancelClick"; "required": false; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; }; }, { "kbqVisibleChange": "kbqVisibleChange"; "kbqAfterOpen": "kbqAfterOpen"; "kbqAfterClose": "kbqAfterClose"; "kbqBeforeClose": "kbqBeforeClose"; "kbqOnOk": "kbqOnOk"; "kbqOnCancel": "kbqOnCancel"; }, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalComponent<any, any>, never>;
 }
@@ -309,7 +307,6 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract markForCheck(): any;
     // (undocumented)
     abstract open(): void;
-    // (undocumented)
     abstract triggerCancel(): void;
     abstract triggerOk(): void;
 }
@@ -368,6 +365,7 @@ export interface ModalOptions<C = any, R = any> {
     kbqAriaLabel?: string;
     kbqAutoFocus?: KbqModalAutoFocus;
     kbqBodyStyle?: object;
+    kbqCancelClick?: OnClickCallback<C>;
     kbqCancelLoading?: boolean;
     kbqCancelText?: string;
     kbqCaption?: string | TemplateRef<{}>;
@@ -382,11 +380,12 @@ export interface ModalOptions<C = any, R = any> {
     kbqMaskClosable?: boolean;
     kbqMaskStyle?: object;
     kbqModalType?: ModalType;
+    kbqOkClick?: OnClickCallback<C>;
     kbqOkLoading?: boolean;
     kbqOkText?: string;
     kbqOkType?: KbqButtonColor;
-    kbqOnCancel?: EventEmitter<C> | OnClickCallback<C>;
-    kbqOnOk?: EventEmitter<C> | OnClickCallback<C>;
+    kbqOnCancel?: EventEmitter<C>;
+    kbqOnOk?: EventEmitter<C>;
     kbqRestoreFocus?: boolean;
     kbqSize?: ModalSize;
     kbqStyle?: object;

@@ -36,8 +36,8 @@ export class ModalScrollExample {
             kbqContent: CustomModalComponent,
             kbqOkText: 'Yes',
             kbqCancelText: 'No',
-            kbqOnOk: () => console.log('Yes'),
-            kbqOnCancel: () => console.log('No')
+            kbqOkClick: () => console.log('Yes'),
+            kbqCancelClick: () => console.log('No')
         });
     }
 }
