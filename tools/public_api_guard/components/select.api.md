@@ -37,6 +37,7 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqOptgroup } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqOptionBase } from '@koobiq/components/core';
+import { KbqOptionParentComponent } from '@koobiq/components/core';
 import { KbqOptionSelectionChange } from '@koobiq/components/core';
 import { KbqPanelMaxHeight } from '@koobiq/components/core';
 import { KbqPanelMaxWidth } from '@koobiq/components/core';
@@ -104,7 +105,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 }
 
 // @public (undocumented)
-export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState, KbqSiblingPopup {
+export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState, KbqSiblingPopup, KbqOptionParentComponent {
     constructor();
     get allOptionsSelected(): boolean;
     readonly ariaLabel: _angular_core.InputSignal<string | null>;
