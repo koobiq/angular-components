@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
-import { ConfirmType, IModalOptionsForService, ModalOptions } from './modal.type';
+import { ConfirmType, IModalOptionsForService, KBQ_MODAL_OPTIONS, ModalOptions } from './modal.type';
 
 /** Injection token that can be used to access the data that was passed in to a modal. */
 export const KBQ_MODAL_DATA = new InjectionToken<unknown>('KbqModalData');
@@ -28,12 +28,7 @@ export class ModalBuilderForService {
         openerDestroyRef: DestroyRef | null = null
     ) {
         this.createModal();
-
-        if (!('kbqGetContainer' in options)) {
-            options.kbqGetContainer = undefined;
-        }
-
-        this.changeProps(options);
+        this.mirrorEmitters(options);
 
         // Nobody owns the builder, so without this the dialog outlives whatever opened it: it stays
         // painted over the next view, `afterClose` never emits, and the body scroll lock is kept.
@@ -56,23 +51,32 @@ export class ModalBuilderForService {
         }
     }
 
-    private changeProps(options: ModalOptions): void {
+    /**
+     * Mirrors the caller's emitters onto the dialog's own outputs. The option values themselves
+     * reach the dialog through `KBQ_MODAL_OPTIONS`, as the initial values of its inputs — a dialog
+     * created by the service has no template bindings to carry them.
+     */
+    private mirrorEmitters(options: ModalOptions): void {
         if (!this.modalRef) return;
 
-        const { kbqAfterOpen, kbqAfterClose, ...inputs } = options;
+        const { kbqAfterOpen, kbqAfterClose, kbqOnOk, kbqOnCancel } = options;
 
-        // here not limit user's inputs at runtime
-        Object.assign(this.modalRef.instance, inputs);
-
-        // The two emitters are the dialog's own outputs. Mirroring them keeps `afterOpen`/
-        // `afterClose` on the returned ref working, and keeps the overlay teardown from hanging off
-        // an emitter the caller owns and can complete.
+        // Mirrored, never substituted, so `afterOpen`/`afterClose` on the returned ref keep working
+        // and the overlay teardown does not hang off an emitter the caller owns and can complete.
         if (kbqAfterOpen) {
             this.modalRef.instance.kbqAfterOpen.subscribe(() => kbqAfterOpen.emit());
         }
 
         if (kbqAfterClose) {
             this.modalRef.instance.kbqAfterClose.subscribe((result) => kbqAfterClose.emit(result));
+        }
+
+        if (kbqOnOk) {
+            this.modalRef.instance.kbqOnOk.subscribe((instance) => kbqOnOk.emit(instance));
+        }
+
+        if (kbqOnCancel) {
+            this.modalRef.instance.kbqOnCancel.subscribe((instance) => kbqOnCancel.emit(instance));
         }
     }
 
@@ -112,29 +116,15 @@ export class KbqModalService {
      * is passed, the root environment injector otherwise — so destroying the opener closes it.
      */
     create<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
-        if (!('kbqCloseByESC' in options)) {
-            options.kbqCloseByESC = true;
-        }
-
-        // Remove the Cancel button if the user not specify a Cancel button
-        if (!('kbqCancelText' in options)) {
-            options.kbqCancelText = undefined;
-        }
-
-        // Remove the Ok button if the user not specify an Ok button
-        if (!('kbqOkText' in options)) {
-            options.kbqOkText = undefined;
-        }
-
-        // Remove the footer if the user not specify a footer
-        if (!('kbqFooter' in options)) {
-            options.kbqFooter = undefined;
-        }
-
         const parentInjector = options.injector || this.injector;
         const injector = Injector.create({
             parent: parentInjector,
-            providers: [{ provide: KBQ_MODAL_DATA, useValue: options.data }]
+            providers: [
+                { provide: KBQ_MODAL_DATA, useValue: options.data },
+                // The dialog reads these as the initial values of its inputs. A service-created
+                // dialog has no template bindings, so that is the only way in.
+                { provide: KBQ_MODAL_OPTIONS, useValue: options }
+            ]
         });
 
         // Read from the caller's injector, not the derived one: `Injector.create` provides a

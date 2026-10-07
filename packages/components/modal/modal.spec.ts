@@ -408,7 +408,7 @@ describe('KbqModal', () => {
             modalRef.triggerOk();
 
             expect(emitted).not.toHaveBeenCalled();
-            expect(modalRef.getInstance().kbqVisible).toBe(true);
+            expect(modalRef.getInstance().kbqVisible()).toBe(true);
             expect(warn).toHaveBeenCalledWith(expect.stringContaining('[kbqOkClick]'));
 
             warn.mockRestore();
@@ -424,7 +424,7 @@ describe('KbqModal', () => {
             modalRef.triggerOk();
 
             expect(emitted).toHaveBeenCalledTimes(1);
-            expect(modalRef.getInstance().kbqVisible).toBe(false);
+            expect(modalRef.getInstance().kbqVisible()).toBe(false);
         });
 
         it('should called function on hotkey ctrl+enter. modal type is confirm ', () => {
@@ -853,7 +853,7 @@ describe('KbqModal', () => {
             fixture.detectChanges();
             tick(ANIMATION_DURATION);
 
-            expect(modalRef.getInstance().kbqVisible).toBe(true);
+            expect(modalRef.getInstance().kbqVisible()).toBe(true);
 
             flush();
         }));
@@ -870,7 +870,7 @@ describe('KbqModal', () => {
             dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
             fixture.detectChanges();
 
-            expect(modalRef.getInstance().kbqVisible).toBe(false);
+            expect(modalRef.getInstance().kbqVisible()).toBe(false);
 
             tick(ANIMATION_DURATION);
             flush();
@@ -887,7 +887,7 @@ describe('KbqModal', () => {
             fixture.detectChanges();
 
             expect(spyCancel).toHaveBeenCalled();
-            expect(modalRef.getInstance().kbqVisible).toBe(false);
+            expect(modalRef.getInstance().kbqVisible()).toBe(false);
 
             tick(ANIMATION_DURATION);
             flush();
@@ -903,7 +903,7 @@ describe('KbqModal', () => {
             fixture.detectChanges();
             tick(ANIMATION_DURATION);
 
-            expect(modalRef.getInstance().kbqVisible).toBe(true);
+            expect(modalRef.getInstance().kbqVisible()).toBe(true);
 
             flush();
         }));
