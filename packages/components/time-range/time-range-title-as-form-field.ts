@@ -1,3 +1,4 @@
+import { _IdGenerator } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, Directive, computed, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -36,6 +37,7 @@ export class KbqTimeRangeTitlePlaceholder {}
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
+        '[attr.id]': 'id',
         '[attr.tabindex]': '0',
         '[attr.aria-labelledby]': 'ariaLabelledby()',
         class: 'kbq-time-range-title-as-form-field'
@@ -64,7 +66,7 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     /** @docs-private */
     value: any;
     /** @docs-private */
-    id: string;
+    id: string = inject(_IdGenerator).getId('kbq-time-range-title-as-control-');
     /** @docs-private */
     placeholder: string;
     /** @docs-private */
