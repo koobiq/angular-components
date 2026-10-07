@@ -447,6 +447,22 @@ The inputs of `KbqModalComponent` are signal inputs named `<member>Input`, hande
 ng g @koobiq/components:modal-signals --project "<your project>"
 ```
 
+#### Tabs
+
+The inputs of `KbqTabGroup`, `KbqTab`, `KbqTabNavBar`, `KbqTabLink` and of the header, labels and bodies inside the tab group are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `tabGroup.selectedIndex`, `tabGroup.headerPosition`, `tab.disabled` or `tabLink.active` works as before. Their queries are signal queries behind getters: `KbqTabGroup.tabs` and `KbqTabNavBar.items` are still `QueryList`s whose `changes` emit as before.
+
+- **A subclass** that implements `ngOnChanges` marks it `override` and calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `headerPositionInput`. A query it redeclared with `@ContentChildren` or `@ViewChild` — `tabs`, `items`, `templateLabel` — is overridden as a getter.
+- **A `SimpleChanges` passed to `ngOnChanges` by hand** is keyed by the `<member>Input` names: `disabledInput`, not `disabled`.
+- **A boolean input** — `disabled`, `active`, `vertical`, `disablePagination` — accepts `boolean | string | null | undefined` in a template.
+- **A bound `undefined`** leaves the member as it is: `[animationDuration]` keeps the duration of `KBQ_TABS_CONFIG`, and a `KbqTabLink` keeps its generated `id`.
+- **`KbqTab.templateLabel` follows the `kbqTabLabel` in the content of the tab**: once that is removed, the tab shows its text label rather than the removed template.
+
+`tabs-signals` reports every subclass and every direct call of `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:tabs-signals --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

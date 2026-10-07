@@ -1279,6 +1279,23 @@ class IdlessTabs {
     readonly group = viewChild.required(KbqTabGroup);
 }
 
+/** A group bound to `activeTab` before the application has picked a tab. */
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group stateSavingKey="tabs-key" [(activeTab)]="activeTab">
+            <kbq-tab label="First" tabId="first">First</kbq-tab>
+            <kbq-tab label="Second" tabId="second">Second</kbq-tab>
+            <kbq-tab label="Last" tabId="last">Last</kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class UnsetActiveTabTabs {
+    readonly group = viewChild.required(KbqTabGroup);
+
+    activeTab?: KbqTabSelectBy;
+}
+
 describe('KbqTabGroup state saving', () => {
     let store: InMemoryStateStore;
 
@@ -1305,7 +1322,7 @@ describe('KbqTabGroup state saving', () => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, UncontrolledTabs, ControlledTabs, IdlessTabs]
+            imports: [KbqTabsModule, UncontrolledTabs, ControlledTabs, IdlessTabs, UnsetActiveTabTabs]
         }).compileComponents();
     });
 
@@ -1404,6 +1421,18 @@ describe('KbqTabGroup state saving', () => {
         clickTab(fixture, 0);
 
         expect(store.getState('tabs-key')).toEqual({ tabId: 'last', index: 2 });
+    });
+
+    it('neither restores nor writes while activeTab is bound, before the application has picked a tab', () => {
+        store.setState('tabs-key', { tabId: 'second', index: 1 });
+
+        const fixture = create(UnsetActiveTabTabs);
+
+        expect(fixture.componentInstance.group().selectedIndex).toBe(0);
+
+        clickTab(fixture, 2);
+
+        expect(store.getState('tabs-key')).toEqual({ tabId: 'second', index: 1 });
     });
 
     it('persists under a key derived from the document when none is given', () => {

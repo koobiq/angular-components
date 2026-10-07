@@ -182,16 +182,6 @@ describe('reading members from source', () => {
         });
     });
 
-    it('reads the default of a decorated input', () => {
-        expect(
-            readSourceFile('packages/components/tabs/tab-group.component.ts').classes.KbqTabGroup.members.headerPosition
-        ).toEqual({
-            declaredType: 'KbqTabHeaderPosition',
-            defaultValue: "'above'",
-            binding: { input: 'headerPosition', required: false }
-        });
-    });
-
     // A default is written in full, however long: a placeholder would leave a reader guessing.
     it('reads a default spanning lines in full, indented from the line it starts on', () => {
         expect(
@@ -221,21 +211,29 @@ describe('reading members from source', () => {
     });
 
     // The library declares no decorated input any more, so the source is written here.
-    it('reads the alias of a decorated input', () => {
+    it('reads the alias and the default of a decorated input', () => {
         const dir = mkdtempSync(join(tmpdir(), 'api-gen-'));
         const file = join(dir, 'decorated.ts');
 
         writeFileSync(
             file,
             "import { Directive, Input } from '@angular/core';\n" +
+                "type Position = 'above' | 'below';\n" +
                 "@Directive({ selector: '[decorated]' })\n" +
-                "export class Decorated {\n    @Input('kbqRelativeToPointer') relativeToPointer: boolean;\n}\n"
+                'export class Decorated {\n' +
+                "    @Input('kbqRelativeToPointer') relativeToPointer: boolean;\n" +
+                "    @Input() headerPosition: Position = 'above';\n" +
+                '}\n'
         );
 
         try {
-            expect(readSourceFile(file).classes.Decorated.members.relativeToPointer.binding).toEqual({
-                input: 'kbqRelativeToPointer',
-                required: false
+            const { members } = readSourceFile(file).classes.Decorated;
+
+            expect(members.relativeToPointer.binding).toEqual({ input: 'kbqRelativeToPointer', required: false });
+            expect(members.headerPosition).toEqual({
+                declaredType: 'Position',
+                defaultValue: "'above'",
+                binding: { input: 'headerPosition', required: false }
             });
         } finally {
             rmSync(dir, { recursive: true, force: true });
