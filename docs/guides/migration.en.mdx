@@ -1707,13 +1707,13 @@ Initial focus was `getElementsByTagName('button')[0]?.focus()`: the first button
 
 The `kbqAfterOpen`/`kbqAfterClose` options are mirrored onto the dialog instead of replacing its own emitters, so `afterOpen`/`afterClose` on the returned ref keep emitting alongside them, and the overlay teardown no longer hangs off an emitter the caller can complete. A declarative modal also stopped emitting `kbqBeforeClose`/`kbqAfterClose` once on creation, before it had ever been shown.
 
-| Member                                                                                                                                                                               | Before | After       |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ----------- |
-| `transformOrigin`, `getKbqFooter()`, `getContainerClasses()`, `autoFocusedButtons`                                                                                                   | public | removed     |
-| `ModalUtil`, `modalUtilObject`, `IClickPosition`                                                                                                                                     | public | removed     |
-| `handleCloseResult`, `getButtonCallableProp`, `isModalType`, `isTemplateRef`, `isNonEmptyString`, `isComponent`, `isModalButtons`, `onClickMask`, `onClickOkCancel`, `onButtonClick` | public | `protected` |
-| `maskAnimationClassMap`, `modalAnimationClassMap`                                                                                                                                    | public | `protected` |
-| `ModalOptions.data`                                                                                                                                                                  | `any`  | `unknown`   |
+| Member                                                                                                                                                                                            | Before | After       |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----------- |
+| `transformOrigin`, `getKbqFooter()`, `getContainerClasses()`, `autoFocusedButtons`                                                                                                                | public | removed     |
+| `ModalUtil`, `modalUtilObject`, `IClickPosition`                                                                                                                                                  | public | removed     |
+| `handleCloseResult`, `getButtonCallableProp`, `isModalType`, `isTemplateRef`, `isNonEmptyString`, `isComponent`, `isModalButtons`, `onClickMask`, `onClickOkCancel`, `onButtonClick`, `onKeyDown` | public | `protected` |
+| `maskAnimationClassMap`, `modalAnimationClassMap`                                                                                                                                                 | public | `protected` |
+| `ModalOptions.data`                                                                                                                                                                               | `any`  | `unknown`   |
 
 `transformOrigin` was computed from the last document click position — set to `{x: -1, y: -1}` and returned unconditionally, so a keyboard-opened dialog got an origin of `-1` — and applied against keyframes that end at `transform: scale(1)`, against which `transform-origin` is a no-op. Nothing it produced was ever visible, and the document-wide click listener feeding it was registered at module load and never removed.
 

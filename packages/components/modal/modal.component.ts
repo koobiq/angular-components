@@ -550,7 +550,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     /** @docs-private */
-    onKeyDown(event: KeyboardEvent): void {
+    protected onKeyDown(event: KeyboardEvent): void {
         if (event.keyCode === ESCAPE) {
             // One implementation for both entry paths: the event only reaches the host from inside
             // the dialog, so it cannot be the keystroke that opened it. Escape is the Cancel
@@ -778,20 +778,30 @@ export class KbqModalComponent<T = any, R = any>
     private focusInitialElement(): void {
         if (this.kbqAutoFocus === false) return;
 
-        const explicit = this.getElement().querySelector<HTMLElement>(
-            '[cdkFocusInitial], [cdk-focus-initial], [autofocus]'
-        );
+        const element = this.getElement();
+        const { focusTrap } = this.trapFocus();
 
-        if (explicit) {
-            explicit.focus();
+        // `cdkFocusInitial` is a bare attribute the CDK's own `focusInitialElement()` reads, not a
+        // directive, and that helper cannot be used here: it falls back to the first tabbable control
+        // whenever the marker is absent or its target fails the CDK's visibility check, which is
+        // exactly what 'dialog' and 'first-heading' must not do. So the marker is read directly, and
+        // it beats `autofocus` instead of losing to whichever comes first in document order.
+        const marked =
+            element.querySelector<HTMLElement>('[cdkFocusInitial], [cdk-focus-initial]') ??
+            // Not part of the CDK's contract, but the predefined buttons carry it and the native
+            // attribute does nothing for an element inserted after the page has loaded.
+            element.querySelector<HTMLElement>('[autofocus]');
+
+        if (marked) {
+            marked.focus();
 
             return;
         }
 
-        if (this.kbqAutoFocus === 'first-tabbable' && this.trapFocus().focusTrap.focusFirstTabbableElement()) return;
+        if (this.kbqAutoFocus === 'first-tabbable' && focusTrap.focusFirstTabbableElement()) return;
 
         if (this.kbqAutoFocus === 'first-heading') {
-            const heading = this.getElement().querySelector<HTMLElement>('.kbq-modal-title');
+            const heading = element.querySelector<HTMLElement>('.kbq-modal-title');
 
             if (heading) {
                 heading.tabIndex = -1;

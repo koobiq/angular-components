@@ -776,6 +776,17 @@ describe('KbqModal', () => {
             flush();
         }));
 
+        it('should let cdkFocusInitial win over the first tabbable control', fakeAsync(() => {
+            modalService.open({ kbqComponent: ModalWithFocusInitialComponent, kbqAriaLabel: 'Marked' });
+
+            fixture.detectChanges();
+            tick(ANIMATION_DURATION);
+
+            expect(document.activeElement).toBe(overlayContainerElement.querySelector('[data-testid="marked"]'));
+
+            flush();
+        }));
+
         it('should focus the dialog itself when kbqAutoFocus is "dialog"', fakeAsync(() => {
             modalService.create({ kbqTitle: 'Long read', kbqContent: 'text', kbqAutoFocus: 'dialog' });
 
@@ -812,6 +823,24 @@ describe('KbqModal', () => {
 
             expect(modalRef.getInstance().kbqVisible).toBe(true);
 
+            flush();
+        }));
+
+        // The builder used to defer Escape until `afterOpen`, on `overlayRef.keydownEvents()` and
+        // bypassing the veto. The host listener cannot see the keystroke that opened the dialog —
+        // that one lands on the trigger, outside the dialog — so the defer has nothing left to guard,
+        // and Escape pressed while the dialog animates in closes it the same way as any other.
+        it('should close on Escape pressed before the opening animation is over', fakeAsync(() => {
+            const modalRef = modalService.create({ kbqTitle: 'Closing' });
+
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+            fixture.detectChanges();
+
+            expect(modalRef.getInstance().kbqVisible).toBe(false);
+
+            tick(ANIMATION_DURATION);
             flush();
         }));
 
@@ -1315,6 +1344,14 @@ export class CustomComponent {
     `
 })
 class TestModalContentComponent {}
+
+@Component({
+    template: `
+        <button>Before</button>
+        <button cdkFocusInitial data-testid="marked">Marked</button>
+    `
+})
+class ModalWithFocusInitialComponent {}
 
 @Component({
     selector: 'modal-with-caption-content',

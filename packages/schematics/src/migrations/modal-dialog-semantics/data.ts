@@ -56,13 +56,13 @@ export const warnPatterns: WarnPattern[] = [
         anchor: MODAL_TYPE,
         pattern:
             '\\.\\s*(?:handleCloseResult|getButtonCallableProp|isModalType|isTemplateRef|isNonEmptyString|' +
-            'isComponent|isModalButtons|onClickMask|onClickOkCancel|onButtonClick|maskAnimationClassMap|' +
-            'modalAnimationClassMap)\\b',
+            'isComponent|isModalButtons|onClickMask|onClickOkCancel|onButtonClick|onKeyDown|' +
+            'maskAnimationClassMap|modalAnimationClassMap)\\b',
         message:
             'The KbqModalComponent members that only ever fed its own template are protected now: ' +
             'handleCloseResult, getButtonCallableProp, isModalType, isTemplateRef, isNonEmptyString, ' +
-            'isComponent, isModalButtons, onClickMask, onClickOkCancel, onButtonClick and the two ' +
-            'animation class maps. The supported surface is open()/close()/destroy(), triggerOk(), ' +
+            'isComponent, isModalButtons, onClickMask, onClickOkCancel, onButtonClick, onKeyDown and the ' +
+            'two animation class maps. The supported surface is open()/close()/destroy(), triggerOk(), ' +
             'triggerCancel() and the inputs.'
     },
     {
