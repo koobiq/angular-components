@@ -116,6 +116,11 @@
             "description": "Migrates the signal inputs of KbqOption, KbqOptgroup, KbqOptionActionComponent and KbqTimezoneOption. The option state consumers read through events and models (value, viewValue, disabled, showCheckbox, timezone) stays a property read, so only programmatic writes are reported. A read of disabled on KbqOptgroup and KbqOptionActionComponent becomes a call. Also reports KbqOption.stateChanges, which no longer emits for disabled, the now optional textElement and the changed KbqOptionBase.",
             "factory": "./migrations/option-signals/index"
         },
+        "input-signals": {
+            "version": "21.0.0-0",
+            "description": "Reports programmatic writes to KbqNumberInput.value, KbqNumberInput.disabled and KbqInput.type, which are signal inputs read through a getter now: a read is unchanged, a write no longer compiles. Warn-only: the write belongs in a template binding or a form control.",
+            "factory": "./migrations/input-signals/index"
+        },
         "zoneless-change-detection": {
             "version": "21.0.0-0",
             "description": "Reports the uses of MockNgZone and its simulateZoneExit(), removed from @koobiq/components/core: the library no longer depends on zone.js and nothing in it waits for NgZone.onStable, so a spec renders with fixture.detectChanges() or waits with fixture.whenStable() instead. Warn-only: which of the two depends on what the spec waited for.",
