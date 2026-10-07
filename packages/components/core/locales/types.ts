@@ -368,8 +368,28 @@ export interface KbqMultipleFileUploadLocaleConfiguration extends KbqBaseFileUpl
     title: string;
 }
 
+/**
+ * Announcements the uploaders push into their own live region.
+ *
+ * Unlike {@link KbqA11yLocaleConfiguration} these are not names of controls: nothing renders them,
+ * they are read out once when the file list changes.
+ */
+export type KbqFileUploadA11yLocaleConfiguration = {
+    /** Announced after a file is added; `{{ fileName }}` is replaced with its name. */
+    fileAdded: string;
+    /** Announced after a file is removed; `{{ fileName }}` is replaced with its name. */
+    fileRemoved: string;
+    /** Announced when part of a selection is discarded — a duplicate, or everything past the first file. */
+    filesNotAdded: string;
+};
+
+/** Labels of both upload flavours, and the announcements neither of them renders. */
 export type KbqFileUploadLocaleConfiguration = {
+    /** Announcements of file list changes, read out rather than rendered. */
+    a11y: KbqFileUploadA11yLocaleConfiguration;
+    /** Labels of the uploader that holds one file. */
     single: KbqBaseFileUploadLocaleConfiguration;
+    /** Labels of the uploader that holds a list, including its title and compact caption. */
     multiple: KbqMultipleFileUploadLocaleConfiguration;
 };
 

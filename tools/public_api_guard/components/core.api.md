@@ -486,6 +486,11 @@ export const enUSLocaleData: {
         };
     };
     fileUpload: {
+        a11y: {
+            fileAdded: string;
+            fileRemoved: string;
+            filesNotAdded: string;
+        };
         single: {
             captionText: string;
             captionTextOnlyFolder: string;
@@ -763,6 +768,11 @@ export const esLALocaleData: {
         };
     };
     fileUpload: {
+        a11y: {
+            fileAdded: string;
+            fileRemoved: string;
+            filesNotAdded: string;
+        };
         single: {
             captionText: string;
             captionTextOnlyFolder: string;
@@ -1308,6 +1318,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         fileUpload: {
+            a11y: {
+                fileAdded: string;
+                fileRemoved: string;
+                filesNotAdded: string;
+            };
             single: {
                 captionText: string;
                 captionTextOnlyFolder: string;
@@ -1560,6 +1575,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         fileUpload: {
+            a11y: {
+                fileAdded: string;
+                fileRemoved: string;
+                filesNotAdded: string;
+            };
             single: {
                 captionText: string;
                 captionTextOnlyFolder: string;
@@ -1808,6 +1828,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         fileUpload: {
+            a11y: {
+                fileAdded: string;
+                fileRemoved: string;
+                filesNotAdded: string;
+            };
             single: {
                 captionText: string;
                 captionTextOnlyFolder: string;
@@ -2062,6 +2087,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         fileUpload: {
+            a11y: {
+                fileAdded: string;
+                fileRemoved: string;
+                filesNotAdded: string;
+            };
             single: {
                 captionText: string;
                 captionTextOnlyFolder: string;
@@ -2312,6 +2342,11 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             };
         };
         fileUpload: {
+            a11y: {
+                fileAdded: string;
+                fileRemoved: string;
+                filesNotAdded: string;
+            };
             single: {
                 captionText: string;
                 captionTextOnlyFolder: string;
@@ -3085,8 +3120,16 @@ export const kbqFilesizeFormatterConfigurationProvider: (configuration: KbqDeepP
 // @public
 export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];
 
-// @public (undocumented)
+// @public
+export type KbqFileUploadA11yLocaleConfiguration = {
+    fileAdded: string;
+    fileRemoved: string;
+    filesNotAdded: string;
+};
+
+// @public
 export type KbqFileUploadLocaleConfiguration = {
+    a11y: KbqFileUploadA11yLocaleConfiguration;
     single: KbqBaseFileUploadLocaleConfiguration;
     multiple: KbqMultipleFileUploadLocaleConfiguration;
 };
@@ -5194,6 +5237,11 @@ export const ptBRLocaleData: {
         };
     };
     fileUpload: {
+        a11y: {
+            fileAdded: string;
+            fileRemoved: string;
+            filesNotAdded: string;
+        };
         single: {
             captionText: string;
             captionTextOnlyFolder: string;
@@ -5667,6 +5715,11 @@ export const ruRULocaleData: {
         };
     };
     fileUpload: {
+        a11y: {
+            fileAdded: string;
+            fileRemoved: string;
+            filesNotAdded: string;
+        };
         single: {
             captionText: string;
             captionTextOnlyFolder: string;
@@ -6049,6 +6102,11 @@ export const tkTMLocaleData: {
         };
     };
     fileUpload: {
+        a11y: {
+            fileAdded: string;
+            fileRemoved: string;
+            filesNotAdded: string;
+        };
         single: {
             captionText: string;
             captionTextOnlyFolder: string;

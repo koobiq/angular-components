@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, DestroyRef, ElementRef, inject, Renderer2, Signal } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, ElementRef, inject, Renderer2, Signal, signal } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
@@ -101,6 +101,32 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     /** @docs-private */
     protected readonly dropzoneService = inject(KbqFullScreenDropzoneService);
+
+    /** Text of the live region that announces changes of the file list. @docs-private */
+    protected readonly announcement = signal('');
+
+    /** @docs-private */
+    protected setFileList(items: KbqFileItem[]): void {
+        this.fileList.list.set(items);
+        this.cdr.markForCheck();
+    }
+
+    /**
+     * Pushes one message into the live region. Cleared first: a live region speaks on a content
+     * change, so removing two identically named files in a row would otherwise stay silent.
+     * @docs-private
+     */
+    protected announce(...messages: string[]): void {
+        const message = messages.filter(Boolean).join('. ');
+
+        this.announcement.set('');
+        setTimeout(() => this.announcement.set(message));
+    }
+
+    /** @docs-private */
+    protected withFileName(template: string, fileName: string): string {
+        return template.replace('{{ fileName }}', fileName);
+    }
 
     /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate
      * @docs-private */

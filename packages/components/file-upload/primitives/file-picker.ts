@@ -46,8 +46,10 @@ export class KbqFileUploadContext {
             tabindex="0"
             type="file"
             class="cdk-visually-hidden"
-            [attr.multiple]="innerMultiple()"
-            [attr.webkitdirectory]="innerOnlyDirectory()"
+            [attr.aria-describedby]="describedBy()"
+            [attr.aria-invalid]="invalid() || null"
+            [attr.multiple]="innerMultiple() || null"
+            [attr.webkitdirectory]="innerOnlyDirectory() || null"
             [accept]="innerAccept()"
             [disabled]="innerDisabled()"
             [id]="innerFor()"
@@ -77,6 +79,10 @@ export class KbqFileLoader {
      * See [`HTMLInputElement: webkitdirectory property`](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/webkitdirectory).
      */
     readonly onlyDirectory = input<boolean | null>(null);
+    /** Ids of the elements describing the file input, written to its `aria-describedby`. */
+    readonly describedBy = input<string | null>(null);
+    /** Whether the file input holds a value the form rejects, reported through `aria-invalid`. */
+    readonly invalid = input(false, { transform: booleanAttribute });
 
     /** Event fires when file selected in file-picker. */
     readonly fileChange = output<Event>();
@@ -137,27 +143,23 @@ export class KbqFileList<T> {
         this.itemsAdded.emit(items);
     }
 
-    /** Removes every occurrence of the specified item. Returns the removed items. */
+    /** Removes the first occurrence of the specified item. Returns removed items and emits event. */
     remove(item: T): T[] {
-        const removed: T[] = [];
+        const index = this.list().indexOf(item);
 
-        this.update((current) =>
-            current.filter((currentItem) => {
-                const isRemoved = currentItem === item;
-
-                if (isRemoved) {
-                    removed.push(currentItem);
-                }
-
-                return !isRemoved;
-            })
-        );
-
-        return removed;
+        return index === -1 ? [] : this.removeAt(index);
     }
 
-    /** Removes item at specified index. Returns removed items and emits event. */
+    /**
+     * Removes item at specified index. Returns removed items and emits event.
+     * An index outside the list removes nothing, emits nothing and leaves the list untouched.
+     */
     removeAt(index: number): T[] {
+        // `splice` silently does nothing for an index past either end. Without this guard the list
+        // was still rewritten with a fresh array — waking every `list()` consumer for a no-op — and
+        // `itemRemoved` fired carrying `undefined` in a tuple typed `[T, number]`.
+        if (index < 0 || index >= this.list().length) return [];
+
         const removed: T[] = [];
 
         this.update((current) => {
