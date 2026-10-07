@@ -18,13 +18,14 @@ import {
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
     linkedSignal,
+    OnChanges,
     OnDestroy,
     output,
     QueryList,
     signal,
+    SimpleChanges,
     untracked,
     ViewEncapsulation
 } from '@angular/core';
@@ -114,6 +115,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
 })
 export class KbqTagList
     implements
+        OnChanges,
         KbqFormFieldControl<any>,
         ControlValueAccessor,
         AfterContentInit,
@@ -329,7 +331,6 @@ export class KbqTagList
     /** Whether the tags in the list can be reordered by dragging. */
     // Stays an accessor: it folds in `disabled`, which comes from the form control when there is one. That
     // is a plain property rather than a signal, so a `computed` would cache it and miss `control.disable()`.
-    @Input({ transform: booleanAttribute })
     get draggable(): boolean {
         return this._draggable() && !this.disabled();
     }
@@ -384,7 +385,6 @@ export class KbqTagList
      *
      * @docs-private
      */
-    @Input()
     get tabIndex(): number | null {
         return this.disabled() || this.tagInput ? null : this._tabIndex;
     }
@@ -476,6 +476,30 @@ export class KbqTagList
 
     /** Triggers unsubscription from all per-tags streams when tags are reset. */
     private readonly tagsSubscriptions$ = new Subject<void>();
+
+    /** @docs-private */
+    readonly draggableInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'draggable',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined>(undefined, { alias: 'tabIndex' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['draggableInput']) {
+            const draggable = this.draggableInput();
+
+            if (draggable !== undefined) this.draggable = draggable;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+    }
 
     constructor() {
         if (this.ngControl) {

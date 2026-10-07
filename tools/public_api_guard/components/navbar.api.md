@@ -28,10 +28,12 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqNavbarLocaleConfiguration } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public
@@ -141,22 +143,23 @@ export class KbqNavbarDivider {
 }
 
 // @public (undocumented)
-export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
+export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     constructor();
     blur(): void;
     readonly button: Signal<KbqButton | undefined>;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     focus(origin?: FocusOrigin): void;
     readonly formField: Signal<KbqFormField | undefined>;
     getLabel(): string;
     get hasFocus(): boolean;
     set hasFocus(value: boolean);
     get nestedElement(): KbqButton | KbqFormField | undefined;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
     ngAfterContentInit(): void;
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     readonly onBlur: Subject<KbqNavbarFocusableItemEvent>;
     readonly onFocus: Subject<KbqNavbarFocusableItemEvent>;
@@ -166,7 +169,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     readonly title: Signal<KbqNavbarTitle | undefined>;
     get tooltip(): KbqTooltipTrigger;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarFocusableItem, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle", never, { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["title", "button", "formField"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarFocusableItem, "kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle", never, { "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["title", "button", "formField"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarFocusableItem, never>;
 }

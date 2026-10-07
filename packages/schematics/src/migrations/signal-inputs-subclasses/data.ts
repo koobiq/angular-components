@@ -34,7 +34,17 @@ const COMPONENTS = [
     'KbqAppSwitcherComponent',
     'KbqNotificationCenterTrigger',
     'KbqPasswordToggle',
-    'KbqEllipsisCenterDirective'
+    'KbqEllipsisCenterDirective',
+    'KbqTagInput',
+    'KbqTagList',
+    'KbqTag',
+    'KbqSingleFileUploadComponent',
+    'KbqMultipleFileUploadComponent',
+    'KbqAccordionItem',
+    'KbqNavbarFocusableItem',
+    'KbqNavbarItem',
+    'KbqNotificationItemComponent',
+    'KbqSidebar'
 ].join('|');
 
 const PANELS = ['KbqPopUp', 'KbqTooltipComponent', 'KbqPopoverComponent', 'KbqPopoverConfirmComponent'].join('|');

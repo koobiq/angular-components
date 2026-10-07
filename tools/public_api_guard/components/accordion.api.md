@@ -17,9 +17,11 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i1$1 from '@koobiq/components/icon';
 import * as i1 from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Signal } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
@@ -115,7 +117,7 @@ export class KbqAccordionHeader {
 }
 
 // @public (undocumented)
-export class KbqAccordionItem implements OnInit, OnDestroy {
+export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     constructor();
     readonly accordion: KbqAccordion;
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -126,17 +128,17 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
     disableAnimation(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     enableAnimation(): void;
     get expanded(): boolean;
     set expanded(expanded: boolean);
     readonly expandedChange: _angular_core.OutputEmitterRef<boolean>;
+    readonly expandedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     protected readonly expansionDispatcher: UniqueSelectionDispatcher;
     focus(): void;
     get id(): string;
     // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_expanded: unknown;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -150,7 +152,7 @@ export class KbqAccordionItem implements OnInit, OnDestroy {
     readonly value: _angular_core.Signal<string>;
     readonly valueInput: _angular_core.InputSignal<string>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionItem, "kbq-accordion-item, [kbq-accordion-item]", never, { "expanded": { "alias": "expanded"; "required": false; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "closed": "closed"; "opened": "opened"; "expandedChange": "expandedChange"; }, ["trigger", "triggerComponent", "content"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqAccordionItem, "kbq-accordion-item, [kbq-accordion-item]", never, { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "expandedInput": { "alias": "expanded"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "closed": "closed"; "opened": "opened"; "expandedChange": "expandedChange"; }, ["trigger", "triggerComponent", "content"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqAccordionItem, never>;
 }

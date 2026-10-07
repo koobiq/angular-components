@@ -11,12 +11,13 @@ import {
     ElementRef,
     inject,
     Injector,
-    Input,
     input,
     NgZone,
+    OnChanges,
     OnDestroy,
     output,
     Renderer2,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -109,7 +110,7 @@ const normalizeSidebarState = (parsed: unknown): KbqSidebarState | null => {
     ],
     exportAs: 'kbqSidebar'
 })
-export class KbqSidebar implements OnDestroy, AfterContentInit {
+export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     private ngZone = inject(NgZone);
     private elementRef = inject(ElementRef);
 
@@ -136,9 +137,6 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
      */
     private readonly stateSaving = inject(KbqStateSaving);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get opened(): boolean {
         return this._opened;
     }
@@ -211,6 +209,18 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
     internalState: boolean = true;
 
     private unbindKeydownListener: ReturnType<Renderer2['listen']> | null = null;
+
+    /** @docs-private */
+    readonly openedInput = input<boolean | undefined>(undefined, { alias: 'opened' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['openedInput']) {
+            const opened = this.openedInput();
+
+            if (opened !== undefined) this.opened = opened;
+        }
+    }
 
     constructor() {
         afterNextRender(() => this.registerKeydownListener());

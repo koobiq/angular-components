@@ -8,7 +8,8 @@ Reports subclasses of the components whose decorator inputs became signal inputs
 The inputs of `KbqCheckbox`, `KbqToggleComponent`, `KbqRadioGroup`, `KbqRadioButton`, `KbqButtonToggleGroup`,
 `KbqButtonToggle`, `KbqButton`, `KbqButtonGroupRoot`, `KbqSplitButton`, `KbqIcon`, `KbqIconButton`, `KbqIconItem` and
 `KbqSearchExpandable`, and of the pop-up triggers — tooltip, popover, popover confirm, app switcher, notification
-center, password toggle and ellipsis center — are signal inputs named `<member>Input`, which `ngOnChanges` hands to the unchanged member.
+center, password toggle and ellipsis center — and of the tags, file uploads, accordion item, navbar item, notification
+item and sidebar are signal inputs named `<member>Input`, which `ngOnChanges` hands to the unchanged member.
 Reading and writing the members works as before.
 
 | Pattern                                  | Manual migration                                                               |
