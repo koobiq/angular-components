@@ -1,6 +1,4 @@
 export interface Schema {
-    /** Name of the project to migrate. */
+    /** Name of the project to inspect. If omitted, the whole tree is inspected. */
     project?: string;
-    /** When true, applies replacements; when false, only logs what would change. Defaults to true. */
-    fix?: boolean;
 }
