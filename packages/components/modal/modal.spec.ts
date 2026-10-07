@@ -291,12 +291,12 @@ describe('KbqModal', () => {
             expect(modalService.openModals.length).toBe(1);
         }));
 
-        it('should trigger kbqOnOk/kbqOnCancel', () => {
+        it('should trigger kbqOkClick/kbqCancelClick', () => {
             const spyOk = jest.fn();
             const spyCancel = jest.fn();
             const modalRef: KbqModalRef = modalService.create({
-                kbqOnOk: spyOk,
-                kbqOnCancel: spyCancel
+                kbqOkClick: spyOk,
+                kbqCancelClick: spyCancel
             });
 
             fixture.detectChanges();
@@ -395,13 +395,45 @@ describe('KbqModal', () => {
             expect(spyOk).toHaveBeenCalled();
         }));
 
+        // The input and the output used to be one property, so binding both silently lost the
+        // output: Angular subscribed to the default emitter and the input then replaced it.
+        it('should let kbqOkClick decide the close and report that kbqOnOk cannot also be bound', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation();
+            const emitted = jest.fn();
+            const modalRef: KbqModalRef = modalService.create({ kbqOkClick: () => false });
+
+            modalRef.getInstance().kbqOnOk.subscribe(emitted);
+            fixture.detectChanges();
+
+            modalRef.triggerOk();
+
+            expect(emitted).not.toHaveBeenCalled();
+            expect(modalRef.getInstance().kbqVisible).toBe(true);
+            expect(warn).toHaveBeenCalledWith(expect.stringContaining('[kbqOkClick]'));
+
+            warn.mockRestore();
+        });
+
+        it('should emit kbqOnOk and close when no kbqOkClick is bound', () => {
+            const emitted = jest.fn();
+            const modalRef: KbqModalRef = modalService.create();
+
+            modalRef.getInstance().kbqOnOk.subscribe(emitted);
+            fixture.detectChanges();
+
+            modalRef.triggerOk();
+
+            expect(emitted).toHaveBeenCalledTimes(1);
+            expect(modalRef.getInstance().kbqVisible).toBe(false);
+        });
+
         it('should called function on hotkey ctrl+enter. modal type is confirm ', () => {
             const spyOk = jest.fn();
             const modalRef = modalService.success({
                 kbqContent: 'Сохранить сделанные изменения?',
                 kbqOkText: 'Сохранить',
                 kbqCancelText: 'Отмена',
-                kbqOnOk: spyOk
+                kbqOkClick: spyOk
             });
 
             fixture.detectChanges();
@@ -844,9 +876,9 @@ describe('KbqModal', () => {
             flush();
         }));
 
-        it('should route Escape through kbqOnCancel on the service path', fakeAsync(() => {
+        it('should route Escape through kbqCancelClick on the service path', fakeAsync(() => {
             const spyCancel = jest.fn();
-            const modalRef = modalService.create({ kbqTitle: 'Cancellable', kbqOnCancel: spyCancel });
+            const modalRef = modalService.create({ kbqTitle: 'Cancellable', kbqCancelClick: spyCancel });
 
             fixture.detectChanges();
             tick(ANIMATION_DURATION);
@@ -861,8 +893,8 @@ describe('KbqModal', () => {
             flush();
         }));
 
-        it('should let a kbqOnCancel callback veto Escape', fakeAsync(() => {
-            const modalRef = modalService.create({ kbqTitle: 'Vetoed', kbqOnCancel: () => false });
+        it('should let a kbqCancelClick callback veto Escape', fakeAsync(() => {
+            const modalRef = modalService.create({ kbqTitle: 'Vetoed', kbqCancelClick: () => false });
 
             fixture.detectChanges();
             tick(ANIMATION_DURATION);
@@ -1194,7 +1226,7 @@ describe('KbqModal', () => {
             flush();
         }));
 
-        it('should close on Escape and run kbqOnCancel first', fakeAsync(() => {
+        it('should close on Escape and emit kbqOnCancel first', fakeAsync(() => {
             open();
 
             dispatchKeyboardEvent(query('.kbq-modal-container'), 'keydown', ESCAPE);

@@ -37,8 +37,8 @@ export class ModalOverviewExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Save'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Save'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 
@@ -50,8 +50,8 @@ export class ModalOverviewExample {
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('OK'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 
@@ -64,8 +64,8 @@ export class ModalOverviewExample {
             kbqCancelText: 'Cancel',
             kbqWidth: '480px',
             kbqMaskClosable: true,
-            kbqOnOk: () => console.log('Delete'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Delete'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 }

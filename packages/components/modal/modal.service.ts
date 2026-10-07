@@ -112,16 +112,6 @@ export class KbqModalService {
      * is passed, the root environment injector otherwise — so destroying the opener closes it.
      */
     create<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
-        if (typeof options.kbqOnCancel !== 'function') {
-            // Leave an empty function to close this modal by default
-            options.kbqOnCancel = () => {};
-        }
-
-        if (typeof options.kbqOnOk !== 'function') {
-            // Leave an empty function to close this modal by default
-            options.kbqOnOk = () => {};
-        }
-
         if (!('kbqCloseByESC' in options)) {
             options.kbqCloseByESC = true;
         }
@@ -161,12 +151,6 @@ export class KbqModalService {
         if ('kbqFooter' in options && isDevMode()) {
             // eslint-disable-next-line no-console
             console.warn(`The Confirm-Modal doesn't support "kbqFooter", this property will be ignored.`);
-        }
-
-        // NOTE: only support function currently by calling confirm()
-        if (typeof options.kbqOnOk !== 'function') {
-            // Leave an empty function to close this modal by default
-            options.kbqOnOk = () => {};
         }
 
         options.kbqModalType = 'confirm';

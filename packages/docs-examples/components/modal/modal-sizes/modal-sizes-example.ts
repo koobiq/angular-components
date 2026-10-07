@@ -39,8 +39,8 @@ export class ModalSizesExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Save'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Save'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 
@@ -51,8 +51,8 @@ export class ModalSizesExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Save'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Save'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 }

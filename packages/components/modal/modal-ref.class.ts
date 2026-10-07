@@ -17,9 +17,12 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract destroy(result?: R): void;
 
     /**
-     * Trigger the kbqOnOk/kbqOnCancel by manual
+     * Runs the OK flow exactly as the predefined OK button does: the `kbqOkClick` handler when one
+     * is bound, the `kbqOnOk` emitter otherwise.
      */
     abstract triggerOk(): void;
+
+    /** Runs the cancel flow exactly as the predefined Cancel button does. */
 
     abstract triggerCancel(): void;
 

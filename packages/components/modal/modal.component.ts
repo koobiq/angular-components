@@ -17,6 +17,7 @@ import {
     inject,
     Injector,
     Input,
+    isDevMode,
     OnChanges,
     OnDestroy,
     OnInit,
@@ -210,10 +211,21 @@ export class KbqModalComponent<T = any, R = any>
     @Input({ transform: booleanAttribute }) kbqOkLoading: boolean = false;
 
     /**
-     * Handler of the predefined OK button. A function returning `false` (or a promise of `false`)
-     * keeps the dialog open; an `EventEmitter` is notified and the dialog closes.
+     * Decision handler of the predefined OK button. Returning `false` — or a promise of `false` —
+     * keeps the dialog open; anything else closes it. Receives the body component instance when the
+     * body is a component.
+     *
+     * Bind this **or** `(kbqOnOk)`, never both: a handler decides the close itself, so the event has
+     * nothing left to report and is not emitted. Binding both is reported in development mode.
      */
-    @Input() @Output() readonly kbqOnOk: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
+    @Input() kbqOkClick?: OnClickCallback<T>;
+
+    /**
+     * Emits when the predefined OK button is activated. A notification, not a decision — the dialog
+     * closes either way. Bind `[kbqOkClick]` instead to decide whether it closes.
+     */
+    @Output() readonly kbqOnOk = new EventEmitter<T>();
+
     /** Caption of the predefined Cancel button. The button is not rendered without it. */
     @Input() kbqCancelText: string;
 
@@ -221,11 +233,18 @@ export class KbqModalComponent<T = any, R = any>
     @Input({ transform: booleanAttribute }) kbqCancelLoading: boolean = false;
 
     /**
-     * Handler of the predefined Cancel button, the close button, <kbd>Escape</kbd> and the dim
-     * layer. A function returning `false` (or a promise of `false`) keeps the dialog open; an
-     * `EventEmitter` is notified and the dialog closes.
+     * Decision handler of the predefined Cancel button, the close button, <kbd>Escape</kbd> and the
+     * dim layer. Returning `false` — or a promise of `false` — keeps the dialog open.
+     *
+     * Bind this **or** `(kbqOnCancel)`, never both — see `kbqOkClick`.
      */
-    @Input() @Output() readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
+    @Input() kbqCancelClick?: OnClickCallback<T>;
+
+    /**
+     * Emits when the dialog is cancelled, by any of the controls `kbqCancelClick` covers. A
+     * notification, not a decision. Bind `[kbqCancelClick]` instead to decide whether it closes.
+     */
+    @Output() readonly kbqOnCancel = new EventEmitter<T>();
 
     readonly modalContainer = viewChild.required<ElementRef>('modalContainer');
     readonly bodyContainer = viewChild.required('bodyContainer', { read: ViewContainerRef });
@@ -583,32 +602,45 @@ export class KbqModalComponent<T = any, R = any>
     /** @docs-private */
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     protected handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean) {
-        const trigger = { ok: this.kbqOnOk, cancel: this.kbqOnCancel }[triggerType];
-        const loadingKey = { ok: 'kbqOkLoading', cancel: 'kbqCancelLoading' }[triggerType];
+        const handler = { ok: this.kbqOkClick, cancel: this.kbqCancelClick }[triggerType];
+        const emitter = { ok: this.kbqOnOk, cancel: this.kbqOnCancel }[triggerType];
+        const loadingKey = triggerType === 'ok' ? 'kbqOkLoading' : 'kbqCancelLoading';
         // Users can return "false" to prevent closing by default
         // eslint-disable-next-line @typescript-eslint/no-empty-object-type
         const caseClose = (doClose: boolean | void | {}) => canClose(doClose) && this.close(doClose as R);
 
-        if (trigger instanceof EventEmitter) {
-            // The emitter form is a notification, not a veto: only the callable form can keep the
-            // dialog open, by returning `false`.
-            trigger.emit(this.getContentComponent());
+        if (!handler) {
+            emitter.emit(this.getContentComponent());
             caseClose(undefined);
-        } else if (typeof trigger === 'function') {
-            const result = trigger(this.getContentComponent());
 
-            if (isPromise(result)) {
-                this[loadingKey] = true;
+            return;
+        }
 
-                const handleThen = (doClose) => {
-                    this[loadingKey] = false;
-                    caseClose(doClose);
-                };
+        if (isDevMode() && emitter.observed) {
+            const input = triggerType === 'ok' ? 'kbqOkClick' : 'kbqCancelClick';
+            const output = triggerType === 'ok' ? 'kbqOnOk' : 'kbqOnCancel';
 
-                (result as Promise<void>).then(handleThen).catch(handleThen);
-            } else {
-                caseClose(result);
-            }
+            // eslint-disable-next-line no-console
+            console.warn(
+                `KbqModal: both [${input}] and (${output}) are bound. The handler decides the close, ` +
+                    `so (${output}) is never emitted. Bind one of them.`
+            );
+        }
+
+        const result = handler(this.getContentComponent());
+
+        if (isPromise(result)) {
+            this[loadingKey] = true;
+
+            // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+            const handleThen = (doClose: boolean | void | {}) => {
+                this[loadingKey] = false;
+                caseClose(doClose);
+            };
+
+            (result as Promise<void>).then(handleThen).catch(handleThen);
+        } else {
+            caseClose(result);
         }
     }
 
