@@ -2,7 +2,6 @@ import {
     afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     DestroyRef,
@@ -24,7 +23,7 @@ import { KbqHint } from './hint';
     selector: 'kbq-reactive-password-hint',
     imports: [KbqIconModule],
     template: `
-        <i [kbq-icon]="icon()" [color]="color"></i>
+        <i [kbq-icon]="icon()" [color]="color()"></i>
 
         <span class="kbq-hint__text">
             <ng-content />
@@ -45,7 +44,6 @@ export class KbqReactivePasswordHint extends KbqHint {
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly injector = inject(Injector);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /** Whether the form field control has an error. */
     readonly hasError = input(false, { transform: booleanAttribute });
@@ -63,7 +61,7 @@ export class KbqReactivePasswordHint extends KbqHint {
     constructor() {
         super();
 
-        this.color = KbqComponentColors.ContrastFade;
+        this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         // `hasError` also drives `icon`, so the color has to follow it in the same pass, otherwise the icon and
         // its color disagree for a tick.
@@ -90,9 +88,7 @@ export class KbqReactivePasswordHint extends KbqHint {
     }
 
     private updateColor(): void {
-        this.color = this.makeColor();
-
-        this.changeDetectorRef.markForCheck();
+        this.color.set(this.makeColor());
     }
 
     private makeColor(): KbqComponentColors {

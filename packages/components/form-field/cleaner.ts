@@ -120,7 +120,7 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
         super();
 
         this.setIconName('kbq-circle-xmark_16');
-        this.color = KbqComponentColors.ContrastFade;
+        this.setDefaultColor(KbqComponentColors.ContrastFade);
         this.autoColor = true;
     }
 

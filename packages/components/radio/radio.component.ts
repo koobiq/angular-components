@@ -81,7 +81,7 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
         '[class.kbq-radio-group_normal]': '!big()',
         '[class.kbq-radio-group_big]': 'big()',
         '[attr.aria-required]': "required() ? 'true' : null",
-        '[attr.aria-invalid]': "color === 'error' ? 'true' : null"
+        '[attr.aria-invalid]': "color() === 'error' ? 'true' : null"
     },
     exportAs: 'kbqRadioGroup'
 })

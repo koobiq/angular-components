@@ -22,6 +22,7 @@ const config: SignalMembersConfig = {
     },
     exportAsToType: { widget: 'Widget', widgetTrigger: 'WidgetTrigger' },
     elementToType: { 'acme-widget': 'Widget' },
+    attributeToType: { 'acme-widget-button': 'Widget' },
     writableMembers: new Set(['label']),
     protectedMembers: ['internals'],
     warnPatterns: [
@@ -320,6 +321,24 @@ describe('signalMembersRule', () => {
             appTree.overwrite(htmlPath(), '<button #t="widgetTrigger">{{ t.armed }}</button>');
 
             expect((await run()).readText(htmlPath())).toContain('{{ t.armed() }}');
+        });
+
+        it('rewrites reads through a bare reference on an element the component claims by attribute', async () => {
+            appTree.overwrite(htmlPath(), '<button acme-widget-button #w></button>{{ w.size }}');
+
+            expect((await run()).readText(htmlPath())).toContain('{{ w.size() }}');
+        });
+
+        it('resolves the attribute when it is bound', async () => {
+            appTree.overwrite(htmlPath(), '<button [acme-widget-button]="x" #w></button>{{ w.size }}');
+
+            expect((await run()).readText(htmlPath())).toContain('{{ w.size() }}');
+        });
+
+        it('leaves a bare reference on an element no component claims alone', async () => {
+            appTree.overwrite(htmlPath(), '<acme-widget /><button #b></button>{{ b.size }}');
+
+            expect((await run()).readText(htmlPath())).toContain('{{ b.size }}');
         });
 
         it('ignores a reference that names a foreign directive', async () => {

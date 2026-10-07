@@ -352,6 +352,20 @@ Koobiq components no longer use `@angular/animations`, which Angular deprecated:
 ng g @koobiq/components:angular-animations-removal --project "<your project>"
 ```
 
+#### Color as a signal
+
+`color` of `KbqColorDirective` is a writable signal, and so is the `color` of every component built on it: the buttons, checkbox, toggle, radio, icons, form field, hints, cleaner, progress bar and spinner, and tag. The `[color]` binding is unchanged.
+
+- **A read is a call, a write is `.set()`**: `icon.color()`, `button.color.set(KbqComponentColors.Theme)`. A color set in code holds until the `[color]` binding or the default color of the component changes — on a button, also the color of its group or its `kbqStyle`.
+- **An unset or falsy `[color]` renders the default color of the component**, `kbq-empty` where it has none, instead of no color class.
+- **A subclass can no longer override the `color` accessor.** Set its default with `setDefaultColor()` instead of assigning `color` in the constructor. `_color` is removed, `defaultColor` and `CanColor.color` are signals, and `KbqColorDirective` takes the type of its color as a parameter: `KbqColorDirective<KbqButtonColor>` for the buttons.
+
+`color-signals` rewrites the reads and writes, and reports subclasses:
+
+```bash
+ng g @koobiq/components:color-signals --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

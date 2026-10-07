@@ -28,11 +28,10 @@ export const buttonLeftIconClassName = "kbq-button-icon_left";
 export const buttonRightIconClassName = "kbq-button-icon_right";
 
 // @public (undocumented)
-export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef {
+export class KbqButton extends KbqColorDirective<KbqButtonColor> implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef {
     constructor();
     protected get ariaDisabledAttribute(): true | null;
-    get color(): KbqButtonColor;
-    set color(value: KbqButtonColor | null | undefined);
+    readonly color: i0.WritableSignal<"theme" | "theme-fade" | "contrast" | "contrast-fade">;
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledSignal: i0.WritableSignal<boolean>;
@@ -79,7 +78,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     textElement: ElementRef<HTMLElement>;
     updateRole(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
 }
@@ -126,10 +125,8 @@ export class KbqButtonGroup {
 }
 
 // @public
-export class KbqButtonGroupRoot extends KbqColorDirective {
+export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> {
     constructor();
-    get color(): KbqButtonColor;
-    set color(value: KbqButtonColor | null | undefined);
     get disabled(): boolean | undefined;
     set disabled(value: boolean);
     protected _disabled: boolean | undefined;
@@ -138,7 +135,7 @@ export class KbqButtonGroupRoot extends KbqColorDirective {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonGroupRoot, "[kbqButtonGroupRoot]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["buttons"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonGroupRoot, "[kbqButtonGroupRoot]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["buttons"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonGroupRoot, never>;
 }

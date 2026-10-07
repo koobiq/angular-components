@@ -115,7 +115,6 @@ export class KbqProgressBar extends KbqColorDirective {
     constructor() {
         super();
 
-        this.color = KbqComponentColors.Theme;
         this.setDefaultColor(KbqComponentColors.Theme);
     }
 }

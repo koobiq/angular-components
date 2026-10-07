@@ -101,6 +101,11 @@
             "description": "Reports the uses of the animation triggers @koobiq/components exported (fadeAnimation, kbqSelectAnimations, kbqDropdownAnimations, kbqTabsAnimations, KbqSidepanelAnimationState) and of the members that carried an AnimationEvent (KbqPopUp.animationStart/animationDone, the animation members of KbqDropdown, the animation callbacks of KbqSidebar, KbqTabBody, KbqToastComponent and the sidepanel and actions panel containers, KbqToastService.animation), and the providers of @angular/animations the components no longer need. Warn-only: what replaces a member depends on what the code did with the event.",
             "factory": "./migrations/angular-animations-removal/index"
         },
+        "color-signals": {
+            "version": "21.0.0-0",
+            "description": "Migrates the signal-based color of KbqColorDirective. On every component built on it (button, button group, split button, checkbox, pseudo checkbox, toggle, radio, icon, form field, hint, error, password hints, cleaner, progress bar and spinner, tag), a read of color becomes a call and a write becomes .set(), in code and through template references. Warns on subclasses, which can no longer override the color accessor, and on CanColor.",
+            "factory": "./migrations/color-signals/index"
+        },
         "zoneless-change-detection": {
             "version": "21.0.0-0",
             "description": "Reports the uses of MockNgZone and its simulateZoneExit(), removed from @koobiq/components/core: the library no longer depends on zone.js and nothing in it waits for NgZone.onStable, so a spec renders with fixture.detectChanges() or waits with fixture.whenStable() instead. Warn-only: which of the two depends on what the spec waited for.",

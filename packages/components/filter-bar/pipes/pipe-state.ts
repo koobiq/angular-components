@@ -42,12 +42,14 @@ export class KbqPipeState<T> {
     }
 
     private updateState = () => {
-        // Both styles resolve to the same default color, so it is written once, outside the branch.
-        this.button.color = KbqComponentColors.ContrastFade;
         this.button.kbqStyle = KbqButtonStyles.Outline;
 
         if (!this.pipe.isEmpty) {
             this.button.kbqStyle = KbqButtonStyles.Filled;
         }
+
+        // Both styles resolve to the same default color, so it is written once, outside the branch, and
+        // after the style: a style change resets the color of the button to the style's default.
+        this.button.color.set(KbqComponentColors.ContrastFade);
     };
 }

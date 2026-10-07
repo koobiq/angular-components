@@ -171,7 +171,6 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
     constructor() {
         super();
-        this.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
     }
 
