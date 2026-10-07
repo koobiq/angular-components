@@ -383,7 +383,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
-            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+            expect(getPipeComponent().select().compareWith()).toBe(customCompare);
         });
 
         it('should use the default id comparator when the template omits compareWith', () => {
@@ -392,7 +392,7 @@ describe('KbqPipeSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            expect(component.select().compareWith).toBe(component.compareByValue);
+            expect(component.select().compareWith()).toBe(component.compareByValue);
         });
 
         it('should clear a previously set compareWith when a later template update omits it', () => {
@@ -400,7 +400,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
-            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+            expect(getPipeComponent().select().compareWith()).toBe(customCompare);
 
             // A follow-up pipeTemplates update for the same pipe id that omits compareWith (e.g. new
             // id-based values) must fall back to the default comparator, not keep forwarding the stale one.
@@ -419,7 +419,7 @@ describe('KbqPipeSelectComponent', () => {
 
             const component = getPipeComponent();
 
-            expect(component.select().compareWith).toBe(component.compareByValue);
+            expect(component.select().compareWith()).toBe(component.compareByValue);
         });
 
         it('should forward compareWith from a later template update even when it omits values', () => {
@@ -438,7 +438,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
-            expect(getPipeComponent().select().compareWith).toBe(getPipeComponent().compareByValue);
+            expect(getPipeComponent().select().compareWith()).toBe(getPipeComponent().compareByValue);
 
             // A follow-up update for the same pipe id that supplies `compareWith` without re-sending
             // `values` must still forward the comparator — it is synced independently of `values`.
@@ -455,7 +455,7 @@ describe('KbqPipeSelectComponent', () => {
             ];
             fixture.detectChanges();
 
-            expect(getPipeComponent().select().compareWith).toBe(customCompare);
+            expect(getPipeComponent().select().compareWith()).toBe(customCompare);
         });
 
         it('should match the selected value in the panel using the custom comparator', fakeAsync(() => {
