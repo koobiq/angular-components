@@ -1989,6 +1989,8 @@ The order shows up in three places: the array emitted to the form, the tags in t
 
 Two more fixes with nothing to migrate: the locale subscription created in the constructor had no teardown, and a root-provided singleton held every created-then-destroyed select for the lifetime of the app; and the select carries combobox/listbox/option ARIA now, with a keyboard-operable tag-remove control, so hand-rolled `role` or `aria-*` attributes on the host are duplicates.
 
+The rest of the select inputs followed. `hasBackdrop`, `compareWith` and `searchMinOptionsThreshold` are signals: read them as calls — `compareWith()(a, b)`; `searchMinOptionsThreshold()` still reports the resolved number. `multiple`, `tabIndex` and `selectAllHandler` are signal inputs read through a getter. None of the six can be assigned any more: bind them in the template. Changing `[multiple]` after the first render still throws.
+
 Reported by `select-signal-inputs`.
 
 #### Sidepanel
@@ -2287,6 +2289,8 @@ The review typed the surface and dropped the members that only existed to feed t
 `KbqTreeSelectChange` is generic and its `value` is no longer `any`, so a handler that relied on the implicit widening needs the type argument.
 
 Three fixes with nothing to migrate: the embedded tree is set up through `KbqTreeSelection.initializeForEmbedding()` instead of a second manual `ngAfterContentInit()`, which used to leave duplicate subscriptions on query lists that are never re-created — so every options change was handled several times, on the search-filtering hot path; the dead `{ provide: KbqTree, useExisting: KbqTreeSelect }` provider is gone, since `KbqTreeSelect` never satisfied `KbqTree` structurally and anything injecting `KbqTree` from inside a tree-select was getting an object that only looked right; and the component renders a host `id` and carries combobox ARIA, so the form field label's `[attr.for]` resolves instead of dangling.
+
+`searchMinOptionsThreshold` is a signal like on `KbqSelect`, and `multiple`, `autoSelect`, `tabIndex` and `selectAllHandler` are signal inputs read through a getter. None of them can be assigned any more: bind them in the template.
 
 Reported by `tree-select-signals`.
 

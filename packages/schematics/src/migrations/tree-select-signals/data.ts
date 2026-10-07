@@ -73,6 +73,21 @@ export const warnPatterns: WarnPattern[] = [
             'KbqTreeSelect.options / tags / overlayDir / triggerRect / panelDoneAnimatingStream / ' +
             'changeDetectorRef are protected. They were the panel and trigger plumbing; the supported ' +
             'surface is the open/close API, the inputs and (selectionChange).'
+    },
+    {
+        anchor: TREE_SELECT_TYPE,
+        pattern: '\\.\\s*searchMinOptionsThreshold\\b(?!\\s*[=(])',
+        message:
+            'KbqTreeSelect.searchMinOptionsThreshold is a signal now: read it as `searchMinOptionsThreshold()`. It ' +
+            'still reports the resolved number.'
+    },
+    {
+        anchor: TREE_SELECT_TYPE,
+        pattern: '\\.\\s*(?:multiple|autoSelect|tabIndex|selectAllHandler|searchMinOptionsThreshold)\\s*=(?!=)',
+        message:
+            'multiple, autoSelect, tabIndex, selectAllHandler and searchMinOptionsThreshold of KbqTreeSelect are ' +
+            'signal inputs, so an assignment no longer compiles. Bind them in the template. This pattern also ' +
+            'matches a write to an unrelated object in the same file — check before changing it.'
     }
 ];
 

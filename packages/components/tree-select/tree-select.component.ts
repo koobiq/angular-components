@@ -1,5 +1,4 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, ScrollStrategy } from '@angular/cdk/overlay';
 import { Platform, _getEventTarget } from '@angular/cdk/platform';
@@ -16,15 +15,12 @@ import {
     EventEmitter,
     InjectionToken,
     Injector,
-    Input,
     OnDestroy,
     OnInit,
-    Output,
     Provider,
     QueryList,
     Renderer2,
     TemplateRef,
-    ViewChild,
     ViewChildren,
     ViewEncapsulation,
     afterNextRender,
@@ -41,7 +37,7 @@ import {
     viewChild,
     type AfterRenderRef
 } from '@angular/core';
-import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
@@ -374,7 +370,12 @@ export class KbqTreeSelect
     /** The options container's custom scrollbar viewport, flashed when the panel opens. */
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
-    @ViewChild(CdkConnectedOverlay, { static: false }) protected overlayDir: CdkConnectedOverlay;
+    private readonly overlayDirQuery = viewChild(CdkConnectedOverlay);
+
+    /** Reference to the CDK connected overlay directive. */
+    protected get overlayDir(): CdkConnectedOverlay {
+        return this.overlayDirQuery()!;
+    }
 
     @ViewChildren(KbqTag) protected tags: QueryList<KbqTag>;
 
@@ -423,19 +424,28 @@ export class KbqTreeSelect
      * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
      * `ngOnInit`) matters beyond this output's original consumers.
      */
-    @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly openedChangeOutput = outputFromObservable(this.openedChange, { alias: 'openedChange' });
 
     /** Event emitted when the select has been opened. */
-    @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
+    readonly openedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => o),
         map(() => {})
     );
 
+    /** @docs-private */
+    readonly openedOutput = outputFromObservable(this.openedStream, { alias: 'opened' });
+
     /** Event emitted when the select has been closed. */
-    @Output('closed') readonly closedStream: Observable<void> = this.openedChange.pipe(
+    readonly closedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => !o),
         map(() => {})
     );
+
+    /** @docs-private */
+    readonly closedOutput = outputFromObservable(this.closedStream, { alias: 'closed' });
 
     /** Event emitted when the selected value has been changed by the user. */
     readonly selectionChange = output<KbqTreeSelectChange>();
@@ -559,37 +569,30 @@ export class KbqTreeSelect
     /** Whether the select is required. */
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
-    // Stays an accessor: the setter refuses a change once the selection model exists.
-    @Input({ transform: booleanAttribute })
+    /** @docs-private */
+    readonly multipleInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'multiple',
+        transform: booleanAttribute
+    });
+
+    /** Whether multiple nodes can be selected. Cannot be changed once the selection model exists. */
     get multiple(): boolean {
-        return this._multiple;
+        return this.multipleValue ?? this.multipleInput();
     }
 
-    set multiple(value: boolean) {
-        if (this.selectionModel) {
-            throw getKbqSelectDynamicMultipleError();
-        }
+    /** The multiplicity the selection model was created with; a later binding change is refused. */
+    private multipleValue: boolean | undefined;
 
-        this._multiple = coerceBooleanProperty(value);
-    }
+    /** @docs-private */
+    readonly autoSelectInput = input<boolean, boolean | string | null | undefined>(true, {
+        alias: 'autoSelect',
+        transform: booleanAttribute
+    });
 
-    private _multiple: boolean = false;
-
-    // Stays an accessor: the getter is not a mirror of the input — multiple selection forces it off.
-    @Input()
+    /** Whether moving the active node selects it. Always off in multiple selection. */
     get autoSelect(): boolean {
-        if (this.multiSelection) {
-            return false;
-        }
-
-        return this._autoSelect;
+        return !this.multiSelection && this.autoSelectInput();
     }
-
-    set autoSelect(value: boolean) {
-        this._autoSelect = coerceBooleanProperty(value);
-    }
-
-    private _autoSelect: boolean = true;
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
@@ -618,19 +621,18 @@ export class KbqTreeSelect
     /** Whether the overlay panel is rendered on top of a backdrop. */
     readonly hasBackdrop = input(false, { transform: booleanAttribute });
 
-    // Stays an accessor: the getter is not a mirror of the input — a disabled select reports -1.
-    @Input()
+    /** @docs-private */
+    readonly tabIndexInput = input<number | null>(0, { alias: 'tabIndex' });
+
+    /** Tab index of the select, `-1` while it is disabled. A value that is not an integer keeps the last valid one. */
     get tabIndex(): number | null {
-        return this.disabled() ? -1 : this._tabIndex;
+        return this.disabled() ? -1 : this.validTabIndex();
     }
 
-    set tabIndex(value: number | null) {
-        if (Number.isInteger(value) || value === null) {
-            this._tabIndex = value;
-        }
-    }
-
-    private _tabIndex: number | null = 0;
+    private readonly validTabIndex = linkedSignal<number | null, number | null>({
+        source: () => this.tabIndexInput(),
+        computation: (value, previous) => (Number.isInteger(value) || value === null ? value : (previous?.value ?? 0))
+    });
 
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
@@ -641,25 +643,30 @@ export class KbqTreeSelect
     /** Whether the select is disabled. Also set by the bound form control. */
     readonly disabled = linkedSignal(() => this.disabledInput());
 
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined,
+        ((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: (fn) => {
+            if (fn !== undefined && typeof fn !== 'function') {
+                throw Error('`selectAllHandler` must be a function.');
+            }
+
+            return fn;
+        }
+    });
+
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
      */
-    // Stays an accessor: the setter rejects a non-function.
-    @Input()
-    get selectAllHandler() {
-        return this._selectAllHandler;
-    }
-
-    set selectAllHandler(fn: (event: KeyboardEvent, select: KbqTreeSelect) => void) {
-        if (typeof fn !== 'function') {
-            throw Error('`selectAllHandler` must be a function.');
-        }
-
-        this._selectAllHandler = fn;
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
-    private _selectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
         const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
 
         if (shouldSelectSearchText(searchInput)) {
@@ -744,18 +751,16 @@ export class KbqTreeSelect
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
      * @default undefined
      */
-    // Stays an accessor: the setter resolves `'auto'` and the token default into a number.
-    @Input() set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
-        this._searchMinOptionsThreshold =
-            this.resolveSearchMinOptionsThreshold(value) ??
-            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold);
-    }
+    readonly searchMinOptionsThreshold = computed<number | undefined>(
+        () =>
+            this.resolveSearchMinOptionsThreshold(this.searchMinOptionsThresholdInput()) ??
+            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold)
+    );
 
-    get searchMinOptionsThreshold(): number | undefined {
-        return this._searchMinOptionsThreshold;
-    }
-
-    private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold();
+    /** @docs-private */
+    readonly searchMinOptionsThresholdInput = input<'auto' | number | undefined>(undefined, {
+        alias: 'searchMinOptionsThreshold'
+    });
 
     get panelOpen(): boolean {
         return this.panelOpenValue();
@@ -884,6 +889,15 @@ export class KbqTreeSelect
     constructor() {
         super();
 
+        // The selection model is created with the multiplicity of the first binding and cannot follow a change.
+        effect(() => {
+            const multiple = this.multipleInput();
+
+            if (this.multipleValue !== undefined && multiple !== this.multipleValue) {
+                throw getKbqSelectDynamicMultipleError();
+            }
+        });
+
         // A disabled select reports no focus to its form field.
         let wasDisabled = false;
 
@@ -1003,6 +1017,7 @@ export class KbqTreeSelect
 
         tree.resetFocusedItemOnBlur = false;
 
+        this.multipleValue = this.multipleInput();
         this.selectionModel = new SelectionModel<any>(this.multiSelection);
 
         this.syncSelectionState();
@@ -1673,9 +1688,9 @@ export class KbqTreeSelect
         const optionsCount = this.tree()?.nodesCount ?? this.options.length;
 
         return (
-            isUndefined(this.searchMinOptionsThreshold) ||
+            isUndefined(this.searchMinOptionsThreshold()) ||
             !!this.search()?.value() ||
-            optionsCount >= this.searchMinOptionsThreshold
+            optionsCount >= this.searchMinOptionsThreshold()!
         );
     }
 

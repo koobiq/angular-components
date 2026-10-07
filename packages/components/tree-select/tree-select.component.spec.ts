@@ -1123,7 +1123,7 @@ class BasicSelectOnPushPreselected {
         <kbq-form-field>
             <kbq-tree-select
                 placeholder="Food"
-                [multiple]="true"
+                [multiple]="multiple"
                 [selectAllToggle]="selectAllToggle"
                 [formControl]="control"
             >
@@ -1147,6 +1147,7 @@ class BasicSelectOnPushPreselected {
 })
 class MultiSelect {
     control = new UntypedFormControl();
+    multiple = true;
     selectAllToggle: boolean = false;
     disabledNodes = new Set<unknown>();
 
@@ -5001,9 +5002,9 @@ describe('KbqTreeSelect', () => {
         }));
 
         it('should throw an exception when trying to change multiple mode after init', fakeAsync(() => {
-            expect(() => {
-                testInstance.select().multiple = false;
-            }).toThrow(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
+            testInstance.multiple = false;
+
+            expect(() => fixture.detectChanges()).toThrow(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
         }));
 
         it('should update the active item index on click', fakeAsync(() => {

@@ -853,11 +853,12 @@ class BasicSelectOnPushPreselected {
     template: `
         <kbq-form-field>
             <kbq-select
-                multiple
                 placeholder="Food"
+                [multiple]="multiple"
                 [formControl]="control"
                 [sortComparator]="sortComparator"
                 [selectAllToggle]="selectAllToggle"
+                [selectAllHandler]="selectAllHandler"
             >
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value" [disabled]="!!food.disabled">
@@ -881,7 +882,9 @@ class BasicSelectOnPushPreselected {
     `
 })
 class MultiSelect {
+    multiple = true;
     selectAllToggle: boolean = false;
+    selectAllHandler: ((event: KeyboardEvent, select: KbqSelect) => void) | undefined;
     foods: any[] = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' },
@@ -6093,9 +6096,9 @@ describe('KbqSelect', () => {
         }));
 
         it('should throw an exception when trying to change multiple mode after init', fakeAsync(() => {
-            expect(() => {
-                testInstance.select().multiple = false;
-            }).toThrow(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
+            testInstance.multiple = false;
+
+            expect(() => fixture.detectChanges()).toThrow(wrappedErrorMessage(getKbqSelectDynamicMultipleError()));
         }));
 
         it('should pass the `multiple` value to all of the option instances', fakeAsync(() => {
@@ -7169,7 +7172,7 @@ describe('KbqSelect', () => {
 
                 // A comparator that only handles the values it considers equal, like a consumer
                 // reading a field that is absent on some of the items.
-                instance.select().compareWith = (a: CityOption, b: CityOption) => {
+                instance.compareWith = (a: CityOption | null, b: CityOption | null) => {
                     if (a.id !== b.id) {
                         throw new Error('unsupported pair');
                     }
@@ -8338,7 +8341,8 @@ describe('KbqSelect', () => {
 
             const select = testInstance.select();
 
-            select.selectAllHandler = handler;
+            testInstance.selectAllHandler = handler;
+            fixture.detectChanges();
 
             const selectElement = fixture.nativeElement.querySelector('kbq-select');
 
@@ -8358,10 +8362,10 @@ describe('KbqSelect', () => {
             expect(testInstance.control.value).toBeFalsy();
         });
 
-        it('should throw if selectAllHandler is set to a non-function value', () => {
-            expect(() => {
-                (testInstance.select() as any).selectAllHandler = 'not a function';
-            }).toThrow('`selectAllHandler` must be a function.');
+        it('should throw if selectAllHandler is bound to a non-function value', () => {
+            (testInstance as { selectAllHandler: unknown }).selectAllHandler = 'not a function';
+
+            expect(() => fixture.detectChanges()).toThrow('`selectAllHandler` must be a function.');
         });
     });
 

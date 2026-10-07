@@ -1,6 +1,5 @@
 import { CdkMonitorFocus, InteractivityChecker } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
     CdkConnectedOverlay,
@@ -24,15 +23,12 @@ import {
     EventEmitter,
     InjectionToken,
     Injector,
-    Input,
     NgZone,
     OnDestroy,
     OnInit,
-    Output,
     Provider,
     QueryList,
     TemplateRef,
-    ViewChild,
     ViewChildren,
     ViewEncapsulation,
     afterNextRender,
@@ -51,7 +47,7 @@ import {
     viewChild,
     type AfterRenderRef
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     ActiveDescendantKeyManager,
@@ -441,8 +437,12 @@ export class KbqSelect
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
     readonly selectAllOption = viewChild(KbqOption);
 
+    private readonly overlayDirQuery = viewChild(CdkConnectedOverlay);
+
     /** Reference to the CDK connected overlay directive. */
-    @ViewChild(CdkConnectedOverlay, { static: false }) protected overlayDir: CdkConnectedOverlay;
+    protected get overlayDir(): CdkConnectedOverlay {
+        return this.overlayDirQuery()!;
+    }
 
     /** Reference to the optional footer element in the panel. */
     readonly footer = contentChild(KbqSelectFooter, { read: ElementRef });
@@ -577,22 +577,16 @@ export class KbqSelect
      * reports the resolved number, never `'auto'`.
      * @default undefined
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
-        this._searchMinOptionsThreshold =
-            this.resolveSearchMinOptionsThreshold(value) ??
-            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold);
-    }
-
-    get searchMinOptionsThreshold(): number | undefined {
-        return this._searchMinOptionsThreshold;
-    }
-
-    private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold(
-        this.defaultOptions?.searchMinOptionsThreshold
+    readonly searchMinOptionsThreshold = computed<number | undefined>(
+        () =>
+            this.resolveSearchMinOptionsThreshold(this.searchMinOptionsThresholdInput()) ??
+            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold)
     );
+
+    /** @docs-private */
+    readonly searchMinOptionsThresholdInput = input<'auto' | number | undefined>(undefined, {
+        alias: 'searchMinOptionsThreshold'
+    });
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
@@ -632,22 +626,31 @@ export class KbqSelect
      * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
      * `ngOnInit`) matters beyond this output's original consumers.
      */
-    @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly openedChangeOutput = outputFromObservable(this.openedChange, { alias: 'openedChange' });
 
     /** Event emitted before the select panel starts opening. */
     readonly beforeOpened = output<void>();
 
     /** Event emitted when the select has been opened. */
-    @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
+    readonly openedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => o),
         map(() => {})
     );
 
+    /** @docs-private */
+    readonly openedOutput = outputFromObservable(this.openedStream, { alias: 'opened' });
+
     /** Event emitted when the select has been closed. */
-    @Output('closed') readonly closedStream: Observable<void> = this.openedChange.pipe(
+    readonly closedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => !o),
         map(() => {})
     );
+
+    /** @docs-private */
+    readonly closedOutput = outputFromObservable(this.closedStream, { alias: 'closed' });
 
     /** Event emitted when the selected value has been changed by the user. */
     readonly selectionChange = output<KbqSelectChange>();
@@ -678,18 +681,7 @@ export class KbqSelect
      * Whether the overlay should have a backdrop.
      * When true, clicking the backdrop will close the select.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get hasBackdrop(): boolean {
-        return this._hasBackdrop;
-    }
-
-    set hasBackdrop(value: boolean) {
-        this._hasBackdrop = coerceBooleanProperty(value);
-    }
-
-    private _hasBackdrop: boolean = false;
+    readonly hasBackdrop = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /**
      * Placeholder text to be shown when no value is selected.
@@ -702,26 +694,22 @@ export class KbqSelect
      */
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly multipleInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'multiple',
+        transform: booleanAttribute
+    });
+
     /**
      * Whether multiple options can be selected.
      * Note: This cannot be changed dynamically after initialization.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get multiple(): boolean {
-        return this._multiple;
+        return this.multipleValue ?? this.multipleInput();
     }
 
-    set multiple(value: boolean) {
-        if (this.selectionModel) {
-            throw getKbqSelectDynamicMultipleError();
-        }
-
-        this._multiple = value;
-    }
-
-    private _multiple: boolean = false;
+    /** The multiplicity the selection model was created with; a later binding change is refused. */
+    private multipleValue: boolean | undefined;
 
     /**
      * Function to compare the option values with the selected values.
@@ -730,25 +718,15 @@ export class KbqSelect
      * Should return true if the values match.
      * Defaults to strict equality comparison.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get compareWith() {
-        return this._compareWith;
-    }
+    readonly compareWith = input<(o1: any, o2: any) => boolean, (o1: any, o2: any) => boolean>((o1, o2) => o1 === o2, {
+        transform: (fn) => {
+            if (typeof fn !== 'function') {
+                throw getKbqSelectNonFunctionValueError();
+            }
 
-    set compareWith(fn: (o1: any, o2: any) => boolean) {
-        if (typeof fn !== 'function') {
-            throw getKbqSelectNonFunctionValueError();
+            return fn;
         }
-
-        this._compareWith = fn;
-
-        if (this.selectionModel) {
-            // A different comparator means the selection could change.
-            this.initializeSelection();
-        }
-    }
+    });
 
     /**
      * Factory used to construct a `KbqVirtualOption` for selected values whose
@@ -798,24 +776,28 @@ export class KbqSelect
      */
     readonly selectAll = input(false, { transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, select: KbqSelect) => void) | undefined,
+        ((event: KeyboardEvent, select: KbqSelect) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: (fn) => {
+            if (fn !== undefined && typeof fn !== 'function') {
+                throw Error('`selectAllHandler` must be a function.');
+            }
+
+            return fn;
+        }
+    });
+
     /**
      * Function for handling the Ctrl + A (select all) keyboard combination.
      * By default, the internal handler selects all options.
      * It is called with the keyboard event that triggered it and a reference to this select component.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get selectAllHandler() {
-        return this._selectAllHandler;
-    }
-
-    set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void) {
-        if (typeof fn !== 'function') {
-            throw Error('`selectAllHandler` must be a function.');
-        }
-
-        this._selectAllHandler = fn;
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqSelect) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
     /**
@@ -890,18 +872,15 @@ export class KbqSelect
      * Sets the tabIndex of the select element.
      * Automatically set to -1 when disabled.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
+    /** @docs-private */
+    readonly tabIndexInput = input<number, number | string | null | undefined>(0, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
     get tabIndex(): number {
-        return this.disabled() ? -1 : this._tabIndex;
+        return this.disabled() ? -1 : this.tabIndexInput();
     }
-
-    set tabIndex(value: number) {
-        this._tabIndex = value;
-    }
-
-    private _tabIndex = 0;
 
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
@@ -1213,6 +1192,28 @@ export class KbqSelect
     constructor() {
         super();
 
+        // A different comparator means a different set of options can match the value.
+        let comparatorBound = false;
+
+        effect(() => {
+            this.compareWith();
+
+            untracked(() => {
+                if (comparatorBound && this.selectionModel) this.initializeSelection();
+
+                comparatorBound = true;
+            });
+        });
+
+        // The selection model is created with the multiplicity of the first binding and cannot follow a change.
+        effect(() => {
+            const multiple = this.multipleInput();
+
+            if (this.multipleValue !== undefined && multiple !== this.multipleValue) {
+                throw getKbqSelectDynamicMultipleError();
+            }
+        });
+
         // A bound value selects its options, as long as it differs from the one the select holds.
         effect(() => {
             const value = this.valueInput();
@@ -1276,6 +1277,7 @@ export class KbqSelect
 
     /** Lifecycle hook called after component initialization. Initializes selection model and subscriptions. */
     ngOnInit() {
+        this.multipleValue = this.multipleInput();
         this.selectionModel = new SelectionModel(this.multiSelection);
         this.emptyValue.set(this.selectionModel.isEmpty());
         this.selectionModel.changed
@@ -1998,9 +2000,9 @@ export class KbqSelect
     /** @docs-private */
     protected shouldShowSearch(): boolean {
         return (
-            isUndefined(this.searchMinOptionsThreshold) ||
+            isUndefined(this.searchMinOptionsThreshold()) ||
             !!this.search()?.value() ||
-            this.options.length >= this.searchMinOptionsThreshold
+            this.options.length >= this.searchMinOptionsThreshold()!
         );
     }
 
@@ -2323,7 +2325,7 @@ export class KbqSelect
             ...this.previousSelectionModelSelected.map((option) => this.resolveSelectedOption(option))
             // Treat null as a special reset value.
         ].find(
-            (option: KbqOptionBase) => option.value != null && runCompareWith(this.compareWith, option.value, value)
+            (option: KbqOptionBase) => option.value != null && runCompareWith(this.compareWith(), option.value, value)
         );
     }
 
@@ -2362,7 +2364,7 @@ export class KbqSelect
         if (this.withVirtualScroll) {
             const source = this.cdkVirtualForOf()?.cdkVirtualForOf;
             const correspondingOptionVirtual =
-                source instanceof Array ? source.find((item) => this.compareWith(item, value)) : undefined;
+                source instanceof Array ? source.find((item) => this.compareWith()(item, value)) : undefined;
 
             if (correspondingOptionVirtual) {
                 return this.createVirtualOption(correspondingOptionVirtual);
@@ -2407,7 +2409,7 @@ export class KbqSelect
 
         // A value that no longer matches the copy means the view was recycled for another item. A
         // comparator that throws reads as "no match" here too, falling back to the value actually selected.
-        return runCompareWith(this.compareWith, option.value, copy.value) ? option : copy;
+        return runCompareWith(this.compareWith(), option.value, copy.value) ? option : copy;
     }
 
     /** Sets up a key manager to listen to keyboard events on the overlay panel. */
@@ -2550,11 +2552,8 @@ export class KbqSelect
         this.keyManager.activeItem?.focus();
     }
 
-    /** Comparison function to specify which option is displayed. Defaults to object equality. */
-    private _compareWith = (o1: any, o2: any) => o1 === o2;
-
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
-    private _selectAllHandler(event: KeyboardEvent, select: KbqSelect): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqSelect): void {
         const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
 
         if (shouldSelectSearchText(searchInput)) {
