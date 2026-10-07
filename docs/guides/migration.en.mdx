@@ -2257,6 +2257,8 @@ The tree moved its inputs and its query members to signals. Six members that use
 
 Two of the six are silent rather than loud. `KbqTreeBase` is exported and is the documented extension point for a custom tree: a subclass reading `this.nodeDefs.length` now gets `0` — the arity of the signal function — instead of the number of node definitions, and `this.nodeDefs.changes.subscribe(…)` throws. And `KbqTreeNodeToggle` kept `disabled` as the input alias (the input itself is declared as `disabledInput`), so every template binding keeps working and only imperative writes break.
 
+The inputs of `KbqTreeSelection` and `KbqTreeOption` followed: `treeControl`, `dataSource`, `disabled`, `tabIndex`, `multiple` and `selectAllHandler` of the tree, `disabled` and `showCheckbox` of the option are signal inputs read through a getter. A read is unchanged, a programmatic write no longer compiles: bind them, and set the selection mode through `multipleMode`. `autoSelect`, `noUnselectLast`, `typeAhead` and `selectAll` stay writable, since `KbqTreeSelect` writes them.
+
 Reported by `tree-signals`. A project that renders a tree at all also gets a summary of all six members, because five of them are only visible at a call site that writes them — a consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
 
 #### Tree select

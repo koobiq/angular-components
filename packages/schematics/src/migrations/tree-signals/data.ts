@@ -74,6 +74,25 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqTreeOption.onFocus and onBlur are Observables now (`asObservable()`), so `.next()` is gone at ' +
             'runtime as well as in the types. Subscribe to them; the option emits on them itself.'
+    },
+    {
+        anchor: '\\bKbqTree(?:Selection|Base)\\b',
+        pattern: '\\.\\s*(?:treeControl|dataSource|disabled|tabIndex|multiple|selectAllHandler)\\s*=[^=]',
+        message:
+            'treeControl, dataSource, disabled, tabIndex, multiple and selectAllHandler of KbqTreeSelection are ' +
+            'signal inputs read through a getter now, so a programmatic write no longer compiles. Bind them, set ' +
+            'the selection mode through multipleMode, and disable the tree through its form control. autoSelect, ' +
+            'noUnselectLast, typeAhead and selectAll stay writable. This pattern also matches a write to an ' +
+            'unrelated object in the same file — check before changing it.'
+    },
+    {
+        anchor: '\\bKbqTreeOption\\b',
+        pattern: '\\.\\s*(?:disabled|showCheckbox)\\s*=[^=]',
+        message:
+            'KbqTreeOption.disabled and .showCheckbox are signal inputs read through a getter now, so a ' +
+            'programmatic write no longer compiles. Bind them, or disable the node through the isDisabled ' +
+            'predicate of the tree control. This pattern also matches a write to an unrelated object in the ' +
+            'same file — check before changing it.'
     }
 ];
 
@@ -89,5 +108,7 @@ export const SUMMARY: string[] = [
     '  - KbqTreeBase.nodeDefs (Signal<readonly KbqTreeNodeDef<T>[]>, no longer a QueryList)',
     '  - KbqTreeNodePadding.indent (InputSignal) and KbqTreeNodePadding.indentUnits (getter)',
     '  - KbqTreeNodeToggleBaseDirective.recursive (InputSignalWithTransform)',
-    '  - KbqTreeOption.onFocus and KbqTreeOption.onBlur (Observable, not Subject)'
+    '  - KbqTreeOption.onFocus and KbqTreeOption.onBlur (Observable, not Subject)',
+    '  - KbqTreeSelection treeControl, dataSource, disabled, tabIndex, multiple, selectAllHandler and',
+    '    KbqTreeOption disabled, showCheckbox (signal inputs read through a getter; bind them instead)'
 ];

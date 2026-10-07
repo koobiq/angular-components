@@ -17,21 +17,20 @@ import {
     forwardRef,
     inject,
     Injector,
-    Input,
     input,
     IterableDiffer,
+    linkedSignal,
     OnDestroy,
-    Output,
     output,
     Provider,
     QueryList,
     signal,
+    untracked,
     viewChild,
-    ViewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     DOWN_ARROW,
@@ -264,22 +263,25 @@ export class KbqTreeSelection
      */
     ownsKeyboard: boolean = true;
 
-    @ViewChild(KbqTreeNodeOutlet, { static: true }) declare nodeOutlet: KbqTreeNodeOutlet;
-
     /** Reference to the built-in "select all" row, rendered only while `selectAll` is on. */
     readonly selectAllOption = viewChild(KbqTreeOption);
 
     @ContentChildren(KbqTreeOption) unorderedOptions: QueryList<KbqTreeOption>;
 
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input() declare treeControl: FlatTreeControl<any>;
+    /** Controls the expanded state and holds the data nodes of the tree. A flat tree is the only kind it renders. */
+    override get treeControl(): FlatTreeControl<any> {
+        return super.treeControl as FlatTreeControl<any>;
+    }
 
     readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption>>();
 
-    // Not an `output()`: `KbqTreeSelect` pipes this stream with rxjs, which an `OutputEmitterRef`
-    // cannot feed without wrapping every call site in `outputToObservable`.
-    @Output() readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
+    /**
+     * Emits when the selection changes. A stream rather than an `output()`: `KbqTreeSelect` pipes it with rxjs.
+     */
+    readonly selectionChange = new EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>();
+
+    /** @docs-private */
+    readonly selectionChangeOutput = outputFromObservable(this.selectionChange, { alias: 'selectionChange' });
 
     /** Emits after "select all" ran, with the options it could act on. */
     readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption>>();
@@ -290,37 +292,47 @@ export class KbqTreeSelection
     /**
      * Emits when the active option is copied with Ctrl/Cmd + C. Subscribing replaces the built-in
      * clipboard handler, so the event has to stay an `EventEmitter`: the decision is made by reading
-     * `observed`, which `OutputEmitterRef` does not have.
+     * `observed`, which `OutputEmitterRef` does not have. A template listener subscribes to it through
+     * the output below.
      */
-    @Output() readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+    readonly copyChange = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+
+    /** @docs-private */
+    readonly copyChangeOutput = outputFromObservable(this.copyChange, { alias: 'copyChange' });
 
     /** @deprecated Use `copyChange` instead. Will be removed in version 20. */
-    @Output() readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+    readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
+
+    /** @docs-private */
+    readonly onCopyOutput = outputFromObservable(this.onCopy, { alias: 'onCopy' });
 
     private sortedNodes: KbqTreeOption[] = [];
 
     private lastSyncedDataNodes: readonly any[] | null = null;
+
+    /** @docs-private */
+    readonly autoSelectInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'autoSelect',
+        transform: booleanAttribute
+    });
+
+    /** `undefined` while the value is derived from the mode. Written by `KbqTreeSelect` as well. */
+    private readonly autoSelectState = linkedSignal(() => this.autoSelectInput());
 
     /**
      * Whether clicking a node clears the rest of the selection. Defaults to `true`, and to `false` for
      * `multiple="checkbox"`.
      *
      * Assigning it — from a template binding or imperatively, as `KbqTreeSelect` does — replaces the
-     * derived default for good, so a later {@link multiple} change leaves the value alone.
+     * derived default, so a later {@link multiple} change leaves the value alone.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get autoSelect(): boolean {
-        return this._autoSelect ?? this.mode() !== MultipleMode.CHECKBOX;
+        return this.autoSelectState() ?? this.mode() !== MultipleMode.CHECKBOX;
     }
 
     set autoSelect(value: boolean) {
-        this._autoSelect = coerceBooleanProperty(value);
+        this.autoSelectState.set(coerceBooleanProperty(value));
     }
-
-    /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
-    private _autoSelect: boolean | null = null;
 
     get optionFocusChanges(): Observable<KbqTreeOptionEvent> {
         return merge(...this.renderedOptions.map((option) => option.onFocus));
@@ -346,14 +358,12 @@ export class KbqTreeSelection
      * The getter reports whether more than one node can be selected; read {@link multipleMode} for the mode
      * itself.
      */
-    @Input()
     get multiple(): boolean {
         return !!this.mode();
     }
 
-    set multiple(value: KbqMultipleInput) {
-        this.setMultipleMode(resolveMultipleMode(value));
-    }
+    /** @docs-private */
+    readonly multipleInput = input<KbqMultipleInput | undefined>(undefined, { alias: 'multiple' });
 
     /** Resolved selection mode, or `null` when only one node can be selected. */
     get multipleMode(): MultipleMode | null {
@@ -371,23 +381,26 @@ export class KbqTreeSelection
      */
     private readonly mode = signal<MultipleMode | null>(null);
 
+    /** @docs-private */
+    readonly noUnselectLastInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'noUnselectLast',
+        transform: booleanAttribute
+    });
+
+    /** `undefined` while the value is derived from the mode. Written by `KbqTreeSelect` as well. */
+    private readonly noUnselectLastState = linkedSignal(() => this.noUnselectLastInput());
+
     /**
      * Whether the last selected node can be deselected.
      * Derived from the mode until assigned, like {@link autoSelect}.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get noUnselectLast(): boolean {
-        return this._noUnselectLast ?? this.mode() !== MultipleMode.CHECKBOX;
+        return this.noUnselectLastState() ?? this.mode() !== MultipleMode.CHECKBOX;
     }
 
     set noUnselectLast(value: boolean) {
-        this._noUnselectLast = coerceBooleanProperty(value);
+        this.noUnselectLastState.set(coerceBooleanProperty(value));
     }
-
-    /** `null` while the consumer has not set the input, i.e. while the value is derived from the mode. */
-    private _noUnselectLast: boolean | null = null;
 
     /**
      * Whether typing printable characters moves the focus to the next option whose label starts with
@@ -397,20 +410,22 @@ export class KbqTreeSelection
      * `KbqTreeSelect` routes everything the user types — the search query included — into this key
      * manager, and type-ahead would move the active option out from under the query.
      */
-    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`, so it cannot be a
-    // signal input.
-    @Input({ transform: booleanAttribute })
     get typeAhead(): boolean {
-        return this._typeAhead;
+        return this.typeAheadState();
     }
 
+    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`.
     set typeAhead(value: boolean) {
-        this._typeAhead = value;
-
-        this.applyTypeAhead();
+        this.typeAheadState.set(value);
     }
 
-    private _typeAhead = true;
+    /** @docs-private */
+    readonly typeAheadInput = input<boolean, boolean | string | null | undefined>(true, {
+        alias: 'typeAhead',
+        transform: booleanAttribute
+    });
+
+    private readonly typeAheadState = linkedSignal(() => this.typeAheadInput());
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
@@ -421,18 +436,22 @@ export class KbqTreeSelection
      * Enabling it also makes Ctrl/Cmd + A a two-way toggle, so the shortcut and the checkbox never
      * disagree (`selectAllToggle` is implied).
      */
-    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`, so it cannot be a
-    // signal input; the signal behind it is what keeps the template in step.
-    @Input({ transform: booleanAttribute })
     get selectAll(): boolean {
         return this.selectAllEnabled();
     }
 
+    // Written imperatively by `KbqTreeSelect`, like `autoSelect` and `noUnselectLast`.
     set selectAll(value: boolean) {
         this.selectAllEnabled.set(value);
     }
 
-    private readonly selectAllEnabled = signal(false);
+    /** @docs-private */
+    readonly selectAllInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'selectAll',
+        transform: booleanAttribute
+    });
+
+    private readonly selectAllEnabled = linkedSignal(() => this.selectAllInput());
 
     /** Whether the "select all" row is currently rendered. */
     protected get showSelectAll(): boolean {
@@ -509,35 +528,25 @@ export class KbqTreeSelection
         };
     }
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Whether the tree is disabled, bound with `[disabled]` or set by a form control. */
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
 
-    set disabled(rawValue: boolean) {
-        const value = coerceBooleanProperty(rawValue);
+    private readonly disabledState = signal(false);
 
-        if (this._disabled !== value) {
-            this._disabled = value;
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined>(undefined, { alias: 'tabIndex' });
 
-            this.markOptionsForCheck();
-        }
-    }
-
-    private _disabled: boolean = false;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get tabIndex(): any {
+    /** Tab index of the tree, `-1` while it is disabled. */
+    get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
-    }
-
-    set tabIndex(value: any) {
-        this._tabIndex = value;
-        this.userTabIndex = value;
     }
 
     private _tabIndex = 0;
@@ -588,6 +597,45 @@ export class KbqTreeSelection
         // because `KbqTreeOption.setSelected` refuses to touch the selection without one, and a static
         // `multiple` attribute reaches the input right after the constructor, before any node exists.
         this.selectionModel = this.ownSelectionModel = new SelectionModel<SelectionModelOption>(false);
+
+        // The inputs below stay `undefined` until a template binds them, so an unbound one does not override
+        // what `KbqTreeSelect`, the `ControlValueAccessor` or the roving focus wrote.
+        effect(() => {
+            const multiple = this.multipleInput();
+
+            if (multiple !== undefined) untracked(() => this.setMultipleMode(resolveMultipleMode(multiple)));
+        });
+
+        effect(() => {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex === undefined) return;
+
+            this._tabIndex = tabIndex;
+            this.userTabIndex = tabIndex;
+        });
+
+        effect(() => {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabledState.set(disabled);
+        });
+
+        let wasDisabled: boolean | undefined;
+
+        effect(() => {
+            const disabled = this.disabledState();
+
+            if (wasDisabled !== undefined && disabled !== wasDisabled) untracked(() => this.markOptionsForCheck());
+
+            wasDisabled = disabled;
+        });
+
+        effect(() => {
+            this.typeAheadState();
+
+            untracked(() => this.applyTypeAhead());
+        });
 
         // `unorderedOptions.changes` never fires for the "select all" row — it is a view child — so the
         // rendered list has to be rebuilt whenever the view query resolves or drops it.
@@ -1088,24 +1136,30 @@ export class KbqTreeSelection
         this.selectionChange.emit(new KbqTreeSelectionChange(this, option, [option]));
     }
 
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined,
+        ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: (fn) => {
+            if (fn !== undefined && typeof fn !== 'function') {
+                throw Error('`selectAllHandler` must be a function.');
+            }
+
+            return fn;
+        }
+    });
+
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used,
      * which toggles the selection of all non-disabled, selectable options.
      */
-    @Input()
-    get selectAllHandler() {
-        return this._selectAllHandler;
+    get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
-    set selectAllHandler(fn: (event: KeyboardEvent, tree: KbqTreeSelection) => void) {
-        if (typeof fn !== 'function') {
-            throw Error('`selectAllHandler` must be a function.');
-        }
-
-        this._selectAllHandler = fn;
-    }
-
-    private _selectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, tree: KbqTreeSelection): void {
         event.preventDefault();
 
         tree.selectAllOptions();
@@ -1197,8 +1251,7 @@ export class KbqTreeSelection
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
      */
     setDisabledState(isDisabled: boolean): void {
-        this._disabled = isDisabled;
-        this.changeDetectorRef.markForCheck();
+        this.disabledState.set(isDisabled);
     }
 
     /** @docs-private */
@@ -1315,7 +1368,7 @@ export class KbqTreeSelection
 
     /** `-1` is the key manager's way of keeping the letter stream running but never matching on it. */
     private applyTypeAhead(): void {
-        this.keyManager?.withTypeAhead(typeAheadDebounce, this._typeAhead ? 0 : -1);
+        this.keyManager?.withTypeAhead(typeAheadDebounce, this.typeAhead ? 0 : -1);
     }
 
     /**

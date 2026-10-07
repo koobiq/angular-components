@@ -682,7 +682,8 @@ describe('KbqTreeSelection', () => {
             it('should invoke a custom selectAllHandler on CTRL + A instead of the default', fakeAsync(() => {
                 const customHandler = vi.fn();
 
-                component.tree.selectAllHandler = customHandler;
+                component.selectAllHandler = customHandler;
+                fixture.detectChanges();
 
                 const selectAllKeyEvent = createKeyboardEvent('keydown', A);
 
@@ -1452,7 +1453,10 @@ describe('KbqTreeSelection', () => {
 
                 expect(getNodes(treeElement).length).toBe(5);
 
-                expect(() => (component.tree().dataSource = null)).not.toThrow();
+                expect(() => {
+                    (component as { dataSource: unknown }).dataSource = null;
+                    fixture.detectChanges();
+                }).not.toThrow();
 
                 expect(getNodes(treeElement).length).toBe(0);
                 expect(levelsOf(component.tree()).size).toBe(0);
@@ -1638,10 +1642,11 @@ describe('KbqTreeSelection', () => {
             });
 
             it('should report an empty state instead of throwing before treeControl is assigned', () => {
-                // `treeControl` is an `@Input`, so a consumer reading these off a template reference —
-                // e.g. to swap the trigger for a "select all" label — gets here on the very pass that
-                // assigns it, while it is still undefined.
+                // A consumer reading these off a template reference — e.g. to swap the trigger for a
+                // "select all" label — can get here before the `treeControl` binding is applied.
                 const uninitialized = Object.create(KbqTreeSelection.prototype) as KbqTreeSelection;
+
+                Object.defineProperty(uninitialized, 'treeControlInput', { value: () => undefined });
 
                 expect(() => uninitialized.allOptionsSelected).not.toThrow();
                 expect(uninitialized.allOptionsSelected).toBe(false);
@@ -2827,6 +2832,7 @@ class TreeSelectionFocusStates extends TreeParams {}
             [disabled]="treeDisabled"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
+            [selectAllHandler]="selectAllHandler"
             [(ngModel)]="modelValue"
             (onSelectAll)="onSelectAll($event)"
             (selectionChange)="onSelectionChange($event)"
@@ -2857,6 +2863,7 @@ class KbqTreeAppMultiple extends TreeParams {
     selectAllToggle: boolean = false;
     selectAllEnabled: boolean = false;
     treeDisabled: boolean = false;
+    selectAllHandler: ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined;
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
 
     savedSelectionChangeEvent?: KbqTreeSelectionChange<KbqTreeOption>;
@@ -3480,7 +3487,7 @@ describe('KbqTreeSelection multiple mode', () => {
         // What `KbqTreeSelect.ngAfterContentInit` does: hands the tree a model it also subscribes to.
         component.tree.selectionModel = shared;
 
-        expect(() => (component.tree.multiple = false)).toThrow(
+        expect(() => (component.tree.multipleMode = null)).toThrow(
             wrappedErrorMessage(getKbqTreeSelectionOwnedMultipleError())
         );
         expect(component.tree.selectionModel).toBe(shared);
@@ -3551,8 +3558,8 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
         component.tree.registerOnChange((value: any) => reported.push(value));
 
         // Two real multiplicity changes, so two reports would be queued without coalescing.
-        component.tree.multiple = false;
-        component.tree.multiple = 'checkbox';
+        component.tree.multipleMode = null;
+        component.tree.multipleMode = MultipleMode.CHECKBOX;
         fixture.detectChanges();
         flush();
 
