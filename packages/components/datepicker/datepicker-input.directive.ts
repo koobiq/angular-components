@@ -10,14 +10,15 @@ import {
     forwardRef,
     inject,
     InjectionToken,
-    Input,
     input,
     linkedSignal,
+    OnChanges,
     OnDestroy,
     output,
     Provider,
     Renderer2,
     signal,
+    SimpleChanges,
     untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -280,7 +281,7 @@ interface DateTimeObject {
     exportAs: 'kbqDatepickerInput'
 })
 export class KbqDatepickerInput<D>
-    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
+    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnChanges, OnDestroy, DoCheck, AfterContentInit
 {
     elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private readonly renderer = inject(Renderer2);
@@ -337,9 +338,6 @@ export class KbqDatepickerInput<D>
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /** The datepicker that this input is associated with. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     set kbqDatepicker(value: KbqDatepicker<D>) {
         if (!value) {
             return;
@@ -360,9 +358,6 @@ export class KbqDatepickerInput<D>
     }
 
     /** The calendar that this input is associated with. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     set kbqCalendar(value: KbqCalendar<D>) {
         if (!value) {
             return;
@@ -372,14 +367,22 @@ export class KbqDatepickerInput<D>
         this.calendar.registerInput(this);
     }
 
+    /** @docs-private */
+    readonly kbqDatepickerInput = input<KbqDatepicker<D> | undefined>(undefined, { alias: 'kbqDatepicker' });
+
+    /** @docs-private */
+    readonly kbqCalendarInput = input<KbqCalendar<D> | undefined>(undefined, { alias: 'kbqCalendar' });
+
     /** Function that can be used to filter out dates within the datepicker. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     set kbqDatepickerFilter(value: (date: D | null) => boolean) {
         this.dateFilter = value;
         this.validatorOnChange();
     }
+
+    /** @docs-private */
+    readonly kbqDatepickerFilterInput = input<((date: D | null) => boolean) | undefined>(undefined, {
+        alias: 'kbqDatepickerFilter'
+    });
 
     /** @docs-private */
     readonly valueInput = input<D | null | undefined>(undefined, { alias: 'value' });
@@ -398,9 +401,6 @@ export class KbqDatepickerInput<D>
      * value it parses, and the comparison is made on wall-clock components rather than on absolute
      * time.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get min(): D | null {
         return this._min;
     }
@@ -421,9 +421,6 @@ export class KbqDatepickerInput<D>
      * value it parses, so an upper bound meant to include its whole day has to be the end of that
      * day.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get max(): D | null {
         return this._max;
     }
@@ -434,6 +431,12 @@ export class KbqDatepickerInput<D>
     }
 
     private _max: D | null;
+
+    /** @docs-private */
+    readonly minInput = input<D | null | undefined>(undefined, { alias: 'min' });
+
+    /** @docs-private */
+    readonly maxInput = input<D | null | undefined>(undefined, { alias: 'max' });
 
     /** @docs-private */
     readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
@@ -450,9 +453,6 @@ export class KbqDatepickerInput<D>
     /** Unique id of the element, generated when not provided. */
     readonly id = computed(() => this.idInput() || this.uid);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     set kbqValidationTooltip(tooltip: KbqTooltipTrigger) {
         if (!tooltip) {
             return;
@@ -473,6 +473,11 @@ export class KbqDatepickerInput<D>
             setTimeout(() => tooltip.hide(), validationTooltipHideDelay);
         });
     }
+
+    /** @docs-private */
+    readonly kbqValidationTooltipInput = input<KbqTooltipTrigger | undefined>(undefined, {
+        alias: 'kbqValidationTooltip'
+    });
 
     readonly incorrectInput = output<void>();
 
@@ -607,6 +612,40 @@ export class KbqDatepickerInput<D>
             // next keystroke re-parses it against the new zone and emits a different instant.
             this.setValue(this.valueState());
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // Not in an effect, which runs too late: `min`, `max` and the filter revalidate the form control before the
+        // template reads its errors.
+        if (changes['kbqDatepickerInput']) {
+            const datepicker = this.kbqDatepickerInput();
+
+            if (datepicker !== undefined) this.kbqDatepicker = datepicker;
+        }
+
+        if (changes['kbqCalendarInput']) {
+            const calendar = this.kbqCalendarInput();
+
+            if (calendar !== undefined) this.kbqCalendar = calendar;
+        }
+
+        if (changes['kbqDatepickerFilterInput']) {
+            const filter = this.kbqDatepickerFilterInput();
+
+            if (filter !== undefined) this.kbqDatepickerFilter = filter;
+        }
+
+        // A bound `undefined` is handed over too, as an unset bound: it lifts the restriction.
+        if (changes['minInput']) this.min = this.minInput() ?? null;
+
+        if (changes['maxInput']) this.max = this.maxInput() ?? null;
+
+        if (changes['kbqValidationTooltipInput']) {
+            const tooltip = this.kbqValidationTooltipInput();
+
+            if (tooltip !== undefined) this.kbqValidationTooltip = tooltip;
+        }
     }
 
     ngDoCheck() {

@@ -419,6 +419,20 @@ Their inputs are signal inputs named `<member>Input`, handed to the unchanged me
 ng g @koobiq/components:signal-inputs-subclasses --project "<your project>"
 ```
 
+#### Datepicker
+
+The inputs of `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`, `KbqCalendarHeader` and `KbqMonthView` are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `datepicker.opened`, `datepicker.startAt`, `input.min` or `calendar.minDate` works as before.
+
+- **A subclass** that implements `ngOnChanges` marks it `override` and calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `minInput`.
+- **A `SimpleChanges` passed to `ngOnChanges` by hand** is keyed by the `<member>Input` names: `minDateInput`, not `minDate`.
+- **A boolean input** — `hasBackdrop`, `disabled` and `opened` — accepts `boolean | string | null | undefined` in a template.
+
+`datepicker-signals` reports every subclass and every direct call of `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:datepicker-signals --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

@@ -6,6 +6,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -14,10 +15,11 @@ import {
     inject,
     InjectionToken,
     Injector,
-    Input,
     input,
+    OnChanges,
     OnDestroy,
     output,
+    SimpleChanges,
     viewChild,
     ViewContainerRef,
     ViewEncapsulation
@@ -141,7 +143,7 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     ],
     exportAs: 'kbqDatepicker'
 })
-export class KbqDatepicker<D> implements OnDestroy {
+export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     private overlay = inject(Overlay);
     private readonly injector = inject(Injector);
     private viewContainerRef = inject(ViewContainerRef);
@@ -150,9 +152,6 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     protected readonly document = inject<Document>(DOCUMENT);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
     }
@@ -164,9 +163,6 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _hasBackdrop: boolean = false;
 
     /** The date to open the calendar to initially. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get startAt(): D | null {
         // If an explicit startAt is set we start there, otherwise we start at whatever the currently
         // selected value is.
@@ -185,9 +181,6 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _startAt: D | null;
 
     /** Whether the datepicker pop-up should be disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get disabled(): boolean {
         return this._disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled() : this._disabled;
     }
@@ -204,9 +197,6 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _disabled: boolean;
 
     /** Whether the calendar is open. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get opened(): boolean {
         return this._opened;
     }
@@ -220,6 +210,27 @@ export class KbqDatepicker<D> implements OnDestroy {
     }
 
     private _opened = false;
+
+    /** @docs-private */
+    readonly hasBackdropInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'hasBackdrop',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly startAtInput = input<D | null | undefined>(undefined, { alias: 'startAt' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly openedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'opened',
+        transform: booleanAttribute
+    });
 
     /** The currently selected date. */
     get selected(): D | null {
@@ -305,6 +316,30 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     constructor() {
         this.scrollStrategy = inject(KBQ_DATEPICKER_SCROLL_STRATEGY);
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['hasBackdropInput']) {
+            const hasBackdrop = this.hasBackdropInput();
+
+            if (hasBackdrop !== undefined) this.hasBackdrop = hasBackdrop;
+        }
+
+        // A bound `undefined` is handed over too, as an unset date.
+        if (changes['startAtInput']) this.startAt = this.startAtInput() ?? null;
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['openedInput']) {
+            const opened = this.openedInput();
+
+            if (opened !== undefined) this.opened = opened;
+        }
     }
 
     ngOnDestroy() {

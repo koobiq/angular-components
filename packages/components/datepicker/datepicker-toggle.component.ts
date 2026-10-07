@@ -1,13 +1,13 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     DestroyRef,
     Directive,
     inject,
-    Input,
     input,
     OnChanges,
     OnDestroy,
@@ -55,9 +55,6 @@ export class KbqDatepickerToggleIcon {}
 })
 export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy, KbqSiblingPopup {
     /** Whether the toggle button is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get disabled(): boolean {
         return this.datepicker().disabled || this._disabled;
     }
@@ -67,6 +64,12 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     }
 
     private _disabled = false;
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
     /** Datepicker instance that the button will toggle. */
     readonly datepicker = input<KbqDatepicker<D>>(undefined!, { alias: 'for' });
@@ -99,6 +102,13 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     private stateChangesSubscription = Subscription.EMPTY;
 
     ngOnChanges(changes: SimpleChanges) {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
         if (changes.datepicker && !changes.datepicker.firstChange) {
             this.watchStateChanges();
         }

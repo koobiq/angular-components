@@ -419,6 +419,20 @@ ng g @koobiq/components:list-signals --project "<your project>"
 ng g @koobiq/components:signal-inputs-subclasses --project "<your project>"
 ```
 
+#### Поле с датой
+
+Инпуты `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`, `KbqCalendarHeader` и `KbqMonthView` стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `datepicker.opened`, `datepicker.startAt`, `input.min` или `calendar.minDate` работают как раньше.
+
+- **Наследник**, реализующий `ngOnChanges`, помечает его `override` и вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `minInput`.
+- **`SimpleChanges`, переданный в `ngOnChanges` вручную**, использует ключи `<член>Input`: `minDateInput`, а не `minDate`.
+- **Булев инпут** — `hasBackdrop`, `disabled` и `opened` — принимает в шаблоне `boolean | string | null | undefined`.
+
+Схематик `datepicker-signals` сообщает о каждом наследнике и каждом прямом вызове `ngOnChanges`:
+
+```bash
+ng g @koobiq/components:datepicker-signals --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

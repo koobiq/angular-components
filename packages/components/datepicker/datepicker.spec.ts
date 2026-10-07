@@ -1228,7 +1228,7 @@ describe('KbqDatepicker', () => {
             }));
 
             it('should not mark invalid when value equals min', fakeAsync(() => {
-                testComponent.date = testComponent.minDate;
+                testComponent.date = testComponent.minDate!;
                 fixture.detectChanges();
                 flush();
                 fixture.detectChanges();
@@ -1294,6 +1294,37 @@ describe('KbqDatepicker', () => {
                 expect(getDatepickerNgModel(fixture).errors).toHaveProperty('kbqDatepickerMin');
             }));
 
+            it('should lift min when its binding becomes unset', async () => {
+                testComponent.date = DateTime.local(2009, 12, 31);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(getDatepickerNgModel(fixture).errors).toHaveProperty('kbqDatepickerMin');
+
+                testComponent.minDate = undefined;
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(getDatepickerNgModel(fixture).errors).toBeNull();
+            });
+
+            it('should keep a max written in code while the bound one does not change', async () => {
+                const datepickerInput = fixture.debugElement
+                    .query(By.directive(KbqDatepickerInput))
+                    .injector.get(KbqDatepickerInput);
+
+                testComponent.date = DateTime.local(2015, 6, 15);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                datepickerInput.max = DateTime.local(2015, 1, 1);
+                testComponent.minDate = DateTime.local(2010, 1, 2);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(getDatepickerNgModel(fixture).errors).toHaveProperty('kbqDatepickerMax');
+            });
+
             it('should ignore an invalid min', fakeAsync(() => {
                 testComponent.minDate = DateTime.invalid('unparseable');
                 testComponent.date = DateTime.local(2015, 6, 15);
@@ -1332,7 +1363,7 @@ describe('KbqDatepicker', () => {
 
                 typeIntoDatepickerInput(fixture, `01.01.${invalidYearLessThanMin}`);
 
-                expect(fixture.componentInstance.date?.year).not.toEqual(fixture.componentInstance.minDate.year);
+                expect(fixture.componentInstance.date?.year).not.toEqual(fixture.componentInstance.minDate?.year);
                 expect(fixture.componentInstance.date?.year).toEqual(invalidYearLessThanMin);
                 expect(
                     fixture.debugElement.queryAll(By.css(yearSelectValuePath))[1].nativeElement.textContent
@@ -1910,7 +1941,7 @@ class DatepickerWithCustomIcon {}
 class DatepickerWithMinAndMaxValidation {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     date: DateTime | null;
-    minDate: DateTime = DateTime.local(2010, 1, 1);
+    minDate: DateTime | undefined = DateTime.local(2010, 1, 1);
     maxDate: DateTime = DateTime.local(2020, 1, 1);
 }
 
