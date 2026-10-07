@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@angular/cdk/keycodes';
-import { Component, DebugElement } from '@angular/core';
+import { Component, DebugElement, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
@@ -115,15 +115,31 @@ describe('KbqAccordion', () => {
 
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain('kbq-accordion-trigger_hug');
 
-            component.selectedVariant = 'fill';
+            component.selectedVariant.set('fill');
             fixture.detectChanges();
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain('kbq-accordion-trigger_fill');
 
-            component.selectedVariant = 'hugSpaceBetween';
+            component.selectedVariant.set('hugSpaceBetween');
             fixture.detectChanges();
             expect(accordionTriggerDebugElement.nativeElement.classList).toContain(
                 'kbq-accordion-trigger_hug-space-between'
             );
+        });
+
+        it('should point the trigger chevron down only in the hugSpaceBetween variant', async () => {
+            const variantsFixture = TestBed.createComponent(AccordionVariants);
+            const iconClasses = () =>
+                variantsFixture.nativeElement.querySelector('.kbq-accordion-trigger__icon').classList;
+
+            await variantsFixture.whenStable();
+
+            expect(iconClasses()).toContain('kbq-chevron-right-s_16');
+
+            variantsFixture.componentInstance.selectedVariant.set('hugSpaceBetween');
+            await variantsFixture.whenStable();
+
+            expect(iconClasses()).toContain('kbq-chevron-down-s_16');
+            expect(iconClasses()).not.toContain('kbq-chevron-right-s_16');
         });
 
         describe('defaultValue', () => {
@@ -2197,7 +2213,7 @@ class TestApp {}
     selector: 'accordion-variant',
     imports: [KbqAccordionModule],
     template: `
-        <kbq-accordion [variant]="selectedVariant">
+        <kbq-accordion [variant]="selectedVariant()">
             <kbq-accordion-item>
                 <kbq-accordion-header>
                     <button kbq-accordion-trigger type="button">Is it accessible?</button>
@@ -2208,7 +2224,7 @@ class TestApp {}
     `
 })
 class AccordionVariants {
-    selectedVariant: KbqAccordionVariant = 'hug';
+    readonly selectedVariant = signal<KbqAccordionVariant>('hug');
 }
 
 @Component({

@@ -239,6 +239,7 @@ type ViewportMetrics = {
     selector: 'scrollbar-style-loader',
     template: '',
     styleUrls: ['./scrollbar-tokens.scss', './native-scrollbar.scss', './scrollbar-viewport.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 class ScrollbarStyleLoader {}

@@ -9,11 +9,13 @@ import {
     inject,
     Injectable,
     Provider,
+    signal,
     TemplateRef,
     Type,
     viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { enUSLocaleData, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
 import { lastValueFrom } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
@@ -103,6 +105,27 @@ export class ActionsPanelController {
 
     close<R = string>(result?: R): void {
         this.actionsPanel.close(result);
+    }
+}
+
+@Component({
+    selector: 'actions-panel-live-content',
+    template: `
+        <ng-template #actionsPanel>
+            <div id="actionsPanel-counter">{{ counter() }}</div>
+        </ng-template>
+    `,
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ActionsPanelLiveContent {
+    readonly counter = signal(0);
+
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
+
+    open(): void {
+        this.actionsPanel.open(this.template());
     }
 }
 
@@ -462,6 +485,33 @@ describe(KbqActionsPanelModule.name, () => {
         getActionsPanelAction2Element().click();
         await fixture.whenStable();
         expect(getActionsPanelContainerElement()).toBeNull();
+    });
+
+    it('should keep template content in sync with the state of the component that declares it', async () => {
+        const fixture = createComponent(ActionsPanelLiveContent);
+        const { componentInstance } = fixture;
+
+        componentInstance.open();
+        await fixture.whenStable();
+        expect(getActionsPanelContainerElement().querySelector('#actionsPanel-counter')!.textContent).toBe('0');
+
+        componentInstance.counter.set(1);
+        await fixture.whenStable();
+        expect(getActionsPanelContainerElement().querySelector('#actionsPanel-counter')!.textContent).toBe('1');
+    });
+
+    it('should name the close button after the active locale', async () => {
+        const fixture = createComponent(ActionsPanelController, [
+            { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+        ]);
+
+        fixture.componentInstance.openFromTemplate();
+        await fixture.whenStable();
+        expect(getActionsPanelCloseButton().getAttribute('aria-label')).toBe(ruRULocaleData.actionsPanel.closeTooltip);
+
+        TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+        await fixture.whenStable();
+        expect(getActionsPanelCloseButton().getAttribute('aria-label')).toBe(enUSLocaleData.actionsPanel.closeTooltip);
     });
 
     it('should apply scrollStrategy', () => {
