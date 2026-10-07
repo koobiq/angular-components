@@ -35,7 +35,12 @@ import {
     isSelectAll,
     runClearPredicate
 } from '@koobiq/components/core';
-import { KBQ_FORM_FIELD, KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
+import {
+    KBQ_FORM_FIELD,
+    KbqCleaner,
+    kbqCleanerFactoryProvider,
+    KbqFormFieldControl
+} from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';

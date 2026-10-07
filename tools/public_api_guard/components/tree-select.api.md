@@ -125,9 +125,9 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     protected readonly isBrowser: boolean;
     // (undocumented)
     isEmptySearchResult: boolean;
+    readonly isNativeLabelSupported = false;
     // (undocumented)
     protected isPanelOpen(): boolean;
-    readonly isNativeLabelSupported = false;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get multiple(): boolean;
@@ -200,6 +200,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     get required(): boolean;
     set required(value: boolean);
+    protected readonly resolvedAriaLabelledby: _angular_core.Signal<string | null>;
     scrollStrategy: ScrollStrategy;
     // (undocumented)
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;

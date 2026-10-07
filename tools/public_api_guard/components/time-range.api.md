@@ -209,6 +209,7 @@ export class KbqTimeRangeTitle {
 
 // @public
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
+    protected readonly ariaLabelledby: _angular_core.Signal<string | null>;
     controlType: string;
     disabled: boolean;
     empty: boolean;

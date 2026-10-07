@@ -175,13 +175,13 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     protected readonly isBrowser: boolean;
     get isEmptySearchResult(): boolean;
     protected isListHeightPinnedToCap(): boolean;
+    readonly isNativeLabelSupported = false;
     protected get isOptionsListBusy(): boolean;
     // (undocumented)
     protected isPanelOpen(): boolean;
     isRtl(): boolean;
     protected isTriggerValueVisible(index: number): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
-    readonly isNativeLabelSupported = false;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get multiple(): boolean;
     set multiple(value: boolean);
