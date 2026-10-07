@@ -8,7 +8,6 @@ import {
     effect,
     ElementRef,
     inject,
-    Input,
     input,
     linkedSignal,
     signal,
@@ -145,27 +144,23 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
      */
     readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly typeInput = input<string | undefined>(undefined, { alias: 'type' });
+
     /** Input type of the element. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get type(): string {
-        return this._type;
+        return this.resolvedType();
     }
 
-    set type(value: string) {
-        this._type = value || 'text';
-        this.validateType();
+    // A native number field runs the value sanitization algorithm on assignment and drops anything that
+    // is not a valid floating-point number — which is every value `kbqNumberInput` renders once a group
+    // separator or a comma fraction separator is in it. It also reports `selectionStart` as `null`,
+    // disabling caret preservation. Reset rather than throw, so an existing consumer keeps working.
+    private readonly resolvedType = computed(() => {
+        const type = this.typeInput() || 'text';
 
-        // When using Angular inputs, developers are no longer able to set the properties on the native
-        // input element. To ensure that bindings for `type` work, we need to sync the setter
-        // with the native property. Textarea elements don't support the type property or attribute.
-        if (getSupportedInputTypes().has(this._type)) {
-            this.elementRef.nativeElement.type = this._type;
-        }
-    }
-
-    private _type = 'text';
+        return this.numberInput && type === 'number' ? 'text' : type;
+    });
 
     private inputValueAccessor: { value: any };
 
@@ -198,6 +193,20 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
         this.value = signal(this.inputValueAccessor.value);
         this.syncedValue = this.inputValueAccessor.value;
+
+        // A binding of `type` no longer reaches the element on its own: the directive takes the input. Textarea
+        // elements don't support the type property or attribute.
+        effect(() => {
+            const type = this.resolvedType();
+
+            untracked(() => {
+                this.validateType();
+
+                if (getSupportedInputTypes().has(type)) {
+                    this.elementRef.nativeElement.type = type;
+                }
+            });
+        });
 
         // A bound value replaces the current one whenever the binding changes.
         effect(() => {
@@ -295,27 +304,21 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
     /** Make sure the input is a supported type. */
     protected validateType() {
-        if (KBQ_INPUT_INVALID_TYPES.indexOf(this._type) > -1) {
-            throw getKbqInputUnsupportedTypeError(this._type);
+        const type = this.typeInput() || 'text';
+
+        if (KBQ_INPUT_INVALID_TYPES.indexOf(type) > -1) {
+            throw getKbqInputUnsupportedTypeError(type);
         }
 
-        // A native number field runs the value sanitization algorithm on assignment and drops anything that
-        // is not a valid floating-point number — which is every value `kbqNumberInput` renders once a group
-        // separator or a comma fraction separator is in it. It also reports `selectionStart` as `null`,
-        // disabling caret preservation. Reset rather than throw, so an existing consumer keeps working.
-        if (this.numberInput && this._type === 'number') {
-            this._type = 'text';
-
-            if (typeof ngDevMode === 'undefined' || ngDevMode) {
-                // eslint-disable-next-line no-console
-                console.warn(KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE);
-            }
+        if (this.numberInput && type === 'number' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+            // eslint-disable-next-line no-console
+            console.warn(KBQ_NUMBER_INPUT_UNSUPPORTED_TYPE_MESSAGE);
         }
     }
 
     /** Checks whether the input type is one of the types that are never empty. */
     protected isNeverEmpty() {
-        return this.neverEmptyInputTypes.indexOf(this._type) > -1;
+        return this.neverEmptyInputTypes.indexOf(this.type) > -1;
     }
 
     /** Checks whether the input is invalid based on the native validation. */

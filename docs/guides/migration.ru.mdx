@@ -388,6 +388,14 @@ ng g @koobiq/components:core-mixins-removal --project "<your project>"
 ng g @koobiq/components:option-signals --project "<your project>"
 ```
 
+#### Числовое поле и тип поля ввода
+
+`KbqNumberInput.value`, `KbqNumberInput.disabled` и `KbqInput.type` стали сигналами `input()` с геттером для чтения: чтение не меняется, а программная запись больше не компилируется. Задавайте `[value]`, `[disabled]` и `[type]` привязкой или пишите через контрол формы. Схематик `input-signals` сообщает о каждой записи:
+
+```bash
+ng g @koobiq/components:input-signals --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}
