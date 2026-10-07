@@ -571,7 +571,8 @@ describe('KbqListSelection without forms', () => {
             const list: KbqListSelection = selectionList.componentInstance;
             const customHandler = vi.fn();
 
-            list.selectAllHandler = customHandler;
+            fixture.componentInstance.selectAllHandler = customHandler;
+            fixture.detectChanges();
 
             const selectAllEvent = createKeyboardEvent('keydown', A);
 
@@ -585,12 +586,10 @@ describe('KbqListSelection without forms', () => {
             expect(listOptions.every(({ componentInstance: o }) => !o.selected)).toBe(true);
         });
 
-        it('should throw when selectAllHandler is set to a non-function', () => {
-            const list: KbqListSelection = selectionList.componentInstance;
+        it('should throw when selectAllHandler is bound to a non-function', () => {
+            (fixture.componentInstance as unknown as { selectAllHandler: unknown }).selectAllHandler = 'not a function';
 
-            expect(() => {
-                (list as unknown as { selectAllHandler: unknown }).selectAllHandler = 'not a function';
-            }).toThrow('`selectAllHandler` must be a function.');
+            expect(() => fixture.detectChanges()).toThrow('`selectAllHandler` must be a function.');
         });
 
         it('should navigate to next page when PAGE_DOWN is pressed', () => {
@@ -2395,6 +2394,7 @@ class SelectionListWithCustomComparator {
             [autoSelect]="false"
             [noUnselectLast]="false"
             [selectAllToggle]="selectAllToggle"
+            [selectAllHandler]="selectAllHandler"
             (selectionChange)="onValueChange($event)"
         >
             <kbq-list-option checkboxPosition="before" disabled="true" [value]="'inbox'">
@@ -2411,6 +2411,7 @@ class SelectionListWithCustomComparator {
 class SelectionListWithListOptions {
     showLastOption: boolean = true;
     selectAllToggle: boolean = false;
+    selectAllHandler: ((event: KeyboardEvent, list: KbqListSelection) => void) | undefined;
 
     onValueChange(_change: KbqListSelectionChange) {}
 }
