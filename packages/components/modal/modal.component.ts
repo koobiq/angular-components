@@ -210,6 +210,16 @@ export class KbqModalComponent<T = any, R = any>
     /** Inline styles for the body element. */
     readonly kbqBodyStyle = input<object | undefined>(this.options?.kbqBodyStyle);
 
+    // TODO These three are the one part of the component still on decorators, and `output()` is not
+    // a drop-in: they also back the public `afterOpen`/`beforeClose`/`afterClose` observables, and
+    // `OutputEmitterRef` has no `asObservable()`. Converting them silently breaks
+    // `modalRef.afterClose` on the service path — `ModalBuilderForService` subscribes first to
+    // dispose the overlay, so by the time the later listener runs the component is destroyed and
+    // `outputToObservable` has already completed the stream, dropping the value. It also emits onto
+    // a destroyed `OutputRef` (NG0953) when the opener dies mid-animation. Converting them means
+    // first moving the source of truth to a `Subject` the dialog owns and completes, with the output
+    // as its template-facing mirror, and taking the overlay teardown off this emitter — the shape
+    // `sidepanel` and `actions-panel` already use.
     // Trigger when modal open(visible) after animations
     @Output() readonly kbqAfterOpen = new EventEmitter<void>();
     // Trigger when modal leave-animation over
