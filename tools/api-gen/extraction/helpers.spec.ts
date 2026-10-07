@@ -220,11 +220,26 @@ describe('reading members from source', () => {
         ]);
     });
 
+    // The library declares no decorated input any more, so the source is written here.
     it('reads the alias of a decorated input', () => {
-        expect(
-            readSourceFile('packages/components/tooltip/tooltip.component.ts').classes.KbqTooltipTrigger.members
-                .relativeToPointer.binding
-        ).toEqual({ input: 'kbqRelativeToPointer', required: false });
+        const dir = mkdtempSync(join(tmpdir(), 'api-gen-'));
+        const file = join(dir, 'decorated.ts');
+
+        writeFileSync(
+            file,
+            "import { Directive, Input } from '@angular/core';\n" +
+                "@Directive({ selector: '[decorated]' })\n" +
+                "export class Decorated {\n    @Input('kbqRelativeToPointer') relativeToPointer: boolean;\n}\n"
+        );
+
+        try {
+            expect(readSourceFile(file).classes.Decorated.members.relativeToPointer.binding).toEqual({
+                input: 'kbqRelativeToPointer',
+                required: false
+            });
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
     });
 
     // Angular's extractor reports none: without these, the interface would read as empty.

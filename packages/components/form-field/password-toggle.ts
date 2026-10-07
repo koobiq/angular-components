@@ -8,8 +8,8 @@ import {
     Component,
     computed,
     inject,
-    Input,
     input,
+    InputSignal,
     numberAttribute,
     OnDestroy,
     Signal,
@@ -112,13 +112,17 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      */
     readonly icon = viewChild.required(KbqIconButton);
 
+    /** @docs-private */
+    override readonly contentInput: InputSignal<KbqTooltipTrigger['content'] | undefined> = input<
+        KbqTooltipTrigger['content'] | undefined
+    >(undefined, {
+        alias: 'kbqTooltipNotHidden'
+    });
+
     /**
      * Tooltip shown while the password is visible. Reading it resolves to the tooltip matching the current
      * visibility, so that the base trigger renders the right one.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTooltipNotHidden')
     get content(): string | TemplateRef<any> {
         return this.control.elementType() === 'password' ? this.kbqTooltipHidden() : this._content;
     }

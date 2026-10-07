@@ -6,12 +6,12 @@ import {
     Component,
     Directive,
     inject,
-    Input,
     input,
     NgModule,
     numberAttribute,
     OnDestroy,
     OnInit,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -60,9 +60,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     /** The two spans this directive renders have no styles of their own until this is loaded. */
     private readonly styleLoader = inject(_CdkPrivateStyleLoader);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input() set kbqEllipsisCenter(value: string) {
+    set kbqEllipsisCenter(value: string) {
         this._kbqEllipsisCenter = value;
         this.refresh();
         // check the view to properly calculate text-start and text-end on text initialized
@@ -113,6 +111,20 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     private lastMeasuredWidth: number | undefined;
 
     private refreshTimeoutId: ReturnType<typeof setTimeout> | undefined;
+
+    /** @docs-private */
+    readonly kbqEllipsisCenterInput = input<string | undefined>(undefined, { alias: 'kbqEllipsisCenter' });
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['kbqEllipsisCenterInput']) {
+            const kbqEllipsisCenter = this.kbqEllipsisCenterInput();
+
+            if (kbqEllipsisCenter !== undefined) this.kbqEllipsisCenter = kbqEllipsisCenter;
+        }
+    }
 
     constructor() {
         super();

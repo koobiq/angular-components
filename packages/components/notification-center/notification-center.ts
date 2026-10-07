@@ -21,10 +21,10 @@ import {
     EventEmitter,
     InjectionToken,
     Injector,
-    Input,
     NgZone,
-    Output,
+    OnChanges,
     RendererStyleFlags2,
+    SimpleChanges,
     TemplateRef,
     Type,
     ViewEncapsulation,
@@ -36,7 +36,7 @@ import {
     numberAttribute,
     viewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -548,7 +548,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 })
 export class KbqNotificationCenterTrigger
     extends KbqPopUpTrigger<KbqNotificationCenterComponent>
-    implements AfterContentInit
+    implements OnChanges, AfterContentInit
 {
     /** @docs-private */
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY);
@@ -573,9 +573,7 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Placement of popUp */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input('kbqNotificationCenterPlacement') placement: KbqPopUpPlacementValues = PopUpPlacements.Right;
+    placement: KbqPopUpPlacementValues = PopUpPlacements.Right;
 
     /** Class that will be used in the background */
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
@@ -590,9 +588,6 @@ export class KbqNotificationCenterTrigger
     readonly scrolledToBottomOffset = input<number, unknown>(0, { transform: numberAttribute });
 
     /** Use popover or not */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get popoverMode(): boolean {
         return this._popoverMode;
     }
@@ -629,9 +624,6 @@ export class KbqNotificationCenterTrigger
     private _popoverMode: boolean = false;
 
     /** Set height of popover. Default is `calc(100vh - <navbar height>)`. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get popoverHeight(): string {
         return this._popoverHeight;
     }
@@ -649,9 +641,6 @@ export class KbqNotificationCenterTrigger
     private _popoverHeight: string;
 
     /** Whether the trigger is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
@@ -668,16 +657,10 @@ export class KbqNotificationCenterTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues;
 
     /** Container for additional positioning, used with stickToWindow */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() container: HTMLElement;
+    container: HTMLElement;
 
     /** @docs-private */
     get hasClickTrigger(): boolean {
@@ -685,10 +668,16 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Emits a change event whenever the placement state changes. */
-    @Output('kbqPlacementChange') readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+
+    /** @docs-private */
+    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPlacementChange' });
 
     /** Emits a change event whenever the visible state changes. */
-    @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
+    readonly visibleChange = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqVisibleChange' });
 
     /** @docs-private */
     trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
@@ -706,6 +695,73 @@ export class KbqNotificationCenterTrigger
             hasBackdrop: false,
             backdropClass: this.backdropClass()
         };
+    }
+
+    /** @docs-private */
+    readonly placementInput = input<KbqPopUpPlacementValues | undefined>(undefined, {
+        alias: 'kbqNotificationCenterPlacement'
+    });
+
+    /** @docs-private */
+    readonly popoverModeInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'popoverMode',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly popoverHeightInput = input<string | undefined>(undefined, { alias: 'popoverHeight' });
+
+    /** @docs-private */
+    readonly stickToWindowInput = input<KbqStickToWindowPlacementValues | undefined>(undefined, {
+        alias: 'stickToWindow'
+    });
+
+    /** @docs-private */
+    readonly containerInput = input<HTMLElement | undefined>(undefined, { alias: 'container' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['placementInput']) {
+            const placement = this.placementInput();
+
+            if (placement !== undefined) this.placement = placement;
+        }
+
+        if (changes['popoverModeInput']) {
+            const popoverMode = this.popoverModeInput();
+
+            if (popoverMode !== undefined) this.popoverMode = popoverMode;
+        }
+
+        if (changes['popoverHeightInput']) {
+            const popoverHeight = this.popoverHeightInput();
+
+            if (popoverHeight !== undefined) this.popoverHeight = popoverHeight;
+        }
+
+        if (changes['stickToWindowInput']) {
+            const stickToWindow = this.stickToWindowInput();
+
+            if (stickToWindow !== undefined) this.stickToWindow = stickToWindow;
+        }
+
+        if (changes['containerInput']) {
+            const container = this.containerInput();
+
+            if (container !== undefined) this.container = container;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
     }
 
     constructor() {

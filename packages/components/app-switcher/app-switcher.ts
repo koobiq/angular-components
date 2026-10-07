@@ -10,12 +10,12 @@ import {
     Directive,
     EventEmitter,
     InjectionToken,
-    Input,
+    OnChanges,
     OnDestroy,
     OnInit,
-    Output,
     Provider,
     QueryList,
+    SimpleChanges,
     TemplateRef,
     Type,
     ViewChildren,
@@ -23,12 +23,13 @@ import {
     booleanAttribute,
     computed,
     inject,
+    input,
     model,
     numberAttribute,
     signal,
     viewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import {
@@ -280,7 +281,7 @@ export function kbqAppSwitcherProvider(): Provider[] {
     hostDirectives: [KbqLocaleOverridesDirective],
     preserveWhitespaces: false
 })
-export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
+export class KbqAppSwitcherComponent extends KbqPopUp implements OnChanges, AfterViewInit, OnDestroy {
     /** Strings currently rendered by the popup. */
     readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'appSwitcher',
@@ -297,10 +298,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     prefix = 'kbq-app-switcher';
 
     /** @docs-private */
-    // TODO: Skipped for migration because:
-    //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
-    //  and migrating would break narrowing currently.
-    @Input() trigger: KbqAppSwitcherTrigger;
+    trigger: KbqAppSwitcherTrigger;
 
     /** @docs-private */
     protected activeSite: KbqAppSwitcherSite | undefined;
@@ -337,6 +335,18 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
      * classList check can't silently drift from the template's class binding if the class is renamed.
      */
     protected readonly nestedAliasClass = 'kbq-app-switcher-site_nested';
+
+    /** @docs-private */
+    readonly triggerInput = input<KbqAppSwitcherTrigger | undefined>(undefined, { alias: 'trigger' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['triggerInput']) {
+            const trigger = this.triggerInput();
+
+            if (trigger !== undefined) this.trigger = trigger;
+        }
+    }
 
     constructor() {
         super();
@@ -625,7 +635,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
 })
 export class KbqAppSwitcherTrigger
     extends KbqPopUpTrigger<KbqAppSwitcherComponent>
-    implements AfterContentInit, OnInit
+    implements OnChanges, AfterContentInit, OnInit
 {
     /**
      * Optional so a standalone consumer works without `kbqAppSwitcherProvider()`; an application-level
@@ -676,25 +686,15 @@ export class KbqAppSwitcherTrigger
     readonly selectedApp = model<KbqAppSwitcherApp | undefined>(undefined);
 
     /** Placement of popUp */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input('kbqAppSwitcherPlacement') placement: KbqPopUpPlacementValues = PopUpPlacements.BottomLeft;
+    placement: KbqPopUpPlacementValues = PopUpPlacements.BottomLeft;
 
     /** Class that will be used in the background */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
+    backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     /** Offset of popUp */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input({ transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
+    offset: number | null = defaultOffsetYWithArrow;
 
     /** Array of sites, with the applications of each site grouped for rendering. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get sites(): KbqAppSwitcherSite[] {
         return this.parsedSites();
     }
@@ -705,9 +705,6 @@ export class KbqAppSwitcherTrigger
 
     /** Function to group the apps by type. The first argument is an app object with type.
      * The second is a groups object and third is an array for untyped apps */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get groupBy(): KbqAppSwitcherGroupBy {
         return this.groupBySignal();
     }
@@ -734,9 +731,6 @@ export class KbqAppSwitcherTrigger
     });
 
     /** Whether the trigger is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
     }
@@ -755,10 +749,16 @@ export class KbqAppSwitcherTrigger
     }
 
     /** Emits a change event whenever the placement state changes. */
-    @Output('kbqPlacementChange') readonly placementChange = new EventEmitter();
+    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+
+    /** @docs-private */
+    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPlacementChange' });
 
     /** Emits a change event whenever the visible state changes. */
-    @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
+    readonly visibleChange = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqVisibleChange' });
 
     /**
      * Space-separated list of DOM events that open the popup (`KbqPopUpTrigger.trigger`).
@@ -828,6 +828,71 @@ export class KbqAppSwitcherTrigger
               (this.parsedSelectedSite()?.apps ?? [])
             : (this.parsedSites()[0]?.apps ?? [])
     );
+
+    /** @docs-private */
+    readonly placementInput = input<KbqPopUpPlacementValues | undefined>(undefined, {
+        alias: 'kbqAppSwitcherPlacement'
+    });
+
+    /** @docs-private */
+    readonly backdropClassInput = input<string | undefined>(undefined, { alias: 'backdropClass' });
+
+    /** @docs-private */
+    readonly offsetInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
+        alias: 'offset',
+        transform: numberAttribute
+    });
+
+    /** @docs-private */
+    readonly sitesInput = input<KbqAppSwitcherSite[] | undefined>(undefined, { alias: 'sites' });
+
+    /** @docs-private */
+    readonly groupByInput = input<KbqAppSwitcherGroupBy | undefined>(undefined, { alias: 'groupBy' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['placementInput']) {
+            const placement = this.placementInput();
+
+            if (placement !== undefined) this.placement = placement;
+        }
+
+        if (changes['backdropClassInput']) {
+            const backdropClass = this.backdropClassInput();
+
+            if (backdropClass !== undefined) this.backdropClass = backdropClass;
+        }
+
+        if (changes['offsetInput']) {
+            const offset = this.offsetInput();
+
+            if (offset !== undefined) this.offset = offset;
+        }
+
+        if (changes['sitesInput']) {
+            const sites = this.sitesInput();
+
+            if (sites !== undefined) this.sites = sites;
+        }
+
+        if (changes['groupByInput']) {
+            const groupBy = this.groupByInput();
+
+            if (groupBy !== undefined) this.groupBy = groupBy;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     ngOnInit(): void {
         super.ngOnInit();

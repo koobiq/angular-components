@@ -126,10 +126,10 @@
             "description": "Reports programmatic writes to the signal inputs of KbqListSelection (autoSelect, noUnselectLast, multiple, tabIndex, selectAllHandler, disabled, draggable) and KbqListOption (value, disabled, draggable, showCheckbox): a read is unchanged, a write no longer compiles. KbqListOption.selected and KbqListSelection.multipleMode stay writable. Warn-only.",
             "factory": "./migrations/list-signals/index"
         },
-        "controls-signal-inputs": {
+        "signal-inputs-subclasses": {
             "version": "21.0.0-0",
-            "description": "Reports subclasses of KbqCheckbox, KbqToggleComponent, KbqRadioGroup, KbqRadioButton, KbqButtonToggleGroup, KbqButtonToggle, KbqButton, KbqButtonGroupRoot, KbqSplitButton, KbqIcon, KbqIconButton, KbqIconItem and KbqSearchExpandable: their decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, so a subclass has to call super.ngOnChanges and override <member>Input instead of redeclaring an @Input. Reads and writes of the members are unchanged. Warn-only.",
-            "factory": "./migrations/controls-signal-inputs/index"
+            "description": "Reports subclasses of KbqCheckbox, KbqToggleComponent, KbqRadioGroup, KbqRadioButton, KbqButtonToggleGroup, KbqButtonToggle, KbqButton, KbqButtonGroupRoot, KbqSplitButton, KbqIcon, KbqIconButton, KbqIconItem, KbqSearchExpandable and the pop-up triggers (tooltip, popover, popover confirm, app switcher, notification center, password toggle, ellipsis center): their decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, so a subclass has to call super.ngOnChanges and override <member>Input instead of redeclaring an @Input. Reads and writes of the members are unchanged. Also reports a pop-up panel that re-declares elementRef with @ViewChild: KbqPopUp.elementRef is a protected getter now. Warn-only.",
+            "factory": "./migrations/signal-inputs-subclasses/index"
         },
         "zoneless-change-detection": {
             "version": "21.0.0-0",
