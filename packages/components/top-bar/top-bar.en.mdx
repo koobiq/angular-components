@@ -60,7 +60,7 @@ The toolbar can remain fixed while scrolling the page.
 <Example id="top-bar-overflow" />
 
 The example above keeps the toolbar outside the scrolling area, which needs no configuration at all. To make
-the toolbar itself stick, set `--kbq-top-bar-inset-block-start: 0` and put it inside the scrolling element:
+the toolbar itself stick, set `--kbq-top-bar-inset-block-start: 0` on it and put it inside the scrolling element:
 `--kbq-top-bar-position` is already `sticky`, but a sticky box is only offset once it has an inset, so with
 the default `auto` the toolbar lays out exactly like `position: relative`.
 
@@ -70,7 +70,8 @@ Panels opened from the page content paint above the toolbar. To have them slide 
 ### CSS variables
 
 The inputs cover the shadow and the accessible name; everything else is configured through custom
-properties, set on `kbq-top-bar` itself or on any of its ancestors.
+properties set on `kbq-top-bar` itself. The defaults are declared on the element, so a value set on an ancestor
+does not reach it.
 
 | Variable                                  | Default                                    | Description                                                                                                                          |
 | ----------------------------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ |

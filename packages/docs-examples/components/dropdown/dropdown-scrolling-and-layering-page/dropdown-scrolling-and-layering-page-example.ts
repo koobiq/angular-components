@@ -86,7 +86,9 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
         .example-scroller {
             height: 400px;
             overflow-y: auto;
+        }
 
+        .kbq-top-bar {
             --kbq-top-bar-inset-block-start: 0;
         }
 
