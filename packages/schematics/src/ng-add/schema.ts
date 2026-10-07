@@ -8,9 +8,4 @@ export interface Schema {
      * The prebuilt Koobiq theme to install. Defaults to 'auto'.
      */
     theme?: 'auto' | 'light' | 'dark';
-
-    /**
-     * Whether to add `provideAnimations()` automatically. Defaults to true.
-     */
-    animations?: boolean;
 }

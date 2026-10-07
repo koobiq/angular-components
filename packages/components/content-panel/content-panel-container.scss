@@ -1,3 +1,5 @@
+@use '../core/styles/common/animation';
+
 .kbq-content-panel-container {
     display: flex;
     gap: var(--kbq-size-l);
@@ -11,6 +13,17 @@
         height: 100%;
     }
 
+    .kbq-content-panel-container__scrollbar_animating {
+        transition: margin-right 150ms cubic-bezier(0.4, 0, 1, 1);
+
+        @include animation.kbq-animations-off();
+    }
+
+    &.kbq-content-panel-container__opened .kbq-content-panel-container__scrollbar_animating {
+        transition-duration: 125ms;
+        transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+
     .kbq-content-panel-container__panel {
         position: absolute;
         right: 0;
@@ -21,6 +34,18 @@
         box-sizing: border-box;
     }
 
+    .kbq-content-panel-container__panel_enter {
+        animation: kbq-content-panel-slide-in 150ms cubic-bezier(0, 0, 0.2, 1);
+
+        @include animation.kbq-animations-off();
+    }
+
+    .kbq-content-panel-container__panel_leave {
+        animation: kbq-content-panel-slide-out 125ms cubic-bezier(0.4, 0, 1, 1) forwards;
+
+        @include animation.kbq-animations-off();
+    }
+
     .kbq-content-panel-container__panel-resizer {
         position: absolute;
         top: 0;
@@ -28,5 +53,17 @@
         width: var(--kbq-content-panel-resizer-width);
         height: 100%;
         z-index: 2;
+    }
+}
+
+@keyframes kbq-content-panel-slide-in {
+    from {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes kbq-content-panel-slide-out {
+    to {
+        transform: translateX(100%);
     }
 }

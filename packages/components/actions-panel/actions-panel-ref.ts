@@ -50,9 +50,6 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     /** Result to be passed down to the `afterClosed` stream. */
     private result: R | undefined;
 
-    /** Handle to the timeout that's running as a fallback in case the close animation doesn't fire. */
-    private closeAnimationFallbackTimeout?: ReturnType<typeof setTimeout>;
-
     constructor(
         private readonly dialogRef: DialogRef<R, I>,
         containerInstance: KbqActionsPanelContainer
@@ -83,18 +80,6 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
             return;
         }
 
-        this.containerInstance.animationStateChanged
-            .pipe(
-                filter((event) => event.phaseName === 'start'),
-                take(1)
-            )
-            .subscribe(({ totalTime }) => {
-                this.closeAnimationFallbackTimeout = setTimeout(
-                    () => this.dialogRef.close(this.result),
-                    totalTime + 100
-                );
-            });
-
         this.result = result;
         this.beforeClosedSubject.next(result);
         this.beforeClosedSubject.complete();
@@ -103,9 +88,9 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     }
 
     private handleAnimation(): void {
-        this.containerInstance.animationStateChanged
+        this.containerInstance.animationDone
             .pipe(
-                filter((event) => event.phaseName === 'done' && event.toState === 'visible'),
+                filter((state) => state === 'visible'),
                 take(1)
             )
             .subscribe(() => {
@@ -113,15 +98,12 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
                 this.afterOpenedSubject.complete();
             });
 
-        this.containerInstance.animationStateChanged
+        this.containerInstance.animationDone
             .pipe(
-                filter((event) => event.phaseName === 'done' && event.toState === 'hidden'),
+                filter((state) => state === 'hidden'),
                 take(1)
             )
-            .subscribe(() => {
-                clearTimeout(this.closeAnimationFallbackTimeout);
-                this.dialogRef.close(this.result);
-            });
+            .subscribe(() => this.dialogRef.close(this.result));
     }
 
     private handleOverlayDetachments(): void {

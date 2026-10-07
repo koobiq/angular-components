@@ -23,7 +23,6 @@ import {
     tick
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     createMouseEvent,
@@ -48,7 +47,7 @@ import { IModalOptionsForService, MODAL_ANIMATE_DURATION, ModalSize } from './mo
 const ANIMATION_DURATION = MODAL_ANIMATE_DURATION * 2;
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    TestBed.configureTestingModule({ imports: [component], providers });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -1574,7 +1573,6 @@ const TEST_DIRECTIVES = [
         KbqModalModule,
         KbqButtonModule,
         KbqDropdownModule,
-        NoopAnimationsModule,
         ...TEST_DIRECTIVES
     ],
     exports: TEST_DIRECTIVES

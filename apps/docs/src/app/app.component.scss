@@ -50,13 +50,35 @@
 
     .docs-sidenav {
         position: absolute !important;
+        right: 0;
         width: 100%;
         height: calc(100% - 64px);
         z-index: 10;
+        transition: right 300ms ease-out;
     }
 
-    .docs-sidenav.docs-sidenav_closed:not(.ng-animating) {
-        display: none;
+    // Hidden once it has slid out, so that nothing in it stays focusable.
+    .docs-sidenav.docs-sidenav_closed {
+        right: -100%;
+        visibility: hidden;
+        transition:
+            right 300ms ease-out,
+            visibility 0s 300ms;
+    }
+
+    .docs-overlay {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+            opacity 300ms ease-out,
+            visibility 0s 300ms;
+    }
+
+    .docs-overlay.docs-overlay_visible {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 300ms ease-out;
     }
 }
 

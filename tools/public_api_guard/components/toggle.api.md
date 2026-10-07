@@ -29,6 +29,7 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
 // @public (undocumented)
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     constructor();
+    protected readonly animationsDisabled: boolean;
     // (undocumented)
     readonly ariaLabel: _angular_core.InputSignal<string>;
     // (undocumented)

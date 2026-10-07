@@ -3,7 +3,6 @@ import { Component, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { KbqButton } from '@koobiq/components/button';
 import { ruRULocaleData } from '@koobiq/components/core';
@@ -43,7 +42,6 @@ describe('KbqSearchExpandable', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqSearchExpandableModule,
                 TestSearchExpandable,
                 TestSearchExpandableExternalToggle,

@@ -4,7 +4,6 @@ import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter } from '@koobiq/components/core';
 import {
@@ -95,7 +94,7 @@ describe('KbqPipeDateComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, KbqLuxonDateModule, TestComponent],
+            imports: [KbqFilterBarModule, KbqLuxonDateModule, TestComponent],
             providers: [
                 { provide: LOCALE_ID, useValue: 'ru-RU' },
                 DateFormatter

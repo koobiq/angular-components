@@ -3,7 +3,6 @@ import { Platform } from '@angular/cdk/platform';
 import { ChangeDetectionStrategy, Component, DebugElement, Provider, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabNavBar } from '@koobiq/components/tabs';
 import { HLJSApi } from 'highlight.js';
@@ -38,7 +37,7 @@ class MockSharedResizeObserver {
 }
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    TestBed.configureTestingModule({ imports: [component], providers });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -696,7 +695,7 @@ describe(KbqCodeBlock.name, () => {
         const addEventListenerSpy = vi.spyOn(HTMLElement.prototype, 'addEventListener');
 
         try {
-            TestBed.configureTestingModule({ imports: [BaseCodeBlock, NoopAnimationsModule] });
+            TestBed.configureTestingModule({ imports: [BaseCodeBlock] });
             const fixture = TestBed.createComponent(BaseCodeBlock);
 
             fixture.componentInstance.hideTabs = true;
@@ -717,7 +716,7 @@ describe(KbqCodeBlock.name, () => {
     });
 
     it('should start tracking hover when alwaysShowActionbar is disabled', fakeAsync(() => {
-        TestBed.configureTestingModule({ imports: [BaseCodeBlock, NoopAnimationsModule] });
+        TestBed.configureTestingModule({ imports: [BaseCodeBlock] });
         const fixture = TestBed.createComponent(BaseCodeBlock);
 
         fixture.componentInstance.hideTabs = true;

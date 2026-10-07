@@ -1,11 +1,7 @@
 @let opened = opened$ | async;
 
 @if (!isExamplePage()) {
-    <docs-sidenav
-        [class.docs-sidenav_closed]="!opened"
-        [class.docs-sidenav_opened]="opened"
-        [@openCloseSidenav]="opened ? 'open' : 'closed'"
-    />
+    <docs-sidenav [class.docs-sidenav_closed]="!opened" [class.docs-sidenav_opened]="opened" />
 }
 
 <div class="docs-app-container layout-column flex">
@@ -18,6 +14,6 @@
     <router-outlet />
 
     @if (!isExamplePage()) {
-        <div class="docs-overlay" [@fadeInOutSidenav]="opened ? 'fadeIn' : 'fadeOut'"></div>
+        <div class="docs-overlay" [class.docs-overlay_visible]="opened"></div>
     }
 </div>

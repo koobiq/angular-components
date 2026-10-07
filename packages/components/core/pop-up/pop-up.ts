@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import {
     ChangeDetectorRef,
@@ -7,11 +6,13 @@ import {
     ElementRef,
     EventEmitter,
     inject,
+    Injector,
     OnDestroy,
     Renderer2,
     TemplateRef
 } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { kbqAfterAnimations, kbqAnimationsDisabled } from '../animation/animations-state';
 import { PopUpPlacements, PopUpVisibility } from './constants';
 import { KbqPopUpTrigger } from './pop-up-trigger';
 
@@ -26,6 +27,14 @@ export abstract class KbqPopUp implements OnDestroy {
     protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
     readonly destroyRef = inject(DestroyRef);
+
+    /**
+     * Whether the pop-up appears without motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    private readonly hostInjector = inject(Injector);
 
     /** Stream that emits when the popup item is hovered. */
     readonly hovered = new BehaviorSubject<boolean>(false);
@@ -58,6 +67,8 @@ export abstract class KbqPopUp implements OnDestroy {
 
     /** Handler bound on the pop-up element to hide it on `mouseleave`, or `null` while none is bound. */
     private hideOnMouseLeave: (() => void) | null = null;
+
+    private showAnimation?: { destroy(): void };
 
     ngOnDestroy() {
         clearTimeout(this.showTimeoutId);
@@ -101,6 +112,7 @@ export abstract class KbqPopUp implements OnDestroy {
             // Mark for check so if any parent component has set the
             // ChangeDetectionStrategy to OnPush it will be checked anyways
             this.markForCheck();
+            this.waitForShowAnimation();
 
             if (this.trigger.triggerName === 'mouseenter') {
                 this.addEventListenerForHide();
@@ -173,26 +185,31 @@ export abstract class KbqPopUp implements OnDestroy {
         this.changeDetectorRef.detectChanges();
     }
 
-    animationStart() {
-        this.closeOnInteraction = false;
-    }
-
     /**
-     * Only the transition into `visible` is observable here: `hide()` emits `onHideSubject` synchronously and
-     * `KbqPopUpTrigger` detaches the overlay in the same call stack, so the view is destroyed before the
-     * `* => hidden` transition can start. Making the fade-out actually play belongs to the migration off the
-     * deprecated `@angular/animations` API, together with the `prefers-reduced-motion` gate.
+     * Called once the pop-up has animated in. Only the entrance animates: `hide()` emits `onHideSubject`
+     * synchronously and `KbqPopUpTrigger` detaches the overlay in the same call stack.
      */
-    animationDone({ toState }: AnimationEvent): void {
-        if (toState === PopUpVisibility.Visible) {
-            this.closeOnInteraction = true;
-        }
-    }
+    protected afterShowAnimation(): void {}
 
     handleBodyInteraction(): void {
         if (this.closeOnInteraction) {
             this.hide(0);
         }
+    }
+
+    /** Holds closing on an outside interaction off until the pop-up has animated in. */
+    private waitForShowAnimation(): void {
+        this.closeOnInteraction = false;
+        this.showAnimation?.destroy();
+        this.showAnimation = kbqAfterAnimations(
+            // Read once rendered: a subclass queries the animated element from its view.
+            () => this.elementRef?.nativeElement,
+            () => {
+                this.closeOnInteraction = true;
+                this.afterShowAnimation();
+            },
+            this.hostInjector
+        );
     }
 
     /** Binds the `mouseleave` hide listener on the pop-up element, at most once per instance. */

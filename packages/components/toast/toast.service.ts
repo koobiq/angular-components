@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { GlobalPositionStrategy, Overlay, OverlayContainer, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
@@ -19,14 +18,12 @@ import {
     BehaviorSubject,
     EMPTY,
     Observable,
-    Subject,
     Subscription,
     distinctUntilChanged,
     filter,
     map,
     share,
     switchMap,
-    take,
     timer
 } from 'rxjs';
 import { KbqToastContainerComponent } from './toast-container.component';
@@ -45,9 +42,6 @@ export const KBQ_TOAST_FACTORY = new InjectionToken('KBQ_TOAST_FACTORY', {
 });
 
 const CHECK_INTERVAL = 500;
-
-/** How long the last exit animation is awaited before the overlay is detached regardless. */
-const EXIT_ANIMATION_FALLBACK = 500;
 
 let templateId = 0;
 
@@ -97,9 +91,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     /** Whether at least one toast holds the focus. Derived from the stack — pushing into it changes nothing. */
     readonly focused = new BehaviorSubject<boolean>(false);
 
-    /** Animation events of every toast in the stack. */
-    readonly animation = new Subject<AnimationEvent>();
-
     private readonly stackSize = new BehaviorSubject<number>(0);
 
     /** Subscribed outside Angular so that a tick never runs change detection over the whole application. */
@@ -125,8 +116,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     private timerSubscription: Subscription;
     private currentPosition?: KbqToastPosition;
 
-    private detachSubscription?: Subscription;
-    private detachTimeout?: ReturnType<typeof setTimeout>;
+    /** Toasts taken off the stack that still play their exit animation in the container. */
+    private readonly leaving = new Set<ComponentRef<T>>();
 
     private toastsDict: { [id: number]: KbqToastRecord<T> } = {};
     private templatesDict: { [id: number]: KbqToastTemplateRecord } = {};
@@ -147,7 +138,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     ngOnDestroy(): void {
         this.timerSubscription.unsubscribe();
-        this.clearPendingDetach();
         this.overlayRef?.dispose();
         this.overlayRef = undefined;
         this.containerInstance = undefined;
@@ -216,7 +206,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         // be read before that happens.
         const focusOrigin = this.focusedToasts.get(id);
 
-        this.containerInstance?.remove(record.componentRef.hostView);
+        this.removeAfterExit(record.componentRef);
 
         delete this.toastsDict[id];
 
@@ -232,7 +222,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
         this.renewLifetimes();
         this.syncStackSize();
-        this.detachOverlay(record.componentRef.location.nativeElement);
     }
 
     hideTemplate(id: number) {
@@ -327,49 +316,32 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         return null;
     }
 
-    private detachOverlay(removedElement?: HTMLElement) {
-        if (this.toasts.length !== 0 || this.templates.length !== 0) {
+    /** Plays the exit animation of a toast taken off the stack, then removes it from the container. */
+    private removeAfterExit(componentRef: ComponentRef<T>): void {
+        // Destroyed by whoever held the ref: there is nothing left to animate.
+        if (componentRef.hostView.destroyed) {
+            this.detachOverlay();
+
             return;
         }
 
-        // Detaching destroys the container synchronously, i.e. before the animation engine flushes the exit
-        // player of the toast that has just been removed.
-        this.clearPendingDetach();
+        this.leaving.add(componentRef);
+        // Destroyed before its exit ends when the overlay is disposed, e.g. for another position.
+        componentRef.onDestroy(() => this.leaving.delete(componentRef));
 
-        this.detachSubscription = this.animation
-            .pipe(
-                // The whole stack shares one animation stream, so the exit of a toast dismissed earlier must
-                // not detach the overlay while the one that emptied it is still sliding out.
-                filter(
-                    ({ element, toState, phaseName }) =>
-                        element === removedElement && toState === 'void' && phaseName === 'done'
-                ),
-                take(1)
-            )
-            .subscribe(() => this.detachNow());
-
-        this.ngZone.runOutsideAngular(() => {
-            // Template toasts emit no animation events at all, so for them this fallback is the only path.
-            this.detachTimeout = setTimeout(() => this.detachNow(), EXIT_ANIMATION_FALLBACK);
+        componentRef.instance.leave(() => {
+            this.containerInstance?.remove(componentRef.hostView);
+            this.detachOverlay();
         });
     }
 
-    private detachNow(): void {
-        this.clearPendingDetach();
-
-        if (this.toasts.length === 0 && this.templates.length === 0) {
-            this.overlayRef?.detach();
+    /** Detaching destroys the container, so it waits for the stack to empty and the last exit to end. */
+    private detachOverlay(): void {
+        if (this.toasts.length !== 0 || this.templates.length !== 0 || this.leaving.size !== 0) {
+            return;
         }
-    }
 
-    private clearPendingDetach(): void {
-        this.detachSubscription?.unsubscribe();
-        this.detachSubscription = undefined;
-
-        if (this.detachTimeout !== undefined) {
-            clearTimeout(this.detachTimeout);
-            this.detachTimeout = undefined;
-        }
+        this.overlayRef?.detach();
     }
 
     private syncStackSize(): void {
@@ -457,8 +429,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     }
 
     private prepareContainer(): KbqToastContainerComponent {
-        this.clearPendingDetach();
-
         const overlayRef = this.createOverlay();
         const portal = this.portal || new ComponentPortal(KbqToastContainerComponent, null, this.createStackInjector());
 
@@ -508,7 +478,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
             // Nothing survives the overlay it lives in, so the stack is drained through the regular paths
             // instead of leaving both dictionaries pointing at destroyed views.
             this.clear();
-            this.clearPendingDetach();
 
             this.overlayRef.dispose();
             this.overlayRef = undefined;

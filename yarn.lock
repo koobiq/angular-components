@@ -602,17 +602,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@angular/animations@npm:21.2.25":
-  version: 21.2.25
-  resolution: "@angular/animations@npm:21.2.25"
-  dependencies:
-    tslib: "npm:^2.3.0"
-  peerDependencies:
-    "@angular/core": 21.2.25
-  checksum: 10c0/9d72d886c82a52087ea014a57093f17b133c55182d2c340476ce94d4bee51312c2face4051247f03aced0cf3043a48b51e2bf47be07a9856480a622246a36805
-  languageName: node
-  linkType: hard
-
 "@angular/build@npm:21.2.25":
   version: 21.2.25
   resolution: "@angular/build@npm:21.2.25"
@@ -10539,7 +10528,6 @@ __metadata:
     "@angular-devkit/architect-cli": "npm:0.2102.25"
     "@angular-devkit/core": "npm:21.2.25"
     "@angular-devkit/schematics": "npm:21.2.25"
-    "@angular/animations": "npm:21.2.25"
     "@angular/build": "npm:21.2.25"
     "@angular/cdk": "npm:21.2.14"
     "@angular/cli": "npm:21.2.25"

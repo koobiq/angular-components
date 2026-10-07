@@ -24,3 +24,9 @@
 Компоненты больше не зависят от zone.js: они работают в приложении, запущенном с `provideZonelessChangeDetection()`, и по-прежнему работают с `provideZoneChangeDetection()`. То, что ждало `NgZone.onStable`, теперь выполняется после следующей отрисовки. Сайт документации, шаблон StackBlitz и приложения для разработки в репозитории работают без zone.js.
 
 `MockNgZone` удален из `@koobiq/components/core`: библиотека больше не ждет `onStable`, и его `simulateZoneExit()` нечего выполнять. Чем заменить его в тестах, описано в [руководстве по миграции](/ru/main/migration), а схематик `zoneless-change-detection` сообщает о каждом использовании.
+
+### Анимации
+
+Компоненты больше не используют `@angular/animations`, который Angular объявил устаревшим: их движение задается в CSS: это анимации и переходы, окончания которых компоненты дожидаются сами, и `animate.enter` / `animate.leave` в шаблонах. `@angular/animations` больше не входит в peer-зависимости, `ng add` больше не устанавливает его и не добавляет `provideAnimations()`, и ни одно приложение репозитория от него не зависит. Движение отключается при `prefers-reduced-motion: reduce` и через `KBQ_ANIMATIONS_CONFIG` (`animationsDisabled: true`).
+
+Экспортируемые компонентами триггеры и члены, принимавшие или отдававшие `AnimationEvent`, удалены. Они перечислены вместе с заменами в [руководстве по миграции](/ru/main/migration), а схематик `angular-animations-removal` сообщает о каждом использовании.

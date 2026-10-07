@@ -262,6 +262,7 @@ export class KbqDatepicker<D> implements OnDestroy {
 // @public
 export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     readonly animationDone: Subject<void>;
+    protected readonly animationsDisabled: boolean;
     animationState: 'enter' | 'void';
     readonly calendar: _angular_core.Signal<KbqCalendar<any>>;
     datepicker: KbqDatepicker<D>;

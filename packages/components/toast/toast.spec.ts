@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
@@ -16,7 +15,6 @@ import {
     viewChild
 } from '@angular/core';
 import { TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
@@ -38,9 +36,6 @@ import {
 /** Mirrors `CHECK_INTERVAL` in the service: the countdown is driven by a heartbeat of that period. */
 const CHECK_INTERVAL = 500;
 
-/** Mirrors `EXIT_ANIMATION_FALLBACK`: how long the overlay waits for the last exit animation. */
-const EXIT_ANIMATION_FALLBACK = 500;
-
 /** A fresh object per call — the service and the component must never write into the caller's data. */
 const createToastData = (overrides: KbqToastData = {}): KbqToastData => ({
     style: KbqToastStyle.Warning,
@@ -50,16 +45,20 @@ const createToastData = (overrides: KbqToastData = {}): KbqToastData => ({
     ...overrides
 });
 
-/** The overlay waits for the exit of the toast that emptied the stack, so the element has to be that toast's. */
-const exitAnimationEvent = (element: HTMLElement): AnimationEvent => ({
-    fromState: 'visible',
-    toState: 'void',
-    totalTime: 0,
-    phaseName: 'done',
-    element,
-    triggerName: 'state',
-    disabled: false
-});
+/**
+ * Gives `element` an exit animation that runs until the returned function ends it. jsdom has no Web Animations
+ * API, so without one every exit ends right after the render it starts in.
+ */
+const holdExitAnimation = (element: HTMLElement): (() => void) => {
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+
+    element.getAnimations = () => [
+        { finished, effect: { getComputedTiming: () => ({ endTime: 300 }) } } as unknown as Animation
+    ];
+
+    return finish;
+};
 
 @Component({
     selector: 'toast-test-button',
@@ -149,7 +148,7 @@ describe('KbqToastService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, ToastButtonWrapper, ToastTemplateWrapper]
+            imports: [KbqToastModule, ToastButtonWrapper, ToastTemplateWrapper]
         });
 
         service = TestBed.inject(KbqToastService);
@@ -260,8 +259,8 @@ describe('KbqToastService', () => {
             const toast = showRendered();
 
             closeButtonOf(toast).click();
-            // The toast leaves the service synchronously; taking its element out of the DOM is the
-            // animation engine's job and lands on the next flush.
+            // The toast leaves the service synchronously; its element goes once the exit animation, played
+            // after the next render, has ended.
             flush();
             render();
 
@@ -554,7 +553,7 @@ describe('KbqToastService', () => {
 
             const afterPurge = ticks;
 
-            tick(EXIT_ANIMATION_FALLBACK + CHECK_INTERVAL * 4);
+            tick(CHECK_INTERVAL * 4);
 
             expect(ticks).toBe(afterPurge);
             expect(containers().length).toBe(0);
@@ -598,44 +597,44 @@ describe('KbqToastService', () => {
             settle();
         }));
 
-        it('keeps the overlay attached until the exit animation reports done', fakeAsync(() => {
+        it('keeps the overlay attached until the exit animation has ended', fakeAsync(() => {
             const toast = showRendered();
+            const finishExit = holdExitAnimation(hostOf(toast));
 
             service.hide(toast.id);
-            expect(containers().length).toBe(1);
-
-            service.animation.next(exitAnimationEvent(hostOf(toast)));
-            // The overlay is detached synchronously; removing the host element is the animation engine's
-            // job and lands on the next flush.
-            flush();
             render();
+            expect(containers().length).toBe(1);
+            expect(hostOf(toast).classList).toContain('kbq-toast_leaving');
+
+            finishExit();
+            flush();
 
             expect(containers().length).toBe(0);
-
-            flush();
         }));
 
-        it('waits for the exit of the toast that emptied the stack, not for one dismissed earlier', fakeAsync(() => {
+        it('waits for every exit to end, not only for the one of the toast that emptied the stack', fakeAsync(() => {
             const first = showRendered();
             const second = showRendered();
+            const finishFirstExit = holdExitAnimation(hostOf(first));
             const detach = vi.spyOn(OverlayRef.prototype, 'detach');
 
-            // `first` starts leaving while `second` is still on screen, so its `done` lands after the
-            // stack is already empty — and `second` is only halfway through its own slide-out.
+            // `first` is still sliding out when `second`, which emptied the stack, is gone.
             service.hide(first.id);
             service.hide(second.id);
-
-            service.animation.next(exitAnimationEvent(hostOf(first)));
+            render();
+            flush();
+            expect(hostOf(second).isConnected).toBe(false);
             expect(detach).not.toHaveBeenCalled();
 
-            service.animation.next(exitAnimationEvent(hostOf(second)));
+            finishFirstExit();
+            flush();
             expect(detach).toHaveBeenCalled();
 
             detach.mockRestore();
             settle();
         }));
 
-        it('detaches the overlay through the fallback when nothing animates', fakeAsync(() => {
+        it('detaches the overlay at once when a template toast empties the stack', () => {
             const fixture = TestBed.createComponent(ToastTemplateWrapper);
 
             fixture.detectChanges();
@@ -643,18 +642,15 @@ describe('KbqToastService', () => {
             const { id } = service.showTemplate(createToastData(), fixture.componentInstance.template(), 0);
 
             service.hideTemplate(id);
-            expect(containers().length).toBe(1);
-
-            tick(EXIT_ANIMATION_FALLBACK);
             expect(containers().length).toBe(0);
-        }));
+        });
 
         it('does not accumulate containers across show and hide cycles', fakeAsync(() => {
             for (let cycle = 0; cycle < 3; cycle++) {
                 const toast = showRendered();
 
                 service.hide(toast.id);
-                tick(EXIT_ANIMATION_FALLBACK);
+                render();
             }
 
             showRendered();
@@ -792,7 +788,7 @@ describe('KbqToastService', () => {
 describe('KbqToastService configuration', () => {
     const configure = (config: Partial<KbqToastConfig> = {}): KbqToastService => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
+            imports: [KbqToastModule],
             providers: [kbqToastConfigurationProvider(config)]
         });
 
@@ -819,7 +815,7 @@ describe('KbqToastService configuration', () => {
         const provider = kbqToastConfigurationProvider({ position: KbqToastPosition.TOP_RIGHT }) as ValueProvider;
 
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
+            imports: [KbqToastModule],
             providers: [provider]
         });
 
@@ -861,7 +857,7 @@ describe('KbqToastService configuration', () => {
 describe('KbqToastService factory', () => {
     const configureWithFactory = (componentType: unknown): KbqToastService => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
+            imports: [KbqToastModule],
             providers: [{ provide: KBQ_TOAST_FACTORY, useValue: componentType }]
         });
 
@@ -913,7 +909,7 @@ class ToastContainerHost {
 describe('KbqToastContainerComponent hosted by a consumer', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, ToastContainerHost]
+            imports: [KbqToastModule, ToastContainerHost]
         });
     });
 
@@ -947,7 +943,7 @@ describe('KbqToastService in a Shadow DOM overlay container', () => {
         shadowRoot = shadowHost.attachShadow({ mode: 'open' });
 
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
+            imports: [KbqToastModule],
             providers: kbqShadowDomOverlayProvider(shadowHost)
         });
 
@@ -999,18 +995,6 @@ describe('KbqToastService: global scroll notifications', () => {
     let scrolled: Mock;
     let scrollSubscription: Subscription;
 
-    /** Emulates what the animation callbacks of every toast push into `KbqToastService.animation`. */
-    const emitToastAnimationEvent = () =>
-        service.animation.next({
-            fromState: 'void',
-            toState: 'visible',
-            totalTime: 0,
-            phaseName: 'done',
-            element: document.createElement('div'),
-            triggerName: 'state',
-            disabled: false
-        } satisfies AnimationEvent);
-
     /** Renders the toast container and the toast itself — the container registers as a scrollable in `ngOnInit`. */
     const renderToast = () => {
         const { id } = service.show(createToastData(), 0);
@@ -1022,7 +1006,7 @@ describe('KbqToastService: global scroll notifications', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, ToastTooltipWrapper]
+            imports: [KbqToastModule, ToastTooltipWrapper]
         });
 
         service = TestBed.inject(KbqToastService);
@@ -1041,8 +1025,8 @@ describe('KbqToastService: global scroll notifications', () => {
     it('does not notify the global ScrollDispatcher when a toast is shown, animated and hidden', () => {
         const id = renderToast();
 
-        emitToastAnimationEvent();
         service.hide(id);
+        TestBed.inject(ApplicationRef).tick();
 
         expect(scrolled).not.toHaveBeenCalled();
     });
@@ -1057,7 +1041,6 @@ describe('KbqToastService: global scroll notifications', () => {
         expect(overlayRef.hasAttached()).toBe(true);
 
         renderToast();
-        emitToastAnimationEvent();
 
         expect(overlayRef.hasAttached()).toBe(true);
 
@@ -1076,7 +1059,6 @@ describe('KbqToastService: global scroll notifications', () => {
         expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeTruthy();
 
         renderToast();
-        emitToastAnimationEvent();
         tick();
         fixture.detectChanges();
 
@@ -1119,7 +1101,7 @@ describe('KbqToastService: stack reflow', () => {
         resized = new Subject<ResizeObserverEntry[]>();
 
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, ToastTemplateWrapper],
+            imports: [KbqToastModule, ToastTemplateWrapper],
             // jsdom performs no layout, so the real observer would never fire.
             providers: [{ provide: SharedResizeObserver, useValue: { observe: () => resized } }]
         });
@@ -1200,8 +1182,8 @@ describe('KbqToastService: stack reflow', () => {
 
         const sources = collectScrolls();
 
-        // A template toast carries no `@state` binding, so its removal fires no animation event —
-        // watching the container's box is what makes this case report at all.
+        // A template toast has no exit animation to wait for — watching the container's box is what makes
+        // this case report at all.
         service.hideTemplate(id);
         resized.next([]);
 

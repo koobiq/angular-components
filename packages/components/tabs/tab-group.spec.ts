@@ -3,7 +3,6 @@ import { AsyncPipe } from '@angular/common';
 import { Component, DebugElement, OnInit, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     KBQ_PARENT_ANIMATION_COMPONENT,
     KBQ_STATE_STORE,
@@ -38,7 +37,6 @@ describe('KbqTabGroup', () => {
         TestBed.configureTestingModule({
             imports: [
                 KbqTabsModule,
-                NoopAnimationsModule,
                 SimpleTabsTestApp,
                 SimpleDynamicTabsTestApp,
                 AsyncTabsTestApp,
@@ -208,7 +206,8 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
 
             const animationDoneSpyFn = vi.spyOn(fixture.componentInstance, 'animationDone');
-            const tabLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1];
+            // Tab two is already selected; the event comes with switching to another one.
+            const tabLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[2];
 
             tabLabel.nativeElement.click();
             fixture.detectChanges();
@@ -920,7 +919,7 @@ describe('KbqTabGroup animation parent', () => {
 describe('nested KbqTabGroup with enabled animations', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule, NestedTabs]
+            imports: [KbqTabsModule, NestedTabs]
         }).compileComponents();
     });
 
@@ -1306,7 +1305,7 @@ describe('KbqTabGroup state saving', () => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule, UncontrolledTabs, ControlledTabs, IdlessTabs]
+            imports: [KbqTabsModule, UncontrolledTabs, ControlledTabs, IdlessTabs]
         }).compileComponents();
     });
 

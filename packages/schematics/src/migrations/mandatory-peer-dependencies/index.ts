@@ -4,14 +4,12 @@ import { logMessage } from '../../utils/messages';
 import { addPackageToPackageJson, getPackageVersionFromPackageJson } from '../../utils/package-config';
 
 const VERSIONS = {
-    ANGULAR_ANIMATIONS: '^0.0.0',
     KOOBIQ_DATE_ADAPTER: '^0.0.0',
     OVERLAYSCROLLBARS: '^0.0.0'
 };
 
 /**
- * `@koobiq/components` now declares `@angular/animations`, `overlayscrollbars` and
- * `@koobiq/date-adapter` as mandatory peers.
+ * `@koobiq/components` now declares `overlayscrollbars` and `@koobiq/date-adapter` as mandatory peers.
  *
  * npm installs a newly mandatory peer on upgrade by itself, but Yarn does not and pnpm only does
  * with `auto-install-peers`, so without this migration those consumers upgrade into a build that
@@ -20,15 +18,10 @@ const VERSIONS = {
  */
 export default function migrate(): Rule {
     return (tree: Tree, context: SchematicContext) => {
-        // Every `@angular/animations` release pins `@angular/core` exactly, so the range has to come
-        // from the application being upgraded rather than from the version this repository builds
-        // with — anything else resolves to a version incompatible with the application's Angular.
-        const angularCoreRange = getPackageVersionFromPackageJson(tree, '@angular/core');
         // Read before the entry is added: `addPackageToPackageJson` leaves one that is already
         // there untouched, so this is the last moment the project's own range is still visible.
         const dateAdapterRange = getPackageVersionFromPackageJson(tree, '@koobiq/date-adapter');
 
-        addPackageToPackageJson(tree, '@angular/animations', angularCoreRange || VERSIONS.ANGULAR_ANIMATIONS);
         addPackageToPackageJson(tree, 'overlayscrollbars', VERSIONS.OVERLAYSCROLLBARS);
         addPackageToPackageJson(tree, '@koobiq/date-adapter', VERSIONS.KOOBIQ_DATE_ADAPTER);
 

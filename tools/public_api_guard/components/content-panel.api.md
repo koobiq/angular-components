@@ -43,14 +43,11 @@ export class KbqContentPanelBody {
 // @public (undocumented)
 export class KbqContentPanelContainer implements OnInit {
     constructor();
+    protected readonly animationsDisabled: boolean;
     clearSavedState(): void;
     close(): void;
-    protected readonly contentAnimationState: i0.Signal<{
-        value: boolean;
-        params: {
-            marginRight: number;
-        };
-    }>;
+    protected readonly contentAnimating: i0.WritableSignal<boolean>;
+    protected readonly contentMargin: i0.Signal<number>;
     readonly disableClose: i0.InputSignalWithTransform<boolean, unknown>;
     readonly disableCloseByEscape: i0.InputSignalWithTransform<boolean, unknown>;
     readonly disableResizer: i0.InputSignalWithTransform<boolean, unknown>;

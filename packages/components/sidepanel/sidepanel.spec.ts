@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     ESCAPE,
@@ -36,6 +35,21 @@ import { KbqSidepanelAnimationState } from './sidepanel-animations';
 
 /** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
 const axeTimeout = 15000;
+
+/**
+ * Gives `element` an animation that runs until the returned function ends it. jsdom has no Web Animations API,
+ * so without one every transition of the sidepanel ends right after the render it starts in.
+ */
+const holdAnimation = (element: Element): (() => void) => {
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+
+    element.getAnimations = () => [
+        { finished, effect: { getComputedTiming: () => ({ endTime: 300 }) } } as unknown as Animation
+    ];
+
+    return finish;
+};
 
 describe('KbqSidepanelService', () => {
     let sidepanelService: KbqSidepanelService;
@@ -86,14 +100,17 @@ describe('KbqSidepanelService', () => {
 
     it('should emit when sidepanel opening animation is complete', fakeAsync(() => {
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
+        const finishOpening = holdAnimation(overlayContainerElement.querySelector('kbq-sidepanel-container')!);
         const afterOpenedCallback = vi.fn();
 
         sidepanelRef.afterOpened().subscribe(afterOpenedCallback);
 
         rootComponentFixture.detectChanges();
+        flush();
 
         expect(afterOpenedCallback).not.toHaveBeenCalled();
 
+        finishOpening();
         flush();
 
         expect(afterOpenedCallback).toHaveBeenCalled();
@@ -1270,7 +1287,6 @@ const TEST_COMPONENTS = [
 @NgModule({
     imports: [
         KbqSidepanelModule,
-        NoopAnimationsModule,
         KbqDropdownModule,
         KbqButtonModule,
         ...TEST_COMPONENTS

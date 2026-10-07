@@ -1,6 +1,5 @@
 import { Component, Type, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
 
@@ -8,7 +7,6 @@ describe(KbqSidebarModule.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqSidebarModule,
                 TestSidebar
             ]
@@ -202,7 +200,7 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqSidebarModule, UncontrolledSidebar, TestSidebar]
+            imports: [KbqSidebarModule, UncontrolledSidebar, TestSidebar]
         }).compileComponents();
     });
 

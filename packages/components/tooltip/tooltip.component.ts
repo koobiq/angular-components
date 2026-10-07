@@ -54,7 +54,6 @@ import {
 import { EMPTY, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
-import { kbqTooltipAnimations } from './tooltip.animations';
 
 /**
  * What the tooltip is vertically anchored to when it is positioned relative to the caret:
@@ -139,8 +138,7 @@ let nextTooltipUniqueId = 0;
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    animations: [kbqTooltipAnimations.tooltipState]
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqTooltipComponent extends KbqPopUp {
     private readonly delayTracker = inject(KbqTooltipDelayTracker);

@@ -5,9 +5,8 @@
     [attr.id]="id"
     [class.kbq-tooltip_arrowless]="!arrow"
     [class]="classMap"
-    [@state]="visibility"
-    (@state.done)="animationDone($event)"
-    (@state.start)="animationStart()"
+    [class.kbq-animations-disabled]="animationsDisabled"
+    [class.kbq-tooltip_visible]="isVisible()"
 >
     <div class="kbq-tooltip__inner">
         @if (arrow) {
