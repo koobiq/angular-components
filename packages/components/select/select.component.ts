@@ -79,6 +79,7 @@ import {
     KbqOptgroup,
     KbqOption,
     KbqOptionBase,
+    KbqOptionParentComponent,
     KbqOptionSelectionChange,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
@@ -291,7 +292,8 @@ export class KbqSelect
         ControlValueAccessor,
         KbqFormFieldControl<any>,
         CanUpdateErrorState,
-        KbqSiblingPopup
+        KbqSiblingPopup,
+        KbqOptionParentComponent
 {
     private readonly _changeDetectorRef = inject(ChangeDetectorRef);
     private readonly _ngZone = inject(NgZone);

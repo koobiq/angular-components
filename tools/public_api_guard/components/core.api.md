@@ -3714,7 +3714,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     protected onMouseleave(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
-    protected readonly parent: KbqOptionParentComponent;
+    protected readonly parent: KbqOptionParentComponent | null;
     // (undocumented)
     select(emitEvent?: boolean): void;
     // (undocumented)
@@ -3819,8 +3819,7 @@ export interface KbqOptionParentComponent {
     multiple?: boolean;
     // (undocumented)
     multiSelection?: boolean;
-    // (undocumented)
-    setSelectedOptionsByClick: (option: KbqOption) => void;
+    setSelectedOptionsByClick?(option: KbqOption): void;
     // (undocumented)
     withVirtualScroll?: boolean;
 }
