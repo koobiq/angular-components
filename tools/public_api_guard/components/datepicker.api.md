@@ -6,7 +6,6 @@
 
 import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter } from '@koobiq/components/core';
@@ -247,8 +246,6 @@ export class KbqDatepicker<D> implements OnDestroy {
     get startAt(): D | null;
     set startAt(value: D | null);
     // (undocumented)
-    readonly stateChanges: Subject<void>;
-    // (undocumented)
     toggle(): void;
     // (undocumented)
     get value(): D | null;
@@ -260,14 +257,12 @@ export class KbqDatepicker<D> implements OnDestroy {
 }
 
 // @public
-export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
+export class KbqDatepickerContent<D> implements OnDestroy {
     readonly animationDone: Subject<void>;
     protected readonly animationsDisabled: boolean;
     animationState: 'enter' | 'void';
     readonly calendar: _angular_core.Signal<KbqCalendar<any>>;
     datepicker: KbqDatepicker<D>;
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -295,29 +290,23 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     get dateInputFormat(): string;
     // (undocumented)
     datepicker: KbqDatepicker<D>;
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: _angular_core.WritableSignal<boolean>;
     disabledChange: EventEmitter<boolean>;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     elementRef: ElementRef<HTMLInputElement>;
-    // (undocumented)
-    get empty(): boolean;
-    // (undocumented)
-    get errorState(): boolean;
-    set errorState(value: boolean);
-    get errorStateMatcher(): ErrorStateMatcher;
-    set errorStateMatcher(value: ErrorStateMatcher);
+    readonly empty: _angular_core.Signal<boolean>;
+    readonly errorState: _angular_core.Signal<boolean>;
+    readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     // (undocumented)
     focus(): void;
     // (undocumented)
     focusChanged(isFocused: boolean): void;
-    // (undocumented)
-    focused: boolean;
+    readonly focused: _angular_core.Signal<boolean>;
     protected readonly formField: _koobiq_components_form_field.KbqFormField | null;
     getOrigin(): ElementRef;
-    // (undocumented)
-    get id(): string;
-    set id(value: string);
+    readonly id: _angular_core.Signal<string>;
+    readonly idInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     readonly incorrectInput: _angular_core.OutputEmitterRef<void>;
     // (undocumented)
@@ -355,34 +344,29 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     onTouched: () => void;
     // (undocumented)
     parseOnBlur: () => any;
-    // (undocumented)
-    get placeholder(): string;
-    set placeholder(value: string);
+    readonly placeholder: _angular_core.Signal<string>;
+    readonly placeholderInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     registerOnChange(fn: (value: any) => void): void;
     // (undocumented)
     registerOnTouched(fn: () => void): void;
     registerOnValidatorChange(fn: () => void): void;
-    // (undocumented)
-    get required(): boolean;
-    set required(value: boolean);
+    readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
-    // (undocumented)
-    readonly stateChanges: Subject<void>;
     // (undocumented)
     toISO8601(value: D): string;
     updateErrorState(): void;
     validate(control: AbstractControl): ValidationErrors | null;
-    get value(): D | null;
-    set value(value: D | null);
+    readonly value: _angular_core.Signal<D | null>;
     valueChange: EventEmitter<D | null>;
+    readonly valueInput: _angular_core.InputSignal<D | null | undefined>;
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
     writeValue(value: D): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, never>;
 }

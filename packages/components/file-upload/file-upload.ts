@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, DestroyRef, ElementRef, inject, Renderer2, Signal, signal } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
-    CanUpdateErrorState,
     ErrorStateMatcher,
     KbqEnumValues,
     KbqFileUploadLocaleConfiguration,
@@ -54,7 +53,7 @@ export type KbqFileUploadCaptionContext = {
 };
 
 /** @docs-private */
-export abstract class KbqFileUploadBase implements CanUpdateErrorState {
+export abstract class KbqFileUploadBase {
     /** Tracks whether the component is in an error state based on the control, parent form,
      * and `errorStateMatcher`, triggering visual updates and state changes if needed. */
     errorState: boolean = false;

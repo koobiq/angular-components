@@ -95,20 +95,17 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     readonly customTrigger: _angular_core.Signal<KbqSelectTrigger | undefined>;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: _angular_core.WritableSignal<boolean>;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    get empty(): boolean;
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    readonly empty: _angular_core.Signal<boolean>;
+    readonly errorState: _angular_core.Signal<boolean>;
+    readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     protected get firstSelected(): any;
     // (undocumented)
     focus(): void;
-    get focused(): boolean;
-    set focused(value: boolean);
+    readonly focused: _angular_core.Signal<boolean>;
     protected getOverlayOriginElement(): HTMLElement | undefined;
     protected handleClick(): void;
     protected handleKeydown(event: KeyboardEvent): void;
@@ -117,9 +114,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     protected readonly hiddenItemsLabel: _angular_core.Signal<string>;
     readonly hiddenItemsText: _angular_core.InputSignal<string | undefined>;
     readonly hiddenItemsTextFormatter: _angular_core.InputSignal<(hiddenItemsText: string, hiddenItems: number) => string>;
-    // (undocumented)
-    get id(): string;
-    set id(value: string);
+    readonly id: _angular_core.Signal<string>;
+    readonly idInput: _angular_core.InputSignal<string | undefined>;
     get isAttached(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
@@ -133,8 +129,6 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     get multiple(): boolean;
     set multiple(value: boolean);
     get multiSelection(): boolean;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_multiple: unknown;
     // (undocumented)
@@ -191,16 +185,11 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     parentForm: NgForm | null;
     // (undocumented)
     parentFormGroup: FormGroupDirective | null;
-    // (undocumented)
-    get placeholder(): string;
-    set placeholder(value: string);
+    readonly placeholder: _angular_core.InputSignal<string | undefined>;
     positions: ConnectedPosition[];
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => void): void;
-    // (undocumented)
-    get required(): boolean;
-    set required(value: boolean);
-    protected readonly resolvedAriaLabelledby: _angular_core.Signal<string | null>;
+    readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     scrollStrategy: ScrollStrategy;
     // (undocumented)
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
@@ -220,7 +209,6 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     setDisabledState(isDisabled: boolean): void;
     protected shouldShowSearch(): boolean;
     readonly sortComparator: _angular_core.InputSignal<(a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number>;
-    readonly stateChanges: Subject<void>;
     // (undocumented)
     get tabIndex(): number | null;
     set tabIndex(value: number | null);
@@ -242,12 +230,11 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     // (undocumented)
     updateErrorState(): void;
     readonly userInteractionChanges: Observable<void>;
-    // (undocumented)
-    get value(): any;
+    readonly value: _angular_core.Signal<any>;
     protected readonly viewportMargin: number;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; "isSignal": true; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "clearPredicate": { "alias": "clearPredicate"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "panelMaxHeight": { "alias": "panelMaxHeight"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search", "noOptionsMessage"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-select-no-options, [kbq-select-no-options]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, [{ directive: typeof i4.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; "isSignal": true; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; "isSignal": true; }; "panelClass": { "alias": "panelClass"; "required": false; "isSignal": true; }; "backdropClass": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "sortComparator": { "alias": "sortComparator"; "required": false; "isSignal": true; }; "clearPredicate": { "alias": "clearPredicate"; "required": false; "isSignal": true; }; "multiline": { "alias": "multiline"; "required": false; "isSignal": true; }; "placeholder": { "alias": "placeholder"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; "panelMinWidth": { "alias": "panelMinWidth"; "required": false; "isSignal": true; }; "panelWidth": { "alias": "panelWidth"; "required": false; "isSignal": true; }; "panelMaxWidth": { "alias": "panelMaxWidth"; "required": false; "isSignal": true; }; "panelMaxHeight": { "alias": "panelMaxHeight"; "required": false; "isSignal": true; }; "searchMinOptionsThreshold": { "alias": "searchMinOptionsThreshold"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "onSelectAll": "onSelectAll"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search", "noOptionsMessage"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger, [kbq-select-trigger]", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-select-no-options, [kbq-select-no-options]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], true, [{ directive: typeof i4.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelect, never>;
 }

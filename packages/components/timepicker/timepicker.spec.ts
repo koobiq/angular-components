@@ -1005,7 +1005,7 @@ describe(KbqTimepicker.name, () => {
             it('should not be in error state initially when invalid but untouched', () => {
                 const fixture = createStandaloneComponent(TimepickerWithErrorStateMatcher);
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and touched', () => {
@@ -1014,7 +1014,7 @@ describe(KbqTimepicker.name, () => {
                 fixture.componentInstance.form.controls.input.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(true);
             });
 
             it('should apply kbq-error class to a prefix clock icon when invalid and touched', () => {
@@ -1034,7 +1034,7 @@ describe(KbqTimepicker.name, () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and update errorState on blur', () => {
@@ -1042,7 +1042,7 @@ describe(KbqTimepicker.name, () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
 
                 // KbqTimepicker is its own ControlValueAccessor and only marks the control
                 // touched on a focus -> blur transition, so focus has to happen first.
@@ -1051,7 +1051,7 @@ describe(KbqTimepicker.name, () => {
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(true);
             });
         });
 
@@ -1063,7 +1063,7 @@ describe(KbqTimepicker.name, () => {
                 fixture.componentInstance.form.controls.input.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
             });
 
             it('should be in error state after form is submitted when invalid', () => {
@@ -1075,7 +1075,7 @@ describe(KbqTimepicker.name, () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -1087,13 +1087,13 @@ describe(KbqTimepicker.name, () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
 
                 getTimepickerElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
             });
         });
 
@@ -1104,7 +1104,7 @@ describe(KbqTimepicker.name, () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and dirty', () => {
@@ -1114,7 +1114,7 @@ describe(KbqTimepicker.name, () => {
                 fixture.componentInstance.form.controls.input.markAsDirty();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -1126,13 +1126,13 @@ describe(KbqTimepicker.name, () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
 
                 getTimepickerElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
             });
         });
 
@@ -1140,12 +1140,12 @@ describe(KbqTimepicker.name, () => {
             it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
                 const fixture = createStandaloneComponent(TimepickerWithDIErrorStateMatcher);
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.input.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
             });
 
             it('should use custom errorStateMatcher logic', () => {
@@ -1154,12 +1154,12 @@ describe(KbqTimepicker.name, () => {
                 fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(true);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.input.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.timepicker().errorState).toBe(false);
+                expect(fixture.componentInstance.timepicker().errorState()).toBe(false);
             });
         });
     });
@@ -1363,8 +1363,8 @@ describe(KbqTimepicker.name, () => {
             const timepicker = fixture.componentInstance.timepicker();
 
             // `KbqFormFieldControl` types both as `boolean`, and the form field reads them through it.
-            expect(timepicker.disabled).toBe(false);
-            expect(timepicker.required).toBe(false);
+            expect(timepicker.disabled()).toBe(false);
+            expect(timepicker.required()).toBe(false);
         });
     });
 });

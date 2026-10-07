@@ -521,7 +521,7 @@ function logWarnings(context: SchematicContext, filePath: string, content: strin
     }
 }
 
-/** A file is a form-field consumer if it names one of the migrated symbols or imports the package. */
+/** A file is a form-field consumer if it names one of the migrated symbols, imports the package or renders a control. */
 function referencesFormField(content: string): boolean {
     return (
         /\bKbq(FormField|Hint|Error|PasswordHint|ReactivePasswordHint|Cleaner|PasswordToggle|Stepper|Trim|A11yLocaleConfiguration)\b/.test(
@@ -530,9 +530,16 @@ function referencesFormField(content: string): boolean {
         /\b(mixinColor|CanColorCtor|PasswordRules|KBQ_FORM_FIELD_REF|regExpPasswordValidator|hasPasswordStrengthError|kbqA11yLocaleConfigurationProvider)\b/.test(
             content
         ) ||
+        /\bKbq(Select|TreeSelect|TimezoneSelect|TagList|Input|InputPassword|Textarea|Timepicker|DatepickerInput|FormFieldControl|ErrorStateTracker|TagTextControl|IconErrorStateContext)\b/.test(
+            content
+        ) ||
+        /\b(mixinErrorState|CanUpdateErrorState|CanUpdateErrorStateCtor|kbqIconErrorStateContextFactoryProvider)\b/.test(
+            content
+        ) ||
         content.includes('@koobiq/components/form-field') ||
         content.includes('kbq-form-field') ||
-        content.includes('kbq-cleaner')
+        content.includes('kbq-cleaner') ||
+        /<kbq-(select|tree-select|timezone-select|tag-list)\b/.test(content)
     );
 }
 

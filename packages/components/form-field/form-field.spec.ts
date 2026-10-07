@@ -22,7 +22,6 @@ import {
     ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
-import { Subject } from 'rxjs';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
 import {
@@ -406,24 +405,6 @@ class InputFormFieldWithCrossFieldMatcher {
                     : { mismatch: { controls: ['first', 'second'] } satisfies CrossFieldError }
         }
     );
-}
-
-@Component({
-    selector: 'password-form-field-with-conditional-content',
-    imports: [ReactiveFormsModule, KbqInputModule],
-    template: `
-        <kbq-form-field>
-            <input kbqInputPassword [formControl]="formControl" />
-            @if (visible) {
-                <kbq-password-toggle />
-                <kbq-reactive-password-hint [hasError]="false">Hint</kbq-reactive-password-hint>
-            }
-        </kbq-form-field>
-    `
-})
-class PasswordFormFieldWithConditionalContent {
-    readonly formControl = new FormControl('');
-    visible = true;
 }
 
 describe(KbqFormField.name, () => {
@@ -928,39 +909,6 @@ describe(KbqFormField.name, () => {
 
         expect(getLabelNativeElement(debugElement).classList.contains('test-label')).toBeTruthy();
         expect(getContentNativeElement(debugElement).classList.contains('test-content')).toBeTruthy();
-    });
-
-    describe('lifecycle', () => {
-        const getStateChangesObserverCount = (debugElement: DebugElement): number => {
-            const control = debugElement.query(By.directive(KbqInputPassword)).injector.get(KbqInputPassword);
-
-            return (control.stateChanges as Subject<void>).observers.length;
-        };
-
-        it('should unsubscribe the projected content from the control stateChanges on destroy', () => {
-            const fixture = createComponent(PasswordFormFieldWithConditionalContent);
-            const { debugElement, componentInstance } = fixture;
-            const initial = getStateChangesObserverCount(debugElement);
-
-            componentInstance.visible = false;
-            fixture.detectChanges();
-            const afterDestroy = getStateChangesObserverCount(debugElement);
-
-            componentInstance.visible = true;
-            fixture.detectChanges();
-
-            expect(afterDestroy).toBeLessThan(initial);
-            expect(getStateChangesObserverCount(debugElement)).toBe(initial);
-        });
-
-        it('should unsubscribe the form field from the control stateChanges on destroy', () => {
-            const fixture = createComponent(PasswordFormFieldWithConditionalContent);
-            const control = fixture.debugElement.query(By.directive(KbqInputPassword)).injector.get(KbqInputPassword);
-
-            expect((control.stateChanges as Subject<void>).observers.length).toBeGreaterThan(0);
-            fixture.destroy();
-            expect((control.stateChanges as Subject<void>).observers.length).toBe(0);
-        });
     });
 
     describe('accessibility', () => {

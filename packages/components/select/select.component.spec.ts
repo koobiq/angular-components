@@ -11,6 +11,7 @@ import {
     Type,
     getDebugNode,
     inject as inject_1,
+    signal,
     viewChild,
     viewChildren
 } from '@angular/core';
@@ -399,9 +400,9 @@ const OPTIONS = [
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -440,6 +441,20 @@ class BasicSelect {
 }
 
 @Component({
+    selector: 'select-with-custom-id',
+    imports: [KbqSelectModule],
+    template: `
+        <kbq-select [id]="id()">
+            <kbq-option value="steak-0">Steak</kbq-option>
+        </kbq-select>
+    `
+})
+class SelectWithCustomId {
+    readonly id = signal<string | undefined>(undefined);
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
     selector: 'basic-events',
     imports: [
         KbqSelectModule,
@@ -460,9 +475,9 @@ class BasicSelect {
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -532,9 +547,9 @@ class ManySelects {}
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -585,9 +600,9 @@ class SelectWithChangeEvent {
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -850,9 +865,9 @@ class BasicSelectOnPushPreselected {
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -937,9 +952,9 @@ class MultiSelectWithNonSelectableOption {
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -969,19 +984,6 @@ class MultiSelectNarrow {
     readonly options = viewChildren(KbqOption);
     sortComparator: (a: KbqOption, b: KbqOption, options: KbqOption[]) => number;
 }
-
-@Component({
-    selector: 'select-with-plain-tabindex',
-    imports: [
-        KbqSelectModule
-    ],
-    template: `
-        <kbq-form-field>
-            <kbq-select [tabIndex]="5" />
-        </kbq-form-field>
-    `
-})
-class SelectWithPlainTabindex {}
 
 @Component({
     selector: 'select-early-sibling-access',
@@ -1035,9 +1037,9 @@ class BasicSelectWithTheming {
                 }
                 <kbq-option>None</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1080,9 +1082,9 @@ class ResetValuesSelect {
                 }
 
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1373,9 +1375,9 @@ class SelectWithCustomTrigger {
                     </kbq-option>
                 }
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1556,9 +1558,9 @@ class SelectWithFormFieldLabel {
                     <div class="kbq-option-caption">caption</div>
                 </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1597,9 +1599,9 @@ class SelectWithLongOptionText {
                 <kbq-option [value]="'value5'">Not long text</kbq-option>
                 <kbq-option [value]="'value6'">Not long text</kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -1678,9 +1680,9 @@ class CdkVirtualScrollViewportSelect<T = string> {
                 </cdk-virtual-scroll-viewport>
 
                 <ng-template #kbqSelectTagContent let-option let-select="select">
-                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState()">
                         {{ option.value.name }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -2244,7 +2246,7 @@ class SelectWithAsyncOptions {
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag [selectable]="false">
                         {{ option.viewValue }}
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
@@ -2457,7 +2459,7 @@ class StandaloneSelect {
     template: `
         <kbq-form-field>
             <kbq-label>Food</kbq-label>
-            <kbq-select [formControl]="control">
+            <kbq-select [formControl]="control" [placeholder]="placeholder">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
                 }
@@ -2466,6 +2468,7 @@ class StandaloneSelect {
     `
 })
 class SelectWithLabel {
+    placeholder: string | undefined;
     foods = [
         { value: 'steak-0', viewValue: 'Steak' },
         { value: 'pizza-1', viewValue: 'Pizza' }
@@ -3132,15 +3135,15 @@ describe('KbqSelect', () => {
                     multiFixture.detectChanges();
                     flush();
 
-                    expect(multiFixture.componentInstance.select().value).toBeFalsy();
+                    expect(multiFixture.componentInstance.select().value()).toBeFalsy();
 
                     dispatchEvent(select, event);
-                    expect(multiFixture.componentInstance.select().value).toEqual(['pizza-1']);
+                    expect(multiFixture.componentInstance.select().value()).toEqual(['pizza-1']);
 
                     dispatchEvent(select, event);
                     flush();
 
-                    expect(multiFixture.componentInstance.select().value).toEqual(['pizza-1', 'tacos-2']);
+                    expect(multiFixture.componentInstance.select().value()).toEqual(['pizza-1', 'tacos-2']);
                 }));
 
                 it('should toggle the previous option when pressing shift + UP_ARROW on a multi-select', fakeAsync(() => {
@@ -3166,16 +3169,16 @@ describe('KbqSelect', () => {
                         multiFixture.detectChanges();
                     }
 
-                    expect(multiFixture.componentInstance.select().value).toBeFalsy();
+                    expect(multiFixture.componentInstance.select().value()).toBeFalsy();
 
                     dispatchEvent(select, event);
                     flush();
-                    expect(multiFixture.componentInstance.select().value).toEqual(['chips-4']);
+                    expect(multiFixture.componentInstance.select().value()).toEqual(['chips-4']);
 
                     dispatchEvent(select, event);
                     flush();
                     // Panel order, not selection order.
-                    expect(multiFixture.componentInstance.select().value).toEqual(['sandwich-3', 'chips-4']);
+                    expect(multiFixture.componentInstance.select().value()).toEqual(['sandwich-3', 'chips-4']);
                 }));
 
                 it('should prevent the default action when pressing space', fakeAsync(() => {
@@ -3466,7 +3469,7 @@ describe('KbqSelect', () => {
                     dispatchFakeEvent(selectElement, 'focus');
                     fixture.detectChanges();
 
-                    expect(selectInstance.focused).toBe(true);
+                    expect(selectInstance.focused()).toBe(true);
 
                     selectInstance.open();
                     fixture.detectChanges();
@@ -3474,7 +3477,7 @@ describe('KbqSelect', () => {
                     dispatchFakeEvent(selectElement, 'blur');
                     fixture.detectChanges();
 
-                    expect(selectInstance.focused).toBe(true);
+                    expect(selectInstance.focused()).toBe(true);
                 })
             );
 
@@ -5085,28 +5088,6 @@ describe('KbqSelect', () => {
         }));
     });
 
-    describe('change events', () => {
-        beforeEach(() => {
-            configureKbqSelectTestingModule([SelectWithPlainTabindex]);
-        });
-
-        it('should complete the stateChanges stream on destroy', () => {
-            const fixture = TestBed.createComponent(SelectWithPlainTabindex);
-
-            fixture.detectChanges();
-
-            const debugElement = fixture.debugElement.query(By.directive(KbqSelect));
-            const select = debugElement.componentInstance;
-
-            const spy = vi.fn();
-            const subscription = select.stateChanges.subscribe(undefined, undefined, spy);
-
-            fixture.destroy();
-            expect(spy).toHaveBeenCalled();
-            subscription.unsubscribe();
-        });
-    });
-
     describe('with theming', () => {
         let fixture: ComponentFixture<BasicSelectWithTheming>;
 
@@ -5327,7 +5308,7 @@ describe('KbqSelect', () => {
 
             errorFixture.detectChanges();
 
-            expect(component.select().errorState).toBe(true);
+            expect(component.select().errorState()).toBe(true);
             expect(errorStateMatcher.isErrorState).toHaveBeenCalled();
             flush();
         }));
@@ -5346,12 +5327,12 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             expect(component.control.invalid).toBe(false);
-            expect(component.select().errorState).toBe(false);
+            expect(component.select().errorState()).toBe(false);
 
             fixture.componentInstance.errorStateMatcher = { isErrorState: matcher };
             fixture.detectChanges();
 
-            expect(component.select().errorState).toBe(true);
+            expect(component.select().errorState()).toBe(true);
             expect(matcher).toHaveBeenCalled();
             flush();
         }));
@@ -5598,7 +5579,7 @@ describe('KbqSelect', () => {
             flush();
 
             expect(fixture.componentInstance.selectedFood).toBe('steak-0');
-            expect(fixture.componentInstance.select().value).toBe('steak-0');
+            expect(fixture.componentInstance.select().value()).toBe('steak-0');
             expect(trigger.textContent).toContain('Steak');
 
             trigger.click();
@@ -5611,7 +5592,7 @@ describe('KbqSelect', () => {
             flush();
 
             expect(fixture.componentInstance.selectedFood).toBe('sandwich-2');
-            expect(fixture.componentInstance.select().value).toBe('sandwich-2');
+            expect(fixture.componentInstance.select().value()).toBe('sandwich-2');
             expect(trigger.textContent).toContain('Sandwich');
         }));
 
@@ -5634,7 +5615,7 @@ describe('KbqSelect', () => {
             const option = overlayContainerElement.querySelectorAll('kbq-option')[2];
 
             expect(option.classList).toContain('kbq-selected');
-            expect(fixture.componentInstance.select().value).toBe('sandwich-2');
+            expect(fixture.componentInstance.select().value()).toBe('sandwich-2');
         }));
 
         it('should reset the label when a null value is set', fakeAsync(() => {
@@ -5654,14 +5635,14 @@ describe('KbqSelect', () => {
             flush();
 
             expect(fixture.componentInstance.selectedFood).toBe('steak-0');
-            expect(fixture.componentInstance.select().value).toBe('steak-0');
+            expect(fixture.componentInstance.select().value()).toBe('steak-0');
             expect(trigger.textContent).toContain('Steak');
 
             fixture.componentInstance.selectedFood = null;
             fixture.detectChanges();
             flush();
 
-            expect(fixture.componentInstance.select().value).toBeNull();
+            expect(fixture.componentInstance.select().value()).toBeNull();
             expect(trigger.textContent).not.toContain('Steak');
         }));
 
@@ -5684,7 +5665,7 @@ describe('KbqSelect', () => {
             const option = overlayContainerElement.querySelectorAll('kbq-option')[1];
 
             expect(option.classList).toContain('kbq-selected');
-            expect(fixture.componentInstance.select().value).toBe('pizza-1');
+            expect(fixture.componentInstance.select().value()).toBe('pizza-1');
         }));
 
         it('should be able to select multiple values', fakeAsync(() => {
@@ -5707,7 +5688,7 @@ describe('KbqSelect', () => {
             flush();
 
             expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0']);
-            expect(fixture.componentInstance.select().value).toEqual(['steak-0']);
+            expect(fixture.componentInstance.select().value()).toEqual(['steak-0']);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t: Element) => t.textContent!.trim())).toEqual([
                 'Steak'
             ]);
@@ -5718,7 +5699,7 @@ describe('KbqSelect', () => {
             flush();
 
             expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'sandwich-2']);
-            expect(fixture.componentInstance.select().value).toEqual(['steak-0', 'sandwich-2']);
+            expect(fixture.componentInstance.select().value()).toEqual(['steak-0', 'sandwich-2']);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t: Element) => t.textContent!.trim())).toEqual([
                 'Steak',
                 'Sandwich'
@@ -5731,7 +5712,7 @@ describe('KbqSelect', () => {
 
             // Panel order, not click order: the value is sorted by the position of the option in the panel.
             expect(fixture.componentInstance.selectedFoods).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
-            expect(fixture.componentInstance.select().value).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
+            expect(fixture.componentInstance.select().value()).toEqual(['steak-0', 'pizza-1', 'sandwich-2']);
             expect(Array.from(trigger.querySelectorAll('kbq-tag'), (t: Element) => t.textContent!.trim())).toEqual([
                 'Steak',
                 'Pizza',
@@ -7100,7 +7081,7 @@ describe('KbqSelect', () => {
                 finishInit(fixture);
 
                 expect(getMatcherText(fixture)).toBe(instance.options[2].name);
-                expect(instance.select().empty).toBe(false);
+                expect(instance.select().empty()).toBe(false);
             }));
 
             it('should render the custom trigger while the selected option is filtered out', fakeAsync(() => {
@@ -7240,7 +7221,7 @@ describe('KbqSelect', () => {
                 instance.control.setValue(null);
                 finishInit(fixture);
 
-                expect(instance.select().empty).toBe(true);
+                expect(instance.select().empty()).toBe(true);
                 expect(isPlaceholderRendered(fixture)).toBe(true);
             }));
 
@@ -7271,7 +7252,7 @@ describe('KbqSelect', () => {
                 instance.control.setValue(instance.options[100]);
                 finishInit(fixture);
 
-                expect(instance.select().empty).toBe(true);
+                expect(instance.select().empty()).toBe(true);
                 expect(isPlaceholderRendered(fixture)).toBe(true);
             }));
         });
@@ -7284,7 +7265,7 @@ describe('KbqSelect', () => {
 
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and touched', () => {
@@ -7295,7 +7276,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.form.controls.select.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
 
             it('should be in error state when form is submitted and control is invalid', () => {
@@ -7306,7 +7287,7 @@ describe('KbqSelect', () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and update errorState on blur', () => {
@@ -7314,13 +7295,13 @@ describe('KbqSelect', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
 
                 getSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
         });
 
@@ -7332,7 +7313,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.form.controls.select.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
 
             it('should be in error state after form is submitted when invalid', () => {
@@ -7344,7 +7325,7 @@ describe('KbqSelect', () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -7356,13 +7337,13 @@ describe('KbqSelect', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
 
                 getSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
         });
 
@@ -7373,7 +7354,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and dirty', () => {
@@ -7383,7 +7364,7 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.form.controls.select.markAsDirty();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -7395,13 +7376,13 @@ describe('KbqSelect', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
 
                 getSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
         });
 
@@ -7409,12 +7390,12 @@ describe('KbqSelect', () => {
             it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
                 const fixture = createComponent(SelectWithDIErrorStateMatcher);
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.select.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
 
             it('should use custom errorStateMatcher logic', () => {
@@ -7423,12 +7404,12 @@ describe('KbqSelect', () => {
                 fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(true);
+                expect(fixture.componentInstance.select().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.select.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.select().errorState).toBe(false);
+                expect(fixture.componentInstance.select().errorState()).toBe(false);
             });
         });
     });
@@ -7467,7 +7448,7 @@ describe('KbqSelect', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(testInstance.select().empty).toBe(true);
+                expect(testInstance.select().empty()).toBe(true);
             }));
 
             it('should use KbqOption (not KbqVirtualOption) when value matches an existing option', fakeAsync(() => {
@@ -7533,7 +7514,7 @@ describe('KbqSelect', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(testInstance.select().empty).toBe(true);
+                expect(testInstance.select().empty()).toBe(true);
             }));
 
             it('should not render the select-all row, since a preselected value may be invisible to it', fakeAsync(() => {
@@ -7590,7 +7571,7 @@ describe('KbqSelect', () => {
             flush();
             fixture.detectChanges();
 
-            expect(testInstance.select().empty).toBe(true);
+            expect(testInstance.select().empty()).toBe(true);
             expect(fixture.debugElement.query(By.css('.kbq-select__placeholder'))).toBeTruthy();
         }));
 
@@ -7668,7 +7649,7 @@ describe('KbqSelect', () => {
             const triggerText = fixture.debugElement.query(By.css('.kbq-select__matcher-text')).nativeElement
                 .textContent;
 
-            expect(testInstance.select().value).toBe('Unknown');
+            expect(testInstance.select().value()).toBe('Unknown');
             expect(triggerText.trim()).toBe('Unknown');
         }));
 
@@ -7684,7 +7665,7 @@ describe('KbqSelect', () => {
             fixture.detectChanges();
 
             expect(testInstance.select().keyManager.activeItemIndex).toBe(0);
-            expect(testInstance.select().value).toBe('Unknown');
+            expect(testInstance.select().value()).toBe('Unknown');
         }));
     });
 
@@ -8937,26 +8918,33 @@ describe('KbqSelect', () => {
         it('should auto-generate a unique id by default', () => {
             const select = fixture.componentInstance.select();
 
-            expect(select.id).toMatch(/^kbq-select-\d+$/);
+            expect(select.id()).toMatch(/^kbq-select-\d+$/);
         });
 
         it('should accept a custom id', () => {
-            const select = fixture.componentInstance.select();
+            const customFixture = TestBed.createComponent(SelectWithCustomId);
 
-            select.id = 'custom-select-id';
+            customFixture.componentInstance.id.set('custom-select-id');
+            customFixture.detectChanges();
 
-            expect(select.id).toBe('custom-select-id');
+            expect(customFixture.componentInstance.select().id()).toBe('custom-select-id');
         });
 
         it('should fall back to the auto-generated uid when id is set to a falsy value', () => {
-            const select = fixture.componentInstance.select();
-            const original = select.id;
+            const customFixture = TestBed.createComponent(SelectWithCustomId);
 
-            select.id = 'temp-id';
-            expect(select.id).toBe('temp-id');
+            customFixture.detectChanges();
 
-            select.id = '';
-            expect(select.id).toBe(original);
+            const select = customFixture.componentInstance.select();
+            const original = select.id();
+
+            customFixture.componentInstance.id.set('temp-id');
+            customFixture.detectChanges();
+            expect(select.id()).toBe('temp-id');
+
+            customFixture.componentInstance.id.set('');
+            customFixture.detectChanges();
+            expect(select.id()).toBe(original);
         });
     });
 
@@ -9415,7 +9403,7 @@ describe('KbqSelect', () => {
                 const fixture = TestBed.createComponent(SelectWithLabel);
 
                 fixture.detectChanges();
-                fixture.componentInstance.select().placeholder = 'Pick one';
+                fixture.componentInstance.placeholder = 'Pick one';
                 fixture.detectChanges();
                 flush();
 

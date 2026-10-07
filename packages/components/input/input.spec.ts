@@ -504,7 +504,7 @@ describe('KbqInput', () => {
             it('should not be in error state initially when invalid but untouched', () => {
                 const fixture = createComponent(InputWithErrorStateMatcher);
 
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and touched', () => {
@@ -513,7 +513,7 @@ describe('KbqInput', () => {
                 fixture.componentInstance.form.controls.input.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.input().errorState).toBe(true);
+                expect(fixture.componentInstance.input().errorState()).toBe(true);
             });
 
             it('should be in error state when form is submitted and control is invalid', async () => {
@@ -523,7 +523,7 @@ describe('KbqInput', () => {
 
                 await fixture.whenStable();
 
-                expect(fixture.componentInstance.input().errorState).toBe(true);
+                expect(fixture.componentInstance.input().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and update errorState on blur', async () => {
@@ -531,14 +531,14 @@ describe('KbqInput', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
 
                 dispatchFakeEvent(getInputElement(fixture), 'blur');
 
                 await fixture.whenStable();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.input().errorState).toBe(true);
+                expect(fixture.componentInstance.input().errorState()).toBe(true);
             });
         });
 
@@ -549,7 +549,7 @@ describe('KbqInput', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.componentInstance.form.controls.input.markAsTouched();
 
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
             });
 
             it('should be in error state after form is submitted when invalid', async () => {
@@ -561,7 +561,7 @@ describe('KbqInput', () => {
 
                 await fixture.whenStable();
 
-                expect(fixture.componentInstance.input().errorState).toBe(true);
+                expect(fixture.componentInstance.input().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', async () => {
@@ -572,14 +572,14 @@ describe('KbqInput', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
 
                 dispatchFakeEvent(getInputElement(fixture), 'blur');
 
                 await fixture.whenStable();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
             });
         });
 
@@ -589,7 +589,7 @@ describe('KbqInput', () => {
 
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
 
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and dirty', () => {
@@ -599,7 +599,7 @@ describe('KbqInput', () => {
                 fixture.componentInstance.form.controls.input.markAsDirty();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.input().errorState).toBe(true);
+                expect(fixture.componentInstance.input().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', async () => {
@@ -610,14 +610,14 @@ describe('KbqInput', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
 
                 dispatchFakeEvent(getInputElement(fixture), 'blur');
 
                 await fixture.whenStable();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
             });
         });
 
@@ -625,12 +625,12 @@ describe('KbqInput', () => {
             it('should override errorStateMatcher by kbqErrorStateMatcherProvider', async () => {
                 const fixture = createComponent(InputWithDIErrorStateMatcher);
 
-                expect(fixture.componentInstance.input().errorState).toBe(true);
+                expect(fixture.componentInstance.input().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.input.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
             });
 
             it('should use custom errorStateMatcher logic', () => {
@@ -639,12 +639,12 @@ describe('KbqInput', () => {
                 fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.input().errorState).toBe(true);
+                expect(fixture.componentInstance.input().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.input.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.input().errorState).toBe(false);
+                expect(fixture.componentInstance.input().errorState()).toBe(false);
             });
         });
     });

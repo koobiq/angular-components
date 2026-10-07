@@ -22,7 +22,6 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -209,21 +208,18 @@ export class KbqTimeRangeTitle {
 
 // @public
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
-    protected readonly ariaLabelledby: _angular_core.Signal<string | null>;
-    controlType: string;
-    disabled: boolean;
-    empty: boolean;
-    errorState: boolean;
+    readonly controlType = "select";
+    readonly disabled: _angular_core.Signal<boolean>;
+    readonly empty: _angular_core.Signal<boolean>;
+    readonly errorState: _angular_core.Signal<boolean>;
     focus(_options?: FocusOptions): void;
-    focused: boolean;
-    id: string;
-    readonly isNativeLabelSupported = false;
-    ngControl: NgControl | null;
+    readonly focused: _angular_core.Signal<boolean>;
+    readonly id: _angular_core.Signal<string>;
+    readonly ngControl: NgControl | null;
     onContainerClick(_event: MouseEvent): void;
-    placeholder: string;
-    required: boolean;
-    stateChanges: Observable<void>;
-    value: any;
+    readonly placeholder: _angular_core.Signal<string | undefined>;
+    readonly required: _angular_core.Signal<boolean>;
+    readonly value: _angular_core.Signal<any>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRangeTitleAsControl, "kbq-time-range-title-as-control", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)

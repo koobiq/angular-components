@@ -230,13 +230,9 @@ export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDi
 
 // @public
 export interface CanUpdateErrorState {
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    readonly errorState: Signal<boolean>;
     updateErrorState(): void;
 }
-
-// @public
-export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
 // @public (undocumented)
 export const CAPS_LOCK = 20;
@@ -3115,9 +3111,9 @@ export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMa
 
 // @public
 export class KbqErrorStateTracker implements CanUpdateErrorState {
-    constructor(defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, parentFormGroup: FormGroupDirective | null, parentForm: NgForm | null, stateChanges: Subject<void>);
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    constructor(defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, parentFormGroup: FormGroupDirective | null, parentForm: NgForm | null);
+    readonly errorState: Signal<boolean>;
+    errorStateMatcher: ErrorStateMatcher | null | undefined;
     // (undocumented)
     ngControl: NgControl | null;
     updateErrorState(): void;
@@ -3277,16 +3273,15 @@ export class KbqFormElement implements AfterContentInit {
 // @public
 export interface KbqFormFieldControlRef<T = unknown> {
     readonly controlType?: string;
-    readonly disabled: boolean;
-    readonly empty: boolean;
-    readonly errorState: boolean;
-    readonly focused: boolean;
-    readonly id: string;
+    readonly disabled: Signal<boolean>;
+    readonly empty: Signal<boolean>;
+    readonly errorState: Signal<boolean>;
+    readonly focused: Signal<boolean>;
+    readonly id: Signal<string>;
     readonly ngControl: NgControl | null;
-    placeholder: string;
-    readonly required: boolean;
-    readonly stateChanges: Observable<void>;
-    value: T | null;
+    readonly placeholder: Signal<string | null | undefined>;
+    readonly required: Signal<boolean>;
+    readonly value: Signal<T | null>;
 }
 
 // @public @deprecated
@@ -4963,11 +4958,6 @@ export const META = 91;
 
 // @public
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
-
-// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point koobiq-components-core.d.ts
-//
-// @public
-export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
 
 // @public
 export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;

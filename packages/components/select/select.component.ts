@@ -43,9 +43,11 @@ import {
     effect,
     inject,
     input,
+    linkedSignal,
     numberAttribute,
     output,
     signal,
+    untracked,
     viewChild,
     type AfterRenderRef
 } from '@angular/core';
@@ -252,7 +254,7 @@ export const minimumTimeToDisplayLoading = 300;
     encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null',
+        '[attr.disabled]': 'disabled() || null',
         // The select is not a native control, so its role, states and the relationship with the panel it
         // owns have to be exposed explicitly.
         role: 'combobox',
@@ -261,14 +263,14 @@ export const minimumTimeToDisplayLoading = 300;
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
         '[attr.aria-labelledby]': 'ariaLabelledby',
         '[attr.aria-label]': 'resolvedAriaLabel',
-        '[attr.aria-invalid]': 'errorState',
-        '[attr.aria-required]': 'required',
-        '[attr.aria-disabled]': 'disabled',
+        '[attr.aria-invalid]': 'errorState()',
+        '[attr.aria-required]': 'required()',
+        '[attr.aria-disabled]': 'disabled()',
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline()',
-        '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-invalid]': 'errorState',
+        '[class.kbq-disabled]': 'disabled()',
+        '[class.kbq-invalid]': 'errorState()',
         '(click)': 'toggle()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
@@ -320,14 +322,10 @@ export class KbqSelect
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
     private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
 
+    private readonly errorStateValue = signal(false);
+
     /** Whether the component is in an error state. */
-    errorState: boolean = false;
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
+    readonly errorState = this.errorStateValue.asReadonly();
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -548,7 +546,7 @@ export class KbqSelect
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
 
     /** Object used to control when error messages are shown. */
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /**
      * Function used to sort the values in a select in multiple mode.
@@ -695,38 +693,12 @@ export class KbqSelect
      * Placeholder text to be shown when no value is selected.
      * Displayed in the trigger when the select is closed and no value is selected.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get placeholder(): string {
-        return this._placeholder;
-    }
-
-    set placeholder(value: string) {
-        this._placeholder = value;
-
-        this.stateChanges.next();
-    }
-
-    private _placeholder: string;
+    readonly placeholder = input<string>();
 
     /**
      * Whether the select is required. Affects validation and display of placeholder.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get required(): boolean {
-        return this._required;
-    }
-
-    set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
-
-        this.stateChanges.next();
-    }
-
-    private _required: boolean = false;
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /**
      * Whether multiple options can be selected.
@@ -786,7 +758,7 @@ export class KbqSelect
      * customise per-value `disabled` state or any future `KbqVirtualOption`
      * fields without adding new `@Input`s.
      *
-     * Defaults to `new KbqVirtualOption(value, this.disabled)`, which is correct
+     * Defaults to `new KbqVirtualOption(value, this.disabled())`, which is correct
      * for primitive values where `value` itself is the display label.
      */
     readonly virtualOptionFactory = input<(value: any) => KbqVirtualOption>();
@@ -892,40 +864,25 @@ export class KbqSelect
      */
     protected readonly panelMaxHeightToken = computed(() => kbqResolvePanelMaxHeightToken(this.panelMaxHeight()));
 
-    /** Value of the select control. Can be a single value or array of values for multiple selection. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get value(): any {
-        return this._value;
-    }
+    /** @docs-private */
+    readonly valueInput = input<any>(undefined, { alias: 'value' });
 
-    set value(newValue: any) {
-        if (newValue !== this._value) {
-            this.writeValue(newValue);
-            this._value = newValue;
-        }
-    }
+    private readonly valueState = signal<any>(undefined);
 
-    private _value: any;
+    /**
+     * Value of the select control. Can be a single value or array of values for multiple selection. Set with
+     * `[value]` and by the user's selection.
+     */
+    readonly value = this.valueState.asReadonly();
+
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
     /**
      * Unique identifier for the select component.
      * Auto-generates an ID if not provided.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get id(): string {
-        return this._id;
-    }
-
-    set id(value: string) {
-        this._id = value || this.uid;
-        this.stateChanges.next();
-    }
-
-    private _id: string;
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Sets the tabIndex of the select element.
@@ -935,7 +892,7 @@ export class KbqSelect
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: numberAttribute })
     get tabIndex(): number {
-        return this.disabled ? -1 : this._tabIndex;
+        return this.disabled() ? -1 : this._tabIndex;
     }
 
     set tabIndex(value: number) {
@@ -944,49 +901,33 @@ export class KbqSelect
 
     private _tabIndex = 0;
 
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     /**
      * Whether the select is disabled.
-     * When disabled, the select cannot be opened and its value cannot be changed.
+     * When disabled, the select cannot be opened and its value cannot be changed. Also set by the bound form
+     * control.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
+    readonly disabled = linkedSignal(() => this.disabledInput());
 
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-
-            if (this.parentFormField) {
-                Promise.resolve().then(() => {
-                    if (this._disabled) {
-                        this.parentFormField.stopFocusMonitor();
-                    } else {
-                        this.parentFormField.runFocusMonitor();
-                    }
-                });
-            }
-
-            // Let the parent form field know to run change detection when the disabled state changes.
-            this.stateChanges.next();
-        }
-    }
-
-    private _disabled: boolean = false;
+    private readonly focusedValue = signal(false);
+    private readonly panelOpenValue = signal(false);
 
     /** Whether the select is focused. */
-    get focused(): boolean {
-        return this._focused || this.panelOpen;
-    }
-
-    set focused(value: boolean) {
-        this._focused = value;
-    }
+    readonly focused = computed(() => this.focusedValue() || this.panelOpenValue());
 
     /** Whether the select panel is currently open. */
-    panelOpen = false;
+    get panelOpen(): boolean {
+        return this.panelOpenValue();
+    }
+
+    set panelOpen(value: boolean) {
+        this.panelOpenValue.set(value);
+    }
 
     /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
     get isAttached(): boolean {
@@ -999,8 +940,6 @@ export class KbqSelect
     protected get scrollbarMode(): KbqScrollbarMode {
         return this.withVirtualScroll ? 'native' : this.scrollbarOptions.mode;
     }
-
-    private _focused = false;
 
     /** Whether the search returned no results. */
     get isEmptySearchResult(): boolean {
@@ -1102,14 +1041,14 @@ export class KbqSelect
 
     /** Returns the display value for the trigger element. */
     get triggerValue(): string {
-        if (this.empty) return '';
+        if (this.empty()) return '';
 
         return this.resolveSelectedOption(this.selectionModel.selected[0]).viewValue;
     }
 
     /** Returns all selected options in display order. */
     get triggerValues(): KbqOptionBase[] {
-        if (this.empty) {
+        if (this.empty()) {
             return [];
         }
 
@@ -1137,10 +1076,10 @@ export class KbqSelect
         return this.visibleTriggerItems === null || index < this.visibleTriggerItems;
     }
 
+    private readonly emptyValue = signal(false);
+
     /** Whether no option is currently selected. */
-    get empty(): boolean {
-        return !!this.selectionModel?.isEmpty();
-    }
+    readonly empty = this.emptyValue.asReadonly();
 
     /** Whether there are no options available. */
     get noOptions(): boolean {
@@ -1170,9 +1109,9 @@ export class KbqSelect
 
     /** @docs-private */
     get colorForState(): KbqComponentColors {
-        if (this.disabled) return KbqComponentColors.Empty;
+        if (this.disabled()) return KbqComponentColors.Empty;
 
-        return (this.hasLegacyValidateDirective() && this.ngControl?.invalid) || this.errorState
+        return (this.hasLegacyValidateDirective() && this.ngControl?.invalid) || this.errorState()
             ? KbqComponentColors.Error
             : KbqComponentColors.ContrastFade;
     }
@@ -1239,7 +1178,7 @@ export class KbqSelect
      * @docs-private
      */
     protected get resolvedAriaLabel(): string | null {
-        return this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder || null);
+        return this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder() || null);
     }
 
     /**
@@ -1272,9 +1211,36 @@ export class KbqSelect
     constructor() {
         super();
 
-        // The template reads the state `stateChanges` reports (placeholder, error state, focus), and this view is
-        // OnPush: every report re-checks it.
-        this.stateChanges.pipe(takeUntilDestroyed()).subscribe(() => this._changeDetectorRef.markForCheck());
+        // A bound value selects its options, as long as it differs from the one the select holds.
+        effect(() => {
+            const value = this.valueInput();
+
+            untracked(() => {
+                if (value !== this.valueState()) {
+                    this.writeValue(value);
+                    this.valueState.set(value);
+                }
+            });
+        });
+
+        // A disabled select reports no focus to its form field.
+        let wasDisabled = false;
+
+        effect(() => {
+            const disabled = this.disabled();
+
+            if (disabled === wasDisabled) return;
+
+            wasDisabled = disabled;
+
+            const formField = this.parentFormField;
+
+            if (formField) {
+                Promise.resolve().then(() =>
+                    this.disabled() ? formField.stopFocusMonitor() : formField.runFocusMonitor()
+                );
+            }
+        });
 
         // The "select all" row only exists while the panel is attached, so the key manager's list has to
         // be rebuilt whenever the view query resolves or drops it — `options.changes` alone never fires
@@ -1290,9 +1256,6 @@ export class KbqSelect
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
-
-        // Force setter to be called in case id was not specified.
-        this.id = this.id;
 
         afterNextRender(() => {
             this.hasLegacyValidateDirective.set(
@@ -1312,7 +1275,10 @@ export class KbqSelect
     /** Lifecycle hook called after component initialization. Initializes selection model and subscriptions. */
     ngOnInit() {
         this.selectionModel = new SelectionModel(this.multiSelection);
-        this.stateChanges.next();
+        this.emptyValue.set(this.selectionModel.isEmpty());
+        this.selectionModel.changed
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.emptyValue.set(this.selectionModel.isEmpty()));
 
         // We need `distinctUntilChanged` here, because some browsers will
         // fire the animation end event twice for the same animation. See:
@@ -1403,7 +1369,6 @@ export class KbqSelect
 
     /** Lifecycle hook when component is destroyed. Cleans up subscriptions. */
     ngOnDestroy() {
-        this.stateChanges.complete();
         this.visibleChanges.complete();
         // Before `openedChange`: the panel stream is what emits into it.
         this.panelDoneAnimatingStream.complete();
@@ -1418,16 +1383,11 @@ export class KbqSelect
 
     /** Updates the error state based on the error state matcher. */
     updateErrorState() {
-        const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
         const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-        const newState = matcher.isErrorState(control, parent);
 
-        if (newState !== oldState) {
-            this.errorState = newState;
-            this.stateChanges.next();
-        }
+        this.errorStateValue.set(matcher.isErrorState(control, parent));
     }
 
     /**
@@ -1453,7 +1413,6 @@ export class KbqSelect
         }
 
         this.propagateChanges();
-        this.stateChanges.next();
 
         this.onSelectAll.emit(new KbqSelectAllEvent(this, targets, this.allOptionsSelected));
     }
@@ -1533,7 +1492,7 @@ export class KbqSelect
      * if options exist, it opens immediately.
      */
     open(): void {
-        if (this.disabled || this.panelOpen) return;
+        if (this.disabled() || this.panelOpen) return;
 
         this.beforeOpened.emit();
 
@@ -1673,9 +1632,7 @@ export class KbqSelect
      * @param isDisabled Sets whether the component is disabled.
      */
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this._changeDetectorRef.markForCheck();
-        this.stateChanges.next();
+        this.disabled.set(isDisabled);
     }
 
     /**
@@ -1692,7 +1649,7 @@ export class KbqSelect
      * @param event The keyboard event to handle.
      */
     handleKeydown(event: KeyboardEvent): void {
-        if (this.disabled) return;
+        if (this.disabled()) return;
 
         if (this.panelOpen) {
             this.handleOpenKeydown(event);
@@ -1703,10 +1660,8 @@ export class KbqSelect
 
     /** Handles focus event on the select element. */
     onFocus() {
-        if (!this.disabled) {
-            this._focused = true;
-
-            this.stateChanges.next();
+        if (!this.disabled()) {
+            this.focusedValue.set(true);
         }
     }
 
@@ -1715,12 +1670,11 @@ export class KbqSelect
      * "blur" to the panel when it opens, causing a false positive.
      */
     onBlur() {
-        this._focused = false;
+        this.focusedValue.set(false);
 
-        if (!this.disabled && !this.panelOpen) {
+        if (!this.disabled() && !this.panelOpen) {
             this.onTouched();
             this._changeDetectorRef.markForCheck();
-            this.stateChanges.next();
         }
     }
 
@@ -1835,7 +1789,7 @@ export class KbqSelect
             !this.isBrowser ||
             this.customTrigger() ||
             this.customMatcher() ||
-            this.empty ||
+            this.empty() ||
             !this.multiple ||
             this.multiline()
         )
@@ -2287,7 +2241,7 @@ export class KbqSelect
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
         Promise.resolve().then(() => {
-            this.setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
+            this.setSelectionByValue(this.ngControl ? this.ngControl.value : this.valueState());
         });
     }
 
@@ -2430,7 +2384,7 @@ export class KbqSelect
     private createVirtualOption(value: any): KbqVirtualOption {
         const virtualOptionFactory = this.virtualOptionFactory();
 
-        return virtualOptionFactory ? virtualOptionFactory(value) : new KbqVirtualOption(value, this.disabled);
+        return virtualOptionFactory ? virtualOptionFactory(value) : new KbqVirtualOption(value, this.disabled());
     }
 
     /**
@@ -2491,10 +2445,7 @@ export class KbqSelect
         // Handles cases like the labels of the selected options changing.
         (this.options.length ? merge(...this.options.map((option) => option.stateChanges)) : EMPTY)
             .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(this.options.changes))
-            .subscribe(() => {
-                this._changeDetectorRef.markForCheck();
-                this.stateChanges.next();
-            });
+            .subscribe(() => this._changeDetectorRef.markForCheck());
     }
 
     /** Invoked when an option is clicked. */
@@ -2527,7 +2478,7 @@ export class KbqSelect
             this.propagateChanges();
         }
 
-        this.stateChanges.next();
+        this._changeDetectorRef.markForCheck();
     }
 
     /** Sorts the selected values based on their order in the panel. */
@@ -2558,7 +2509,7 @@ export class KbqSelect
                 });
             }
 
-            this.stateChanges.next();
+            this._changeDetectorRef.markForCheck();
         }
     }
 
@@ -2572,7 +2523,7 @@ export class KbqSelect
             valueToEmit = this.selected ? (this.selected as KbqOption).value : fallbackValue;
         }
 
-        this._value = valueToEmit;
+        this.valueState.set(valueToEmit);
         this.valueChange.emit(valueToEmit);
         this.onChange(valueToEmit);
         this.selectionChange.emit(new KbqSelectChange(this, valueToEmit));
@@ -2585,7 +2536,7 @@ export class KbqSelect
      */
     private highlightCorrectOption(): void {
         if (this.keyManager) {
-            if (this.empty || !this.firstSelected || this.firstFiltered) {
+            if (this.empty() || !this.firstSelected || this.firstFiltered) {
                 this.keyManager.setFirstItemActive();
             } else {
                 this.keyManager.setActiveItem(this.firstSelected as KbqOption);

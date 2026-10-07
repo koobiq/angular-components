@@ -75,7 +75,7 @@
             "schema": "./migrations/button-state-and-styles/schema.json"
         },
         "form-field-signals": {
-            "description": "Migrates KbqFormField and KbqHint consumers to the signal-based API (content-query and has* reads become calls, KbqPasswordHint.regex writes become .set()), moves [attr.aria-label] on kbq-cleaner to the [aria-label] input, and warns on the lost QueryList API, the removed mixinColor and the new required a11y locale keys",
+            "description": "Migrates KbqFormField and KbqHint consumers to the signal-based API (content-query and has* reads become calls, KbqPasswordHint.regex writes become .set()), moves [attr.aria-label] on kbq-cleaner to the [aria-label] input, and warns on the lost QueryList API, the removed mixinColor and the new required a11y locale keys; also moves consumers of the built-in KbqFormFieldControl state to signals and warns on custom implementations and stateChanges",
             "factory": "./migrations/form-field-signals/index",
             "schema": "./migrations/form-field-signals/schema.json"
         },

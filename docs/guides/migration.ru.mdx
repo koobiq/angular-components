@@ -791,7 +791,7 @@ group.emitChangeEvent(toggle);
 
 ### Ревью поля формы (21.0.0)
 
-{/* migration-step-components(form-field, input, select) */}
+{/* migration-step-components(form-field, input, select, textarea, tree-select, timezone, tag-list, timepicker, datepicker) */}
 
 Ревью `<kbq-form-field>` завершило перевод контейнера и семейства подсказок на сигналы, дало иконочным «крестику» и переключателю пароля настоящую семантику кнопки и удалило устаревший `mixinColor`. Большая часть изменений ломает сборку, но часть, связанная с доступностью, меняет разметку молча.
 
@@ -811,6 +811,8 @@ group.emitChangeEvent(toggle);
 **Поле формы описывает свой контрол.** Подсказки и ошибка связаны с контролом через `aria-describedby`, `kbq-error` рендерит `role="alert"`, а `KbqInput` / `KbqInputPassword` / `KbqSelect` — `aria-invalid` (у `KbqSelect` ещё и `aria-required`). Сборку это не ломает — меняется разметка.
 
 **`mixinColor` удалён.** Он был устаревшим, внутри библиотеки не использовался и на каждый экземпляр писал предупреждение в dev-режиме. Замена — `KbqColorDirective` с тем же инпутом `color`.
+
+**`KbqFormFieldControl` перешёл на сигналы.** Раньше поле формы перепроверяло свой контрол на каждое событие `stateChanges`. Теперь `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` и `errorState` — сигналы, `stateChanges` удалён, а поле формы выводит своё состояние из них. Встроенные контролы тоже отдают это состояние сигналами: `KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` и `KbqDatepickerInput`. Их `errorStateMatcher` — сигнальный инпут. Привязки в шаблоне (`[value]`, `[disabled]`, `[placeholder]`, `[required]`, `[id]`) не затронуты.
 
 #### Запуск миграции
 
@@ -853,6 +855,8 @@ if (formField.hasCleaner() && formField.hint().length && hint.fillTextOff()) {
 
 **Записи в `KbqPasswordHint.regex` становятся `.set()`:** `hint.regex = /x/` → `hint.regex.set(/x/)`.
 
+**Чтения состояния контрола становятся вызовами**, а запись идёт через `.set()` там, где член остался записываемым: `disabled` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` и `KbqDatepickerInput` (`select.disabled = true` → `select.disabled.set(true)`), `value` у `KbqInput`, `KbqInputPassword`, `KbqTextarea` и `KbqTagList`. Ссылочная переменная шаблона на `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` или `<kbq-tag-list>` тоже мигрируется.
+
 **Доступное имя «крестика» переезжает в инпут:** `<kbq-cleaner [attr.aria-label]="label" />` → `<kbq-cleaner [aria-label]="label" />`.
 
 **Файл стилей с опечаткой переименован:** `_fiedset-theme.scss` стал `_fieldset-theme.scss`, поэтому `@use '…/form-field/fiedset-theme'` переписывается.
@@ -869,7 +873,41 @@ if (formField.hasCleaner() && formField.hint().length && hint.fillTextOff()) {
 
 **`KbqPasswordHint.icon` стал `protected`.** Выводите состояние из `checked` / `hasError`, а не из имени иконки.
 
-**`KBQ_FORM_FIELD_REF.control` типизирован.** Раньше это был `any`, поэтому `formField.control.placeholder` компилировался и молча давал `undefined` — ровно такая ошибка и была в самой библиотеке. Сначала вызывайте сигнал: `formField.control().placeholder`.
+**`KBQ_FORM_FIELD_REF.control` типизирован.** Раньше это был `any`, поэтому `formField.control.placeholder` компилировался и молча давал `undefined` — ровно такая ошибка и была в самой библиотеке. Сначала вызывайте сигнал: `formField.control().placeholder()` — состояние контрола тоже сигнал.
+
+**Собственный контрол поля формы должен отдавать сигналы.** Объявите каждый член состояния как `Signal` — `input()`, `computed()` или `signal()`, который пишет сам контрол, — и уберите `stateChanges`: поле формы больше ни на что не подписывается. Код, подписанный на `control.stateChanges`, читает сигналы в `computed()` или `effect()`.
+
+```ts
+// Было
+export class ColorInput implements KbqFormFieldControl<string> {
+    readonly stateChanges = new Subject<void>();
+    focused = false;
+    // value, id, placeholder, empty, required, disabled и errorState — обычные свойства
+
+    onFocus() {
+        this.focused = true;
+        this.stateChanges.next();
+    }
+}
+
+// Стало
+export class ColorInput implements KbqFormFieldControl<string> {
+    private readonly focusedState = signal(false);
+    readonly focused = this.focusedState.asReadonly();
+    readonly placeholder = input<string>();
+    // value, id, empty, required, disabled и errorState — тоже сигналы
+
+    onFocus() {
+        this.focusedState.set(true);
+    }
+}
+```
+
+**Остальное состояние контрола доступно только для чтения.** Не компилируются присваивания в `placeholder`, `required` и `id`, а также в `disabled` у контролов на нативном элементе и в `value` у `KbqSelect`, `KbqTreeSelect`, `KbqTimepicker` и `KbqDatepickerInput`: задавайте их привязкой в шаблоне, а значение — через контрол формы. Каждое присваивание выводится с именем файла.
+
+**Вместе с этим изменились помощники состояния ошибки.** `KbqErrorStateTracker` больше не принимает субъект `stateChanges`, а его `errorState` — как и `CanUpdateErrorState.errorState` — стал `Signal<boolean>`; `CanUpdateErrorState` больше не объявляет `errorStateMatcher`. Устаревшие `mixinErrorState` и `CanUpdateErrorStateCtor` удалены. `KbqTagTextControl` и `KbqIconErrorStateContext` тоже перешли на сигналы.
+
+**`KbqDatepicker` больше не контрол поля формы.** Он предоставлял контракт, не реализуя его; теперь поле формы всегда находит поле ввода `kbqDatepicker`. Поле ввода теперь рендерит свой `id`, поэтому метка поля формы связана с ним.
 
 **Кастомным данным локали нужны ещё три ключа в `a11y`** — `clear`, `showPassword` и `hidePassword` — для доступных имён «крестика» и переключателя пароля. Литерал локали без них перестанет проходить проверку типов; данные, зарегистрированные через `KBQ_LOCALE_DATA`, откатятся на строки ru-RU.
 

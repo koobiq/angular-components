@@ -3,7 +3,6 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
-import { Subject } from 'rxjs';
 import { KbqFormField } from './form-field';
 import { KbqFormFieldModule } from './form-field.module';
 import { hasPasswordStrengthError, KbqPasswordHint, PasswordRules, regExpPasswordValidator } from './password-hint';
@@ -90,14 +89,13 @@ class PasswordFormFieldWithCustomHint {
 })
 class PasswordHintWithNullValue {
     @ViewChild(KbqPasswordHint) readonly hint: KbqPasswordHint;
-    readonly stateChanges = new Subject<void>();
     readonly formField = {
         control: signal({
-            value: null,
-            focused: false,
-            required: true,
-            ngControl: null,
-            stateChanges: this.stateChanges
+            value: signal(null),
+            focused: signal(false),
+            required: signal(true),
+            errorState: signal(false),
+            ngControl: null
         })
     } as unknown as KbqFormField;
     rule: PasswordRules | undefined = PasswordRules.Length;
@@ -195,7 +193,7 @@ describe(KbqPasswordHint.name, () => {
         it('should NOT throw for PasswordRules.Length when the control reports null', () => {
             const fixture = createComponent(PasswordHintWithNullValue, { rule: PasswordRules.Length });
 
-            fixture.componentInstance.stateChanges.next();
+            fixture.detectChanges();
 
             expect(fixture.componentInstance.hint.hasError).toBe(true);
         });
@@ -203,7 +201,7 @@ describe(KbqPasswordHint.name, () => {
         it('should NOT satisfy a regex rule when the control reports null', () => {
             const fixture = createComponent(PasswordHintWithNullValue, { rule: PasswordRules.LowerLatin });
 
-            fixture.componentInstance.stateChanges.next();
+            fixture.detectChanges();
 
             expect(fixture.componentInstance.hint.hasError).toBe(true);
         });

@@ -10,14 +10,15 @@ import {
     forwardRef,
     inject,
     InjectionToken,
-    Input,
     input,
+    linkedSignal,
     OnChanges,
-    OnDestroy,
     output,
     Provider,
     Renderer2,
-    SimpleChanges
+    signal,
+    SimpleChanges,
+    untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -66,7 +67,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import type { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { noop, Subject } from 'rxjs';
+import { noop } from 'rxjs';
 
 import {
     AM_PM_FORMAT_REGEXP,
@@ -137,10 +138,10 @@ const timeFormatAttribute = (value: TimeFormats | null | undefined): TimeFormats
         class: 'kbq-input kbq-timepicker',
         // Native input properties that are overwritten by Angular inputs need to be synced with
         // the native input element. Otherwise property bindings for those don't work.
-        '[attr.id]': 'id',
-        '[attr.placeholder]': 'placeholder',
-        '[attr.disabled]': 'disabled || null',
-        '[attr.required]': 'required',
+        '[attr.id]': 'id()',
+        '[attr.placeholder]': 'placeholder()',
+        '[attr.disabled]': 'disabled() || null',
+        '[attr.required]': 'required()',
         '[attr.size]': 'getSize()',
         '[attr.autocomplete]': '"off"',
         '(blur)': 'onBlur()',
@@ -154,7 +155,7 @@ const timeFormatAttribute = (value: TimeFormats | null | undefined): TimeFormats
     exportAs: 'kbqTimepicker'
 })
 export class KbqTimepicker<D>
-    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnChanges, OnDestroy, DoCheck, AfterContentInit
+    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnChanges, DoCheck, AfterContentInit
 {
     private readonly uid = inject(_IdGenerator).getId('kbq-timepicker-');
 
@@ -166,17 +167,23 @@ export class KbqTimepicker<D>
         'timepicker',
         KBQ_TIMEPICKER_LOCALE_CONFIGURATION
     );
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     * @docs-private
-     */
-    readonly stateChanges: Subject<void> = new Subject<void>();
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        inject(ErrorStateMatcher),
+        null,
+        inject(FormGroupDirective, { optional: true }),
+        inject(NgForm, { optional: true })
+    );
+
+    /** @docs-private */
+    readonly errorState = this.errorStateTracker.errorState;
+
+    private readonly focusedValue = signal(false);
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    focused: boolean = false;
+    readonly focused = this.focusedValue.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -185,83 +192,37 @@ export class KbqTimepicker<D>
     controlType: string = 'timepicker';
 
     /** Object used to control when error messages are shown. */
-    // Stays an accessor: `CanUpdateErrorState` declares it as a plain member, and it delegates to the
-    // shared `KbqErrorStateTracker`.
-    @Input()
-    get errorStateMatcher() {
-        return this.errorStateTracker.errorStateMatcher;
-    }
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
-    set errorStateMatcher(value: ErrorStateMatcher) {
-        this.errorStateTracker.errorStateMatcher = value;
-    }
+    /** @docs-private */
+    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Defaults to the localized pattern of `format`.
+     * @docs-private
+     */
+    readonly placeholder = computed(() => this.placeholderInput() ?? this.timeFormatPlaceholder);
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Whether the timepicker is disabled. Also set by the bound form control. */
+    readonly disabled = linkedSignal(() => this.disabledInput());
+
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
+
+    /** Unique id of the element, generated when not provided. */
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // Stays an accessor: `KbqFormFieldControl` declares `placeholder` as a plain member, and the setter
-    // records that the consumer took it over from the locale-provided default.
-    @Input()
-    get placeholder(): string {
-        return this._placeholder;
-    }
-
-    set placeholder(value: string) {
-        this._placeholder = value;
-
-        this.defaultPlaceholder = false;
-    }
-
-    private _placeholder = TIMEFORMAT_PLACEHOLDERS[DEFAULT_TIME_FORMAT];
-
-    // Stays an accessor: `KbqFormFieldControl` declares `disabled` as a plain member.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        this._disabled = value;
-
-        // Browsers may not fire the blur event if the input is disabled too quickly.
-        // Reset from here to ensure that the element doesn't become stuck.
-        if (this.focused) {
-            this.focused = false;
-        }
-
-        this.stateChanges.next();
-    }
-
-    private _disabled: boolean = false;
-
-    // Stays an accessor: `KbqFormFieldControl` declares `id` as a plain member.
-    @Input()
-    get id(): string {
-        return this._id;
-    }
-
-    set id(value: string) {
-        this._id = value || this.uid;
-    }
-
-    private _id: string = this.uid;
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     * @docs-private
-     */
-    // Stays an accessor: `KbqFormFieldControl` declares `required` as a plain member.
-    @Input({ transform: booleanAttribute })
-    get required(): boolean {
-        return this._required;
-    }
-
-    set required(value: boolean) {
-        this._required = value;
-    }
-
-    private _required: boolean = false;
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     /** Time format the input parses and renders. An unsupported value falls back to the default. */
     readonly format = input<TimeFormats, TimeFormats | null | undefined>(DEFAULT_TIME_FORMAT, {
@@ -280,24 +241,13 @@ export class KbqTimepicker<D>
     /** `max` as the date adapter reads it, or null when it cannot. */
     private readonly maxDate = computed(() => this.getValidDateOrNull(this.dateAdapter.deserialize(this.max())));
 
-    // Stays an accessor: `KbqFormFieldControl` declares `value` as a plain member, and the setter is the
-    // single place the view is re-rendered from.
-    @Input()
-    get value(): D | null {
-        return this._value;
-    }
+    /** @docs-private */
+    readonly valueInput = input<D | null | undefined>(undefined, { alias: 'value' });
 
-    set value(value: D | null) {
-        const newValue = this.dateAdapter.deserialize(value);
+    private readonly valueState = signal<D | null>(null);
 
-        this.lastValueValid = !newValue || this.dateAdapter.isValid(newValue);
-
-        this._value = this.getValidDateOrNull(newValue);
-
-        this.updateView();
-    }
-
-    private _value: D | null;
+    /** The time the control holds: set with `[value]`, by the form control and by typing. */
+    readonly value = this.valueState.asReadonly();
 
     /** Tooltip shown for a moment whenever a keystroke is rejected. */
     readonly kbqValidationTooltip = input<KbqTooltipTrigger | undefined>();
@@ -324,13 +274,13 @@ export class KbqTimepicker<D>
         return this.control;
     }
 
+    private readonly emptyValue = signal(true);
+
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    get empty(): boolean {
-        return !this.viewValue && !this.isBadInput();
-    }
+    readonly empty = this.emptyValue.asReadonly();
 
     get selectionStart(): number | null {
         return this.elementRef.nativeElement.selectionStart;
@@ -360,28 +310,16 @@ export class KbqTimepicker<D>
         );
     }
 
-    /** @docs-private */
-    get errorState(): boolean {
-        return this.errorStateTracker.errorState;
-    }
-
-    set errorState(value: boolean) {
-        this.errorStateTracker.errorState = value;
-    }
-
     private readonly validator: ValidatorFn | null;
 
     private lastValueValid = false;
 
     private control?: AbstractControl;
 
-    private defaultPlaceholder = true;
     private separator = ':';
 
     private onChange: (value: any) => void;
     private onTouched: () => void;
-
-    private readonly errorStateTracker: KbqErrorStateTracker;
 
     constructor() {
         if (!this.dateAdapter) {
@@ -396,28 +334,39 @@ export class KbqTimepicker<D>
         this.onChange = noop;
         this.onTouched = noop;
 
-        this.errorStateTracker = new KbqErrorStateTracker(
-            inject(ErrorStateMatcher),
-            null,
-            inject(FormGroupDirective, { optional: true }),
-            inject(NgForm, { optional: true }),
-            this.stateChanges
-        );
+        // A bound value is applied whenever the binding changes; an unbound one leaves the value to the form.
+        let bound = false;
 
         effect(() => {
-            // Read before the guard: an early return that skipped it would leave the effect with nothing
-            // to track, and the next locale or format change would never reach the input.
-            const placeholder = this.timeFormatPlaceholder;
+            const value = this.valueInput();
 
-            if (this.defaultPlaceholder) {
-                // Assigned through the private field so the setter does not mark it consumer-provided.
-                this._placeholder = placeholder;
-            }
+            if (!bound && value === undefined) return;
+
+            bound = true;
+
+            untracked(() => this.setValue(value ?? null));
+        });
+
+        effect(() => {
+            this.localeConfiguration();
+            this.format();
 
             // Re-assigning the value re-runs it through the date adapter, which formats on the new locale
             // and the new format. Only a complete value: with none, `updateView()` would render `''` over
-            // whatever the user has half typed, and the setter would clear a pending parse error with it.
-            if (this._value) this.value = this._value;
+            // whatever the user has half typed, and `setValue` would clear a pending parse error with it.
+            untracked(() => {
+                const value = this.valueState();
+
+                if (value) this.setValue(value);
+            });
+        });
+
+        // Browsers may not fire the blur event if the input is disabled too quickly.
+        // Reset from here to ensure that the element doesn't become stuck.
+        effect(() => {
+            if (this.disabled()) {
+                untracked(() => this.focusedValue.set(false));
+            }
         });
 
         effect((onCleanup) => {
@@ -463,7 +412,7 @@ export class KbqTimepicker<D>
         this.timezoneService.changes.pipe(takeUntilDestroyed()).subscribe(() => {
             // The rendered text names a wall clock in the zone it was formatted in. Left as it is, the
             // next keystroke re-parses it against the new zone and emits a different instant.
-            this.value = this._value;
+            this.setValue(this.valueState() ?? null);
         });
     }
 
@@ -474,6 +423,9 @@ export class KbqTimepicker<D>
             // that whatever logic is in here has to be super lean or we risk destroying the performance.
             this.updateErrorState();
         }
+
+        // The rendered text changes without notice: through the keyboard handlers, which write the element.
+        this.emptyValue.set(!this.viewValue && !this.isBadInput());
     }
 
     ngAfterContentInit() {
@@ -488,10 +440,6 @@ export class KbqTimepicker<D>
         if (changes['min'] || changes['max']) this.validatorOnChange();
     }
 
-    ngOnDestroy(): void {
-        this.stateChanges.complete();
-    }
-
     getSize(): number {
         return this.isFullFormat ? fullFormatSize : shortFormatSize;
     }
@@ -501,17 +449,16 @@ export class KbqTimepicker<D>
     }
 
     focusChanged(isFocused: boolean): void {
-        if (isFocused !== this.focused) {
-            this.focused = isFocused;
+        if (isFocused !== this.focused()) {
+            this.focusedValue.set(isFocused);
             this.onTouched();
-            this.stateChanges.next();
         }
     }
 
     onBlur() {
         this.focusChanged(false);
 
-        if (this.viewValue !== this.getTimeStringFromDate(this.value, this.format())) {
+        if (this.viewValue !== this.getTimeStringFromDate(this.value(), this.format())) {
             this.setViewValue(this.formatUserPaste(this.viewValue));
 
             this.onInput();
@@ -531,9 +478,8 @@ export class KbqTimepicker<D>
 
         this.setViewValue(this.getTimeStringFromDate(newTimeObj, this.format()));
 
-        this.value = newTimeObj;
+        this.setValue(newTimeObj);
         this.onChange(newTimeObj);
-        this.stateChanges.next();
     }
 
     onInput = () => {
@@ -571,9 +517,8 @@ export class KbqTimepicker<D>
             return;
         }
 
-        this.value = newTimeObj;
+        this.setValue(newTimeObj);
         this.onChange(newTimeObj);
-        this.stateChanges.next();
     };
 
     /**
@@ -641,7 +586,7 @@ export class KbqTimepicker<D>
     }
 
     writeValue(value: D | null): void {
-        this.value = value;
+        this.setValue(value);
     }
 
     registerOnChange(fn: (value: D) => void): void {
@@ -653,7 +598,7 @@ export class KbqTimepicker<D>
     }
 
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.disabled.set(isDisabled);
     }
 
     private formatUserPaste(value: string) {
@@ -764,7 +709,9 @@ export class KbqTimepicker<D>
     }
 
     private verticalArrowKeyHandler(keyCode: number): void {
-        if (!this.value) {
+        const value = this.value();
+
+        if (!value) {
             return;
         }
 
@@ -773,19 +720,18 @@ export class KbqTimepicker<D>
         const newEditParams = this.getTimeEditMetrics(this.selectionStart as number);
 
         if (keyCode === UP_ARROW) {
-            changedTime = this.incrementTime(this.value, newEditParams.modifiedTimePart);
+            changedTime = this.incrementTime(value, newEditParams.modifiedTimePart);
         }
 
         if (keyCode === DOWN_ARROW) {
-            changedTime = this.decrementTime(this.value, newEditParams.modifiedTimePart);
+            changedTime = this.decrementTime(value, newEditParams.modifiedTimePart);
         }
 
-        this.value = changedTime;
+        this.setValue(changedTime);
 
         this.setSelection(newEditParams.cursorStartPosition, newEditParams.cursorEndPosition);
 
         this.onChange(changedTime);
-        this.stateChanges.next();
     }
 
     private fixEmptyDigit() {
@@ -794,13 +740,15 @@ export class KbqTimepicker<D>
             .map((part) => part.length)
             .some((item) => !item);
 
-        if (hasEmptyDigit && this.value) {
-            this.value = this.dateAdapter.clone(this.value);
+        const value = this.value();
+
+        if (hasEmptyDigit && value) {
+            this.setValue(this.dateAdapter.clone(value));
         }
     }
 
     private horizontalArrowKeyHandler(keyCode: number): void {
-        if (!this.value) {
+        if (!this.value()) {
             return;
         }
 
@@ -860,13 +808,13 @@ export class KbqTimepicker<D>
         }
 
         return this.dateAdapter.createDateTime(
-            this.dateAdapter.getYear(this.value),
-            this.dateAdapter.getMonth(this.value),
-            this.dateAdapter.getDate(this.value),
+            this.dateAdapter.getYear(this.value()),
+            this.dateAdapter.getMonth(this.value()),
+            this.dateAdapter.getDate(this.value()),
             hours,
             minutes,
             seconds,
-            this.dateAdapter.getMilliseconds(this.value)
+            this.dateAdapter.getMilliseconds(this.value())
         );
     }
 
@@ -901,13 +849,13 @@ export class KbqTimepicker<D>
         }
 
         return this.dateAdapter.createDateTime(
-            this.dateAdapter.getYear(this.value),
-            this.dateAdapter.getMonth(this.value),
-            this.dateAdapter.getDate(this.value),
+            this.dateAdapter.getYear(this.value()),
+            this.dateAdapter.getMonth(this.value()),
+            this.dateAdapter.getDate(this.value()),
             hours,
             minutes,
             seconds,
-            this.dateAdapter.getMilliseconds(this.value)
+            this.dateAdapter.getMilliseconds(this.value())
         );
     }
 
@@ -962,7 +910,7 @@ export class KbqTimepicker<D>
             return null;
         }
 
-        const date = this.value || this.dateAdapter.today();
+        const date = this.value() || this.dateAdapter.today();
 
         const HMS = timeString.match(HOURS_MINUTES_SECONDS_REGEXP);
         const HM = timeString.match(HOURS_MINUTES_REGEXP);
@@ -1011,7 +959,7 @@ export class KbqTimepicker<D>
     }
 
     private parseValidator: ValidatorFn = (): ValidationErrors | null => {
-        return this.focused || this.empty || this.lastValueValid
+        return this.focused() || !this.viewValue || this.isBadInput() || this.lastValueValid
             ? null
             : { kbqTimepickerParse: { text: this.viewValue } };
     };
@@ -1055,14 +1003,26 @@ export class KbqTimepicker<D>
     }
 
     private updateView() {
-        const formattedValue = this.getTimeStringFromDate(this.value, this.format());
+        const formattedValue = this.getTimeStringFromDate(this.value(), this.format());
 
         this.setViewValue(formattedValue);
     }
 
     /** @docs-private */
     updateErrorState() {
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
         this.errorStateTracker.updateErrorState();
+    }
+
+    /** Takes a value from any source, re-rendering the element with it. */
+    private setValue(value: D | null): void {
+        const newValue = this.dateAdapter.deserialize(value);
+
+        this.lastValueValid = !newValue || this.dateAdapter.isValid(newValue);
+
+        this.valueState.set(this.getValidDateOrNull(newValue));
+
+        this.updateView();
     }
 
     private setControl(control: AbstractControl) {
@@ -1070,7 +1030,7 @@ export class KbqTimepicker<D>
 
         this.control = control;
 
-        this.control.valueChanges.subscribe((value) => (this._value = value));
+        this.control.valueChanges.subscribe((value) => this.valueState.set(value));
 
         // @TODO resolve types
         this.errorStateTracker.ngControl = { control } as unknown as NgControl;

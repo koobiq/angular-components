@@ -6,7 +6,7 @@ export * from './checkbox';
 export * from './clipboard';
 export { CanColor, KbqColorDirective, KbqComponentColors, ThemePalette } from './color';
 export { CanDisable, CanDisableCtor, mixinDisabled } from './disabled';
-export { CanUpdateErrorState, CanUpdateErrorStateCtor, KbqErrorStateTracker, mixinErrorState } from './error-state';
+export { CanUpdateErrorState, KbqErrorStateTracker } from './error-state';
 export * from './flex';
 export * from './hover';
 export * from './orientation';

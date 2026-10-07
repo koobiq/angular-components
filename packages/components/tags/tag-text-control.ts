@@ -7,13 +7,13 @@ import { NgControl } from '@angular/forms';
  * @docs-private
  */
 export interface KbqTagTextControl {
-    id: string;
+    readonly id: Signal<string>;
 
-    placeholder: string;
+    readonly placeholder: Signal<string>;
 
-    focused: boolean;
+    readonly focused: Signal<boolean>;
 
-    empty: boolean;
+    readonly empty: Signal<boolean>;
 
     /** Whether the control's value was filled in by the browser. */
     autofilled?: Signal<boolean>;

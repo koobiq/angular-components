@@ -39,7 +39,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                         <kbq-label>The error message replaces the hint</kbq-label>
                         <input #input="kbqInput" formControlName="last" kbqInput />
 
-                        @if (input.errorState) {
+                        @if (input.errorState()) {
                             <kbq-error>Required</kbq-error>
                         } @else {
                             <kbq-hint>Hint under the field</kbq-hint>

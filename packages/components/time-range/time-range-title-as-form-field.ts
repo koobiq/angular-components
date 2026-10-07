@@ -1,8 +1,7 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, Directive, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Directive, inject, signal } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Observable, Subject } from 'rxjs';
+import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTimeRange } from './time-range';
 
 /** Directive for easy using styles of time-range placeholder publicly. */
@@ -39,7 +38,7 @@ export class KbqTimeRangeTitlePlaceholder {}
     host: {
         '[attr.id]': 'id',
         '[attr.tabindex]': '0',
-        '[attr.aria-labelledby]': 'ariaLabelledby()',
+        '[attr.id]': 'id()',
         class: 'kbq-time-range-title-as-form-field'
     }
 })
@@ -48,37 +47,25 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
 
     /** @docs-private */
-    controlType = 'select';
+    readonly controlType = 'select';
     /** @docs-private */
-    readonly isNativeLabelSupported = false;
-    /**
-     * Id of the `kbq-form-field` caption naming this control, when it has one.
-     *
-     * A `<label for>` does not associate with a custom element, so the relationship is expressed the
-     * other way around — from the control to the label.
-     * @docs-private
-     */
-    protected readonly ariaLabelledby = computed(() => this.parentFormField?.labelId() ?? null);
+    readonly ngControl: NgControl | null = this.timeRange.ngControl;
     /** @docs-private */
-    stateChanges: Observable<void> = new Subject<void>();
+    readonly value = signal<any>(null).asReadonly();
     /** @docs-private */
-    ngControl: NgControl | null = this.timeRange.ngControl;
+    readonly id = signal(inject(_IdGenerator).getId('kbq-time-range-title-')).asReadonly();
     /** @docs-private */
-    value: any;
+    readonly placeholder = signal<string | undefined>(undefined).asReadonly();
     /** @docs-private */
-    id: string = inject(_IdGenerator).getId('kbq-time-range-title-as-control-');
+    readonly focused = signal(false).asReadonly();
     /** @docs-private */
-    placeholder: string;
+    readonly empty = signal(false).asReadonly();
     /** @docs-private */
-    focused: boolean;
+    readonly required = signal(false).asReadonly();
     /** @docs-private */
-    empty: boolean;
+    readonly disabled = signal(false).asReadonly();
     /** @docs-private */
-    required: boolean;
-    /** @docs-private */
-    disabled: boolean;
-    /** @docs-private */
-    errorState: boolean;
+    readonly errorState = signal(false).asReadonly();
     /** @docs-private */
     onContainerClick(_event: MouseEvent): void {}
     /** @docs-private */

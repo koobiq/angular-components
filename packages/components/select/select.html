@@ -3,7 +3,7 @@
     #trigger
     cdkOverlayOrigin
     class="kbq-select__trigger"
-    [class.kbq-select__trigger_empty]="empty"
+    [class.kbq-select__trigger_empty]="empty()"
     [class.kbq-select__trigger_multiline]="multiline()"
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
@@ -12,9 +12,9 @@
         <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
     } @else {
         <div class="kbq-select__matcher">
-            @if (empty) {
+            @if (empty()) {
                 <span class="kbq-select__placeholder">
-                    {{ placeholder || '\u00A0' }}
+                    {{ placeholder() || '\u00A0' }}
                 </span>
             } @else {
                 @if (!!customTrigger()) {
@@ -38,11 +38,11 @@
                                     @for (option of triggerValues; track option) {
                                         <kbq-tag
                                             [color]="colorForState"
-                                            [disabled]="option.disabled || disabled"
+                                            [disabled]="option.disabled || disabled()"
                                             [selectable]="false"
                                         >
                                             {{ option.viewValue }}
-                                            @if (!option.disabled && !disabled) {
+                                            @if (!option.disabled && !disabled()) {
                                                 <!--
                                                     `kbqTagRemove` now carries the role, the accessible
                                                     name and keyboard activation itself, so this binds

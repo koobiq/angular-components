@@ -28,7 +28,7 @@ import { KbqIconRegistry } from './icon-registry';
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'svgIcon ? null : iconName',
-        '[class.kbq-error]': 'color === "error" || hasError'
+        '[class.kbq-error]': 'color === "error" || hasError || autoColorError'
     }
 })
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
@@ -49,6 +49,14 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     @Input() autoColor = false;
 
     hasError: boolean = false;
+
+    /**
+     * Whether `autoColor` takes the error color from the host's error state.
+     * @docs-private
+     */
+    protected get autoColorError(): boolean {
+        return this.autoColor && !!this.errorStateContext?.errorState();
+    }
 
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
     // TODO: Skipped for migration because:
@@ -102,11 +110,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     ngAfterContentInit(): void {
-        if (this.autoColor) {
-            this.errorStateContext?.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
-            this.updateState();
-        }
-
         this.updateMaxHeight();
 
         this.svgIconName
@@ -152,12 +155,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
                 }
             });
     }
-
-    private updateState = () => {
-        this.hasError = !!this.errorStateContext?.errorState;
-
-        this.changeDetectorRef.markForCheck();
-    };
 
     private parseIconSize(): number {
         const iconName = this.iconName;

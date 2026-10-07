@@ -18,6 +18,7 @@ import {
     HostAttributeToken,
     inject,
     InjectionToken,
+    Injector,
     input,
     model,
     OnDestroy,
@@ -26,12 +27,10 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
-import { EMPTY, merge } from 'rxjs';
-import { delay, startWith } from 'rxjs/operators';
 import { KbqCleaner, kbqCleanerFactoryProvider } from './cleaner';
 import { KbqError } from './error';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
@@ -135,9 +134,6 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
             return {
                 get errorState() {
                     return formField.control().errorState;
-                },
-                get stateChanges() {
-                    return formField.control().stateChanges;
                 }
             };
         })
@@ -176,6 +172,7 @@ export class KbqFormField
     implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked
 {
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
@@ -261,7 +258,7 @@ export class KbqFormField
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
-        return !!this.control()?.errorState;
+        return !!this.control()?.errorState();
     }
 
     /**
@@ -291,7 +288,7 @@ export class KbqFormField
      * `for` only associates a label with a native form control, so a control that is a custom element
      * (`kbq-select`, for one) has to point back at the label through `aria-labelledby` instead.
      */
-    readonly labelId = computed(() => (this.hasLabel() ? `${this.control().id}-label` : null));
+    readonly labelId = computed(() => (this.hasLabel() ? `${this.control().id()}-label` : null));
 
     /**
      * Whether the control is a native labelable element, so that a `<label>` can associate with it.
@@ -366,7 +363,7 @@ export class KbqFormField
      * @docs-private
      */
     get hasFocus(): boolean {
-        return !!this.control()?.focused;
+        return !!this.control()?.focused();
     }
 
     /**
@@ -381,7 +378,7 @@ export class KbqFormField
 
     /** Whether the form field is disabled. */
     get disabled(): boolean {
-        return !!this.control()?.disabled;
+        return !!this.control()?.disabled();
     }
 
     /**
@@ -404,15 +401,28 @@ export class KbqFormField
     ngAfterContentInit(): void {
         this.validateControlChild();
 
-        // Subscribe to changes in the child control state in order to update the form field UI.
-        this.control()
-            .stateChanges.pipe(startWith(), delay(0), takeUntilDestroyed(this.destroyRef))
-            .subscribe((state) => {
-                const focused = (state as { focused?: boolean } | undefined)?.focused;
+        const control = this.control();
+        // Only a field with the legacy password hints follows the control: nothing else needs the check.
+        const passwordState = computed(() =>
+            this.passwordHints().length ? { focused: control.focused(), value: control.value() } : null
+        );
 
-                if (this.passwordHints().length && !focused && hasPasswordStrengthError(this.passwordHints())) {
-                    this.setPasswordStrengthError();
-                }
+        // The legacy password hints check their rules in the render that follows a change, so the strength
+        // error is set once that render is over.
+        toObservable(passwordState, { injector: this.injector })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((state) => {
+                if (!state) return;
+
+                setTimeout(() => {
+                    if (
+                        !this.destroyRef.destroyed &&
+                        !state.focused &&
+                        hasPasswordStrengthError(this.passwordHints())
+                    ) {
+                        this.setPasswordStrengthError();
+                    }
+                });
             });
 
         this.initializeControl();
@@ -581,8 +591,9 @@ export class KbqFormField
             this.elementRef.nativeElement.classList.add(`kbq-form-field-type-${control.controlType}`);
         }
 
-        merge(control.stateChanges, control.ngControl?.valueChanges || EMPTY)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+        // The `ng-*` classes forwarded from the form control are not signals.
+        control.ngControl?.valueChanges
+            ?.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 }
