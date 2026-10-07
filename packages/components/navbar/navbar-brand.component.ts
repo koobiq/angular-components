@@ -6,6 +6,7 @@ import {
     AfterContentInit,
     afterNextRender,
     booleanAttribute,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     computed,
@@ -36,6 +37,7 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
     styleUrls: [
         './navbar-brand.scss'
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-navbar-brand',
         [`[class.${LONG_TITLE_CLASS}]`]: 'longTitleEnabled()',

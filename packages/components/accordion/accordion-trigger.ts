@@ -3,6 +3,7 @@ import {
     afterNextRender,
     AfterRenderRef,
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     inject,
     OnDestroy,
@@ -26,6 +27,7 @@ import { KbqAccordionTriggerDirective } from './accordion-trigger.directive';
         <ng-content />
     `,
     styleUrls: ['accordion-trigger.scss', 'accordion-tokens.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-accordion-trigger',

@@ -329,6 +329,7 @@ ng update @koobiq/components@21
 
 - **`MockNgZone` удален** из `@koobiq/components/core`. Он вызывал `onStable` по требованию, а библиотека этого события больше не ждет: уберите подмену `NgZone`, а `simulateZoneExit()` замените на `fixture.detectChanges()` или `await fixture.whenStable()`.
 - **Без zone.js тест отрисовывает компонент только по команде.** Проверке сразу после события нужен `fixture.detectChanges()` или `await fixture.whenStable()`, а `whenStable()` больше не ждет таймеров, запущенных компонентом.
+- **Контейнер панели действий работает в режиме `OnPush`**, как и контейнер боковой панели. В приложении с zone.js компонент, открытый в панели, должен вызывать `markForCheck()` или хранить состояние в сигнале, если меняет свои поля из таймера или подписки.
 
 Схематик `zoneless-change-detection` сообщает обо всех использованиях `MockNgZone` и `simulateZoneExit()`:
 

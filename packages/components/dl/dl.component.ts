@@ -50,6 +50,7 @@ const optionalBooleanAttribute = (value: unknown): boolean | null | undefined =>
 @Component({
     selector: 'kbq-dt',
     template: '<ng-content />',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dt'
@@ -60,6 +61,7 @@ export class KbqDtComponent {}
 @Component({
     selector: 'kbq-dd',
     template: '<ng-content />',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dd'
