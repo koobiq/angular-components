@@ -366,6 +366,14 @@ ng g @koobiq/components:angular-animations-removal --project "<your project>"
 ng g @koobiq/components:color-signals --project "<your project>"
 ```
 
+#### Удаленные миксины
+
+`mixinDisabled` и `mixinTabIndex` удалены из `@koobiq/components/core` вместе с `CanDisable`, `CanDisableCtor`, `HasTabIndex` и `HasTabIndexCtor`. Они были устаревшими и внутри библиотеки не использовались: объявите `disabled` и `tabIndex` инпутами самого класса. Схематик `core-mixins-removal` сообщает о каждом использовании:
+
+```bash
+ng g @koobiq/components:core-mixins-removal --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

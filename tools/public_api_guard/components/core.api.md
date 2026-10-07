@@ -216,18 +216,6 @@ export interface CanColor {
     readonly color: Signal<KbqComponentColors | ThemePalette | string>;
 }
 
-// @public (undocumented)
-export interface CanDisable {
-    // (undocumented)
-    disabled: boolean;
-}
-
-// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point koobiq-components-core.d.ts
-// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point koobiq-components-core.d.ts
-//
-// @public
-export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
-
 // @public
 export interface CanUpdateErrorState {
     readonly errorState: Signal<boolean>;
@@ -1081,15 +1069,6 @@ export const H = 72;
 //
 // @public (undocumented)
 export function hasModifierKey(event: KeyboardEvent | MouseEvent, ...modifiers: ModifierKey[]): boolean;
-
-// @public (undocumented)
-export interface HasTabIndex {
-    // (undocumented)
-    tabIndex: number;
-}
-
-// @public (undocumented)
-export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
 
 // @public
 export interface Highlightable extends ListKeyManagerOption {
@@ -4951,12 +4930,6 @@ export const MAC_WK_CMD_RIGHT = 93;
 
 // @public (undocumented)
 export const META = 91;
-
-// @public
-export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
-
-// @public
-export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;
 
 // @public (undocumented)
 export enum MultipleMode {

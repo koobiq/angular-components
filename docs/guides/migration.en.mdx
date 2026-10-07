@@ -366,6 +366,14 @@ ng g @koobiq/components:angular-animations-removal --project "<your project>"
 ng g @koobiq/components:color-signals --project "<your project>"
 ```
 
+#### Removed mixins
+
+`mixinDisabled` and `mixinTabIndex` are removed from `@koobiq/components/core` with `CanDisable`, `CanDisableCtor`, `HasTabIndex` and `HasTabIndexCtor`. They were deprecated and unused inside the library: declare `disabled` and `tabIndex` as inputs of the class instead. `core-mixins-removal` reports every use:
+
+```bash
+ng g @koobiq/components:core-mixins-removal --project "<your project>"
+```
+
 ### Actions panel overlay container (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

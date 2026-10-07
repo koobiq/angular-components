@@ -127,8 +127,7 @@ export abstract class KbqFileUploadBase {
         return template.replace('{{ fileName }}', fileName);
     }
 
-    /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate
-     * @docs-private */
+    /** @docs-private */
     updateErrorState() {
         const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
