@@ -232,6 +232,23 @@ describe('KbqCalendar', () => {
             expect(initSpyFn).toHaveBeenCalled();
         });
 
+        it('should lift the min date when its binding becomes unset', () => {
+            const disabledCells = () =>
+                calendarElement.querySelectorAll('.kbq-calendar__body-cell-content.kbq-disabled');
+
+            testComponent.startAt = adapter.createDate(2016, 0, 1);
+            testComponent.minDate = adapter.createDate(2016, 0, 15);
+            fixture.detectChanges();
+
+            expect(disabledCells().length).toBe(14);
+
+            testComponent.minDate = undefined;
+            fixture.detectChanges();
+
+            expect(calendarInstance.minDate).toBeNull();
+            expect(disabledCells().length).toBe(0);
+        });
+
         it('should update the minDate in the child view if it changed after an interaction', () => {
             fixture.destroy();
 
@@ -359,7 +376,7 @@ class CalendarWithMinMax {
     adapter = inject_1<DateAdapter<DateTime>>(DateAdapter);
 
     startAt: DateTime;
-    minDate = this.adapter.createDate(2016, 0, 1);
+    minDate: DateTime | undefined = this.adapter.createDate(2016, 0, 1);
     maxDate = this.adapter.createDate(2018, 0, 1);
 }
 
