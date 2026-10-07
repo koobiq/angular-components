@@ -213,7 +213,7 @@ export const C = 67;
 // @public (undocumented)
 export interface CanColor {
     // (undocumented)
-    color: KbqComponentColors | ThemePalette | string;
+    readonly color: Signal<KbqComponentColors | ThemePalette | string>;
 }
 
 // @public (undocumented)
@@ -2947,22 +2947,18 @@ export type KbqCodeBlockLocaleConfiguration = {
     openExternalSystemTooltip: string;
 };
 
-// @public (undocumented)
-export class KbqColorDirective {
-    constructor();
-    // (undocumented)
-    get color(): KbqComponentColors | ThemePalette | string;
-    set color(value: KbqComponentColors | ThemePalette | string);
-    // (undocumented)
-    protected _color: KbqComponentColors | ThemePalette | string;
-    get colorClassName(): KbqComponentColors | ThemePalette | string;
-    protected defaultColor: KbqComponentColors | ThemePalette | string;
+// @public
+export class KbqColorDirective<T extends string = KbqComponentColors | ThemePalette | string> {
+    readonly color: WritableSignal<T>;
+    get colorClassName(): string;
+    readonly colorInput: i0.InputSignal<T | null | undefined>;
+    protected readonly defaultColor: Signal<T>;
     readonly elementRef: ElementRef<HTMLElement>;
-    setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
+    setDefaultColor(color: T): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective, never, never, { "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective<any>, never, never, { "colorInput": { "alias": "color"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective<any>, never>;
 }
 
 // @public (undocumented)

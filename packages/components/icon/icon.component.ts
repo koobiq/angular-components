@@ -28,7 +28,7 @@ import { KbqIconRegistry } from './icon-registry';
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'svgIcon ? null : iconName',
-        '[class.kbq-error]': 'color === "error" || hasError || autoColorError'
+        '[class.kbq-error]': 'color() === "error" || hasError || autoColorError'
     }
 })
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {

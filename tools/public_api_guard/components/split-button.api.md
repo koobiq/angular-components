@@ -13,11 +13,9 @@ import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 
 // @public (undocumented)
-export class KbqSplitButton extends KbqColorDirective implements AfterContentInit {
+export class KbqSplitButton extends KbqColorDirective<KbqButtonColor> implements AfterContentInit {
     constructor();
     protected readonly buttons: i0.Signal<readonly KbqButton[]>;
-    get color(): KbqButtonColor;
-    set color(value: KbqButtonColor | null | undefined);
     get disabled(): boolean | undefined;
     set disabled(value: boolean);
     // (undocumented)
@@ -33,7 +31,7 @@ export class KbqSplitButton extends KbqColorDirective implements AfterContentIni
     readonly panelAutoWidth: i0.InputSignal<boolean>;
     get secondDisabled(): boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button, [kbq-split-button]", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; "isSignal": true; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["buttons", "dropdownTrigger"], ["[kbq-button]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSplitButton, "kbq-split-button, [kbq-split-button]", never, { "panelAutoWidth": { "alias": "panelAutoWidth"; "required": false; "isSignal": true; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["buttons", "dropdownTrigger"], ["[kbq-button]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSplitButton, never>;
 }

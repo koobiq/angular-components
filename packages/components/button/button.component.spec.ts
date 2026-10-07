@@ -1308,8 +1308,8 @@ describe(KbqButtonGroupRoot.name, () => {
 
         const [overridden, inherited] = componentInstance.buttons();
 
-        expect(overridden.color).toBe(KbqComponentColors.Theme);
-        expect(inherited.color).toBe(KbqComponentColors.ThemeFade);
+        expect(overridden.color()).toBe(KbqComponentColors.Theme);
+        expect(inherited.color()).toBe(KbqComponentColors.ThemeFade);
     });
 
     it('should preserve overrides when a button is added to the group', () => {

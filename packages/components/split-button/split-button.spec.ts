@@ -174,7 +174,7 @@ describe('KbqSplitButton', () => {
 
         it('should default color on nested buttons to contrast-fade', () => {
             buttons.forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.ContrastFade);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.ContrastFade);
             });
         });
 
@@ -183,7 +183,7 @@ describe('KbqSplitButton', () => {
             fixture.detectChanges();
 
             buttons.forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.Theme);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.Theme);
             });
         });
 
@@ -195,7 +195,7 @@ describe('KbqSplitButton', () => {
             fixture.detectChanges();
 
             buttons.forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.ContrastFade);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.ContrastFade);
             });
         });
 
@@ -205,7 +205,7 @@ describe('KbqSplitButton', () => {
             unboundFixture.detectChanges();
 
             unboundFixture.debugElement.queryAll(By.directive(KbqButton)).forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.Contrast);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.Contrast);
             });
         });
 
@@ -217,7 +217,7 @@ describe('KbqSplitButton', () => {
             fixture.detectChanges();
 
             buttons.forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.Theme);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.Theme);
             });
         });
     });
@@ -382,8 +382,8 @@ describe('KbqSplitButton', () => {
 
             const [first, second] = getButtons(fixture);
 
-            expect(first.color).toBe(KbqComponentColors.Theme);
-            expect(second.color).toBe(KbqComponentColors.ContrastFade);
+            expect(first.color()).toBe(KbqComponentColors.Theme);
+            expect(second.color()).toBe(KbqComponentColors.ContrastFade);
         });
     });
 

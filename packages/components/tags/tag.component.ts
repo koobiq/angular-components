@@ -451,7 +451,6 @@ export class KbqTag
     constructor() {
         super();
 
-        this.color = KbqComponentColors.ContrastFade;
         this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         this.addHostClassName();

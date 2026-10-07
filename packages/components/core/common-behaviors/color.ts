@@ -1,7 +1,7 @@
-import { Directive, ElementRef, inject, Input } from '@angular/core';
+import { Directive, ElementRef, inject, input, linkedSignal, Signal, signal, WritableSignal } from '@angular/core';
 
 export interface CanColor {
-    color: KbqComponentColors | ThemePalette | string;
+    readonly color: Signal<KbqComponentColors | ThemePalette | string>;
 }
 
 export enum ThemePalette {
@@ -30,49 +30,37 @@ export enum KbqComponentColors {
     Empty = 'empty'
 }
 
-@Directive()
-export class KbqColorDirective {
+/** Renders the `color` of a component as its `kbq-<color>` host class. */
+@Directive({
+    host: {
+        '[class]': 'colorClassName'
+    }
+})
+export class KbqColorDirective<T extends string = KbqComponentColors | ThemePalette | string> {
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    private readonly defaultColorState = signal<T>(KbqComponentColors.Empty as T);
+
+    /** Color used while the `color` input is unset or falsy. */
+    protected readonly defaultColor: Signal<T> = this.defaultColorState.asReadonly();
+
     /** @docs-private */
-    protected defaultColor: KbqComponentColors | ThemePalette | string;
+    readonly colorInput = input<T | null | undefined>(undefined, { alias: 'color' });
+
+    /**
+     * Color of the component. Falls back to the default color while the input is unset or falsy.
+     * A value set in code holds until the input or the default color changes.
+     */
+    readonly color: WritableSignal<T> = linkedSignal(() => this.colorInput() || this.defaultColor());
 
     /** current class name of color */
-    get colorClassName(): KbqComponentColors | ThemePalette | string {
-        return `kbq-${this._color}`;
-    }
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get color(): KbqComponentColors | ThemePalette | string {
-        return this._color;
-    }
-
-    set color(value: KbqComponentColors | ThemePalette | string) {
-        const color = value || this.defaultColor;
-
-        if (color !== this._color) {
-            if (this._color) {
-                this.elementRef.nativeElement.classList.remove(`kbq-${this._color}`);
-            }
-
-            if (color) {
-                this.elementRef.nativeElement.classList.add(`kbq-${color}`);
-            }
-
-            this._color = color;
-        }
-    }
-
-    protected _color: KbqComponentColors | ThemePalette | string;
-
-    constructor() {
-        this.color = KbqComponentColors.Empty;
+    get colorClassName(): string {
+        return `kbq-${this.color() || this.defaultColor()}`;
     }
 
     /** this color will be used as a default value. For example [color]="'' | false | undefined | null". */
-    setDefaultColor(color: KbqComponentColors | ThemePalette | string) {
-        this.defaultColor = color;
+    setDefaultColor(color: T): void {
+        this.defaultColorState.set(color);
     }
 }

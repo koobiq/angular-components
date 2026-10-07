@@ -352,6 +352,20 @@ ng g @koobiq/components:zoneless-change-detection --project "<your project>"
 ng g @koobiq/components:angular-animations-removal --project "<your project>"
 ```
 
+#### Цвет как сигнал
+
+`color` директивы `KbqColorDirective` стал записываемым сигналом, как и `color` всех компонентов на ее основе: кнопок, чекбокса, переключателя, радиокнопок, иконок, поля формы, подсказок, кнопки очистки, прогресс-бара и спиннера, тега. Привязка `[color]` не изменилась.
+
+- **Чтение — вызов, запись — `.set()`**: `icon.color()`, `button.color.set(KbqComponentColors.Theme)`. Цвет, заданный в коде, держится, пока не изменится привязка `[color]` или цвет компонента по умолчанию, а у кнопки — еще и цвет ее группы или `kbqStyle`.
+- **Незаданный или пустой `[color]` дает цвет компонента по умолчанию**, `kbq-empty`, если его нет, а не отсутствие класса цвета.
+- **Наследник больше не может переопределить геттер и сеттер `color`.** Задавайте цвет по умолчанию через `setDefaultColor()`, а не присваиванием `color` в конструкторе. `_color` удален, `defaultColor` и `CanColor.color` стали сигналами, а `KbqColorDirective` принимает тип цвета параметром: у кнопок это `KbqColorDirective<KbqButtonColor>`.
+
+Схематик `color-signals` переписывает чтения и записи и сообщает о наследниках:
+
+```bash
+ng g @koobiq/components:color-signals --project "<your project>"
+```
+
 ### Контейнер оверлея панели действий (21.0.0)
 
 {/* migration-step-components(actions-panel) */}

@@ -1736,7 +1736,7 @@ export class KbqSelect
 
     /** Returns the theme to be used on the panel based on parent form field color. */
     getPanelTheme(): string {
-        return this.parentFormField ? `kbq-${this.parentFormField.color}` : '';
+        return this.parentFormField ? `kbq-${this.parentFormField.color()}` : '';
     }
 
     /**
