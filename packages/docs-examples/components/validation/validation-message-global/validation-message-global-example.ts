@@ -95,7 +95,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     styles: `
         .example-container {
             width: 320px;
-            padding: 1px;
         }
 
         form {
