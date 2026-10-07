@@ -71,6 +71,13 @@ field annotated `KbqModalComponent`, an `inject()`/`viewChild()`/`contentChild()
 - `KbqModalControlService` still turns the dim layer of covered dialogs off and back on from
   outside, through `animateMaskTo()` and the new `setMaskEnabled()`. That orchestration belongs in
   the dialog, keyed on `topVisibleModal()` the way `inert` already is, and has not moved yet.
+- `kbqAfterOpen`, `kbqAfterClose` and `kbqBeforeClose` are still `@Output() EventEmitter`. They back
+  the public `afterOpen`/`beforeClose`/`afterClose` observables, and `output()` is not a drop-in:
+  `OutputEmitterRef` has no `asObservable()`, and `outputToObservable()` completes the stream when
+  the component is destroyed — which happens inside the emit itself, because
+  `ModalBuilderForService` subscribes first to dispose the overlay, so the value is dropped before
+  it reaches a consumer's `afterClose`. Converting them means moving the source of truth to a
+  `Subject` the dialog owns and taking the overlay teardown off that emitter.
 
 ## Running it manually
 
