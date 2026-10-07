@@ -127,6 +127,7 @@ import {
 import {
     E2eHorizontalNavbarStates,
     E2eNavbarCollapse,
+    E2eNavbarDisabledBrand,
     E2eNavbarInteractions,
     E2eNavbarItemSuffix,
     E2eVerticalNavbarBrandAutoLongTitle,
@@ -435,6 +436,7 @@ const components: Record<string, Type<unknown>> = {
     E2eVerticalNavbarStates,
     E2eVerticalNavbarBrandAutoLongTitle,
     E2eVerticalNavbarBrandFirstExpand,
+    E2eNavbarDisabledBrand,
     E2eNavbarInteractions,
     E2eNavbarItemSuffix,
     E2eNavbarCollapse,
