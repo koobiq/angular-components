@@ -51,6 +51,7 @@ import {
     typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { axe } from 'jest-axe';
 import { map, Observable, Subject, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
@@ -791,34 +792,27 @@ describe(KbqTagList.name, () => {
             expect(spy).toHaveBeenCalled();
             subscription.unsubscribe();
         });
-
-        // The form field renders <label [attr.for]="control().id"> and no aria-owns, so the label points at
-        // the kbq-tag-list host rather than at the inner input. Wiring it to the input is a form-field change.
-        xit('should point the label id to the tag input', () => {
-            const label = fixture.nativeElement.querySelector('label');
-            const input = fixture.nativeElement.querySelector('input');
-
-            fixture.detectChanges();
-
-            expect(label.getAttribute('for')).toBeTruthy();
-            expect(label.getAttribute('for')).toBe(input.getAttribute('id'));
-            expect(label.getAttribute('aria-owns')).toBe(input.getAttribute('id'));
-        });
     });
 
     describe('accessible name', () => {
-        // A tag list is not a native labelable element, so the form-field renders a `<span>` caption it
-        // `for` cannot point at; the list is named from the label side instead.
-        it('should be named by the form-field caption', () => {
+        // The tag list reports the id of its input, so the form-field caption is a `<label for>` that
+        // names the native input.
+        it('should label the tag input with the form-field caption', () => {
             fixture = createComponent(TagListWithFormFieldLabel);
             fixture.detectChanges();
 
-            const list: HTMLElement = fixture.nativeElement.querySelector('kbq-tag-list');
+            const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
             const caption: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field__label');
 
-            expect(caption.tagName).toBe('SPAN');
-            expect(caption.getAttribute('for')).toBeNull();
-            expect(list.getAttribute('aria-labelledby')).toBe(caption.id);
+            expect(caption.tagName).toBe('LABEL');
+            expect(caption.getAttribute('for')).toBe(input.id);
+        });
+
+        it('should have no axe violations', async () => {
+            fixture = createComponent(TagListWithFormFieldLabel);
+            fixture.detectChanges();
+
+            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
         });
     });
 

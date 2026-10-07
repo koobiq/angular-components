@@ -216,7 +216,6 @@ export interface KbqTagInputEvent {
 // @public (undocumented)
 export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnDestroy, CanUpdateErrorState, AfterViewInit {
     constructor();
-    protected readonly ariaLabelledby: _angular_core.Signal<string | null>;
     readonly autofilled: _angular_core.Signal<boolean>;
     blur(): void;
     get canClear(): boolean;
@@ -244,7 +243,6 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     focusInput(): void;
     handleSelectionInteraction(tag: KbqTag, extendRange: boolean): void;
     get id(): string;
-    readonly isNativeLabelSupported = false;
     keydown(event: KeyboardEvent): void;
     keyManager: FocusKeyManager<KbqTag>;
     markAsTouched(): void;

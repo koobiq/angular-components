@@ -35,12 +35,7 @@ import {
     isSelectAll,
     runClearPredicate
 } from '@koobiq/components/core';
-import {
-    KBQ_FORM_FIELD,
-    KbqCleaner,
-    kbqCleanerFactoryProvider,
-    KbqFormFieldControl
-} from '@koobiq/components/form-field';
+import { KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, startWith, takeUntil } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
@@ -106,7 +101,6 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
         '[class.kbq-tag-list_removable]': 'removable()',
         '[class.kbq-tag-list_draggable]': 'draggable',
         '[attr.tabindex]': 'tabIndex',
-        '[attr.aria-labelledby]': 'ariaLabelledby()',
         '[id]': 'uid',
         '(focus)': 'focus()',
         '(blur)': 'blur()',
@@ -133,8 +127,6 @@ export class KbqTagList
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     ngControl = inject(NgControl, { optional: true, self: true })!;
 
-    private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
-
     private readonly dropList = inject(CdkDropList, { host: true });
     private readonly destroyRef = inject(DestroyRef);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -145,21 +137,6 @@ export class KbqTagList
      * @docs-private
      */
     readonly controlType: string = 'tag-list';
-
-    /**
-     * A `kbq-tag-list` is not a native labelable element, so the form-field's `<label for>` cannot
-     * associate with it. The control is named through `aria-labelledby` instead.
-     */
-    readonly isNativeLabelSupported = false;
-
-    /**
-     * Id of the `kbq-form-field` caption naming this control, when it has one.
-     *
-     * A `<label for>` does not associate with a custom element, so the relationship is expressed the
-     * other way around — from the control to the label.
-     * @docs-private
-     */
-    protected readonly ariaLabelledby = computed(() => this.parentFormField?.labelId() ?? null);
 
     /**
      * Emits whenever the component state changes and should cause the parent
