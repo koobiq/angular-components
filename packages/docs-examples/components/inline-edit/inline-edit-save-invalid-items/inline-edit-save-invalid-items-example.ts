@@ -82,12 +82,12 @@ class ExampleRolesError extends Error {
                     <ng-template #kbqSelectTagContent let-option let-select="select">
                         <kbq-tag
                             [selectable]="false"
-                            [disabled]="option.disabled || select.disabled"
+                            [disabled]="option.disabled || select.disabled()"
                             [color]="rejectedRoles().includes(option.value) ? tagColors.Error : tagColors.ContrastFade"
                         >
                             {{ option.viewValue }}
                             <!-- The custom template replaces the built-in markup, so the remove control is up to us. -->
-                            @if (!option.disabled && !select.disabled) {
+                            @if (!option.disabled && !select.disabled()) {
                                 <i
                                     kbq-icon="kbq-xmark-s_16"
                                     kbqTagRemove

@@ -6,17 +6,18 @@ import {
     computed,
     Directive,
     DoCheck,
+    effect,
     ElementRef,
     inject,
     InjectionToken,
-    Input,
     input,
+    linkedSignal,
     NgZone,
-    OnChanges,
-    OnDestroy,
     OnInit,
     Renderer2,
-    signal
+    signal,
+    untracked,
+    WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
@@ -30,7 +31,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqNativeScrollbar } from '@koobiq/components/scrollbar';
-import { asapScheduler, observeOn, Subject } from 'rxjs';
+import { asapScheduler } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
@@ -41,11 +42,11 @@ export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('K
         class: 'kbq-textarea',
         '[class.kbq-textarea-resizable]': '!growing()',
         '[class.kbq-textarea_max-row-limit-reached]': 'maxRowLimitReached()',
-        '[attr.id]': 'id',
-        '[attr.placeholder]': 'placeholder',
-        '[attr.aria-invalid]': 'errorState',
-        '[disabled]': 'disabled',
-        '[required]': 'required',
+        '[attr.id]': 'id()',
+        '[attr.placeholder]': 'placeholder()',
+        '[attr.aria-invalid]': 'errorState()',
+        '[disabled]': 'disabled()',
+        '[required]': 'required()',
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
         '(input)': 'dirtyCheckNativeValue()'
@@ -53,9 +54,7 @@ export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('K
     hostDirectives: [KbqNativeScrollbar],
     exportAs: 'kbqTextarea'
 })
-export class KbqTextarea
-    implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
-{
+export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, CanUpdateErrorState {
     protected elementRef = inject<ElementRef<HTMLTextAreaElement>>(ElementRef);
     readonly ngControl = inject(NgControl, { optional: true, self: true });
     readonly parentForm = inject(NgForm, { optional: true });
@@ -64,8 +63,10 @@ export class KbqTextarea
     private readonly parent = inject(KBQ_PARENT_ANIMATION_COMPONENT, { optional: true, host: true });
     private readonly ngZone = inject(NgZone);
 
+    private readonly errorStateValue = signal(false);
+
     /** Whether the component is in an error state. */
-    errorState: boolean = false;
+    readonly errorState = this.errorStateValue.asReadonly();
 
     /**
      * Parameter enables or disables the ability to automatically increase the height.
@@ -81,15 +82,15 @@ export class KbqTextarea
     readonly maxRows = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
 
     /** An object used to control when error messages are shown. */
-    // Stays a plain member: `KbqFormFieldControl` declares it as one, and the form field reads it
-    // through that interface.
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    private readonly focusedValue = signal(false);
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    focused: boolean = false;
+    readonly focused = this.focusedValue.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -101,59 +102,40 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    readonly stateChanges: Subject<void> = new Subject<void>();
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     * @docs-private
-     */
     controlType: string = 'textarea';
 
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     * @docs-private
-     */
-    // Stays an accessor: `KbqFormFieldControl` declares `disabled` as a plain member, and the getter
-    // has to defer to the bound `NgControl` when there is one.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        if (this.ngControl && this.ngControl.disabled !== null) {
-            return this.ngControl.disabled;
-        }
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        this._disabled = value;
-
-        if (this.focused) {
-            this.focused = false;
-            this.stateChanges.next();
-        }
-    }
+    /** `disabled` of the bound form control, which takes precedence over the input. */
+    private readonly formDisabled = signal<boolean | null>(null);
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // Stays an accessor: `KbqFormFieldControl` declares `id` as a plain member.
-    @Input()
-    get id(): string {
-        return this._id;
-    }
+    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
 
-    set id(value: string) {
-        this._id = value || this.uid;
-    }
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // Stays a plain member: `KbqFormFieldControl` declares it as one, and the form field reads it
-    // through that interface.
-    @Input() placeholder: string;
+    readonly id = computed(() => this.idInput() || this.uid);
+
+    /** @docs-private */
+    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
+
+    /**
+     * Implemented as part of KbqFormFieldControl.
+     * @docs-private
+     */
+    readonly placeholder = linkedSignal(() => this.placeholderInput());
 
     /** Distance from the last line to the bottom border. Defaults to a single line height. */
     readonly freeRowsHeight = input<number | undefined, unknown>(undefined, { transform: kbqOptionalNumberAttribute });
@@ -162,33 +144,28 @@ export class KbqTextarea
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // Stays an accessor: `KbqFormFieldControl` declares `required` as a plain member.
-    @Input({ transform: booleanAttribute })
-    get required(): boolean {
-        return this._required;
-    }
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
-    set required(value: boolean) {
-        this._required = value;
-    }
+    /** @docs-private */
+    readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Follows what the user types; a value bound with `[value]` or set
+     * here is written to the element.
+     * @docs-private
+     */
+    readonly value: WritableSignal<string>;
+
+    private readonly emptyValue = signal(true);
+
+    /** The value the element and `value` last agreed on. */
+    private syncedValue: unknown;
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // Stays an accessor: `KbqFormFieldControl` declares `value` as a plain member, and it reads and
-    // writes the native element rather than storing anything.
-    @Input()
-    get value(): string {
-        return this.valueAccessor.value;
-    }
-
-    set value(value: string) {
-        if (value !== this.value) {
-            this.valueAccessor.value = value;
-            this.stateChanges.next();
-        }
-    }
+    readonly empty = this.emptyValue.asReadonly();
 
     /**
      * Flag that will be set to true when the maximum number of lines is reached.
@@ -214,10 +191,6 @@ export class KbqTextarea
     private readonly resolvedFreeRowsHeight = computed(() => this.freeRowsHeight() ?? this.lineHeight());
 
     protected readonly uid = inject(_IdGenerator).getId('kbq-textarea-');
-    protected previousNativeValue: any;
-    private _disabled = false;
-    private _id: string = this.uid;
-    private _required = false;
 
     private valueAccessor: { value: any };
 
@@ -233,12 +206,52 @@ export class KbqTextarea
         // accessor.
         this.valueAccessor = inputValueAccessor || this.elementRef.nativeElement;
 
-        this.previousNativeValue = this.value;
+        this.value = signal(this.valueAccessor.value);
+        this.syncedValue = this.valueAccessor.value;
 
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.parent?.animationDone.pipe(takeUntilDestroyed()).subscribe(() => this.ngOnInit());
 
-        this.stateChanges.pipe(observeOn(asapScheduler), takeUntilDestroyed()).subscribe(() => this.grow());
+        // A bound value replaces the current one whenever the binding changes.
+        effect(() => {
+            const value = this.valueInput();
+
+            if (value !== undefined) {
+                untracked(() => this.value.set(value));
+            }
+        });
+
+        // A value set in code is written to the element on the next change detection.
+        effect(() => {
+            const value = this.value();
+
+            untracked(() => {
+                if (this.valueAccessor.value !== value) {
+                    this.valueAccessor.value = value;
+                }
+
+                this.syncedValue = value;
+                this.emptyValue.set(this.isEmpty());
+            });
+        });
+
+        // The height follows the content and the inputs that size it, measured once the change is rendered.
+        effect(() => {
+            this.value();
+            this.canGrow();
+            this.maxRows();
+            this.freeRowsHeight();
+
+            untracked(() => asapScheduler.schedule(() => this.grow()));
+        });
+
+        // Browsers may not fire the blur event if the textarea is disabled too quickly.
+        // Reset from here to ensure that the element doesn't become stuck.
+        effect(() => {
+            if (this.disabled()) {
+                untracked(() => this.focusedValue.set(false));
+            }
+        });
     }
 
     ngOnInit() {
@@ -255,20 +268,13 @@ export class KbqTextarea
         setTimeout(() => this.grow(), 0);
     }
 
-    ngOnChanges() {
-        this.stateChanges.next();
-    }
-
-    ngOnDestroy() {
-        this.stateChanges.complete();
-    }
-
     ngDoCheck() {
         if (this.ngControl) {
             // We need to re-evaluate this on every change detection cycle, because there are some
             // error triggers that we can't subscribe to (e.g. parent form submissions). This means
             // that whatever logic is in here has to be super lean or we risk destroying the performance.
             this.updateErrorState();
+            this.formDisabled.set(this.ngControl.disabled);
         }
 
         // We need to dirty-check the native element's value, because there are some cases where
@@ -278,16 +284,11 @@ export class KbqTextarea
     }
 
     updateErrorState() {
-        const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
         const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-        const newState = matcher.isErrorState(control, parent);
 
-        if (newState !== oldState) {
-            this.errorState = newState;
-            this.stateChanges.next();
-        }
+        this.errorStateValue.set(matcher.isErrorState(control, parent));
     }
 
     /** @docs-private */
@@ -341,18 +342,7 @@ export class KbqTextarea
      * @docs-private
      */
     focusChanged(isFocused: boolean) {
-        if (isFocused !== this.focused) {
-            this.focused = isFocused;
-            this.stateChanges.next();
-        }
-    }
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     * @docs-private
-     */
-    get empty(): boolean {
-        return !this.elementRef.nativeElement.value && !this.isBadInput();
+        this.focusedValue.set(isFocused);
     }
 
     /**
@@ -363,14 +353,21 @@ export class KbqTextarea
         this.focus();
     }
 
-    /** Does some manual dirty checking on the native textarea `value` property. */
-    protected dirtyCheckNativeValue() {
-        const newValue = this.value;
+    /**
+     * Reads the native value back, since it changes without notice: through the forms API, which writes the
+     * element directly, or by the user typing into a textarea that no form listens to.
+     * @docs-private
+     */
+    dirtyCheckNativeValue() {
+        const nativeValue = this.valueAccessor.value;
 
-        if (this.previousNativeValue !== newValue) {
-            this.previousNativeValue = newValue;
-            this.stateChanges.next();
+        // Only a change of the element itself: a value set in code and not yet written must not be overwritten.
+        if (nativeValue !== this.syncedValue) {
+            this.syncedValue = nativeValue;
+            this.value.set(nativeValue);
         }
+
+        this.emptyValue.set(this.isEmpty());
     }
 
     /** Checks whether the textarea is invalid based on the native validation. */
@@ -379,5 +376,9 @@ export class KbqTextarea
         const validity = (this.elementRef.nativeElement as HTMLTextAreaElement).validity;
 
         return validity && validity.badInput;
+    }
+
+    private isEmpty(): boolean {
+        return !this.elementRef.nativeElement.value && !this.isBadInput();
     }
 }

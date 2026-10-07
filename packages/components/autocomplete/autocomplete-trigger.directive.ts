@@ -27,6 +27,7 @@ import {
     InjectionToken,
     Injector,
     input,
+    isWritableSignal,
     NgZone,
     OnDestroy,
     output,
@@ -770,10 +771,11 @@ export class KbqAutocompleteTrigger
 
         const inputValue = toDisplay != null ? toDisplay : '';
 
-        // If it's used within a `MatFormField`, we should set it through the property so it can go
-        // through change detection.
-        if (this.formField) {
-            this.formField.control().value = inputValue;
+        // Within a form field the value goes through the control, which writes it to the element itself.
+        const controlValue = this.formField?.control().value;
+
+        if (isWritableSignal(controlValue)) {
+            controlValue.set(inputValue);
         } else {
             this.elementRef.nativeElement.value = inputValue;
         }

@@ -40,8 +40,7 @@ import { KbqIconRegistry } from './icon-registry';
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'svgIcon ? null : iconName',
-        '[class.kbq-error]': 'color === "error" || hasError',
-        '[attr.aria-hidden]': 'resolvedAriaHidden()'
+        '[class.kbq-error]': 'color === "error" || hasError || autoColorError'
     }
 })
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
@@ -124,6 +123,14 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     /** Whether the host this icon follows is currently in an error state. Only ever set with `autoColor`. */
     hasError: boolean = false;
 
+    /**
+     * Whether `autoColor` takes the error color from the host's error state.
+     * @docs-private
+     */
+    protected get autoColorError(): boolean {
+        return this.autoColor && !!this.errorStateContext?.errorState();
+    }
+
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
     // TODO: Skipped for migration because:
     //  Subclass KbqIconButton overrides this input with `@Input({ alias: 'kbq-icon-button' })`
@@ -190,13 +197,6 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     ngAfterContentInit(): void {
-        this.contentInitialized = true;
-        this.destroyRef.onDestroy(() => this.errorStateSubscription?.unsubscribe());
-
-        if (this.autoColorEnabled) {
-            this.trackErrorState();
-        }
-
         this.updateMaxHeight();
 
         this.svgIconName
@@ -218,70 +218,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
             .subscribe((svg) => this.renderSvgIcon(svg));
     }
 
-    /** Injects the resolved `<svg>`, or drops back to the font class when the name did not resolve. */
-    private renderSvgIcon(svg: SVGElement | null): void {
-        const host = this.getHostElement();
-        const previous = host.querySelector('svg');
-
-        if (previous) {
-            this.renderer.removeChild(host, previous);
-        }
-
-        this.svgIcon = !!svg;
-
-        if (svg) {
-            const size = this.resolveIconSize();
-
-            if (size !== undefined) {
-                this.renderer.setAttribute(svg, 'width', `${size}`);
-                this.renderer.setAttribute(svg, 'height', `${size}`);
-            }
-
-            this.renderer.insertBefore(host, svg, host.firstChild);
-        }
-
-        this.updateMaxHeight();
-        this.changeDetectorRef.markForCheck();
-    }
-
-    private trackErrorState(): void {
-        this.errorStateSubscription?.unsubscribe();
-        this.errorStateSubscription = null;
-
-        if (!this.autoColorEnabled) {
-            this.setHasError(false);
-
-            return;
-        }
-
-        const context = this.errorStateContext;
-
-        if (!context) return;
-
-        // `errorState` and `stateChanges` are read back off the context on every emission: the form field
-        // exposes both as getters over the control it currently holds, which can be replaced at runtime.
-        // Torn down by the `onDestroy` registered in `ngAfterContentInit`, so that toggling `autoColor`
-        // does not pile up one destroy callback per toggle.
-        this.errorStateSubscription = context.stateChanges.subscribe(() => this.setHasError(context.errorState));
-
-        this.setHasError(context.errorState);
-    }
-
-    // Writes unconditionally, with no `value === this.hasError` guard: `markForCheck()` here is the only
-    // thing that wakes an `OnPush` ancestor whose own state changed but whose icon-button children read it
-    // through a plain (non-signal) property — `kbq-stepper`'s arrows disable through `control().disabled`
-    // this way, with no signal of their own to trigger a recheck. Skipping the call when `hasError` does
-    // not change would silently strand them at whatever `disabled` they had on creation.
-    private setHasError(value: boolean): void {
-        this.hasError = value;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    private resolveIconSize(): number | undefined {
-        return this.iconSize() ?? this.parseIconSize();
-    }
-
-    private parseIconSize(): number | undefined {
+    private parseIconSize(): number {
         const iconName = this.iconName;
         const baseName = iconName?.includes(':') ? iconName.split(':')[1] : iconName;
         const size = parseInt(baseName?.split('_').pop() ?? '');

@@ -1,21 +1,7 @@
-import { _IdGenerator, FocusMonitor } from '@angular/cdk/a11y';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    Directive,
-    DoCheck,
-    effect,
-    ElementRef,
-    inject,
-    OnDestroy,
-    signal
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
-import { ErrorStateMatcher, KbqErrorStateTracker } from '@koobiq/components/core';
-import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Observable, Subject } from 'rxjs';
+import { _IdGenerator } from '@angular/cdk/a11y';
+import { ChangeDetectionStrategy, Component, Directive, inject, signal } from '@angular/core';
+import { NgControl } from '@angular/forms';
+import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTimeRange } from './time-range';
 import { KbqTimeRangeRange } from './types';
 
@@ -52,8 +38,8 @@ export class KbqTimeRangeTitlePlaceholder {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         '[attr.id]': 'id',
-        '[attr.tabindex]': 'disabled ? null : 0',
-        '[attr.aria-labelledby]': 'ariaLabelledby()',
+        '[attr.tabindex]': '0',
+        '[attr.id]': 'id()',
         class: 'kbq-time-range-title-as-form-field'
     }
 })
@@ -69,92 +55,23 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRa
     /** @docs-private */
     readonly controlType = 'select';
     /** @docs-private */
-    readonly isNativeLabelSupported = false;
-    /**
-     * Id of the `kbq-form-field` caption naming this control, when it has one.
-     *
-     * A `<label for>` does not associate with a custom element, so the relationship is expressed the
-     * other way around — from the control to the label.
-     * @docs-private
-     */
-    protected readonly ariaLabelledby = computed(() => this.parentFormField?.labelId() ?? null);
-    /** @docs-private */
-    readonly stateChanges: Observable<void> = this.stateChangesSubject;
-    /** @docs-private */
     readonly ngControl: NgControl | null = this.timeRange.ngControl;
     /** @docs-private */
-    readonly id: string = inject(_IdGenerator).getId('kbq-time-range-title-as-control-');
+    readonly value = signal<any>(null).asReadonly();
     /** @docs-private */
-    readonly placeholder = '';
+    readonly id = signal(inject(_IdGenerator).getId('kbq-time-range-title-')).asReadonly();
     /** @docs-private */
-    focused = false;
-
+    readonly placeholder = signal<string | undefined>(undefined).asReadonly();
     /** @docs-private */
-    get value(): KbqTimeRangeRange | null {
-        return this.timeRange.value();
-    }
-
+    readonly focused = signal(false).asReadonly();
     /** @docs-private */
-    get empty(): boolean {
-        return this.timeRange.value() === null;
-    }
-
+    readonly empty = signal(false).asReadonly();
     /** @docs-private */
-    get required(): boolean {
-        return !!this.ngControl?.control?.hasValidator(Validators.required);
-    }
-
+    readonly required = signal(false).asReadonly();
     /** @docs-private */
-    get disabled(): boolean {
-        return this.timeRange.disabled();
-    }
-
-    /**
-     * Whether the error state is currently shown.
-     *
-     * Backed by a signal rather than the tracker's own field: `KbqFormField` reads this while it
-     * renders, and the tracker is only refreshed from `ngDoCheck`, which runs after the form field
-     * has already rendered. A plain boolean left the error a pass behind - and left a control that
-     * only became `touched` with nothing to schedule that pass at all.
-     * @docs-private
-     */
-    get errorState(): boolean {
-        return this.errorStateSignal();
-    }
-
-    constructor() {
-        this.errorStateTracker = new KbqErrorStateTracker(
-            inject(ErrorStateMatcher),
-            this.ngControl,
-            inject(FormGroupDirective, { optional: true }),
-            inject(NgForm, { optional: true }),
-            this.stateChangesSubject
-        );
-
-        this.focusMonitor
-            .monitor(this.elementRef, true)
-            .pipe(takeUntilDestroyed())
-            .subscribe((origin) => {
-                this.focused = !!origin;
-                this.stateChangesSubject.next();
-            });
-
-        // The value and the disabled state live in signals on the host, and `KbqFormField` only
-        // learns that any of them moved through `stateChanges`.
-        effect(() => {
-            this.timeRange.value();
-            this.timeRange.disabled();
-
-            this.stateChangesSubject.next();
-        });
-    }
-
+    readonly disabled = signal(false).asReadonly();
     /** @docs-private */
-    ngDoCheck(): void {
-        this.errorStateTracker.updateErrorState();
-        this.errorStateSignal.set(this.errorStateTracker.errorState);
-    }
-
+    readonly errorState = signal(false).asReadonly();
     /** @docs-private */
     ngOnDestroy(): void {
         this.focusMonitor.stopMonitoring(this.elementRef);

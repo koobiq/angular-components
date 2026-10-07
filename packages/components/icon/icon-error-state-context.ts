@@ -1,5 +1,4 @@
-import { InjectionToken, Provider } from '@angular/core';
-import type { Observable } from 'rxjs';
+import { InjectionToken, Provider, Signal } from '@angular/core';
 
 /**
  * Narrow contract that lets `KbqIcon` react to a host's error state (e.g. `autoColor`) without
@@ -8,9 +7,7 @@ import type { Observable } from 'rxjs';
  */
 export interface KbqIconErrorStateContext {
     /** Whether the host is currently in an error state. */
-    readonly errorState: boolean;
-    /** Emits whenever the host's state changes, prompting `KbqIcon` to re-check `errorState`. */
-    readonly stateChanges: Observable<void>;
+    readonly errorState: Signal<boolean>;
 }
 
 /**

@@ -10,6 +10,7 @@ deprecated `mixinColor`.
 `KbqFormField` finished its migration to signal queries and `KbqHint` to signal inputs, so every programmatic
 read of those members needs a call. The icon-only cleaner and password toggle became real buttons with a
 localized accessible name, which means the component now owns the `aria-label` a consumer used to set by hand.
+`KbqFormFieldControl` followed: the state of every control is a signal, and `stateChanges` is gone.
 Template _bindings_ (`[fillTextOff]`, `[compact]`, `[regex]`, …) keep working — only programmatic reads/writes
 and template-reference reads break.
 
@@ -26,6 +27,8 @@ and template-reference reads break.
 | `KbqPasswordHint.icon`                                                                                                     | `public`                  | `protected`                              | ⚠️ warn                          |
 | `KbqA11yLocaleConfiguration`                                                                                               | 8 keys                    | +`clear`, `showPassword`, `hidePassword` | ⚠️ warn                          |
 | `KbqFormFieldRef.control`                                                                                                  | `any`                     | `Signal<KbqFormFieldControlRef>`         | ⚠️ warn                          |
+| `value` / `id` / `placeholder` / `focused` / `empty` / `required` / `disabled` / `errorState` of the controls              | property or getter        | `Signal`                                 | ✅ read → call, write → `.set()` |
+| `KbqFormFieldControl.stateChanges`                                                                                         | `Observable<void>`        | removed                                  | ⚠️ warn                          |
 
 `control`, `stepper` and `connectionContainerRef` were already signals before this release and are deliberately
 left alone — appending `()` to them would be a double call.
@@ -41,8 +44,14 @@ The schematic walks every `.ts`, `.html`, `.scss` and `.css` file in the project
   of a migrated member becomes a call: `formField.hasHint` → `formField.hasHint()` (incl. optional chain
   `formField?.hint` → `formField?.hint()`).
 - **Writes to `KbqPasswordHint.regex`.** `hint.regex = /x/` → `hint.regex.set(/x/)`, since `regex` is a `model()`.
+- **Control state.** On a receiver typed `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`,
+  `KbqTimepicker`, `KbqDatepickerInput`, `KbqInput`, `KbqInputPassword`, `KbqTextarea` or `KbqFormFieldControl`,
+  a read of `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` or `errorState` becomes a
+  call. A write becomes `.set()` where the member stays writable — `disabled` on the selects, the tag list, the
+  timepicker and the datepicker input, `value` on the native-element controls and the tag list.
 - **Template reference reads.** For a `#ref` bound to `<kbq-form-field>`, `<kbq-hint>`, `<kbq-error>`,
-  `<kbq-password-hint>` or `<kbq-reactive-password-hint>`, reads through that ref are rewritten in the same
+  `<kbq-password-hint>`, `<kbq-reactive-password-hint>`, `<kbq-select>`, `<kbq-tree-select>`,
+  `<kbq-timezone-select>` or `<kbq-tag-list>`, reads through that ref are rewritten in the same
   template (external `.html` and inline `template:` strings).
 - **Cleaner accessible name.** `<kbq-cleaner [attr.aria-label]="…">` → `<kbq-cleaner [aria-label]="…">`. The
   component now writes `aria-label` from a host binding, so an `attr.` binding is silently overwritten by the
@@ -69,6 +78,12 @@ These changes can't be rewritten safely and are surfaced as warnings (in both `f
 | `PasswordRules` / `KbqPasswordHint` / `hasPasswordStrengthError`                            | Deprecated. Migrate to `KbqReactivePasswordHint`, which derives its state from the form control validators.                                                                |
 | `KbqTrim.trim(...)`                                                                         | Typed `(value: unknown) => unknown`. Narrow or cast the result.                                                                                                            |
 | `<kbq-error role="…">` / `<kbq-cleaner role="button">`                                      | `kbq-error` renders `role="alert"` + `aria-atomic` and `kbq-cleaner` renders `role="button"` themselves. Drop the hand-rolled attributes.                                  |
+| `implements KbqFormFieldControl`                                                            | Expose the state as signals and drop `stateChanges`: the form field derives its state from the signals.                                                                    |
+| `formField.control().stateChanges`                                                          | Removed. Read the state signals in `computed()` / `effect()`, or turn one into a stream with `toObservable()`.                                                             |
+| A write to a read-only control member (`select.placeholder = …`)                            | Bind it in the template, or set the value through a form control.                                                                                                          |
+| `KbqErrorStateTracker` / `CanUpdateErrorState`                                              | The tracker takes no `stateChanges` subject; `errorState` is a `Signal<boolean>`; the interface no longer declares `errorStateMatcher`.                                    |
+| `mixinErrorState(...)` / `CanUpdateErrorStateCtor`                                          | Removed. Track the error state with `KbqErrorStateTracker`.                                                                                                                |
+| `KbqTagTextControl` / `KbqIconErrorStateContext`                                            | Their state members are signals; `KbqIconErrorStateContext.stateChanges` was removed.                                                                                      |
 
 ## Behaviour changes without a code fix
 
@@ -79,6 +94,8 @@ These changes can't be rewritten safely and are surfaced as warnings (in both `f
   collides with `KbqHint`. Nothing should depend on a generated id, but selectors keyed on it will stop matching.
 - `.kbq-form-field_no-borders` and `.kbq-form-field_in-overlay` no longer use `!important`: they override the
   `--kbq-form-field-*` tokens instead. A stylesheet that fought the old `!important` can be simplified.
+- `KbqDatepicker` is no longer provided as a `KbqFormFieldControl`; the form field always finds the
+  `kbqDatepicker` input, which now renders its `id` for the label.
 
 ## Running it manually
 

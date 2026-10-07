@@ -18,7 +18,9 @@ import {
     forwardRef,
     inject,
     InjectionToken,
+    Injector,
     input,
+    isWritableSignal,
     model,
     NgZone,
     numberAttribute,
@@ -30,6 +32,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -206,6 +209,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     private readonly pendingTasks = inject(PendingTasks);
     private readonly scrollDispatcher = inject(ScrollDispatcher);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly contentObserver = inject(ContentObserver);
     private readonly interactivityChecker = inject(InteractivityChecker);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -538,7 +542,11 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         const formFieldRefList = this.formFieldRefList();
 
-        merge(...formFieldRefList.map((ref) => ref.control().stateChanges))
+        const controlsState = computed(() =>
+            formFieldRefList.map((ref) => [ref.control().errorState(), ref.control().value()])
+        );
+
+        toObservable(controlsState, { injector: this.injector })
             .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
                 if (!this.isInvalid()) {
@@ -1123,7 +1131,11 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         if (!formFieldRefList.length) return;
 
-        return this.formFieldRefList().map((ref) => this.coerceControl(ref)?.value);
+        return this.formFieldRefList().map((ref) => {
+            const control = this.coerceControl(ref);
+
+            return control instanceof AbstractControl ? control.value : control?.value();
+        });
     }
 
     private setValue<T>(value: T): void {
@@ -1146,8 +1158,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
             if (control instanceof AbstractControl) {
                 control.setValue(controlValue);
-            } else {
-                control.value = controlValue;
+            } else if (isWritableSignal(control.value)) {
+                // A control without a form control can still hold a value code writes, as `kbqInput` does.
+                control.value.set(controlValue);
             }
         });
     }

@@ -256,7 +256,7 @@ describe('KbqDatepicker', () => {
 
             it('disabled datepicker input should open the calendar if datepicker is enabled', () => {
                 testComponent.datepicker().disabled = false;
-                testComponent.datepickerInput().disabled = true;
+                testComponent.datepickerInput().disabled.set(true);
                 fixture.detectChanges();
 
                 expect(document.querySelector('.cdk-overlay-pane')).toBeNull();
@@ -310,7 +310,7 @@ describe('KbqDatepicker', () => {
 
                     const datepickerInput = testComponent.datepickerInput();
 
-                    expect(datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, currentDay).toISO());
+                    expect(datepickerInput.value()?.toISO()).toEqual(DateTime.local(2020, 1, currentDay).toISO());
 
                     const cells = document.querySelectorAll('.kbq-calendar__body-cell');
 
@@ -321,7 +321,7 @@ describe('KbqDatepicker', () => {
 
                 expect(nextSpyFn).toHaveBeenCalledTimes(1);
 
-                expect(testComponent.datepickerInput().value?.toISO()).toEqual(DateTime.local(2020, 1, 2).toISO());
+                expect(testComponent.datepickerInput().value()?.toISO()).toEqual(DateTime.local(2020, 1, 2).toISO());
             }));
 
             // The calendar handles no keys: the input's keydown is the only listener, and it ignores ENTER.
@@ -559,7 +559,7 @@ describe('KbqDatepicker', () => {
 
                 fixture.detectChanges();
 
-                expect(testComponent.datepickerInput().value).toBeNull();
+                expect(testComponent.datepickerInput().value()).toBeNull();
                 expect(testComponent.datepicker().selected).toBeNull();
 
                 testComponent.assignedDatepicker = testComponent.datepicker();
@@ -570,7 +570,7 @@ describe('KbqDatepicker', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(testComponent.datepickerInput().value?.toISO()).toEqual(toSelect.toISO());
+                expect(testComponent.datepickerInput().value()?.toISO()).toEqual(toSelect.toISO());
                 expect(testComponent.datepicker().selected?.toISO()).toEqual(toSelect.toISO());
             }));
         });
@@ -642,7 +642,7 @@ describe('KbqDatepicker', () => {
             });
 
             it('should update datepicker when model changes', fakeAsync(() => {
-                expect(testComponent.datepickerInput().value).toBeNull();
+                expect(testComponent.datepickerInput().value()).toBeNull();
                 expect(testComponent.datepicker().selected).toBeNull();
 
                 const selected = DateTime.local(2017, 1, 1);
@@ -652,13 +652,13 @@ describe('KbqDatepicker', () => {
                 flush();
                 fixture.detectChanges();
 
-                expect(testComponent.datepickerInput().value?.toISO()).toEqual(selected?.toISO());
+                expect(testComponent.datepickerInput().value()?.toISO()).toEqual(selected?.toISO());
                 expect(testComponent.datepicker().selected?.toISO()).toEqual(selected?.toISO());
             }));
 
             it('should update model when date is selected', fakeAsync(() => {
                 expect(testComponent.selected).toBeNull();
-                expect(testComponent.datepickerInput().value).toBeNull();
+                expect(testComponent.datepickerInput().value()).toBeNull();
 
                 const selected = DateTime.local(2017, 1, 1);
 
@@ -668,7 +668,7 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
 
                 expect(testComponent.selected).toEqual(selected);
-                expect(testComponent.datepickerInput().value).toEqual(selected);
+                expect(testComponent.datepickerInput().value()).toEqual(selected);
             }));
 
             it('should mark input dirty after input', fakeAsync(() => {
@@ -810,7 +810,7 @@ describe('KbqDatepicker', () => {
             });
 
             it('should update datepicker when formControl changes', () => {
-                expect(testComponent.datepickerInput().value).toBeNull();
+                expect(testComponent.datepickerInput().value()).toBeNull();
                 expect(testComponent.datepicker().selected).toBeNull();
 
                 const selected = DateTime.local(2017, 1, 1);
@@ -818,13 +818,13 @@ describe('KbqDatepicker', () => {
                 testComponent.formControl.setValue(selected);
                 fixture.detectChanges();
 
-                expect(testComponent.datepickerInput().value?.toISO()).toEqual(selected?.toISO());
+                expect(testComponent.datepickerInput().value()?.toISO()).toEqual(selected?.toISO());
                 expect(testComponent.datepicker().selected?.toISO()).toEqual(selected?.toISO());
             });
 
             it('should update formControl when date is selected', () => {
                 expect(testComponent.formControl.value).toBeNull();
-                expect(testComponent.datepickerInput().value).toBeNull();
+                expect(testComponent.datepickerInput().value()).toBeNull();
 
                 const selected = DateTime.local(2017, 1, 1);
 
@@ -832,7 +832,7 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
 
                 expect(testComponent.formControl.value).toEqual(selected);
-                expect(testComponent.datepickerInput().value).toEqual(selected);
+                expect(testComponent.datepickerInput().value()).toEqual(selected);
             });
 
             it('should disable input when form control disabled', () => {
@@ -863,7 +863,7 @@ describe('KbqDatepicker', () => {
 
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
                 });
 
                 it('should be in error state when invalid and touched', () => {
@@ -872,7 +872,7 @@ describe('KbqDatepicker', () => {
                     fixture.componentInstance.form.controls.date.markAsTouched();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(true);
                 });
 
                 it('should apply kbq-error class to the datepicker toggle icon when invalid and touched', () => {
@@ -896,7 +896,7 @@ describe('KbqDatepicker', () => {
                     getSubmitButton(fixture).click();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(true);
                 });
 
                 it('should call errorStateMatcher and update errorState on blur', () => {
@@ -907,7 +907,7 @@ describe('KbqDatepicker', () => {
                     const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                     expect(spy).not.toHaveBeenCalled();
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
 
                     // focus first so that subsequent blur triggers focusChanged and marks control as touched
                     getDatepickerInputElement(fixture).dispatchEvent(new Event('focus'));
@@ -915,7 +915,7 @@ describe('KbqDatepicker', () => {
                     fixture.detectChanges();
 
                     expect(spy).toHaveBeenCalled();
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(true);
                 });
             });
 
@@ -927,7 +927,7 @@ describe('KbqDatepicker', () => {
                     fixture.componentInstance.form.controls.date.markAsTouched();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
                 });
 
                 it('should be in error state after form is submitted when invalid', () => {
@@ -939,7 +939,7 @@ describe('KbqDatepicker', () => {
                     getSubmitButton(fixture).click();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(true);
                 });
 
                 it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -953,14 +953,14 @@ describe('KbqDatepicker', () => {
                     const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                     expect(spy).not.toHaveBeenCalled();
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
 
                     getDatepickerInputElement(fixture).dispatchEvent(new Event('focus'));
                     getDatepickerInputElement(fixture).dispatchEvent(new Event('blur'));
                     fixture.detectChanges();
 
                     expect(spy).toHaveBeenCalled();
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
                 });
             });
 
@@ -971,7 +971,7 @@ describe('KbqDatepicker', () => {
                     fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
                 });
 
                 it('should be in error state when invalid and dirty', () => {
@@ -981,7 +981,7 @@ describe('KbqDatepicker', () => {
                     fixture.componentInstance.form.controls.date.markAsDirty();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(true);
                 });
 
                 it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -995,14 +995,14 @@ describe('KbqDatepicker', () => {
                     const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                     expect(spy).not.toHaveBeenCalled();
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
 
                     getDatepickerInputElement(fixture).dispatchEvent(new Event('focus'));
                     getDatepickerInputElement(fixture).dispatchEvent(new Event('blur'));
                     fixture.detectChanges();
 
                     expect(spy).toHaveBeenCalled();
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
                 });
             });
 
@@ -1012,12 +1012,12 @@ describe('KbqDatepicker', () => {
 
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(true);
 
                     fixture.componentInstance.form.controls.date.markAsTouched();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
                 });
 
                 it('should use custom errorStateMatcher', () => {
@@ -1026,12 +1026,12 @@ describe('KbqDatepicker', () => {
                     fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(true);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(true);
 
                     fixture.componentInstance.form.controls.date.markAsTouched();
                     fixture.detectChanges();
 
-                    expect(fixture.componentInstance.datepickerInput().errorState).toBe(false);
+                    expect(fixture.componentInstance.datepickerInput().errorState()).toBe(false);
                 });
             });
         });
@@ -1119,7 +1119,7 @@ describe('KbqDatepicker', () => {
             it('should not open calendar when toggle clicked if input is disabled', () => {
                 expect(testComponent.datepicker().disabled).toBe(false);
 
-                testComponent.input().disabled = true;
+                testComponent.input().disabled.set(true);
                 fixture.detectChanges();
 
                 const toggle = fixture.debugElement.query(By.css('kbq-datepicker-toggle-icon')).nativeElement;

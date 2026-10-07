@@ -242,7 +242,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.data.value = [];
         } else {
-            this.data.value = this.multiSelect.mergeLocked([...this.select().value]);
+            this.data.value = this.multiSelect.mergeLocked([...this.select().value()]);
         }
 
         if (emitEvent) {

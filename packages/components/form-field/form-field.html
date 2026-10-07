@@ -1,13 +1,7 @@
 @if (hasLabel()) {
-    @if (isNativeLabelSupported()) {
-        <label class="kbq-form-field__label" [attr.id]="labelId()" [class]="labelClass()" [attr.for]="control().id">
-            <ng-container [ngTemplateOutlet]="labelContent" />
-        </label>
-    } @else {
-        <span class="kbq-form-field__label" [attr.id]="labelId()" [class]="labelClass()">
-            <ng-container [ngTemplateOutlet]="labelContent" />
-        </span>
-    }
+    <label class="kbq-form-field__label" [attr.id]="labelId()" [class]="labelClass()" [attr.for]="control().id()">
+        <ng-content select="kbq-label" />
+    </label>
 }
 
 <ng-template #labelContent><ng-content select="kbq-label" /></ng-template>

@@ -94,12 +94,12 @@ export const DATA_OBJECT = {
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag
                         [selectable]="false"
-                        [disabled]="option.disabled || select.disabled"
+                        [disabled]="option.disabled || select.disabled()"
                         [color]="deletedIds.has(option.value) ? 'error' : ''"
                     >
                         {{ option.viewValue }}
                         <!-- remove control; hidden when the tag or the whole select is disabled -->
-                        @if (!select.disabled && !option.disabled) {
+                        @if (!select.disabled() && !option.disabled) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove

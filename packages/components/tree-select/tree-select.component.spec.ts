@@ -334,6 +334,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
             <kbq-tree-select
                 placeholder="Food"
                 [formControl]="control"
+                [required]="isRequired"
                 [tabIndex]="tabIndexOverride"
                 [panelClass]="panelClass"
             >
@@ -368,6 +369,7 @@ class BasicTreeSelect {
 
     heightAbove = 0;
     heightBelow = 0;
+    isRequired = false;
     tabIndexOverride: number = 0;
     panelClass = ['custom-one', 'custom-two'];
 
@@ -1163,19 +1165,6 @@ class MultiSelect {
         return nodeData.expandable;
     }
 }
-
-@Component({
-    selector: 'select-with-plain-tabindex',
-    imports: [
-        KbqTreeSelectModule
-    ],
-    template: `
-        <kbq-form-field>
-            <kbq-tree-select />
-        </kbq-form-field>
-    `
-})
-class EmptySelect {}
 
 @Component({
     selector: 'select-early-sibling-access',
@@ -2162,7 +2151,7 @@ describe('KbqTreeSelect', () => {
                 }));
 
                 it('should render the id the form-field label points at', () => {
-                    const { id } = fixture.componentInstance.select();
+                    const id = fixture.componentInstance.select().id();
 
                     expect(id).toBeTruthy();
                     expect(select.getAttribute('id')).toBe(id);
@@ -2223,7 +2212,7 @@ describe('KbqTreeSelect', () => {
                 it('should expose the required state', () => {
                     expect(select.getAttribute('aria-required')).toBe('false');
 
-                    fixture.componentInstance.select().required = true;
+                    fixture.componentInstance.isRequired = true;
                     fixture.detectChanges();
 
                     expect(select.getAttribute('aria-required')).toBe('true');
@@ -2940,7 +2929,7 @@ describe('KbqTreeSelect', () => {
                 dispatchFakeEvent(selectElement, 'focus');
                 fixture.detectChanges();
 
-                expect(selectInstance.focused).toBe(true);
+                expect(selectInstance.focused()).toBe(true);
 
                 selectInstance.open();
                 fixture.detectChanges();
@@ -2949,7 +2938,7 @@ describe('KbqTreeSelect', () => {
                 fixture.detectChanges();
                 tick(10);
 
-                expect(selectInstance.focused).toBe(true);
+                expect(selectInstance.focused()).toBe(true);
             }));
         });
 
@@ -4108,26 +4097,6 @@ describe('KbqTreeSelect', () => {
         }));
     });
 
-    describe('change events', () => {
-        beforeEach(() => configureKbqTreeSelectTestingModule([EmptySelect]));
-
-        it('should complete the stateChanges stream on destroy', () => {
-            const fixture = TestBed.createComponent(EmptySelect);
-
-            fixture.detectChanges();
-
-            const debugElement = fixture.debugElement.query(By.directive(KbqTreeSelect));
-            const select = debugElement.componentInstance;
-
-            const spy = vi.fn();
-            const subscription = select.stateChanges.subscribe(undefined, undefined, spy);
-
-            fixture.destroy();
-            expect(spy).toHaveBeenCalled();
-            subscription.unsubscribe();
-        });
-    });
-
     describe('with theming', () => {
         beforeEach(() => configureKbqTreeSelectTestingModule([BasicSelectWithTheming]));
 
@@ -4288,7 +4257,7 @@ describe('KbqTreeSelect', () => {
 
             tick(10);
 
-            expect(component.select().errorState).toBe(true);
+            expect(component.select().errorState()).toBe(true);
             expect(errorStateMatcher.isErrorState).toHaveBeenCalled();
         }));
 
@@ -4313,13 +4282,13 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
 
             expect(component.control.invalid).toBe(false);
-            expect(component.select().errorState).toBe(false);
+            expect(component.select().errorState()).toBe(false);
 
             fixture.componentInstance.errorStateMatcher = { isErrorState: matcher };
             fixture.detectChanges();
             tick(10);
 
-            expect(component.select().errorState).toBe(true);
+            expect(component.select().errorState()).toBe(true);
             expect(matcher).toHaveBeenCalled();
         }));
     });
@@ -4592,7 +4561,7 @@ describe('KbqTreeSelect', () => {
             flush();
 
             expect(fixture.componentInstance.selectedFood).toBe('rootNode_1');
-            expect(fixture.componentInstance.select().value).toBe('rootNode_1');
+            expect(fixture.componentInstance.select().value()).toBe('rootNode_1');
             expect(trigger.textContent).toContain('rootNode_1');
 
             trigger.click();
@@ -4605,7 +4574,7 @@ describe('KbqTreeSelect', () => {
             flush();
 
             expect(fixture.componentInstance.selectedFood).toBe('Documents');
-            expect(fixture.componentInstance.select().value).toBe('Documents');
+            expect(fixture.componentInstance.select().value()).toBe('Documents');
             expect(trigger.textContent).toContain('Documents');
         }));
 
@@ -4673,7 +4642,7 @@ describe('KbqTreeSelect', () => {
             const option = overlayContainerElement.querySelectorAll('kbq-tree-option')[1];
 
             expect(option.classList).toContain('kbq-selected');
-            expect(fixture.componentInstance.select().value).toBe('Pictures');
+            expect(fixture.componentInstance.select().value()).toBe('Pictures');
         }));
 
         it('should be able to select multiple values', fakeAsync(() => {
@@ -4699,7 +4668,7 @@ describe('KbqTreeSelect', () => {
             flush();
 
             expect(localFixture.componentInstance.selectedFoods).toEqual(['rootNode_1']);
-            expect(localFixture.componentInstance.select().value).toEqual(['rootNode_1']);
+            expect(localFixture.componentInstance.select().value()).toEqual(['rootNode_1']);
             expect(trigger.textContent).toContain('rootNode_1');
 
             options[2].click();
@@ -4708,7 +4677,7 @@ describe('KbqTreeSelect', () => {
             flush();
 
             expect(localFixture.componentInstance.selectedFoods).toEqual(['rootNode_1', 'Documents']);
-            expect(localFixture.componentInstance.select().value).toEqual(['rootNode_1', 'Documents']);
+            expect(localFixture.componentInstance.select().value()).toEqual(['rootNode_1', 'Documents']);
             expect(trigger.textContent).toContain('rootNode_1');
             expect(trigger.textContent).toContain('Documents');
 
@@ -4718,7 +4687,7 @@ describe('KbqTreeSelect', () => {
             flush();
 
             expect(localFixture.componentInstance.selectedFoods).toEqual(['rootNode_1', 'Documents', 'Pictures']);
-            expect(localFixture.componentInstance.select().value).toEqual(['rootNode_1', 'Documents', 'Pictures']);
+            expect(localFixture.componentInstance.select().value()).toEqual(['rootNode_1', 'Documents', 'Pictures']);
             expect(trigger.textContent).toContain('rootNode_1');
             expect(trigger.textContent).toContain('Pictures');
             expect(trigger.textContent).toContain('Documents');
@@ -5822,7 +5791,7 @@ describe('KbqTreeSelect', () => {
             const treeSelect = fixture.componentInstance.treeSelect();
 
             expect(treeSelect.ngControl?.invalid).toBe(false);
-            expect(treeSelect.errorState).toBe(true);
+            expect(treeSelect.errorState()).toBe(true);
             expect(treeSelect.colorForState()).toBe(KbqComponentColors.Error);
         });
 
@@ -5830,7 +5799,7 @@ describe('KbqTreeSelect', () => {
             it('should not be in error state initially when invalid but untouched', () => {
                 const fixture = createComponent(TreeSelectWithErrorStateMatcher);
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and touched', () => {
@@ -5839,7 +5808,7 @@ describe('KbqTreeSelect', () => {
                 fixture.componentInstance.form.controls.treeSelect.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(true);
             });
 
             it('should be in error state when form is submitted and control is invalid', () => {
@@ -5848,7 +5817,7 @@ describe('KbqTreeSelect', () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and update errorState on blur', () => {
@@ -5856,13 +5825,13 @@ describe('KbqTreeSelect', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
 
                 getTreeSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(true);
             });
         });
 
@@ -5874,7 +5843,7 @@ describe('KbqTreeSelect', () => {
                 fixture.componentInstance.form.controls.treeSelect.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
             });
 
             it('should be in error state after form is submitted when invalid', () => {
@@ -5886,7 +5855,7 @@ describe('KbqTreeSelect', () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -5898,13 +5867,13 @@ describe('KbqTreeSelect', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
 
                 getTreeSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
             });
         });
 
@@ -5915,7 +5884,7 @@ describe('KbqTreeSelect', () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and dirty', () => {
@@ -5925,7 +5894,7 @@ describe('KbqTreeSelect', () => {
                 fixture.componentInstance.form.controls.treeSelect.markAsDirty();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(true);
             });
 
             it('should call errorStateMatcher and NOT update errorState on blur', () => {
@@ -5937,13 +5906,13 @@ describe('KbqTreeSelect', () => {
                 const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
 
                 getTreeSelectElement(fixture).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
             });
         });
 
@@ -5951,12 +5920,12 @@ describe('KbqTreeSelect', () => {
             it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
                 const fixture = createComponent(TreeSelectWithDIErrorStateMatcher);
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.treeSelect.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
             });
 
             it('should use custom errorStateMatcher logic', () => {
@@ -5965,12 +5934,12 @@ describe('KbqTreeSelect', () => {
                 fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(true);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.treeSelect.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.treeSelect().errorState).toBe(false);
+                expect(fixture.componentInstance.treeSelect().errorState()).toBe(false);
             });
         });
     });

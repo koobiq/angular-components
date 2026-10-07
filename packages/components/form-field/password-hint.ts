@@ -1,6 +1,7 @@
 import {
     AfterContentInit,
     afterNextRender,
+    afterRenderEffect,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -11,6 +12,7 @@ import {
     input,
     model,
     QueryList,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -137,7 +139,15 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
      * @docs-private
      */
     protected get iconColor(): KbqComponentColors {
-        if (this.control?.ngControl?.untouched && this.control?.ngControl?.pristine) {
+        const control = this.control;
+
+        // `touched` and `pristine` are not signals. They change with the focus, the value and the error state,
+        // which are: reading those keeps this view in step with the control.
+        control?.focused();
+        control?.value();
+        control?.errorState();
+
+        if (control?.ngControl?.untouched && control?.ngControl?.pristine) {
             return KbqComponentColors.ContrastFade;
         }
 
@@ -156,7 +166,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
      * silently matches the coerced `"null"`.
      */
     private get controlValue(): string {
-        return this.control.value ?? '';
+        return this.control.value() ?? '';
     }
 
     constructor() {
@@ -202,7 +212,17 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
             () => {
                 const control = this.formField.control();
 
-                control.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.checkValue);
+                // After the render: the rule's state is plain fields the template has already read by then.
+                afterRenderEffect(
+                    () => {
+                        control.value();
+                        control.focused();
+                        control.required();
+
+                        untracked(this.checkValue);
+                    },
+                    { injector: this.injector }
+                );
 
                 ((control as unknown as { checkRule?: Subject<unknown> }).checkRule || (EMPTY as Observable<unknown>))
                     .pipe(takeUntilDestroyed(this.destroyRef))
@@ -212,8 +232,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
                         this.changeDetectorRef.markForCheck();
                     });
 
-                // A control that is already filled emits nothing on its own, so its value would stay
-                // unchecked until the first interaction.
+                // The effect first runs with the next change detection; a filled control is checked right away.
                 this.checkValue();
             },
             { injector: this.injector }
@@ -224,9 +243,9 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
         this.checked = this.checkRule(this.controlValue);
         // While the control has focus the password is still being typed, so a rule it does not satisfy yet
         // must not be reported as an error.
-        this.hasError = this.control.focused ? false : !this.checked;
+        this.hasError = this.control.focused() ? false : !this.checked;
 
-        if (!this.control.required && !this.control.value) {
+        if (!this.control.required() && !this.control.value()) {
             this.checked = this.hasError = false;
         }
 

@@ -20,13 +20,13 @@ import { KbqTagsModule } from '@koobiq/components/tags';
                 <ng-template #kbqSelectTagContent let-option let-select="select">
                     <kbq-tag
                         [selectable]="false"
-                        [disabled]="option.disabled || select.disabled"
+                        [disabled]="option.disabled || select.disabled()"
                         [color]="severities[option.value].color"
                     >
                         <i kbqTagPrefix [kbq-icon]="severities[option.value].icon"></i>
                         {{ option.viewValue }}
                         <!-- The custom template replaces the built-in markup, so the remove control is up to us. -->
-                        @if (!option.disabled && !select.disabled) {
+                        @if (!option.disabled && !select.disabled()) {
                             <i
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove

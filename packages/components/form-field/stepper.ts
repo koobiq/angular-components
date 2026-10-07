@@ -14,17 +14,19 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { concatMap, fromEvent, interval, Subject, timer } from 'rxjs';
+import { concatMap, fromEvent, interval, Observable, Subject, timer } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { KBQ_FORM_FIELD } from './form-field';
-import type { KbqFormFieldControl } from './form-field-control';
 
 /**
- * Narrow structural contract for the control hosted by `kbqNumberInput`, duck-typed here to avoid
- * a circular dependency between `@koobiq/components/form-field` and `@koobiq/components/input`.
+ * Narrow structural contract for `KbqNumberInput`, duck-typed here to avoid a circular dependency between
+ * `@koobiq/components/form-field` and `@koobiq/components/input`. It is not the form field control: that is
+ * `KbqInput` on the same element.
  */
-type KbqStepperControl = KbqFormFieldControl<unknown> & {
+type KbqStepperControl = {
     readonly controlType: 'input-number';
+    readonly disabled: boolean;
+    readonly stateChanges: Observable<void>;
     /** A signal since the input review: `step` is an `input()` on `KbqNumberInput`. */
     readonly step: Signal<number>;
     stepUp: (step: number) => void;
