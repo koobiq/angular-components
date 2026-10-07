@@ -253,7 +253,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
     },
     "skeleton": {
         "en": "KbqSkeleton is a temporary placeholder that occupies the space of the loading element and displays its approximate layout while the actual content is still loading.",
-        "ru": "KbqSkeleton - это временная заглушка, которая занимает место подгружаемого элемента и отображает его примерный макет, пока реальный контент еще загружается."
+        "ru": "Скелетон — временная заглушка, которая занимает место загружаемого элемента и показывает его примерную форму."
     },
     "split-button": {
         "en": "A split button combines several related actions into a single control. The primary action is immediately accessible, while additional options are hidden in a dropdown menu.",
