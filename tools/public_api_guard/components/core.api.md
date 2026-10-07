@@ -4117,6 +4117,9 @@ export class KbqPseudoCheckboxModule {
 // @public (undocumented)
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
+// @public
+export function kbqQueryListFrom<T>(query: Signal<readonly T[]>): () => QueryList<T>;
+
 // @public (undocumented)
 export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []> implements PipeTransform {
     // (undocumented)
