@@ -11,7 +11,7 @@
     "components-checkbox": 2,
     "components-code-block": 2,
     "components-content-panel": 10,
-    "components-core": 716,
+    "components-core": 715,
     "components-datepicker": 49,
     "components-dl": 3,
     "components-dropdown": 13,
@@ -45,7 +45,7 @@
     "components-timezone": 42,
     "components-toast": 52,
     "components-toggle": 21,
-    "components-tooltip": 28,
+    "components-tooltip": 27,
     "components-tree": 160,
     "components-tree-select": 28,
     "components-username": 1

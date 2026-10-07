@@ -5,10 +5,10 @@ import { setupOptions } from '../../utils/package-config';
 import { SUMMARY, warnPatterns } from './data';
 import { Schema } from './schema';
 
-const LABEL = '[controls-signal-inputs]';
+const LABEL = '[signal-inputs-subclasses]';
 
-/** Reports subclasses of the controls whose inputs became signal inputs. Never writes. */
-export default function controlsSignalInputs(options: Schema): Rule {
+/** Reports subclasses of the components whose inputs became signal inputs feeding writable members. Never writes. */
+export default function signalInputsSubclasses(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
         const { project } = options;
         const projectDefinition = await setupOptions(project, tree);
@@ -33,7 +33,7 @@ export default function controlsSignalInputs(options: Schema): Rule {
             }
         });
 
-        // Nothing here extends the controls, so the summary would only be noise.
+        // Nothing here extends the components, so the summary would only be noise.
         if (reported === 0) return;
 
         logMessage(context.logger, [

@@ -7,7 +7,7 @@ import { createTestApp } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
-const SCHEMATIC_NAME = 'controls-signal-inputs';
+const SCHEMATIC_NAME = 'signal-inputs-subclasses';
 
 describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
@@ -42,6 +42,19 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('has to call super.ngOnChanges(changes)');
     });
 
+    it('reports a pop-up panel that re-declares elementRef with a decorator query', async () => {
+        appTree.create(
+            file,
+            "import { ElementRef, ViewChild } from '@angular/core';\n" +
+                "import { KbqPopUp } from '@koobiq/components/core';\n" +
+                "export class MyPanel extends KbqPopUp { @ViewChild('panel') elementRef: ElementRef; }\n"
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain('KbqPopUp.elementRef is a protected getter now');
+    });
+
     it('says nothing when the inputs are only read', async () => {
         appTree.create(
             file,
@@ -51,6 +64,6 @@ describe(SCHEMATIC_NAME, () => {
 
         await run();
 
-        expect(messages.join('\n')).not.toContain('[controls-signal-inputs]');
+        expect(messages.join('\n')).not.toContain('[signal-inputs-subclasses]');
     });
 });

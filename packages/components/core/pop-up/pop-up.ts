@@ -24,7 +24,12 @@ import { KbqPopUpTrigger } from './pop-up-trigger';
 })
 export abstract class KbqPopUp implements OnDestroy {
     protected readonly renderer: Renderer2 = inject(Renderer2);
-    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly hostElementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    /** The element the pop-up measures and decorates: its host, unless a subclass renders a panel of its own. */
+    protected get elementRef(): ElementRef<HTMLElement> {
+        return this.hostElementRef;
+    }
     protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
     readonly destroyRef = inject(DestroyRef);
 

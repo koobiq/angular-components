@@ -3964,8 +3964,7 @@ export abstract class KbqPopUp implements OnDestroy {
     readonly destroyRef: DestroyRef;
     // (undocumented)
     detectChanges(): void;
-    // (undocumented)
-    protected readonly elementRef: ElementRef<HTMLElement>;
+    protected get elementRef(): ElementRef<HTMLElement>;
     // (undocumented)
     handleBodyInteraction(): void;
     // (undocumented)

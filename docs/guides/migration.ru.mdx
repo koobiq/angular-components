@@ -404,17 +404,18 @@ ng g @koobiq/components:input-signals --project "<your project>"
 ng g @koobiq/components:list-signals --project "<your project>"
 ```
 
-#### Чекбокс, переключатель, радиокнопки, группа кнопок, кнопки, иконки и поиск
+#### Чекбокс, переключатель, радиокнопки, группа кнопок, кнопки, иконки, поиск и всплывающие элементы
 
-Их инпуты стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `checkbox.checked`, `button.disabled` или `icon.iconName` работают как раньше.
+Их инпуты стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `checkbox.checked`, `button.disabled`, `icon.iconName` или `tooltip.content` работают как раньше. То же относится к триггерам тултипа, поповера, поповера подтверждения, переключателя приложений и центра уведомлений, к переключателю видимости пароля и к сокращению текста посередине.
 
 - **Наследник**, реализующий `ngOnChanges`, вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `iconNameInput`.
 - **Булев инпут** принимает в шаблоне `boolean | string | null | undefined`, а не любое значение.
+- **`KbqPopUp.elementRef` стал защищенным геттером.** Панель, которая отрисовывает собственный элемент, переопределяет его поверх `viewChild()`, а не объявляет поле заново через `@ViewChild`.
 
-Схематик `controls-signal-inputs` сообщает о каждом наследнике:
+Схематик `signal-inputs-subclasses` сообщает о каждом наследнике:
 
 ```bash
-ng g @koobiq/components:controls-signal-inputs --project "<your project>"
+ng g @koobiq/components:signal-inputs-subclasses --project "<your project>"
 ```
 
 ### Контейнер оверлея панели действий (21.0.0)

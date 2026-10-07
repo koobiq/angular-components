@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "$id": "koobiq-components-controls-signal-inputs",
-    "title": "Koobiq components controls signal inputs migration",
+    "$id": "koobiq-components-signal-inputs-subclasses",
+    "title": "Koobiq components signal inputs subclasses migration",
     "type": "object",
     "properties": {
         "project": {

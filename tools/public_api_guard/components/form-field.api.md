@@ -14,6 +14,7 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
@@ -270,6 +271,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     protected readonly changeDetectorRef: ChangeDetectorRef;
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
+    readonly contentInput: InputSignal<KbqTooltipTrigger['content'] | undefined>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
     // (undocumented)
@@ -277,7 +279,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     get hidden(): boolean;
     readonly icon: Signal<KbqIconButton>;
     get iconClass(): string;
-    readonly kbqTooltipHidden: i0.InputSignal<string | TemplateRef<any>>;
+    readonly kbqTooltipHidden: InputSignal<string | TemplateRef<any>>;
     // (undocumented)
     protected readonly nativeElement: HTMLElement;
     // (undocumented)
@@ -289,7 +291,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     toggle(event: Event): void;
     get visibility(): 'hidden' | 'visible';
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "tabindex": { "alias": "tabindex"; "required": false; "isSignal": true; }; "contentInput": { "alias": "kbqTooltipNotHidden"; "required": false; "isSignal": true; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordToggle, never>;
 }
