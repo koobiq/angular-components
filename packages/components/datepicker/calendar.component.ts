@@ -3,7 +3,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Input,
     OnChanges,
     OnDestroy,
     SimpleChanges,
@@ -44,9 +43,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private changeDetectorRef = inject(ChangeDetectorRef);
 
     /** A date representing the period (month or year) to start the calendar in. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get startAt(): D | null {
         return this._startAt;
     }
@@ -61,9 +57,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _startAt: D | null;
 
     /** The currently selected date. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get selected(): D | null {
         return this._selected;
     }
@@ -75,9 +68,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _selected: D | null;
 
     /** The minimum selectable date. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get minDate(): D | null {
         return this._minDate;
     }
@@ -91,9 +81,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private _minDate: D | null;
 
     /** The maximum selectable date. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get maxDate(): D | null {
         return this._maxDate;
     }
@@ -105,6 +92,18 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
 
     private _maxDate: D | null;
+
+    /** @docs-private */
+    readonly startAtInput = input<D | null | undefined>(undefined, { alias: 'startAt' });
+
+    /** @docs-private */
+    readonly selectedInput = input<D | null | undefined>(undefined, { alias: 'selected' });
+
+    /** @docs-private */
+    readonly minDateInput = input<D | null | undefined>(undefined, { alias: 'minDate' });
+
+    /** @docs-private */
+    readonly maxDateInput = input<D | null | undefined>(undefined, { alias: 'maxDate' });
 
     /**
      * The current active date. This determines which time period is shown and which date is
@@ -173,7 +172,18 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        const change = changes.minDate || changes.maxDate || changes.dateFilter;
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote. A
+        // bound `undefined` is handed over too, as an unset date: a bound that becomes unset lifts its restriction.
+        if (changes['minDateInput']) this.minDate = this.minDateInput() ?? null;
+
+        if (changes['maxDateInput']) this.maxDate = this.maxDateInput() ?? null;
+
+        if (changes['selectedInput']) this.selected = this.selectedInput() ?? null;
+
+        // After the bounds, which `startAt` is clamped to.
+        if (changes['startAtInput']) this.startAt = this.startAtInput() ?? null;
+
+        const change = changes['minDateInput'] || changes['maxDateInput'] || changes['dateFilter'];
 
         if (change && !change.firstChange) {
             const monthView = this.monthView();

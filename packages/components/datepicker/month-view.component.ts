@@ -3,7 +3,8 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    Input,
+    OnChanges,
+    SimpleChanges,
     ViewEncapsulation,
     inject,
     input,
@@ -31,7 +32,7 @@ const DAYS_PER_WEEK = 7;
     encapsulation: ViewEncapsulation.None,
     exportAs: 'kbqMonthView'
 })
-export class KbqMonthView<D> implements AfterContentInit {
+export class KbqMonthView<D> implements AfterContentInit, OnChanges {
     private changeDetectorRef = inject(ChangeDetectorRef);
     private readonly timezoneService = inject(KbqDateTimezoneService);
     adapter: DateAdapter<D> = injectRequiredDateAdapter<D>();
@@ -39,9 +40,6 @@ export class KbqMonthView<D> implements AfterContentInit {
     /**
      * The date to display in this month view (everything other than the month and year is ignored).
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get activeDate(): D {
         return this._activeDate;
     }
@@ -59,9 +57,6 @@ export class KbqMonthView<D> implements AfterContentInit {
     private _activeDate: D;
 
     /** The currently selected date. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get selected(): D | null {
         return this._selected;
     }
@@ -72,6 +67,12 @@ export class KbqMonthView<D> implements AfterContentInit {
     }
 
     private _selected: D | null;
+
+    /** @docs-private */
+    readonly activeDateInput = input<D | undefined>(undefined, { alias: 'activeDate' });
+
+    /** @docs-private */
+    readonly selectedInput = input<D | null | undefined>(undefined, { alias: 'selected' });
 
     /** The minimum selectable date. */
     readonly minDate = input<D | null>(undefined!);
@@ -135,6 +136,21 @@ export class KbqMonthView<D> implements AfterContentInit {
             this.init();
             this.changeDetectorRef.markForCheck();
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['selectedInput']) {
+            const selected = this.selectedInput();
+
+            if (selected !== undefined) this.selected = selected;
+        }
+
+        if (changes['activeDateInput']) {
+            const activeDate = this.activeDateInput();
+
+            if (activeDate !== undefined) this.activeDate = activeDate;
+        }
     }
 
     ngAfterContentInit() {
