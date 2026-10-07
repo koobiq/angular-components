@@ -362,6 +362,36 @@ test.describe('KbqNavbarModule', () => {
         });
     });
 
+    test.describe('E2eNavbarDisabledBrand', () => {
+        test('a disabled brand should show the default cursor', async ({ page }) => {
+            await page.goto('/E2eNavbarDisabledBrand');
+
+            for (const orientation of ['horizontal', 'vertical']) {
+                const brand = page.getByTestId(`${orientation}-brand`);
+                const disabledBrand = page.getByTestId(`${orientation}-disabled-brand`);
+
+                await expect(brand.locator('.kbq-navbar-title')).toHaveCSS('cursor', 'pointer');
+
+                await expect(disabledBrand).toHaveClass(/kbq-disabled/);
+                await expect(disabledBrand).toHaveCSS('cursor', 'default');
+                await expect(disabledBrand.locator('.kbq-navbar-title')).toHaveCSS('cursor', 'default');
+            }
+        });
+
+        test('hovering a disabled vertical brand should not scale its logo', async ({ page }) => {
+            await page.goto('/E2eNavbarDisabledBrand');
+
+            const brand = page.getByTestId('vertical-brand');
+            const disabledBrand = page.getByTestId('vertical-disabled-brand');
+
+            await brand.hover();
+            await expect(brand.locator('.kbq-navbar-logo')).toHaveCSS('transform', 'matrix(1.06, 0, 0, 1.06, 0, 0)');
+
+            await disabledBrand.hover();
+            await expect(disabledBrand.locator('.kbq-navbar-logo')).toHaveCSS('transform', 'none');
+        });
+    });
+
     test.describe('E2eVerticalNavbarItemClippedTitle', () => {
         const getTooltip = (page: Page) =>
             page.locator('.kbq-tooltip', { hasText: 'User Management, Access Control and Audit' });
