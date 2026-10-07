@@ -43,6 +43,8 @@ files that hold a call site one of the narrowings breaks:
 | `nodeDefs.changes` / `.length` / `.toArray()` / … | Read `nodeDefs()`; replace the subscription with an `effect`                       |
 | `<padding>.indent` / `.indentUnits`               | Read `indent()`; bind `kbqTreeNodePaddingIndent`                                   |
 | `<option>.onFocus.next(…)` / `onBlur.next(…)`     | Subscribe instead — the option emits on both streams itself                        |
+| `<tree>.treeControl / dataSource / disabled = …`  | Bind it; `tabIndex`, `multiple` and `selectAllHandler` too (`multipleMode` writes) |
+| `<option>.disabled / showCheckbox = …`            | Bind it, or disable the node through the tree control's `isDisabled`               |
 
 Each pattern is scoped to files that also name its owner, so a `.disabled =` write in a file that
 never mentions a tree toggle stays quiet. A project that renders a tree at all also gets a summary

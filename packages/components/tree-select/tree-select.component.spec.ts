@@ -1128,11 +1128,15 @@ class BasicSelectOnPushPreselected {
                 [formControl]="control"
             >
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="disabledNodes.has(node)">
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
+                        [disabled]="disabledNodes.has(node)"
+                    >
                         <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
@@ -1144,6 +1148,7 @@ class BasicSelectOnPushPreselected {
 class MultiSelect {
     control = new UntypedFormControl();
     selectAllToggle: boolean = false;
+    disabledNodes = new Set<unknown>();
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -5072,8 +5077,10 @@ describe('KbqTreeSelect', () => {
             const options = fixture.componentInstance.options();
 
             for (let i = 0; i < 3; i++) {
-                options[i].disabled = true;
+                fixture.componentInstance.disabledNodes.add(options[i].data);
             }
+
+            fixture.detectChanges();
 
             expect(testInstance.control.value).toBeFalsy();
 

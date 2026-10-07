@@ -1,5 +1,5 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import {
@@ -9,7 +9,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     contentChild,
     DestroyRef,
     DoCheck,
@@ -18,12 +17,11 @@ import {
     EventEmitter,
     inject,
     InjectionToken,
-    Input,
     input,
     output,
     QueryList,
     signal,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -161,10 +159,15 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     preventBlur: boolean = false;
 
-    @ViewChild('kbqTitleContainer') parentTextElement: ElementRef;
+    private readonly titleContainer = viewChild<ElementRef<HTMLElement>>('kbqTitleContainer');
+
+    /** Container of the option text, measured by `kbq-title`. */
+    get parentTextElement(): ElementRef<HTMLElement> | undefined {
+        return this.titleContainer();
+    }
 
     // Same element as `parentTextElement` — `.kbq-option-text` clips the text, so it is measured against itself.
-    get textElement(): ElementRef {
+    get textElement(): ElementRef<HTMLElement> | undefined {
         return this.parentTextElement;
     }
 
@@ -173,12 +176,21 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
     readonly actionButton = contentChild(KbqOptionActionComponent);
 
-    // `KbqOptionActionComponent` reads these as directive instances through KBQ_OPTION_ACTION_PARENT,
-    // so they must stay decorator queries. A signal `contentChild` would expose the query function
-    // instead of the trigger, making `dropdownTrigger.dropdownClosed` undefined and throwing on `.pipe`
-    // when an action button is rendered (e.g. on tree node expansion) — see #DS-5079.
-    @ContentChild(KbqTooltipTrigger) tooltipTrigger?: KbqTooltipTrigger;
-    @ContentChild(KbqDropdownTrigger) dropdownTrigger?: KbqDropdownTrigger;
+    private readonly tooltipTriggerQuery = contentChild(KbqTooltipTrigger);
+    private readonly dropdownTriggerQuery = contentChild(KbqDropdownTrigger);
+
+    // Getters rather than the signal queries themselves: `KbqOptionActionComponent` reads the triggers as
+    // directive instances through KBQ_OPTION_ACTION_PARENT — see #DS-5079.
+
+    /** Tooltip trigger projected into the option. */
+    get tooltipTrigger(): KbqTooltipTrigger | undefined {
+        return this.tooltipTriggerQuery();
+    }
+
+    /** Dropdown trigger projected into the option. */
+    get dropdownTrigger(): KbqDropdownTrigger | undefined {
+        return this.dropdownTriggerQuery();
+    }
 
     readonly checkboxThirdState = input<boolean>(false);
 
@@ -196,27 +208,20 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     private _value: any;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Whether the option is disabled: through its own input, the tree, or the tree control's `isDisabled`. */
     get disabled(): boolean {
         if (this.selectAllRow()) {
-            return this._disabled || this.tree.disabled;
+            return this.disabledInput() || this.tree.disabled;
         }
 
-        return this._disabled || this.tree.disabled || this.tree.treeControl.isDisabled(this.data);
+        return this.disabledInput() || this.tree.disabled || this.tree.treeControl.isDisabled(this.data);
     }
-
-    set disabled(value: BooleanInput) {
-        const newValue = coerceBooleanProperty(value);
-
-        if (newValue !== this._disabled) {
-            this._disabled = newValue;
-            this.changeDetectorRef.markForCheck();
-        }
-    }
-
-    private _disabled: boolean = false;
 
     /** `disabled` as this view last saw it: the tree control's `isDisabled` predicate gives no notice of a change. */
     private checkedDisabled = false;
@@ -240,18 +245,16 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
      */
     readonly selectAllRow = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /** @docs-private */
+    readonly showCheckboxInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'showCheckbox',
+        transform: booleanAttribute
+    });
+
+    /** Whether the option renders a pseudo-checkbox. Falls back to the tree's own mode until bound. */
     get showCheckbox(): boolean {
-        return this._showCheckbox !== undefined ? this._showCheckbox : this.tree.showCheckbox;
+        return this.showCheckboxInput() ?? this.tree.showCheckbox;
     }
-
-    set showCheckbox(value: BooleanInput) {
-        this._showCheckbox = coerceBooleanProperty(value);
-    }
-
-    private _showCheckbox: boolean;
 
     /** Emits whenever the selected state of the option changes. */
     readonly selectionChange = output<KbqTreeOptionChange>();
