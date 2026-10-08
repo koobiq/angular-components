@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     KbqFilter,
@@ -116,6 +116,8 @@ describe('KbqPipeMultiSelectComponent', () => {
             .compileComponents();
     });
 
+    afterEach(() => vi.useRealTimers());
+
     const getPipeComponent = (index: number = 0): KbqPipeMultiSelectComponent => {
         const pipes = fixture.debugElement.queryAll(By.css('kbq-pipe-multi-select'));
 
@@ -198,7 +200,9 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(getPipeComponent().isEmpty).toBe(false);
         });
 
-        it('should be empty when selectedAllEqualsSelectedNothing and all options selected', fakeAsync(() => {
+        it('should be empty when selectedAllEqualsSelectedNothing and all options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
@@ -206,14 +210,14 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             expect(component.allOptionsSelected).toBe(true);
             expect(component.isEmpty).toBe(true);
-        }));
+        });
     });
 
     describe('selected getter', () => {
@@ -253,40 +257,46 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should return unchecked when no options selected', fakeAsync(() => {
+        it('should return unchecked when no options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPipeComponent().checkboxState).toBe('unchecked');
-        }));
+        });
 
-        it('should return checked when all options selected', fakeAsync(() => {
+        it('should return checked when all options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             expect(component.allOptionsSelected).toBe(true);
             expect(component.checkboxState).toBe('checked');
-        }));
+        });
 
-        it('should return indeterminate when some options selected', fakeAsync(() => {
+        it('should return indeterminate when some options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [SELECT_VALUES[0]], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -294,7 +304,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
             expect(component.allOptionsSelected).toBe(false);
             expect(component.checkboxState).toBe('indeterminate');
-        }));
+        });
     });
 
     describe('onSelect', () => {
@@ -303,7 +313,9 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should emit onChangePipe event on selection', fakeAsync(() => {
+        it('should emit onChangePipe event on selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [SELECT_VALUES[0]] })
             ]);
@@ -315,7 +327,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBar.onChangePipe.subscribe(spy);
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
@@ -323,13 +335,15 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(options.length).toBeGreaterThan(0);
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should set data.value to empty array when all selected and selectedAllEqualsSelectedNothing', fakeAsync(() => {
+        it('should set data.value to empty array when all selected and selectedAllEqualsSelectedNothing', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES })
@@ -339,15 +353,15 @@ describe('KbqPipeMultiSelectComponent', () => {
             const component = getPipeComponent();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.allOptionsSelected).toBe(true);
             expect(component.selectedAllEqualsSelectedNothing).toBe(true);
             component.onSelect([...ALL_VALUES]);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(component.data.value).toEqual([]);
-        }));
+        });
     });
 
     describe('toggleSelectionAll', () => {
@@ -356,46 +370,52 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should select all options when none selected', fakeAsync(() => {
+        it('should select all options when none selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectionAll();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.select().selectionModel.selected.length).toBeGreaterThan(0);
-        }));
+        });
 
-        it('should deselect all options when all selected', fakeAsync(() => {
+        it('should deselect all options when all selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             expect(component.allOptionsSelected).toBe(true);
             component.toggleSelectionAll();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.select().selectionModel.selected.length).toBe(0);
-        }));
+        });
 
-        it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', fakeAsync(() => {
+        it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
@@ -403,19 +423,19 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectionAll();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.allOptionsSelected).toBe(true);
             expect(component.selectedAllEqualsSelectedNothing).toBe(true);
             expect(component.data.value).toEqual([]);
-        }));
+        });
     });
 
     describe('toggleSelectionAllByEnterKey', () => {
@@ -424,14 +444,16 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should call toggleSelectionAll when activeItemIndex is 0 and selectAll is true', fakeAsync(() => {
+        it('should call toggleSelectionAll when activeItemIndex is 0 and selectAll is true', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -442,16 +464,18 @@ describe('KbqPipeMultiSelectComponent', () => {
             component.toggleSelectionAllByEnterKey();
 
             expect(toggleSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should not call toggleSelectionAll when selectAll is false', fakeAsync(() => {
+        it('should not call toggleSelectionAll when selectAll is false', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: false })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -460,7 +484,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             component.toggleSelectionAllByEnterKey();
 
             expect(toggleSpy).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('onClear', () => {
@@ -521,7 +545,9 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should update internalSelected on close when all options selected', fakeAsync(() => {
+        it('should update internalSelected on close when all options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [SELECT_VALUES[0]], selectAll: true })
@@ -529,7 +555,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -537,7 +563,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             // Select every option. Under selectedAllEqualsSelectedNothing this collapses data.value
             // to [], while internalSelected still holds the previously committed value (stale).
             component.toggleSelectionAll();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.allOptionsSelected).toBe(true);
@@ -547,12 +573,14 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             // onClose refreshes internalSelected from the current data.value.
             component.onClose();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.selected).toEqual([]);
-        }));
+        });
 
-        it('should restore focus to the trigger button on close', fakeAsync(() => {
+        it('should restore focus to the trigger button on close', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [] })
             ]);
@@ -561,10 +589,10 @@ describe('KbqPipeMultiSelectComponent', () => {
             const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onClose();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
     });
 
     describe('open', () => {
@@ -741,7 +769,9 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(getPipeComponent().select().compareWith()).toBe(customCompare);
         });
 
-        it('should match selected values in the panel using the custom comparator', fakeAsync(() => {
+        it('should match selected values in the panel using the custom comparator', async () => {
+            vi.useFakeTimers();
+
             setTemplate(idlessValues);
             // The two selected values are distinct objects equal to the second and third options only by
             // `value`. Each selected item is resolved independently via `getCorrespondOption`/`.find`, so
@@ -761,7 +791,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const selectedText = Array.from(document.querySelectorAll('.kbq-option.kbq-selected')).map((el) =>
@@ -769,7 +799,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             );
 
             expect(selectedText).toEqual(['Option 2', 'Option 3']);
-        }));
+        });
     });
 
     describe('panelMaxHeight forwarding', () => {
@@ -787,7 +817,9 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should forward panelMaxHeight from the pipe template to the panel', fakeAsync(() => {
+        it('should forward panelMaxHeight from the pipe template to the panel', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.pipeTemplates = [
                 {
                     name: 'MultiSelect',
@@ -804,23 +836,25 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('300px');
-        }));
+        });
 
-        it('should leave the token unset when the template omits panelMaxHeight', fakeAsync(() => {
+        it('should leave the token unset when the template omits panelMaxHeight', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // No inline custom property at all, so the select-family default of 256px applies.
             expect(readPanelMaxHeightToken()).toBe('');
-        }));
+        });
     });
 
     describe('caption', () => {
@@ -854,24 +888,28 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should render the caption as a second line', fakeAsync(() => {
+        it('should render the caption as a second line', async () => {
+            vi.useFakeTimers();
+
             setTemplate([CAPTIONED]);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getOptions()[0].querySelector('.kbq-option-caption')!.textContent!.trim()).toBe('category.generic');
-        }));
+        });
 
-        it('should leave an option without a caption as a bare text node', fakeAsync(() => {
+        it('should leave an option without a caption as a bare text node', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const option = getOptions()[0];
@@ -880,42 +918,48 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(option.querySelector('.kbq-option-caption')).toBeNull();
             expect(option.querySelector('.kbq-option-text')!.children.length).toBe(0);
             expect(option.textContent!.trim()).toBe(SELECT_VALUES[0].name);
-        }));
+        });
 
-        it('should keep the caption out of the trigger', fakeAsync(() => {
+        it('should keep the caption out of the trigger', async () => {
+            vi.useFakeTimers();
+
             setTemplate([CAPTIONED]);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [CAPTIONED] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Without `viewValue` the option would derive it from `textContent` and glue the two lines.
             expect(getPipeComponent().select().triggerValue).toBe('Threat type');
             expect(fixture.nativeElement.querySelector('.kbq-pipe__value').textContent.trim()).toBe('Threat type');
-        }));
+        });
 
-        it('should let a valueTemplate own the option and its view value', fakeAsync(() => {
+        it('should let a valueTemplate own the option and its view value', async () => {
+            vi.useFakeTimers();
+
             setTemplate([CAPTIONED], fixture.componentInstance.optionTemplate());
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [CAPTIONED] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getOptions()[0].querySelector('.kbq-option-caption')).toBeNull();
             expect(getPipeComponent().select().triggerValue).toBe('custom Threat type');
-        }));
+        });
 
-        it('should keep a locked captioned option disabled', fakeAsync(() => {
+        it('should keep a locked captioned option disabled', async () => {
+            vi.useFakeTimers();
+
             setTemplate([CAPTIONED], undefined, [CAPTIONED]);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [CAPTIONED] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // The caption markup must not have displaced `[disabled]="isLocked(item)"`.
@@ -923,7 +967,7 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             expect(option.querySelector('.kbq-option-caption')).not.toBeNull();
             expect(option.getAttribute('aria-disabled')).toBe('true');
-        }));
+        });
     });
 
     describe('multilineOptions', () => {
@@ -953,36 +997,42 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should add the modifier to the panel when the template sets it', fakeAsync(() => {
+        it('should add the modifier to the panel when the template sets it', async () => {
+            vi.useFakeTimers();
+
             setTemplate(true);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(true);
-        }));
+        });
 
-        it('should leave the panel unmodified when the template omits it', fakeAsync(() => {
+        it('should leave the panel unmodified when the template omits it', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(false);
-        }));
+        });
 
-        it('should clear the modifier when a later template update omits it', fakeAsync(() => {
+        it('should clear the modifier when a later template update omits it', async () => {
+            vi.useFakeTimers();
+
             setTemplate(true);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(true);
@@ -992,14 +1042,16 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(false);
-        }));
+        });
 
-        it('should apply a later template update that omits values', fakeAsync(() => {
+        it('should apply a later template update that omits values', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(false);
@@ -1019,7 +1071,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(true);
-        }));
+        });
     });
 
     describe('selectAllHandler', () => {
@@ -1028,14 +1080,16 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should prevent default and toggle selection all', fakeAsync(() => {
+        it('should prevent default and toggle selection all', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -1047,7 +1101,7 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             expect(preventSpy).toHaveBeenCalled();
             expect(toggleSpy).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('select all without options', () => {
@@ -1062,28 +1116,32 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
         });
 
-        it('should not render the "select all" row', fakeAsync(() => {
+        it('should not render the "select all" row', async () => {
+            vi.useFakeTimers();
+
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(document.querySelector('.kbq-select-no-options')).not.toBeNull();
             expect(document.querySelectorAll('.kbq-option').length).toBe(0);
-        }));
+        });
 
-        it('should keep the value and emit nothing on Ctrl+A', fakeAsync(() => {
+        it('should keep the value and emit nothing on Ctrl+A', async () => {
+            vi.useFakeTimers();
+
             const changeSpy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(changeSpy);
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             getPipeComponent().selectAllHandler(new KeyboardEvent('keydown'));
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPipeComponent().data.value).toBeNull();
             expect(changeSpy).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('searchControl', () => {
@@ -1092,7 +1150,9 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should filter options by search text', fakeAsync(() => {
+        it('should filter options by search text', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], search: true })
             ]);
@@ -1108,13 +1168,15 @@ describe('KbqPipeMultiSelectComponent', () => {
             });
 
             component.searchControl.setValue('Option 1');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(lastFiltered.length).toBe(1);
             expect(lastFiltered[0].name).toBe('Option 1');
-        }));
+        });
 
-        it('should return all options when search is empty', fakeAsync(() => {
+        it('should return all options when search is empty', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], search: true })
             ]);
@@ -1128,12 +1190,12 @@ describe('KbqPipeMultiSelectComponent', () => {
             });
 
             component.searchControl.setValue('Option 1');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             component.searchControl.setValue('');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(lastFiltered.length).toBe(SELECT_VALUES.length);
-        }));
+        });
 
         describe('by caption', () => {
             const CAPTIONED: KbqSelectValue[] = [
@@ -1143,7 +1205,7 @@ describe('KbqPipeMultiSelectComponent', () => {
                 { id: 3, name: 'Plain', value: 'plain' }
             ];
 
-            const search = (query: string): KbqSelectValue[] => {
+            const search = async (query: string): Promise<KbqSelectValue[]> => {
                 fixture.componentInstance.pipeTemplates = [
                     {
                         name: 'MultiSelect',
@@ -1168,18 +1230,22 @@ describe('KbqPipeMultiSelectComponent', () => {
                 });
 
                 component.searchControl.setValue(query);
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 return lastFiltered;
             };
 
-            it('should match an option whose caption contains the query', fakeAsync(() => {
-                expect(search('category').map((item) => item.name)).toEqual(['Threat type']);
-            }));
+            it('should match an option whose caption contains the query', async () => {
+                vi.useFakeTimers();
 
-            it('should match the caption case-insensitively', fakeAsync(() => {
-                expect(search('AUDIT').map((item) => item.name)).toEqual(['Action']);
-            }));
+                expect((await search('category')).map((item) => item.name)).toEqual(['Threat type']);
+            });
+
+            it('should match the caption case-insensitively', async () => {
+                vi.useFakeTimers();
+
+                expect((await search('AUDIT')).map((item) => item.name)).toEqual(['Action']);
+            });
         });
     });
 
@@ -1189,37 +1255,41 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should return true when all visible options are selected', fakeAsync(() => {
+        it('should return true when all visible options are selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             expect(component.allOptionsSelected).toBe(true);
             expect(component.allVisibleOptionsSelected).toBe(true);
-        }));
+        });
 
-        it('should return false when some visible options are not selected', fakeAsync(() => {
+        it('should return false when some visible options are not selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [SELECT_VALUES[0]], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             expect(component.allOptionsSelected).toBe(false);
             expect(component.allVisibleOptionsSelected).toBe(false);
-        }));
+        });
     });
 
     describe('allOptionsSelected', () => {
@@ -1228,35 +1298,39 @@ describe('KbqPipeMultiSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should return true when all options selected', fakeAsync(() => {
+        it('should return true when all options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             expect(component.allOptionsSelected).toBe(true);
-        }));
+        });
 
-        it('should return false when not all options selected', fakeAsync(() => {
+        it('should return false when not all options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [SELECT_VALUES[0]], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             expect(component.allOptionsSelected).toBe(false);
-        }));
+        });
     });
 
     describe('lockedValues', () => {
@@ -1283,12 +1357,14 @@ describe('KbqPipeMultiSelectComponent', () => {
             setLockedTemplate([LOCKED]);
         });
 
-        it('should render the locked option as disabled and selected', fakeAsync(() => {
+        it('should render the locked option as disabled and selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [LOCKED] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const locked = getPipeComponent()
@@ -1297,14 +1373,16 @@ describe('KbqPipeMultiSelectComponent', () => {
 
             expect(locked.disabled).toBe(true);
             expect(locked.selected).toBe(true);
-        }));
+        });
 
-        it('should not change the value when the locked option is clicked', fakeAsync(() => {
+        it('should not change the value when the locked option is clicked', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [LOCKED] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -1313,27 +1391,29 @@ describe('KbqPipeMultiSelectComponent', () => {
                 .options()
                 .find((option) => option.value?.id === LOCKED.id)!
                 .selectViaInteraction();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.data.value).toEqual([LOCKED]);
-        }));
+        });
 
-        it('should not deselect the locked option on a repeated shift + click', fakeAsync(() => {
+        it('should not deselect the locked option on a repeated shift + click', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [LOCKED, SELECT_VALUES[1]] })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
             const locked = component.options().find((option) => option.value?.id === LOCKED.id)!;
-            const shiftClickLockedOption = () => {
+            const shiftClickLockedOption = async () => {
                 locked.getHostElement().dispatchEvent(new MouseEvent('click', { shiftKey: true }));
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
             };
 
@@ -1341,35 +1421,37 @@ describe('KbqPipeMultiSelectComponent', () => {
             // Twice on purpose: the second one used to reach the toggle branch and drop the locked option
             // out of the selection model without emitting a `selectionChange`, so the pipe never saw it and
             // `mergeLocked` never ran.
-            shiftClickLockedOption();
-            shiftClickLockedOption();
+            await shiftClickLockedOption();
+            await shiftClickLockedOption();
 
             expect(locked.selected).toBe(true);
             expect(component.data.value).toEqual([LOCKED, SELECT_VALUES[1]]);
-        }));
+        });
 
-        it('should keep the locked option selected after "select all" and reopening the panel', fakeAsync(() => {
+        it('should keep the locked option selected after "select all" and reopening the panel', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectionAll();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             component.onClose();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Closing over a full selection re-snapshots from the "all selected = nothing selected"
@@ -1377,7 +1459,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             // the locked option unchecked while still rendering it disabled.
             expect(component.selected).toEqual([LOCKED]);
             expect(component.options().find((option) => option.value?.id === LOCKED.id)!.selected).toBe(true);
-        }));
+        });
 
         it('should append the missing locked values without emitting a change', () => {
             const changeSpy = vi.fn();
@@ -1399,25 +1481,27 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(getPipeComponent().data.value).toEqual([LOCKED]);
         });
 
-        it('should keep the locked options selected when all options are deselected', fakeAsync(() => {
+        it('should keep the locked options selected when all options are deselected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectionAll();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.select().selectionModel.selected.map(({ value }) => value)).toEqual([LOCKED]);
             expect(component.data.value).toEqual([LOCKED]);
-        }));
+        });
 
         it('should leave only the locked values on clear', () => {
             fixture.componentInstance.activeFilter = createFilter([
@@ -1466,46 +1550,52 @@ describe('KbqPipeMultiSelectComponent', () => {
             expect(getPipeComponent().isEmpty).toBe(false);
         });
 
-        it('should keep the master checkbox unchecked when only the locked values are selected', fakeAsync(() => {
+        it('should keep the master checkbox unchecked when only the locked values are selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [LOCKED], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getPipeComponent().checkboxState).toBe('unchecked');
-        }));
+        });
 
-        it('should check the master checkbox once every unlocked option is selected', fakeAsync(() => {
+        it('should check the master checkbox once every unlocked option is selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getPipeComponent().checkboxState).toBe('checked');
-        }));
+        });
 
-        it('should keep the "all selected" sentinel across a later template update', fakeAsync(() => {
+        it('should keep the "all selected" sentinel across a later template update', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectionAll();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.data.value).toEqual([]);
@@ -1517,9 +1607,11 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             expect(component.data.value).toEqual([]);
-        }));
+        });
 
-        it('should keep the master checkbox unchecked when every option is locked', fakeAsync(() => {
+        it('should keep the master checkbox unchecked when every option is locked', async () => {
+            vi.useFakeTimers();
+
             setLockedTemplate(ALL_VALUES);
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
@@ -1527,7 +1619,7 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -1536,9 +1628,11 @@ describe('KbqPipeMultiSelectComponent', () => {
             // master checkbox would promise an action the user cannot take.
             expect(component.allOptionsSelected).toBe(false);
             expect(component.checkboxState).toBe('unchecked');
-        }));
+        });
 
-        it('should keep the locked values when "select all" is toggled with every option locked', fakeAsync(() => {
+        it('should keep the locked values when "select all" is toggled with every option locked', async () => {
+            vi.useFakeTimers();
+
             setLockedTemplate(ALL_VALUES);
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ALL_VALUES, selectAll: true })
@@ -1546,19 +1640,19 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectionAll();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Reporting a full selection here would commit the "all selected = nothing selected"
             // sentinel and drop the locked values, which no later normalization puts back.
             expect(component.data.value).toEqual(ALL_VALUES);
-        }));
+        });
 
         it('should lift the lock without touching the committed value when a later template omits it', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);

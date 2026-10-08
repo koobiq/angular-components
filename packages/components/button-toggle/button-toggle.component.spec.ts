@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { Component, DebugElement, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -131,17 +131,17 @@ describe('KbqButtonToggle with forms', () => {
             fixture.detectChanges();
         });
 
-        it('should update the model before firing change event', fakeAsync(() => {
+        it('should update the model before firing change event', async () => {
             expect(testComponent.modelValue).toBeUndefined();
             expect(testComponent.lastEvent).toBeUndefined();
 
             innerButtons[0].click();
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
             expect(testComponent.modelValue).toBe('red');
             expect(testComponent.lastEvent.value).toBe('red');
-        }));
+        });
 
         it('should check the corresponding button toggle on a group value change', () => {
             expect(groupInstance.value).toBeFalsy();
@@ -161,14 +161,14 @@ describe('KbqButtonToggle with forms', () => {
             expect(selected.value).toBe(groupInstance.value);
         });
 
-        it('should have the correct NgModel control state initially and after interaction', fakeAsync(() => {
+        it('should have the correct NgModel control state initially and after interaction', async () => {
             expect(groupNgModel.valid).toBe(true);
             expect(groupNgModel.pristine).toBe(true);
             expect(groupNgModel.touched).toBe(false);
 
             buttonToggleInstances[1].checked = true;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(groupNgModel.valid).toBe(true);
             expect(groupNgModel.pristine).toBe(true);
@@ -176,21 +176,21 @@ describe('KbqButtonToggle with forms', () => {
 
             innerButtons[2].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(groupNgModel.valid).toBe(true);
             expect(groupNgModel.pristine).toBe(false);
             expect(groupNgModel.touched).toBe(true);
-        }));
+        });
 
-        it('should update the ngModel value when selecting a button toggle', fakeAsync(() => {
+        it('should update the ngModel value when selecting a button toggle', async () => {
             innerButtons[1].click();
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             expect(testComponent.modelValue).toBe('green');
-        }));
+        });
     });
 });
 
@@ -318,7 +318,7 @@ describe('KbqButtonToggle without forms', () => {
             expect(groupNativeElement.classList).toContain('kbq-button-toggle_vertical');
         });
 
-        it('should emit a change event from button toggles', fakeAsync(() => {
+        it('should emit a change event from button toggles', async () => {
             expect(buttonToggleInstances[0].checked).toBe(false);
 
             const changeSpy = vi.fn();
@@ -327,18 +327,18 @@ describe('KbqButtonToggle without forms', () => {
 
             innerButtons[0].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(changeSpy).toHaveBeenCalledTimes(1);
 
             innerButtons[0].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             // Always emit change event when button toggle is clicked
             expect(changeSpy).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('should emit a change event from the button toggle group', fakeAsync(() => {
+        it('should emit a change event from the button toggle group', async () => {
             expect(groupInstance.value).toBeFalsy();
 
             const changeSpy = vi.fn();
@@ -347,14 +347,14 @@ describe('KbqButtonToggle without forms', () => {
 
             innerButtons[0].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(changeSpy).toHaveBeenCalled();
 
             innerButtons[1].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(changeSpy).toHaveBeenCalledTimes(2);
-        }));
+        });
 
         it('should update the group and button toggles when updating the group value', () => {
             expect(groupInstance.value).toBeFalsy();
@@ -386,7 +386,7 @@ describe('KbqButtonToggle without forms', () => {
             expect(buttonToggleInstances.every((toggle) => !toggle.checked)).toBe(true);
         });
 
-        it('should update the model if a selected toggle is removed', fakeAsync(() => {
+        it('should update the model if a selected toggle is removed', async () => {
             expect(groupInstance.value).toBeFalsy();
             innerButtons[0].click();
             fixture.detectChanges();
@@ -396,11 +396,11 @@ describe('KbqButtonToggle without forms', () => {
 
             testComponent.renderFirstToggle = false;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(groupInstance.value).toBeFalsy();
             expect(groupInstance.selected).toBeFalsy();
-        }));
+        });
     });
 
     describe('with initial value and change event', () => {
@@ -628,23 +628,23 @@ describe('KbqButtonToggle without forms', () => {
             expect(groupNativeElement.classList).toContain('kbq-button-toggle_vertical');
         });
 
-        it('should deselect a button toggle when selected twice', fakeAsync(() => {
+        it('should deselect a button toggle when selected twice', async () => {
             innerButtons[0].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(buttonToggleInstances[0].checked).toBe(true);
             expect(groupInstance.value).toEqual(['eggs']);
 
             innerButtons[0].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(groupInstance.value).toEqual([]);
             expect(buttonToggleInstances[0].checked).toBe(false);
-        }));
+        });
 
-        it('should emit a change event for state changes', fakeAsync(() => {
+        it('should emit a change event for state changes', async () => {
             expect(buttonToggleInstances[0].checked).toBe(false);
 
             const changeSpy = vi.fn();
@@ -653,20 +653,20 @@ describe('KbqButtonToggle without forms', () => {
 
             innerButtons[0].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(changeSpy).toHaveBeenCalled();
             expect(groupInstance.value).toEqual(['eggs']);
 
             innerButtons[0].click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(groupInstance.value).toEqual([]);
 
             // The default browser behavior is to emit an event, when the value was set
             // to false. That's because the current input type is set to `checkbox` when
             // using the multiple mode.
             expect(changeSpy).toHaveBeenCalledTimes(2);
-        }));
+        });
 
         it('should report the toggle the change came from, including the one that emptied the group', () => {
             const events: KbqButtonToggleChange[] = [];
@@ -709,21 +709,21 @@ describe('KbqButtonToggle without forms', () => {
             buttonToggleInstance = buttonToggleDebugElement.componentInstance;
         });
 
-        it('should toggle when clicked', fakeAsync(() => {
+        it('should toggle when clicked', async () => {
             innerButton.click();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(buttonToggleInstance.checked).toBe(true);
 
             innerButton.click();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(buttonToggleInstance.checked).toBe(false);
-        }));
+        });
 
-        it('should emit a change event for state changes', fakeAsync(() => {
+        it('should emit a change event for state changes', async () => {
             expect(buttonToggleInstance.checked).toBe(false);
 
             const changeSpy = vi.fn();
@@ -732,17 +732,17 @@ describe('KbqButtonToggle without forms', () => {
 
             innerButton.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             expect(changeSpy).toHaveBeenCalled();
 
             innerButton.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             // The default browser behavior is to emit an event, when the value was set
             // to false. That's because the current input type is set to `checkbox`.
             expect(changeSpy).toHaveBeenCalledTimes(2);
-        }));
+        });
 
         it('should report the disabled state as a boolean without a group to fall back on', () => {
             // The getter used to hand back the group it could not find, i.e. `null`, whenever the
@@ -1352,7 +1352,7 @@ describe('KbqButtonToggle accessibility', () => {
     });
 
     describe('teardown', () => {
-        it('should not sync the selection after the whole group is destroyed', fakeAsync(() => {
+        it('should not sync the selection after the whole group is destroyed', async () => {
             const fixture = TestBed.createComponent(DestroyableButtonToggleGroup);
 
             fixture.detectChanges();
@@ -1368,10 +1368,10 @@ describe('KbqButtonToggle accessibility', () => {
             // runs after the group it would notify is already gone.
             fixture.componentInstance.render = false;
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(valueChange).not.toHaveBeenCalled();
-        }));
+        });
     });
 });
 

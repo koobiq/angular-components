@@ -1,13 +1,5 @@
 ﻿import { Component, Provider, Type, viewChild } from '@angular/core';
-import {
-    ComponentFixture,
-    ComponentFixtureAutoDetect,
-    TestBed,
-    fakeAsync,
-    flush,
-    flushMicrotasks,
-    tick
-} from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
     FormControl,
@@ -248,8 +240,12 @@ class TextareaWithErrorStateMatcher {
 }
 
 describe('KbqTextarea', () => {
+    afterEach(() => vi.useRealTimers());
+
     describe('basic behaviors', () => {
-        it('should change "disabled" state', fakeAsync(() => {
+        it('should change "disabled" state', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
@@ -262,18 +258,18 @@ describe('KbqTextarea', () => {
 
             fixture.componentInstance.disabled = true;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(formFieldElement.classList.contains('kbq-disabled')).toBe(true);
             expect(textareaElement.disabled).toBe(true);
-        }));
+        });
 
-        it('should have a placeholder', fakeAsync(() => {
+        it('should have a placeholder', async () => {
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             const testComponent = fixture.debugElement.componentInstance;
 
@@ -290,7 +286,7 @@ describe('KbqTextarea', () => {
             fixture.detectChanges();
 
             expect(textareaElement.getAttribute('placeholder')).toBe('');
-        }));
+        });
     });
 
     describe('appearance', () => {
@@ -315,7 +311,7 @@ describe('KbqTextarea', () => {
                 expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
             });
 
-            it('should run validation after submit (required)', fakeAsync(() => {
+            it('should run validation after submit (required)', async () => {
                 const fixture = createComponent(KbqFormFieldWithNgModelInForm);
 
                 fixture.detectChanges();
@@ -328,9 +324,9 @@ describe('KbqTextarea', () => {
                 const event = createMouseEvent('click');
 
                 dispatchEvent(submitButton, event);
-                flush();
+                await fixture.whenStable();
                 expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
-            }));
+            });
         });
     });
 
@@ -442,11 +438,13 @@ describe('KbqTextarea', () => {
     });
 
     describe('grow behavior', () => {
-        it('should update the value when an input event fires with a changed value', fakeAsync(() => {
+        it('should update the value when an input event fires with a changed value', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const textareaEl = getTextareaElement(fixture);
             const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
@@ -455,14 +453,15 @@ describe('KbqTextarea', () => {
             dispatchFakeEvent(textareaEl, 'input');
 
             expect(textarea.value()).toBe('changed value');
-        }));
+        });
 
-        it('should grow once per input change: dirtyCheckNativeValue in (input) leaves ngDoCheck nothing to report', fakeAsync(() => {
+        it('should grow once per input change: dirtyCheckNativeValue in (input) leaves ngDoCheck nothing to report', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(KbqTextareaForBehaviors);
 
             fixture.detectChanges();
-            flushMicrotasks();
-            tick(); // flush initial setTimeout(grow, 0) from ngOnInit
+            await vi.advanceTimersByTimeAsync(0); // drain microtasks, then the initial setTimeout(grow, 0) from ngOnInit
 
             const textareaEl = getTextareaElement(fixture);
             const textareaDir = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
@@ -471,20 +470,21 @@ describe('KbqTextarea', () => {
             textareaEl.value = 'test\ntest\ntest\ntest\ntest';
             dispatchFakeEvent(textareaEl, 'input');
             fixture.detectChanges(); // explicit CD: the value is already read back
-            flushMicrotasks();
+            await fixture.whenStable();
 
             expect(growSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should defer grow to microtask so lineHeight is initialized before first grow call', fakeAsync(() => {
+        it('should defer grow to microtask so lineHeight is initialized before first grow call', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(KbqTextareaGrowWithMaxRows);
 
             const textareaEl = getTextareaElement(fixture);
             const textareaDir = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
 
             fixture.detectChanges(); // ngOnInit queues M1 (lineHeight init); the value effect queues a grow
-            flushMicrotasks(); // drain M1 + any grow microtasks queued during detectChanges
-            tick(); // flush setTimeout(grow, 0) from ngOnInit
+            await vi.advanceTimersByTimeAsync(0); // drain M1 + the grow microtasks, then setTimeout(grow, 0) from ngOnInit
 
             // Spy set up AFTER initial flushes — only captures subsequent grow() calls
             const growSpy = vi.spyOn(textareaDir as any, 'grow');
@@ -495,10 +495,10 @@ describe('KbqTextarea', () => {
 
             expect(growSpy).not.toHaveBeenCalled(); // M2 still pending
 
-            flushMicrotasks(); // M2 runs → grow()
+            await fixture.whenStable(); // M2 runs → grow()
 
             expect(growSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 
     describe('ErrorStateMatcher', () => {
@@ -652,7 +652,9 @@ describe('KbqTextarea', () => {
     });
 
     describe('async validation', () => {
-        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+        it('should emit VALID via statusChanges on blur', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(TextareaControlWithAsyncValidators);
             const { control, textarea } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];
@@ -665,19 +667,19 @@ describe('KbqTextarea', () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             textarea().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             subscription.unsubscribe();
-        }));
+        });
     });
 });
 

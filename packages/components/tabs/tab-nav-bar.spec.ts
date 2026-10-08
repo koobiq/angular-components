@@ -1,6 +1,6 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Component } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
@@ -300,7 +300,13 @@ describe(KbqTabNavBar.name, () => {
             fixture.detectChanges();
         });
 
-        it('should dim the previous/next arrows at each scroll bound without removing them', fakeAsync(() => {
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should dim the previous/next arrows at each scroll bound without removing them', async () => {
+            vi.useFakeTimers();
+
             const before = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_before');
             const after = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_after');
 
@@ -313,12 +319,12 @@ describe(KbqTabNavBar.name, () => {
 
             // `KbqTabNavBar` is OnPush — arrow state from a native scroll event is only reflected
             // once the audited change-detection tick fires.
-            tick(SCROLL_CD_THROTTLE);
+            await vi.advanceTimersByTimeAsync(SCROLL_CD_THROTTLE);
             fixture.detectChanges();
 
             expect(before.classList.contains('kbq-disabled')).toBe(false);
             expect(after.classList.contains('kbq-disabled')).toBe(true);
-        }));
+        });
     });
 
     describe('activeTabOffset', () => {

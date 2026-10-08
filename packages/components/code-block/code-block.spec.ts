@@ -1,7 +1,7 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
 import { ChangeDetectionStrategy, Component, DebugElement, Provider, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTabNavBar } from '@koobiq/components/tabs';
@@ -261,6 +261,10 @@ class MaxHeightCodeBlock {
 }
 
 describe(KbqCodeBlock.name, () => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('should hide lineNumbers', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
@@ -282,10 +286,8 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_hide-line-numbers']).toBeFalsy();
     });
 
-    // The async tests in this file are plain `async` rather than `waitForAsync`: highlighting flashes the
-    // scrollbar of the code content, and `waitForAsync` would wait out the hide timer that starts — 1s by
-    // default, against a 2s test timeout. `fixture.whenStable()` settles without it, because it tracks
-    // NgZone, and that is what these tests actually need.
+    // Highlighting flashes the scrollbar of the code content, which starts a hide timer (1s by default, against a
+    // 2s test timeout); `fixture.whenStable()` waits for pending tasks rather than timers, so it settles first.
     it('should apply lineNumbers plugin', async () => {
         const fixture = createComponent(BaseCodeBlock);
         const codeBlock = geCodeBlockDebugElement(fixture.debugElement);
@@ -637,7 +639,9 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
     });
 
-    it('should show actionbar on hover when tabs are hidden', fakeAsync(() => {
+    it('should show actionbar on hover when tabs are hidden', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
@@ -645,14 +649,18 @@ describe(KbqCodeBlock.name, () => {
         componentInstance.hideTabs = true;
         fixture.detectChanges();
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
-        tick(HOVER_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(HOVER_DEBOUNCE_TIME);
+        fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
-        tick(HOVER_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(HOVER_DEBOUNCE_TIME);
+        fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
-    }));
+    });
 
-    it('should always show actionbar when alwaysShowActionbar is enabled', fakeAsync(() => {
+    it('should always show actionbar when alwaysShowActionbar is enabled', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
@@ -663,9 +671,10 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
 
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
-        tick(HOVER_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(HOVER_DEBOUNCE_TIME);
+        fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
-    }));
+    });
 
     it('should use alwaysShowActionbar from default options', () => {
         const { debugElement } = createComponent(CodeBlockWithDefaultOptions, [
@@ -715,7 +724,9 @@ describe(KbqCodeBlock.name, () => {
         }
     });
 
-    it('should start tracking hover when alwaysShowActionbar is disabled', fakeAsync(() => {
+    it('should start tracking hover when alwaysShowActionbar is disabled', async () => {
+        vi.useFakeTimers();
+
         TestBed.configureTestingModule({ imports: [BaseCodeBlock] });
         const fixture = TestBed.createComponent(BaseCodeBlock);
 
@@ -729,12 +740,14 @@ describe(KbqCodeBlock.name, () => {
         const codeBlock = geCodeBlockDebugElement(fixture.debugElement);
 
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
-        tick(HOVER_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(HOVER_DEBOUNCE_TIME);
         fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
-    }));
+    });
 
-    it('should restore hover behavior when alwaysShowActionbar is disabled', fakeAsync(() => {
+    it('should restore hover behavior when alwaysShowActionbar is disabled', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
@@ -749,11 +762,14 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
 
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
-        tick(HOVER_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(HOVER_DEBOUNCE_TIME);
+        fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
-    }));
+    });
 
-    it('should stop tracking hover when hideTabs changes to false', fakeAsync(() => {
+    it('should stop tracking hover when hideTabs changes to false', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
@@ -762,7 +778,8 @@ describe(KbqCodeBlock.name, () => {
         fixture.detectChanges();
 
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
-        tick(HOVER_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(HOVER_DEBOUNCE_TIME);
+        fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
 
         componentInstance.hideTabs = false;
@@ -770,9 +787,10 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
 
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
-        tick(HOVER_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(HOVER_DEBOUNCE_TIME);
+        fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
-    }));
+    });
 
     it('should show viewAll button when content overflows maxHeight', () => {
         const mockResizeObserver = new MockSharedResizeObserver();

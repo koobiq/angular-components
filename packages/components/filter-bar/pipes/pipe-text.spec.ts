@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ENTER, ESCAPE } from '@koobiq/components/core';
 import {
@@ -199,9 +199,12 @@ describe('KbqPipeTextComponent', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            vi.useFakeTimers();
         });
 
-        it('should set data.value from control value', fakeAsync(() => {
+        afterEach(() => vi.useRealTimers());
+
+        it('should set data.value from control value', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
@@ -209,12 +212,12 @@ describe('KbqPipeTextComponent', () => {
 
             component.control.setValue('new text');
             component.onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.data.value).toBe('new text');
-        }));
+        });
 
-        it('should mark control as pristine after apply', fakeAsync(() => {
+        it('should mark control as pristine after apply', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
@@ -223,12 +226,12 @@ describe('KbqPipeTextComponent', () => {
             component.control.setValue('new text');
             component.control.markAsDirty();
             component.onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.control.pristine).toBe(true);
-        }));
+        });
 
-        it('should call popover.hide()', fakeAsync(() => {
+        it('should call popover.hide()', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
@@ -236,24 +239,24 @@ describe('KbqPipeTextComponent', () => {
             const hideSpy = vi.spyOn(component.popover(), 'hide');
 
             component.onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(hideSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should restore focus to the trigger button after apply', fakeAsync(() => {
+        it('should restore focus to the trigger button after apply', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
             const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
 
-        it('should emit onChangePipe event', fakeAsync(() => {
+        it('should emit onChangePipe event', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
@@ -263,10 +266,10 @@ describe('KbqPipeTextComponent', () => {
             filterBar.onChangePipe.subscribe(spy);
 
             getPipeComponent().onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('onKeydown', () => {

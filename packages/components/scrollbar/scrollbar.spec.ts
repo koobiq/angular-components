@@ -2,7 +2,7 @@ import { Dir } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkScrollable, ScrollDispatcher, ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, ElementRef, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     createMouseEvent,
@@ -21,8 +21,10 @@ import {
     KbqScrollbarViewport
 } from './scrollbar';
 
-// The scrollbar measures on the next animation frame, which fakeAsync runs as a 16 ms timer.
-const tickFrame = (): void => tick(16);
+// The scrollbar measures on the next animation frame, which fake timers run every 16 ms.
+const tickFrame = async (): Promise<void> => {
+    await vi.advanceTimersByTimeAsync(16);
+};
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers });
@@ -347,6 +349,14 @@ describe(KbqScrollbar.name, () => {
     });
 
     describe('KbqScrollbarTrack visibility', () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
         @Component({
             selector: 'test-scrollbar-track-visibility',
             imports: [KbqScrollbar],
@@ -361,18 +371,19 @@ describe(KbqScrollbar.name, () => {
         const getViewportEl = (fixture: ComponentFixture<TestScrollbarTrackVisibility>): HTMLElement =>
             fixture.componentInstance.scrollbar().nativeElement;
 
-        // waitForAsync waits for every pending task, not only those inside NgZone. A scrollbar that kept polling
-        // would leave a frame queued for as long as it lived, and this test would time out; fakeAsync would not
+        // `runAllTimersAsync` fails once timers keep scheduling timers. A scrollbar that kept polling would leave
+        // a frame queued for as long as it lived, so this would never settle; `whenStable()` alone would not
         // notice, since it does not track pending animation frames.
-        it('lets waitForAsync settle once it has measured', waitForAsync(async () => {
+        it('lets the fixture settle once it has measured', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
+            await vi.runAllTimersAsync();
             await fixture.whenStable();
 
             expect(fixture.nativeElement.querySelector('kbq-scrollbar-track')).not.toBeNull();
-        }));
+        });
 
-        it('shows only the vertical bar when content overflows vertically only', fakeAsync(() => {
+        it('shows only the vertical bar when content overflows vertically only', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
             setMetrics(getViewportEl(fixture), {
@@ -382,14 +393,14 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 100
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).not.toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).toBeNull();
-        }));
+        });
 
-        it('shows only the horizontal bar when content overflows horizontally only', fakeAsync(() => {
+        it('shows only the horizontal bar when content overflows horizontally only', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
             setMetrics(getViewportEl(fixture), {
@@ -399,14 +410,14 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 500
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).not.toBeNull();
-        }));
+        });
 
-        it('marks both bars _has-horizontal/_has-vertical when both axes overflow', fakeAsync(() => {
+        it('marks both bars _has-horizontal/_has-vertical when both axes overflow', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
             setMetrics(getViewportEl(fixture), {
@@ -416,14 +427,14 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 500
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_has-horizontal')).not.toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_has-vertical')).not.toBeNull();
-        }));
+        });
 
-        it('shows no bars when content does not overflow, even in "always" mode', fakeAsync(() => {
+        it('shows no bars when content does not overflow, even in "always" mode', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
             setMetrics(getViewportEl(fixture), {
@@ -433,14 +444,14 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 100
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__thumb')).toBeNull();
-        }));
+        });
 
-        it('paints no bar for an axis the browser refuses to scroll, however much it overflows', fakeAsync(() => {
+        it('paints no bar for an axis the browser refuses to scroll, however much it overflows', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
             const viewportEl = getViewportEl(fixture);
 
@@ -459,14 +470,14 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 200
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).toBeNull();
-        }));
+        });
 
-        it('paints no bar for a box left at the initial overflow, which is not a scroll container', fakeAsync(() => {
+        it('paints no bar for a box left at the initial overflow, which is not a scroll container', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
             const viewportEl = getViewportEl(fixture);
 
@@ -482,13 +493,13 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 200
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
-        }));
+        });
 
-        it('keeps the bar on the axis that is still scrollable when only the other one is hidden', fakeAsync(() => {
+        it('keeps the bar on the axis that is still scrollable when only the other one is hidden', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
             const viewportEl = getViewportEl(fixture);
 
@@ -502,14 +513,14 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 200
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_vertical')).not.toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar_horizontal')).toBeNull();
-        }));
+        });
 
-        it('flashScrollIndicators paints no bar when the content cannot overflow', fakeAsync(() => {
+        it('flashScrollIndicators paints no bar when the content cannot overflow', async () => {
             @Component({
                 selector: 'test-flash-no-overflow',
                 imports: [KbqScrollbar],
@@ -531,18 +542,18 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 100
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             fixture.componentInstance.scrollbar().flashScrollIndicators();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__bar')).toBeNull();
             expect(fixture.nativeElement.querySelector('.kbq-scrollbar-track__thumb')).toBeNull();
-        }));
+        });
 
-        it('mirrors the viewport clientHeight into block-size/margin-block-end, one pixel short', fakeAsync(() => {
+        it('mirrors the viewport clientHeight into block-size/margin-block-end, one pixel short', async () => {
             const { provider, triggerResize } = createResizeTrigger();
             const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
             const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
@@ -554,9 +565,9 @@ describe(KbqScrollbar.name, () => {
 
             expect(trackEl.style.blockSize).toBe('49px');
             expect(trackEl.style.marginBlockEnd).toBe('-49px');
-        }));
+        });
 
-        it('keeps the track layout-neutral on a zero-sized viewport instead of leaving a positive end margin', fakeAsync(() => {
+        it('keeps the track layout-neutral on a zero-sized viewport instead of leaving a positive end margin', async () => {
             const { provider, triggerResize } = createResizeTrigger();
             const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
             const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
@@ -574,9 +585,9 @@ describe(KbqScrollbar.name, () => {
             expect(trackEl.style.minInlineSize).toBe('0px');
             expect(trackEl.style.maxInlineSize).toBe('0px');
             expect(trackEl.style.marginInlineEnd).toBe('0px');
-        }));
+        });
 
-        it('writes no inline geometry until the ResizeObserver emits', fakeAsync(() => {
+        it('writes no inline geometry until the ResizeObserver emits', async () => {
             const { provider } = createResizeTrigger();
             const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
             const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
@@ -590,9 +601,9 @@ describe(KbqScrollbar.name, () => {
             expect(trackEl.style.maxInlineSize).toBe('');
             expect(trackEl.style.marginBlockEnd).toBe('');
             expect(trackEl.style.marginInlineEnd).toBe('');
-        }));
+        });
 
-        it('lifts the track over the viewport start padding on both axes so it spans the padding box, flush and without shifting content', fakeAsync(() => {
+        it('lifts the track over the viewport start padding on both axes so it spans the padding box, flush and without shifting content', async () => {
             const { provider, triggerResize } = createResizeTrigger();
             const fixture = createComponent(TestScrollbarTrackVisibility, [provider]);
             const viewportEl = getViewportEl(fixture);
@@ -620,9 +631,9 @@ describe(KbqScrollbar.name, () => {
             expect(trackEl.style.marginInlineStart).toBe('-6px');
             expect(trackEl.style.insetInlineStart).toBe('-6px');
             expect(trackEl.style.marginInlineEnd).toBe('-23px');
-        }));
+        });
 
-        it('toggles kbq-scrollbar-track_revealed while scrolling and clears it after scrolling stops', fakeAsync(() => {
+        it('toggles kbq-scrollbar-track_revealed while scrolling and clears it after scrolling stops', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
             const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
 
@@ -632,12 +643,12 @@ describe(KbqScrollbar.name, () => {
             fixture.detectChanges();
             expect(trackEl.classList).toContain('kbq-scrollbar-track_revealed');
 
-            tick(1000);
+            await vi.advanceTimersByTimeAsync(1000);
             fixture.detectChanges();
             expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
-        }));
+        });
 
-        it('flashScrollIndicators() reveals the track and clears it after hideDelay, without any scroll', fakeAsync(() => {
+        it('flashScrollIndicators() reveals the track and clears it after hideDelay, without any scroll', async () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
             const trackEl: HTMLElement = fixture.nativeElement.querySelector('kbq-scrollbar-track');
             const scrollbar: KbqScrollbar = fixture.debugElement.query(By.directive(KbqScrollbar)).componentInstance;
@@ -648,10 +659,10 @@ describe(KbqScrollbar.name, () => {
             fixture.detectChanges();
             expect(trackEl.classList).toContain('kbq-scrollbar-track_revealed');
 
-            tick(1000);
+            await vi.advanceTimersByTimeAsync(1000);
             fixture.detectChanges();
             expect(trackEl.classList).not.toContain('kbq-scrollbar-track_revealed');
-        }));
+        });
 
         it('is inserted as the first child of the scrollable element', () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
@@ -661,6 +672,14 @@ describe(KbqScrollbar.name, () => {
     });
 
     describe('gesture click suppression', () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
         @Component({
             selector: 'test-scrollbar-click-suppression',
             imports: [KbqScrollbar],
@@ -678,7 +697,7 @@ describe(KbqScrollbar.name, () => {
             readonly hostClick = vi.fn();
         }
 
-        const setup = (fixture: ComponentFixture<TestScrollbarClickSuppression>) => {
+        const setup = async (fixture: ComponentFixture<TestScrollbarClickSuppression>) => {
             setMetrics(fixture.componentInstance.scrollbar().nativeElement, {
                 clientHeight: 100,
                 scrollHeight: 500,
@@ -686,7 +705,7 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 100
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             return {
@@ -696,29 +715,29 @@ describe(KbqScrollbar.name, () => {
             };
         };
 
-        it('swallows the click a press+release on the bar produces, so it never reaches the host', fakeAsync(() => {
+        it('swallows the click a press+release on the bar produces, so it never reaches the host', async () => {
             const fixture = createComponent(TestScrollbarClickSuppression);
-            const { bar, item, hostClick } = setup(fixture);
+            const { bar, item, hostClick } = await setup(fixture);
 
             dispatchMouseEvent(bar, 'mousedown');
             dispatchFakeEvent(window, 'mouseup');
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('leaves a click untouched when no gesture started on the bar', fakeAsync(() => {
+        it('leaves a click untouched when no gesture started on the bar', async () => {
             const fixture = createComponent(TestScrollbarClickSuppression);
-            const { item, hostClick } = setup(fixture);
+            const { item, hostClick } = await setup(fixture);
 
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('swallows only the gesture’s own click; a later unrelated click reaches the host', fakeAsync(() => {
+        it('swallows only the gesture’s own click; a later unrelated click reaches the host', async () => {
             const fixture = createComponent(TestScrollbarClickSuppression);
-            const { bar, item, hostClick } = setup(fixture);
+            const { bar, item, hostClick } = await setup(fixture);
 
             dispatchMouseEvent(bar, 'mousedown');
             dispatchFakeEvent(window, 'mouseup');
@@ -726,46 +745,46 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('arms on the gesture mouseup no matter how long the drag lasts', fakeAsync(() => {
+        it('arms on the gesture mouseup no matter how long the drag lasts', async () => {
             const fixture = createComponent(TestScrollbarClickSuppression);
-            const { bar, item, hostClick } = setup(fixture);
+            const { bar, item, hostClick } = await setup(fixture);
 
             dispatchMouseEvent(bar, 'mousedown');
-            tick(5000);
+            await vi.advanceTimersByTimeAsync(5000);
             dispatchFakeEvent(window, 'mouseup');
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('does not swallow a click when the gesture produced no mouseup (released off-window)', fakeAsync(() => {
+        it('does not swallow a click when the gesture produced no mouseup (released off-window)', async () => {
             const fixture = createComponent(TestScrollbarClickSuppression);
-            const { bar, item, hostClick } = setup(fixture);
+            const { bar, item, hostClick } = await setup(fixture);
 
             dispatchMouseEvent(bar, 'mousedown');
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('drops the suppressor after mouseup when no click follows it', fakeAsync(() => {
+        it('drops the suppressor after mouseup when no click follows it', async () => {
             const fixture = createComponent(TestScrollbarClickSuppression);
-            const { bar, item, hostClick } = setup(fixture);
+            const { bar, item, hostClick } = await setup(fixture);
 
             dispatchMouseEvent(bar, 'mousedown');
             dispatchFakeEvent(window, 'mouseup');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('drops the armed suppressor when the track is destroyed mid-gesture', fakeAsync(() => {
+        it('drops the armed suppressor when the track is destroyed mid-gesture', async () => {
             const fixture = createComponent(TestScrollbarClickSuppression);
-            const { bar, item, hostClick } = setup(fixture);
+            const { bar, item, hostClick } = await setup(fixture);
 
             dispatchMouseEvent(bar, 'mousedown');
             dispatchFakeEvent(window, 'mouseup');
@@ -775,10 +794,18 @@ describe(KbqScrollbar.name, () => {
             dispatchFakeEvent(item, 'click', true);
 
             expect(hostClick).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 
     describe('KbqScrollbarThumb', () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
         @Component({
             selector: 'test-scrollbar-thumb',
             imports: [KbqScrollbarViewport],
@@ -792,10 +819,10 @@ describe(KbqScrollbar.name, () => {
 
         type ThumbOrientation = 'vertical' | 'horizontal';
 
-        const getThumbElements = (
+        const getThumbElements = async (
             fixture: ComponentFixture<TestScrollbarThumb>,
             orientation: ThumbOrientation
-        ): { viewport: HTMLElement; bar: HTMLElement; thumb: HTMLElement } => {
+        ): Promise<{ viewport: HTMLElement; bar: HTMLElement; thumb: HTMLElement }> => {
             const viewport = fixture.componentInstance.viewport().nativeElement;
 
             setMetrics(viewport, {
@@ -805,7 +832,7 @@ describe(KbqScrollbar.name, () => {
                 scrollWidth: 300
             });
 
-            tickFrame();
+            await tickFrame();
             fixture.detectChanges();
 
             const bar = (fixture.nativeElement as HTMLElement).querySelector<HTMLElement>(
@@ -820,9 +847,9 @@ describe(KbqScrollbar.name, () => {
             return { viewport, bar, thumb };
         };
 
-        it('applies top/height to a vertical thumb, not insetInlineStart/width', fakeAsync(() => {
+        it('applies top/height to a vertical thumb, not insetInlineStart/width', async () => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, thumb } = getThumbElements(fixture, 'vertical');
+            const { viewport, thumb } = await getThumbElements(fixture, 'vertical');
 
             setMetrics(viewport, { scrollTop: 50, scrollHeight: 200, clientHeight: 100 });
             viewport.dispatchEvent(new Event('scroll'));
@@ -830,11 +857,11 @@ describe(KbqScrollbar.name, () => {
             expect(thumb.style.top).not.toBe('');
             expect(thumb.style.height).not.toBe('');
             expect(thumb.style.insetInlineStart).toBe('');
-        }));
+        });
 
-        it('applies insetInlineStart/width to a horizontal thumb, not top/height (orientation forwarding)', fakeAsync(() => {
+        it('applies insetInlineStart/width to a horizontal thumb, not top/height (orientation forwarding)', async () => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, thumb } = getThumbElements(fixture, 'horizontal');
+            const { viewport, thumb } = await getThumbElements(fixture, 'horizontal');
 
             setMetrics(viewport, { scrollLeft: 50, scrollWidth: 200, clientWidth: 100 });
             viewport.dispatchEvent(new Event('scroll'));
@@ -842,56 +869,56 @@ describe(KbqScrollbar.name, () => {
             expect(thumb.style.insetInlineStart).not.toBe('');
             expect(thumb.style.width).not.toBe('');
             expect(thumb.style.top).toBe('');
-        }));
+        });
 
-        it('drags the vertical thumb to update the viewport scrollTop, not scrollLeft', fakeAsync(() => {
+        it('drags the vertical thumb to update the viewport scrollTop, not scrollLeft', async () => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, bar, thumb } = getThumbElements(fixture, 'vertical');
+            const { viewport, bar, thumb } = await getThumbElements(fixture, 'vertical');
 
             setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
             setRect(thumb, { top: 0, left: 0, height: 1, width: 1 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
             dispatchMouseEvent(thumb, 'mousedown', 0, 0);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             dispatchMouseEvent(document, 'mousemove', 50, 50);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             dispatchMouseEvent(document, 'mouseup');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(viewport.scrollTop).toBe(100);
             expect(viewport.scrollLeft).toBe(0);
-        }));
+        });
 
-        it('jumps to the click position when clicking the track, not the thumb', fakeAsync(() => {
+        it('jumps to the click position when clicking the track, not the thumb', async () => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, bar, thumb } = getThumbElements(fixture, 'vertical');
+            const { viewport, bar, thumb } = await getThumbElements(fixture, 'vertical');
 
             setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
             dispatchMouseEvent(bar, 'mousedown', 50, 50);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(viewport.scrollTop).toBe(100);
-        }));
+        });
 
         // Clicking the middle of the track lands in the middle of the scroll range whatever the thumb
         // measures — anchoring the thumb by its edge instead would make the result thumb-size dependent.
         it.each([20, 40])(
             'centers a %ipx thumb under the pointer when clicking the track',
-            fakeAsync((thumbSize: number) => {
+            async (thumbSize: number) => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { viewport, bar, thumb } = getThumbElements(fixture, 'vertical');
+                const { viewport, bar, thumb } = await getThumbElements(fixture, 'vertical');
 
                 setMetrics(thumb, { offsetHeight: thumbSize, offsetWidth: thumbSize });
                 setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
                 dispatchMouseEvent(bar, 'mousedown', 50, 50);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(viewport.scrollTop).toBe(100);
-            })
+            }
         );
 
         // Documents the current behavior: unlike native scrollbars, the track answers to every button.
@@ -899,42 +926,39 @@ describe(KbqScrollbar.name, () => {
             ['left', 0],
             ['middle', 1],
             ['right', 2]
-        ])(
-            'scrolls on a track click made with the %s button',
-            fakeAsync((_: string, button: number) => {
-                const fixture = createComponent(TestScrollbarThumb);
-                const { viewport, bar, thumb } = getThumbElements(fixture, 'vertical');
-
-                setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
-                setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
-
-                dispatchMouseEvent(bar, 'mousedown', 50, 50, createMouseEvent('mousedown', 50, 50, button));
-                tick();
-
-                expect(viewport.scrollTop).toBe(100);
-            })
-        );
-
-        it('drags the horizontal thumb to update the viewport scrollLeft, not scrollTop', fakeAsync(() => {
+        ])('scrolls on a track click made with the %s button', async (_: string, button: number) => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
+            const { viewport, bar, thumb } = await getThumbElements(fixture, 'vertical');
+
+            setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
+            setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
+
+            dispatchMouseEvent(bar, 'mousedown', 50, 50, createMouseEvent('mousedown', 50, 50, button));
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(viewport.scrollTop).toBe(100);
+        });
+
+        it('drags the horizontal thumb to update the viewport scrollLeft, not scrollTop', async () => {
+            const fixture = createComponent(TestScrollbarThumb);
+            const { viewport, bar, thumb } = await getThumbElements(fixture, 'horizontal');
 
             setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
             setRect(thumb, { top: 0, left: 0, height: 1, width: 1 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
             dispatchMouseEvent(thumb, 'mousedown', 0, 0);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             dispatchMouseEvent(document, 'mousemove', 50, 50);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             dispatchMouseEvent(document, 'mouseup');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(viewport.scrollLeft).toBe(100);
             expect(viewport.scrollTop).toBe(0);
-        }));
+        });
 
-        it('negates the horizontal offset in RTL when clicking the track', fakeAsync(() => {
+        it('negates the horizontal offset in RTL when clicking the track', async () => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl',
                 imports: [Dir, KbqScrollbarViewport],
@@ -945,33 +969,33 @@ describe(KbqScrollbar.name, () => {
             class TestScrollbarThumbRtl extends TestScrollbarThumb {}
 
             const fixture = createComponent(TestScrollbarThumbRtl);
-            const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
+            const { viewport, bar, thumb } = await getThumbElements(fixture, 'horizontal');
 
             setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
             dispatchMouseEvent(bar, 'mousedown', 50, 50);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // Mirrors the LTR "jumps to the click position" test's +100, negated: RTL measures the
             // click offset from the track's right edge instead of its left.
             expect(viewport.scrollLeft).toBe(-100);
-        }));
+        });
 
-        it('centers the thumb under the pointer when clicking the horizontal track', fakeAsync(() => {
+        it('centers the thumb under the pointer when clicking the horizontal track', async () => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
+            const { viewport, bar, thumb } = await getThumbElements(fixture, 'horizontal');
 
             setMetrics(thumb, { offsetHeight: 20, offsetWidth: 20 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
             dispatchMouseEvent(bar, 'mousedown', 50, 50);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(viewport.scrollLeft).toBe(100);
-        }));
+        });
 
-        it('centers the thumb under the pointer when clicking the horizontal track in RTL', fakeAsync(() => {
+        it('centers the thumb under the pointer when clicking the horizontal track in RTL', async () => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl-centering',
                 imports: [Dir, KbqScrollbarViewport],
@@ -982,20 +1006,20 @@ describe(KbqScrollbar.name, () => {
             class TestScrollbarThumbRtlCentering extends TestScrollbarThumb {}
 
             const fixture = createComponent(TestScrollbarThumbRtlCentering);
-            const { viewport, bar, thumb } = getThumbElements(fixture, 'horizontal');
+            const { viewport, bar, thumb } = await getThumbElements(fixture, 'horizontal');
 
             setMetrics(thumb, { offsetHeight: 20, offsetWidth: 20 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
             dispatchMouseEvent(bar, 'mousedown', 50, 50);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // Half the thumb is added back towards the track's right edge, mirroring the LTR case:
             // subtracting it instead would overshoot to -150.
             expect(viewport.scrollLeft).toBe(-100);
-        }));
+        });
 
-        it('detects RTL from a bare dir="rtl" ancestor without CDK Dir/BidiModule', fakeAsync(() => {
+        it('detects RTL from a bare dir="rtl" ancestor without CDK Dir/BidiModule', async () => {
             @Component({
                 selector: 'test-scrollbar-thumb-rtl-bare',
                 imports: [KbqScrollbarViewport],
@@ -1008,20 +1032,20 @@ describe(KbqScrollbar.name, () => {
             class TestScrollbarThumbRtlBare extends TestScrollbarThumb {}
 
             const fixture = createComponent(TestScrollbarThumbRtlBare);
-            const { bar, thumb, viewport } = getThumbElements(fixture, 'horizontal');
+            const { bar, thumb, viewport } = await getThumbElements(fixture, 'horizontal');
 
             setMetrics(thumb, { offsetHeight: 0, offsetWidth: 0 });
             setRect(bar, { top: 0, left: 0, height: 100, width: 100, right: 100, bottom: 100 });
 
             dispatchMouseEvent(bar, 'mousedown', 50, 50);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(viewport.scrollLeft).toBe(-100);
-        }));
+        });
 
-        it('reserves top-offset room for the CSS-enforced min thumb size on very long content', fakeAsync(() => {
+        it('reserves top-offset room for the CSS-enforced min thumb size on very long content', async () => {
             const fixture = createComponent(TestScrollbarThumb);
-            const { viewport, thumb } = getThumbElements(fixture, 'vertical');
+            const { viewport, thumb } = await getThumbElements(fixture, 'vertical');
 
             // Content is long enough that the natural view fraction (1%) is far below what the
             // CSS-enforced min thumb box size (32px min-size + 3px gap on each side = 38px) would
@@ -1031,52 +1055,52 @@ describe(KbqScrollbar.name, () => {
             viewport.dispatchEvent(new Event('scroll'));
 
             expect(parseFloat(thumb.style.top)).toBeCloseTo(62, 5);
-        }));
+        });
 
         describe('ARIA', () => {
-            it('marks the thumb with role="scrollbar"', fakeAsync(() => {
+            it('marks the thumb with role="scrollbar"', async () => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { thumb } = getThumbElements(fixture, 'vertical');
+                const { thumb } = await getThumbElements(fixture, 'vertical');
 
                 expect(thumb.getAttribute('role')).toBe('scrollbar');
-            }));
+            });
 
             it.each<['vertical' | 'horizontal']>([['vertical'], ['horizontal']])(
                 'sets aria-orientation to the current orientation: %s',
-                fakeAsync((orientation) => {
+                async (orientation) => {
                     const fixture = createComponent(TestScrollbarThumb);
-                    const { thumb } = getThumbElements(fixture, orientation);
+                    const { thumb } = await getThumbElements(fixture, orientation);
 
                     expect(thumb.getAttribute('aria-orientation')).toBe(orientation);
-                })
+                }
             );
 
-            it('points aria-controls at the viewport element', fakeAsync(() => {
+            it('points aria-controls at the viewport element', async () => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { viewport, thumb } = getThumbElements(fixture, 'vertical');
+                const { viewport, thumb } = await getThumbElements(fixture, 'vertical');
 
                 expect(viewport.id).not.toBe('');
                 expect(thumb.getAttribute('aria-controls')).toBe(viewport.id);
-            }));
+            });
 
-            it('sets a fixed 0/100 aria-valuemin/aria-valuemax percentage range', fakeAsync(() => {
+            it('sets a fixed 0/100 aria-valuemin/aria-valuemax percentage range', async () => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { thumb } = getThumbElements(fixture, 'vertical');
+                const { thumb } = await getThumbElements(fixture, 'vertical');
 
                 expect(thumb.getAttribute('aria-valuemin')).toBe('0');
                 expect(thumb.getAttribute('aria-valuemax')).toBe('100');
-            }));
+            });
 
-            it('sets aria-valuenow when the thumb is created', fakeAsync(() => {
+            it('sets aria-valuenow when the thumb is created', async () => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { thumb } = getThumbElements(fixture, 'vertical');
+                const { thumb } = await getThumbElements(fixture, 'vertical');
 
                 expect(thumb.getAttribute('aria-valuenow')).not.toBeNull();
-            }));
+            });
 
-            it('reflects the scrolled percentage in aria-valuenow', fakeAsync(() => {
+            it('reflects the scrolled percentage in aria-valuenow', async () => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { viewport, thumb } = getThumbElements(fixture, 'vertical');
+                const { viewport, thumb } = await getThumbElements(fixture, 'vertical');
 
                 setMetrics(viewport, { scrollTop: 0, scrollHeight: 300, clientHeight: 100 });
                 viewport.dispatchEvent(new Event('scroll'));
@@ -1089,17 +1113,17 @@ describe(KbqScrollbar.name, () => {
                 setMetrics(viewport, { scrollTop: 200, scrollHeight: 300, clientHeight: 100 });
                 viewport.dispatchEvent(new Event('scroll'));
                 expect(thumb.getAttribute('aria-valuenow')).toBe('100');
-            }));
+            });
 
-            it('defaults aria-valuenow to 0 rather than NaN when there is nothing to scroll', fakeAsync(() => {
+            it('defaults aria-valuenow to 0 rather than NaN when there is nothing to scroll', async () => {
                 const fixture = createComponent(TestScrollbarThumb);
-                const { viewport, thumb } = getThumbElements(fixture, 'vertical');
+                const { viewport, thumb } = await getThumbElements(fixture, 'vertical');
 
                 setMetrics(viewport, { scrollTop: 0, scrollHeight: 100, clientHeight: 100 });
                 viewport.dispatchEvent(new Event('scroll'));
 
                 expect(thumb.getAttribute('aria-valuenow')).toBe('0');
-            }));
+            });
         });
     });
 
