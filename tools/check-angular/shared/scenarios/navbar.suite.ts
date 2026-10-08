@@ -223,6 +223,22 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 expect(item(navbar, 'reports').classList).toContain('cdk-keyboard-focused');
             });
 
+            it('hands the focus to its first item when focused by code, without a keyboard ring', async () => {
+                const fixture = await renderScenario(NavbarScenario, config);
+                const navbar = horizontalNavbar(fixture);
+                const brand = navbar.querySelector<HTMLElement>('[kbq-navbar-brand]')!;
+
+                navbar.focus();
+                await fixture.whenStable();
+
+                expect(document.activeElement).toBe(brand);
+                expect(brand.classList).toContain('cdk-program-focused');
+
+                await press(fixture, RIGHT_ARROW);
+
+                expect(document.activeElement).toBe(item(navbar, 'dashboards'));
+            });
+
             it('lists its items in focusableItems', async () => {
                 const fixture = await renderScenario(NavbarScenario, config);
                 const { focusableItems } = fixture.componentInstance.navbar();
@@ -419,6 +435,25 @@ export function defineNavbarSuite(config: CheckConfig): void {
 
                 expect(document.activeElement).toBe(item(navbar, 'tasks'));
                 expect(item(navbar, 'tasks').classList).toContain('cdk-keyboard-focused');
+            });
+
+            it('hands the focus to its first item when focused by code, without a tooltip', async () => {
+                const fixture = await renderScenario(NavbarScenario, config);
+                const navbar = verticalNavbar(fixture);
+
+                vi.useFakeTimers();
+
+                navbar.focus();
+                await elapse(fixture, TOOLTIP_ENTER_DELAY);
+
+                expect(document.activeElement).toBe(item(navbar, 'dashboards'));
+                expect(item(navbar, 'dashboards').classList).toContain('cdk-program-focused');
+                expect(document.querySelector('.kbq-tooltip')).toBeNull();
+
+                keydown(document.activeElement!, DOWN_ARROW);
+                await elapse(fixture, 0);
+
+                expect(document.activeElement).toBe(item(navbar, 'tasks'));
             });
 
             it('shows the title of a collapsed item as a tooltip on keyboard focus and on hover', async () => {
