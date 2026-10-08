@@ -6,6 +6,7 @@ const UNREAD_COUNTER_ASYNC = '`unreadItemsCounter` of the notification center se
 const NOTIFICATION_STREAMS = '`unreadItemsCounter` and `groupedItems` of `KbqNotificationCenterService` are signals';
 const NOTIFICATION_CHANGES = 'If this subscribes to `KbqNotificationCenterService.changes`';
 const TOAST_FLAGS = '`hovered` and `focused` of `KbqToastService` and `KbqToastComponent`';
+const POP_UP_HOVERED = 'If this uses `hovered` of a pop-up or its trigger';
 const FILTERED_OPTIONS = '`filteredOptions` of `KbqFilters`, `KbqPipeSelectComponent`';
 const FILTERED_OPTIONS_ASYNC = '`filteredOptions` of the filter bar is a signal';
 const PIPE_SELECT_INIT = '`KbqPipeSelectComponent` no longer implements `ngOnInit`';
@@ -87,7 +88,7 @@ describe('v21-upgrade: state as signals', () => {
         expect(run.log).toContain(NOTIFICATION_CHANGES);
     });
 
-    it('reports the toast flags read as subjects, but not the pop-up hovered of core', async () => {
+    it('reports the toast flags and the hover state of a pop-up, each with its own warning', async () => {
         const toast = await runV21Upgrade({
             'toast.ts': [
                 "import { KbqToastService } from '@koobiq/components/toast';",
@@ -106,7 +107,31 @@ describe('v21-upgrade: state as signals', () => {
         });
 
         expect(toast.log).toContain(TOAST_FLAGS);
+        expect(toast.log).not.toContain(POP_UP_HOVERED);
+        expect(popUp.log).toContain(POP_UP_HOVERED);
         expect(popUp.log).not.toContain(TOAST_FLAGS);
+    });
+
+    it('reports the hover state of a tooltip trigger, but not the hover stream of a dropdown item', async () => {
+        const tooltip = await runV21Upgrade({
+            'tooltip.ts': [
+                "import { KbqTooltipTrigger } from '@koobiq/components/tooltip';",
+                '',
+                'export const isHovered = (trigger: KbqTooltipTrigger) => trigger.hovered.value;',
+                ''
+            ].join('\n')
+        });
+        const dropdown = await runV21Upgrade({
+            'dropdown.ts': [
+                "import { KbqDropdownItem } from '@koobiq/components/dropdown';",
+                '',
+                'export const watch = (item: KbqDropdownItem) => item.hovered.subscribe();',
+                ''
+            ].join('\n')
+        });
+
+        expect(tooltip.log).toContain(POP_UP_HOVERED);
+        expect(dropdown.log).not.toContain(POP_UP_HOVERED);
     });
 
     it('reports a subscription to and an assignment of the filtered options of the filter bar', async () => {

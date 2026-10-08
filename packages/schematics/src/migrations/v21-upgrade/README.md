@@ -117,6 +117,8 @@ element in a template):
   `groupedItems` of the notification center, and a subscription to its `changes`, which no longer emits on
   subscription;
 - the same on `hovered` and `focused` of the toast service and component;
+- the same on `hovered` of a pop-up or its trigger (tooltip, popover, notification center, app switcher), but
+  not on `KbqDropdownItem.hovered`, which stays an event stream;
 - a subscription to, an assignment of or `| async` on `filteredOptions` of the filter bar, `super.ngOnInit()` in a
   subclass of `KbqPipeSelectComponent`, and the date pipe flags read as fields in a subclass;
 - `hiddenItems` of `KbqSelect` read as a field;
