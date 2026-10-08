@@ -1,25 +1,18 @@
 import '@analogjs/vitest-angular/setup-serializers';
-import '@analogjs/vitest-angular/setup-zone';
 import '@angular/compiler';
 
 import { setupTestBed } from '@analogjs/vitest-angular/setup-testbed';
-import { DebugNode, provideCheckNoChangesConfig, provideZonelessChangeDetection } from '@angular/core';
+import { DebugNode, provideCheckNoChangesConfig } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { toHaveNoViolations } from 'jest-axe';
 import { expect, SnapshotSerializer, vi } from 'vitest';
 import './fail-on-console';
 
-// zone.js stays loaded only for the specs that still use `fakeAsync`; NG0914 warns about exactly that.
-const silenceWarn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-const zoneless = provideZonelessChangeDetection();
-
-silenceWarn.mockRestore();
-
+// Zoneless, the default of `setupTestBed`, as the library runs.
 setupTestBed({
-    zoneless: false,
     // Exhaustive: a binding that changed without notifying change detection fails the spec, OnPush views included.
     // eslint-disable-next-line @angular-eslint/no-developer-preview -- test-only, and the reason the suite catches it
-    providers: [zoneless, provideCheckNoChangesConfig({ exhaustive: true })]
+    providers: [provideCheckNoChangesConfig({ exhaustive: true })]
 });
 
 // Without zone.js, `fixture.detectChanges()` refreshes only the views marked dirty, so a test host whose plain
