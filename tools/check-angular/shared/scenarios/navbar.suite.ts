@@ -208,21 +208,19 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 expect(item(navbar, 'reports').classList).toContain('kbq-active');
             });
 
-            // Library bug: `KbqFocusableComponent` hands the key manager the origin of the last focus event, here
-            // 'mouse', and an arrow key does not change it. `KbqNavbarFocusableItem.focus(origin)` moves the DOM focus
-            // only for a 'keyboard' origin, so the key manager's active item moves on to Reports while the focus
-            // stays on Tasks. Fails in all three applications.
-            it.fails('moves focus with the arrow keys from an item the user clicked', async () => {
+            it('moves focus with the arrow keys from an item the user clicked', async () => {
                 const fixture = await renderScenario(NavbarScenario, config);
                 const navbar = horizontalNavbar(fixture);
 
                 await clickWithMouse(fixture, item(navbar, 'tasks'));
 
                 expect(document.activeElement).toBe(item(navbar, 'tasks'));
+                expect(item(navbar, 'tasks').classList).toContain('cdk-mouse-focused');
 
                 await press(fixture, RIGHT_ARROW);
 
                 expect(document.activeElement).toBe(item(navbar, 'reports'));
+                expect(item(navbar, 'reports').classList).toContain('cdk-keyboard-focused');
             });
 
             it('lists its items in focusableItems', async () => {
@@ -406,6 +404,21 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 await press(fixture, UP_ARROW);
 
                 expect(document.activeElement).toBe(item(navbar, 'tasks'));
+            });
+
+            it('moves focus with the arrow keys from an item the user clicked', async () => {
+                const fixture = await renderScenario(NavbarScenario, config);
+                const navbar = verticalNavbar(fixture);
+
+                await clickWithMouse(fixture, item(navbar, 'dashboards'));
+
+                expect(document.activeElement).toBe(item(navbar, 'dashboards'));
+                expect(item(navbar, 'dashboards').classList).toContain('cdk-mouse-focused');
+
+                await press(fixture, DOWN_ARROW);
+
+                expect(document.activeElement).toBe(item(navbar, 'tasks'));
+                expect(item(navbar, 'tasks').classList).toContain('cdk-keyboard-focused');
             });
 
             it('shows the title of a collapsed item as a tooltip on keyboard focus and on hover', async () => {
