@@ -243,6 +243,70 @@ describe('KbqOverlayLayer', () => {
         });
     });
 
+    describe('with overlays shown as popovers', () => {
+        // jsdom has no Popover API, and CDK shows an overlay as a popover only where `showPopover` exists.
+        const shown = new Set<HTMLElement>();
+
+        beforeEach(() => {
+            Object.defineProperty(HTMLElement.prototype, 'showPopover', {
+                configurable: true,
+                value(this: HTMLElement) {
+                    if (!this.hasAttribute('popover')) throw new DOMException('Not a popover', 'NotSupportedError');
+
+                    shown.add(this);
+                }
+            });
+            Object.defineProperty(HTMLElement.prototype, 'hidePopover', {
+                configurable: true,
+                value(this: HTMLElement) {
+                    shown.delete(this);
+                }
+            });
+            setup();
+        });
+
+        afterEach(() => {
+            delete (HTMLElement.prototype as Partial<HTMLElement>).showPopover;
+            delete (HTMLElement.prototype as Partial<HTMLElement>).hidePopover;
+            shown.clear();
+        });
+
+        it('takes a panel moved into a layer out of the top layer, where the layer could not cover it', () => {
+            const overlayRef = createOverlay({ hasBackdrop: true });
+            const host = overlayRef.hostElement;
+
+            attach(overlayRef);
+
+            expect(shown.has(host)).toBe(true);
+
+            layers.adopt(overlayRef, element('#inside'));
+
+            expect(host.parentElement).toBe(layerOf('main'));
+            expect(shown.has(host)).toBe(false);
+            expect(host.hasAttribute('popover')).toBe(false);
+            expect(host.classList).not.toContain('cdk-overlay-popover');
+            expect(host.previousElementSibling).toBe(overlayRef.backdropElement);
+        });
+
+        it('returns a panel moved back to the application-wide container to the top layer', () => {
+            const overlayRef = createOverlay({ hasBackdrop: true });
+            const host = overlayRef.hostElement;
+            let origin = element('#inside');
+
+            layers.adopt(overlayRef, () => origin);
+            attach(overlayRef);
+            detach(overlayRef);
+            origin = element('#outside');
+            attach(overlayRef);
+
+            expect(host.parentElement).toBe(root);
+            expect(shown.has(host)).toBe(true);
+            expect(host.getAttribute('popover')).toBe('manual');
+            expect(host.classList).toContain('cdk-overlay-popover');
+            expect(host.firstElementChild).toBe(overlayRef.backdropElement);
+        });
+    });
+
     it('leaves panels in place outside the browser', () => {
         setup([{ provide: PLATFORM_ID, useValue: 'server' }]);
 
