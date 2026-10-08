@@ -1,4 +1,5 @@
 import { CollectionViewer, DataSource, SelectionChange } from '@angular/cdk/collections';
+import { signal } from '@angular/core';
 import { BehaviorSubject, Observable, merge } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { FlatTreeControl } from '../control/flat-tree-control';
@@ -147,17 +148,17 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
     filteredData = new BehaviorSubject<F[]>([]);
 
     get data() {
-        return this._data.value;
+        return this._data();
     }
 
     set data(value: T[]) {
-        this._data.next(value);
+        this._data.set(value);
 
         this.flattenedData.next(this.treeFlattener.flattenNodes(this.data));
         this.treeControl.dataNodes = this.flattenedData.value;
     }
 
-    private _data: BehaviorSubject<T[]>;
+    private readonly _data = signal<T[]>([]);
 
     constructor(
         private treeControl: FlatTreeControl<F>,
@@ -166,7 +167,7 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
     ) {
         super();
 
-        this._data = new BehaviorSubject<T[]>(initialData);
+        this._data.set(initialData);
 
         // The setter flattens the data for the tree.
         if (initialData.length) {

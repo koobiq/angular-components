@@ -551,10 +551,10 @@ export class KbqTreeSelection
 
     /** Tab index of the tree, `-1` while it is disabled. */
     get tabIndex(): number {
-        return this.disabled ? -1 : this._tabIndex;
+        return this.disabled ? -1 : this.tabIndexState();
     }
 
-    private _tabIndex = 0;
+    private readonly tabIndexState = signal(0);
 
     get showCheckbox(): boolean {
         return this.mode() === MultipleMode.CHECKBOX;
@@ -619,7 +619,7 @@ export class KbqTreeSelection
 
             if (tabIndex === undefined) return;
 
-            this._tabIndex = tabIndex;
+            this.tabIndexState.set(tabIndex);
             this.userTabIndex = tabIndex;
         });
 
@@ -627,16 +627,6 @@ export class KbqTreeSelection
             const disabled = this.disabledInput();
 
             if (disabled !== undefined) this.disabledState.set(disabled);
-        });
-
-        let wasDisabled: boolean | undefined;
-
-        effect(() => {
-            const disabled = this.disabledState();
-
-            if (wasDisabled !== undefined && disabled !== wasDisabled) untracked(() => this.markOptionsForCheck());
-
-            wasDisabled = disabled;
         });
 
         effect(() => {
@@ -686,8 +676,6 @@ export class KbqTreeSelection
         if (rebuildNeeded) {
             this.rebuildSelectionModel(!!next);
         }
-
-        this.changeDetectorRef.markForCheck();
     }
 
     /** Replaces the `SelectionModel` with one of the given multiplicity, keeping what the new one can hold. */
@@ -1433,8 +1421,7 @@ export class KbqTreeSelection
     }
 
     private updateTabIndex(): void {
-        this._tabIndex = this.renderedOptions.length === 0 ? -1 : 0;
-        this.changeDetectorRef.markForCheck();
+        this.tabIndexState.set(this.renderedOptions.length === 0 ? -1 : 0);
     }
 
     private updateRenderedOptions = () => {
@@ -1480,8 +1467,8 @@ export class KbqTreeSelection
     }
 
     private allowFocusEscape() {
-        if (this._tabIndex !== -1) {
-            this._tabIndex = -1;
+        if (this.tabIndexState() !== -1) {
+            this.tabIndexState.set(-1);
             // Written to the DOM right away, as `KbqTagList` does: the browser moves the focus as soon as this Tab is
             // handled, and the binding is only applied by the change detection that runs after it.
             this.elementRef.nativeElement.tabIndex = -1;
@@ -1489,8 +1476,7 @@ export class KbqTreeSelection
             clearTimeout(this.restoreTabIndexTimeout);
 
             this.restoreTabIndexTimeout = setTimeout(() => {
-                this._tabIndex = this.userTabIndex || 0;
-                this.changeDetectorRef.markForCheck();
+                this.tabIndexState.set(this.userTabIndex || 0);
             });
         }
     }
@@ -1547,10 +1533,6 @@ export class KbqTreeSelection
     /** Checks whether any of the options is focused. */
     private hasFocusedOption() {
         return this.renderedOptions.some((option) => option.hasFocus);
-    }
-
-    private markOptionsForCheck() {
-        this.renderedOptions.forEach((option) => option.markForCheck());
     }
 
     private updateOptionsFocus() {

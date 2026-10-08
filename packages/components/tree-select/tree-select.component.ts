@@ -1525,7 +1525,7 @@ export class KbqTreeSelect
         )
             return;
 
-        const { totalItemsWidth, totalVisibleItemsWidth, visibleItems } = this.measureMatcherItems();
+        const { totalItemsWidth, visibleItems } = this.measureMatcherItems();
 
         this.hiddenItems.set(this.selectionModel.selected.length - visibleItems);
         this.changeDetectorRef.detectChanges();
@@ -1534,11 +1534,7 @@ export class KbqTreeSelect
             const itemsCounter = this.trigger().nativeElement.querySelector('.kbq-select__match-hidden-text');
             const matcherList = this.trigger().nativeElement.querySelector('.kbq-select__match-list');
 
-            if (!itemsCounter || !matcherList) {
-                this.changeDetectorRef.markForCheck();
-
-                return;
-            }
+            if (!itemsCounter || !matcherList) return;
 
             const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
             const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
@@ -1550,18 +1546,7 @@ export class KbqTreeSelect
                 this.hiddenItems.set(0);
                 this.changeDetectorRef.detectChanges();
             }
-
-            if (
-                totalVisibleItemsWidth === matcherListWidth ||
-                totalVisibleItemsWidth + itemsCounterWidth < matcherListWidth
-            ) {
-                this.changeDetectorRef.markForCheck();
-
-                return;
-            }
         }
-
-        this.changeDetectorRef.markForCheck();
     };
 
     triggerKeydownHandler(event: KeyboardEvent) {
@@ -1739,7 +1724,7 @@ export class KbqTreeSelect
      * built, appended and removed once, and the only thing separating the two passes is the counter,
      * which the second pass drops from the copy.
      */
-    private measureMatcherItems(): { totalItemsWidth: number; totalVisibleItemsWidth: number; visibleItems: number } {
+    private measureMatcherItems(): { totalItemsWidth: number; visibleItems: number } {
         const triggerClone = this.buildTriggerClone();
         const hiddenText = triggerClone.querySelector('.kbq-select__match-hidden-text');
 
@@ -1749,12 +1734,10 @@ export class KbqTreeSelect
 
         this.renderer.appendChild(this.trigger().nativeElement, triggerClone);
 
-        let totalVisibleItemsWidth: number = 0;
         let visibleItems: number = 0;
 
         triggerClone.querySelectorAll<HTMLElement>('kbq-tag').forEach((item) => {
             if (item.offsetTop < item.offsetHeight) {
-                totalVisibleItemsWidth += this.getItemWidth(item);
                 visibleItems++;
             }
         });
@@ -1769,7 +1752,7 @@ export class KbqTreeSelect
 
         triggerClone.remove();
 
-        return { totalItemsWidth, totalVisibleItemsWidth, visibleItems };
+        return { totalItemsWidth, visibleItems };
     }
 
     private buildTriggerClone(): HTMLDivElement {
@@ -1889,7 +1872,6 @@ export class KbqTreeSelect
             });
 
             this.syncSelectionState();
-            this.changeDetectorRef.markForCheck();
         }
     }
 

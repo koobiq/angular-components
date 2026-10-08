@@ -2373,6 +2373,31 @@ describe('KbqTreeSelection', () => {
                 expect(treeElement.getAttribute('aria-disabled')).toBe('true');
             });
 
+            it('should repaint the options and their checkboxes when setDisabledState toggles', async () => {
+                vi.useFakeTimers();
+
+                const checkboxFixture = TestBed.createComponent(KbqTreeAppMultipleCheckbox);
+                const checkboxTree = checkboxFixture.nativeElement.querySelector('kbq-tree-selection');
+                const disabledRows = () => getNodes(checkboxTree).filter((node) => node.matches('.kbq-disabled'));
+                const disabledCheckboxes = () => checkboxTree.querySelectorAll('kbq-pseudo-checkbox.kbq-disabled');
+
+                checkboxFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                checkboxFixture.detectChanges();
+
+                checkboxFixture.componentInstance.tree.setDisabledState(true);
+                checkboxFixture.detectChanges();
+
+                expect(disabledRows().length).toBe(getNodes(checkboxTree).length);
+                expect(disabledCheckboxes().length).toBe(getNodes(checkboxTree).length);
+
+                checkboxFixture.componentInstance.tree.setDisabledState(false);
+                checkboxFixture.detectChanges();
+
+                expect(disabledRows().length).toBe(0);
+                expect(disabledCheckboxes().length).toBe(0);
+            });
+
             it('should stay pristine when ngModel writes its value', async () => {
                 vi.useFakeTimers();
 
@@ -2652,6 +2677,19 @@ describe('KbqTreeSelection', () => {
                 await pressKey(DOWN_ARROW);
 
                 expect(treeElement.getAttribute('aria-activedescendant')).toBe(nodeFor('src').id);
+            });
+
+            it('should give the tab stop back to the host once a Tab has moved the focus out', async () => {
+                vi.useFakeTimers();
+
+                component.tree.onKeyDown(createKeyboardEvent('keydown', TAB));
+                fixture.detectChanges();
+
+                expect(treeElement.getAttribute('tabindex')).toBe('-1');
+
+                await settle();
+
+                expect(treeElement.getAttribute('tabindex')).toBe('0');
             });
 
             it('should move real focus onto the option the arrow keys land on', async () => {

@@ -267,18 +267,18 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     readonly userInteraction = new EventEmitter<void>();
 
     get selected(): boolean {
-        return this._selected;
+        return this.selectedState();
     }
 
     set selected(value: boolean) {
         const isSelected = coerceBooleanProperty(value);
 
-        if (isSelected !== this._selected) {
+        if (isSelected !== this.selectedState()) {
             this.setSelected(isSelected);
         }
     }
 
-    private _selected: boolean = false;
+    private readonly selectedState = signal(false);
 
     get id(): string {
         return this._id;
@@ -453,11 +453,11 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     setSelected(selected: boolean): void {
-        if (this.selectAllRow() || this._selected === selected || !this.tree.selectionModel) {
+        if (this.selectAllRow() || this.selectedState() === selected || !this.tree.selectionModel) {
             return;
         }
 
-        this._selected = selected;
+        this.selectedState.set(selected);
 
         if (selected) {
             this.tree.selectionModel.select(this.data);
@@ -468,8 +468,6 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         if (this.showCheckbox) {
             this.updateCheckboxState();
         }
-
-        this.markForCheck();
     }
 
     focus(focusOrigin?: FocusOrigin) {
@@ -508,7 +506,6 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
                 }
 
                 this.hasFocus = false;
-                this.markForCheck();
 
                 this.blurEvents.next({ option: this });
             },
@@ -535,31 +532,28 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     select(setFocus = true): void {
-        if (this.selectAllRow() || this._selected) {
+        if (this.selectAllRow() || this.selectedState()) {
             return;
         }
 
-        this._selected = true;
+        this.selectedState.set(true);
 
         if (setFocus && !this.hasFocus) {
             this.focus();
         }
 
         this.updateCheckboxState();
-        this.markForCheck();
         this.emitSelectionChangeEvent();
     }
 
     deselect(): void {
-        if (this.selectAllRow() || !this._selected) {
+        if (this.selectAllRow() || !this.selectedState()) {
             return;
         }
 
-        this._selected = false;
+        this.selectedState.set(false);
 
         this.updateCheckboxState();
-
-        this.markForCheck();
         this.emitSelectionChangeEvent();
     }
 
@@ -571,8 +565,6 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         if (this.disabled || !this.selectable()) {
             return;
         }
-
-        this.markForCheck();
 
         this.userInteraction.emit();
 
