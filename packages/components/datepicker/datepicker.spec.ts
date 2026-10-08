@@ -27,7 +27,12 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { KBQ_LUXON_DATE_FORMATS, KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import {
+    KBQ_LUXON_DATE_FORMATS,
+    KbqLuxonDateModule,
+    LuxonDateAdapter,
+    LuxonDateModule
+} from '@koobiq/angular-luxon-adapter/adapter';
 import {
     createKeyboardEvent,
     DateAdapter,
@@ -57,7 +62,12 @@ import { DateTime } from 'luxon';
 import { map, Observable, timer } from 'rxjs';
 import type { MockInstance } from 'vitest';
 import { KbqInputModule } from '../input/index';
-import { KbqDatepickerInput, KbqDatepickerInputEvent } from './datepicker-input.directive';
+import {
+    KBQ_DATEPICKER_LOCALE_CONFIGURATION,
+    KbqDatepickerInput,
+    KbqDatepickerInputEvent,
+    kbqDatepickerLocaleConfigurationProvider
+} from './datepicker-input.directive';
 import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
 import { KbqDatepicker } from './datepicker.component';
 import { KbqDatepickerModule } from './index';
@@ -1285,6 +1295,50 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.datepicker().opened).toBe(false);
             });
 
+            it('should close on ESCAPE pressed inside the calendar and return the focus to the input', async () => {
+                clickWithMouse(getDatepickerToggleIconElement(fixture));
+                fixture.detectChanges();
+
+                const nextMonth = document.querySelector<HTMLElement>('.kbq-calendar-header__next-button')!;
+
+                clickWithMouse(nextMonth);
+                fixture.detectChanges();
+
+                expect(document.activeElement).toBe(nextMonth);
+
+                const escape = dispatchKeyboardEvent(nextMonth, 'keydown', ESCAPE);
+
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(escape.defaultPrevented).toBe(true);
+                expect(testComponent.datepicker().opened).toBe(false);
+                expect(document.querySelector('.kbq-datepicker__content')).toBeNull();
+                expect(document.activeElement).toBe(testComponent.input().elementRef.nativeElement);
+            });
+
+            it('should close the month list of the calendar on ESCAPE and keep the calendar open', async () => {
+                clickWithMouse(getDatepickerToggleIconElement(fixture));
+                fixture.detectChanges();
+
+                clickWithMouse(document.querySelector<HTMLElement>('.kbq-calendar-header__select-group button')!);
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(document.querySelector('.kbq-calendar-select-panel')).not.toBeNull();
+
+                dispatchKeyboardEvent(document.activeElement!, 'keydown', ESCAPE);
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(document.querySelector('.kbq-calendar-select-panel')).toBeNull();
+                expect(testComponent.datepicker().opened).toBe(true);
+
+                dispatchKeyboardEvent(document.activeElement!, 'keydown', ESCAPE);
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(testComponent.datepicker().opened).toBe(false);
+                expect(document.activeElement).toBe(testComponent.input().elementRef.nativeElement);
+            });
+
             it('should close on a second click on the toggle and open on the next one', async () => {
                 const datepicker = testComponent.datepicker();
                 const toggle = getDatepickerToggleIconElement(fixture);
@@ -1938,6 +1992,50 @@ describe('KbqDatepicker', () => {
 
             expect(overlayContainer.getContainerElement().querySelector('kbq-datepicker__content')).not.toBeNull();
         });
+
+        // CDK hands a key to the topmost overlay listening for keys: the calendar's, while it is open.
+        it('should close the calendar, and not the modal, on ESCAPE', async () => {
+            vi.useFakeTimers();
+
+            const container = TestBed.inject(OverlayContainer).getContainerElement();
+            const fixture = TestBed.createComponent(DatepickerInModalHost);
+            const modalClosing = vi.fn();
+
+            fixture.detectChanges();
+            fixture.componentInstance.open().beforeClose.subscribe(modalClosing);
+            await vi.advanceTimersByTimeAsync(MODAL_ANIMATE_DURATION);
+
+            const input = container.querySelector<HTMLInputElement>('input')!;
+            const openCalendar = async () => {
+                clickWithMouse(container.querySelector<HTMLElement>('kbq-datepicker-toggle-icon i[kbq-icon-button]')!);
+                await vi.runOnlyPendingTimersAsync();
+            };
+            const pressEscape = async (target: Element) => {
+                dispatchKeyboardEvent(target, 'keydown', ESCAPE);
+                await vi.runOnlyPendingTimersAsync();
+            };
+
+            await openCalendar();
+            await pressEscape(input);
+
+            expect(container.querySelector('.kbq-datepicker__content')).toBeNull();
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            await openCalendar();
+
+            const nextMonth = container.querySelector<HTMLElement>('.kbq-calendar-header__next-button')!;
+
+            clickWithMouse(nextMonth);
+            await pressEscape(nextMonth);
+
+            expect(container.querySelector('.kbq-datepicker__content')).toBeNull();
+            expect(document.activeElement).toBe(input);
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            await pressEscape(input);
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
+        });
     });
 
     describe('placeholder', () => {
@@ -1959,8 +2057,48 @@ describe('KbqDatepicker', () => {
             expect(renderPlaceholder([{ provide: KBQ_DATE_LOCALE, useValue: 'es-LA' }])).toBe('dd/mm/aaaa');
         });
 
-        it('should fall back to ru-RU for a date locale the library ships no strings for', () => {
-            expect(renderPlaceholder([{ provide: KBQ_DATE_LOCALE, useValue: 'zh-CN' }])).toBe('дд.мм.гггг');
+        it('should name the format the input takes for a date locale the library ships no strings for', () => {
+            expect(renderPlaceholder([{ provide: KBQ_DATE_LOCALE, useValue: 'zh-CN' }])).toBe('yyyy/mm/dd');
+        });
+
+        it('should name the format KBQ_DATE_FORMATS sets rather than the one of the date locale', () => {
+            const placeholder = renderPlaceholder([
+                { provide: LOCALE_ID, useValue: 'en-US' },
+                { provide: KBQ_DATE_FORMATS, useValue: { dateInput: 'dd.MM.yyyy' } }
+            ]);
+
+            expect(placeholder).toBe('dd.mm.yyyy');
+        });
+
+        it('should follow the date locale of a date adapter provided on a component', () => {
+            TestBed.configureTestingModule({
+                imports: [DatepickerWithOwnDateAdapter],
+                providers: [{ provide: KBQ_DATE_LOCALE, useValue: 'ru-RU' }]
+            });
+
+            const fixture = TestBed.createComponent(DatepickerWithOwnDateAdapter);
+
+            fixture.detectChanges();
+
+            expect(getDatepickerInputElement(fixture).placeholder).toBe('yyyy-mm-dd');
+        });
+
+        it('should keep the strings provided for the token', () => {
+            const placeholder = renderPlaceholder([
+                { provide: KBQ_DATE_LOCALE, useValue: 'zh-CN' },
+                { provide: KBQ_DATEPICKER_LOCALE_CONFIGURATION, useValue: { placeholder: 'date' } }
+            ]);
+
+            expect(placeholder).toBe('date');
+        });
+
+        it('should apply kbqDatepickerLocaleConfigurationProvider over the date locale', () => {
+            const placeholder = renderPlaceholder([
+                { provide: KBQ_DATE_LOCALE, useValue: 'zh-CN' },
+                kbqDatepickerLocaleConfigurationProvider({ placeholder: 'date' })
+            ]);
+
+            expect(placeholder).toBe('date');
         });
 
         it('should follow the locale service over KBQ_DATE_LOCALE', () => {
@@ -2331,6 +2469,19 @@ class DatepickerWithEvents {
     `
 })
 class DatepickerWithDefaultPlaceholder {}
+
+@Component({
+    imports: [KbqDatepickerModule],
+    template: `
+        <input [kbqDatepicker]="d" />
+        <kbq-datepicker #d />
+    `,
+    providers: [
+        { provide: KBQ_DATE_LOCALE, useValue: 'en-US' },
+        { provide: DateAdapter, useClass: LuxonDateAdapter }
+    ]
+})
+class DatepickerWithOwnDateAdapter {}
 
 @Component({
     imports: [

@@ -201,25 +201,58 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
 /** @docs-private */
 export const KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION = ruRULocaleData.datepicker;
 
-/** The `datepicker` section of the shipped locale `localeId`, or of the default locale when none is shipped. */
-const shippedDatepickerLocaleConfiguration = (localeId: string): KbqDatepickerLocaleConfiguration => {
+/** The `datepicker` section of the shipped locale `localeId`, if the library ships one. */
+const shippedDatepickerLocaleConfiguration = (localeId: string): KbqDatepickerLocaleConfiguration | undefined => {
     const shipped: KbqLocaleDataInput = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
     const locale = shipped[localeId];
 
-    if (!locale || Array.isArray(locale)) return KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION;
-
     // A shipped locale is complete, its sections included.
-    return locale.datepicker as KbqDatepickerLocaleConfiguration;
+    return locale && !Array.isArray(locale) ? (locale.datepicker as KbqDatepickerLocaleConfiguration) : undefined;
 };
+
+/** The values of the token's own factory, told apart from strings an application provides for the token. */
+const factoryDefaults = new WeakSet<KbqDatepickerLocaleConfiguration>();
 
 /** Injection Token for providing configuration of datepicker */
 /** @docs-private */
 export const KBQ_DATEPICKER_LOCALE_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
     'KbqDatepickerLocaleConfiguration',
-    // Without a locale service the date adapter takes `KBQ_DATE_LOCALE`: following it, the placeholder names the
-    // format the input parses.
-    { factory: () => shippedDatepickerLocaleConfiguration(inject(KBQ_DATE_LOCALE)) }
+    {
+        factory: () => {
+            // A copy: the shipped section itself may also be provided on purpose.
+            const configuration = {
+                ...(shippedDatepickerLocaleConfiguration(inject(KBQ_DATE_LOCALE)) ??
+                    KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION)
+            };
+
+            factoryDefaults.add(configuration);
+
+            return configuration;
+        }
+    }
 );
+
+/** The default strings of one input. */
+const KBQ_DATEPICKER_INPUT_LOCALE_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
+    'KbqDatepickerInputLocaleConfiguration'
+);
+
+/**
+ * Unless strings are provided for the token, those of the format the input parses: the token's own default resolves
+ * in the root injector, which knows only the date locale of the application, not the date adapter of the input.
+ */
+const datepickerInputLocaleConfiguration = (): KbqDatepickerLocaleConfiguration => {
+    const configuration = inject(KBQ_DATEPICKER_LOCALE_CONFIGURATION);
+    const adapter = inject(DateAdapter, { optional: true });
+
+    if (!factoryDefaults.has(configuration) || !adapter?.config) return configuration;
+
+    const format: string = inject(KBQ_DATE_FORMATS, { optional: true })?.dateInput || adapter.config.dateInput;
+    // The shipped placeholders name the locale's own format, lower-cased and translated.
+    const shipped = format === adapter.config.dateInput && shippedDatepickerLocaleConfiguration(adapter.config.name);
+
+    return shipped || { placeholder: format.toLowerCase() };
+};
 
 /**
  * Utility provider for `KBQ_DATEPICKER_LOCALE_CONFIGURATION`. Only the strings you pass are overridden; the rest
@@ -271,7 +304,8 @@ interface DateTimeObject {
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
-        { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }
+        { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput },
+        { provide: KBQ_DATEPICKER_INPUT_LOCALE_CONFIGURATION, useFactory: datepickerInputLocaleConfiguration }
     ],
     host: {
         class: 'kbq-input kbq-datepicker',
@@ -309,7 +343,7 @@ export class KbqDatepickerInput<D>
 
     protected readonly localeConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'datepicker',
-        KBQ_DATEPICKER_LOCALE_CONFIGURATION
+        KBQ_DATEPICKER_INPUT_LOCALE_CONFIGURATION
     );
 
     private readonly errorStateTracker = new KbqErrorStateTracker(
