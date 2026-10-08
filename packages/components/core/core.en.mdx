@@ -252,11 +252,12 @@ Pop-up panels render into the application-wide overlay container (`z-index: 1000
 import { KbqOverlayLayer } from '@koobiq/components/core';
 ```
 
-The panels of select, tree-select, timezone select, dropdown, popover, autocomplete, datepicker and inline edit whose trigger is inside the marked element move into a layer of their own with `z-index: var(--kbq-overlay-layer-z-index, 980)`; the variable can be set on the element or any of its ancestors. Panels opened from those panels follow them. Modals, sidepanels, toasts, tooltips and the panels opened outside the element, the bars included, stay above the bars.
+The panels of select, tree-select, timezone select, dropdown, popover, autocomplete, datepicker and inline edit whose trigger is inside the marked element move into a layer of their own with `z-index: var(--kbq-overlay-layer-z-index, 980)`; the variable can be set on the element or any of its ancestors. Panels opened from those panels follow them. Modals, sidepanels, toasts, tooltips and the panels opened outside the element or from the bars stay above the bars.
+
+Panels opened from `kbq-top-bar`, `kbq-navbar` and `kbq-vertical-navbar` stay above the bars even when a bar is inside the marked element. To keep the panels of other page chrome there too, mark it with `kbqOverlayLayerExclude`.
 
 Conditions:
 
-- the bars are outside the marked element;
 - neither the element nor its ancestors create a containing block for fixed elements: `transform`, `filter`, `perspective`, `contain`, `container-type`;
 - neither the element nor its ancestors raise it above the bars with `z-index`.
 

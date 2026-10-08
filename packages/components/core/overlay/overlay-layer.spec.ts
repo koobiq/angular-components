@@ -2,7 +2,7 @@ import { Overlay, OverlayConfig, OverlayContainer, OverlayRef } from '@angular/c
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ApplicationRef, ChangeDetectionStrategy, Component, PLATFORM_ID, Provider, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { KBQ_OVERLAY_LAYERS, KbqOverlayLayer, KbqOverlayLayers } from '@koobiq/components/core';
+import { KBQ_OVERLAY_LAYERS, KbqOverlayLayer, KbqOverlayLayerExclude, KbqOverlayLayers } from '@koobiq/components/core';
 
 @Component({
     template: '<button>Panel action</button>',
@@ -11,7 +11,7 @@ import { KBQ_OVERLAY_LAYERS, KbqOverlayLayer, KbqOverlayLayers } from '@koobiq/c
 class PanelContent {}
 
 @Component({
-    imports: [KbqOverlayLayer],
+    imports: [KbqOverlayLayer, KbqOverlayLayerExclude],
     template: `
         <button id="outside">Outside</button>
         @if (hasLayer()) {
@@ -23,6 +23,9 @@ class PanelContent {}
                 <div class="cdk-overlay-container">
                     <button id="scoped">Scoped</button>
                 </div>
+                <header kbqOverlayLayerExclude>
+                    <button id="excluded">Excluded</button>
+                </header>
             </main>
         }
     `,
@@ -137,6 +140,14 @@ describe('KbqOverlayLayer', () => {
             const overlayRef = createOverlay();
 
             layers.adopt(overlayRef, element('#scoped'));
+
+            expect(overlayRef.hostElement.parentElement).toBe(root);
+        });
+
+        it('keeps a panel opened from an excluded element inside the element in the application-wide container', () => {
+            const overlayRef = createOverlay();
+
+            layers.adopt(overlayRef, element('#excluded'));
 
             expect(overlayRef.hostElement.parentElement).toBe(root);
         });

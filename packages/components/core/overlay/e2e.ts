@@ -110,14 +110,28 @@ export class E2eOverlayLayerStickyBar {
     selector: 'e2e-overlay-layer-global-overlays',
     imports: [
         KbqButtonModule,
+        KbqDropdownModule,
         KbqFormFieldModule,
         KbqOverlayLayer,
         KbqPopoverModule,
         KbqSelectModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        KbqTopBarModule
     ],
     template: `
         <div class="e2e-overlay-layer-global-overlays__content" data-testid="e2eOverlayLayerContent" kbqOverlayLayer>
+            <kbq-top-bar>
+                <div kbqTopBarContainer placement="end">
+                    <button kbq-button data-testid="e2eOverlayLayerBarTrigger" [kbqDropdownTriggerFor]="barDropdown">
+                        Actions
+                    </button>
+
+                    <kbq-dropdown #barDropdown="kbqDropdown">
+                        <button kbq-dropdown-item>Rename</button>
+                    </kbq-dropdown>
+                </div>
+            </kbq-top-bar>
+
             <button kbq-button data-testid="e2eOverlayLayerTooltipTrigger" kbqTooltip="Tooltip">Tooltip</button>
 
             <button kbq-button data-testid="e2eOverlayLayerModalTrigger" (click)="openModal()">Modal</button>

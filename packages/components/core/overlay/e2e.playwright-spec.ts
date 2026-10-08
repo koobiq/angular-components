@@ -112,6 +112,15 @@ test.describe('KbqOverlayLayer', () => {
             await expect(getLayerPanes(page)).toHaveCount(0);
         });
 
+        test('keeps a panel opened from a bar inside the content in the application-wide container', async ({
+            page
+        }) => {
+            await page.getByTestId('e2eOverlayLayerBarTrigger').click();
+
+            await expect(getGlobalPanes(page)).toHaveCount(1);
+            await expect(getLayerPanes(page)).toHaveCount(0);
+        });
+
         test('keeps a select inside a modal declared in the content above the modal', async ({ page }) => {
             await page.getByTestId('e2eOverlayLayerModalTrigger').click();
             await page.getByTestId('e2eOverlayLayerModalSelect').click();

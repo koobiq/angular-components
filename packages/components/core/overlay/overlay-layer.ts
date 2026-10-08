@@ -5,6 +5,7 @@ import { Directive, inject, Injectable, InjectionToken, OnDestroy } from '@angul
 import { kbqInjectNativeElement } from '../utils';
 
 const overlayLayerClass = 'kbq-overlay-layer';
+const overlayLayerExcludeClass = 'kbq-overlay-layer-exclude';
 
 /** Element an overlay is anchored to, or a getter read again on every attach of the overlay. */
 export type KbqOverlayLayerOrigin = Element | (() => Element | null | undefined);
@@ -92,6 +93,7 @@ class KbqOverlayLayerRegistry implements KbqOverlayLayers {
         }
 
         const overlayAncestor = origin.closest('.cdk-overlay-container');
+        const excludedAncestor = origin.closest(`.${overlayLayerExcludeClass}`);
         const fullscreenElement = this.document.fullscreenElement;
         let match: KbqOverlayLayer | null = null;
 
@@ -99,6 +101,11 @@ class KbqOverlayLayerRegistry implements KbqOverlayLayers {
             const { host } = layer;
 
             if (!host.contains(origin)) {
+                continue;
+            }
+
+            // Opened from page chrome inside the host: stays above that chrome.
+            if (excludedAncestor && host.contains(excludedAncestor)) {
                 continue;
             }
 
@@ -136,8 +143,9 @@ export const KBQ_OVERLAY_LAYERS = new InjectionToken<KbqOverlayLayers>('KBQ_OVER
  * or `kbq-navbar`, so they slide under the bar while the content scrolls.
  *
  * Covers the panels of select, tree-select, timezone select, dropdown, popover, autocomplete, datepicker and inline
- * edit. Modals, sidepanels, toasts, tooltips and the panels opened from outside the element stay in the
- * application-wide overlay container above the bars. The layer's `z-index` is `--kbq-overlay-layer-z-index` (`980`).
+ * edit. Modals, sidepanels, toasts, tooltips and the panels opened from outside the element or from a
+ * {@link KbqOverlayLayerExclude} element inside it, such as the bars, stay in the application-wide overlay container
+ * above the bars. The layer's `z-index` is `--kbq-overlay-layer-z-index` (`980`).
  */
 @Directive({
     selector: '[kbqOverlayLayer]'
@@ -174,3 +182,16 @@ export class KbqOverlayLayer implements OnDestroy {
         return this.container;
     }
 }
+
+/**
+ * Keeps the panels opened from inside the element in the application-wide overlay container, even within a
+ * {@link KbqOverlayLayer} element, so they stay above page chrome they overlap. `kbq-top-bar`, `kbq-navbar` and
+ * `kbq-vertical-navbar` apply it themselves.
+ */
+@Directive({
+    selector: '[kbqOverlayLayerExclude]',
+    host: {
+        class: overlayLayerExcludeClass
+    }
+})
+export class KbqOverlayLayerExclude {}

@@ -253,11 +253,12 @@ bootstrapApplication(AppComponent, {
 import { KbqOverlayLayer } from '@koobiq/components/core';
 ```
 
-Панели select, tree-select, timezone select, dropdown, popover, autocomplete, datepicker и inline edit, чей триггер находится внутри помеченного элемента, переносятся в отдельный слой с `z-index: var(--kbq-overlay-layer-z-index, 980)`; переменную можно задать на самом элементе или на любом его предке. Панели, открытые из этих панелей, следуют за ними. Модальные окна, sidepanel, тосты, всплывающие подсказки и панели, открытые вне элемента, в том числе из самих шапок, остаются над шапками.
+Панели select, tree-select, timezone select, dropdown, popover, autocomplete, datepicker и inline edit, чей триггер находится внутри помеченного элемента, переносятся в отдельный слой с `z-index: var(--kbq-overlay-layer-z-index, 980)`; переменную можно задать на самом элементе или на любом его предке. Панели, открытые из этих панелей, следуют за ними. Модальные окна, sidepanel, тосты, всплывающие подсказки и панели, открытые вне элемента или из шапок, остаются над шапками.
+
+Панели, открытые из `kbq-top-bar`, `kbq-navbar` и `kbq-vertical-navbar`, остаются над шапками, даже если шапка находится внутри помеченного элемента. Чтобы так же вела себя другая шапка страницы, пометьте ее директивой `kbqOverlayLayerExclude`.
 
 Условия:
 
-- шапки находятся вне помеченного элемента;
 - ни элемент, ни его предки не создают содержащий блок для fixed-элементов: `transform`, `filter`, `perspective`, `contain`, `container-type`;
 - ни элемент, ни его предки не поднимают его над шапками через `z-index`.
 

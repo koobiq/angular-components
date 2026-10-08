@@ -6,6 +6,7 @@ import {
     input,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqOverlayLayerExclude } from '@koobiq/components/core';
 
 /**
  * Separator between the two `[kbqTopBarContainer]` slots of a `kbq-top-bar`. It reserves
@@ -62,7 +63,8 @@ export class KbqTopBarContainer {
         // `== null`, so `aria-label=""` would otherwise render as an empty attribute, which nulls the
         // banner landmark's accessible name per the accname algorithm.
         '[attr.aria-label]': 'ariaLabel() || null'
-    }
+    },
+    hostDirectives: [KbqOverlayLayerExclude]
 })
 export class KbqTopBar {
     /**

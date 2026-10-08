@@ -3855,6 +3855,14 @@ export class KbqOverlayLayer implements OnDestroy {
 }
 
 // @public
+export class KbqOverlayLayerExclude {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverlayLayerExclude, "[kbqOverlayLayerExclude]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverlayLayerExclude, never>;
+}
+
+// @public
 export type KbqOverlayLayerOrigin = Element | (() => Element | null | undefined);
 
 // @public
