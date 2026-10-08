@@ -589,6 +589,9 @@ export class KbqDatepickerInput<D>
 
     private separatorPositions: number[];
 
+    /** Start of the part a caret key selects on a timer, until the selection lands there. */
+    private pendingCaret: { start: number } | null = null;
+
     constructor() {
         this.validator = Validators.compose([
             this.parseValidator,
@@ -1436,7 +1439,8 @@ export class KbqDatepickerInput<D>
             return;
         }
 
-        let cursorPos = this.selectionStart as number;
+        // A key pressed before the previous one's selection has landed moves on from where that one goes.
+        let cursorPos = this.pendingCaret?.start ?? (this.selectionStart as number);
 
         if ([HOME, PAGE_UP].includes(keyCode)) {
             cursorPos = 0;
@@ -1475,7 +1479,15 @@ export class KbqDatepickerInput<D>
     }
 
     private selectDigitByCursor(cursorPos: number): void {
+        const pendingCaret = { start: this.getDateEditMetrics(cursorPos)[1] };
+
+        this.pendingCaret = pendingCaret;
+
         setTimeout(() => {
+            if (this.pendingCaret === pendingCaret) {
+                this.pendingCaret = null;
+            }
+
             const [, selectionStart, selectionEnd] = this.getDateEditMetrics(cursorPos);
 
             this.setSelection(selectionStart, selectionEnd);

@@ -390,8 +390,12 @@ recurrence fails on a named state instead of a pixel count. **Verified:** the sp
   neither the paginator width (40 px) nor any other constant in that file. No mechanism established,
   and it did not reproduce in 20 local repeats at 8 workers or 5 at 16. Nothing was changed.
 - **`datepicker › scrolls back to the part the caret returns to`** — 1 occurrence in 99 CI runs, and it
-  did not reproduce in 200 local repeats under 16 workers. No mechanism established, so nothing was
-  changed. Left for the next occurrence, which will now be visible rather than absorbed.
+  did not reproduce in 200 local repeats under 16 workers. The second occurrence (2026-10-08, the
+  selection stuck on the month, `3,5` instead of `0,2`) gave the mechanism: an arrow key reads the
+  input's `selectionStart` and sets the new selection on a timer, so a second key that arrives before
+  that timer runs moves on from the old selection and lands on the same part again. Fixed in the
+  input: a key moves on from the part the previous one is about to select. A unit spec presses both
+  keys in one task.
 - **`notification-center › states`** — 1 occurrence, 3831 px. Initially attributed to the scrollbar
   reveal and gated accordingly; that was wrong. A `MutationObserver` running from first paint records
   no reveal on this route at all, and `scrollToBottom()` is reachable only from a `loadingMore`
