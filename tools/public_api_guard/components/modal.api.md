@@ -158,7 +158,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     kbqBodyStyle: object;
     readonly kbqBodyStyleInput: _angular_core.InputSignal<object | undefined>;
     // (undocumented)
-    kbqCancelLoading: boolean;
+    get kbqCancelLoading(): boolean;
+    set kbqCancelLoading(value: boolean);
     readonly kbqCancelLoadingInput: _angular_core.InputSignal<boolean | undefined>;
     // (undocumented)
     kbqCancelText: string;
@@ -202,7 +203,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     kbqModalType: ModalType;
     readonly kbqModalTypeInput: _angular_core.InputSignal<ModalType | undefined>;
     // (undocumented)
-    kbqOkLoading: boolean;
+    get kbqOkLoading(): boolean;
+    set kbqOkLoading(value: boolean);
     readonly kbqOkLoadingInput: _angular_core.InputSignal<boolean | undefined>;
     // (undocumented)
     kbqOkText: string;

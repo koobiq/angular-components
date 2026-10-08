@@ -440,7 +440,7 @@ ng g @koobiq/components:datepicker-signals --project "<your project>"
 
 Инпуты `KbqModalComponent` стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член; `kbqAfterOpen`, `kbqAfterClose`, `kbqBeforeClose`, `kbqOnOk` и `kbqOnCancel` стали выходами с именем `<член>Output` поверх прежних эмиттеров. Привязки, параметры `KbqModalService`, а также чтение и запись через `getInstance()` работают как раньше.
 
-- **Наследник**, реализующий `ngOnChanges`, вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()` или `@Output()`, переопределяет `<член>Input` или `<член>Output`, например `kbqTitleInput`. `kbqVisible`, `kbqMask`, `kbqMaskClosable`, `kbqOkLoading` и `kbqCancelLoading` стали полями, а не геттерами и сеттерами.
+- **Наследник**, реализующий `ngOnChanges`, вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()` или `@Output()`, переопределяет `<член>Input` или `<член>Output`, например `kbqTitleInput`. `kbqVisible` и `kbqMaskClosable` стали полями, а не геттерами и сеттерами; `kbqMask`, `kbqOkLoading` и `kbqCancelLoading` остались геттерами и сеттерами, теперь поверх сигналов.
 - **`SimpleChanges`, переданный в `ngOnChanges` вручную**, использует ключи `<член>Input`: `kbqVisibleInput`, а не `kbqVisible`.
 - **Привязанное значение `undefined`** оставляет член как есть: чтобы скрыть окно, передавайте `false`.
 

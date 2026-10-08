@@ -192,7 +192,17 @@ export class KbqModalComponent<T = any, R = any>
     kbqOkType: KbqButtonColor = KbqComponentColors.Contrast;
 
     kbqRestoreFocus = true;
-    kbqOkLoading = false;
+
+    // A signal, so that the OK button follows a promise returned by `kbqOnOk` settling, which notifies nothing.
+    get kbqOkLoading(): boolean {
+        return this._kbqOkLoading();
+    }
+
+    set kbqOkLoading(value: boolean) {
+        this._kbqOkLoading.set(value);
+    }
+
+    private readonly _kbqOkLoading = signal(false);
 
     // The default emitter backs the `kbqOnOk` output; a callback that is bound or passed replaces it.
     kbqOnOk: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
@@ -201,7 +211,17 @@ export class KbqModalComponent<T = any, R = any>
     readonly kbqOnOkOutput = outputFromObservable(this.kbqOnOk as EventEmitter<T>, { alias: 'kbqOnOk' });
 
     kbqCancelText: string;
-    kbqCancelLoading = false;
+
+    // A signal for the same reason as `kbqOkLoading`.
+    get kbqCancelLoading(): boolean {
+        return this._kbqCancelLoading();
+    }
+
+    set kbqCancelLoading(value: boolean) {
+        this._kbqCancelLoading.set(value);
+    }
+
+    private readonly _kbqCancelLoading = signal(false);
 
     // The default emitter backs the `kbqOnCancel` output; a callback that is bound or passed replaces it.
     kbqOnCancel: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
@@ -676,8 +696,15 @@ export class KbqModalComponent<T = any, R = any>
 
         if (isPromise(result)) {
             button.loading = true;
+
+            // A plain object, so the view is told once the promise settles.
+            const stopLoading = () => {
+                button.loading = false;
+                this.markForCheck();
+            };
+
             // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-            (result as Promise<{}>).then(() => (button.loading = false)).catch(() => (button.loading = false));
+            (result as Promise<{}>).then(stopLoading).catch(stopLoading);
         }
     }
 

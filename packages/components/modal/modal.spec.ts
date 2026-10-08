@@ -307,6 +307,53 @@ describe('KbqModal', () => {
             expect(modalRef.getElement().querySelectorAll('.kbq-progress').length).toBe(1);
         });
 
+        it('should drop the progress state of a footer button once its onClick promise settles', async () => {
+            let settle!: () => void;
+            const pending = new Promise<void>((resolve) => (settle = resolve));
+            const modalRef = modalService.create({
+                kbqFooter: [{ label: 'button 1', type: 'primary', onClick: () => pending }]
+            });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const button = modalRef.getElement().querySelector<HTMLButtonElement>('.kbq-modal-footer button')!;
+
+            button.click();
+            fixture.detectChanges();
+
+            expect(button.classList).toContain('kbq-progress');
+
+            settle();
+            await pending;
+            fixture.detectChanges();
+
+            expect(button.classList).not.toContain('kbq-progress');
+        });
+
+        it('should show the OK button of a confirm modal in progress while its kbqOnOk promise is pending', async () => {
+            let settle!: (doClose: false) => void;
+            const pending = new Promise<false>((resolve) => (settle = resolve));
+            const modalRef = modalService.confirm({ kbqOkText: 'OK', kbqOnOk: () => pending });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const ok = modalRef.getElement().querySelector<HTMLButtonElement>('.kbq-confirm-footer button')!;
+
+            ok.click();
+            fixture.detectChanges();
+
+            expect(ok.classList).toContain('kbq-progress');
+
+            // `false` keeps the modal open.
+            settle(false);
+            await pending;
+            fixture.detectChanges();
+
+            expect(ok.classList).not.toContain('kbq-progress');
+        });
+
         it('should process show flag', async () => {
             const isShown = false;
             const modalRef = modalService.create({
@@ -781,6 +828,41 @@ describe('KbqModal', () => {
             await fixture.whenStable();
             await animationEnd();
         });
+
+        it.each<[string, number, 'okCallback' | 'cancelCallback']>([
+            ['OK', 0, 'okCallback'],
+            ['Cancel', 1, 'cancelCallback']
+        ])(
+            'should show the %s button in progress while its callback promise is pending',
+            async (_, index, callback) => {
+                useFakeTimeouts();
+
+                const fixture = TestBed.createComponent(ModalInTemplate);
+                const host = fixture.componentInstance;
+                let settle!: (doClose: false) => void;
+                const pending = new Promise<false>((resolve) => (settle = resolve));
+
+                host[callback].set(() => pending);
+                host.visible.set(true);
+                await fixture.whenStable();
+
+                const button = host.modal().getKbqFooter().querySelectorAll('button')[index];
+
+                button.click();
+                await fixture.whenStable();
+
+                expect(button.classList).toContain('kbq-progress');
+
+                // `false` keeps the modal open.
+                settle(false);
+                await pending;
+                await fixture.whenStable();
+
+                expect(button.classList).not.toContain('kbq-progress');
+
+                await animationEnd();
+            }
+        );
     });
 
     describe('with manually composed content', () => {
@@ -1024,6 +1106,7 @@ class ModalByServiceFromDropdownComponent {
             kbqOkText="OK"
             kbqCancelText="Cancel"
             [kbqOnOk]="okCallback()"
+            [kbqOnCancel]="cancelCallback()"
             [(kbqVisible)]="visible"
             (kbqAfterOpen)="afterOpen()"
             (kbqBeforeClose)="beforeClose()"
@@ -1039,6 +1122,7 @@ class ModalInTemplate {
     readonly modal = viewChild.required(KbqModalComponent);
     readonly visible = signal(false);
     readonly okCallback = signal<OnClickCallback<unknown> | undefined>(undefined);
+    readonly cancelCallback = signal<OnClickCallback<unknown> | undefined>(undefined);
     readonly afterOpen = vi.fn();
     readonly beforeClose = vi.fn();
     readonly afterClose = vi.fn();
