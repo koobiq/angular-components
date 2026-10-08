@@ -23,9 +23,8 @@ export const warnPatterns: WarnPattern[] = [
             'from ngOnChanges now, so an ngOnChanges of the subclass has to call super.ngOnChanges(changes). An input ' +
             'the subclass redeclared with @Input() is overridden through the `<member>Input` signal input instead, ' +
             "e.g. `override readonly kbqTitleInput = input<string | undefined>(undefined, { alias: 'kbqTitle' })`, " +
-            'and an output redeclared with @Output() through `<member>Output`. kbqVisible, kbqMask, kbqMaskClosable, ' +
-            'kbqOkLoading and kbqCancelLoading are fields rather than accessors, so they can no longer be ' +
-            'overridden with a getter.'
+            'and an output redeclared with @Output() through `<member>Output`. kbqVisible and kbqMaskClosable are ' +
+            'fields rather than accessors, so they can no longer be overridden with a getter.'
     },
     {
         anchor: '\\bKbqModalComponent\\b',
