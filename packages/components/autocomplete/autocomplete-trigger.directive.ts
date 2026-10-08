@@ -33,6 +33,7 @@ import {
     output,
     Provider,
     Renderer2,
+    signal,
     untracked,
     ViewContainerRef
 } from '@angular/core';
@@ -193,7 +194,7 @@ export class KbqAutocompleteTrigger
     }
 
     get panelOpen(): boolean {
-        return this.overlayAttached && this.autocomplete().showPanel();
+        return this.overlayAttached() && this.autocomplete().showPanel();
     }
 
     /** The autocomplete panel to be attached to this trigger. */
@@ -201,7 +202,7 @@ export class KbqAutocompleteTrigger
 
     /** Whether the autocomplete panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
     get isAttached(): boolean {
-        return this.overlayAttached;
+        return this.overlayAttached();
     }
 
     /**
@@ -334,13 +335,12 @@ export class KbqAutocompleteTrigger
     /** Inline hint drawn after the caret, or `''` while there is none. */
     private inlineHintText = '';
 
-    private overlayAttached: boolean = false;
+    /** Whether the overlay is attached. A signal: host bindings read it, and it changes outside any listener. */
+    private readonly overlayAttached = signal(false);
 
     private overlayRef: OverlayRef | null;
 
     private portal: TemplatePortal;
-
-    private componentDestroyed = false;
 
     private scrollStrategy: () => ScrollStrategy;
 
@@ -415,7 +415,6 @@ export class KbqAutocompleteTrigger
         this.window.removeEventListener('blur', this.windowBlurHandler);
 
         this.viewportSubscription.unsubscribe();
-        this.componentDestroyed = true;
         this.destroyPanel();
         this.textMirror?.destroy();
         this.closeKeyEventStream.complete();
@@ -439,7 +438,7 @@ export class KbqAutocompleteTrigger
     }
 
     closePanel(): void {
-        if (!this.overlayAttached) {
+        if (!this.overlayAttached()) {
             return;
         }
 
@@ -452,22 +451,12 @@ export class KbqAutocompleteTrigger
         this.inlineHintText = '';
         this.textMirror?.hide();
 
-        this.overlayAttached = false;
+        this.overlayAttached.set(false);
         this.autocomplete().attached.set(false);
 
         if (this.overlayRef && this.overlayRef.hasAttached()) {
             this.overlayRef.detach();
             this.closingActionsSubscription.unsubscribe();
-        }
-
-        // Note that in some cases this can end up being called after the component is destroyed.
-        // Add a check to ensure that we don't try to run change detection on a destroyed view.
-        if (!this.componentDestroyed) {
-            // We need to trigger change detection manually, because
-            // `fromEvent` doesn't seem to do it at the proper time.
-            // This ensures that the label is reset when the
-            // user clicks outside.
-            this.changeDetectorRef.detectChanges();
         }
     }
 
@@ -476,7 +465,7 @@ export class KbqAutocompleteTrigger
      * within the viewport.
      */
     updatePosition(): void {
-        if (this.overlayAttached) {
+        if (this.overlayAttached()) {
             this.overlayRef!.updatePosition();
         }
     }
@@ -488,10 +477,10 @@ export class KbqAutocompleteTrigger
     get panelClosingActions(): Observable<KbqOptionSelectionChange | null> {
         return merge(
             this.optionSelections,
-            this.autocomplete().keyManager.tabOut.pipe(filter(() => this.overlayAttached)),
+            this.autocomplete().keyManager.tabOut.pipe(filter(() => this.overlayAttached())),
             this.closeKeyEventStream,
             this.getOutsideClickStream(),
-            this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached)) : observableOf()
+            this.overlayRef ? this.overlayRef.detachments().pipe(filter(() => this.overlayAttached())) : observableOf()
         ).pipe(
             // Normalize the output so we return a consistent type.
             map((event) => (event instanceof KbqOptionSelectionChange ? event : null))
@@ -662,7 +651,7 @@ export class KbqAutocompleteTrigger
                 const customOrigin = connectedTo ? connectedTo.elementRef.nativeElement : null;
 
                 return (
-                    this.overlayAttached &&
+                    this.overlayAttached() &&
                     clickTarget !== this.elementRef.nativeElement &&
                     (!formField || !formField.contains(clickTarget)) &&
                     (!customOrigin || !customOrigin.contains(clickTarget)) &&
@@ -858,7 +847,7 @@ export class KbqAutocompleteTrigger
 
         autocomplete.listboxName.set(this.getListboxName());
         autocomplete.setVisibility();
-        this.overlayAttached = true;
+        this.overlayAttached.set(true);
         autocomplete.attached.set(true);
 
         // We need to do an extra `panelOpen` check in here, because the
@@ -1033,7 +1022,7 @@ export class KbqAutocompleteTrigger
 
         if (
             open &&
-            !this.overlayAttached &&
+            !this.overlayAttached() &&
             this.canOpen() &&
             _getFocusedElementPierceShadowDom() === this.elementRef.nativeElement
         ) {
@@ -1083,7 +1072,7 @@ export class KbqAutocompleteTrigger
                     this.zone.run(() => this.refreshQuery(false));
                 }
 
-                if (this.relativeToCaret() && this.overlayAttached) {
+                if (this.relativeToCaret() && this.overlayAttached()) {
                     this.overlayRef?.updatePosition();
                 }
             });

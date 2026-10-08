@@ -4,7 +4,6 @@ import {
     AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     contentChildren,
@@ -110,7 +109,6 @@ function normalizeClassInput(
     exportAs: 'kbqAutocomplete'
 })
 export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, KbqOptionParentComponent {
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
     private readonly destroyRef = inject(DestroyRef);
@@ -298,8 +296,6 @@ export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, K
         this.showPanel.set(!!this.options.length);
 
         this.updateFocusClass();
-
-        this.changeDetectorRef.markForCheck();
     }
 
     /** @docs-private */

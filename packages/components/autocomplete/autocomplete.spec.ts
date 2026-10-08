@@ -3298,6 +3298,31 @@ describe('KbqAutocomplete', () => {
         });
     });
 
+    describe('in a view checked on push', () => {
+        it('should expose the panel state when it is opened and closed from code', () => {
+            const fixture = createComponent(InputOnPushHost);
+
+            fixture.detectChanges();
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+            const trigger = fixture.componentInstance.field().trigger();
+
+            trigger.open();
+            fixture.detectChanges();
+
+            expect(input.getAttribute('aria-expanded')).toBe('true');
+            expect(input.getAttribute('aria-controls')).toBe(
+                overlayContainerElement.querySelector('[role="listbox"]')!.id
+            );
+
+            trigger.closePanel();
+            fixture.detectChanges();
+
+            expect(input.getAttribute('aria-expanded')).toBe('false');
+            expect(input.hasAttribute('aria-controls')).toBe(false);
+        });
+    });
+
     describe('overlay layer', () => {
         it('should render the panel of an input inside the element into its overlay layer', () => {
             const fixture = createComponent(AutocompleteInOverlayLayer);
@@ -4231,6 +4256,45 @@ class TextFieldOnPushHost {
 
         return query === undefined ? [] : TEXT_OPTIONS.filter((option) => option.toLocaleLowerCase().includes(query));
     });
+}
+
+@Component({
+    selector: 'input-on-push',
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqAutocompleteModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqInput aria-label="State" [kbqAutocomplete]="autocomplete()" />
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class InputOnPush {
+    readonly autocomplete = input.required<KbqAutocomplete>();
+
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+}
+
+/** Declares the panel outside the view of the field, so that nothing the panel does marks that view for check. */
+@Component({
+    imports: [
+        KbqAutocompleteModule,
+        InputOnPush
+    ],
+    template: `
+        <input-on-push [autocomplete]="auto" />
+
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            <kbq-option value="Alabama">Alabama</kbq-option>
+            <kbq-option value="California">California</kbq-option>
+        </kbq-autocomplete>
+    `
+})
+class InputOnPushHost {
+    readonly field = viewChild.required(InputOnPush);
 }
 
 @Component({
