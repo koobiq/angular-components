@@ -18,6 +18,7 @@ import {
     ElementRef,
     EventEmitter,
     Host,
+    HostAttributeToken,
     Inject,
     InjectionToken,
     Input,
@@ -180,6 +181,7 @@ export const minimumTimeToDisplayLoading = 300;
     host: {
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
+        '[attr.aria-labelledby]': 'ariaLabelledby',
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline',
@@ -233,6 +235,15 @@ export class KbqSelect
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
+
+    /**
+     * A `kbq-select` is not a native labelable element, so the form-field's `<label for>` cannot
+     * associate with it. The select is named through `aria-labelledby` instead.
+     */
+    readonly isNativeLabelSupported = false;
+
+    /** `aria-labelledby` set on the host by the consumer, which outranks the form-field caption. */
+    private readonly ariaLabelledbyAttribute = inject(new HostAttributeToken('aria-labelledby'), { optional: true });
 
     hiddenItems: number = 0;
 
@@ -707,6 +718,17 @@ export class KbqSelect
     /** Whether the cleaner (clear button) should be shown. */
     get canShowCleaner(): boolean {
         return !this.disabled && this.cleaner && this.selectionModel.hasValue();
+    }
+
+    /**
+     * Id of the `kbq-form-field` caption naming this select, when it has one.
+     *
+     * A `<label for>` does not associate with a custom element, so the relationship is expressed the
+     * other way around — from the control to the label.
+     * @docs-private
+     */
+    protected get ariaLabelledby(): string | null {
+        return this.ariaLabelledbyAttribute ?? this.parentFormField?.labelId ?? null;
     }
 
     /** Returns the currently selected option(s). Single value or array for multiple selection. */

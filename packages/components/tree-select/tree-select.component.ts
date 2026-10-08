@@ -17,6 +17,7 @@ import {
     ElementRef,
     EventEmitter,
     Host,
+    HostAttributeToken,
     Inject,
     InjectionToken,
     Input,
@@ -164,6 +165,7 @@ export class KbqTreeSelectChange {
         '[class.kbq-invalid]': 'errorState',
         '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
+        '[attr.aria-labelledby]': 'ariaLabelledby',
         '(click)': 'handleClick()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
@@ -207,6 +209,15 @@ export class KbqTreeSelect
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
+
+    /**
+     * A `kbq-tree-select` is not a native labelable element, so the form-field's `<label for>` cannot
+     * associate with it. The control is named through `aria-labelledby` instead.
+     */
+    readonly isNativeLabelSupported = false;
+
+    /** `aria-labelledby` set on the host by the consumer, which outranks the form-field caption. */
+    private readonly ariaLabelledbyAttribute = inject(new HostAttributeToken('aria-labelledby'), { optional: true });
 
     hiddenItems: number = 0;
 
@@ -565,6 +576,17 @@ export class KbqTreeSelect
 
     get canShowCleaner(): boolean {
         return !this.disabled && this.cleaner && this.selectionModel.hasValue();
+    }
+
+    /**
+     * Id of the `kbq-form-field` caption naming this control, when it has one.
+     *
+     * A `<label for>` does not associate with a custom element, so the relationship is expressed the
+     * other way around — from the control to the label.
+     * @docs-private
+     */
+    protected get ariaLabelledby(): string | null {
+        return this.ariaLabelledbyAttribute ?? this.parentFormField?.labelId ?? null;
     }
 
     /** @docs-private */

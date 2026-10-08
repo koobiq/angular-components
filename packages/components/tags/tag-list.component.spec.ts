@@ -181,6 +181,21 @@ export class TestFormFieldTagList {
     );
 }
 
+/** Tag list named by the caption of its wrapping `kbq-form-field`. */
+@Component({
+    imports: [KbqFormFieldModule, KbqTagsModule, CdkMonitorFocus, KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Tags</kbq-label>
+            <kbq-tag-list #tagList="kbqTagList">
+                <kbq-tag value="1">1</kbq-tag>
+                <input cdkMonitorElementFocus [kbqTagInputFor]="tagList" />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
+})
+class TagListWithFormFieldLabel {}
+
 @Component({
     imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule],
     template: `
@@ -758,16 +773,20 @@ describe(KbqTagList.name, () => {
             expect(spy).toHaveBeenCalled();
             subscription.unsubscribe();
         });
+    });
 
-        xit('should point the label id to the tag input', () => {
-            const label = fixture.nativeElement.querySelector('label');
-            const input = fixture.nativeElement.querySelector('input');
-
+    describe('accessible name', () => {
+        // The tag list reports the id of its input, so the form-field caption is a `<label for>` that
+        // names the native input.
+        it('should label the tag input with the form-field caption', () => {
+            fixture = createComponent(TagListWithFormFieldLabel);
             fixture.detectChanges();
 
-            expect(label.getAttribute('for')).toBeTruthy();
-            expect(label.getAttribute('for')).toBe(input.getAttribute('id'));
-            expect(label.getAttribute('aria-owns')).toBe(input.getAttribute('id'));
+            const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+            const caption: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field__label');
+
+            expect(caption.tagName).toBe('LABEL');
+            expect(caption.getAttribute('for')).toBe(input.id);
         });
     });
 

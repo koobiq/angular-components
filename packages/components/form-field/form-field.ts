@@ -1,6 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { NgClass } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -88,7 +88,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 /** Container for form controls that applies styling and behavior. */
 @Component({
     selector: 'kbq-form-field',
-    imports: [NgClass],
+    imports: [NgClass, NgTemplateOutlet],
     templateUrl: 'form-field.html',
     styleUrls: [
         'form-field.scss',
@@ -241,6 +241,29 @@ export class KbqFormField
      */
     protected get hasLabel(): boolean {
         return !!this.label;
+    }
+
+    /**
+     * Id of the caption, so that a control the `<label for>` cannot associate with is named through
+     * `aria-labelledby` instead.
+     *
+     * @docs-private
+     */
+    get labelId(): string | null {
+        return this.hasLabel && this.control ? `${this.control.id}-label` : null;
+    }
+
+    /**
+     * Whether the control is a native labelable element, so that a `<label>` can associate with it.
+     *
+     * A custom control (`kbq-select`, for one) reports `isNativeLabelSupported: false`; the caption is then rendered
+     * as a `<span>` instead of a `<label>`, because a label that neither has a `for` matching a labelable
+     * element nor wraps one is invalid, and the control is named through `aria-labelledby` instead.
+     *
+     * @docs-private
+     */
+    protected get isNativeLabelSupported(): boolean {
+        return this.control?.isNativeLabelSupported !== false;
     }
 
     /**

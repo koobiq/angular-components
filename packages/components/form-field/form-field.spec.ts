@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type } from '@angular/core';
+import { Component, DebugElement, Directive, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -18,9 +18,11 @@ import {
     ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
+import { Subject } from 'rxjs';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
 import { getKbqFormFieldMissingControlError, KbqFormField, kbqFormFieldDefaultOptionsProvider } from './form-field';
+import { KbqFormFieldControl } from './form-field-control';
 import { KbqFormFieldModule } from './form-field.module';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
@@ -171,6 +173,40 @@ export class InputFormFieldWithoutFormFieldControl {
 export class InputFormFieldWithLabel {
     readonly id = 'UNIQUE_TEST_ID';
 }
+
+/** Minimal control that reports itself as not labelable, the way `kbq-select` does. */
+@Directive({
+    selector: '[testNonLabelableControl]',
+    providers: [{ provide: KbqFormFieldControl, useExisting: TestNonLabelableControl }]
+})
+export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
+    value = null;
+    readonly stateChanges = new Subject<void>();
+    readonly id = 'TEST_NON_LABELABLE_CONTROL_ID';
+    readonly placeholder = '';
+    readonly ngControl = null;
+    focused = false;
+    empty = true;
+    required = false;
+    disabled = false;
+    errorState = false;
+    readonly isNativeLabelSupported = false;
+    onContainerClick(): void {}
+    focus(): void {}
+    open(): void {}
+}
+
+@Component({
+    selector: 'non-labelable-form-field',
+    imports: [KbqFormField, KbqLabel, TestNonLabelableControl],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Label</kbq-label>
+            <span testNonLabelableControl>Control</span>
+        </kbq-form-field>
+    `
+})
+export class NonLabelableFormField {}
 
 class CustomErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: AbstractControl | null, _form: FormGroupDirective | NgForm | null): boolean {
@@ -552,6 +588,19 @@ describe(KbqFormField.name, () => {
         const { debugElement, componentInstance } = createComponent(InputFormFieldWithLabel);
 
         expect(getLabelNativeElement(debugElement).getAttribute('for')).toBe(componentInstance.id);
+    });
+
+    it('should not render a label for a non-labelable control', () => {
+        const { debugElement } = createComponent(NonLabelableFormField);
+
+        const caption: HTMLElement = debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
+
+        // A `<label>` that neither has a `for` matching a labelable element nor wraps one is invalid, so
+        // the caption is rendered as a `<span>` and the control points back at it through `aria-labelledby`.
+        expect(caption.tagName).toBe('SPAN');
+        expect(caption.textContent?.trim()).toBe('Label');
+        expect(caption.getAttribute('for')).toBeNull();
+        expect(caption.id).toBe('TEST_NON_LABELABLE_CONTROL_ID-label');
     });
 
     it('should focus input by click on label', () => {

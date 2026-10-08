@@ -1,6 +1,7 @@
+import { _IdGenerator } from '@angular/cdk/a11y';
 import { ChangeDetectionStrategy, Component, Directive, inject } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Observable, Subject } from 'rxjs';
 import { KbqTimeRange } from './time-range';
 
@@ -26,7 +27,9 @@ export class KbqTimeRangeTitlePlaceholder {}
         }
     ],
     host: {
+        '[attr.id]': 'id',
         '[attr.tabindex]': '0',
+        '[attr.aria-labelledby]': 'ariaLabelledby',
         class: 'kbq-time-range-title-as-form-field'
     },
     styles: `
@@ -42,9 +45,12 @@ export class KbqTimeRangeTitlePlaceholder {}
 })
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     private timeRange = inject(KbqTimeRange);
+    private readonly parentFormField = inject(KbqFormField, { host: true, optional: true });
 
     /** @docs-private */
     controlType = 'select';
+    /** @docs-private */
+    readonly isNativeLabelSupported = false;
     /** @docs-private */
     stateChanges: Observable<void> = new Subject<void>();
     /** @docs-private */
@@ -52,7 +58,7 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     /** @docs-private */
     value: any;
     /** @docs-private */
-    id: string;
+    id: string = inject(_IdGenerator).getId('kbq-time-range-title-as-control-');
     /** @docs-private */
     placeholder: string;
     /** @docs-private */
@@ -69,4 +75,15 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     onContainerClick(_event: MouseEvent): void {}
     /** @docs-private */
     focus(_options?: FocusOptions): void {}
+
+    /**
+     * Id of the `kbq-form-field` caption naming this control, when it has one.
+     *
+     * A `<label for>` does not associate with a custom element, so the relationship is expressed the
+     * other way around — from the control to the label.
+     * @docs-private
+     */
+    protected get ariaLabelledby(): string | null {
+        return this.parentFormField?.labelId ?? null;
+    }
 }

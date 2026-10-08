@@ -1374,6 +1374,35 @@ class SelectWithFormFieldLabel {
     placeholder: string;
 }
 
+/** Select named by the caption of its wrapping `kbq-form-field`. */
+@Component({
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Food</kbq-label>
+            <kbq-select>
+                <kbq-option [value]="'thing'">A thing</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectNamedByFormFieldCaption {}
+
+/** Select that the consumer names on its own while the form field has a caption. */
+@Component({
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <span id="own-name">Own name</span>
+        <kbq-form-field>
+            <kbq-label>Food</kbq-label>
+            <kbq-select aria-labelledby="own-name">
+                <kbq-option [value]="'thing'">A thing</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithOwnAriaLabelledby {}
+
 @Component({
     selector: 'select-with-long-label-option',
     imports: [
@@ -2351,6 +2380,38 @@ describe('KbqSelect', () => {
                     flush();
 
                     expect(select.getAttribute('tabindex')).toBe('3');
+                }));
+
+                // A select is not a native labelable element, so the form-field renders a `<span>` caption
+                // that `for` cannot point at; the select is named from the label side instead.
+                it('should be named by the form-field caption', fakeAsync(() => {
+                    const labeledFixture = TestBed.createComponent(SelectNamedByFormFieldCaption);
+
+                    labeledFixture.detectChanges();
+                    flush();
+
+                    const labeledSelect: HTMLElement = labeledFixture.nativeElement.querySelector('kbq-select');
+                    const caption: HTMLElement = labeledFixture.nativeElement.querySelector('.kbq-form-field__label');
+
+                    expect(caption.tagName).toBe('SPAN');
+                    expect(caption.getAttribute('for')).toBeNull();
+                    expect(caption.id).toBeTruthy();
+                    expect(labeledSelect.getAttribute('aria-labelledby')).toBe(caption.id);
+                }));
+
+                it('should keep the aria-labelledby set on the select', fakeAsync(() => {
+                    const ownFixture = TestBed.createComponent(SelectWithOwnAriaLabelledby);
+
+                    ownFixture.detectChanges();
+                    flush();
+
+                    const ownSelect: HTMLElement = ownFixture.nativeElement.querySelector('kbq-select');
+
+                    expect(ownSelect.getAttribute('aria-labelledby')).toBe('own-name');
+                }));
+
+                it('should not set aria-labelledby without a form-field caption', fakeAsync(() => {
+                    expect(select.hasAttribute('aria-labelledby')).toBe(false);
                 }));
 
                 it('should set the tabindex of the select to -1 if disabled', fakeAsync(() => {
