@@ -105,7 +105,15 @@ export class KbqDropdownItem
     readonly focused = new Subject<KbqDropdownItem>();
 
     /** Whether the dropdown item is highlighted. */
-    highlighted: boolean = false;
+    get highlighted(): boolean {
+        return this.highlightedState();
+    }
+
+    set highlighted(value: boolean) {
+        this.highlightedState.set(value);
+    }
+
+    private readonly highlightedState = signal(false);
 
     /** Whether the item is the panel's active item while DOM focus is held elsewhere. */
     protected readonly active = signal(false);

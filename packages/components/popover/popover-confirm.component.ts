@@ -55,10 +55,26 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     readonly onConfirm = new Subject<void>();
 
     /** Caption of the confirm button. Written by the trigger. */
-    confirmButtonText: string;
+    get confirmButtonText(): string {
+        return this.confirmButtonTextState();
+    }
+
+    set confirmButtonText(value: string) {
+        this.confirmButtonTextState.set(value);
+    }
+
+    private readonly confirmButtonTextState = signal<string>(undefined!);
 
     /** Question rendered in the panel. Written by the trigger. */
-    confirmText: string;
+    get confirmText(): string {
+        return this.confirmTextState();
+    }
+
+    set confirmText(value: string) {
+        this.confirmTextState.set(value);
+    }
+
+    private readonly confirmTextState = signal<string>(undefined!);
 }
 
 @Directive({
@@ -157,7 +173,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
             this.instance.confirmText = confirmText;
             this.instance.confirmButtonText = confirmButtonText;
-            this.instance.markForCheck();
         });
     }
 
@@ -167,6 +182,10 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
             return;
         }
 
+        // Before `super.updateData()`, which renders the panel.
+        this.instance.confirmButtonText = this.confirmButtonText;
+        this.instance.confirmText = this.confirmText;
+
         super.updateData();
 
         if (this.wiredInstance !== this.instance) {
@@ -174,10 +193,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
             this.setupButtonEvents();
         }
-
-        this.instance.confirmButtonText = this.confirmButtonText;
-        this.instance.confirmText = this.confirmText;
-        this.instance.detectChanges();
     }
 
     /**

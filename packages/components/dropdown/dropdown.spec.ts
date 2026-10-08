@@ -760,6 +760,26 @@ describe('KbqDropdown', () => {
         expect(fixture.componentInstance.triggerEl().nativeElement.classList.contains('kbq-pressed')).toBeFalsy();
     });
 
+    it('should refresh an OnPush view that reads the open state of a trigger outside of it', async () => {
+        const fixture = createComponent(OpenStateReader);
+
+        fixture.detectChanges();
+
+        const state = fixture.debugElement.query(By.css('.open-state')).nativeElement;
+
+        expect(state.textContent.trim()).toBe('closed');
+
+        fixture.componentInstance.trigger().open();
+        await fixture.whenStable();
+
+        expect(state.textContent.trim()).toBe('opened');
+
+        fixture.componentInstance.trigger().close();
+        await fixture.whenStable();
+
+        expect(state.textContent.trim()).toBe('closed');
+    });
+
     describe('lazy rendering', () => {
         it('should be able to render the dropdown content lazily', async () => {
             vi.useFakeTimers();
@@ -1714,7 +1734,7 @@ describe('KbqDropdown', () => {
             await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-            expect(levelOneTrigger.classList).not.toContain('kbq-dropdown-item-highlighted');
+            expect(levelOneTrigger.classList).not.toContain('kbq-dropdown-item_highlighted');
         });
 
         it('should close all the open nested dropdowns when the hover state is changed at the root', async () => {
@@ -4723,6 +4743,35 @@ class OnPushContainer {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly itemRef = viewChild.required(KbqDropdownItem, { read: ElementRef });
     readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
+}
+
+@Component({
+    selector: 'open-state',
+    template: `
+        <span class="open-state">{{ trigger().opened ? 'opened' : 'closed' }}</span>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class OpenState {
+    readonly trigger = input.required<KbqDropdownTrigger>();
+}
+
+@Component({
+    imports: [
+        KbqDropdownModule,
+        OpenState
+    ],
+    template: `
+        <button #trigger="kbqDropdownTrigger" [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item>Item</button>
+        </kbq-dropdown>
+        <open-state [trigger]="trigger" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class OpenStateReader {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
 }
 
 @Component({

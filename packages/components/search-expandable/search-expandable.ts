@@ -7,6 +7,7 @@ import {
     ChangeDetectorRef,
     Component,
     DestroyRef,
+    effect,
     ElementRef,
     inject,
     InjectionToken,
@@ -16,7 +17,9 @@ import {
     OnDestroy,
     output,
     Provider,
+    signal,
     SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -44,7 +47,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { BehaviorSubject, distinctUntilChanged, filter, Subject, Subscription, timer } from 'rxjs';
+import { filter, Subject, Subscription, timer } from 'rxjs';
 import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 /** default configuration of search-expandable */
@@ -162,8 +165,8 @@ export class KbqSearchExpandable
     /** Icon of the collapsed button and of the expanded field's prefix. */
     protected readonly searchIconName = 'kbq-magnifying-glass_16';
 
-    /** Current value in input. */
-    value = new BehaviorSubject(defaultValue);
+    /** Current value in input. A write reaches the field, and the bound control once `emitValueTimeout` passes. */
+    readonly value = signal(defaultValue);
 
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null = null;
 
@@ -181,7 +184,16 @@ export class KbqSearchExpandable
     private focusMonitorSubscription: Subscription | null = null;
 
     /** state of component. */
-    isOpened = false;
+    get isOpened(): boolean {
+        return this.openedState();
+    }
+
+    set isOpened(value: boolean) {
+        this.openedState.set(value);
+    }
+
+    private readonly openedState = signal(false);
+
     /** Emit event by enter or not. Default is false */
     readonly isEmitValueByEnterEnabled = input(false, { transform: booleanAttribute });
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
@@ -211,27 +223,25 @@ export class KbqSearchExpandable
 
     /** Whether the component is disabled. Also set by the bound control through `setDisabledState`. */
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
 
     set disabled(value: boolean) {
-        this._disabled = value;
+        this.disabledState.set(value);
 
         // `emitEvent: false`: `disable()`/`enable()` re-emit the current value, which would restart the
         // debounce and emit a value the user never typed.
-        if (this._disabled) {
+        if (value) {
             this.control.disable({ emitEvent: false });
             this.stopFocusMonitor();
         } else {
             this.control.enable({ emitEvent: false });
             this.runFocusMonitor();
         }
-
-        // `setDisabledState` reaches here from the forms API, outside any binding of this view.
-        this.changeDetectorRef.markForCheck();
     }
 
-    private _disabled: boolean = false;
+    // A signal: `setDisabledState` reaches the setter from the forms API, outside any binding of this view.
+    private readonly disabledState = signal(false);
 
     /** Tab index of the collapsed button and of the expanded input. Always `-1` while disabled. */
     get tabIndex(): number {
@@ -321,13 +331,17 @@ export class KbqSearchExpandable
         // `value` predates the internal control and stays part of the public API: writes into it must
         // still reach the field, and reads must still observe the current value. Both directions are
         // guarded on the current value, so the pair cannot loop.
-        this.value.pipe(distinctUntilChanged(), takeUntilDestroyed()).subscribe((value) => {
-            if (this.control.value !== value) {
-                this.control.setValue(value);
-            }
+        effect(() => {
+            const value = this.value();
+
+            untracked(() => {
+                if (this.control.value !== value) {
+                    this.control.setValue(value);
+                }
+            });
         });
 
-        this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.syncValueSubject(value));
+        this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.value.set(value));
 
         this.control.valueChanges
             .pipe(
@@ -430,7 +444,7 @@ export class KbqSearchExpandable
         // `emitEvent: false` keeps a programmatic write out of the debounced pipeline — feeding it back
         // through `onChange` would mark the consumer's control dirty and double-fire its `valueChanges`.
         this.control.setValue(nextValue, { emitEvent: false });
-        this.syncValueSubject(nextValue);
+        this.value.set(nextValue);
 
         // Expand automatically when the model already holds a value, without stealing focus —
         // unless focus is already inside the component (e.g. on the collapsed toggle button
@@ -484,7 +498,7 @@ export class KbqSearchExpandable
             // `emitEvent: false`: the reset reaches the consumer through the forced emit below, so
             // routing it through the debounce as well would only schedule a redundant no-op emission.
             this.control.setValue(defaultValue, { emitEvent: false });
-            this.syncValueSubject(defaultValue);
+            this.value.set(defaultValue);
             // Force the emit — closing must always synchronize the bound control to the reset
             // value, rather than relying on the debounce to eventually settle (it can be raced
             // by a value pushed just before close, silently leaving the control at a stale value).
@@ -492,11 +506,6 @@ export class KbqSearchExpandable
         }
 
         this.isOpenedChange.emit(this.isOpened);
-
-        // Ensure the OnPush view re-renders for callers that mutate isOpened from outside this
-        // component's own template (e.g. a parent-owned button), whose click marks the parent —
-        // not this component — dirty.
-        this.changeDetectorRef.markForCheck();
     }
 
     /** Moves focus back onto the collapsed button, keeping its tooltip from opening on the way. */
@@ -511,12 +520,6 @@ export class KbqSearchExpandable
 
         if (tooltip) {
             tooltip.disabled = false;
-        }
-    }
-
-    private syncValueSubject(value: string): void {
-        if (this.value.value !== value) {
-            this.value.next(value);
         }
     }
 

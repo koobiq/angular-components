@@ -134,7 +134,6 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
             // `todayDate` and the cell dates are resolved once, in `init()`, against the zone that was
             // active then; a new one can move which cell is today.
             this.init();
-            this.changeDetectorRef.markForCheck();
         });
     }
 

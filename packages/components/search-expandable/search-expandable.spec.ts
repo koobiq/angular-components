@@ -8,6 +8,7 @@ import { KbqButton } from '@koobiq/components/button';
 import { ruRULocaleData } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
 import {
+    defaultEmitValueTimeout,
     defaultValue,
     KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION,
     KbqSearchExpandable,
@@ -130,14 +131,14 @@ describe('KbqSearchExpandable', () => {
 
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
-            component.value.next('some value');
+            component.value.set('some value');
             await vi.advanceTimersByTimeAsync(300);
             fixture.detectChanges();
 
             component.toggle();
             fixture.detectChanges();
 
-            expect(component.value.getValue()).toBe(defaultValue);
+            expect(component.value()).toBe(defaultValue);
         });
 
         it('should emit isOpenedChange on toggle', () => {
@@ -311,7 +312,7 @@ describe('KbqSearchExpandable', () => {
         it('should have default empty value', () => {
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
-            expect(component.value.getValue()).toBeFalsy();
+            expect(component.value()).toBeFalsy();
         });
 
         it('should update value via ngModel', async () => {
@@ -324,7 +325,7 @@ describe('KbqSearchExpandable', () => {
 
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
-            expect(component.value.getValue()).toBe('test value');
+            expect(component.value()).toBe('test value');
         });
     });
 
@@ -362,7 +363,26 @@ describe('KbqSearchExpandable', () => {
 
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
-            expect(component.value.getValue()).toBe('form value');
+            expect(component.value()).toBe('form value');
+        });
+
+        it('should hand a value written into `value` to the field and, after the timeout, to the control', async () => {
+            vi.useFakeTimers();
+
+            formFixture.componentInstance.openedState = true;
+            formFixture.detectChanges();
+
+            const component = debugElement.componentInstance as KbqSearchExpandable;
+
+            component.value.set('written');
+            formFixture.detectChanges();
+
+            expect(debugElement.query(By.css('input')).nativeElement.value).toBe('written');
+            expect(formFixture.componentInstance.searchControl.value).toBe(defaultValue);
+
+            await vi.advanceTimersByTimeAsync(defaultEmitValueTimeout);
+
+            expect(formFixture.componentInstance.searchControl.value).toBe('written');
         });
     });
 

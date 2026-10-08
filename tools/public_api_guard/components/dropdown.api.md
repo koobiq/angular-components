@@ -176,7 +176,8 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     haltDisabledEvents(event: Event): void;
     protected handleKeydown(event: KeyboardEvent): void;
     handleMouseEnter(): void;
-    highlighted: boolean;
+    get highlighted(): boolean;
+    set highlighted(value: boolean);
     readonly hovered: Subject<KbqDropdownItem>;
     // (undocumented)
     readonly icon: _angular_core.Signal<KbqIcon | undefined>;

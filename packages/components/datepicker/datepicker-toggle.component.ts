@@ -1,23 +1,19 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-    AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    DestroyRef,
     Directive,
-    inject,
     input,
     OnChanges,
-    OnDestroy,
+    signal,
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { outputToObservable, takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
 import { KbqSiblingPopup, kbqSiblingPopupProvider } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { merge, Observable, Subscription } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { KbqDatepicker } from './datepicker.component';
 
@@ -54,17 +50,17 @@ export class KbqDatepickerToggleIcon {}
         '(click)': 'open($event)'
     }
 })
-export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy, KbqSiblingPopup {
+export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblingPopup {
     /** Whether the toggle button is disabled. */
     get disabled(): boolean {
-        return this.datepicker().disabled || this._disabled;
+        return this.datepicker().disabled || this.disabledState();
     }
 
     set disabled(value: boolean) {
-        this._disabled = coerceBooleanProperty(value);
+        this.disabledState.set(coerceBooleanProperty(value));
     }
 
-    private _disabled = false;
+    private readonly disabledState = signal(false);
 
     /** @docs-private */
     readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -86,7 +82,7 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
      *
      * Built on top of the `datepicker` signal rather than read once, because the instance is bound after the
      * consumers of this stream (a tooltip on the same element subscribes in its constructor) and may be
-     * swapped later — the same reason `watchStateChanges` is re-run from `ngOnChanges`.
+     * swapped later.
      */
     readonly openedChange: Observable<boolean> = toObservable(this.datepicker).pipe(
         filter(Boolean),
@@ -98,10 +94,6 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
         )
     );
 
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly cdr = inject(ChangeDetectorRef);
-    private stateChangesSubscription = Subscription.EMPTY;
-
     /** Whether the calendar was open when the toggle was pressed. */
     private openedOnPress = false;
 
@@ -112,18 +104,6 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
 
             if (disabled !== undefined) this.disabled = disabled;
         }
-
-        if (changes.datepicker && !changes.datepicker.firstChange) {
-            this.watchStateChanges();
-        }
-    }
-
-    ngAfterContentInit() {
-        this.watchStateChanges();
-    }
-
-    ngOnDestroy() {
-        this.stateChangesSubscription.unsubscribe();
     }
 
     /** Opens the calendar, moving the focus to its input; closes it instead when it was open at the press. */
@@ -156,22 +136,5 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
         event.preventDefault();
 
         this.openedOnPress = !!this.datepicker()?.opened;
-    }
-
-    private watchStateChanges() {
-        this.stateChangesSubscription.unsubscribe();
-
-        const datepicker = this.datepicker();
-
-        if (!datepicker) return;
-
-        this.stateChangesSubscription = merge(
-            datepicker.disabledChange,
-            datepicker.datepickerInput.disabledChange,
-            outputToObservable(datepicker.openedStream),
-            outputToObservable(datepicker.closedStream)
-        )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.cdr.markForCheck());
     }
 }

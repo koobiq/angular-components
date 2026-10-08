@@ -7,7 +7,6 @@
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
@@ -56,7 +55,8 @@ export class KbqSearchExpandable implements OnChanges, ControlValueAccessor, Aft
     protected readonly errorStateMatcher: ErrorStateMatcher;
     protected readonly focusMonitor: FocusMonitor;
     readonly isEmitValueByEnterEnabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    isOpened: boolean;
+    get isOpened(): boolean;
+    set isOpened(value: boolean);
     readonly isOpenedChange: _angular_core.OutputEmitterRef<boolean>;
     readonly isOpenedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
@@ -89,7 +89,7 @@ export class KbqSearchExpandable implements OnChanges, ControlValueAccessor, Aft
     get tooltipText(): string;
     set tooltipText(value: string | null);
     readonly tooltipTextInput: _angular_core.InputSignal<string | null | undefined>;
-    value: BehaviorSubject<string>;
+    readonly value: _angular_core.WritableSignal<string>;
     writeValue(value: string): void;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSearchExpandable, "kbq-search-expandable", never, { "isEmitValueByEnterEnabled": { "alias": "isEmitValueByEnterEnabled"; "required": false; "isSignal": true; }; "emitValueTimeout": { "alias": "emitValueTimeout"; "required": false; "isSignal": true; }; "isOpenedInput": { "alias": "isOpened"; "required": false; "isSignal": true; }; "tooltipTextInput": { "alias": "tooltipText"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, { "isOpenedChange": "isOpenedChange"; }, never, never, true, [{ directive: typeof _koobiq_components_core.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;

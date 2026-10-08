@@ -1,9 +1,11 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
+    ChangeDetectionStrategy,
     Component,
     FactoryProvider,
     inject as inject_1,
+    input,
     LOCALE_ID,
     Provider,
     Type,
@@ -1311,6 +1313,30 @@ describe('KbqDatepicker', () => {
             });
         });
 
+        describe('datepicker state read by an OnPush view', () => {
+            it('should refresh the view when the datepicker is opened, closed and disabled from code', async () => {
+                const fixture = createComponent(DatepickerWithStateReader, [KbqLuxonDateModule]);
+
+                fixture.detectChanges();
+
+                const datepicker = fixture.componentInstance.datepicker();
+                const state = fixture.debugElement.query(By.css('.datepicker-state')).nativeElement;
+
+                expect(state.textContent.trim()).toBe('closed enabled');
+
+                datepicker.open();
+                await fixture.whenStable();
+
+                expect(state.textContent.trim()).toBe('opened enabled');
+
+                datepicker.close();
+                datepicker.disabled = true;
+                await fixture.whenStable();
+
+                expect(state.textContent.trim()).toBe('closed disabled');
+            });
+        });
+
         describe('datepicker with custom kbq-datepicker-toggle icon', () => {
             it('should render the projected custom icon and suppress the default kbq-icon-button', async () => {
                 vi.useFakeTimers();
@@ -2028,6 +2054,35 @@ describe('KbqDatepicker', () => {
     `
 })
 class DatepickerInOverlayLayer {
+    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+}
+
+@Component({
+    selector: 'datepicker-state',
+    template: `
+        <span class="datepicker-state">
+            {{ datepicker().opened ? 'opened' : 'closed' }} {{ datepicker().disabled ? 'disabled' : 'enabled' }}
+        </span>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class DatepickerState {
+    readonly datepicker = input.required<KbqDatepicker<DateTime>>();
+}
+
+@Component({
+    imports: [
+        KbqDatepickerModule,
+        DatepickerState
+    ],
+    template: `
+        <input [kbqDatepicker]="d" />
+        <kbq-datepicker #d />
+        <datepicker-state [datepicker]="d" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class DatepickerWithStateReader {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
 }
 
