@@ -1,6 +1,6 @@
 ﻿import { F8 } from '@angular/cdk/keycodes';
 import { Component, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/components/core';
@@ -192,6 +192,8 @@ class PasswordInputWithLabel {
 }
 
 describe('KbqPasswordInput', () => {
+    afterEach(() => vi.useRealTimers());
+
     it('should handle Alt+F8 only when KbqPasswordToggle is present', async () => {
         const fixture = createComponent(PasswordInputWithDynamicToggle);
         const input = fixture.debugElement.query(By.directive(KbqInputPassword)).nativeElement as HTMLInputElement;
@@ -211,7 +213,7 @@ describe('KbqPasswordInput', () => {
         expect(input.type).toBe('text');
     });
 
-    it('should have toggle', fakeAsync(() => {
+    it('should have toggle', () => {
         const fixture = createComponent(PasswordInputDefault);
 
         fixture.detectChanges();
@@ -219,29 +221,28 @@ describe('KbqPasswordInput', () => {
         const kbqPasswordToggle = fixture.debugElement.query(By.css('.kbq-password-toggle'));
 
         expect(kbqPasswordToggle).not.toBeNull();
-        flush();
-    }));
+    });
 
-    it('should change visibility of toggle if form field disabled and empty', fakeAsync(() => {
+    it('should change visibility of toggle if form field disabled and empty', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(PasswordInputDefault);
         const kbqPasswordToggle = fixture.debugElement.query(By.css('.kbq-password-toggle'));
 
         fixture.componentInstance.disabled = true;
         fixture.componentInstance.value = '';
         fixture.detectChanges();
-        tick(1000);
+        await vi.advanceTimersByTimeAsync(1000);
 
         expect(kbqPasswordToggle.styles.visibility).toEqual('hidden');
 
         fixture.componentInstance.disabled = false;
         fixture.componentInstance.value = '123';
         fixture.detectChanges();
-        tick(1000);
+        await vi.advanceTimersByTimeAsync(1000);
 
         expect(kbqPasswordToggle.styles.visibility).toEqual('visible');
-
-        flush();
-    }));
+    });
 
     it('toggle should change input type', () => {
         const fixture = createComponent(PasswordInputDefault);
@@ -298,11 +299,11 @@ describe('KbqPasswordInput', () => {
         expect(() => fixture.detectChanges()).toThrow('You should set [regex] or [checkRule] for PasswordRules.Custom');
     });
 
-    it('should provide custom password rule via callback', fakeAsync(() => {
+    it('should provide custom password rule via callback', async () => {
         const fixture = createComponent(PasswordInputCustomPasswordRule);
 
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         const input = fixture.debugElement.query(By.directive(KbqInputPassword)).nativeElement;
         const hint = () => fixture.componentInstance.passwordHint();
@@ -320,14 +321,14 @@ describe('KbqPasswordInput', () => {
 
         type('TESTValue');
         expect(hint().hasError).toBe(false);
-    }));
+    });
 
-    it('should apply validation rules on blur', fakeAsync(() => {
+    it('should apply validation rules on blur', async () => {
         const fixture = createComponent(PasswordInputWithReactiveControl);
         const { componentInstance } = fixture;
 
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         const passwordInput: HTMLInputElement = fixture.debugElement.query(
             By.directive(KbqInputPassword)
@@ -341,27 +342,27 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
 
         expect(componentInstance.form.controls.control.hasError('maxlength')).toBeTruthy();
-    }));
+    });
 
     describe('accessibility', () => {
-        it('should mint its id in its own namespace', fakeAsync(() => {
+        it('should mint its id in its own namespace', async () => {
             const fixture = createComponent(PasswordInputDefault);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             const passwordInput: HTMLInputElement = fixture.debugElement.query(
                 By.directive(KbqInputPassword)
             ).nativeElement;
 
             expect(passwordInput.id).toMatch(/^kbq-input-password-\w+$/);
-        }));
+        });
 
-        it('should flip aria-invalid with the error state', fakeAsync(() => {
+        it('should flip aria-invalid with the error state', async () => {
             const fixture = createComponent(PasswordInputWithReactiveControl);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             const passwordInput: HTMLInputElement = fixture.debugElement.query(
                 By.directive(KbqInputPassword)
@@ -374,17 +375,17 @@ describe('KbqPasswordInput', () => {
             dispatchFakeEvent(passwordInput, 'input');
             dispatchFakeEvent(passwordInput, 'blur');
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(passwordInput.getAttribute('aria-invalid')).toBe('true');
-        }));
+        });
 
-        it('should link every password hint through aria-describedby', fakeAsync(() => {
+        it('should link every password hint through aria-describedby', async () => {
             const fixture = createComponent(PasswordInputDefault);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const passwordInput: HTMLInputElement = fixture.debugElement.query(
@@ -394,7 +395,7 @@ describe('KbqPasswordInput', () => {
 
             expect(describedByIds).toHaveLength(fixture.debugElement.queryAll(By.css('kbq-password-hint')).length);
             expect(describedByIds.every((id) => !!document.getElementById(id))).toBe(true);
-        }));
+        });
 
         it('should have no AXE violations for a label + control + hint + error template', async () => {
             const fixture = createComponent(PasswordInputWithLabel);

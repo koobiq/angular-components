@@ -1,5 +1,5 @@
 ﻿import { Component, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, ComponentFixtureAutoDetect, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
     FormControl,
@@ -311,7 +311,7 @@ class InputWithHintsAndError {
 
 describe('KbqInput', () => {
     describe('basic behaviors', () => {
-        it('should reflect disabled state on form-field and native input', fakeAsync(() => {
+        it('should reflect disabled state on form-field and native input', async () => {
             const fixture = createComponent(InputForBehaviors);
 
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
@@ -323,17 +323,17 @@ describe('KbqInput', () => {
 
             fixture.componentInstance.disabled = true;
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(formFieldElement.classList.contains('kbq-disabled')).toBe(true);
             expect(inputElement.disabled).toBe(true);
             expect(inputElement.getAttribute('disabled')).not.toBeNull();
-        }));
+        });
 
         // The case above goes through `DefaultValueAccessor`, which writes the native `disabled` property
         // itself, so it never reaches `KbqInput`'s own host binding. This one has no form control at all.
-        it('should reflect disabled state without a form control', fakeAsync(() => {
+        it('should reflect disabled state without a form control', async () => {
             const fixture = createComponent(InputWithoutForm);
             const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
@@ -345,9 +345,9 @@ describe('KbqInput', () => {
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('disabled')).not.toBeNull();
-        }));
+        });
 
-        it('should reflect placeholder input on native element', fakeAsync(() => {
+        it('should reflect placeholder input on native element', async () => {
             const fixture = createComponent(InputForBehaviors);
             const testComponent = fixture.debugElement.componentInstance;
             const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
@@ -363,16 +363,19 @@ describe('KbqInput', () => {
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('placeholder')).toBe('');
-        }));
+        });
 
         describe('cleaner', () => {
-            it('should show cleaner when value is set and clear value on cleaner click', fakeAsync(() => {
+            it('should show cleaner when value is set and clear value on cleaner click', async () => {
                 const fixture = createComponent(FormFieldWithCleaner);
                 const testComponent = fixture.debugElement.componentInstance;
                 const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
                 const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
                 expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(0);
+
+                // NgModel writes its initial value in a microtask, which would overwrite a value typed before it.
+                await fixture.whenStable();
 
                 inputElement.value = 'test';
                 dispatchFakeEvent(inputElement, 'input');
@@ -387,14 +390,16 @@ describe('KbqInput', () => {
 
                 expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(0);
                 expect(testComponent.value).toBe(null);
-            }));
+            });
 
-            it('should clear value on ESC keydown', fakeAsync(() => {
+            it('should clear value on ESC keydown', async () => {
                 const fixture = createComponent(FormFieldWithCleaner);
                 const formFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));
                 const formFieldElement = formFieldDebug.nativeElement;
                 const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
                 const testComponent = fixture.debugElement.componentInstance;
+
+                await fixture.whenStable();
 
                 inputElement.value = 'test';
                 dispatchFakeEvent(inputElement, 'input');
@@ -408,30 +413,30 @@ describe('KbqInput', () => {
 
                 expect(formFieldElement.querySelectorAll('.kbq-form-field__cleaner').length).toBe(0);
                 expect(testComponent.value).toBe(null);
-            }));
+            });
         });
     });
 
     describe('validation', () => {
         describe('ngModel', () => {
             describe('standalone', () => {
-                it('should run validation (required)', fakeAsync(() => {
+                it('should run validation (required)', async () => {
                     const fixture = createComponent(FormFieldWithStandaloneNgModel);
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
                     expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
-                }));
+                });
             });
 
             describe('in form', () => {
-                it('should not run validation (required)', fakeAsync(() => {
+                it('should not run validation (required)', async () => {
                     const fixture = createComponent(FormFieldWithNgModelInForm);
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
                     expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
-                }));
+                });
 
-                it('should run validation after submit (required)', fakeAsync(() => {
+                it('should run validation after submit (required)', async () => {
                     const fixture = createComponent(FormFieldWithNgModelInForm);
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
                     const submitButton = fixture.debugElement.query(By.css('button')).nativeElement;
@@ -439,9 +444,9 @@ describe('KbqInput', () => {
                     expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
 
                     submitButton.click();
-                    flush();
+                    await fixture.whenStable();
                     expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
-                }));
+                });
             });
         });
     });
@@ -454,12 +459,14 @@ describe('KbqInput', () => {
             expect(inputElement.classList).toContain('kbq-input_monospace');
         });
 
-        it('should toggle invalid state when value violates minlength', fakeAsync(() => {
+        it('should toggle invalid state when value violates minlength', async () => {
             const fixture = createComponent(InputInvalid);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
             const inputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
             expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
+
+            await fixture.whenStable();
 
             inputElement.value = 'four';
             dispatchFakeEvent(inputElement, 'input');
@@ -472,15 +479,15 @@ describe('KbqInput', () => {
             fixture.detectChanges();
 
             expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
-        }));
+        });
 
-        it('should render kbq-hint with provided text', fakeAsync(() => {
+        it('should render kbq-hint with provided text', async () => {
             const fixture = createComponent(FormFieldWithHint);
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
             expect(formFieldElement.querySelectorAll('.kbq-form-field__hint').length).toBe(1);
             expect(formFieldElement.querySelectorAll('.kbq-form-field__hint')[0].textContent).toBe('Hint');
-        }));
+        });
 
         it('should render kbqPrefix icon', async () => {
             const fixture = createComponent(FormFieldWithPrefix, [KbqIconModule]);
@@ -650,7 +657,15 @@ describe('KbqInput', () => {
     });
 
     describe('async validation', () => {
-        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should emit VALID via statusChanges on blur', async () => {
             const fixture = createComponent(InputControlWithAsyncValidators);
             const { control, input } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];
@@ -663,23 +678,23 @@ describe('KbqInput', () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             input().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             subscription.unsubscribe();
-        }));
+        });
     });
 
     describe('accessibility', () => {
-        it('should give the text and the password control distinct ids', fakeAsync(() => {
+        it('should give the text and the password control distinct ids', async () => {
             const fixture = createComponent(LoginForm);
 
             fixture.detectChanges();
@@ -694,9 +709,9 @@ describe('KbqInput', () => {
             // produced byte-identical ids whenever the two controls were created in the same order.
             expect(ids[0]).toMatch(/^kbq-input-\w+$/);
             expect(ids[1]).toMatch(/^kbq-input-password-\w+$/);
-        }));
+        });
 
-        it('should resolve every label `for` to its own control', fakeAsync(() => {
+        it('should resolve every label `for` to its own control', async () => {
             const fixture = createComponent(LoginForm);
 
             fixture.detectChanges();
@@ -711,9 +726,9 @@ describe('KbqInput', () => {
 
                 expect(document.getElementById(label.htmlFor)).toBe(input);
             });
-        }));
+        });
 
-        it('should flip aria-invalid with the error state', fakeAsync(() => {
+        it('should flip aria-invalid with the error state', async () => {
             const fixture = createComponent(InputWithHintsAndError);
             const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
@@ -723,19 +738,19 @@ describe('KbqInput', () => {
 
             fixture.componentInstance.control.markAsDirty();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('aria-invalid')).toBe('true');
-        }));
+        });
 
-        it('should list every hint and the error in aria-describedby', fakeAsync(() => {
+        it('should list every hint and the error in aria-describedby', async () => {
             const fixture = createComponent(InputWithHintsAndError);
             const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
 
             fixture.componentInstance.control.markAsDirty();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const describedByIds = inputElement.getAttribute('aria-describedby')!.split(' ');
@@ -746,7 +761,7 @@ describe('KbqInput', () => {
                 2
             );
             expect(describedElements.every(Boolean)).toBe(true);
-        }));
+        });
 
         it('should have no AXE violations for a label + control + hint + error template', async () => {
             const fixture = createComponent(InputWithHintsAndError);

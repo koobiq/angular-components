@@ -1,6 +1,6 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { ChangeDetectionStrategy, Component, DebugElement, Provider, signal, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFlexWrap, KbqOrientation } from '@koobiq/components/core';
 import { EMPTY, Subject } from 'rxjs';
@@ -151,6 +151,8 @@ const getOverflowItemsDirective = (debugElement: DebugElement): KbqOverflowItems
 };
 
 describe('KbqOverflowItems', () => {
+    afterEach(() => vi.useRealTimers());
+
     it('should render all items', () => {
         const { debugElement } = createComponent(TestOverflowItems);
 
@@ -177,19 +179,23 @@ describe('KbqOverflowItems', () => {
     });
 
     describe('additionalResizeObserverTargets', () => {
-        it('should observe document.body by default', fakeAsync(() => {
+        it('should observe document.body by default', async () => {
+            vi.useFakeTimers();
+
             const observeSpy = vi.fn().mockReturnValue(EMPTY);
 
             createComponent(TestOverflowItemsAdditionalTargets, [
                 { provide: SharedResizeObserver, useValue: { observe: observeSpy } }
             ]);
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(observeSpy).toHaveBeenCalledWith(document.body);
-        }));
+        });
 
-        it('should observe new target when input changes dynamically', fakeAsync(() => {
+        it('should observe new target when input changes dynamically', async () => {
+            vi.useFakeTimers();
+
             const targetA = document.createElement('div');
             const targetB = document.createElement('div');
             const observeSpy = vi.fn().mockReturnValue(new Subject().asObservable());
@@ -200,18 +206,20 @@ describe('KbqOverflowItems', () => {
 
             fixture.componentInstance.additionalTarget.set(targetA);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(observeSpy).toHaveBeenCalledWith(targetA);
 
             fixture.componentInstance.additionalTarget.set(targetB);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(observeSpy).toHaveBeenCalledWith(targetB);
-        }));
+        });
 
-        it('should unsubscribe from old target when input changes dynamically', fakeAsync(() => {
+        it('should unsubscribe from old target when input changes dynamically', async () => {
+            vi.useFakeTimers();
+
             const targetA = document.createElement('div');
             const targetB = document.createElement('div');
             const subjectA = new Subject<void>();
@@ -228,18 +236,20 @@ describe('KbqOverflowItems', () => {
 
             fixture.componentInstance.additionalTarget.set(targetA);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(subjectA.observed).toBe(true);
 
             fixture.componentInstance.additionalTarget.set(targetB);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(subjectA.observed).toBe(false);
-        }));
+        });
 
-        it('should observe all targets when input is an array', fakeAsync(() => {
+        it('should observe all targets when input is an array', async () => {
+            vi.useFakeTimers();
+
             const targetA = document.createElement('div');
             const targetB = document.createElement('div');
             const observeSpy = vi.fn().mockReturnValue(EMPTY);
@@ -250,13 +260,15 @@ describe('KbqOverflowItems', () => {
 
             fixture.componentInstance.additionalTargets.set([targetA, targetB]);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(observeSpy).toHaveBeenCalledWith(targetA);
             expect(observeSpy).toHaveBeenCalledWith(targetB);
-        }));
+        });
 
-        it('should unsubscribe from old targets array when input changes dynamically', fakeAsync(() => {
+        it('should unsubscribe from old targets array when input changes dynamically', async () => {
+            vi.useFakeTimers();
+
             const targetA = document.createElement('div');
             const targetB = document.createElement('div');
             const targetC = document.createElement('div');
@@ -276,22 +288,24 @@ describe('KbqOverflowItems', () => {
 
             fixture.componentInstance.additionalTargets.set([targetA, targetB]);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(subjectA.observed).toBe(true);
             expect(subjectB.observed).toBe(true);
 
             fixture.componentInstance.additionalTargets.set([targetC]);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(subjectA.observed).toBe(false);
             expect(subjectB.observed).toBe(false);
-        }));
+        });
     });
 
     describe('debounceTime', () => {
-        it('should apply debounceTime input and recalculate on resize events', fakeAsync(() => {
+        it('should apply debounceTime input and recalculate on resize events', async () => {
+            vi.useFakeTimers();
+
             const hostResize$ = new Subject<void>();
             const bodyResize$ = new Subject<void>();
             const observeSpy = vi.fn().mockImplementation((target: Element) => {
@@ -306,20 +320,22 @@ describe('KbqOverflowItems', () => {
             const directive = getOverflowItemsDirective(fixture.debugElement);
             const hiddenItemsSpy = vi.spyOn(directive as any, 'getHiddenItems');
 
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
             hiddenItemsSpy.mockClear();
 
             expect(directive.debounceTime()).toBe(100);
 
             hostResize$.next();
 
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
             expect(hiddenItemsSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 
     describe('without result element', () => {
-        it('should recalculate hidden items without kbqOverflowItemsResult and emit hidden IDs', fakeAsync(() => {
+        it('should recalculate hidden items without kbqOverflowItemsResult and emit hidden IDs', async () => {
+            vi.useFakeTimers();
+
             const hostResize$ = new Subject<void>();
             const bodyResize$ = new Subject<void>();
             const observeSpy = vi.fn().mockImplementation((target: Element) => {
@@ -336,20 +352,24 @@ describe('KbqOverflowItems', () => {
 
             directive.changes.subscribe(changesSpy);
 
-            expect(() => {
-                hostResize$.next();
-                tick();
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    hostResize$.next();
+                    await vi.advanceTimersByTimeAsync(0);
+                })()
+            ).resolves.not.toThrow();
 
             const hiddenIds = directive.hiddenItemIDs();
 
             expect(hiddenIds.size).toBe(0);
             expect(changesSpy).toHaveBeenCalledWith(hiddenIds);
-        }));
+        });
     });
 
     describe('changes and hiddenItemIDs', () => {
-        it('should keep hiddenItemIDs empty before first recalculation and update after resize', fakeAsync(() => {
+        it('should keep hiddenItemIDs empty before first recalculation and update after resize', async () => {
+            vi.useFakeTimers();
+
             const hostResize$ = new Subject<void>();
             const bodyResize$ = new Subject<void>();
             const observeSpy = vi.fn().mockImplementation((target: Element) => {
@@ -367,13 +387,13 @@ describe('KbqOverflowItems', () => {
             expect(initial.size).toBe(0);
 
             hostResize$.next();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const updated = directive.hiddenItemIDs();
 
             expect(updated.size).toBe(0);
             expect(updated).not.toBe(initial);
-        }));
+        });
     });
 
     describe('sortItemsByOrder', () => {
@@ -414,7 +434,9 @@ describe('KbqOverflowItems', () => {
     });
 
     describe('orientation', () => {
-        it('should trigger recalculation when orientation input changes', fakeAsync(() => {
+        it('should trigger recalculation when orientation input changes', async () => {
+            vi.useFakeTimers();
+
             const hostResize$ = new Subject<void>();
             const observeSpy = vi.fn().mockReturnValue(hostResize$.asObservable());
             const fixture = createComponent(TestOverflowItems, [
@@ -423,19 +445,21 @@ describe('KbqOverflowItems', () => {
             const directive = getOverflowItemsDirective(fixture.debugElement);
             const spy = vi.spyOn(directive as any, 'getHiddenItems');
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             spy.mockClear();
 
             fixture.componentInstance.orientation.set('vertical');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(spy).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 
     describe('reverseOverflowOrder', () => {
-        it('should trigger recalculation when reverseOverflowOrder input changes', fakeAsync(() => {
+        it('should trigger recalculation when reverseOverflowOrder input changes', async () => {
+            vi.useFakeTimers();
+
             const hostResize$ = new Subject<void>();
             const observeSpy = vi.fn().mockReturnValue(hostResize$.asObservable());
             const fixture = createComponent(TestOverflowItems, [
@@ -444,19 +468,21 @@ describe('KbqOverflowItems', () => {
             const directive = getOverflowItemsDirective(fixture.debugElement);
             const spy = vi.spyOn(directive as any, 'getHiddenItems');
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             spy.mockClear();
 
             fixture.componentInstance.reverseOverflowOrder.set(true);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(spy).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 
     describe('wrap', () => {
-        it('should set flex-wrap style on host element when wrap input changes', fakeAsync(() => {
+        it('should set flex-wrap style on host element when wrap input changes', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(TestOverflowItems);
             const hostEl = fixture.debugElement.query(By.directive(KbqOverflowItems)).nativeElement as HTMLElement;
 
@@ -464,10 +490,10 @@ describe('KbqOverflowItems', () => {
 
             fixture.componentInstance.flexWrap.set('wrap');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(hostEl.style.flexWrap).toBe('wrap');
-        }));
+        });
     });
 
     describe('ElementVisibilityManager', () => {

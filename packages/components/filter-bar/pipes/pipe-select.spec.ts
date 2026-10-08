@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
 import {
@@ -93,6 +93,10 @@ describe('KbqPipeSelectComponent', () => {
 
     afterAll(() => {
         window.structuredClone = originalStructuredClone;
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     beforeEach(() => {
@@ -241,7 +245,9 @@ describe('KbqPipeSelectComponent', () => {
             expect(spy).toHaveBeenCalled();
         });
 
-        it('should emit onChangePipe via UI click on option', fakeAsync(() => {
+        it('should emit onChangePipe via UI click on option', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
@@ -253,7 +259,7 @@ describe('KbqPipeSelectComponent', () => {
             filterBar.onChangePipe.subscribe(spy);
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
@@ -261,11 +267,11 @@ describe('KbqPipeSelectComponent', () => {
             expect(options.length).toBeGreaterThan(0);
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('keyboard selection & focus restore', () => {
@@ -274,7 +280,7 @@ describe('KbqPipeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        const shouldSelectActiveOptionAndRestoreFocus = (search: boolean) => {
+        const shouldSelectActiveOptionAndRestoreFocus = async (search: boolean) => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null, search })]);
             fixture.detectChanges();
 
@@ -288,13 +294,13 @@ describe('KbqPipeSelectComponent', () => {
             const selectEl = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
 
             component.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Highlight the first option, then confirm it with Enter.
             component.select().keyManager.setActiveItem(0);
             dispatchKeyboardEvent(selectEl, 'keydown', ENTER);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(changeSpy).toHaveBeenCalled();
@@ -304,13 +310,17 @@ describe('KbqPipeSelectComponent', () => {
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), 'keyboard');
         };
 
-        it('should select the active option with Enter and restore focus (no search)', fakeAsync(() => {
-            shouldSelectActiveOptionAndRestoreFocus(false);
-        }));
+        it('should select the active option with Enter and restore focus (no search)', async () => {
+            vi.useFakeTimers();
 
-        it('should select the active option with Enter and restore focus (with search)', fakeAsync(() => {
-            shouldSelectActiveOptionAndRestoreFocus(true);
-        }));
+            await shouldSelectActiveOptionAndRestoreFocus(false);
+        });
+
+        it('should select the active option with Enter and restore focus (with search)', async () => {
+            vi.useFakeTimers();
+
+            await shouldSelectActiveOptionAndRestoreFocus(true);
+        });
     });
 
     describe('compareByValue', () => {
@@ -458,7 +468,9 @@ describe('KbqPipeSelectComponent', () => {
             expect(getPipeComponent().select().compareWith()).toBe(customCompare);
         });
 
-        it('should match the selected value in the panel using the custom comparator', fakeAsync(() => {
+        it('should match the selected value in the panel using the custom comparator', async () => {
+            vi.useFakeTimers();
+
             setTemplateWithComparator();
             // The selected value is a distinct object equal to SELECT_VALUES[1] only by `value`; the
             // options carry no `id`. `getCorrespondOption` uses `.find`, so exactly one option is
@@ -471,7 +483,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const selectedText = Array.from(document.querySelectorAll('.kbq-option.kbq-selected')).map((el) =>
@@ -479,7 +491,7 @@ describe('KbqPipeSelectComponent', () => {
             );
 
             expect(selectedText).toEqual(['Option 2']);
-        }));
+        });
     });
 
     describe('panelMaxHeight forwarding', () => {
@@ -512,37 +524,43 @@ describe('KbqPipeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should forward panelMaxHeight from the pipe template to the panel', fakeAsync(() => {
+        it('should forward panelMaxHeight from the pipe template to the panel', async () => {
+            vi.useFakeTimers();
+
             setTemplateWithPanelMaxHeight(300);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('300px');
-        }));
+        });
 
-        it('should leave the token unset when the template omits panelMaxHeight', fakeAsync(() => {
+        it('should leave the token unset when the template omits panelMaxHeight', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // No inline custom property at all, so the select-family default of 256px applies.
             expect(readPanelMaxHeightToken()).toBe('');
-        }));
+        });
 
-        it('should clear a previously set panelMaxHeight when a later template update omits it', fakeAsync(() => {
+        it('should clear a previously set panelMaxHeight when a later template update omits it', async () => {
+            vi.useFakeTimers();
+
             setTemplateWithPanelMaxHeight(300);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('300px');
@@ -563,14 +581,16 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('');
-        }));
+        });
 
-        it('should forward panelMaxHeight from a later template update even when it omits values', fakeAsync(() => {
+        it('should forward panelMaxHeight from a later template update even when it omits values', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('');
@@ -590,7 +610,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('240px');
-        }));
+        });
     });
 
     describe('caption', () => {
@@ -618,24 +638,28 @@ describe('KbqPipeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should render the caption as a second line', fakeAsync(() => {
+        it('should render the caption as a second line', async () => {
+            vi.useFakeTimers();
+
             setTemplate([CAPTIONED]);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getOptions()[0].querySelector('.kbq-option-caption')!.textContent!.trim()).toBe('category.generic');
-        }));
+        });
 
-        it('should leave an option without a caption as a bare text node', fakeAsync(() => {
+        it('should leave an option without a caption as a bare text node', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const option = getOptions()[0];
@@ -644,34 +668,38 @@ describe('KbqPipeSelectComponent', () => {
             expect(option.querySelector('.kbq-option-caption')).toBeNull();
             expect(option.querySelector('.kbq-option-text')!.children.length).toBe(0);
             expect(option.textContent!.trim()).toBe(SELECT_VALUES[0].name);
-        }));
+        });
 
-        it('should keep the caption out of the trigger', fakeAsync(() => {
+        it('should keep the caption out of the trigger', async () => {
+            vi.useFakeTimers();
+
             setTemplate([CAPTIONED]);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: CAPTIONED })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Without `viewValue` the option would derive it from `textContent` and glue the two lines.
             expect(getPipeComponent().select().triggerValue).toBe('Threat type');
             expect(fixture.nativeElement.querySelector('.kbq-pipe__value').textContent.trim()).toBe('Threat type');
-        }));
+        });
 
-        it('should let a valueTemplate own the option and its view value', fakeAsync(() => {
+        it('should let a valueTemplate own the option and its view value', async () => {
+            vi.useFakeTimers();
+
             setTemplate([CAPTIONED], fixture.componentInstance.optionTemplate());
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: CAPTIONED })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getOptions()[0].querySelector('.kbq-option-caption')).toBeNull();
             expect(getPipeComponent().select().triggerValue).toBe('custom Threat type');
-        }));
+        });
     });
 
     describe('multilineOptions', () => {
@@ -701,36 +729,42 @@ describe('KbqPipeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should add the modifier to the panel when the template sets it', fakeAsync(() => {
+        it('should add the modifier to the panel when the template sets it', async () => {
+            vi.useFakeTimers();
+
             setTemplate(true);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(true);
-        }));
+        });
 
-        it('should leave the panel unmodified when the template omits it', fakeAsync(() => {
+        it('should leave the panel unmodified when the template omits it', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(false);
-        }));
+        });
 
-        it('should clear the modifier when a later template update omits it', fakeAsync(() => {
+        it('should clear the modifier when a later template update omits it', async () => {
+            vi.useFakeTimers();
+
             setTemplate(true);
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(true);
@@ -740,14 +774,16 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(false);
-        }));
+        });
 
-        it('should apply a later template update that omits values', fakeAsync(() => {
+        it('should apply a later template update that omits values', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(false);
@@ -767,7 +803,7 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             expect(panelHasMultilineClass()).toBe(true);
-        }));
+        });
     });
 
     describe('open', () => {
@@ -797,7 +833,9 @@ describe('KbqPipeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should initially emit all values', fakeAsync(() => {
+        it('should initially emit all values', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null, search: true })
             ]);
@@ -809,12 +847,14 @@ describe('KbqPipeSelectComponent', () => {
             component.filteredOptions.subscribe((filtered) => {
                 lastFiltered = filtered;
             });
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(lastFiltered.length).toBe(SELECT_VALUES.length);
-        }));
+        });
 
-        it('should filter options by search text', fakeAsync(() => {
+        it('should filter options by search text', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null, search: true })
             ]);
@@ -828,13 +868,15 @@ describe('KbqPipeSelectComponent', () => {
             });
 
             component.searchControl.setValue('Option 1');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(lastFiltered.length).toBe(1);
             expect(lastFiltered[0].name).toBe('Option 1');
-        }));
+        });
 
-        it('should return all options when search is cleared', fakeAsync(() => {
+        it('should return all options when search is cleared', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null, search: true })
             ]);
@@ -848,14 +890,16 @@ describe('KbqPipeSelectComponent', () => {
             });
 
             component.searchControl.setValue('Option 1');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             component.searchControl.setValue('');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(lastFiltered.length).toBe(SELECT_VALUES.length);
-        }));
+        });
 
-        it('should filter case-insensitively', fakeAsync(() => {
+        it('should filter case-insensitively', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null, search: true })
             ]);
@@ -869,11 +913,11 @@ describe('KbqPipeSelectComponent', () => {
             });
 
             component.searchControl.setValue('option 1');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(lastFiltered.length).toBe(1);
             expect(lastFiltered[0].name).toBe('Option 1');
-        }));
+        });
 
         describe('by caption', () => {
             const CAPTIONED: KbqSelectValue[] = [
@@ -883,7 +927,7 @@ describe('KbqPipeSelectComponent', () => {
                 { name: 'Plain', value: 'plain' }
             ];
 
-            const search = (query: string): KbqSelectValue[] => {
+            const search = async (query: string): Promise<KbqSelectValue[]> => {
                 fixture.componentInstance.pipeTemplates = [
                     {
                         name: 'Select',
@@ -908,18 +952,22 @@ describe('KbqPipeSelectComponent', () => {
                 });
 
                 component.searchControl.setValue(query);
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 return lastFiltered;
             };
 
-            it('should match an option whose caption contains the query', fakeAsync(() => {
-                expect(search('category').map((item) => item.name)).toEqual(['Threat type']);
-            }));
+            it('should match an option whose caption contains the query', async () => {
+                vi.useFakeTimers();
 
-            it('should match the caption case-insensitively', fakeAsync(() => {
-                expect(search('AUDIT').map((item) => item.name)).toEqual(['Action']);
-            }));
+                expect((await search('category')).map((item) => item.name)).toEqual(['Threat type']);
+            });
+
+            it('should match the caption case-insensitively', async () => {
+                vi.useFakeTimers();
+
+                expect((await search('AUDIT')).map((item) => item.name)).toEqual(['Action']);
+            });
         });
     });
 
@@ -929,7 +977,9 @@ describe('KbqPipeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should render options on first open when templates are supplied after the pipe is created', fakeAsync(() => {
+        it('should render options on first open when templates are supplied after the pipe is created', async () => {
+            vi.useFakeTimers();
+
             // Reproduce a parent assigning `pipeTemplates` in ngAfterViewInit: the Select pipe is
             // created before its template (carrying the option `values`) arrives.
             fixture.componentInstance.pipeTemplates = [];
@@ -953,13 +1003,13 @@ describe('KbqPipeSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             expect(options.length).toBe(SELECT_VALUES.length);
-        }));
+        });
     });
 
     describe('onClear', () => {

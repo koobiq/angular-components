@@ -1,5 +1,5 @@
 import { Component, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
 
@@ -70,7 +70,7 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.position()).toBe(SidebarPositions.Right);
         });
 
-        it('should fire change event', fakeAsync(() => {
+        it('should fire change event', async () => {
             const changeSpy = vi.fn();
 
             sidebarComponent.stateChanged.subscribe(changeSpy);
@@ -79,11 +79,11 @@ describe(KbqSidebarModule.name, () => {
 
             sidebarComponent.toggle();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(sidebarComponent.opened).toBeFalsy();
             expect(changeSpy).toHaveBeenCalledWith(false);
-        }));
+        });
 
         it('should toggle on `BracketLeft` keypress', () => {
             const toggleSpy = vi.spyOn(sidebarComponent, 'toggle');

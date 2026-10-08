@@ -1,6 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
 import {
@@ -388,6 +388,8 @@ describe('KbqSplitButton', () => {
     });
 
     describe('dynamic buttons', () => {
+        afterEach(() => vi.useRealTimers());
+
         it('should reassign the position classes when a button is added', () => {
             const fixture = TestBed.createComponent(TestAppDynamicButtons);
 
@@ -436,7 +438,9 @@ describe('KbqSplitButton', () => {
             });
         });
 
-        it('should stop reacting to button changes once the split button is destroyed', fakeAsync(() => {
+        it('should stop reacting to button changes once the split button is destroyed', async () => {
+            vi.useFakeTimers();
+
             const fixture = TestBed.createComponent(TestAppDynamicButtons);
 
             fixture.componentInstance.showSecond = true;
@@ -452,10 +456,10 @@ describe('KbqSplitButton', () => {
             first.classList.remove('kbq-split-button_first');
             fixture.destroy();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(first.classList.contains('kbq-split-button_first')).toBe(false);
-        }));
+        });
     });
 
     describe('dropdown integration', () => {

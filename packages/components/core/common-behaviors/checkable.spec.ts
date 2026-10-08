@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqCheckable, KbqCheckableClickAction, TransitionCheckState } from './checkable';
@@ -318,17 +318,17 @@ describe(`${KbqCheckable.name} integration with ngModel`, () => {
         ngModelFixture = createComponent(TestCheckableWithNgModel);
     });
 
-    it('should support two-way binding through the KbqCheckable ControlValueAccessor', fakeAsync(() => {
+    it('should support two-way binding through the KbqCheckable ControlValueAccessor', async () => {
         const testInput = ngModelFixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
 
-        tick();
+        await ngModelFixture.whenStable();
 
         expect(ngModelFixture.componentInstance.checked).toBe(false);
 
         testInput.click();
         ngModelFixture.detectChanges();
-        tick();
+        await ngModelFixture.whenStable();
 
         expect(ngModelFixture.componentInstance.checked).toBe(true);
-    }));
+    });
 });

@@ -1,5 +1,5 @@
 import { Component, DebugElement, signal, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/components/core';
@@ -93,7 +93,7 @@ describe('KbqCheckbox', () => {
             expect(inputElement.indeterminate).toBe(false);
         });
 
-        it('should set indeterminate to false when input clicked', fakeAsync(() => {
+        it('should set indeterminate to false when input clicked', async () => {
             testComponent.isIndeterminate = true;
             fixture.detectChanges();
 
@@ -105,7 +105,7 @@ describe('KbqCheckbox', () => {
             fixture.detectChanges();
 
             // Flush the microtasks because the forms module updates the model state asynchronously.
-            flush();
+            await fixture.whenStable();
 
             // The checked property has been updated from the model and now the view needs
             // to reflect the state change.
@@ -129,7 +129,7 @@ describe('KbqCheckbox', () => {
             fixture.detectChanges();
 
             // Flush the microtasks because the forms module updates the model state asynchronously.
-            flush();
+            await fixture.whenStable();
 
             // The checked property has been updated from the model and now the view needs
             // to reflect the state change.
@@ -139,7 +139,7 @@ describe('KbqCheckbox', () => {
             expect(inputElement.indeterminate).toBe(false);
             expect(inputElement.checked).toBe(false);
             expect(testComponent.isIndeterminate).toBe(false);
-        }));
+        });
 
         it('should not set indeterminate to false when checked is set programmatically', () => {
             testComponent.isIndeterminate = true;
@@ -189,7 +189,7 @@ describe('KbqCheckbox', () => {
             expect(checkboxInstance.checked).toBe(false);
         });
 
-        it('should change from indeterminate to checked on click', fakeAsync(() => {
+        it('should change from indeterminate to checked on click', async () => {
             testComponent.isChecked = false;
             testComponent.isIndeterminate = true;
             fixture.detectChanges();
@@ -199,7 +199,7 @@ describe('KbqCheckbox', () => {
             inputElement.click();
 
             // Flush the microtasks because the indeterminate state will be updated in the next tick.
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(checkboxInstance.checked).toBe(true);
@@ -210,7 +210,7 @@ describe('KbqCheckbox', () => {
 
             expect(checkboxInstance.checked).toBe(false);
             expect(checkboxInstance.indeterminate).toBe(false);
-        }));
+        });
 
         it('should not render a disabled attribute while enabled', () => {
             expect(checkboxNativeElement.hasAttribute('disabled')).toBe(false);
@@ -256,7 +256,7 @@ describe('KbqCheckbox', () => {
             expect(checkboxInstance.checked).toBe(false);
         });
 
-        it('should overwrite indeterminate state when clicked', fakeAsync(() => {
+        it('should overwrite indeterminate state when clicked', async () => {
             testComponent.isIndeterminate = true;
             fixture.detectChanges();
 
@@ -264,11 +264,11 @@ describe('KbqCheckbox', () => {
             fixture.detectChanges();
 
             // Flush the microtasks because the indeterminate state will be updated in the next tick.
-            flush();
+            await fixture.whenStable();
 
             expect(checkboxInstance.checked).toBe(true);
             expect(checkboxInstance.indeterminate).toBe(false);
-        }));
+        });
 
         it('should preserve the user-provided id', () => {
             expect(checkboxNativeElement.id).toBe('simple-check');
@@ -320,7 +320,7 @@ describe('KbqCheckbox', () => {
             expect(onCheckboxClickSpyFn).toHaveBeenCalledTimes(1);
         });
 
-        it('should trigger a change event when the native input does', fakeAsync(() => {
+        it('should trigger a change event when the native input does', async () => {
             const onCheckboxChangeSpyFn = vi.spyOn(testComponent, 'onCheckboxChange');
 
             expect(inputElement.checked).toBe(false);
@@ -333,14 +333,14 @@ describe('KbqCheckbox', () => {
             expect(checkboxNativeElement.classList).toContain('kbq-checked');
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             // The change event shouldn't fire, because the value change was not caused
             // by any interaction.
             expect(onCheckboxChangeSpyFn).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should not trigger the change event by changing the native value', fakeAsync(() => {
+        it('should not trigger the change event by changing the native value', async () => {
             const onCheckboxChangeSpyFn = vi.spyOn(testComponent, 'onCheckboxChange');
 
             expect(inputElement.checked).toBe(false);
@@ -353,12 +353,12 @@ describe('KbqCheckbox', () => {
             expect(checkboxNativeElement.classList).toContain('kbq-checked');
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             // The change event shouldn't fire, because the value change was not caused
             // by any interaction.
             expect(onCheckboxChangeSpyFn).not.toHaveBeenCalled();
-        }));
+        });
 
         it('should forward the required attribute', () => {
             testComponent.isRequired = true;
@@ -439,18 +439,18 @@ describe('KbqCheckbox', () => {
                 labelElement = checkboxNativeElement.querySelector('label') as HTMLLabelElement;
             });
 
-            it('should not set `indeterminate` to false on click if check is set', fakeAsync(() => {
+            it('should not set `indeterminate` to false on click if check is set', async () => {
                 testComponent.isIndeterminate = true;
                 inputElement.click();
 
                 fixture.detectChanges();
-                flush();
+                await fixture.whenStable();
                 fixture.detectChanges();
                 expect(inputElement.checked).toBe(true);
                 expect(checkboxNativeElement.classList).toContain('kbq-checked');
                 expect(inputElement.indeterminate).toBe(true);
                 expect(checkboxNativeElement.classList).toContain('kbq-indeterminate');
-            }));
+            });
         });
 
         describe('when clickAction input overrides KBQ_CHECKBOX_CLICK_ACTION token', () => {
@@ -530,27 +530,27 @@ describe('KbqCheckbox', () => {
                 labelElement = checkboxNativeElement.querySelector('label') as HTMLLabelElement;
             });
 
-            it('should not change `indeterminate` on click if noop is set', fakeAsync(() => {
+            it('should not change `indeterminate` on click if noop is set', async () => {
                 testComponent.isIndeterminate = true;
                 inputElement.click();
 
                 fixture.detectChanges();
-                flush();
+                await fixture.whenStable();
                 fixture.detectChanges();
 
                 expect(inputElement.checked).toBe(false);
                 expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
                 expect(inputElement.indeterminate).toBe(true);
                 expect(checkboxNativeElement.classList).toContain('kbq-indeterminate');
-            }));
+            });
 
-            it(`should not change 'checked' or 'indeterminate' on click if noop is set`, fakeAsync(() => {
+            it(`should not change 'checked' or 'indeterminate' on click if noop is set`, async () => {
                 testComponent.isChecked = true;
                 testComponent.isIndeterminate = true;
                 inputElement.click();
 
                 fixture.detectChanges();
-                flush();
+                await fixture.whenStable();
                 fixture.detectChanges();
 
                 expect(inputElement.checked).toBe(true);
@@ -562,14 +562,14 @@ describe('KbqCheckbox', () => {
                 inputElement.click();
 
                 fixture.detectChanges();
-                flush();
+                await fixture.whenStable();
                 fixture.detectChanges();
 
                 expect(inputElement.checked).toBe(false);
                 expect(checkboxNativeElement.classList).not.toContain('kbq-checked');
                 expect(inputElement.indeterminate).toBe(true);
                 expect(checkboxNativeElement.classList).toContain('kbq-indeterminate');
-            }));
+            });
         });
     });
 
@@ -609,7 +609,7 @@ describe('KbqCheckbox', () => {
             expect(changeSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('should not emit a DOM event to the change output', fakeAsync(() => {
+        it('should not emit a DOM event to the change output', async () => {
             fixture.detectChanges();
             expect(testComponent.lastEvent).toBeUndefined();
 
@@ -617,13 +617,13 @@ describe('KbqCheckbox', () => {
             // emit a DOM event to the change output.
             inputElement.click();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             // We're checking the arguments type / emitted value to be a boolean, because sometimes the
             // emitted value can be a DOM Event, which is not valid.
             // See angular/angular#4059
             expect(testComponent.lastEvent.checked).toBe(true);
-        }));
+        });
     });
 
     describe('with provided tabIndex', () => {
@@ -733,8 +733,8 @@ describe('KbqCheckbox', () => {
             inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
         });
 
-        it('should be in pristine, untouched, and valid states initially', fakeAsync(() => {
-            flush();
+        it('should be in pristine, untouched, and valid states initially', async () => {
+            await fixture.whenStable();
 
             const checkboxElement = fixture.debugElement.query(By.directive(KbqCheckbox));
             const ngModel = checkboxElement.injector.get<NgModel>(NgModel);
@@ -744,8 +744,7 @@ describe('KbqCheckbox', () => {
             expect(ngModel.touched).toBe(false);
 
             // TODO(jelbourn): test that `touched` and `pristine` state are modified appropriately.
-            // This is currently blocked on issues with async() and fakeAsync().
-        }));
+        });
 
         it('should toggle checked state on click', () => {
             expect(checkboxInstance.checked).toBe(false);

@@ -1,5 +1,5 @@
 import { Component, DebugElement, Inject, Type, inject, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
     FormControl,
@@ -138,6 +138,8 @@ describe(KbqTimepicker.name, () => {
         fixture.detectChanges();
     });
 
+    afterEach(() => vi.useRealTimers());
+
     describe('caret handling', () => {
         const charWidth = 10;
         const padding = 8;
@@ -147,7 +149,9 @@ describe(KbqTimepicker.name, () => {
         // `clearMocks` only clears call records, so the prototype patch has to be undone by hand.
         afterEach(() => vi.restoreAllMocks());
 
-        it('should scroll the part the caret moves to into view', fakeAsync(() => {
+        it('should scroll the part the caret moves to into view', async () => {
+            vi.useFakeTimers();
+
             // Three parts, so the caret can land on one that is neither end of the value.
             testComponent.timeFormat = TimeFormats.HHmmss;
             fixture.detectChanges();
@@ -180,12 +184,12 @@ describe(KbqTimepicker.name, () => {
             input.setSelectionRange(2, 2);
 
             inputElementDebug.injector.get(KbqTimepicker).onInput();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect([input.selectionStart, input.selectionEnd]).toEqual([3, 5]);
             // Just enough to show the end of the minutes: neither end of the value.
             expect(input.scrollLeft).toBe(padding + 5 * charWidth + padding - clientWidth);
-        }));
+        });
     });
 
     describe('Core attributes support', () => {
@@ -262,12 +266,14 @@ describe(KbqTimepicker.name, () => {
             expect(inputElementDebug.nativeElement.classList.contains('ng-valid')).toBe(true);
         });
 
-        it('Should invalidate time lower then min-time', fakeAsync(() => {
+        it('Should invalidate time lower then min-time', async () => {
+            vi.useFakeTimers();
+
             testComponent.minTime = adapter.createDateTime(1970, 1, 11, 13, 59, 0);
             fixture.detectChanges();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             expect(inputElementDebug.nativeElement.classList.contains('ng-invalid')).toBe(true);
-        }));
+        });
 
         it('Should invalidate time higher then max-time', () => {
             testComponent.maxTime = adapter.createDateTime(1970, 1, 11, 11, 0, 0);
@@ -325,10 +331,12 @@ describe(KbqTimepicker.name, () => {
             expect(inputElementDebug.nativeElement.value).toBe('12:18');
         });
 
-        it('When the format updates', fakeAsync(() => {
+        it('When the format updates', async () => {
+            vi.useFakeTimers();
+
             testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 0, 0, 0);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             testComponent.timeFormat = TimeFormats.HHmmss;
             fixture.detectChanges();
@@ -337,11 +345,13 @@ describe(KbqTimepicker.name, () => {
             testComponent.timeFormat = TimeFormats.HHmm;
             fixture.detectChanges();
             expect(inputElementDebug.nativeElement.value).toBe('00:00');
-        }));
+        });
     });
 
     describe('Convert user input', () => {
-        it('Convert input, format HH:mm:ss', fakeAsync(() => {
+        it('Convert input, format HH:mm:ss', async () => {
+            vi.useFakeTimers();
+
             testComponent.timeFormat = TimeFormats.HHmmss;
             fixture.detectChanges();
 
@@ -349,12 +359,14 @@ describe(KbqTimepicker.name, () => {
 
             inputElementDebug.nativeElement.value = '18:08:08';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(testComponent.timeValue.toString()).toContain('18:08:08');
-        }));
+        });
 
-        it('Convert input as direct input (onInput), format HH:mm', fakeAsync(() => {
+        it('Convert input as direct input (onInput), format HH:mm', async () => {
+            vi.useFakeTimers();
+
             testComponent.timeFormat = TimeFormats.HHmm;
             fixture.detectChanges();
 
@@ -362,10 +374,10 @@ describe(KbqTimepicker.name, () => {
 
             inputElementDebug.nativeElement.value = '18:09';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(testComponent.timeValue.toString()).toContain('18:09');
-        }));
+        });
 
         it('Should not change model on blur', () => {
             const date = testComponent.adapter.toIso8601(testComponent.timeValue);
@@ -388,40 +400,42 @@ describe(KbqTimepicker.name, () => {
             expect(inputElementDebug.nativeElement.value).toBe('01:00');
         });
 
-        it('Convert user input (add lead zero)', fakeAsync(() => {
+        it('Convert user input (add lead zero)', async () => {
+            vi.useFakeTimers();
+
             testComponent.timeFormat = TimeFormats.HHmmss;
             fixture.detectChanges();
 
             inputElementDebug.nativeElement.value = '1*';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toEqual('01:00:00');
 
             inputElementDebug.nativeElement.value = '01:1*';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toEqual('01:01:00');
 
             inputElementDebug.nativeElement.value = '01:01:1*';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toEqual('01:01:01');
 
             inputElementDebug.nativeElement.value = '01:1*:10';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toEqual('01:01:10');
 
             inputElementDebug.nativeElement.value = '1*:10:10';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toEqual('01:10:10');
-        }));
+        });
     });
 
     describe('Paste value from clipboard', () => {
@@ -585,110 +599,131 @@ describe(KbqTimepicker.name, () => {
     });
 
     describe('Keyboard value control', () => {
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             testComponent.timeValue = adapter.createDateTime(1970, 1, 11, 23, 0, 0);
             testComponent.timeFormat = TimeFormats.HHmmss;
             fixture.detectChanges();
-        }));
+            await fixture.whenStable();
+        });
 
-        it('Should ignore SPACE keyDown', fakeAsync(() => {
+        it('Should ignore SPACE keyDown', async () => {
+            vi.useFakeTimers();
+
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
 
             const spaceEvent: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
 
             dispatchEvent(inputElementDebug.nativeElement, spaceEvent);
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
-        }));
+        });
 
-        it('Input hours above max', fakeAsync(() => {
+        it('Input hours above max', async () => {
+            vi.useFakeTimers();
+
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
 
             inputElementDebug.nativeElement.value = '24';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
-        }));
+        });
 
-        it('Input minutes above max', fakeAsync(() => {
+        it('Input minutes above max', async () => {
+            vi.useFakeTimers();
+
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
 
             inputElementDebug.nativeElement.value = '23:99';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('23:59:00');
-        }));
+        });
 
-        it('Input seconds above max', fakeAsync(() => {
+        it('Input seconds above max', async () => {
+            vi.useFakeTimers();
+
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
 
             inputElementDebug.nativeElement.value = '23:00:99';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('23:00:59');
-        }));
+        });
 
-        it('Should normalize incomplete value instead of letting it grow', fakeAsync(() => {
+        it('Should normalize incomplete value instead of letting it grow', async () => {
+            vi.useFakeTimers();
+
             inputElementDebug.nativeElement.value = '911:1';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('23:1');
-        }));
+        });
 
-        it('Should trim time part longer than two digits', fakeAsync(() => {
+        it('Should trim time part longer than two digits', async () => {
+            vi.useFakeTimers();
+
             inputElementDebug.nativeElement.value = '0001:1';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('01:1');
-        }));
+        });
 
-        it('Should normalize time part with more than four digits', fakeAsync(() => {
+        it('Should normalize time part with more than four digits', async () => {
+            vi.useFakeTimers();
+
             inputElementDebug.nativeElement.value = '123456';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
-        }));
+        });
 
-        it('Should keep intermediate value untouched while typing', fakeAsync(() => {
+        it('Should keep intermediate value untouched while typing', async () => {
+            vi.useFakeTimers();
+
             inputElementDebug.nativeElement.value = '12:3';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('12:3');
 
             inputElementDebug.nativeElement.value = '1';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(inputElementDebug.nativeElement.value).toBe('1');
-        }));
+        });
 
-        it('Increase hours by ArrowUp key and cycle from max to min', fakeAsync(() => {
+        it('Increase hours by ArrowUp key and cycle from max to min', async () => {
+            vi.useFakeTimers();
+
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
 
             inputElementDebug.nativeElement.selectionStart = 1;
             inputElementDebug.triggerEventHandler('keydown', { preventDefault: () => null, keyCode: UP_ARROW });
 
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
             expect(inputElementDebug.nativeElement.value).toBe('00:00:00');
-        }));
+        });
 
-        it('Decrease minutes by ArrowDown key and cycle from min to max', fakeAsync(() => {
+        it('Decrease minutes by ArrowDown key and cycle from min to max', async () => {
+            vi.useFakeTimers();
+
             inputElementDebug.nativeElement.selectionStart = 3;
             inputElementDebug.triggerEventHandler('keydown', { preventDefault: () => null, keyCode: DOWN_ARROW });
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
 
             expect(inputElementDebug.nativeElement.value).toBe('23:59:00');
-        }));
+        });
 
         it('Manual keyboard input digit-by-digit', () => {
             const inputNativeElement = inputElementDebug.nativeElement;
@@ -788,7 +823,9 @@ describe(KbqTimepicker.name, () => {
             expect(testComponent.formControl.value.toString()).toContain('2020-01-01T19:01:02');
         });
 
-        it('Create time from input when formControl value is null', fakeAsync(() => {
+        it('Create time from input when formControl value is null', async () => {
+            vi.useFakeTimers();
+
             testComponent.timeFormat = 'HH:mm';
             fixture.detectChanges();
 
@@ -796,12 +833,12 @@ describe(KbqTimepicker.name, () => {
 
             inputElementDebug.nativeElement.value = '18:09';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             fixture.detectChanges();
 
             expect(testComponent.formControl.value.toString()).toContain('2020-01-01T18:09');
-        }));
+        });
     });
 
     @Component({
@@ -867,7 +904,9 @@ describe(KbqTimepicker.name, () => {
             expect(testComponent.model.toString()).toContain('2020-01-01T19:01:02');
         });
 
-        it('Create time from input when model value is null', fakeAsync(() => {
+        it('Create time from input when model value is null', async () => {
+            vi.useFakeTimers();
+
             testComponent.timeFormat = 'HH:mm';
             fixture.detectChanges();
 
@@ -875,12 +914,12 @@ describe(KbqTimepicker.name, () => {
 
             inputElementDebug.nativeElement.value = '18:09';
             dispatchFakeEvent(inputElementDebug.nativeElement, 'keydown');
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             fixture.detectChanges();
 
             expect(testComponent.model.toString()).toContain('2020-01-01T18:09');
-        }));
+        });
     });
 
     @Component({
@@ -1181,7 +1220,9 @@ describe(KbqTimepicker.name, () => {
     }
 
     describe('async validation', () => {
-        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+        it('should emit VALID via statusChanges on blur', async () => {
+            vi.useFakeTimers();
+
             const fixture = createStandaloneComponent(TimepickerControlWithAsyncValidators);
             const { control, timepicker } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];
@@ -1193,19 +1234,19 @@ describe(KbqTimepicker.name, () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             timepicker().onBlur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             subscription.unsubscribe();
-        }));
+        });
     });
     describe('signal inputs', () => {
         it('should clamp an unsupported format to the default', () => {
@@ -1277,7 +1318,9 @@ describe(KbqTimepicker.name, () => {
             expect(timepicker.max()).toBe('nor this');
         });
 
-        it('should stop driving a validation tooltip once it is rebound', fakeAsync(() => {
+        it('should stop driving a validation tooltip once it is rebound', async () => {
+            vi.useFakeTimers();
+
             const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
             const { componentInstance } = fixture;
             const [first, second] = componentInstance.tooltips();
@@ -1301,10 +1344,12 @@ describe(KbqTimepicker.name, () => {
             expect(firstShow).toHaveBeenCalledTimes(1);
             expect(secondShow).toHaveBeenCalledTimes(1);
 
-            tick(validationTooltipHideDelay);
-        }));
+            await vi.advanceTimersByTimeAsync(validationTooltipHideDelay);
+        });
 
-        it('should give an unbound tooltip its own trigger and delay back', fakeAsync(() => {
+        it('should give an unbound tooltip its own trigger and delay back', async () => {
+            vi.useFakeTimers();
+
             const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
             const { componentInstance } = fixture;
             const [first, second] = componentInstance.tooltips();
@@ -1319,9 +1364,11 @@ describe(KbqTimepicker.name, () => {
             // Left on `manual`, the tooltip would have no hover or focus listeners and never open again.
             expect(first.trigger).toBe(trigger);
             expect(first.enterDelay).toBe(enterDelay);
-        }));
+        });
 
-        it('should close the tooltip and drop the pending hide when unbound while it is open', fakeAsync(() => {
+        it('should close the tooltip and drop the pending hide when unbound while it is open', async () => {
+            vi.useFakeTimers();
+
             const fixture = createStandaloneComponent(TimepickerWithValidationTooltip);
             const { componentInstance } = fixture;
             const [first] = componentInstance.tooltips();
@@ -1338,10 +1385,10 @@ describe(KbqTimepicker.name, () => {
             expect(hide).toHaveBeenCalledTimes(1);
 
             // The timer is cleared rather than left to reach a tooltip this timepicker no longer drives.
-            tick(validationTooltipHideDelay);
+            await vi.advanceTimersByTimeAsync(validationTooltipHideDelay);
 
             expect(hide).toHaveBeenCalledTimes(1);
-        }));
+        });
 
         it('should re-run the validators when min changes', () => {
             const fixture = createStandaloneComponent(TimepickerSignalInputs);

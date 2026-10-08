@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -17,7 +17,7 @@ describe(KbqBadge.name, () => {
         let fixture: ComponentFixture<TestApp>;
         let badgeNativeElement: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqBadgeModule, TestApp]
             });
@@ -28,7 +28,7 @@ describe(KbqBadge.name, () => {
             fixture.detectChanges();
 
             badgeNativeElement = fixture.debugElement.query(By.directive(KbqBadge)).nativeElement;
-        }));
+        });
 
         it('should add class', () => {
             expect(badgeNativeElement.classList.contains('kbq-badge')).toBe(true);
