@@ -1,9 +1,9 @@
-import { inject, Injectable, TemplateRef } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, TemplateRef, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
-import { BehaviorSubject, combineLatestWith, EMPTY, merge, Observable, Subject } from 'rxjs';
-import { distinctUntilChanged, map, shareReplay, skip } from 'rxjs/operators';
+import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
+import { map, skip } from 'rxjs/operators';
 
 /** A single notification rendered by the notification center. */
 export interface KbqNotificationItem {
@@ -103,28 +103,46 @@ export class KbqNotificationCenterService {
     /** Parsed `date` per item. Keyed by the item itself, so no consumer-owned object is written to. */
     private readonly parsedDates = new WeakMap<KbqNotificationItem, KbqParsedNotificationDate>();
 
+    private readonly _silentMode = signal(false);
+    private readonly _loadingMode = signal(false);
+    private readonly _errorMode = signal(false);
+    private readonly _loadingMore = signal(false);
+    private readonly _loadMoreErrorMode = signal(false);
+    private readonly _hasMore = signal(true);
+    private readonly originalItems = signal<KbqNotificationItem[]>([]);
+
+    /**
+     * Bumped on every `onRead` emission: `read` is flipped in place on the consumer's object, so the list
+     * itself does not change when a notification is read.
+     */
+    private readonly readVersion = signal(0);
+
+    /** Pinged by every state setter; `changes` merges it with `onRead`. */
+    private readonly stateChanges = new Subject<void>();
+
     /** @docs-private */
-    readonly silentMode = new BehaviorSubject(false);
+    readonly silentMode: Signal<boolean> = this._silentMode.asReadonly();
     /** @docs-private */
-    readonly loadingMode = new BehaviorSubject(false);
+    readonly loadingMode: Signal<boolean> = this._loadingMode.asReadonly();
     /** @docs-private */
-    readonly errorMode = new BehaviorSubject(false);
+    readonly errorMode: Signal<boolean> = this._errorMode.asReadonly();
     /**
      * Whether the bottom "load more" spinner is shown while the next page is being loaded.
      * Note: this is the infinite-scroll indicator and is distinct from `loadingMode`,
-     * which renders the full-screen loader instead of the list.
+     * which renders the full-screen loader instead of the list. Set it with `setLoadingMore()`.
      */
-    readonly loadingMore = new BehaviorSubject(false);
+    readonly loadingMore: Signal<boolean> = this._loadingMore.asReadonly();
     /**
      * Whether the bottom "load more" error row (with a retry button) is shown.
      * Distinct from `errorMode`, which replaces the whole list with the full-screen error state.
+     * Set it with `setLoadMoreErrorMode()`.
      */
-    readonly loadMoreErrorMode = new BehaviorSubject(false);
+    readonly loadMoreErrorMode: Signal<boolean> = this._loadMoreErrorMode.asReadonly();
     /**
      * Whether there are more notifications to load. While `true`, scrolling to the bottom
-     * emits `onNextPage`; set it to `false` to stop further infinite-scroll requests.
+     * emits `onNextPage`; set it to `false` with `setHasMore()` to stop further infinite-scroll requests.
      */
-    readonly hasMore = new BehaviorSubject(true);
+    readonly hasMore: Signal<boolean> = this._hasMore.asReadonly();
 
     /** Emits a notification the moment it flips from unread to read. */
     readonly onRead = new BehaviorSubject<KbqNotificationItem | null>(null);
@@ -138,86 +156,74 @@ export class KbqNotificationCenterService {
     /** Triggers an event when an item, a group, or all notifications are removed. */
     readonly onDelete = new Subject<KbqNotificationDeleteEvent>();
 
-    private originalItems = new BehaviorSubject([] as KbqNotificationItem[]);
-
     /**
      * Grouped notifications, always ordered from newest to oldest: day groups are sorted by date
      * descending, and notifications within each day are sorted by date descending. Notifications whose
      * `date` the adapter cannot parse keep their raw value as a group heading and sort last.
      * @docs-private
      */
-    readonly groupedItems: Observable<KbqNotificationsGroup[]> = merge(
-        this.originalItems,
-        // The day headings are localized, so a runtime `setLocale()` has to rebuild them. `changes` is
-        // a BehaviorSubject whose replayed current value would only duplicate the emission above.
-        this.localeService?.changes.pipe(skip(1)) ?? EMPTY
-    ).pipe(
-        map(() => {
-            const items = this.originalItems.value;
-            const result: KbqNotificationsGroups = {};
+    readonly groupedItems: Signal<KbqNotificationsGroup[]> = computed(() => {
+        // The day headings are localized, so a runtime `setLocale()` has to rebuild them.
+        this.localeService?.localeId();
 
-            items.forEach((item) => this.makeGroup(item, result));
+        const result: KbqNotificationsGroups = {};
 
-            const groups = Object.values(result);
+        this.originalItems().forEach((item) => this.makeGroup(item, result));
 
-            // Newest notifications first within each day.
-            groups.forEach((group) => group.items.sort(this.compareByDateDesc));
+        const groups = Object.values(result);
 
-            // Newest day first.
-            return groups.sort((a, b) => this.compareByDateDesc(a.items[0], b.items[0]));
-        })
-    );
+        // Newest notifications first within each day.
+        groups.forEach((group) => group.items.sort(this.compareByDateDesc));
 
-    /** Emits whenever any part of the center's state changes. Carries no payload — it is a ping. */
+        // Newest day first.
+        return groups.sort((a, b) => this.compareByDateDesc(a.items[0], b.items[0]));
+    });
+
+    /**
+     * Emits whenever any part of the center's state changes. Carries no payload — it is a ping — and
+     * emits nothing on subscription.
+     */
     readonly changes: Observable<void> = merge(
-        this.silentMode,
-        this.loadingMode,
-        this.errorMode,
-        this.loadingMore,
-        this.loadMoreErrorMode,
-        this.hasMore,
-        this.originalItems,
-        this.onRead
+        this.stateChanges,
+        // The replayed current value is not a change.
+        this.onRead.pipe(skip(1))
     ).pipe(map(() => undefined));
 
     /**
      * Number of unread notifications, formatted for the trigger badge: empty while nothing is unread,
-     * and `"99+"` above `maxUnreadItemsLength`. Shared, so binding it through `AsyncPipe` in several
-     * places subscribes once.
+     * and `"99+"` above `maxUnreadItemsLength`.
      */
-    readonly unreadItemsCounter: Observable<string> = this.originalItems.pipe(
-        // `read` is flipped in place on the item, without re-emitting `originalItems`, so the count has
-        // to be recomputed on `onRead` as well — hence combining before, not after, the count is taken.
-        combineLatestWith(this.onRead),
-        map(([items]) => items.filter((item) => item.read === false).length),
-        map((value) => {
-            if (value > maxUnreadItemsLength) {
-                return `${maxUnreadItemsLength}+`;
-            }
+    readonly unreadItemsCounter: Signal<string> = computed(() => {
+        this.readVersion();
 
-            return value ? value.toString() : '';
-        }),
-        distinctUntilChanged(),
-        shareReplay({ bufferSize: 1, refCount: true })
-    );
+        const value = this.originalItems().filter((item) => item.read === false).length;
+
+        if (value > maxUnreadItemsLength) {
+            return `${maxUnreadItemsLength}+`;
+        }
+
+        return value ? value.toString() : '';
+    });
 
     /** Notification items */
     get items() {
-        return this.originalItems.value;
+        return this.originalItems();
     }
 
     set items(values: KbqNotificationItem[]) {
-        this.originalItems.next(this.setReadState(this.setIds(values)));
+        this.setItems(this.setReadState(this.setIds(values)));
     }
 
     /** true if there are no notifications. */
     get isEmpty() {
-        return this.originalItems.value.length === 0;
+        return this.originalItems().length === 0;
     }
 
     constructor() {
+        this.onRead.pipe(takeUntilDestroyed()).subscribe(() => this.readVersion.update((version) => version + 1));
+
         this.toastService?.read.pipe(takeUntilDestroyed()).subscribe((toastData) => {
-            const item = this.items.find((item) => item.id === toastData?.id);
+            const item = this.currentItems().find((item) => item.id === toastData?.id);
 
             if (item && !item.read) {
                 item.read = true;
@@ -229,32 +235,38 @@ export class KbqNotificationCenterService {
 
     /** Set silent mode */
     setSilentMode(value: boolean) {
-        this.silentMode.next(value);
+        this._silentMode.set(value);
+        this.stateChanges.next();
     }
 
     /** Set loading mode */
     setLoadingMode(value: boolean) {
-        this.loadingMode.next(value);
+        this._loadingMode.set(value);
+        this.stateChanges.next();
     }
 
     /** Set error mode */
     setErrorMode(value: boolean) {
-        this.errorMode.next(value);
+        this._errorMode.set(value);
+        this.stateChanges.next();
     }
 
     /** Set the bottom "load more" spinner visibility. */
     setLoadingMore(value: boolean) {
-        this.loadingMore.next(value);
+        this._loadingMore.set(value);
+        this.stateChanges.next();
     }
 
     /** Set the bottom "load more" error state visibility. */
     setLoadMoreErrorMode(value: boolean) {
-        this.loadMoreErrorMode.next(value);
+        this._loadMoreErrorMode.set(value);
+        this.stateChanges.next();
     }
 
     /** Set whether there are more notifications to load via infinite scroll. */
     setHasMore(value: boolean) {
-        this.hasMore.next(value);
+        this._hasMore.set(value);
+        this.stateChanges.next();
     }
 
     /**
@@ -264,17 +276,17 @@ export class KbqNotificationCenterService {
      * uses is added under a freshly generated one instead of being dropped.
      */
     push(item: KbqNotificationItem) {
-        if (this.originalItems.value.includes(item)) {
+        if (this.currentItems().includes(item)) {
             return;
         }
 
-        this.setReadState(this.setIds([item], this.originalItems.value));
+        this.setReadState(this.setIds([item], this.currentItems()));
 
-        if (!this.silentMode.value) {
+        if (!untracked(this.silentMode)) {
             item.toastId = this.toastService.show(item).id;
         }
 
-        this.originalItems.next([...this.originalItems.value, item]);
+        this.setItems([...this.currentItems(), item]);
     }
 
     /** Hides the toast that corresponds to the given notification item. */
@@ -289,13 +301,13 @@ export class KbqNotificationCenterService {
 
     /** Removes a notification. Removing one that is not in the list is a no-op and emits nothing. */
     remove(removedItem: KbqNotificationItem) {
-        if (!this.originalItems.value.includes(removedItem)) {
+        if (!this.currentItems().includes(removedItem)) {
             return;
         }
 
         this.hideToast(removedItem);
 
-        this.originalItems.next(this.originalItems.value.filter((item) => removedItem !== item));
+        this.setItems(this.currentItems().filter((item) => removedItem !== item));
 
         this.onDelete.next({ type: 'item', items: [removedItem] });
     }
@@ -303,10 +315,10 @@ export class KbqNotificationCenterService {
     /**
      * Removes a whole day group. Only the notifications that are actually in the list are removed and
      * reported; a group holding none of them — a stale reference kept from an earlier `groupedItems`
-     * emission — is a no-op and emits nothing.
+     * value — is a no-op and emits nothing.
      */
     removeGroup(group: KbqNotificationsGroup) {
-        const removedItems = group.items.filter((item) => this.originalItems.value.includes(item));
+        const removedItems = group.items.filter((item) => this.currentItems().includes(item));
 
         if (removedItems.length === 0) {
             return;
@@ -314,24 +326,37 @@ export class KbqNotificationCenterService {
 
         removedItems.forEach((item) => this.hideToast(item));
 
-        this.originalItems.next(this.originalItems.value.filter((item) => !removedItems.includes(item)));
+        this.setItems(this.currentItems().filter((item) => !removedItems.includes(item)));
 
         this.onDelete.next({ type: 'group', items: removedItems });
     }
 
     /** Removes every notification. Removing from an already empty list is a no-op and emits nothing. */
     removeAll() {
-        if (this.isEmpty) {
+        const items = this.currentItems();
+
+        if (items.length === 0) {
             return;
         }
 
-        const items = this.originalItems.value;
-
         items.forEach((item) => this.hideToast(item));
 
-        this.originalItems.next([]);
+        this.setItems([]);
 
         this.onDelete.next({ type: 'all', items });
+    }
+
+    /**
+     * The list as the commands see it: untracked, so a command called from a reactive context does not
+     * make it depend on the list it is about to write.
+     */
+    private currentItems(): KbqNotificationItem[] {
+        return untracked(this.originalItems);
+    }
+
+    private setItems(items: KbqNotificationItem[]): void {
+        this.originalItems.set(items);
+        this.stateChanges.next();
     }
 
     private makeGroup = (item: KbqNotificationItem, groups: KbqNotificationsGroups) => {
@@ -342,7 +367,7 @@ export class KbqNotificationCenterService {
         } else {
             groups[groupId] = {
                 id: groupId,
-                // Formatted on every emission rather than cached with the parsed value: the heading is
+                // Formatted on every recomputation rather than cached with the parsed value: the heading is
                 // localized, and a cached one would leave the group in the locale it was built in while
                 // a group created afterwards renders in the current one.
                 title: value === null ? source : this.formatter.absoluteLongDate(value),

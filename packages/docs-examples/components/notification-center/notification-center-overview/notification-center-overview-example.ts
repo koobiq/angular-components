@@ -1,6 +1,13 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, inject, TemplateRef, viewChild } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -47,7 +54,6 @@ enum NavbarIcItems {
         KbqTopBarModule,
         KbqButtonModule,
         KbqDropdownModule,
-        AsyncPipe,
         KbqLinkModule,
         LuxonDateModule,
         KbqFormattersModule

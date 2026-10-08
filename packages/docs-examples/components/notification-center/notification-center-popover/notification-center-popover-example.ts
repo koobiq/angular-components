@@ -1,5 +1,14 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, inject, TemplateRef, viewChild } from '@angular/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    inject,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqFormattersModule } from '@koobiq/components/core';
@@ -19,7 +28,7 @@ import { createNotifications, injectExampleText } from '../localized-data';
         KbqBadgeModule,
         KbqIconModule,
         KbqNavbarModule,
-        AsyncPipe,
+        KbqDividerModule,
         KbqLinkModule,
         LuxonDateModule,
         KbqFormattersModule
