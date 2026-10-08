@@ -651,6 +651,70 @@ export class E2eNavbarInteractions {}
 })
 export class E2eVerticalNavbarBrandFirstExpand {}
 
+/** Enabled, disabled and decorative brands in each orientation. Has no screenshot baseline. */
+@Component({
+    selector: 'e2e-navbar-disabled-brand',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar data-testid="horizontal">
+            <kbq-navbar-container>
+                @for (brand of brands; track brand.id) {
+                    <a
+                        kbq-navbar-brand
+                        [attr.href]="brand.href"
+                        [disabled]="brand.disabled"
+                        [attr.data-testid]="brand.id"
+                    >
+                        <div kbq-navbar-logo data-testid="logo">
+                            <!-- prettier-ignore -->
+                            <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><rect fill="#FF0000" height="32" rx="6" width="32"/></svg>
+                        </div>
+
+                        <div kbq-navbar-title data-testid="title">App Name</div>
+                    </a>
+                }
+
+                <div kbq-navbar-brand data-testid="decorative-brand">
+                    <div kbq-navbar-title data-testid="title">App Name</div>
+                </div>
+            </kbq-navbar-container>
+        </kbq-navbar>
+
+        <div style="height: 320px; display: flex">
+            <kbq-vertical-navbar data-testid="vertical" [expanded]="true">
+                <kbq-navbar-container>
+                    @for (brand of brands; track brand.id) {
+                        <a
+                            kbq-navbar-brand
+                            [attr.href]="brand.href"
+                            [disabled]="brand.disabled"
+                            [attr.data-testid]="brand.id"
+                        >
+                            <div kbq-navbar-logo data-testid="logo">
+                                <!-- prettier-ignore -->
+                                <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><rect fill="#FF0000" height="32" rx="6" width="32"/></svg>
+                            </div>
+
+                            <div kbq-navbar-title data-testid="title">App Name</div>
+                        </a>
+                    }
+                </kbq-navbar-container>
+            </kbq-vertical-navbar>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        'data-testid': 'e2eNavbarDisabledBrand'
+    }
+})
+export class E2eNavbarDisabledBrand {
+    protected readonly brands = [
+        { id: 'brand', href: '#', disabled: false },
+        { id: 'disabled-brand', href: null, disabled: true },
+        { id: 'disabled-link-brand', href: '#disabled-link-brand', disabled: true }
+    ];
+}
+
 /** An icon after the title marked with `kbqNavbarItemSuffix`, next to dropdown items whose chevron it lines up with. */
 @Component({
     selector: 'e2e-navbar-item-suffix',
