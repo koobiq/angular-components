@@ -387,8 +387,6 @@ export class KbqFormField
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();
-
-        this.changeDetectorRef.markForCheck();
     }
 
     ngOnDestroy(): void {
@@ -424,10 +422,7 @@ export class KbqFormField
      * @docs-private
      */
     onHoverChanged(isHovered: boolean): void {
-        if (isHovered !== this.hovered) {
-            this.hovered = isHovered;
-            this.changeDetectorRef.markForCheck();
-        }
+        this.hovered = isHovered;
     }
 
     /**

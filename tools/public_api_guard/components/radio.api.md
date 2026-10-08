@@ -99,7 +99,6 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentChec
     emitChangeEvent(): void;
     focus(origin?: FocusOrigin): void;
     readonly labelPosition: _angular_core.InputSignalWithTransform<"before" | "after", "before" | "after">;
-    // (undocumented)
     markRadiosForCheck(): void;
     readonly name: _angular_core.InputSignal<string>;
     ngAfterContentChecked(): void;

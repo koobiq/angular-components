@@ -17,8 +17,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { Signal } from '@angular/core';
@@ -35,6 +33,7 @@ export const KBQ_ICONS_CONFIG: InjectionToken<KbqIconsConfig[]>;
 
 // @public
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
+    constructor();
     // (undocumented)
     autoColor: boolean;
     protected get autoColorError(): boolean;
@@ -62,8 +61,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly registry: KbqIconRegistry | null;
     // (undocumented)
     readonly small: _angular_core.InputSignal<boolean>;
-    protected svgIcon: boolean;
-    protected readonly svgIconName: ReplaySubject<string | undefined>;
+    protected readonly svgIcon: _angular_core.WritableSignal<boolean>;
+    protected readonly svgIconName: _angular_core.WritableSignal<string | undefined>;
+    // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "small": { "alias": "small"; "required": false; "isSignal": true; }; "autoColorInput": { "alias": "autoColor"; "required": false; "isSignal": true; }; "iconNameInput": { "alias": "kbq-icon"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
