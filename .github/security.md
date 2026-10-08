@@ -4,9 +4,9 @@ Thanks for helping keep Koobiq and its users safe.
 
 ## Supported versions
 
-Security fixes are made on `main`, which is the current release line (`20.x`). Older release
-branches (`19.x`, `18.x`) receive backports where the fix applies cleanly and the line is
-still in use.
+Security fixes are made on `main`, which is the current release line (`21.x`). Older release
+branches (`20.4.x` for 20, `19.x`, `18.x`) receive backports where the fix applies cleanly and
+the line is still in use.
 
 Note that `@koobiq/components` and the adapter packages declare their Angular dependencies
 as peer dependencies. Vulnerabilities in Angular itself should be reported to the
