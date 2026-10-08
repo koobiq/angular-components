@@ -143,9 +143,7 @@ export function defineDatepickerSuite(config: CheckConfig): void {
             expectClosed();
         });
 
-        // Library bug: without a `KBQ_LOCALE_SERVICE` the Luxon adapter takes Angular's `LOCALE_ID` (en-US, yyyy-MM-dd)
-        // while `KBQ_DATEPICKER_LOCALE_CONFIGURATION` falls back to ru-RU, so the placeholder is `дд.мм.гггг`.
-        it.fails('shows a placeholder in the format the input takes', async () => {
+        it('shows a placeholder in the format the input takes', async () => {
             fixture.componentInstance.date.setValue(null);
             await fixture.whenStable();
 
@@ -245,25 +243,18 @@ export function defineDatepickerSuite(config: CheckConfig): void {
             expectClosed();
         });
 
-        // Library bug: the toggle's `<i kbq-icon-button tabindex="-1">` takes the focus on mousedown, `open()` records it
-        // as the element to restore and `close()` focuses it again instead of the input.
-        it.fails(
-            'returns the focus to the input once a day is picked in a calendar opened from the toggle',
-            async () => {
-                clickWithMouse(input);
-                await openWithToggle();
+        it('returns the focus to the input once a day is picked in a calendar opened from the toggle', async () => {
+            clickWithMouse(input);
+            await openWithToggle();
 
-                clickWithMouse(getDay(17));
-                await fixture.whenStable();
+            clickWithMouse(getDay(17));
+            await fixture.whenStable();
 
-                expect(value()).toBe('2026-03-17');
-                expect(document.activeElement).toBe(input);
-            }
-        );
+            expect(value()).toBe('2026-03-17');
+            expect(document.activeElement).toBe(input);
+        });
 
-        // Library bug: Escape is handled only by the input's keydown listener; a click on the toggle leaves the focus on
-        // its icon (see above), the overlay listens to no key, so Escape reaches nothing that closes the calendar.
-        it.fails('closes on Escape a calendar opened from the toggle', async () => {
+        it('closes on Escape a calendar opened from the toggle', async () => {
             clickWithMouse(input);
             await openWithToggle();
 
@@ -285,27 +276,19 @@ export function defineDatepickerSuite(config: CheckConfig): void {
             expect(events()).toEqual(['opened', 'closed']);
         });
 
-        // Library bug: the overlay's outside-click listener (capture on body) closes the calendar, then the toggle's own
-        // click handler calls `open()`. With zone.js, leaving `NgZone.run()` in that listener ticks synchronously, the
-        // exit finishes and disposes the popup, so `open()` builds a new one and the calendar stays open.
-        (config.name === 'zoneless' ? it : it.fails)(
-            'closes when the toggle is clicked again, and opens on the next click',
-            async () => {
-                await openWithToggle();
-                await openWithToggle();
+        it('closes when the toggle is clicked again, and opens on the next click', async () => {
+            await openWithToggle();
+            await openWithToggle();
 
-                expectClosed();
+            expectClosed();
 
-                await openWithToggle();
+            await openWithToggle();
 
-                expect(getPanel()).not.toBeNull();
-                expect(toggle.getAttribute('aria-expanded')).toBe('true');
-            }
-        );
+            expect(getPanel()).not.toBeNull();
+            expect(toggle.getAttribute('aria-expanded')).toBe('true');
+        });
 
-        // Library bug: the reopen above. With zone.js it fires opened, closed, opened. Zoneless, `open()` finds the exiting
-        // popup still attached and only flags it open; its disposal emits `detachments()`, which closes it once more.
-        it.fails('fires opened and closed once when the toggle is clicked twice', async () => {
+        it('fires opened and closed once when the toggle is clicked twice', async () => {
             await openWithToggle();
             await openWithToggle();
 
