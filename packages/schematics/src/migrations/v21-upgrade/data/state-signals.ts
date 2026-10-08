@@ -59,6 +59,18 @@ export const stateSignals: AreaData = {
                 '`toastService.hovered()`; a subclass of the toast sets its hover state with `setHovered()`.'
         },
         {
+            // `KbqDropdownItem.hovered` stays an event stream, so the anchor names the pop-ups and their triggers.
+            anchor:
+                '\\b(?:KbqPopUp|KbqPopUpTrigger|KbqTooltip(?:Component|Trigger)|KbqPopover(?:Confirm)?(?:Component|Trigger)|' +
+                'KbqNotificationCenter(?:Component|Trigger)|KbqAppSwitcher(?:Component|Trigger)|KbqTitleDirective|' +
+                'KbqEllipsisCenterDirective|KbqPasswordToggle)\\b',
+            pattern: `\\bhovered${SUBJECT_ACCESS}|\\bhovered\\s*\\.\\s*complete\\s*\\(`,
+            message:
+                'If this uses `hovered` of a pop-up or its trigger (tooltip, popover, notification center, app ' +
+                'switcher): it is a read-only signal. Read `hovered()`, wrap it in `toObservable()` where a stream ' +
+                'is needed; a subclass sets it with `this.setHovered(value)`.'
+        },
+        {
             anchor: '@koobiq/components/filter-bar',
             pattern: '\\.filteredOptions\\s*(?:\\.\\s*(?:subscribe|pipe)\\s*\\(|=(?!=))',
             message:
