@@ -493,12 +493,14 @@ The state that components and services expose for reading is a signal, where it 
 | `filteredOptions` of `KbqFilters`, `KbqPipeSelectComponent` and `KbqPipeMultiSelectComponent`                             | `Observable`                          | a read-only `Signal`                               |
 | `KbqSelect.hiddenItems`                                                                                                   | `number`                              | `Signal<number>`, as in `KbqTreeSelect`            |
 | `KbqSearchExpandable.value`                                                                                               | `BehaviorSubject<string>`             | `WritableSignal<string>`                           |
+| `hovered` of `KbqPopUp` and `KbqPopUpTrigger`: tooltips, popovers, the notification center and the app switcher           | `BehaviorSubject<boolean>`            | `Signal<boolean>`                                  |
 
 - **Read** them with a call — `service.silentMode()`, `trigger.unreadItemsCounter()` — instead of `.value`, `.getValue()` or `| async`. Where a stream is still needed, wrap the signal in `toObservable()` from `@angular/core/rxjs-interop`.
 - **Write** the notification center flags with their `set…()` methods and the search value with `value.set()`; the other signals are read-only.
 - **`KbqNotificationCenterService.changes`** no longer emits on subscription: a handler that relied on that runs once on its own before subscribing.
 - **`KbqFilters.filteredOptions`** now follows a change of the `filters` input too.
-- **A subclass** of `KbqToastComponent` sets its hover state with the protected `setHovered()`; one of `KbqPipeSelectComponent` drops its `super.ngOnInit()` call, and one of `KbqDatepickerToggleIconComponent` its `super.ngAfterContentInit()` and `super.ngOnDestroy()` calls, since the classes no longer implement them. The protected `isListMode`, `showStartCalendar` and `showEndCalendar` of the date pipes are signals.
+- **A pop-up trigger no longer marks its host view for check** when it opens or closes: an OnPush view that renders a field of its own, written from a `visibleChange` subscription made in code, calls `markForCheck()` itself or keeps the field in a signal. An output bound in the template needs nothing.
+- **A subclass** of `KbqToastComponent`, `KbqPopUp` or `KbqPopUpTrigger` sets its hover state with the protected `setHovered()`; one of `KbqPipeSelectComponent` drops its `super.ngOnInit()` call, and one of `KbqDatepickerToggleIconComponent` its `super.ngAfterContentInit()` and `super.ngOnDestroy()` calls, since the classes no longer implement them. The protected `isListMode`, `showStartCalendar` and `showEndCalendar` of the date pipes are signals.
 - **`KbqFileItem`** keeps its `loading` and `progress` subjects, which the application updates.
 
 `v21-upgrade` reports these reads, writes and `super` calls:
