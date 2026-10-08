@@ -144,6 +144,25 @@ describe('KbqTreeFlatDataSource', () => {
         expect(control.dataNodes).toBe(dataSource.flattenedData.value);
     });
 
+    it('should flatten the data handed to its constructor and hand it to the tree control', () => {
+        const data = buildData();
+
+        dataSource = new KbqTreeFlatDataSource(control, flattener, data);
+
+        expect(dataSource.data).toBe(data);
+        expect(names(dataSource.flattenedData.value)).toEqual(['root', 'documents', 'draft', 'images', 'other']);
+        expect(control.dataNodes).toBe(dataSource.flattenedData.value);
+    });
+
+    it('should emit the expanded nodes of the data handed to its constructor on connect', () => {
+        const emissions: string[][] = [];
+
+        dataSource = new KbqTreeFlatDataSource(control, flattener, buildData());
+        dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+
+        expect(emissions[emissions.length - 1]).toEqual(['root', 'other']);
+    });
+
     it('should report the data it was last given', () => {
         const data = buildData();
 

@@ -257,23 +257,17 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
         });
 
         describe('with its data handed to the data source constructor', () => {
-            // Library bug: `KbqTreeFlatDataSource` keeps the `initialData` of its constructor without flattening it;
-            // only the `data` setter fills `flattenedData` and `treeControl.dataNodes`. The tree renders no node, and
-            // the tree-select, left without options, does not open.
-            itFailsIn(config, ['zoneless', 'zone', 'zone-animations'])(
-                'opens on the nodes of the initial data',
-                async () => {
-                    const fixture = await renderScenario(TreeSelectInitialDataScenario, config);
-                    const select = byTestId(fixture, 'file');
+            it('opens on the nodes of the initial data', async () => {
+                const fixture = await renderScenario(TreeSelectInitialDataScenario, config);
+                const select = byTestId(fixture, 'file');
 
-                    await click(fixture, select.querySelector('.kbq-select__trigger')!);
+                await click(fixture, select.querySelector('.kbq-select__trigger')!);
 
-                    expect(select.getAttribute('aria-expanded')).toBe('true');
-                    expect(
-                        Array.from(document.querySelectorAll('.kbq-tree-select__panel kbq-tree-option')).map(text)
-                    ).toEqual(['Documents', 'Pictures', 'Readme']);
-                }
-            );
+                expect(select.getAttribute('aria-expanded')).toBe('true');
+                expect(
+                    Array.from(document.querySelectorAll('.kbq-tree-select__panel kbq-tree-option')).map(text)
+                ).toEqual(['Documents', 'Pictures', 'Readme']);
+            });
         });
     });
 }
