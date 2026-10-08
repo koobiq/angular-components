@@ -25,6 +25,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
+    ESCAPE,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OVERLAY_LAYERS,
@@ -33,7 +34,7 @@ import {
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { merge, Subject, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendar } from './calendar.component';
 import { injectRequiredDateAdapter } from './datepicker-errors';
@@ -514,6 +515,18 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         this.overlayLayers.adopt(this.popupRef, this.datepickerInput.getOrigin().nativeElement);
 
         this.closeSubscription = this.closingActions().subscribe(() => this.close(this.restoreFocus()));
+
+        // The input handles the keys while it has the focus; this covers a focus inside the calendar. CDK hands a key
+        // only to the topmost overlay listening for keys, so a modal underneath no longer closes on the same Escape.
+        this.closeSubscription.add(
+            this.popupRef
+                .keydownEvents()
+                .pipe(filter((event) => event.keyCode === ESCAPE))
+                .subscribe((event) => {
+                    event.preventDefault();
+                    this.close();
+                })
+        );
     }
 
     private restoreFocus(): boolean {
