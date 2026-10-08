@@ -308,7 +308,7 @@ export class KbqSelectChange {
 
 // @public
 export class KbqSelectError {
-    paging: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly paging: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSelectError, "kbq-select-error, [kbq-select-error]", ["kbqSelectError"], { "paging": { "alias": "paging"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
