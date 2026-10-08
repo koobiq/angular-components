@@ -12,6 +12,7 @@ import {
     CdkScrollable,
     FlexibleConnectedPositionStrategy,
     OverlayConfig,
+    OverlayRef,
     ScrollDispatcher,
     ScrollStrategy
 } from '@angular/cdk/overlay';
@@ -45,6 +46,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     EmptyFocusTrapStrategy,
+    KBQ_OVERLAY_LAYERS,
     KBQ_WINDOW,
     KbqComponentColors,
     KbqOverflowShadowBottom,
@@ -302,6 +304,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly document = inject(DOCUMENT);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
 
     /** Id of the panel this trigger controls, shared with `aria-controls`. */
     readonly panelId: string = `kbq-popover-${nextUniqueId++}`;
@@ -851,6 +854,16 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         if (this.isOpen) {
             this.scheduleReposition();
         }
+    }
+
+    /** @docs-private */
+    override createOverlay(): OverlayRef {
+        const overlayRef = super.createOverlay();
+
+        // Read on every attach: a popover stuck to a window edge stays above the bars.
+        this.overlayLayers.adopt(overlayRef, () => (this.stickToWindow ? null : this.getNativeElement()));
+
+        return overlayRef;
     }
 
     /**

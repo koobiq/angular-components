@@ -289,6 +289,10 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownRecursiveTemplateExample);
         case 'dropdown-safe-area':
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownSafeAreaExample);
+        case 'dropdown-scrolling-and-layering-page':
+            return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownScrollingAndLayeringPageExample);
+        case 'dropdown-scrolling-and-layering':
+            return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownScrollingAndLayeringExample);
         case 'dropdown-slash-menu':
             return import('@koobiq/docs-examples/components/dropdown').then((m) => m.DropdownSlashMenuExample);
         case 'dropdown-with-filter':

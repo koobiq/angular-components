@@ -1,5 +1,6 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqOverflowShadowContainer, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 
@@ -8,9 +9,9 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
  */
 @Component({
     selector: 'select-scrolling-and-layering-page-example',
-    imports: [KbqTopBarModule, CdkScrollable, KbqSelectModule],
+    imports: [KbqTopBarModule, CdkScrollable, KbqOverflowShadowContainer, KbqOverlayLayer, KbqSelectModule],
     template: `
-        <kbq-top-bar>
+        <kbq-top-bar [withShadow]="scroller.overflow().top">
             <div
                 class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
                 kbqTopBarContainer
@@ -22,15 +23,13 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             <div kbqTopBarSpacer></div>
         </kbq-top-bar>
 
-        <div class="example-text-container layout-padding-left-xxl" cdk-scrollable>
-            <p>
-                The &lt;select> HTML element represents a control that provides a menu of options. The above example
-                shows typical &lt;select> usage. It is given an id attribute to enable it to be associated with a
-                &lt;label> for accessibility purposes, as well as a name attribute to represent the name of the
-                associated data point submitted to the server. Each menu option is defined by an &lt;option> element
-                nested inside the &lt;select>.
-            </p>
-
+        <div
+            #scroller="kbqOverflowShadowContainer"
+            class="example-text-container layout-padding-left-xxl"
+            cdk-scrollable
+            kbqOverflowShadowContainer
+            kbqOverlayLayer
+        >
             <kbq-form-field>
                 <kbq-select [value]="'Network Watcher'">
                     <kbq-option [value]="'Network Watcher'">Network Watcher</kbq-option>
@@ -43,6 +42,14 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
                     <kbq-option [value]="'Endpoint Defender'">Endpoint Defender</kbq-option>
                 </kbq-select>
             </kbq-form-field>
+
+            <p>
+                The &lt;select> HTML element represents a control that provides a menu of options. The above example
+                shows typical &lt;select> usage. It is given an id attribute to enable it to be associated with a
+                &lt;label> for accessibility purposes, as well as a name attribute to represent the name of the
+                associated data point submitted to the server. Each menu option is defined by an &lt;option> element
+                nested inside the &lt;select>.
+            </p>
 
             <p>
                 The &lt;select> element has some unique attributes you can use to control it, such as multiple to
@@ -106,6 +113,8 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
         .kbq-form-field {
             width: 320px;
             align-self: center;
+
+            margin-top: var(--kbq-size-l);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

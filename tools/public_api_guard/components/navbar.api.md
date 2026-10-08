@@ -82,7 +82,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     readonly resizeStream: Subject<Event>;
     updateExpandedStateForItems: () => void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbar, "kbq-navbar", never, {}, {}, ["rectangleElements", "navbarItems"], ["[kbq-navbar-container], kbq-navbar-container"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbar, "kbq-navbar", never, {}, {}, ["rectangleElements", "navbarItems"], ["[kbq-navbar-container], kbq-navbar-container"], true, [{ directive: typeof i2.KbqOverlayLayerExclude; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbar, never>;
 }
@@ -323,7 +323,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     readonly rectangleElements: i0.Signal<readonly KbqNavbarRectangleElement[]>;
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; }, ["rectangleElements", "items", "bento"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1$1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; "isSignal": true; }; "expanded": { "alias": "expanded"; "required": false; "isSignal": true; }; }, { "expanded": "expandedChange"; }, ["rectangleElements", "items", "bento"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], true, [{ directive: typeof i1$1.CdkMonitorFocus; inputs: {}; outputs: {}; }, { directive: typeof i2.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }, { directive: typeof i2.KbqOverlayLayerExclude; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }

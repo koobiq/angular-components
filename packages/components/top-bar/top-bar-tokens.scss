@@ -1,7 +1,7 @@
 :where(.kbq-top-bar) {
     /* LAYER TOKENS */
-    /* The top bar is page chrome: it sits above the page content its shadow spills over, but below every
-       CDK overlay (1000), so dropdown, select and popover panels always paint on top of it. */
+    /* The top bar is page chrome: it sits above the page content its shadow spills over and the
+       `kbqOverlayLayer` layer (980), but below every other CDK overlay (1000). */
     --kbq-top-bar-z-index: 990;
     /* POSITION TOKENS */
     /* `sticky` only takes effect once an inset is set — with every inset `auto` the box lays out exactly as

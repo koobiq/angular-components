@@ -17,6 +17,7 @@ import {
     ESCAPE,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
+    KbqOverlayLayer,
     KbqOverlayOrigin,
     KbqPopUpPlacementValues,
     KbqStickToWindowPlacementValues,
@@ -31,7 +32,7 @@ import {
     enUSLocaleData,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Subject, filter } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
@@ -1603,6 +1604,47 @@ describe('KbqPopover', () => {
             tick();
         }));
     });
+
+    describe('overlay layer', () => {
+        let layerFixture: ComponentFixture<PopoverInOverlayLayer>;
+        let layerInstance: PopoverInOverlayLayer;
+
+        const getLayer = (): HTMLElement =>
+            layerFixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer');
+
+        beforeEach(() => {
+            layerFixture = createComponent(PopoverInOverlayLayer);
+            layerInstance = layerFixture.componentInstance;
+            readOverlayContainer();
+        });
+
+        afterEach(() => {
+            overlayContainer.ngOnDestroy();
+        });
+
+        it('should render the panel of a trigger inside the element into its overlay layer', fakeAsync(() => {
+            openAndAssertPopover(layerFixture, layerInstance.popover());
+
+            expect(layerInstance.popoverTrigger().overlayRef!.hostElement.parentElement).toBe(getLayer());
+        }));
+
+        it('should keep a panel stuck to a window edge in the application-wide container', fakeAsync(() => {
+            layerInstance.stickToWindow = 'top';
+            layerFixture.detectChanges();
+            openAndAssertPopover(layerFixture, layerInstance.popover());
+
+            expect(layerInstance.popoverTrigger().overlayRef!.hostElement.parentElement).toBe(overlayContainerElement);
+        }));
+
+        it('should keep a tooltip inside the element in the application-wide container', fakeAsync(() => {
+            dispatchMouseEvent(layerInstance.tooltip().nativeElement, 'mouseenter');
+            layerFixture.detectChanges();
+            tick(tooltipEnterDelay);
+            layerFixture.detectChanges();
+
+            expect(layerInstance.tooltipTrigger().overlayRef!.hostElement.parentElement).toBe(overlayContainerElement);
+        }));
+    });
 });
 
 @Component({
@@ -1949,4 +1991,25 @@ class PopoverOrigin {
 
     readonly trigger = viewChild.required<ElementRef>('trigger');
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+}
+
+@Component({
+    selector: 'popover-in-overlay-layer',
+    imports: [KbqPopoverModule, KbqToolTipModule, KbqOverlayLayer],
+    template: `
+        <div kbqOverlayLayer>
+            <button #popover kbqPopover [kbqPopoverContent]="'POPOVER'" [kbqPopoverStickToWindow]="stickToWindow">
+                Popover
+            </button>
+            <button #tooltip [kbqTooltip]="'TOOLTIP'">Tooltip</button>
+        </div>
+    `
+})
+class PopoverInOverlayLayer {
+    stickToWindow?: KbqStickToWindowPlacementValues;
+
+    readonly popover = viewChild.required<ElementRef>('popover');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+    readonly tooltip = viewChild.required<ElementRef>('tooltip');
+    readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
 }

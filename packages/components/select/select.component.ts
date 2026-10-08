@@ -64,6 +64,7 @@ import {
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OPTION_PARENT_COMPONENT,
+    KBQ_OVERLAY_LAYERS,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
@@ -299,6 +300,7 @@ export class KbqSelect
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private overlayContainer = inject(OverlayContainer);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private readonly _dir = inject(Directionality, { optional: true });
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
@@ -1707,6 +1709,9 @@ export class KbqSelect
      * Sets up position change subscription and closing actions.
      */
     onAttached(): void {
+        // `cdkConnectedOverlay` creates and attaches the overlay in one go, so this is the first point it exists.
+        this.overlayLayers.adopt(this.overlayDir.overlayRef, this.elementRef.nativeElement);
+
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this._changeDetectorRef.detectChanges();
             this.setOverlayPosition();
@@ -2055,20 +2060,20 @@ export class KbqSelect
         this.destroyRef.onDestroy(() => query.removeEventListener('change', onChange));
     }
 
-    /** Gets the current overlay position index in the container. */
-    private currentOverlayPosition(): number {
-        const element = this.overlayDir.overlayRef.hostElement;
+    /** Whether a modal paints over the panel, so that clicks inside the modal leave the panel open. */
+    private isCoveredByModal(): boolean {
+        const host = this.overlayDir.overlayRef.hostElement;
+        const overlays = Array.from(this.overlayContainer.getContainerElement().children);
+        const modalIndex = overlays.findIndex((overlay) => overlay.classList.contains('kbq-modal-overlay'));
 
-        return Array.from(this.overlayContainer.getContainerElement().childNodes).findIndex((node) => {
-            return node.firstChild?.['id'] === element.firstChild?.['id'];
-        });
-    }
+        if (modalIndex === -1) {
+            return false;
+        }
 
-    /** Gets the position index of modal overlay in the container. */
-    private modalOverlayPosition(): number {
-        return Array.from(this.overlayContainer.getContainerElement().childNodes).findIndex((childNode) =>
-            (childNode as HTMLElement).classList.contains('kbq-modal-overlay')
-        );
+        const panelIndex = overlays.indexOf(host);
+
+        // A panel on an overlay layer paints under the whole application-wide container.
+        return panelIndex === -1 || panelIndex < modalIndex;
     }
 
     /**
@@ -2080,15 +2085,7 @@ export class KbqSelect
         const outsidePointerEvents = this.overlayDir
             .overlayRef!.outsidePointerEvents()
             .pipe(delay(0))
-            .pipe(
-                filter(() => {
-                    if (this.overlayContainer.getContainerElement().childElementCount > 1) {
-                        return this.currentOverlayPosition() > this.modalOverlayPosition();
-                    }
-
-                    return true;
-                })
-            );
+            .pipe(filter(() => !this.isCoveredByModal()));
 
         return merge(outsidePointerEvents, this.overlayDir.overlayRef!.detachments());
     }

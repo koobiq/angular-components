@@ -24,6 +24,7 @@ import {
 import {
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
+    KBQ_OVERLAY_LAYERS,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -144,6 +145,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 })
 export class KbqDatepicker<D> implements OnDestroy {
     private overlay = inject(Overlay);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private ngZone = inject(NgZone);
     private viewContainerRef = inject(ViewContainerRef);
     private readonly dateAdapter = injectRequiredDateAdapter<D>();
@@ -464,6 +466,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         });
 
         this.popupRef = this.overlay.create(overlayConfig);
+        this.overlayLayers.adopt(this.popupRef, this.datepickerInput.getOrigin().nativeElement);
 
         this.closeSubscription = this.closingActions().subscribe(() => this.close(this.restoreFocus()));
     }

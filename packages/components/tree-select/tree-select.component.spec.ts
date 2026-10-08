@@ -41,6 +41,7 @@ import {
     KbqComponentColors,
     KbqLocaleService,
     KbqLocaleServiceModule,
+    KbqOverlayLayer,
     KbqPanelMaxHeight,
     KbqPanelWidth,
     KbqPseudoCheckbox,
@@ -6313,6 +6314,58 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
 
             expect(option.classList).toContain('kbq-focused');
+        }));
+    });
+
+    describe('overlay layer', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqTreeModule, KbqTreeSelectModule, KbqOverlayLayer],
+            template: `
+                <div kbqOverlayLayer>
+                    <kbq-form-field>
+                        <kbq-tree-select placeholder="Files">
+                            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                                    {{ treeControl.getViewValue(node) }}
+                                </kbq-tree-option>
+                            </kbq-tree-selection>
+                        </kbq-tree-select>
+                    </kbq-form-field>
+                </div>
+            `
+        })
+        class TreeSelectInOverlayLayer {
+            treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+            treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+            dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+            readonly select = viewChild.required(KbqTreeSelect);
+
+            constructor() {
+                this.dataSource.data = buildFileTree(TREE_DATA, 0);
+            }
+        }
+
+        beforeEach(() => {
+            configureKbqTreeSelectTestingModule([TreeSelectInOverlayLayer]);
+        });
+
+        it('should render the panel of a tree-select inside the element into its overlay layer', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TreeSelectInOverlayLayer);
+
+            fixture.detectChanges();
+
+            const select = fixture.componentInstance.select();
+
+            select.open();
+            fixture.detectChanges();
+            flush();
+
+            const overlayHost = select.panel()!.nativeElement.closest('.cdk-overlay-pane').parentElement;
+
+            expect(overlayHost.parentElement).toBe(
+                fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer')
+            );
         }));
     });
 });

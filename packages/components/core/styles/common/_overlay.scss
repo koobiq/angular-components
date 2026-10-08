@@ -4,6 +4,8 @@
 $overlay-container-z-index: 1000 !default;
 $overlay-z-index: 1000 !default;
 $overlay-backdrop-z-index: 1000 !default;
+// Layer of `kbqOverlayLayer`: below the sticky top-bar and navbar (990), above the page content.
+$overlay-layer-z-index: 980 !default;
 
 // Background color for all of the backdrops
 $overlay-backdrop-color: rgba(0, 0, 0, 0.5) !default;
@@ -40,6 +42,10 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
             // Hide the element when it doesn't have any child nodes. This doesn't
             // include overlays that have been detached, rather than disposed.
             display: none;
+        }
+
+        &.kbq-overlay-layer {
+            z-index: var(--kbq-overlay-layer-z-index, #{$overlay-layer-z-index});
         }
     }
 

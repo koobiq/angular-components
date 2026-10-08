@@ -1757,6 +1757,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-safe-area-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-scrolling-and-layering-page": {
+    "packagePath": "components/dropdown/dropdown-scrolling-and-layering-page",
+    "title": "Dropdown scrolling and layering page",
+    "componentName": "DropdownScrollingAndLayeringPageExample",
+    "files": [
+      "dropdown-scrolling-and-layering-page-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-scrolling-and-layering-page-example",
+    "primaryFile": "dropdown-scrolling-and-layering-page-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-scrolling-and-layering": {
+    "packagePath": "components/dropdown/dropdown-scrolling-and-layering",
+    "title": "Dropdown scrolling and layering",
+    "componentName": "DropdownScrollingAndLayeringExample",
+    "files": [
+      "dropdown-scrolling-and-layering-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-scrolling-and-layering-example",
+    "primaryFile": "dropdown-scrolling-and-layering-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dropdown-slash-menu": {
     "packagePath": "components/dropdown/dropdown-slash-menu",
     "title": "Dropdown at the caret",
@@ -7950,6 +7974,8 @@ export type LiveExampleId =
   | 'dropdown-overview'
   | 'dropdown-recursive-template'
   | 'dropdown-safe-area'
+  | 'dropdown-scrolling-and-layering-page'
+  | 'dropdown-scrolling-and-layering'
   | 'dropdown-slash-menu'
   | 'dropdown-with-filter'
   | 'dropdown-with-footer'

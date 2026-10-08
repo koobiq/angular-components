@@ -22,6 +22,7 @@ import {
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
     KbqNavbarLocaleConfiguration,
+    KbqOverlayLayerExclude,
     ruRULocaleData,
     TAB,
     UP_ARROW
@@ -93,7 +94,8 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = KBQ_NAVBAR_LOCALE_CONFIGURATION
     },
     hostDirectives: [
         CdkMonitorFocus,
-        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
+        { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] },
+        KbqOverlayLayerExclude
     ],
     exportAs: 'KbqVerticalNavbar'
 })

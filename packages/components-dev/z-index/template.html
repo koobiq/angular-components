@@ -16,7 +16,7 @@
     <button kbq-dropdown-item>Point 3</button>
 </kbq-dropdown>
 
-<kbq-navbar style="position: fixed; top: 0; z-index: 1000">
+<kbq-navbar style="position: fixed; top: 0">
     <kbq-navbar-container>
         <kbq-navbar-item
             #horizontalNavbarDropdownTrigger_1="kbqDropdownTrigger"
@@ -216,7 +216,7 @@
     </kbq-form-field>
 </ng-template>
 
-<div style="height: 200vh; margin-top: 64px">
+<div style="height: 200vh; margin-top: 64px" kbqOverlayLayer>
     <ng-container *ngTemplateOutlet="controls" />
 </div>
 
