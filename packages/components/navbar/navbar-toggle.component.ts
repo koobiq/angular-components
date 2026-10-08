@@ -3,7 +3,6 @@ import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     effect,
     inject,
@@ -124,7 +123,6 @@ export class KbqNavbarToggleRegistry implements OnDestroy {
 })
 export class KbqNavbarToggle implements OnDestroy {
     private readonly nativeElement = kbqInjectNativeElement();
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly registry = inject(KbqNavbarToggleRegistry);
     private readonly isBrowser = inject(Platform).isBrowser;
 
@@ -171,8 +169,6 @@ export class KbqNavbarToggle implements OnDestroy {
     toggle() {
         this.navbar.toggle();
         this.tooltip.hide();
-
-        this.changeDetectorRef.markForCheck();
     }
 
     /** @docs-private */

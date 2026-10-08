@@ -207,14 +207,14 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
     /** @docs-private */
     get hasFocus(): boolean {
-        return !!this.nestedElement?.hasFocus || this._hasFocus;
+        return !!this.nestedElement?.hasFocus || this.hasFocusState();
     }
 
     set hasFocus(value: boolean) {
-        this._hasFocus = value;
+        this.hasFocusState.set(value);
     }
 
-    private _hasFocus: boolean = false;
+    private readonly hasFocusState = signal(false);
 
     /**
      * Whether the item is disabled.
@@ -225,17 +225,14 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
      * element, which the key manager has to skip just the same.
      */
     get disabled(): boolean {
-        return this._disabled || this.decorative;
+        return this.disabledState();
     }
 
     set disabled(value: boolean) {
-        if (value !== this._disabled) {
-            this._disabled = value;
-            this.changeDetector.markForCheck();
-        }
+        this.disabledState.set(value);
     }
 
-    private _disabled = false;
+    private readonly disabledState = signal(false);
 
     /**
      * Keeps an element with nothing to interact with out of the roving focus order, without announcing or
@@ -318,8 +315,6 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
         this.hasFocus = true;
 
-        this.changeDetector.markForCheck();
-
         this.elementRef.nativeElement.focus();
     }
 
@@ -367,8 +362,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
                 // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.
                 if (_getFocusedElementPierceShadowDom() === this.elementRef.nativeElement) return;
 
-                this._hasFocus = false;
-                this.changeDetector.markForCheck();
+                this.hasFocusState.set(false);
 
                 this.tooltip?.hide();
 
@@ -649,8 +643,6 @@ export class KbqNavbarItem implements AfterContentInit {
             this.updateDropdown();
 
             this.updateTooltip();
-
-            this.changeDetectorRef.markForCheck();
         });
 
         this.navbarFocusableItem.setTooltip(this.tooltip);
