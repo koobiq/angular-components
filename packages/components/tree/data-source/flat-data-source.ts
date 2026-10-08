@@ -167,6 +167,11 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
         super();
 
         this._data = new BehaviorSubject<T[]>(initialData);
+
+        // The setter flattens the data for the tree.
+        if (initialData.length) {
+            this.data = initialData;
+        }
     }
 
     connect(collectionViewer: CollectionViewer): Observable<F[]> {
