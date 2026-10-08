@@ -65,6 +65,14 @@ export const warnPatterns: WarnPattern[] = [
             'through their ref: afterOpened(), beforeClosed() and afterClosed().'
     },
     {
+        pattern: '\\b(setAnimationState|animationTransform)\\b|\\.animationState\\b',
+        message:
+            'The animation state of KbqSidepanelContainerComponent (animationState, animationTransform, ' +
+            'setAnimationState()), KbqSidebar and KbqToastComponent was removed. Follow a sidepanel through ' +
+            'KbqSidepanelRef: afterOpened(), beforeClosed() and afterClosed(); a sidebar through stateChanged. ' +
+            'Ignore this if animationState is a member of your own component.'
+    },
+    {
         pattern: '\\.animation\\s*\\.\\s*(pipe|subscribe|next)\\b',
         message:
             'KbqToastService.animation (and KbqToastStack.animation) were removed: a toast plays its exit animation ' +
