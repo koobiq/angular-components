@@ -483,10 +483,11 @@ export class KbqListSelection<T = any>
 
     /** Tab index of the list, `-1` while it is disabled. */
     get tabIndex(): number {
-        return this.disabled ? -1 : this._tabIndex;
+        return this.disabled ? -1 : this.ownTabIndex();
     }
 
-    private _tabIndex = 0;
+    /** Tab index the list holds while enabled. Also written outside any listener, hence a signal. */
+    private readonly ownTabIndex = signal(0);
 
     /** @docs-private */
     readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -624,7 +625,7 @@ export class KbqListSelection<T = any>
             if (tabIndex === undefined) return;
 
             this.userTabIndex = tabIndex;
-            this._tabIndex = tabIndex;
+            this.ownTabIndex.set(tabIndex);
         });
 
         effect(() => {
@@ -717,8 +718,6 @@ export class KbqListSelection<T = any>
         if (this.selectionModel.isMultipleSelection() !== !!next) {
             this.rebuildSelectionModel(!!next);
         }
-
-        this.changeDetectorRef.markForCheck();
     }
 
     /** Replaces the `SelectionModel` with one of the given multiplicity, keeping what the new one can hold. */
@@ -803,15 +802,12 @@ export class KbqListSelection<T = any>
             .withHorizontalOrientation(this.horizontal() ? 'ltr' : null);
 
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this._tabIndex = -1;
+            this.ownTabIndex.set(-1);
             // Written to the DOM right away, as `KbqTagList` does: the browser moves the focus as soon as this Tab is
             // handled, and the binding is only applied by the change detection that runs after it.
             this.elementRef.nativeElement.tabIndex = -1;
 
-            setTimeout(() => {
-                this._tabIndex = this.userTabIndex || 0;
-                this.changeDetectorRef.markForCheck();
-            });
+            setTimeout(() => this.ownTabIndex.set(this.userTabIndex || 0));
         });
 
         // The initial value is applied by the `options.changes` subscription below, which starts with the
@@ -829,10 +825,6 @@ export class KbqListSelection<T = any>
             this.syncNavigableOptions();
             this.updateTabIndex();
             this.initializeSelection();
-            // `showSelectAll` is derived from the option count, and nothing else in this view changes
-            // when an option is added or removed — without this the row would not appear on the first
-            // option, nor go away with the last one.
-            this.changeDetectorRef.markForCheck();
         });
 
         if (!this.platform.isBrowser) return;
@@ -1212,7 +1204,7 @@ export class KbqListSelection<T = any>
         // Counted over `options`, not the navigable list: the "select all" row only renders when there
         // is at least one option, so the two are empty together — and `navigableOptions` is rebuilt a
         // pass later, which would leave an emptied list holding a tab stop with nothing to focus.
-        this._tabIndex = this.userTabIndex || (this.options.length === 0 ? -1 : 0);
+        this.ownTabIndex.set(this.userTabIndex || (this.options.length === 0 ? -1 : 0));
     }
 
     private onCopyDefaultHandler(): void {
@@ -1512,7 +1504,6 @@ export class KbqListSelection<T = any>
 
         this.dropIndex = index;
         this.dropIndicatorOffset.set(boundary - startOf(container) + scrolled);
-        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -2107,11 +2098,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
         this.onFocus.next({ option: this });
 
-        Promise.resolve().then(() => {
-            this.hasFocus = true;
-
-            this.changeDetector.markForCheck();
-        });
+        Promise.resolve().then(() => (this.hasFocus = true));
     }
 
     /** Marks this option as blurred after the next render, unless {@link preventBlur} is set. */

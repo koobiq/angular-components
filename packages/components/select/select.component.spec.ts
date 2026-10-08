@@ -6582,7 +6582,7 @@ describe('KbqSelect', () => {
             await vi.advanceTimersByTimeAsync(0);
             await vi.runOnlyPendingTimersAsync();
 
-            expect(componentInstance.select().hiddenItems).not.toBeFalsy();
+            expect(componentInstance.select().hiddenItems()).not.toBeFalsy();
         });
 
         it('should compute hidden items correctly', async () => {
@@ -6608,14 +6608,21 @@ describe('KbqSelect', () => {
                 await vi.advanceTimersByTimeAsync(0);
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(componentInstance.select().hiddenItems).toEqual(1);
+                expect(componentInstance.select().hiddenItems()).toEqual(1);
 
                 options.item(2).click();
                 fixtureTest.detectChanges();
                 await vi.advanceTimersByTimeAsync(0);
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(componentInstance.select().hiddenItems).toEqual(2);
+                expect(componentInstance.select().hiddenItems()).toEqual(2);
+
+                fixtureTest.detectChanges();
+
+                const counter: HTMLElement = triggerEl.querySelector('.kbq-select__match-hidden-text');
+
+                expect(counter.textContent?.trim()).toBe('+2');
+                expect(counter.classList).toContain('kbq-select__match-hidden-text_visible');
             } finally {
                 restoreLayout();
             }
@@ -6997,7 +7004,7 @@ describe('KbqSelect', () => {
             fixture.autoDetectChanges();
             await vi.runOnlyPendingTimersAsync();
 
-            const hiddenItemBeforeRenderedOptionsChange = fixture.componentInstance.select().hiddenItems;
+            const hiddenItemBeforeRenderedOptionsChange = fixture.componentInstance.select().hiddenItems();
 
             testInstance.viewport().setRenderedRange({ start: options.length + 1, end: options.length * 2 + 1 });
             // finishInit(fixture);
@@ -7011,7 +7018,7 @@ describe('KbqSelect', () => {
                 await vi.advanceTimersByTimeAsync(0);
             }
 
-            expect(testInstance.select().hiddenItems).not.toEqual(hiddenItemBeforeRenderedOptionsChange);
+            expect(testInstance.select().hiddenItems()).not.toEqual(hiddenItemBeforeRenderedOptionsChange);
         });
 
         it('should calculate hidden items with virtual options', async () => {
@@ -7035,13 +7042,13 @@ describe('KbqSelect', () => {
                 fixture.autoDetectChanges();
                 await vi.runOnlyPendingTimersAsync();
 
-                expect(testInstance.select().hiddenItems).toEqual(1);
+                expect(testInstance.select().hiddenItems()).toEqual(1);
 
                 options.item(2).click();
                 fixture.autoDetectChanges();
                 await vi.advanceTimersByTimeAsync(0);
                 await vi.runOnlyPendingTimersAsync();
-                expect(testInstance.select().hiddenItems).toEqual(2);
+                expect(testInstance.select().hiddenItems()).toEqual(2);
             } finally {
                 restoreLayout();
             }
@@ -9750,7 +9757,7 @@ describe('KbqSelect', () => {
         it('should leave the tab order to the tags that fit', async () => {
             await selectAllThree();
 
-            expect(testInstance.select().hiddenItems).toBe(1);
+            expect(testInstance.select().hiddenItems()).toBe(1);
             expect(getTabIndexes()).toEqual(['0', '0', '-1']);
         });
 
