@@ -1,4 +1,5 @@
 import { CollectionViewer } from '@angular/cdk/collections';
+import { computed } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { FlatTreeControl } from '../control/flat-tree-control';
 import { KbqTreeFlatDataSource, KbqTreeFlattener } from './flat-data-source';
@@ -169,6 +170,16 @@ describe('KbqTreeFlatDataSource', () => {
         dataSource.data = data;
 
         expect(dataSource.data).toBe(data);
+    });
+
+    it('should let a computed follow the data it is given', () => {
+        const rootCount = computed(() => dataSource.data.length);
+
+        expect(rootCount()).toBe(0);
+
+        dataSource.data = buildData();
+
+        expect(rootCount()).toBe(2);
     });
 
     it('should emit the expanded nodes on connect', () => {
