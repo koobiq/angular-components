@@ -356,6 +356,27 @@ change.
 **Verified:** at threshold 0, in Docker at 6 workers — the whole `form-field` spec ×3 (156/156) and
 the two autofill shots ×25 (50/50).
 
+## Follow-up, 2026-10-08
+
+### `actions-panel › items overflow and dropdown`
+
+1 occurrence in a full local Docker run, 23709 px (ratio 0.05) on `2-light.png`: the first item of the
+overflow dropdown, `Action 5`, rendered in its hover/focus state, where the baseline has no item
+highlighted. It did not come back in about 80 further runs of the test, among them the whole suite ×3
+and the spec ×60 alone and ×15 at 64 workers.
+
+The test set the container to 650 px and clicked the overflow button straight away. The overflow follows
+the width through a `ResizeObserver`, and at the fixture's 400 px four actions are hidden rather than
+two, so a slow recalculation lets the dropdown open while it still lists `Action 3` to `Action 6` and
+lose two items while open. That race is the only asynchronous step between the runs. The highlight
+itself is not explained: a probe that opened the panel before the recalculation left no item focused,
+and the pointer, resting on the button, stays below the panel in both states, so it is not a hover.
+
+**Fix:** the test waits until exactly the two actions that no longer fit are hidden before it opens
+the dropdown, then asserts the two items and that none of them is focused before the screenshot, so a
+recurrence fails on a named state instead of a pixel count. **Verified:** the spec ×30 in Docker
+(240/240).
+
 ## Not fixed
 
 - **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
