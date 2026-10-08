@@ -1,6 +1,5 @@
 import { ComponentFixture } from '@angular/core/testing';
 import { DOWN_ARROW, ENTER, ESCAPE, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@koobiq/components/core';
-import { CheckConfig } from '../config';
 
 const KEY_CODES = {
     Enter: ENTER,
@@ -95,14 +94,6 @@ export function text(element: Element | null | undefined): string {
 /** The container the panels render into, outside the fixture. */
 export function overlayContainer(): HTMLElement | null {
     return document.querySelector<HTMLElement>('.cdk-overlay-container');
-}
-
-/** `it.fails` in the applications where a library bug makes the test fail, `it` in the others. */
-export function itFailsIn(
-    config: CheckConfig,
-    names: CheckConfig['name'][]
-): (name: string, test: () => Promise<void> | void) => void {
-    return names.includes(config.name) ? it.fails : it;
 }
 
 /** Fails a test of the enclosing `describe` that logs an error or a warning, such as an NG0100 in dev mode. */

@@ -7,7 +7,6 @@ import {
     failOnConsole,
     focus,
     focusedElement,
-    itFailsIn,
     Key,
     overlayContainer,
     press,
@@ -51,15 +50,9 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
                 expect(text(byTestId(fixture, 'file-summary'))).toBe('closed: none');
             });
 
-            // Library bug: `KbqTreeSelect` binds `aria-labelledby` from its own input only and never reads the form
-            // field's `labelId()` the way `KbqSelect` does, so `kbq-label` does not name it and the placeholder becomes
-            // its `aria-label`.
-            itFailsIn(config, ['zoneless', 'zone', 'zone-animations'])(
-                'is named by the form field label, as the select is',
-                () => {
-                    expect(text(document.getElementById(select.getAttribute('aria-labelledby') ?? ''))).toBe('File');
-                }
-            );
+            it('is named by the form field label, as the select is', () => {
+                expect(text(document.getElementById(select.getAttribute('aria-labelledby') ?? ''))).toBe('File');
+            });
 
             it('opens on click, emits openedChange and moves focus to the first node', async () => {
                 await click(fixture, trigger());
@@ -219,19 +212,13 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
                 expect(scenario.file.dirty).toBe(false);
             });
 
-            // Library bug: `KbqTreeSelect` passes every `selectionModel.changed` to the forms `onChange`, including the
-            // change `writeValue` makes through `setSelectionByValue`, so a value the control writes comes back as a
-            // change from the view and marks the control dirty. `KbqSelect` keeps it pristine.
-            itFailsIn(config, ['zoneless', 'zone', 'zone-animations'])(
-                'keeps the form control pristine when the control writes a value',
-                async () => {
-                    scenario.file.setValue('readme');
-                    await settle(fixture);
+            it('keeps the form control pristine when the control writes a value', async () => {
+                scenario.file.setValue('readme');
+                await settle(fixture);
 
-                    expect(scenario.file.value).toBe('readme');
-                    expect(scenario.file.pristine).toBe(true);
-                }
-            );
+                expect(scenario.file.value).toBe('readme');
+                expect(scenario.file.pristine).toBe(true);
+            });
 
             it('shows a value written to the form control and opens on it', async () => {
                 scenario.file.setValue('readme');

@@ -239,7 +239,7 @@ export class KbqTreeSelectChange<T = any> {
         '[attr.aria-expanded]': 'panelOpen',
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
         '[attr.aria-label]': 'ariaLabelText',
-        '[attr.aria-labelledby]': 'ariaLabelledby()',
+        '[attr.aria-labelledby]': 'resolvedAriaLabelledby',
         '[attr.aria-invalid]': 'errorState()',
         '[attr.aria-required]': 'required()',
         '[attr.aria-disabled]': 'disabled() || null',
@@ -477,26 +477,22 @@ export class KbqTreeSelect
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
     /**
-     * Id of the element that names the control.
+     * Id of the element that names the control. Defaults to the `kbq-label` of a wrapping `kbq-form-field`.
      *
      * A `role="combobox"` element takes its name from the author only, so neither the placeholder nor the
-     * selected values name it. The `<label for>` a wrapping `kbq-form-field` renders does not either —
-     * `for` only names labelable elements, which a custom control is not — so point this at the label, or
-     * at whatever visible text names the control.
+     * selected values name it, and the `<label for>` of the form field names labelable elements only, which
+     * a custom control is not. Without a form-field label, point this at whatever visible text names the
+     * control.
      */
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
 
     /**
-     * The `aria-labelledby` the control actually exposes: an explicit input wins, otherwise a wrapping
-     * `kbq-form-field` names the control through its caption.
-     *
-     * The form field renders a `<span>` caption for this control (`isNativeLabelSupported: false`), so
-     * `label for` cannot associate with it — the relationship is expressed from the control to the label.
-     * @docs-private
+     * Id of the element that names the control: its own `aria-labelledby`, or else the form-field label.
+     * @internal
      */
-    protected readonly resolvedAriaLabelledby = computed(
-        () => this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null
-    );
+    protected get resolvedAriaLabelledby(): string | null {
+        return this.ariaLabelledby() || this.parentFormField?.labelId() || null;
+    }
 
     /** Object used to control when error messages are shown. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();
@@ -850,7 +846,7 @@ export class KbqTreeSelect
      * repository is in. Left off while `aria-labelledby` is set, which outranks `aria-label` anyway.
      */
     protected get ariaLabelText(): string | null {
-        return this.ariaLabelledby() ? null : this.ariaLabel() || this.placeholder() || null;
+        return this.resolvedAriaLabelledby ? null : this.ariaLabel() || this.placeholder() || null;
     }
 
     isEmptySearchResult: boolean;
@@ -879,6 +875,9 @@ export class KbqTreeSelect
 
     // Used for storing the values that were assigned before the options were initialized.
     private tempValues: string | string[] | null;
+
+    /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
+    private writingValue = false;
 
     /** Handles of the timers that outlive the call that scheduled them. */
     private readonly pendingTimers = new Set<ReturnType<typeof setTimeout>>();
@@ -1023,7 +1022,10 @@ export class KbqTreeSelect
 
         this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.syncSelectionState();
-            this.onChange(this.selectedValues);
+
+            if (!this.writingValue) {
+                this.onChange(this.selectedValues);
+            }
 
             if (this.multiSelection) {
                 this.refreshTriggerValues();
@@ -1826,16 +1828,22 @@ export class KbqTreeSelect
      * found with the designated value, the select trigger is cleared.
      */
     private setSelectionByValue(value: any | any[]) {
-        if (this.multiSelection && value) {
-            if (!Array.isArray(value)) {
-                throw getKbqSelectNonArrayValueError();
+        this.writingValue = true;
+
+        try {
+            if (this.multiSelection && value) {
+                if (!Array.isArray(value)) {
+                    throw getKbqSelectNonArrayValueError();
+                }
+
+                this.tree()!.setOptionsFromValues(value);
+
+                this.sortValues();
+            } else {
+                this.tree()!.setOptionsFromValues([value]);
             }
-
-            this.tree()!.setOptionsFromValues(value);
-
-            this.sortValues();
-        } else {
-            this.tree()!.setOptionsFromValues([value]);
+        } finally {
+            this.writingValue = false;
         }
 
         this.changeDetectorRef.detectChanges();
@@ -1857,7 +1865,13 @@ export class KbqTreeSelect
 
             if (this.panelOpenValue() && this.panel()) {
                 this.scrollActiveOptionIntoView();
-            } else if (!this.panelOpenValue() && !this.multiSelection && treeValue.keyManager.activeItem) {
+            } else if (
+                !this.panelOpenValue() &&
+                !this.multiSelection &&
+                treeValue.keyManager.activeItem &&
+                // The active option follows a written value; selecting it again would report it as the user's.
+                !this.writingValue
+            ) {
                 treeValue.keyManager.activeItem.selectViaInteraction();
             }
         });

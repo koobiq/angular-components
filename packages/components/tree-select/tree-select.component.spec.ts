@@ -398,6 +398,9 @@ class BasicTreeSelect {
     ],
     template: `
         <kbq-form-field>
+            @if (label) {
+                <kbq-label>{{ label }}</kbq-label>
+            }
             <kbq-tree-select placeholder="Food" [aria-label]="ariaLabel" [aria-labelledby]="ariaLabelledby">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
@@ -415,6 +418,7 @@ class TreeSelectWithAriaName {
 
     ariaLabel: string | null = null;
     ariaLabelledby: string | null = null;
+    label: string | null = null;
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -2301,25 +2305,38 @@ describe('KbqTreeSelect', () => {
                     expect(namedSelect.hasAttribute('aria-label')).toBe(false);
                 });
 
-                // A tree-select is not a native labelable element, so the form-field renders a `<span>`
-                // caption it `for` cannot point at; the control is named from the label side instead.
-                it('should be named by the form-field caption', fakeAsync(() => {
+                it('should be named by the form-field label', async () => {
                     fixture.destroy();
 
-                    const labeledFixture = TestBed.createComponent(TreeSelectWithFormFieldLabel);
+                    const labelledFixture = TestBed.createComponent(TreeSelectWithAriaName);
 
-                    labeledFixture.detectChanges();
-                    flush();
+                    labelledFixture.componentInstance.label = 'Dish';
+                    labelledFixture.detectChanges();
+                    await vi.runOnlyPendingTimersAsync();
 
-                    const labeledSelect = getTreeSelectElement(labeledFixture);
-                    const caption: HTMLElement = labeledFixture.debugElement.query(
-                        By.css('.kbq-form-field__label')
-                    ).nativeElement;
+                    const labelledSelect = getTreeSelectElement(labelledFixture);
+                    const label = labelledFixture.debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
 
-                    expect(caption.tagName).toBe('SPAN');
-                    expect(caption.getAttribute('for')).toBeNull();
-                    expect(labeledSelect.getAttribute('aria-labelledby')).toBe(caption.id);
-                }));
+                    expect(label.id).toBeTruthy();
+                    expect(label.textContent.trim()).toBe('Dish');
+                    expect(labelledSelect.getAttribute('aria-labelledby')).toBe(label.id);
+                    expect(labelledSelect.hasAttribute('aria-label')).toBe(false);
+                });
+
+                it('should prefer its own aria-labelledby over the form-field label', async () => {
+                    fixture.destroy();
+
+                    const labelledFixture = TestBed.createComponent(TreeSelectWithAriaName);
+
+                    labelledFixture.componentInstance.label = 'Dish';
+                    labelledFixture.componentInstance.ariaLabelledby = 'external-label';
+                    labelledFixture.detectChanges();
+                    await vi.runOnlyPendingTimersAsync();
+
+                    expect(getTreeSelectElement(labelledFixture).getAttribute('aria-labelledby')).toBe(
+                        'external-label'
+                    );
+                });
 
                 it('should have no axe violations when named only by the placeholder', async () => {
                     // axe-core schedules its work on timers.
@@ -3367,6 +3384,17 @@ describe('KbqTreeSelect', () => {
 
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
             });
+
+            it('should keep the control pristine when the form writes a value of a node', async () => {
+                const { control } = fixture.componentInstance;
+
+                control.setValue('rootNode_1');
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(control.value).toBe('rootNode_1');
+                expect(control.pristine).toBe(true);
+            });
         });
 
         describe('Clear value', () => {
@@ -3682,6 +3710,18 @@ describe('KbqTreeSelect', () => {
         });
         // todo эта проверка для ситуации когда нельзя снять выделение с элемента,
         // но для этого требуется реализация параметра noUnselect, поэтому пока этот TC добавлен в исключения.
+
+        // Following the written value, the closed single select moves its active option onto it, which its
+        // arrow-key handling must not take for a selection of the user.
+        it('should not emit an event when the form writes a value', async () => {
+            const treeSelect = fixture.componentInstance.treeSelect();
+
+            treeSelect.writeValue('rootNode_1');
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(treeSelect.value()).toBe('rootNode_1');
+            expect(fixture.componentInstance.selectionChangeListener).not.toHaveBeenCalled();
+        });
 
         it('should only emit one event when pressing arrow keys on closed select', async () => {
             const select = fixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
