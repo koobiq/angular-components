@@ -56,12 +56,6 @@ test.describe('KbqNavbarModule', () => {
             await expect(getTitle(page, 'wraps')).toHaveCSS('font-size', '14px');
         });
 
-        test('should keep the explicit longTitle=false override', async ({ page }) => {
-            await page.goto('/E2eVerticalNavbarBrandAutoLongTitle');
-
-            await expect(getTitle(page, 'forced-off')).toHaveCSS('font-size', '18px');
-        });
-
         /**
          * `-webkit-line-clamp` does nothing without `display: -webkit-box`, and the per-orientation rules set
          * `display` on the title at the same specificity. Asserting the type alone would not notice: the font

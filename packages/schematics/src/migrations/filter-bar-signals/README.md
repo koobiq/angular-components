@@ -33,8 +33,8 @@ The schematic walks every `.ts` and `.html` file in the project (skipping
   of signal members through that ref are rewritten in the same template
   (external `.html` and inline `template:` strings): `ref.isChanged` →
   `ref.isChanged()`.
-- **Rename.** `KbqFilterBarRefresher` → `KbqFilterRefresher` (the old name is
-  still re-exported as an alias, so this is optional cleanup).
+- **Rename.** `KbqFilterBarRefresher` → `KbqFilterRefresher` (the old name
+  stayed an alias until 21.0.0).
 
 All rewrites are idempotent — running twice does not double the call.
 

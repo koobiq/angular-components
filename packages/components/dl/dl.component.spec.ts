@@ -688,24 +688,6 @@ describe(KbqDlComponent.name, () => {
         await vi.runOnlyPendingTimersAsync();
     });
 
-    it('should still honor the deprecated minWidth alias as the vertical-layout threshold', async () => {
-        vi.useFakeTimers();
-
-        const fixture = createComponent(KbqDlComponent);
-
-        // 600px is above the default (400) but below the alias value, so only a working `minWidth` makes it vertical.
-        fixture.componentRef.setInput('minWidth', 700);
-        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
-            configurable: true,
-            value: () => [{ width: 600 } as DOMRect]
-        });
-
-        await vi.advanceTimersByTimeAsync(100);
-        fixture.detectChanges();
-
-        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
-        await vi.runOnlyPendingTimersAsync();
-    });
     it('should re-evaluate the layout when the breakpoint changes', async () => {
         vi.useFakeTimers();
 
@@ -834,7 +816,7 @@ describe(KbqDlComponent.name, () => {
 
         const dl = fixture.debugElement.query(By.directive(KbqDlComponent)).componentInstance as KbqDlComponent;
 
-        expect(dl.minWidth()).toBe(700);
+        expect(dl.verticalBreakpoint()).toBe(700);
         expect(dl.dtMinWidth()).toBe(120);
         expect(dl.ddMinWidth()).toBe(80);
     });
@@ -881,7 +863,7 @@ class DlWithInvalidWidths {}
 @Component({
     imports: [KbqDlModule],
     template: `
-        <kbq-dl minWidth="700" dtMinWidth="120" ddMinWidth="80">
+        <kbq-dl verticalBreakpoint="700" dtMinWidth="120" ddMinWidth="80">
             <kbq-dt>term</kbq-dt>
             <kbq-dd>description</kbq-dd>
         </kbq-dl>

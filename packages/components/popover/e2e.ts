@@ -295,7 +295,7 @@ export class E2ePopoverScrollbarNoOverflow {}
             kbqPopoverSize="small"
             kbqPopoverPlacement="bottom"
             kbqTrigger="click"
-            [closeOnScroll]="true"
+            [kbqPopoverCloseOnScroll]="true"
             [kbqPopoverContent]="content"
         >
             Open

@@ -9,7 +9,6 @@ import {
     inject,
     input,
     linkedSignal,
-    OnDestroy,
     signal,
     untracked,
     WritableSignal
@@ -17,7 +16,6 @@ import {
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Subject } from 'rxjs';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
 
 @Directive({
@@ -44,7 +42,7 @@ import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
     },
     exportAs: 'kbqInputPassword'
 })
-export class KbqInputPassword implements KbqFormFieldControl<any>, OnDestroy, DoCheck, CanUpdateErrorState {
+export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanUpdateErrorState {
     protected elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     ngControl = inject(NgControl, { optional: true, self: true });
     parentForm = inject(NgForm, { optional: true });
@@ -72,9 +70,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnDestroy, Do
      * @docs-private
      */
     readonly autofilled = kbqInjectAutofilled();
-
-    /** Emits when the password hints are asked to re-run their rules. */
-    readonly checkRule = new Subject<void>();
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -195,10 +190,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnDestroy, Do
         });
     }
 
-    ngOnDestroy() {
-        this.checkRule.complete();
-    }
-
     ngDoCheck() {
         if (this.ngControl) {
             // We need to re-evaluate this on every change detection cycle, because there are some
@@ -220,11 +211,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnDestroy, Do
         const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
 
         this.errorStateValue.set(matcher.isErrorState(control, parent));
-    }
-
-    /** Asks every `kbq-password-hint` in the form field to re-run its rule against the current value. */
-    checkRules() {
-        this.checkRule.next();
     }
 
     /** Toggles the native input type between password and text. */

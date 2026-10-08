@@ -6,7 +6,6 @@ export * from './form-field-control';
 export * from './form-field.module';
 export * from './hint';
 export * from './label';
-export * from './password-hint';
 export * from './password-toggle';
 export * from './prefix';
 export * from './reactive-password-hint';

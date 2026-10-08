@@ -140,8 +140,9 @@ const filledByBrowser = this.input.autofilled();
 `<kbq-password-toggle>` - это компонент, который добавляет кнопку _"Показать пароль"_ для **заполненного** поля
 `<input kbqInputPassword />` внутри `<kbq-form-field>` компонента.
 
-`<kbq-password-hint>` - это компонент, который используется для добавления подсказок к полю `<input kbqInputPassword />`
-внутри `<kbq-form-field>` компонента.
+`<kbq-reactive-password-hint>` - это компонент, который используется для добавления подсказок к полю
+`<input kbqInputPassword />` внутри `<kbq-form-field>` компонента. Состояние подсказки задает инпут `[hasError]`:
+привяжите его к ошибке контрола, которую описывает подсказка.
 
 В примере используется [PasswordValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - это набор статических методов для валидации пароля.
 

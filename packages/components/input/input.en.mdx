@@ -31,8 +31,6 @@ The directive renders into a `type="text"` field. Do not add `type="number"`: th
 
 `min`, `max`, `step` and `bigStep` are signals, so reading one programmatically is a call — `numberInput.max()`. They are read-only: an `input()` has no `.set()`, so a value that changes at runtime is bound rather than assigned. `valueChange` and `disabledChange` are RxJS `Subject`s; subscribing is unchanged, emitting is `.next()`.
 
-`checkRules()` on `kbqInputPassword` re-runs every `kbq-password-hint` in the form field against the current value — call it after changing a rule at runtime.
-
 #### Number formatting and locale
 
 Separators come from the active locale, through the `input.number` section of its configuration. Override them for a subtree with `kbqInputLocaleConfigurationProvider({ number: { fractionSeparator: '.' } })`; only the keys you pass are replaced, the rest keep following the locale. `KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION` holds the `ru-RU` defaults.

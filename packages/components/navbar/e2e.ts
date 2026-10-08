@@ -130,7 +130,7 @@ export class E2eHorizontalNavbarStates {}
                         </span>
                     </div>
 
-                    <a href="#" kbq-navbar-brand [longTitle]="true">
+                    <a href="#" kbq-navbar-brand>
                         <div kbq-navbar-logo>
                             <!-- prettier-ignore -->
                             <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
@@ -216,7 +216,7 @@ export class E2eHorizontalNavbarStates {}
                         </span>
                     </div>
 
-                    <a href="#" kbq-navbar-brand [longTitle]="true">
+                    <a href="#" kbq-navbar-brand>
                         <div kbq-navbar-logo>
                             <!-- prettier-ignore -->
                             <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
@@ -302,7 +302,7 @@ export class E2eHorizontalNavbarStates {}
                         </span>
                     </div>
 
-                    <a href="#" kbq-navbar-brand [longTitle]="true">
+                    <a href="#" kbq-navbar-brand>
                         <div kbq-navbar-logo>
                             <!-- prettier-ignore -->
                             <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
@@ -388,7 +388,7 @@ export class E2eHorizontalNavbarStates {}
                         </span>
                     </div>
 
-                    <a href="#" kbq-navbar-brand [longTitle]="true">
+                    <a href="#" kbq-navbar-brand>
                         <div kbq-navbar-logo>
                             <!-- prettier-ignore -->
                             <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
@@ -486,7 +486,7 @@ export class E2eVerticalNavbarStates {}
                 @for (brand of brands; track brand.testId) {
                     <kbq-vertical-navbar [expanded]="true">
                         <kbq-navbar-container>
-                            <a href="#" kbq-navbar-brand [longTitle]="brand.longTitle">
+                            <a href="#" kbq-navbar-brand>
                                 <div kbq-navbar-logo>
                                     <!-- prettier-ignore -->
                                     <svg fill="none" height="32" viewBox="0 0 32 32" width="32" xmlns="http://www.w3.org/2000/svg"><rect fill="#FF0000" height="32" rx="6" width="32"/></svg>
@@ -530,7 +530,7 @@ export class E2eVerticalNavbarStates {}
     }
 })
 export class E2eVerticalNavbarBrandAutoLongTitle {
-    readonly brands: readonly { title: string; testId: string; longTitle?: boolean }[] = [
+    readonly brands: readonly { title: string; testId: string }[] = [
         // Fits on one line at 18px: stays in the default presentation.
         { title: 'Secret Notes', testId: 'short' },
         // Overflows at 18px, wraps to two lines at 14px.
@@ -541,9 +541,7 @@ export class E2eVerticalNavbarBrandAutoLongTitle {
             testId: 'clamped'
         },
         // The oscillation band: too wide at 18px, but would fit one line at 14px.
-        { title: 'Knowledge Hub Portal', testId: 'band' },
-        // The deprecated override still wins over the measurement.
-        { title: 'User Management and Access Control', testId: 'forced-off', longTitle: false }
+        { title: 'Knowledge Hub Portal', testId: 'band' }
     ];
 
     readonly horizontalBrands: readonly { title: string; testId: string }[] = [

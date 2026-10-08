@@ -18,7 +18,6 @@ import {
     HostAttributeToken,
     inject,
     InjectionToken,
-    Injector,
     input,
     model,
     OnDestroy,
@@ -27,7 +26,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { KBQ_CONNECTED_OVERLAY_ORIGIN, KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { kbqIconErrorStateContextFactoryProvider } from '@koobiq/components/icon';
@@ -36,7 +35,6 @@ import { KbqError } from './error';
 import { KbqFormFieldControl, kbqSetDescribedByIds } from './form-field-control';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
-import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqReactivePasswordHint } from './reactive-password-hint';
@@ -53,9 +51,6 @@ export function getKbqFormFieldMissingControlError(): Error {
  * @docs-private
  */
 export const KBQ_FORM_FIELD = new InjectionToken<KbqFormField>('KbqFormField');
-
-/** Error key set on the control by the legacy `KbqPasswordHint` when the password is not strong enough. */
-const PASSWORD_STRENGTH_ERROR = 'passwordStrength';
 
 /**
  * Default options for the kbq-form-field that can be configured using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS`
@@ -161,7 +156,6 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '[class.ng-invalid]': 'shouldForward("invalid")',
         '[class.ng-pending]': 'shouldForward("pending")',
 
-        '(keydown)': 'onKeyDown($event)',
         '(mouseenter)': 'onHoverChanged(true)',
         '(mouseleave)': 'onHoverChanged(false)'
     },
@@ -172,7 +166,6 @@ export class KbqFormField
     implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked
 {
     private readonly destroyRef = inject(DestroyRef);
-    private readonly injector = inject(Injector);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
@@ -222,10 +215,6 @@ export class KbqFormField
     /**
      * @docs-private
      */
-    readonly passwordHints = contentChildren(KbqPasswordHint);
-    /**
-     * @docs-private
-     */
     readonly suffix = contentChildren(KbqSuffix);
     /**
      * @docs-private
@@ -249,12 +238,6 @@ export class KbqFormField
      * @docs-private
      */
     hovered: boolean = false;
-
-    /**
-     * @docs-private
-     * @deprecated Unused. This property is no longer used by the form field and will be removed in a future version.
-     */
-    canCleanerClearByEsc: boolean = true;
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
@@ -289,22 +272,6 @@ export class KbqFormField
      * (`kbq-select`, for one) has to point back at the label through `aria-labelledby` instead.
      */
     readonly labelId = computed(() => (this.hasLabel() ? `${this.control().id()}-label` : null));
-
-    /**
-     * Whether the control is a native labelable element, so that a `<label>` can associate with it.
-     *
-     * A custom control (`kbq-select`, for one) reports `isNativeLabelSupported: false`; the caption is then rendered
-     * as a `<span>` instead of a `<label>`, because a label that neither has a `for` matching a labelable
-     * element nor wraps one is invalid, and the control is named through `aria-labelledby` instead.
-     */
-    readonly isNativeLabelSupported = computed(() => this.control().isNativeLabelSupported !== false);
-
-    /**
-     * Whether the form-field contains kbq-password-hint.
-     *
-     * @docs-private
-     */
-    readonly hasPasswordHint = computed(() => this.passwordHints().length > 0);
 
     /**
      * Whether the form-field contains kbq-hint.
@@ -401,30 +368,6 @@ export class KbqFormField
     ngAfterContentInit(): void {
         this.validateControlChild();
 
-        const control = this.control();
-        // Only a field with the legacy password hints follows the control: nothing else needs the check.
-        const passwordState = computed(() =>
-            this.passwordHints().length ? { focused: control.focused(), value: control.value() } : null
-        );
-
-        // The legacy password hints check their rules in the render that follows a change, so the strength
-        // error is set once that render is over.
-        toObservable(passwordState, { injector: this.injector })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((state) => {
-                if (!state) return;
-
-                setTimeout(() => {
-                    if (
-                        !this.destroyRef.destroyed &&
-                        !state.focused &&
-                        hasPasswordStrengthError(this.passwordHints())
-                    ) {
-                        this.setPasswordStrengthError();
-                    }
-                });
-            });
-
         this.initializeControl();
     }
 
@@ -467,13 +410,6 @@ export class KbqFormField
             control.onContainerClick(event);
         }
     }
-
-    /**
-     * Handles keydown events.
-     * @deprecated Unused. This method is no longer called by the form field and will be removed in a future version.
-     * @docs-private
-     */
-    onKeyDown(_event: KeyboardEvent): void {}
 
     /**
      * @docs-private
@@ -553,7 +489,6 @@ export class KbqFormField
             // reference elements that are not in the DOM.
             ...(this.invalid ? this.error() : []),
             ...this.hint(),
-            ...this.passwordHints(),
             ...this.reactivePasswordHint()
         ].map((hint) => hint.id());
         const joinedIds = ids.join(' ');
@@ -571,16 +506,6 @@ export class KbqFormField
         } else {
             kbqSetDescribedByIds(this.controlElementRef().nativeElement, ids);
         }
-    }
-
-    /**
-     * Adds the password strength error to the control, keeping the errors set by the other validators:
-     * `setErrors` replaces the whole errors object.
-     */
-    private setPasswordStrengthError(): void {
-        const control = this.control().ngControl?.control;
-
-        control?.setErrors({ ...control.errors, [PASSWORD_STRENGTH_ERROR]: true });
     }
 
     /** Initializes the form field control. */

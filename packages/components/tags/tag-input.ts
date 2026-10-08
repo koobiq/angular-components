@@ -14,7 +14,6 @@ import {
     signal,
     SimpleChanges
 } from '@angular/core';
-import { NgControl } from '@angular/forms';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
     COMMA,
@@ -126,16 +125,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private defaultOptions = inject<KbqTagsDefaultOptions>(KBQ_TAGS_DEFAULT_OPTIONS);
     private trimDirective = inject(KbqTrim, { optional: true, self: true });
-    /**
-     * The form control instance bound to the input, if any.
-     *
-     * @deprecated Read only, and unused by the library: validation lives on the `<kbq-tag-list>`
-     * control. Binding `[formControl]`/`[ngModel]` to the input itself stays supported — it is what
-     * `kbqAutocomplete` drives the input through — only its validators are not consulted.
-     * Will be removed in a future major release.
-     * @docs-private
-     */
-    ngControl: NgControl | null = inject(NgControl, { optional: true, self: true });
     /**
      * The autocomplete trigger attached to the input, if any.
      * @docs-private
@@ -314,13 +303,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
             this.emitTagEnd();
         }
     }
-
-    /**
-     * @deprecated No-op. Validation belongs to the `<kbq-tag-list>` form control, which
-     * revalidates itself whenever its value changes. Will be removed in a future major release.
-     * @docs-private
-     */
-    triggerValidation(): void {}
 
     /**
      * Checks to see if the (tagEnd) event needs to be emitted.
