@@ -5398,6 +5398,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "skeleton-accordion-example.ts",
     "importPath": "components/skeleton"
   },
+  "skeleton-basic": {
+    "packagePath": "components/skeleton/skeleton-basic",
+    "title": "Skeleton basic block",
+    "componentName": "SkeletonBasicExample",
+    "files": [
+      "skeleton-basic-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-basic-example",
+    "primaryFile": "skeleton-basic-example.ts",
+    "importPath": "components/skeleton"
+  },
   "skeleton-checkable": {
     "packagePath": "components/skeleton/skeleton-checkable",
     "title": "Skeleton checkable preset",
@@ -5420,6 +5432,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "skeleton-code-block-example",
     "primaryFile": "skeleton-code-block-example.ts",
+    "importPath": "components/skeleton"
+  },
+  "skeleton-directive": {
+    "packagePath": "components/skeleton/skeleton-directive",
+    "title": "Skeleton directive",
+    "componentName": "SkeletonDirectiveExample",
+    "files": [
+      "skeleton-directive-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "skeleton-directive-example",
+    "primaryFile": "skeleton-directive-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-dl": {
@@ -5492,18 +5516,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "skeleton-in-sidepanel-example",
     "primaryFile": "skeleton-in-sidepanel-example.ts",
-    "importPath": "components/skeleton"
-  },
-  "skeleton-overview": {
-    "packagePath": "components/skeleton/skeleton-overview",
-    "title": "Skeleton overview",
-    "componentName": "SkeletonOverviewExample",
-    "files": [
-      "skeleton-overview-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "skeleton-overview-example",
-    "primaryFile": "skeleton-overview-example.ts",
     "importPath": "components/skeleton"
   },
   "skeleton-table": {
@@ -8246,15 +8258,16 @@ export type LiveExampleId =
   | 'sidepanel-with-custom-injector'
   | 'sidepanel-with-dynamic-config-update'
   | 'skeleton-accordion'
+  | 'skeleton-basic'
   | 'skeleton-checkable'
   | 'skeleton-code-block'
+  | 'skeleton-directive'
   | 'skeleton-dl'
   | 'skeleton-elements'
   | 'skeleton-form-field'
   | 'skeleton-grid'
   | 'skeleton-group'
   | 'skeleton-in-sidepanel'
-  | 'skeleton-overview'
   | 'skeleton-table'
   | 'skeleton-tabs'
   | 'skeleton-tree'
