@@ -107,8 +107,8 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqTextarea.grow is protected now, so a call - `textarea.grow()` - and a detached reference - ' +
             '`setTimeout(textarea.grow, 0)` - no longer compile. The textarea already re-measures on every ' +
-            'value change and whenever one of its inputs changes. A call that compensated for a layout change ' +
-            'it cannot see, such as a width change, can emit `textarea.stateChanges.next()` instead.'
+            'value change and whenever one of its inputs changes; a layout change it cannot see, such as a width ' +
+            'change, is measured at the next one.'
     },
     {
         anchor: TEXTAREA_ANCHOR,

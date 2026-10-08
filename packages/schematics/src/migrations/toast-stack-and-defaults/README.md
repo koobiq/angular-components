@@ -20,8 +20,8 @@ and reach the whole service through it. It now resolves only the narrow
 existed for the old rendering path: `elementRef`, `ttl`, `delay`,
 `isTemplateRef()`, `themePalette` and `toastStyle`. Everything the template
 renders — `style`, `icon`, `role`, `closeButton` and the resolved slot templates
-— became `protected`. `data`, `id`, `hovered`, `focused`, `animationState`,
-`close()` and `onAnimation()` are still public.
+— became `protected`. `data`, `id`, `hovered`, `focused` and `close()` are
+still public.
 
 A subclass registered through `KBQ_TOAST_FACTORY` is the documented extension
 point, so it is the code most likely to break:
@@ -55,9 +55,9 @@ The countdown moved into the service, so there is no per-instance `ttl` or
 `delay` to read or write any more — pass the lifetime as the `duration`
 argument of `show()`.
 
-**`KbqToastService.animation` is a `Subject<AnimationEvent>`**, not a
-`BehaviorSubject<AnimationEvent | null>`. `.getValue()` and `.value` no longer
-exist and nothing is replayed to a late subscriber.
+**`KbqToastService.animation` was removed** with `@angular/animations`: a toast
+plays its exit animation before it is taken out, and the overlay detaches once
+the last exit has ended.
 
 **`showTemplate()` and `templates` return
 `EmbeddedViewRef<KbqToastTemplateContext>`**, whose `$implicit` is the

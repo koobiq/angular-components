@@ -65,6 +65,23 @@ describe(SCHEMATIC_NAME, () => {
         expect(log).toContain('3 use(s) reported');
     });
 
+    it('reports the removed animation state of the sidepanel container, sidebar and toast', async () => {
+        const [first] = projects.keys();
+        const messages = collectLogs();
+
+        appTree.create(
+            filePath(projects.get(first)!, 'sidepanel.ts'),
+            'ref.containerInstance.setAnimationState(state);\nexport const opened = sidebar.animationState;\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('The animation state of KbqSidepanelContainerComponent');
+        expect(log).toContain('1 use(s) reported');
+    });
+
     it('suggests KBQ_ANIMATIONS_CONFIG in place of the no-op animations', async () => {
         const [first] = projects.keys();
         const messages = collectLogs();

@@ -64,7 +64,7 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('inject(KBQ_TOAST_STACK)');
     });
 
-    it('reports a replayed read of the animation subject', async () => {
+    it('reports a read of the removed animation subject', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
         const messages = collectLogs();
@@ -73,7 +73,7 @@ describe(SCHEMATIC_NAME, () => {
 
         await run(first);
 
-        expect(messages.join('\n')).toContain('plain Subject<AnimationEvent>');
+        expect(messages.join('\n')).toContain('KbqToastService.animation was removed');
     });
 
     it('reports a read of a removed member through the toasts getter', async () => {
