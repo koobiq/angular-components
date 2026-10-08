@@ -38,8 +38,6 @@ updates:
         update-types: ['version-update:semver-major']
       - dependency-name: 'typescript'
         update-types: ['version-update:semver-major']
-      - dependency-name: 'zone.js'
-        update-types: ['version-update:semver-major']
       # AG Grid packages must stay on the same major and be upgraded together deliberately.
       - dependency-name: 'ag-grid-*'
         update-types: ['version-update:semver-major']
@@ -88,7 +86,6 @@ updates:
         patterns:
           - '@angular/*'
           - 'rxjs'
-          - 'zone.js'
           - '@angular-devkit/*'
           - '@schematics/angular'
           - 'ng-packagr'

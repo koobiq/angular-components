@@ -10738,7 +10738,6 @@ __metadata:
     vite: "npm:^8.3.3"
     vitest: "npm:4.1.11"
     xlsx: "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
-    zone.js: "npm:~0.16.3"
   languageName: unknown
   linkType: soft
 
@@ -16094,13 +16093,6 @@ __metadata:
   version: 4.4.3
   resolution: "zod@npm:4.4.3"
   checksum: 10c0/7ea31b558e88f9faf44f31dd185e2e1cbf51fed3081787fb96cc2534749b50c0acfc6da7f0922a7353ed092dd358c7d50c28ea96c94d04af64191bd33152eca3
-  languageName: node
-  linkType: hard
-
-"zone.js@npm:~0.16.3":
-  version: 0.16.3
-  resolution: "zone.js@npm:0.16.3"
-  checksum: 10c0/8fd5626650126be4db1b5a4ee030d864e7c103bc90de5bd3836517be7b04c63f9232f8d06ada9aa85279f7fab7ca695eb7e18b91cb160baee24a739808b4efc5
   languageName: node
   linkType: hard
 
