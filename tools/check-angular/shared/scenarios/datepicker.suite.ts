@@ -1,5 +1,5 @@
-import { ComponentFixture } from '@angular/core/testing';
-import { DOWN_ARROW, ESCAPE, TAB, UP_ARROW } from '@koobiq/components/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DOWN_ARROW, ESCAPE, KBQ_DATE_LOCALE, TAB, UP_ARROW } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
@@ -265,6 +265,25 @@ export function defineDatepickerSuite(config: CheckConfig): void {
             expect(events()).toEqual(['opened', 'closed']);
         });
 
+        it('closes on Escape pressed inside the calendar and returns the focus to the input', async () => {
+            await openWithToggle();
+
+            const nextMonth = document.querySelector<HTMLElement>(`${PANEL} .kbq-calendar-header__next-button`)!;
+
+            clickWithMouse(nextMonth);
+            await fixture.whenStable();
+
+            expect(getHeader()).toEqual(['Apr', '2026']);
+            expect(document.activeElement).toBe(nextMonth);
+
+            expect(press(ESCAPE).defaultPrevented).toBe(true);
+            await fixture.whenStable();
+
+            expectClosed();
+            expect(document.activeElement).toBe(input);
+            expect(events()).toEqual(['opened', 'closed']);
+        });
+
         it('closes on a click outside and detaches the calendar', async () => {
             await openWithToggle();
 
@@ -338,6 +357,25 @@ export function defineDatepickerSuite(config: CheckConfig): void {
             expect(value()).toBe('2025-12-31');
             expect(fixture.componentInstance.date.hasError('kbqDatepickerMin')).toBe(true);
             expect(fixture.nativeElement.querySelector('kbq-error')).not.toBeNull();
+        });
+    });
+
+    describe(`datepicker in a date locale the library ships no strings for (${config.name})`, () => {
+        it('shows a placeholder in the format the input takes', async () => {
+            // Where the scenario provides its date adapter, as a lazy route would.
+            TestBed.overrideComponent(DatepickerScenario, {
+                add: { providers: [{ provide: KBQ_DATE_LOCALE, useValue: 'zh-CN' }] }
+            });
+
+            const fixture = await renderScenario(DatepickerScenario, config);
+            const input: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+            expect(input.value).toBe('2026/03/05');
+
+            fixture.componentInstance.date.setValue(null);
+            await fixture.whenStable();
+
+            expect(input.placeholder).toBe('yyyy/mm/dd');
         });
     });
 }

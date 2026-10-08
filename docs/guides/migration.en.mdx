@@ -434,7 +434,7 @@ The inputs of `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconCom
 ng g @koobiq/components:datepicker-signals --project "<your project>"
 ```
 
-**Without a locale service, the placeholder follows the date locale.** It used to be the `ru-RU` one whatever locale the date adapter parsed in. It now comes from `KBQ_DATE_LOCALE` — Angular's `LOCALE_ID` unless provided — so with the default `en-US` it reads `yyyy-mm-dd`, the format the input takes; a locale the library ships no strings for keeps the `ru-RU` placeholder. To keep the former one, bind `[placeholder]` or pass it to `kbqDatepickerLocaleConfigurationProvider()`. With a locale service nothing changes.
+**Without a locale service, the placeholder names the format the input takes.** It used to be the `ru-RU` one whatever locale the date adapter parsed in. It now follows the date adapter of the input — `KBQ_DATE_LOCALE`, Angular's `LOCALE_ID` unless provided, on a component too — so with the default `en-US` it reads `yyyy-mm-dd`; for a locale the library ships no strings for, or a format set through `KBQ_DATE_FORMATS`, it is the format itself, such as `yyyy/mm/dd`. To keep the former one, bind `[placeholder]` or pass it to `kbqDatepickerLocaleConfigurationProvider()`. With a locale service nothing changes.
 
 #### Modal
 
