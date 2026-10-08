@@ -124,8 +124,6 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     /**
      * Monitored with `checkChildren`, because the navbar is one composite widget: the host owns the tab stop
      * but hands focus straight to an item, and without it that hand-off reads as the navbar being blurred.
-     * The origin would reset to `null` on the very first item, leaving every later arrow key with no keyboard
-     * origin to pass on — the key manager would move its active item while nothing moved in the DOM.
      * @docs-private
      */
     ngAfterContentChecked(): void {
@@ -376,7 +374,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     protected onKeyDown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
 
-        // The origin of the last focus event may be a click, and an item takes the DOM focus only from the keyboard.
+        // The origin of the last focus event may be a click, and an item takes no DOM focus for a pointer origin.
         this.keyManager.setFocusOrigin('keyboard');
 
         if (!this.eventFromInput(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) {
