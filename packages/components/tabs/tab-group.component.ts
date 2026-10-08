@@ -31,8 +31,8 @@ import {
 } from '@angular/core';
 import { KBQ_PARENT_ANIMATION_COMPONENT, kbqQueryListFrom, KbqStateSaving } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { merge, Subject, Subscription } from 'rxjs';
+import { debounceTime, filter } from 'rxjs/operators';
 import { KbqTabBody } from './tab-body.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
@@ -669,36 +669,17 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
         );
     }
 
-    /**
-     * Index that owns `tabindex="0"`, falling back to the first enabled tab when focus sits on a
-     * disabled one.
-     *
-     * The template calls this once per tab, so the common path stays allocation-free: `QueryList.get`
-     * indexes the backing array, where `toArray()` would copy the whole thing N times per check and
-     * make rendering the strip quadratic in the number of tabs.
-     */
-    private getRovingTabIndex(tabHeader: KbqTabHeader): number {
-        const { focusIndex } = tabHeader;
-        const focused = this.tabs?.get(focusIndex);
-
-        if (focused && !focused.disabled()) {
-            return focusIndex;
-        }
-
-        const length = this.tabs?.length ?? 0;
-
-        for (let index = 0; index < length; index++) {
-            if (!this.tabs.get(index)!.disabled()) {
-                return index;
-            }
-        }
-
-        return -1;
-    }
-
-    /** First tab that can actually be selected, so that a leading disabled tab is not the default. */
-    private getDefaultTab(): KbqTab | null {
-        return this.tabs?.find((tab) => !tab.disabled()) || this.tabs?.get(0) || null;
+    private subscribeToResize() {
+        // `vertical` is read per resize: called from the constructor, the input is not bound yet.
+        this.resizeSubscription = this.resizeStream
+            .pipe(
+                debounceTime(this.resizeDebounceInterval),
+                filter(() => this.vertical())
+            )
+            .subscribe(() => {
+                this.checkOverflow();
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
     /** Clamps the given index to the bounds of 0 and the tabs length. */

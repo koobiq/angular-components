@@ -171,7 +171,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
             if (disabled !== undefined) this.disabled = disabled;
         }
 
-        if (changes['textLabel'] || changes['disabledInput']) {
+        if (changes['textLabel'] || changes['disabledInput'] || changes['tooltipTitleInput']) {
             this.stateChanges.next();
         }
     }
