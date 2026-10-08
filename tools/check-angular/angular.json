@@ -1,0 +1,141 @@
+{
+    "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+    "version": 1,
+    "cli": {
+        "packageManager": "npm",
+        "analytics": false
+    },
+    "newProjectRoot": "projects",
+    "projects": {
+        "zoneless": {
+            "projectType": "application",
+            "root": "projects/zoneless",
+            "sourceRoot": "projects/zoneless/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "browser": "projects/zoneless/src/main.ts",
+                        "tsConfig": "projects/zoneless/tsconfig.app.json",
+                        "polyfills": [],
+                        "outputPath": "dist/zoneless"
+                    },
+                    "configurations": {
+                        "production": {
+                            "outputHashing": "none"
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "buildTarget": "zoneless:build:development"
+                    }
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "tsConfig": "projects/zoneless/tsconfig.spec.json",
+                        "buildTarget": "zoneless:build:development",
+                        "runner": "vitest"
+                    }
+                }
+            }
+        },
+        "zone": {
+            "projectType": "application",
+            "root": "projects/zone",
+            "sourceRoot": "projects/zone/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "browser": "projects/zone/src/main.ts",
+                        "tsConfig": "projects/zone/tsconfig.app.json",
+                        "polyfills": [
+                            "zone.js"
+                        ],
+                        "outputPath": "dist/zone"
+                    },
+                    "configurations": {
+                        "production": {
+                            "outputHashing": "none"
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "buildTarget": "zone:build:development"
+                    }
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "tsConfig": "projects/zone/tsconfig.spec.json",
+                        "buildTarget": "zone:build:development",
+                        "runner": "vitest"
+                    }
+                }
+            }
+        },
+        "zone-animations": {
+            "projectType": "application",
+            "root": "projects/zone-animations",
+            "sourceRoot": "projects/zone-animations/src",
+            "prefix": "app",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:application",
+                    "options": {
+                        "browser": "projects/zone-animations/src/main.ts",
+                        "tsConfig": "projects/zone-animations/tsconfig.app.json",
+                        "polyfills": [
+                            "zone.js"
+                        ],
+                        "outputPath": "dist/zone-animations"
+                    },
+                    "configurations": {
+                        "production": {
+                            "outputHashing": "none"
+                        },
+                        "development": {
+                            "optimization": false,
+                            "extractLicenses": false,
+                            "sourceMap": true
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "serve": {
+                    "builder": "@angular/build:dev-server",
+                    "options": {
+                        "buildTarget": "zone-animations:build:development"
+                    }
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "tsConfig": "projects/zone-animations/tsconfig.spec.json",
+                        "buildTarget": "zone-animations:build:development",
+                        "runner": "vitest"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -3,17 +3,17 @@ import {
     booleanAttribute,
     computed,
     Directive,
+    DoCheck,
     ElementRef,
     inject,
     InjectionToken,
-    Input,
     input,
     OnChanges,
     output,
     Provider,
-    signal
+    signal,
+    SimpleChanges
 } from '@angular/core';
-import { NgControl } from '@angular/forms';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
     COMMA,
@@ -109,9 +109,9 @@ export const kbqTagsDefaultOptionsProvider = (options: Partial<KbqTagsDefaultOpt
     selector: 'input[kbqTagInputFor]',
     host: {
         class: 'kbq-tag-input',
-        '[id]': 'id',
+        '[id]': 'id()',
         '[attr.disabled]': 'disabled || null',
-        '[attr.placeholder]': 'placeholder || null',
+        '[attr.placeholder]': 'placeholder() || null',
         '(keydown)': 'onKeydown($event)',
         '(blur)': 'blur($event)',
         '(focus)': 'onFocus()',
@@ -121,30 +121,22 @@ export const kbqTagsDefaultOptionsProvider = (options: Partial<KbqTagsDefaultOpt
     hostDirectives: [KbqFieldSizingContent],
     exportAs: 'kbqTagInput, kbqTagInputFor'
 })
-export class KbqTagInput implements KbqTagTextControl, OnChanges {
+export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     private elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     private defaultOptions = inject<KbqTagsDefaultOptions>(KBQ_TAGS_DEFAULT_OPTIONS);
     private trimDirective = inject(KbqTrim, { optional: true, self: true });
-    /**
-     * The form control instance bound to the input, if any.
-     *
-     * @deprecated Read only, and unused by the library: validation lives on the `<kbq-tag-list>`
-     * control. Binding `[formControl]`/`[ngModel]` to the input itself stays supported — it is what
-     * `kbqAutocomplete` drives the input through — only its validators are not consulted.
-     * Will be removed in a future major release.
-     * @docs-private
-     */
-    ngControl: NgControl | null = inject(NgControl, { optional: true, self: true });
     /**
      * The autocomplete trigger attached to the input, if any.
      * @docs-private
      */
     autocompleteTrigger? = inject(KbqAutocompleteTrigger, { optional: true, self: true });
+    private readonly focusedValue = signal(false);
+
     /**
      * Whether the control is focused.
      * @docs-private
      */
-    focused: boolean = false;
+    readonly focused = this.focusedValue.asReadonly();
 
     /** Whether the control's value was filled in by the browser. */
     readonly autofilled = kbqInjectAutofilled();
@@ -181,13 +173,10 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     readonly distinct = input(false, { transform: booleanAttribute });
 
     /** The input's placeholder text. */
-    // Stays a plain member: `KbqTagTextControl` declares it as one, and the tag list reads it through
-    // that interface.
-    @Input() placeholder: string = '';
+    readonly placeholder = input('');
 
     /** Unique id for the input. */
-    // Stays a plain member: `KbqTagTextControl` declares it as one.
-    @Input() id: string = inject(_IdGenerator).getId('kbq-tag-list-input-');
+    readonly id = input(inject(_IdGenerator).getId('kbq-tag-list-input-'));
 
     /** Register input for tag list. */
     readonly tagList = input<KbqTagList | undefined>(undefined, { alias: 'kbqTagInputFor' });
@@ -213,9 +202,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     // Stays an accessor: it folds in the tag list's state, which comes from the list's form control when
     // there is one. That is a plain property rather than a signal, so a `computed` would cache it and
     // miss `control.disable()`.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled() || (this._tagList && this._tagList.disabled);
+        return this._disabled() || (this._tagList && this._tagList.disabled());
     }
 
     set disabled(value: boolean) {
@@ -224,33 +212,47 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     private readonly _disabled = signal(false);
 
+    private readonly emptyValue = signal(true);
+
     /** Whether the input is empty. */
-    get empty(): boolean {
-        return !this.inputElement.value;
-    }
+    readonly empty = this.emptyValue.asReadonly();
 
     /** The native input element to which this directive is attached. */
     private inputElement: HTMLInputElement;
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
     constructor() {
         this.inputElement = this.elementRef.nativeElement as HTMLInputElement;
     }
 
-    ngOnChanges(): void {
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
         const tagList = this.tagList();
 
         // Registered here rather than in an effect or a computed. The tag list has no content query for its
         // input and learns of it only through `registerInput()`, which has to land before the list's host
-        // bindings read the input on the first pass - an effect runs after this hook, so the
-        // `stateChanges` call below would find no list. And `registerInput()` writes a signal, which a
-        // computed rejects with NG0600.
+        // bindings read the input on the first pass, and an effect runs after this hook. And
+        // `registerInput()` writes a signal, which a computed rejects with NG0600.
         if (tagList && tagList !== this._tagList) {
             this._tagList = tagList;
             tagList.registerInput(this);
         }
+    }
 
-        // A list bound through a query resolves after the first pass, so there is nothing to notify yet.
-        this._tagList?.stateChanges.next();
+    ngDoCheck(): void {
+        // The value changes without notice: the consumer clears the input once a tag is added.
+        this.emptyValue.set(!this.inputElement.value);
     }
 
     /** @docs-private */
@@ -288,10 +290,10 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
      * @docs-private
      */
     blur(event: FocusEvent): void {
-        this.focused = false;
+        this.focusedValue.set(false);
 
         // Blur the tag list if it is not focused
-        if (!this._tagList.focused) {
+        if (!this._tagList.focused()) {
             this._tagList.blur();
         }
 
@@ -300,16 +302,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         if (!this.disabled && this.addOnBlur() && (this.autocompleteTrigger?.onInputBlur()(event) ?? true)) {
             this.emitTagEnd();
         }
-
-        this._tagList.stateChanges.next();
     }
-
-    /**
-     * @deprecated No-op. Validation belongs to the `<kbq-tag-list>` form control, which
-     * revalidates itself whenever its value changes. Will be removed in a future major release.
-     * @docs-private
-     */
-    triggerValidation(): void {}
 
     /**
      * Checks to see if the (tagEnd) event needs to be emitted.
@@ -329,8 +322,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     /** @docs-private */
     onInput(): void {
-        // Let tag list know whenever the value changes.
-        this._tagList.stateChanges.next();
+        this.emptyValue.set(!this.inputElement.value);
     }
 
     /** @docs-private */
@@ -364,9 +356,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
 
     /** @docs-private */
     onFocus(): void {
-        this.focused = true;
+        this.focusedValue.set(true);
         this._tagList.unselectAll();
-        this._tagList.stateChanges.next();
     }
 
     /** Focuses the input. */

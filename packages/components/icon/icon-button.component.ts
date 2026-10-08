@@ -4,16 +4,14 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    computed,
     effect,
     inject,
-    Input,
     input,
     OnDestroy,
     signal,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { KbqIcon } from './icon.component';
 
 /**
@@ -36,31 +34,17 @@ export type KbqIconButtonSize = 'compact' | 'normal';
         '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-icon-button_compact]': 'isCompact()',
-        // @deprcated Will be removed in the next major release (#DS-5338)
-        '[class.kbq-icon-button_small]': 'isCompact()'
+        '[class.kbq-icon-button_compact]': "size() === 'compact'"
     }
 })
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     protected readonly focusMonitor = inject(FocusMonitor);
     /** Size of the icon button. */
     readonly size = input<KbqIconButtonSize>('normal');
-    /**
-     * @deprecated Use `size` input instead. Will be removed in the next major release (#DS-5338).
-     */
-    readonly small = input(false);
 
     /** @docs-private */
-    protected readonly isCompact = computed(() => this.size() === 'compact' || this.small());
+    override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-button' });
 
-    /** Name of an icon within a `@koobiq/icons`. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ alias: 'kbq-icon-button' }) iconName: string;
-
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get tabindex() {
         return this.disabled ? null : this._tabindex;
     }
@@ -73,30 +57,47 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledSignal();
     }
 
     set disabled(value: boolean) {
         this.disabledSignal.set(value);
     }
 
-    // @todo 20 In the next major release this line will be deleted.
-    private _disabled: boolean;
-
     /** @docs-private */
     readonly disabledSignal = signal(false);
 
     override name = 'KbqIconButton';
 
+    /** @docs-private */
+    readonly tabindexInput = input<number | string | null | undefined>(undefined, { alias: 'tabindex' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['tabindexInput']) {
+            const tabindex = this.tabindexInput();
+
+            if (tabindex !== undefined) this.tabindex = tabindex;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
+
     constructor() {
         super();
-
-        // @todo 20 In the next major release this line will be deleted.
-        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
 
         effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
     }

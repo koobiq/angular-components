@@ -1,4 +1,3 @@
-import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
@@ -15,12 +14,12 @@ import {
     inject,
     viewChild
 } from '@angular/core';
-import { TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TestBed } from '@angular/core/testing';
 import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider } from '@koobiq/components/core';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Subject, Subscription } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
@@ -37,9 +36,6 @@ import {
 /** Mirrors `CHECK_INTERVAL` in the service: the countdown is driven by a heartbeat of that period. */
 const CHECK_INTERVAL = 500;
 
-/** Mirrors `EXIT_ANIMATION_FALLBACK`: how long the overlay waits for the last exit animation. */
-const EXIT_ANIMATION_FALLBACK = 500;
-
 /** A fresh object per call — the service and the component must never write into the caller's data. */
 const createToastData = (overrides: KbqToastData = {}): KbqToastData => ({
     style: KbqToastStyle.Warning,
@@ -49,16 +45,20 @@ const createToastData = (overrides: KbqToastData = {}): KbqToastData => ({
     ...overrides
 });
 
-/** The overlay waits for the exit of the toast that emptied the stack, so the element has to be that toast's. */
-const exitAnimationEvent = (element: HTMLElement): AnimationEvent => ({
-    fromState: 'visible',
-    toState: 'void',
-    totalTime: 0,
-    phaseName: 'done',
-    element,
-    triggerName: 'state',
-    disabled: false
-});
+/**
+ * Gives `element` an exit animation that runs until the returned function ends it. jsdom has no Web Animations
+ * API, so without one every exit ends right after the render it starts in.
+ */
+const holdExitAnimation = (element: HTMLElement): (() => void) => {
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+
+    element.getAnimations = () => [
+        { finished, effect: { getComputedTiming: () => ({ endTime: 300 }) } } as unknown as Animation
+    ];
+
+    return finish;
+};
 
 @Component({
     selector: 'toast-test-button',
@@ -79,7 +79,9 @@ class ToastButtonWrapper {
     selector: 'toast-template-wrapper',
     imports: [KbqToastModule],
     template: `
-        <ng-template #tpl><div>tpl</div></ng-template>
+        <ng-template #tpl let-data>
+            <div>{{ data.title }}</div>
+        </ng-template>
     `
 })
 class ToastTemplateWrapper {
@@ -141,14 +143,14 @@ describe('KbqToastService', () => {
     const containers = () => overlayContainerElement.querySelectorAll('kbq-toast-container');
 
     /** Releases everything the service scheduled, so that no fake timer survives the spec. */
-    const settle = () => {
+    const settle = async () => {
         service.ngOnDestroy();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
     };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, ToastButtonWrapper, ToastTemplateWrapper]
+            imports: [KbqToastModule, ToastButtonWrapper, ToastTemplateWrapper]
         });
 
         service = TestBed.inject(KbqToastService);
@@ -161,6 +163,7 @@ describe('KbqToastService', () => {
     afterEach(() => {
         service.ngOnDestroy();
         overlayContainer.ngOnDestroy();
+        vi.useRealTimers();
     });
 
     describe('rendering', () => {
@@ -222,6 +225,16 @@ describe('KbqToastService', () => {
 
             expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
         });
+
+        it('renders a toast shown outside change detection on the next scheduled render', async () => {
+            showRendered();
+
+            const toast = service.show(createToastData({ title: 'Later' }));
+
+            await appRef.whenStable();
+
+            expect(hostOf(toast).querySelector('.kbq-toast__title')!.textContent).toContain('Later');
+        });
     });
 
     describe('stack order', () => {
@@ -255,19 +268,21 @@ describe('KbqToastService', () => {
             expect(service.toasts.length).toBe(0);
         });
 
-        it('removes a toast through the close button', fakeAsync(() => {
+        it('removes a toast through the close button', async () => {
+            vi.useFakeTimers();
+
             const toast = showRendered();
 
             closeButtonOf(toast).click();
-            // The toast leaves the service synchronously; taking its element out of the DOM is the
-            // animation engine's job and lands on the next flush.
-            flush();
+            // The toast leaves the service synchronously; its element goes once the exit animation, played
+            // after the next render, has ended.
+            await vi.runOnlyPendingTimersAsync();
             render();
 
             expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(0);
 
-            settle();
-        }));
+            await settle();
+        });
 
         it('removes a toast on Escape', () => {
             const toast = showRendered();
@@ -277,101 +292,140 @@ describe('KbqToastService', () => {
             expect(service.toasts.length).toBe(0);
         });
 
-        it('keeps a sticky toast well past the default duration', fakeAsync(() => {
+        it('keeps a sticky toast well past the default duration', async () => {
+            vi.useFakeTimers();
+
             showRendered(createToastData(), 0);
 
-            tick(10000);
+            await vi.advanceTimersByTimeAsync(10000);
 
             expect(service.toasts.length).toBe(1);
-            settle();
-        }));
+            await settle();
+        });
 
-        it('removes a toast once its duration has run out', fakeAsync(() => {
+        it('removes a toast once its duration has run out', async () => {
+            vi.useFakeTimers();
+
             showRendered(createToastData(), 3000);
 
-            tick(3000 + CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(3000 + CHECK_INTERVAL);
 
             expect(service.toasts.length).toBe(0);
-            settle();
-        }));
+            await settle();
+        });
 
-        it('keeps a long-lived survivor for its own duration after a short toast expires', fakeAsync(() => {
+        it('keeps a long-lived survivor for its own duration after a short toast expires', async () => {
+            vi.useFakeTimers();
+
             showRendered(createToastData(), 1000);
             showRendered(createToastData(), 30000);
 
-            tick(1000 + CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(1000 + CHECK_INTERVAL);
             expect(service.toasts.length).toBe(1);
 
             // Far past the 2000 ms delay the survivor used to be pinned to.
-            tick(5000);
+            await vi.advanceTimersByTimeAsync(5000);
             expect(service.toasts.length).toBe(1);
 
-            settle();
-        }));
+            await settle();
+        });
 
-        it('gives a survivor of a manual close at least the configured delay', fakeAsync(() => {
+        it('gives a survivor of a manual close at least the configured delay', async () => {
+            vi.useFakeTimers();
+
             const first = showRendered(createToastData(), 5000);
 
             showRendered(createToastData(), 500);
 
             service.hide(first.id);
 
-            tick(500 + CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(500 + CHECK_INTERVAL);
             expect(service.toasts.length).toBe(1);
 
-            tick(defaultToastConfig.delay);
+            await vi.advanceTimersByTimeAsync(defaultToastConfig.delay);
             expect(service.toasts.length).toBe(0);
 
-            settle();
-        }));
+            await settle();
+        });
     });
 
     describe('pause', () => {
-        it('pauses the whole stack while one toast is hovered', fakeAsync(() => {
+        it('pauses the whole stack while one toast is hovered', async () => {
+            vi.useFakeTimers();
+
             const hovered = showRendered(createToastData(), 3000);
 
             showRendered(createToastData(), 3000);
 
             dispatchMouseEvent(hostOf(hovered), 'mouseenter');
-            tick(10000);
+            await vi.advanceTimersByTimeAsync(10000);
 
             expect(service.toasts.length).toBe(2);
-            settle();
-        }));
+            await settle();
+        });
 
-        it('resumes the countdown once the pointer leaves', fakeAsync(() => {
+        it('resumes the countdown once the pointer leaves', async () => {
+            vi.useFakeTimers();
+
             const toast = showRendered(createToastData(), 3000);
 
             dispatchMouseEvent(hostOf(toast), 'mouseenter');
-            tick(5000);
+            await vi.advanceTimersByTimeAsync(5000);
             dispatchMouseEvent(hostOf(toast), 'mouseleave');
-            tick(3000 + CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(3000 + CHECK_INTERVAL);
 
             expect(service.toasts.length).toBe(0);
-            settle();
-        }));
+            await settle();
+        });
 
-        it('keeps the pause when a sibling is dismissed', fakeAsync(() => {
+        it('keeps the pause when a sibling is dismissed', async () => {
+            vi.useFakeTimers();
+
             const hovered = showRendered(createToastData(), 3000);
             const sibling = showRendered(createToastData(), 3000);
 
             dispatchMouseEvent(hostOf(hovered), 'mouseenter');
             service.hide(sibling.id);
-            tick(10000);
+            await vi.advanceTimersByTimeAsync(10000);
 
             expect(service.toasts.length).toBe(1);
-            settle();
-        }));
+            await settle();
+        });
 
-        it('pauses the stack while a toast holds the focus', fakeAsync(() => {
+        it('pauses the stack while a toast holds the focus', async () => {
+            vi.useFakeTimers();
+
             const toast = showRendered(createToastData(), 3000);
 
             focusMonitor.focusVia(closeButtonOf(toast), 'keyboard');
-            tick(10000);
+            await vi.advanceTimersByTimeAsync(10000);
 
             expect(service.toasts.length).toBe(1);
-            settle();
-        }));
+            await settle();
+        });
+
+        it('reports the hovered toast, and the stack as hovered', () => {
+            const toast = showRendered();
+
+            dispatchMouseEvent(hostOf(toast), 'mouseenter');
+
+            expect(toast.ref.instance.hovered()).toBe(true);
+            expect(service.hovered()).toBe(true);
+
+            dispatchMouseEvent(hostOf(toast), 'mouseleave');
+
+            expect(toast.ref.instance.hovered()).toBe(false);
+            expect(service.hovered()).toBe(false);
+        });
+
+        it('reports the focused toast, and the stack as focused', () => {
+            const toast = showRendered();
+
+            focusMonitor.focusVia(closeButtonOf(toast), 'keyboard');
+
+            expect(toast.ref.instance.focused()).toBe(true);
+            expect(service.focused()).toBe(true);
+        });
     });
 
     describe('read state', () => {
@@ -398,39 +452,45 @@ describe('KbqToastService', () => {
             expect(read).toEqual([data]);
         });
 
-        it('reports a toast as read exactly once across repeated hover cycles and a close', fakeAsync(() => {
+        it('reports a toast as read exactly once across repeated hover cycles and a close', async () => {
+            vi.useFakeTimers();
+
             const toast = showRendered();
             const host = hostOf(toast);
 
             for (let cycle = 0; cycle < 3; cycle++) {
                 dispatchMouseEvent(host, 'mouseenter');
-                tick(600);
+                await vi.advanceTimersByTimeAsync(600);
                 dispatchMouseEvent(host, 'mouseleave');
             }
 
             closeButtonOf(toast).click();
 
             expect(read.length).toBe(1);
-            settle();
-        }));
+            await settle();
+        });
     });
 
     describe('focus', () => {
-        it('hands the focus to a surviving toast instead of dropping it on the body', fakeAsync(() => {
+        it('hands the focus to a surviving toast instead of dropping it on the body', async () => {
+            vi.useFakeTimers();
+
             const survivor = showRendered();
             const closing = showRendered();
 
             focusMonitor.focusVia(closeButtonOf(closing), 'keyboard');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             service.hide(closing.id);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(hostOf(survivor).contains(document.activeElement)).toBe(true);
-            settle();
-        }));
+            await settle();
+        });
 
-        it('hands the focus to the adjacent toast rather than the oldest one when `onTop` is set', fakeAsync(() => {
+        it('hands the focus to the adjacent toast rather than the oldest one when `onTop` is set', async () => {
+            vi.useFakeTimers();
+
             // Three toasts, because with two the adjacent one and the oldest one are the same toast.
             const oldest = service.show(createToastData(), 0, true);
             const adjacent = service.show(createToastData(), 0, true);
@@ -439,16 +499,18 @@ describe('KbqToastService', () => {
             render();
 
             focusMonitor.focusVia(closeButtonOf(closing), 'keyboard');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             service.hide(closing.id);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(hostOf(adjacent).contains(document.activeElement)).toBe(true);
             expect(hostOf(oldest).contains(document.activeElement)).toBe(false);
-            settle();
-        }));
-        it('hands the focus back to the trigger when the last toast closes', fakeAsync(() => {
+            await settle();
+        });
+        it('hands the focus back to the trigger when the last toast closes', async () => {
+            vi.useFakeTimers();
+
             const trigger = document.createElement('button');
 
             document.body.appendChild(trigger);
@@ -457,36 +519,38 @@ describe('KbqToastService', () => {
             const toast = showRendered();
 
             focusMonitor.focusVia(closeButtonOf(toast), 'keyboard');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             service.hide(toast.id);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(document.activeElement).toBe(trigger);
 
             trigger.remove();
-            settle();
-        }));
+            await settle();
+        });
 
-        it('leaves the focus where the browser put it when a toast is dismissed with the mouse', fakeAsync(() => {
+        it('leaves the focus where the browser put it when a toast is dismissed with the mouse', async () => {
+            vi.useFakeTimers();
+
             const survivor = showRendered(createToastData(), 3000);
             const closing = showRendered(createToastData(), 3000);
 
             // Pressing a button with the mouse focuses it, so a plain click reports a focused toast.
             focusMonitor.focusVia(closeButtonOf(closing), 'mouse');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             service.hide(closing.id);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(hostOf(survivor).contains(document.activeElement)).toBe(false);
 
             // Handing the focus to the survivor would report it as focused and pause the stack for good.
-            tick(3000 + CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(3000 + CHECK_INTERVAL);
             expect(service.toasts.length).toBe(0);
 
-            settle();
-        }));
+            await settle();
+        });
     });
 
     describe('templates', () => {
@@ -497,6 +561,14 @@ describe('KbqToastService', () => {
 
             fixture.detectChanges();
             template = fixture.componentInstance.template();
+        });
+
+        it('renders a template shown outside change detection on the next scheduled render', async () => {
+            const { ref } = service.showTemplate(createToastData({ title: 'Later' }), template, 0);
+
+            await appRef.whenStable();
+
+            expect(ref.rootNodes[0].textContent).toBe('Later');
         });
 
         it('passes the toast data as the template context', () => {
@@ -516,23 +588,27 @@ describe('KbqToastService', () => {
             expect(service.templates.length).toBe(0);
         });
 
-        it('keeps a template with a zero duration on screen', fakeAsync(() => {
+        it('keeps a template with a zero duration on screen', async () => {
+            vi.useFakeTimers();
+
             service.showTemplate(createToastData(), template, 0);
 
-            tick(10000);
+            await vi.advanceTimersByTimeAsync(10000);
 
             expect(service.templates.length).toBe(1);
-            settle();
-        }));
+            await settle();
+        });
 
-        it('removes a template once its duration has run out', fakeAsync(() => {
+        it('removes a template once its duration has run out', async () => {
+            vi.useFakeTimers();
+
             service.showTemplate(createToastData(), template, 1000);
 
-            tick(1000 + CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(1000 + CHECK_INTERVAL);
 
             expect(service.templates.length).toBe(0);
-            settle();
-        }));
+            await settle();
+        });
 
         it('omits destroyed views from `templates`', () => {
             const { ref } = service.showTemplate(createToastData(), template, 0);
@@ -542,25 +618,27 @@ describe('KbqToastService', () => {
             expect(service.templates.length).toBe(0);
         });
 
-        it('stops the heartbeat and releases the overlay when a view is destroyed from outside', fakeAsync(() => {
+        it('stops the heartbeat and releases the overlay when a view is destroyed from outside', async () => {
+            vi.useFakeTimers();
+
             let ticks = 0;
             const subscription = service.timer.subscribe(() => ticks++);
             const { ref } = service.showTemplate(createToastData(), template, 0);
 
             // A sticky record is never touched by the countdown, so only a purge can drop it.
             ref.destroy();
-            tick(CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(CHECK_INTERVAL);
 
             const afterPurge = ticks;
 
-            tick(EXIT_ANIMATION_FALLBACK + CHECK_INTERVAL * 4);
+            await vi.advanceTimersByTimeAsync(CHECK_INTERVAL * 4);
 
             expect(ticks).toBe(afterPurge);
             expect(containers().length).toBe(0);
 
             subscription.unsubscribe();
-            settle();
-        }));
+            await settle();
+        });
 
         it('keeps the container alive while templates are visible', () => {
             const toast = showRendered();
@@ -573,7 +651,9 @@ describe('KbqToastService', () => {
     });
 
     describe('overlay lifecycle', () => {
-        it('does not take the overlay out of the DOM to put it back on top of itself', fakeAsync(() => {
+        it('does not take the overlay out of the DOM to put it back on top of itself', async () => {
+            vi.useFakeTimers();
+
             // A foreign overlay, so that the stacking step engages at all: with the toast overlay alone in
             // the container there is nothing for it to be moved past.
             const foreign = document.createElement('div');
@@ -594,47 +674,51 @@ describe('KbqToastService', () => {
             expect(detachProbeCount).toBe(0);
 
             foreign.remove();
-            settle();
-        }));
+            await settle();
+        });
 
-        it('keeps the overlay attached until the exit animation reports done', fakeAsync(() => {
+        it('keeps the overlay attached until the exit animation has ended', async () => {
+            vi.useFakeTimers();
+
             const toast = showRendered();
+            const finishExit = holdExitAnimation(hostOf(toast));
 
             service.hide(toast.id);
-            expect(containers().length).toBe(1);
-
-            service.animation.next(exitAnimationEvent(hostOf(toast)));
-            // The overlay is detached synchronously; removing the host element is the animation engine's
-            // job and lands on the next flush.
-            flush();
             render();
+            expect(containers().length).toBe(1);
+            expect(hostOf(toast).classList).toContain('kbq-toast_leaving');
+
+            finishExit();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(containers().length).toBe(0);
+        });
 
-            flush();
-        }));
+        it('waits for every exit to end, not only for the one of the toast that emptied the stack', async () => {
+            vi.useFakeTimers();
 
-        it('waits for the exit of the toast that emptied the stack, not for one dismissed earlier', fakeAsync(() => {
             const first = showRendered();
             const second = showRendered();
-            const detach = jest.spyOn(OverlayRef.prototype, 'detach');
+            const finishFirstExit = holdExitAnimation(hostOf(first));
+            const detach = vi.spyOn(OverlayRef.prototype, 'detach');
 
-            // `first` starts leaving while `second` is still on screen, so its `done` lands after the
-            // stack is already empty — and `second` is only halfway through its own slide-out.
+            // `first` is still sliding out when `second`, which emptied the stack, is gone.
             service.hide(first.id);
             service.hide(second.id);
-
-            service.animation.next(exitAnimationEvent(hostOf(first)));
+            render();
+            await vi.runOnlyPendingTimersAsync();
+            expect(hostOf(second).isConnected).toBe(false);
             expect(detach).not.toHaveBeenCalled();
 
-            service.animation.next(exitAnimationEvent(hostOf(second)));
+            finishFirstExit();
+            await vi.runOnlyPendingTimersAsync();
             expect(detach).toHaveBeenCalled();
 
             detach.mockRestore();
-            settle();
-        }));
+            await settle();
+        });
 
-        it('detaches the overlay through the fallback when nothing animates', fakeAsync(() => {
+        it('detaches the overlay at once when a template toast empties the stack', () => {
             const fixture = TestBed.createComponent(ToastTemplateWrapper);
 
             fixture.detectChanges();
@@ -642,25 +726,24 @@ describe('KbqToastService', () => {
             const { id } = service.showTemplate(createToastData(), fixture.componentInstance.template(), 0);
 
             service.hideTemplate(id);
-            expect(containers().length).toBe(1);
-
-            tick(EXIT_ANIMATION_FALLBACK);
             expect(containers().length).toBe(0);
-        }));
+        });
 
-        it('does not accumulate containers across show and hide cycles', fakeAsync(() => {
+        it('does not accumulate containers across show and hide cycles', async () => {
+            vi.useFakeTimers();
+
             for (let cycle = 0; cycle < 3; cycle++) {
                 const toast = showRendered();
 
                 service.hide(toast.id);
-                tick(EXIT_ANIMATION_FALLBACK);
+                render();
             }
 
             showRendered();
 
             expect(containers().length).toBe(1);
-            settle();
-        }));
+            await settle();
+        });
 
         it('disposes the overlay on destroy, so a re-bootstrap does not leak a second container', () => {
             showRendered();
@@ -673,7 +756,9 @@ describe('KbqToastService', () => {
     });
 
     describe('heartbeat', () => {
-        it('ticks outside the Angular zone', fakeAsync(() => {
+        it('ticks outside the Angular zone', async () => {
+            vi.useFakeTimers();
+
             let ticks = 0;
             let ticksInsideAngular = 0;
             const subscription = service.timer.subscribe(() => {
@@ -685,45 +770,49 @@ describe('KbqToastService', () => {
             });
 
             showRendered();
-            tick(CHECK_INTERVAL * 3);
+            await vi.advanceTimersByTimeAsync(CHECK_INTERVAL * 3);
 
             expect(ticks).toBeGreaterThan(0);
             expect(ticksInsideAngular).toBe(0);
 
             subscription.unsubscribe();
-            settle();
-        }));
+            await settle();
+        });
 
-        it('does not tick while the stack is empty', fakeAsync(() => {
+        it('does not tick while the stack is empty', async () => {
+            vi.useFakeTimers();
+
             let ticks = 0;
             const subscription = service.timer.subscribe(() => ticks++);
 
-            tick(CHECK_INTERVAL * 4);
+            await vi.advanceTimersByTimeAsync(CHECK_INTERVAL * 4);
             expect(ticks).toBe(0);
 
             showRendered();
-            tick(CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(CHECK_INTERVAL);
             expect(ticks).toBe(1);
 
             subscription.unsubscribe();
-            settle();
-        }));
+            await settle();
+        });
 
-        it('leaves no periodic task behind after destroy', fakeAsync(() => {
+        it('leaves no periodic task behind after destroy', async () => {
+            vi.useFakeTimers();
+
             let ticks = 0;
             const subscription = service.timer.subscribe(() => ticks++);
 
             showRendered();
-            tick(CHECK_INTERVAL);
+            await vi.advanceTimersByTimeAsync(CHECK_INTERVAL);
 
             const before = ticks;
 
             service.ngOnDestroy();
-            tick(CHECK_INTERVAL * 4);
+            await vi.advanceTimersByTimeAsync(CHECK_INTERVAL * 4);
 
             expect(ticks).toBe(before);
             subscription.unsubscribe();
-        }));
+        });
     });
 
     describe('accessibility', () => {
@@ -791,7 +880,7 @@ describe('KbqToastService', () => {
 describe('KbqToastService configuration', () => {
     const configure = (config: Partial<KbqToastConfig> = {}): KbqToastService => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
+            imports: [KbqToastModule],
             providers: [kbqToastConfigurationProvider(config)]
         });
 
@@ -818,13 +907,13 @@ describe('KbqToastService configuration', () => {
         const provider = kbqToastConfigurationProvider({ position: KbqToastPosition.TOP_RIGHT }) as ValueProvider;
 
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
+            imports: [KbqToastModule],
             providers: [provider]
         });
 
         const service = TestBed.inject(KbqToastService);
         const stale = service.show(createToastData(), 0);
-        const hide = jest.spyOn(service, 'hide');
+        const hide = vi.spyOn(service, 'hide');
 
         // A provided configuration is a plain object, so a consumer can move the stack while it is live.
         (provider.useValue as KbqToastConfig).position = KbqToastPosition.BOTTOM_LEFT;
@@ -860,7 +949,7 @@ describe('KbqToastService configuration', () => {
 describe('KbqToastService factory', () => {
     const configureWithFactory = (componentType: unknown): KbqToastService => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
+            imports: [KbqToastModule],
             providers: [{ provide: KBQ_TOAST_FACTORY, useValue: componentType }]
         });
 
@@ -912,7 +1001,7 @@ class ToastContainerHost {
 describe('KbqToastContainerComponent hosted by a consumer', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, ToastContainerHost]
+            imports: [KbqToastModule, ToastContainerHost]
         });
     });
 
@@ -946,7 +1035,7 @@ describe('KbqToastService in a Shadow DOM overlay container', () => {
         shadowRoot = shadowHost.attachShadow({ mode: 'open' });
 
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule],
+            imports: [KbqToastModule],
             providers: kbqShadowDomOverlayProvider(shadowHost)
         });
 
@@ -995,20 +1084,8 @@ describe('KbqToastService: global scroll notifications', () => {
     let service: KbqToastService;
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
-    let scrolled: jest.Mock;
+    let scrolled: Mock;
     let scrollSubscription: Subscription;
-
-    /** Emulates what the animation callbacks of every toast push into `KbqToastService.animation`. */
-    const emitToastAnimationEvent = () =>
-        service.animation.next({
-            fromState: 'void',
-            toState: 'visible',
-            totalTime: 0,
-            phaseName: 'done',
-            element: document.createElement('div'),
-            triggerName: 'state',
-            disabled: false
-        } satisfies AnimationEvent);
 
     /** Renders the toast container and the toast itself — the container registers as a scrollable in `ngOnInit`. */
     const renderToast = () => {
@@ -1021,13 +1098,13 @@ describe('KbqToastService: global scroll notifications', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, ToastTooltipWrapper]
+            imports: [KbqToastModule, ToastTooltipWrapper]
         });
 
         service = TestBed.inject(KbqToastService);
         overlayContainer = TestBed.inject(OverlayContainer);
         overlayContainerElement = overlayContainer.getContainerElement();
-        scrolled = jest.fn();
+        scrolled = vi.fn();
         scrollSubscription = TestBed.inject(ScrollDispatcher).scrolled(0).subscribe(scrolled);
     });
 
@@ -1035,13 +1112,14 @@ describe('KbqToastService: global scroll notifications', () => {
         scrollSubscription.unsubscribe();
         service.ngOnDestroy();
         overlayContainer.ngOnDestroy();
+        vi.useRealTimers();
     });
 
     it('does not notify the global ScrollDispatcher when a toast is shown, animated and hidden', () => {
         const id = renderToast();
 
-        emitToastAnimationEvent();
         service.hide(id);
+        TestBed.inject(ApplicationRef).tick();
 
         expect(scrolled).not.toHaveBeenCalled();
     });
@@ -1056,34 +1134,34 @@ describe('KbqToastService: global scroll notifications', () => {
         expect(overlayRef.hasAttached()).toBe(true);
 
         renderToast();
-        emitToastAnimationEvent();
 
         expect(overlayRef.hasAttached()).toBe(true);
 
         overlayRef.dispose();
     });
 
-    it('keeps an open tooltip open when a toast appears', fakeAsync(() => {
+    it('keeps an open tooltip open when a toast appears', async () => {
+        vi.useFakeTimers();
+
         const fixture = TestBed.createComponent(ToastTooltipWrapper);
 
         fixture.detectChanges();
 
         dispatchMouseEvent(fixture.componentInstance.triggerElementRef().nativeElement, 'mouseenter');
         fixture.detectChanges();
-        tick(tooltipEnterDelay);
+        await vi.advanceTimersByTimeAsync(tooltipEnterDelay);
         fixture.detectChanges();
         expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeTruthy();
 
         renderToast();
-        emitToastAnimationEvent();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeTruthy();
 
         service.ngOnDestroy();
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
     it('keeps the container registered as a scrollable, so a real scroll still reaches the dispatcher', () => {
         renderToast();
@@ -1095,7 +1173,7 @@ describe('KbqToastService: global scroll notifications', () => {
 
     it('still dispatches on the container when the deprecated `dispatchScrollEvent` is called explicitly', () => {
         const fixture = TestBed.createComponent(KbqToastContainerComponent);
-        const onScroll = jest.fn();
+        const onScroll = vi.fn();
 
         fixture.detectChanges();
         fixture.nativeElement.addEventListener('scroll', onScroll);
@@ -1118,7 +1196,7 @@ describe('KbqToastService: stack reflow', () => {
         resized = new Subject<ResizeObserverEntry[]>();
 
         TestBed.configureTestingModule({
-            imports: [KbqToastModule, NoopAnimationsModule, ToastTemplateWrapper],
+            imports: [KbqToastModule, ToastTemplateWrapper],
             // jsdom performs no layout, so the real observer would never fire.
             providers: [{ provide: SharedResizeObserver, useValue: { observe: () => resized } }]
         });
@@ -1175,7 +1253,7 @@ describe('KbqToastService: stack reflow', () => {
         // The strategy only subscribes once the overlay is actually attached.
         overlayRef.attach(new ComponentPortal(ToastOverlayContent));
 
-        const updatePosition = jest.spyOn(overlayRef, 'updatePosition');
+        const updatePosition = vi.spyOn(overlayRef, 'updatePosition');
 
         resized.next([]);
 
@@ -1199,8 +1277,8 @@ describe('KbqToastService: stack reflow', () => {
 
         const sources = collectScrolls();
 
-        // A template toast carries no `@state` binding, so its removal fires no animation event —
-        // watching the container's box is what makes this case report at all.
+        // A template toast has no exit animation to wait for — watching the container's box is what makes
+        // this case report at all.
         service.hideTemplate(id);
         resized.next([]);
 

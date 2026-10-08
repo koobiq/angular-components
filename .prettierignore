@@ -32,3 +32,8 @@ apps/docs/src/app/seo-descriptions.ts
 
 # ignore CODEOWNERS to keep its column alignment
 /.github/CODEOWNERS
+
+# output and caches of the separate check-angular npm project
+/tools/check-angular/dist
+/tools/check-angular/.angular
+/tools/check-angular/.tarballs

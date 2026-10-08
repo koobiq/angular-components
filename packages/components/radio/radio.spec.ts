@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ApplicationRef, ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ThemePalette } from '@koobiq/components/core';
@@ -188,7 +188,7 @@ describe('KbqRadio', () => {
         it('should emit a change event from radio buttons', () => {
             expect(radioInstances[0].checked).toBe(false);
 
-            const spies = radioInstances.map(() => jest.fn());
+            const spies = radioInstances.map(() => vi.fn());
 
             spies.forEach((spy, index) => radioInstances[index].change.subscribe(spy));
 
@@ -209,7 +209,7 @@ describe('KbqRadio', () => {
         it(`should not emit a change event from the radio group when change group value programmatically`, () => {
             expect(groupInstance.value).toBeFalsy();
 
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
 
@@ -255,7 +255,7 @@ describe('KbqRadio', () => {
         });
 
         it(`should update the group's selected radio to null when unchecking that radio programmatically`, () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
@@ -276,7 +276,7 @@ describe('KbqRadio', () => {
         });
 
         it('should not fire a change event from the group when a radio checked state changes', () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
@@ -296,7 +296,7 @@ describe('KbqRadio', () => {
         });
 
         it(`should update checked status if changed value to radio group's value`, () => {
-            const changeSpy = jest.fn();
+            const changeSpy = vi.fn();
 
             groupInstance.change.subscribe(changeSpy);
             groupInstance.value = 'apple';
@@ -531,6 +531,8 @@ describe('KbqRadio', () => {
     });
 
     describe('focus', () => {
+        afterEach(() => vi.useRealTimers());
+
         it('should leave a keyboard focus origin on the host, which is what paints the ring', () => {
             const fixture = TestBed.createComponent(RadiosInsideRadioGroup);
 
@@ -592,7 +594,8 @@ describe('KbqRadio', () => {
             expect(hosts[1].nativeElement.classList).toContain('cdk-keyboard-focused');
         });
 
-        it('should mark the group as touched when focus leaves a radio button', fakeAsync(() => {
+        it('should mark the group as touched when focus leaves a radio button', async () => {
+            vi.useFakeTimers();
             const fixture = TestBed.createComponent(RadioGroupWithFormControl);
 
             fixture.detectChanges();
@@ -601,16 +604,16 @@ describe('KbqRadio', () => {
 
             TestBed.inject(FocusMonitor).focusVia(input, 'keyboard');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.touched).toBe(false);
 
             input.blur();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.touched).toBe(true);
-        }));
+        });
     });
 
     /**
@@ -652,13 +655,13 @@ describe('KbqRadio', () => {
     });
 
     describe('ControlValueAccessor', () => {
-        it('should check the radio matching the ngModel value', fakeAsync(() => {
+        it('should check the radio matching the ngModel value', async () => {
             const fixture = TestBed.createComponent(RadioGroupWithNgModel);
 
             fixture.componentInstance.model = 'water';
             fixture.detectChanges();
             // NgModel writes the initial value through a microtask.
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const radios = fixture.debugElement
@@ -666,7 +669,7 @@ describe('KbqRadio', () => {
                 .map((debugEl) => debugEl.componentInstance as KbqRadioButton);
 
             expect(radios.map((radio) => radio.checked)).toEqual([false, true, false]);
-        }));
+        });
 
         it('should write the clicked value back into the ngModel', () => {
             const fixture = TestBed.createComponent(RadioGroupWithNgModel);

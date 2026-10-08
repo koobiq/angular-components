@@ -4,10 +4,10 @@
 
 ```ts
 
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
@@ -66,7 +66,7 @@ export type KbqListDragCursor = 'auto' | 'grab';
 export type KbqListDragPreview = 'text' | 'full';
 
 // @public
-export class KbqListItem implements AfterContentInit {
+export class KbqListItem implements AfterContentChecked, AfterContentInit {
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
@@ -74,11 +74,13 @@ export class KbqListItem implements AfterContentInit {
     // (undocumented)
     protected handleFocus(): void;
     // (undocumented)
-    lines: QueryList<KbqLine>;
+    get lines(): QueryList<KbqLine>;
+    // (undocumented)
+    ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["lines"], ["[kbq-list-icon], [mcListIcon]", "[kbq-line], [mcLine]", "*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["linesQuery"], ["[kbq-list-icon], [mcListIcon]", "[kbq-line], [mcLine]", "*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListItem, never>;
 }
@@ -104,11 +106,10 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     // (undocumented)
     readonly checkboxPosition: _angular_core.InputSignal<"before" | "after">;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     get draggable(): boolean;
-    set draggable(value: boolean);
-    // (undocumented)
-    dropdownTrigger?: KbqDropdownTrigger;
+    readonly draggableInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    get dropdownTrigger(): KbqDropdownTrigger | undefined;
     // (undocumented)
     protected get externalPseudoCheckbox(): boolean;
     focus(): void;
@@ -124,15 +125,10 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     readonly group: KbqOptgroup | null;
     protected handleClick($event: MouseEvent): void;
     // (undocumented)
-    hasFocus: boolean;
+    get hasFocus(): boolean;
+    set hasFocus(value: boolean);
     // (undocumented)
     listSelection: KbqListSelection<T>;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_draggable: unknown;
-    // (undocumented)
-    static ngAcceptInputType_selected: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -149,23 +145,23 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     readonly selectAllRow: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selected(): boolean;
     set selected(value: boolean);
+    readonly selectedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     setSelected(selected: boolean): void;
     get showCheckbox(): boolean;
-    set showCheckbox(value: BooleanInput);
+    readonly showCheckboxInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     protected get showsGrabCursor(): boolean;
     syncDraggableState(): void;
     // (undocumented)
     get tabIndex(): number | null;
     // (undocumented)
     readonly text: _angular_core.Signal<ElementRef<any>>;
-    textElement: ElementRef;
+    get textElement(): ElementRef<HTMLElement> | undefined;
     toggle(): void;
-    // (undocumented)
-    tooltipTrigger?: KbqTooltipTrigger;
+    get tooltipTrigger(): KbqTooltipTrigger | undefined;
     get value(): T;
-    set value(newValue: T);
+    readonly valueInput: _angular_core.InputSignal<T>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; }, {}, ["actionButton", "pseudoCheckbox", "dragHandles", "tooltipTrigger", "dropdownTrigger"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListOption<any>, "kbq-list-option", ["kbqListOption"], { "checkboxPosition": { "alias": "checkboxPosition"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "draggableInput": { "alias": "draggable"; "required": false; "isSignal": true; }; "showCheckboxInput": { "alias": "showCheckbox"; "required": false; "isSignal": true; }; "selectedInput": { "alias": "selected"; "required": false; "isSignal": true; }; }, {}, ["actionButton", "tooltipTriggerQuery", "dropdownTriggerQuery", "pseudoCheckbox", "dragHandles"], ["kbq-pseudo-checkbox", "[kbq-icon]", "*", "[kbq-list-option-caption]", "kbq-option-action"], true, [{ directive: typeof i1.CdkDrag; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListOption<any>, never>;
 }
@@ -188,11 +184,11 @@ export class KbqListSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqListSelection<T = any> implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class KbqListSelection<T = any> implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor();
     get allOptionsSelected(): boolean;
     get autoSelect(): boolean;
-    set autoSelect(value: boolean);
+    readonly autoSelectInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     blur(): void;
     canDeselectLast(listOption: KbqListOption<T>): boolean;
     clearDropIndicators(option: KbqListOption): void;
@@ -200,10 +196,10 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     readonly connectedTo: _angular_core.InputSignal<string | KbqListSelection<T> | readonly (string | KbqListSelection<T>)[]>;
     deselectAll(): void;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly dragCursor: _angular_core.InputSignal<KbqListDragCursor>;
     get draggable(): boolean;
-    set draggable(value: boolean);
+    readonly draggableInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     readonly dragPreview: _angular_core.InputSignal<KbqListDragPreview>;
     protected readonly dropIndicatorOffset: _angular_core.WritableSignal<number | null>;
     readonly dropped: _angular_core.OutputEmitterRef<KbqListSelectionDroppedEvent>;
@@ -220,14 +216,12 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     keyManager: FocusKeyManager<KbqListOption<T>>;
     get multiple(): boolean;
-    set multiple(value: KbqMultipleInput);
+    readonly multipleInput: _angular_core.InputSignal<KbqMultipleInput>;
     get multipleMode(): MultipleMode | null;
     set multipleMode(value: MultipleMode | null);
     readonly navigableOptions: QueryList<KbqListOption<T>>;
     // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_draggable: unknown;
+    ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -235,8 +229,9 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     ngOnDestroy(): void;
     get noUnselectLast(): boolean;
-    set noUnselectLast(value: boolean);
+    readonly noUnselectLastInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly onCopy: EventEmitter<KbqListCopyEvent<KbqListOption<T>>>;
+    readonly onCopyOutput: _angular_core.OutputRef<KbqListCopyEvent<KbqListOption<T>>>;
     onKeyDown(event: KeyboardEvent): void;
     onOptionDragMoved(option: KbqListOption, pointer: {
         x: number;
@@ -250,7 +245,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     get optionFocusChanges(): Observable<KbqOptionEvent<T>>;
     // (undocumented)
-    options: QueryList<KbqListOption<T>>;
+    get options(): QueryList<KbqListOption<T>>;
     refreshSelectAllState(): void;
     // (undocumented)
     registerOnChange(fn: (value: T[]) => void): void;
@@ -265,7 +260,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     selectAll(): void;
     readonly selectAllEnabled: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selectAllHandler(): (event: KeyboardEvent, list: KbqListSelection<T>) => void;
-    set selectAllHandler(fn: (event: KeyboardEvent, list: KbqListSelection<T>) => void);
+    readonly selectAllHandlerInput: _angular_core.InputSignalWithTransform<((event: KeyboardEvent, list: KbqListSelection<T>) => void) | undefined, ((event: KeyboardEvent, list: KbqListSelection<T>) => void) | undefined>;
     readonly selectAllOption: _angular_core.Signal<KbqListOption<T> | undefined>;
     get selectAllState(): KbqPseudoCheckboxState;
     protected get selectAllText(): string;
@@ -283,7 +278,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     get showCheckbox(): boolean;
     protected get showSelectAll(): boolean;
     get tabIndex(): number;
-    set tabIndex(value: number);
+    readonly tabIndexInput: _angular_core.InputSignal<number | undefined>;
     // (undocumented)
     toggleFocusedOption(): void;
     toggleSelectAll(): void;
@@ -298,7 +293,7 @@ export class KbqListSelection<T = any> implements AfterContentInit, AfterViewIni
     // (undocumented)
     writeValue(values: T[] | T | null): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "draggable": { "alias": "draggable"; "required": false; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "dragPreview": { "alias": "dragPreview"; "required": false; "isSignal": true; }; "dragCursor": { "alias": "dragCursor"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllEnabled": { "alias": "selectAll"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["virtualScroll", "options"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListSelection<any>, "kbq-list-selection", ["kbqListSelection"], { "autoSelectInput": { "alias": "autoSelect"; "required": false; "isSignal": true; }; "noUnselectLastInput": { "alias": "noUnselectLast"; "required": false; "isSignal": true; }; "draggableInput": { "alias": "draggable"; "required": false; "isSignal": true; }; "connectedTo": { "alias": "connectedTo"; "required": false; "isSignal": true; }; "dragPreview": { "alias": "dragPreview"; "required": false; "isSignal": true; }; "dragCursor": { "alias": "dragCursor"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllEnabled": { "alias": "selectAll"; "required": false; "isSignal": true; }; "multipleInput": { "alias": "multiple"; "required": false; "isSignal": true; }; "horizontal": { "alias": "horizontal"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "compareWith": { "alias": "compareWith"; "required": false; "isSignal": true; }; "selectAllHandlerInput": { "alias": "selectAllHandler"; "required": false; "isSignal": true; }; }, { "onSelectAll": "onSelectAll"; "onCopyOutput": "onCopy"; "dropped": "dropped"; "selectionChange": "selectionChange"; }, ["optionsQuery", "virtualScroll"], ["*"], true, [{ directive: typeof i1.CdkDropList; inputs: { "id": "id"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListSelection<any>, never>;
 }

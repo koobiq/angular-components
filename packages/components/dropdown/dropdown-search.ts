@@ -69,7 +69,7 @@ export class KbqDropdownSearch implements AfterContentInit {
 
     /** The current search query. */
     value(): string {
-        return this.formField.control().value;
+        return this.formField.control().value();
     }
 
     /** @docs-private */

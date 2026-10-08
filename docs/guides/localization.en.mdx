@@ -25,7 +25,10 @@ bootstrapApplication(AppComponent, {
 ```
 
 Without that provider every component falls back to its own built-in `ru-RU` defaults, and switching the
-locale at runtime does nothing.
+locale at runtime does nothing. The placeholder of the datepicker is the exception: it names the format its input
+parses — the shipped one of the date adapter's locale (`KBQ_DATE_LOCALE`, Angular's `LOCALE_ID` unless
+provided), or the format itself, such as `yyyy/mm/dd`, for a locale the library ships no strings for and for a
+format set through `KBQ_DATE_FORMATS`.
 
 Use `kbqLocaleServiceProvider()` rather than `{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }`:
 `useClass` builds a **second** instance, independent of the `providedIn: 'root'` one, so a `setLocale()`

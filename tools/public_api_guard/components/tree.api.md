@@ -7,19 +7,19 @@
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { BooleanInput } from '@angular/cdk/coercion';
 import { ChangeDetectorRef } from '@angular/core';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { ControlValueAccessor } from '@angular/forms';
 import { DataSource } from '@angular/cdk/collections';
 import { DestroyRef } from '@angular/core';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/components/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
-import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import * as i2 from '@koobiq/components/icon';
 import { IFocusableOption } from '@koobiq/components/core';
@@ -157,20 +157,21 @@ export const KBQ_TREE_OPTION_PARENT_COMPONENT: InjectionToken<KbqTreeOptionParen
 // @public (undocumented)
 export class KbqTree extends KbqTreeBase<any> {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTree, "kbq-tree", ["kbqTree"], {}, {}, never, never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTree, "kbq-tree", ["kbqTree"], {}, {}, never, never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTree, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTree, never>;
 }
 
 // @public
 export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
+    constructor();
     protected applyNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer: IterableDiffer<T>, viewContainer: ViewContainerRef, parentData?: T): boolean;
     // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
     clearSavedState(): void;
     protected dataDiffer: IterableDiffer<T>;
     get dataSource(): DataSource<T> | Observable<T[]> | T[] | null;
-    set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[] | null);
+    readonly dataSourceInput: _angular_core.InputSignal<DataSource<T> | T[] | Observable<T[]> | null | undefined>;
     // (undocumented)
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
@@ -187,22 +188,21 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
     // (undocumented)
     ngOnInit(): void;
     readonly nodeDefs: Signal<readonly KbqTreeNodeDef<T>[]>;
-    // (undocumented)
-    nodeOutlet: KbqTreeNodeOutlet;
+    get nodeOutlet(): KbqTreeNodeOutlet;
     registerNode(node: KbqTreeNode<T>): void;
     renderNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     saveState(): void;
-    readonly trackBy: i0.InputSignal<TrackByFunction<T>>;
-    // (undocumented)
-    treeControl: TreeControl<T>;
+    readonly trackBy: _angular_core.InputSignal<TrackByFunction<T>>;
+    get treeControl(): TreeControl<T>;
+    readonly treeControlInput: _angular_core.InputSignal<TreeControl<T>>;
     viewChange: BehaviorSubject<{
         start: number;
         end: number;
     }>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeBase<any>, never, never, { "treeControl": { "alias": "treeControl"; "required": false; }; "trackBy": { "alias": "trackBy"; "required": false; "isSignal": true; }; "dataSource": { "alias": "dataSource"; "required": false; }; }, {}, ["nodeDefs"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeBase<any>, never, never, { "treeControlInput": { "alias": "treeControl"; "required": false; "isSignal": true; }; "trackBy": { "alias": "trackBy"; "required": false; "isSignal": true; }; "dataSourceInput": { "alias": "dataSource"; "required": false; "isSignal": true; }; }, {}, ["nodeDefs"], never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeBase<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeBase<any>, never>;
 }
 
 // @public
@@ -258,11 +258,11 @@ export class KbqTreeFlattener<T, F> {
 // @public (undocumented)
 export class KbqTreeModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqTreeModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqTreeModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, never, [typeof i1.KbqPseudoCheckboxModule, typeof i2.KbqIconModule, typeof i1.KbqActionContainer, typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective], [typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqTreeModule, never, [typeof i1.KbqPseudoCheckboxModule, typeof i2.KbqIconModule, typeof i1.KbqActionContainer, typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective], [typeof KbqTreeNodeOutlet, typeof KbqTreeNodeDef, typeof KbqTreeNode, typeof KbqTreeNodePadding, typeof KbqTree, typeof KbqTreeSelection, typeof KbqTreeOption, typeof KbqTreeNodeToggleComponent, typeof KbqTreeNodeToggleDirective]>;
 }
 
 // @public (undocumented)
@@ -310,22 +310,22 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     // (undocumented)
     tree: KbqTreeBase<T>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNode<any>, "kbq-tree-node", ["kbqTreeNode"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNode<any>, "kbq-tree-node", ["kbqTreeNode"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNode<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeNode<any>, never>;
 }
 
 // @public
 export class KbqTreeNodeDef<T> {
     // (undocumented)
-    readonly data: i0.InputSignal<T>;
+    readonly data: _angular_core.InputSignal<T>;
     // (undocumented)
     template: TemplateRef<any>;
     when: (index: number, nodeData: T) => boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeDef<any>, "[kbqTreeNodeDef]", never, { "when": { "alias": "kbqTreeNodeDefWhen"; "required": false; }; "data": { "alias": "kbqTreeNode"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNodeDef<any>, "[kbqTreeNodeDef]", never, { "when": { "alias": "kbqTreeNodeDefWhen"; "required": false; }; "data": { "alias": "kbqTreeNode"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeDef<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeNodeDef<any>, never>;
 }
 
 // @public (undocumented)
@@ -335,9 +335,9 @@ export class KbqTreeNodeOutlet {
     // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeOutlet, "[kbqTreeNodeOutlet]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNodeOutlet, "[kbqTreeNodeOutlet]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeOutlet, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeNodeOutlet, never>;
 }
 
 // @public
@@ -353,7 +353,7 @@ export class KbqTreeNodeOutletContext<T> {
 export class KbqTreeNodePadding<T> implements AfterViewInit {
     constructor();
     iconWidth: number;
-    readonly indent: i0.InputSignal<string | number>;
+    readonly indent: _angular_core.InputSignal<string | number>;
     get indentUnits(): string;
     // (undocumented)
     get leftPadding(): number;
@@ -373,51 +373,50 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     // (undocumented)
     withIcon: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodePadding<any>, "[kbqTreeNodePadding]", ["kbqTreeNodePadding"], { "indent": { "alias": "kbqTreeNodePaddingIndent"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNodePadding<any>, "[kbqTreeNodePadding]", ["kbqTreeNodePadding"], { "indent": { "alias": "kbqTreeNodePaddingIndent"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodePadding<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeNodePadding<any>, never>;
 }
 
 // @public
 export class KbqTreeNodeToggleBaseDirective<T> {
-    constructor();
     // (undocumented)
     get disabled(): boolean;
-    readonly disabledInput: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get iconState(): boolean;
     // (undocumented)
-    readonly node: i0.InputSignal<T>;
-    readonly recursive: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly node: _angular_core.InputSignal<T>;
+    readonly recursive: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     toggle(event: Event): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeToggleBaseDirective<any>, never, never, { "node": { "alias": "node"; "required": false; "isSignal": true; }; "recursive": { "alias": "kbqTreeNodeToggleRecursive"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNodeToggleBaseDirective<any>, never, never, { "node": { "alias": "node"; "required": false; "isSignal": true; }; "recursive": { "alias": "kbqTreeNodeToggleRecursive"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleBaseDirective<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeNodeToggleBaseDirective<any>, never>;
 }
 
 // @public (undocumented)
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeNodeToggleComponent<any>, "kbq-tree-node-toggle", ["kbqTreeNodeToggle"], {}, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeNodeToggleComponent<any>, "kbq-tree-node-toggle", ["kbqTreeNodeToggle"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleComponent<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeNodeToggleComponent<any>, never>;
 }
 
 // @public (undocumented)
 export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirective<T> {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeToggleDirective<any>, "[kbq-tree-node-toggle], [kbqTreeNodeToggle]", ["kbqTreeNodeToggle"], {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNodeToggleDirective<any>, "[kbq-tree-node-toggle], [kbqTreeNodeToggle]", ["kbqTreeNodeToggle"], {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleDirective<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeNodeToggleDirective<any>, never>;
 }
 
 // @public (undocumented)
-export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
+export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, DoCheck, KbqTitleTextRef {
     constructor();
     // (undocumented)
-    readonly actionButton: i0.Signal<KbqOptionActionComponent | undefined>;
+    readonly actionButton: _angular_core.Signal<KbqOptionActionComponent | undefined>;
     protected get ariaChecked(): string | null;
     protected get ariaExpanded(): boolean | null;
     protected get ariaSelected(): boolean | null;
@@ -427,18 +426,16 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     get checkboxState(): KbqPseudoCheckboxState;
     set checkboxState(value: KbqPseudoCheckboxState);
     // (undocumented)
-    readonly checkboxThirdState: i0.InputSignal<boolean>;
+    readonly checkboxThirdState: _angular_core.InputSignal<boolean>;
     // (undocumented)
     descendantsAllSelected(): boolean;
     // (undocumented)
     descendantsPartiallySelected(): boolean;
     // (undocumented)
     deselect(): void;
-    // (undocumented)
     get disabled(): boolean;
-    set disabled(value: BooleanInput);
-    // (undocumented)
-    dropdownTrigger?: KbqDropdownTrigger;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    get dropdownTrigger(): KbqDropdownTrigger | undefined;
     // (undocumented)
     emitSelectionChangeEvent(): void;
     // (undocumented)
@@ -463,47 +460,46 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     markForCheck(): void;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngDoCheck(): void;
     readonly onBlur: Observable<KbqTreeOptionEvent>;
     readonly onFocus: Observable<KbqTreeOptionEvent>;
     // (undocumented)
     onKeydown($event: any): void;
     protected onMouseenter(): void;
     // @deprecated (undocumented)
-    readonly onSelectionChange: i0.OutputEmitterRef<KbqTreeOptionChange>;
-    // (undocumented)
-    parentTextElement: ElementRef;
+    readonly onSelectionChange: _angular_core.OutputEmitterRef<KbqTreeOptionChange>;
+    get parentTextElement(): ElementRef<HTMLElement> | undefined;
     // (undocumented)
     preventBlur: boolean;
     // (undocumented)
-    readonly pseudoCheckbox: i0.Signal<KbqPseudoCheckbox | undefined>;
+    readonly pseudoCheckbox: _angular_core.Signal<KbqPseudoCheckbox | undefined>;
     refresh(): void;
     // (undocumented)
     select(setFocus?: boolean): void;
-    readonly selectable: i0.InputSignalWithTransform<boolean, unknown>;
-    readonly selectAllRow: i0.InputSignalWithTransform<boolean, unknown>;
+    readonly selectable: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly selectAllRow: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get selected(): boolean;
     set selected(value: boolean);
-    readonly selectionChange: i0.OutputEmitterRef<KbqTreeOptionChange>;
+    readonly selectionChange: _angular_core.OutputEmitterRef<KbqTreeOptionChange>;
     // (undocumented)
-    selectViaInteraction($event?: KeyboardEvent): void;
+    selectViaInteraction($event?: KeyboardEvent | MouseEvent): void;
     // (undocumented)
     setSelected(selected: boolean): void;
-    // (undocumented)
     get showCheckbox(): boolean;
-    set showCheckbox(value: BooleanInput);
+    readonly showCheckboxInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
-    get textElement(): ElementRef;
+    get textElement(): ElementRef<HTMLElement> | undefined;
     // (undocumented)
     toggle(): void;
     // (undocumented)
     get toggleElement(): KbqTreeNodeToggleBaseDirective<KbqTreeOption> | undefined;
     // (undocumented)
-    readonly toggleElementComponent: i0.Signal<KbqTreeNodeToggleComponent<any> | undefined>;
+    readonly toggleElementComponent: _angular_core.Signal<KbqTreeNodeToggleComponent<any> | undefined>;
     // (undocumented)
-    readonly toggleElementDirective: i0.Signal<KbqTreeNodeToggleDirective<any> | undefined>;
-    // (undocumented)
-    tooltipTrigger?: KbqTooltipTrigger;
+    readonly toggleElementDirective: _angular_core.Signal<KbqTreeNodeToggleDirective<any> | undefined>;
+    get tooltipTrigger(): KbqTooltipTrigger | undefined;
     // (undocumented)
     tree: KbqTreeOptionParent & KbqTreeBase<any>;
     // (undocumented)
@@ -518,9 +514,9 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeOption, "kbq-tree-option", ["kbqTreeOption"], { "checkboxThirdState": { "alias": "checkboxThirdState"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; }, { "selectionChange": "selectionChange"; "onSelectionChange": "onSelectionChange"; }, ["toggleElementDirective", "toggleElementComponent", "pseudoCheckbox", "actionButton", "tooltipTrigger", "dropdownTrigger"], ["kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]", "kbq-pseudo-checkbox", "kbq-checkbox", "[kbq-icon]", "kbq-progress-spinner", "*", "kbq-option-action"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeOption, "kbq-tree-option", ["kbqTreeOption"], { "checkboxThirdState": { "alias": "checkboxThirdState"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "selectAllRow": { "alias": "selectAllRow"; "required": false; "isSignal": true; }; "showCheckboxInput": { "alias": "showCheckbox"; "required": false; "isSignal": true; }; }, { "selectionChange": "selectionChange"; "onSelectionChange": "onSelectionChange"; }, ["toggleElementDirective", "toggleElementComponent", "pseudoCheckbox", "actionButton", "tooltipTriggerQuery", "dropdownTriggerQuery"], ["kbq-tree-node-toggle, [kbq-tree-node-toggle], [kbqTreeNodeToggle]", "kbq-pseudo-checkbox", "kbq-checkbox", "[kbq-icon]", "kbq-progress-spinner", "*", "kbq-option-action"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeOption, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeOption, never>;
 }
 
 // @public
@@ -573,18 +569,19 @@ export const kbqTreeSelectAllValue = "selectAll";
 export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
     constructor();
     get allOptionsSelected(): boolean;
-    readonly ariaLabel: i0.InputSignal<string>;
-    readonly ariaLabelledby: i0.InputSignal<string>;
+    readonly ariaLabel: _angular_core.InputSignal<string>;
+    readonly ariaLabelledby: _angular_core.InputSignal<string>;
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
+    readonly autoSelectInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
     blur(): void;
     // (undocumented)
     copyActiveOption(event: KeyboardEvent): void;
     readonly copyChange: EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>;
-    // (undocumented)
+    readonly copyChangeOutput: _angular_core.OutputRef<KbqTreeCopyEvent<KbqTreeOption>>;
     get disabled(): boolean;
-    set disabled(rawValue: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     protected emitChangeEvent(option: KbqTreeOption): void;
     protected emitNavigationEvent(option: KbqTreeOption): void;
     // (undocumented)
@@ -602,32 +599,30 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     keyManager: FocusKeyManager<KbqTreeOption>;
     get multiple(): boolean;
-    set multiple(value: KbqMultipleInput);
+    readonly multipleInput: _angular_core.InputSignal<KbqMultipleInput>;
     get multipleMode(): MultipleMode | null;
     set multipleMode(value: MultipleMode | null);
     // (undocumented)
-    readonly navigationChange: i0.OutputEmitterRef<KbqTreeNavigationChange<KbqTreeOption>>;
+    readonly navigationChange: _angular_core.OutputEmitterRef<KbqTreeNavigationChange<KbqTreeOption>>;
     // (undocumented)
-    static ngAcceptInputType_selectAll: unknown;
-    // (undocumented)
-    static ngAcceptInputType_typeAhead: unknown;
+    ngAfterContentChecked(): void;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    nodeOutlet: KbqTreeNodeOutlet;
     get nodesCount(): number;
     get noUnselectLast(): boolean;
     set noUnselectLast(value: boolean);
+    readonly noUnselectLastInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     onChange: (value: any) => void;
     // @deprecated (undocumented)
     readonly onCopy: EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>;
+    readonly onCopyOutput: _angular_core.OutputRef<KbqTreeCopyEvent<KbqTreeOption>>;
     onKeyDown(event: KeyboardEvent): void;
     // @deprecated (undocumented)
-    readonly onSelectAll: i0.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption>>;
+    readonly onSelectAll: _angular_core.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption>>;
     onTouched: () => void;
     // (undocumented)
     get optionBlurChanges(): Observable<KbqTreeOptionEvent>;
@@ -650,18 +645,19 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     protected selectActiveOptions(): void;
     get selectAll(): boolean;
     set selectAll(value: boolean);
-    readonly selectAllChange: i0.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption>>;
+    readonly selectAllChange: _angular_core.OutputEmitterRef<KbqTreeSelectAllEvent<KbqTreeOption>>;
     get selectAllHandler(): (event: KeyboardEvent, tree: KbqTreeSelection) => void;
-    set selectAllHandler(fn: (event: KeyboardEvent, tree: KbqTreeSelection) => void);
-    readonly selectAllOption: i0.Signal<KbqTreeOption | undefined>;
+    readonly selectAllHandlerInput: _angular_core.InputSignalWithTransform<((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined, ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined>;
+    readonly selectAllInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
+    readonly selectAllOption: _angular_core.Signal<KbqTreeOption | undefined>;
     // (undocumented)
     selectAllOptions(allowDeselect?: boolean): void;
     get selectAllState(): KbqPseudoCheckboxState;
     protected get selectAllText(): string;
-    readonly selectAllToggle: i0.InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
+    readonly selectAllToggle: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly selectionChange: EventEmitter<KbqTreeSelectionChange<KbqTreeOption>>;
-    // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point index.d.ts
+    readonly selectionChangeOutput: _angular_core.OutputRef<KbqTreeSelectionChange<KbqTreeOption>>;
+    // Warning: (ae-forgotten-export) The symbol "SelectionModelOption" needs to be exported by the entry point koobiq-components-tree.d.ts
     selectionModel: SelectionModel<SelectionModelOption>;
     setDisabledState(isDisabled: boolean): void;
     protected setFocusedOption(option: KbqTreeOption): void;
@@ -673,26 +669,25 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     get showCheckbox(): boolean;
     protected get showSelectAll(): boolean;
-    // (undocumented)
-    get tabIndex(): any;
-    set tabIndex(value: any);
+    get tabIndex(): number;
+    readonly tabIndexInput: _angular_core.InputSignal<number | undefined>;
     protected toggleFocusedOption(): void;
     protected toggleSelectAll(): void;
-    // (undocumented)
-    treeControl: FlatTreeControl<any>;
+    get treeControl(): FlatTreeControl<any>;
     get typeAhead(): boolean;
     set typeAhead(value: boolean);
+    readonly typeAheadInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
-    unorderedOptions: QueryList<KbqTreeOption>;
+    get unorderedOptions(): QueryList<KbqTreeOption>;
     updateScrollSize(): void;
     // (undocumented)
     userTabIndex: number | null;
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "treeControl": { "alias": "treeControl"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "typeAhead": { "alias": "typeAhead"; "required": false; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAll": { "alias": "selectAll"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "selectAllHandler": { "alias": "selectAllHandler"; "required": false; }; }, { "navigationChange": "navigationChange"; "selectionChange": "selectionChange"; "selectAllChange": "selectAllChange"; "onSelectAll": "onSelectAll"; "copyChange": "copyChange"; "onCopy": "onCopy"; }, ["unorderedOptions"], never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }, { directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTreeSelection, "kbq-tree-selection", ["kbqTreeSelection"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "autoSelectInput": { "alias": "autoSelect"; "required": false; "isSignal": true; }; "multipleInput": { "alias": "multiple"; "required": false; "isSignal": true; }; "noUnselectLastInput": { "alias": "noUnselectLast"; "required": false; "isSignal": true; }; "typeAheadInput": { "alias": "typeAhead"; "required": false; "isSignal": true; }; "selectAllToggle": { "alias": "selectAllToggle"; "required": false; "isSignal": true; }; "selectAllInput": { "alias": "selectAll"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "selectAllHandlerInput": { "alias": "selectAllHandler"; "required": false; "isSignal": true; }; }, { "navigationChange": "navigationChange"; "selectionChangeOutput": "selectionChange"; "selectAllChange": "selectAllChange"; "onSelectAll": "onSelectAll"; "copyChangeOutput": "copyChange"; "onCopyOutput": "onCopy"; }, ["unorderedOptionsQuery"], never, true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }, { directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelection, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeSelection, never>;
 }
 
 // @public (undocumented)

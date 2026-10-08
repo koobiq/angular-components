@@ -4,7 +4,6 @@ import {
     Component,
     ElementRef,
     forwardRef,
-    Input,
     input,
     viewChild,
     ViewEncapsulation
@@ -47,21 +46,20 @@ export class KbqTimezoneOption extends KbqOption {
     /** Whether `highlightText` was matched with diacritic folding (e.g. via `createSearchPredicate`) — see `kbqHighlightBackground`. */
     readonly foldDiacritics = input(false);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /** @docs-private */
+    readonly timezoneInput = input<KbqTimezoneZone>(undefined!, { alias: 'timezone' });
+
+    /** The time zone the option stands for. */
     get timezone(): KbqTimezoneZone {
-        return this._timezone;
+        return this.timezoneInput();
     }
 
-    set timezone(zone: KbqTimezoneZone) {
-        this._timezone = zone;
-        this.value = zone.id;
+    /** The id of the time zone, unless no time zone is bound. */
+    override get value(): string {
+        return this.timezone?.id ?? super.value;
     }
 
-    private _timezone: KbqTimezoneZone;
-
-    get viewValue(): string {
+    override get viewValue(): string {
         const cities: string = [this.timezone.city, this.timezone.cities].filter(Boolean).join(', ');
 
         return [offsetFormatter(this.timezone.offset), cities].join(' ');

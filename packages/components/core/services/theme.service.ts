@@ -6,7 +6,6 @@ import {
     inject,
     Injectable,
     InjectionToken,
-    OnDestroy,
     PLATFORM_ID,
     Provider,
     Renderer2,
@@ -14,8 +13,8 @@ import {
     REQUEST,
     signal
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { BehaviorSubject, EMPTY, Observable, Subscription } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY, Observable } from 'rxjs';
 import { KBQ_WINDOW } from '../tokens';
 
 /** Media query behind `KbqThemeService.mode`'s `'auto'` resolution. */
@@ -30,22 +29,6 @@ export type KbqThemeColorScheme = 'light' | 'dark';
 /** Selection understood by `KbqThemeService`. The only way to select a theme — see `setMode()`. */
 export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
 
-/**
- * @deprecated will be removed in a future major version — use `KbqThemeConfig` instead, which adds the
- * `colorScheme` this interface can no longer carry without a breaking change to existing consumers.
- */
-export interface KbqTheme {
-    name: string;
-    /** CSS class applied to the document body when this theme is active. */
-    className: string;
-    /**
-     * @deprecated Selection state is now owned by `KbqThemeService` — read `currentTheme()`/`mode()` instead.
-     * Kept in sync by the deprecated `ThemeService` facade for backward compatibility.
-     */
-    selected?: boolean;
-    colorScheme?: KbqThemeColorScheme;
-}
-
 /** A theme registered with `KbqThemeService`, resolved by `mode()` via its required `colorScheme`. */
 export interface KbqThemeConfig {
     name: string;
@@ -58,8 +41,6 @@ export interface KbqThemeConfig {
 export enum KbqThemeSelector {
     /** Class for the built-in light theme. */
     Light = 'kbq-light',
-    /** @deprecated use `Light` instead. Will be removed in a next major version. */
-    Default = 'kbq-light',
     /** Class for the built-in dark theme. */
     Dark = 'kbq-dark'
 }
@@ -68,20 +49,15 @@ export enum KbqThemeSelector {
 export enum KbqThemeNames {
     /** Name for the built-in light theme. */
     Light = 'light',
-    /** @deprecated use `Light` instead. Will be removed in a next major version. */
-    Default = 'light',
     /** Name for the built-in dark theme. */
     Dark = 'dark'
 }
 
-/** The built-in light/dark theme set — `KBQ_THEME_CONFIG`'s default `themes`. @docs-private */
+/** The built-in light/dark theme set — `KBQ_THEME_CONFIG`'s default `themes`. */
 export const KBQ_DEFAULT_THEMES: KbqThemeConfig[] = [
     { name: KbqThemeNames.Light, className: KbqThemeSelector.Light, colorScheme: 'light' },
     { name: KbqThemeNames.Dark, className: KbqThemeSelector.Dark, colorScheme: 'dark' }
 ];
-
-/** @deprecated use `KBQ_DEFAULT_THEMES` instead. Will be removed in a next major version. */
-export const KbqDefaultThemes = KBQ_DEFAULT_THEMES;
 
 /** Settings accepted by `KBQ_THEME_CONFIG` / `kbqThemeProvider()`. */
 export interface KbqThemeSettings<T extends KbqThemeConfig = KbqThemeConfig> {
@@ -520,53 +496,5 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
                 this.renderer.removeClass(this.document.body, className);
             }
         }
-    }
-}
-
-/** @deprecated use `KbqThemeService` instead. Will be removed in a future major version. */
-@Injectable({ providedIn: 'root' })
-export class ThemeService<T extends KbqTheme = KbqTheme> implements OnDestroy {
-    private readonly kbqThemeService = inject(KbqThemeService);
-
-    /** @deprecated read `currentTheme()` on the injected `KbqThemeService` instead. */
-    readonly current = new BehaviorSubject<T | null>(null);
-
-    private readonly subscription: Subscription;
-
-    constructor() {
-        this.subscription = toObservable(this.kbqThemeService.currentTheme).subscribe((current) => {
-            for (const theme of this.kbqThemeService.themes()) theme.selected = theme === current;
-
-            this.current.next(current);
-        });
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
-
-    /** @deprecated read `themes()` on the injected `KbqThemeService` instead. */
-    get themes(): T[] {
-        return this.kbqThemeService.themes();
-    }
-
-    set themes(items: T[]) {
-        this.kbqThemeService.setThemes(items);
-    }
-
-    /** @deprecated use `setMode()` on the injected `KbqThemeService` instead. */
-    setTheme(value: T | number) {
-        const theme = typeof value === 'number' ? this.themes[value] : value;
-
-        if (theme && this.themes.includes(theme)) {
-            this.kbqThemeService.setMode(theme.colorScheme ?? 'light');
-        } else {
-            throw Error(`value has unsupported type: ${typeof value}`);
-        }
-    }
-
-    /** @deprecated read `currentTheme()` on the injected `KbqThemeService` instead. */
-    getTheme(): T | null {
-        return this.current.value;
     }
 }

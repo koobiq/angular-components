@@ -1,6 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
-import { Platform } from '@angular/cdk/platform';
+import { _getFocusedElementPierceShadowDom, Platform } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     afterNextRender,
@@ -18,12 +18,12 @@ import {
     ElementRef,
     inject,
     Injector,
-    Input,
     input,
-    NgZone,
+    OnChanges,
     OnDestroy,
     Signal,
     signal,
+    SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -44,7 +44,6 @@ import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { getOuterWidth } from './outer-width';
 
 /** Orientation of the navbar an element belongs to. */
@@ -95,15 +94,12 @@ export class KbqNavbarItemSuffix {}
         class: 'kbq-navbar-title'
     }
 })
-export class KbqNavbarTitle implements AfterViewInit {
+export class KbqNavbarTitle {
     /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
-
-    /** @docs-private */
-    outerElementWidth: number;
 
     /** Text content of the title element. */
     get text(): string {
@@ -134,11 +130,6 @@ export class KbqNavbarTitle implements AfterViewInit {
     /** Outer width of the title: its border box plus horizontal margins. */
     getOuterElementWidth(): number {
         return this.isBrowser ? getOuterWidth(this.nativeElement, this.window) : 0;
-    }
-
-    /** @docs-private */
-    ngAfterViewInit(): void {
-        this.outerElementWidth = this.getOuterElementWidth();
     }
 }
 
@@ -180,11 +171,11 @@ export class KbqNavbarDivider {
         '(blur)': 'blur()'
     }
 })
-export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
+export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private changeDetector = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
-    private ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
 
     /** @docs-private */
@@ -216,14 +207,14 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
     /** @docs-private */
     get hasFocus(): boolean {
-        return !!this.nestedElement?.hasFocus || this._hasFocus;
+        return !!this.nestedElement?.hasFocus || this.hasFocusState();
     }
 
     set hasFocus(value: boolean) {
-        this._hasFocus = value;
+        this.hasFocusState.set(value);
     }
 
-    private _hasFocus: boolean = false;
+    private readonly hasFocusState = signal(false);
 
     /**
      * Whether the item is disabled.
@@ -232,19 +223,15 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
      * through its default skip predicate, and a signal would always read truthy there — the manager would then
      * skip every item and arrow navigation would stop working entirely.
      */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
 
     set disabled(value: boolean) {
-        if (value !== this._disabled) {
-            this._disabled = value;
-            this.changeDetector.markForCheck();
-        }
+        this.disabledState.set(value);
     }
 
-    private _disabled = false;
+    private readonly disabledState = signal(false);
 
     /**
      * Items are never in the tab order themselves: the navbar host owns the single tab stop and moves focus
@@ -252,6 +239,21 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
      */
     get tabIndex(): number {
         return -1;
+    }
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
     }
 
     constructor() {
@@ -295,8 +297,6 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
         this.hasFocus = true;
 
-        this.changeDetector.markForCheck();
-
         this.elementRef.nativeElement.focus();
     }
 
@@ -306,18 +306,20 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
             return;
         }
 
-        if (origin === 'keyboard') {
-            this.focusMonitor.focusVia(this.elementRef, origin);
+        // A pointer focuses what it lands on by itself; moving the focus for it would surface a focus ring and a
+        // tooltip. Focus set by code still has to reach the item, or the host keeps it while this item is active.
+        const movesFocus = origin !== 'mouse' && origin !== 'touch';
+
+        if (movesFocus) {
+            this.focusMonitor.focusVia(this.elementRef, origin ?? 'program');
         }
 
         if (this.nestedElement) {
-            if (origin === 'keyboard') {
-                // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
-                if ('focusViaKeyboard' in this.nestedElement) {
-                    this.nestedElement.focusViaKeyboard();
-                } else {
-                    this.nestedElement.focus();
-                }
+            // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
+            if (origin === 'keyboard' && 'focusViaKeyboard' in this.nestedElement) {
+                this.nestedElement.focusViaKeyboard();
+            } else if (movesFocus) {
+                this.nestedElement.focus();
             }
 
             this.changeDetector.markForCheck();
@@ -325,8 +327,9 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
             return;
         }
 
-        if (origin === 'keyboard') {
-            this.tooltip?.show();
+        if (movesFocus) {
+            if (origin === 'keyboard') this.tooltip?.show();
+
             this.onFocusHandler();
         }
     }
@@ -336,23 +339,26 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
         // When animations are enabled, Angular may end up removing the option from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the list
         // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until the next time the zone stabilizes.
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.ngZone.run(() => {
-                    this._hasFocus = false;
+        // as not focused until after the next render. An item blurred by its own destruction has nothing to update.
+        if (this.destroyRef.destroyed) return;
 
-                    this.tooltip?.hide();
+        afterNextRender(
+            () => {
+                // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.
+                if (_getFocusedElementPierceShadowDom() === this.elementRef.nativeElement) return;
 
-                    if (this.button()?.hasFocus) {
-                        return;
-                    }
+                this.hasFocusState.set(false);
 
-                    this.onBlur.next({ item: this });
-                });
-            });
+                this.tooltip?.hide();
+
+                if (this.button()?.hasFocus) {
+                    return;
+                }
+
+                this.onBlur.next({ item: this });
+            },
+            { injector: this.injector }
+        );
     }
 
     /** @docs-private */
@@ -622,8 +628,6 @@ export class KbqNavbarItem implements AfterContentInit {
             this.updateDropdown();
 
             this.updateTooltip();
-
-            this.changeDetectorRef.markForCheck();
         });
 
         this.navbarFocusableItem.setTooltip(this.tooltip);
@@ -732,17 +736,6 @@ export class KbqNavbarItem implements AfterContentInit {
      */
     getCollapsibleWidth(): number {
         return Math.max(this.expandedWidth - this.collapsedWidth, 0);
-    }
-
-    /**
-     * Outer width of the projected title, measured once when it initialized.
-     *
-     * @deprecated Unused by the navbar, which collapses items by `getCollapsibleWidth()`: the title alone leaves out
-     * a suffix, the dropdown chevron and the padding an item gives up. Will be removed in the next major release.
-     * @docs-private
-     */
-    getTitleWidth(): number {
-        return this.title()?.outerElementWidth ?? 0;
     }
 
     /** @docs-private */

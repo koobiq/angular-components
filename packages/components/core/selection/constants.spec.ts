@@ -1,10 +1,11 @@
+import type { MockInstance } from 'vitest';
 import { KbqMultipleInput, MultipleMode, resolveMultipleMode } from './constants';
 
 describe('resolveMultipleMode', () => {
-    let warn: jest.SpyInstance;
+    let warn: MockInstance;
 
     beforeEach(() => {
-        warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     });
 
     afterEach(() => warn.mockRestore());

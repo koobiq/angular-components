@@ -45,17 +45,6 @@ export function themeServiceFallback(projectName: string): string[] {
     ];
 }
 
-export function animationsManualSetup(projectName?: string): string[] {
-    return [
-        projectName
-            ? `Could not automatically register 'provideAnimations()' for project '${projectName}'.`
-            : 'Angular animations have to be provided by the application.',
-        "Add `provideAnimations()` from '@angular/platform-browser/animations' to the providers",
-        'of `bootstrapApplication`, otherwise every component that animates (dropdown, select,',
-        'tooltip, toast, datepicker) fails with NG05105 as soon as it opens.'
-    ];
-}
-
 export function ssrSuggestion(): string[] {
     return [
         'This project renders on the server — the default `KbqThemeLocalStorageStore` only',

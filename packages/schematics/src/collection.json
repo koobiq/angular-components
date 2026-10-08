@@ -75,7 +75,7 @@
             "schema": "./migrations/button-state-and-styles/schema.json"
         },
         "form-field-signals": {
-            "description": "Migrates KbqFormField and KbqHint consumers to the signal-based API (content-query and has* reads become calls, KbqPasswordHint.regex writes become .set()), moves [attr.aria-label] on kbq-cleaner to the [aria-label] input, and warns on the lost QueryList API, the removed mixinColor and the new required a11y locale keys",
+            "description": "Migrates KbqFormField and KbqHint consumers to the signal-based API (content-query and has* reads become calls), moves [attr.aria-label] on kbq-cleaner to the [aria-label] input, and warns on the lost QueryList API, the removed mixinColor and the new required a11y locale keys; also moves consumers of the built-in KbqFormFieldControl state to signals and warns on custom implementations and stateChanges",
             "factory": "./migrations/form-field-signals/index",
             "schema": "./migrations/form-field-signals/schema.json"
         },
@@ -95,7 +95,7 @@
             "schema": "./migrations/button-supported-colors/schema.json"
         },
         "mandatory-peer-dependencies": {
-            "description": "Adds @angular/animations, overlayscrollbars and @koobiq/date-adapter, which became mandatory peers of @koobiq/components, to projects whose package manager does not install new peers on upgrade",
+            "description": "Adds overlayscrollbars and @koobiq/date-adapter, which became mandatory peers of @koobiq/components, to projects whose package manager does not install new peers on upgrade",
             "factory": "./migrations/mandatory-peer-dependencies/index",
             "schema": "./migrations/mandatory-peer-dependencies/schema.json"
         },
@@ -133,6 +133,71 @@
             "description": "Rewrites the reworked multiple input of kbq-list-selection and kbq-tree-selection in ts and html",
             "factory": "./migrations/list-tree-multiple-input/index",
             "schema": "./migrations/list-tree-multiple-input/schema.json"
+        },
+        "angular-animations-removal": {
+            "description": "Reports the uses of the animation triggers @koobiq/components exported (fadeAnimation, kbqSelectAnimations, kbqDropdownAnimations, kbqTabsAnimations, KbqSidepanelAnimationState) and of the members that carried an AnimationEvent (KbqPopUp.animationStart/animationDone, the animation members of KbqDropdown, the animation callbacks and state of KbqSidebar, KbqTabBody, KbqToastComponent and the sidepanel and actions panel containers, KbqToastService.animation), and the providers of @angular/animations the components no longer need. Warn-only: what replaces a member depends on what the code did with the event.",
+            "factory": "./migrations/angular-animations-removal/index",
+            "schema": "./migrations/angular-animations-removal/schema.json"
+        },
+        "color-signals": {
+            "description": "Migrates the signal-based color of KbqColorDirective. On every component built on it (button, button group, split button, checkbox, pseudo checkbox, toggle, radio, icon, form field, hint, error, password hints, cleaner, progress bar and spinner, tag), a read of color becomes a call and a write becomes .set(), in code and through template references. Warns on subclasses, which can no longer override the color accessor, and on CanColor.",
+            "factory": "./migrations/color-signals/index",
+            "schema": "./migrations/color-signals/schema.json"
+        },
+        "core-mixins-removal": {
+            "description": "Reports the uses of mixinDisabled, CanDisable, CanDisableCtor, mixinTabIndex, HasTabIndex and HasTabIndexCtor, removed from @koobiq/components/core: they were deprecated, unused inside the library, and logged a dev-mode warning on every instance. Warn-only: a class built on them declares the members itself.",
+            "factory": "./migrations/core-mixins-removal/index",
+            "schema": "./migrations/core-mixins-removal/schema.json"
+        },
+        "option-signals": {
+            "description": "Migrates the signal inputs of KbqOption, KbqOptgroup, KbqOptionActionComponent and KbqTimezoneOption. The option state consumers read through events and models (value, viewValue, disabled, showCheckbox, timezone) stays a property read, so only programmatic writes are reported. A read of disabled on KbqOptgroup and KbqOptionActionComponent becomes a call. Also reports KbqOption.stateChanges, which no longer emits for disabled, the now optional textElement and the changed KbqOptionBase.",
+            "factory": "./migrations/option-signals/index",
+            "schema": "./migrations/option-signals/schema.json"
+        },
+        "input-signals": {
+            "description": "Reports programmatic writes to KbqNumberInput.value, KbqNumberInput.disabled and KbqInput.type, which are signal inputs read through a getter now: a read is unchanged, a write no longer compiles. Warn-only: the write belongs in a template binding or a form control.",
+            "factory": "./migrations/input-signals/index",
+            "schema": "./migrations/input-signals/schema.json"
+        },
+        "list-signals": {
+            "description": "Reports programmatic writes to the signal inputs of KbqListSelection (autoSelect, noUnselectLast, multiple, tabIndex, selectAllHandler, disabled, draggable) and KbqListOption (value, disabled, draggable, showCheckbox): a read is unchanged, a write no longer compiles. KbqListOption.selected and KbqListSelection.multipleMode stay writable. Warn-only.",
+            "factory": "./migrations/list-signals/index",
+            "schema": "./migrations/list-signals/schema.json"
+        },
+        "modal-signals": {
+            "description": "Reports subclasses of KbqModalComponent and direct calls of its ngOnChanges: its decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, and its outputs are <member>Output over the unchanged emitters, so a subclass has to call super.ngOnChanges and override <member>Input or <member>Output instead of redeclaring an @Input or @Output, and a hand-made SimpleChanges is keyed by the <member>Input names. Reads and writes of the members and the options of KbqModalService are unchanged. Warn-only.",
+            "factory": "./migrations/modal-signals/index",
+            "schema": "./migrations/modal-signals/schema.json"
+        },
+        "datepicker-signals": {
+            "description": "Reports subclasses of KbqDatepicker, KbqDatepickerInput, KbqDatepickerToggleIconComponent, KbqCalendar, KbqCalendarHeader and KbqMonthView, and direct calls of their ngOnChanges: their decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, so a subclass has to call super.ngOnChanges and override <member>Input instead of redeclaring an @Input, and a hand-made SimpleChanges is keyed by the <member>Input names. Reads and writes of the members are unchanged. Warn-only.",
+            "factory": "./migrations/datepicker-signals/index",
+            "schema": "./migrations/datepicker-signals/schema.json"
+        },
+        "tabs-signals": {
+            "description": "Reports subclasses of KbqTabGroup, KbqTab, KbqTabHeader, KbqTabNavBar, KbqTabLink, KbqTabLabelWrapper and KbqTabBody, and direct calls of their ngOnChanges: their decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, so a subclass has to call super.ngOnChanges and override <member>Input instead of redeclaring an @Input, and a hand-made SimpleChanges is keyed by the <member>Input names. Their decorator queries are signal queries behind getters (KbqTabGroup.tabs and the items of the header and nav bar stay QueryLists), so a subclass overrides the getter instead of redeclaring the query. Reads and writes of the members are unchanged. Warn-only.",
+            "factory": "./migrations/tabs-signals/index",
+            "schema": "./migrations/tabs-signals/schema.json"
+        },
+        "query-list-signals": {
+            "description": "Reports subclasses that redeclare, and code that writes, the query members of KbqSelect, KbqTreeSelect, KbqAutocomplete, KbqListSelection, KbqListItem, the navbars, KbqRadioGroup, KbqTagList, KbqTag, KbqDropdownItem, KbqTreeSelection and KbqAppSwitcherComponent: they are getters over signal queries now that keep their types, a QueryList whose changes emit as before or an ElementRef, so a read is unchanged while a redeclaration as a field or a write no longer compiles. Also reports a KbqCodeBlock subclass reading tabLinkTemplate, a protected signal now. Warn-only.",
+            "factory": "./migrations/query-list-signals/index",
+            "schema": "./migrations/query-list-signals/schema.json"
+        },
+        "v21-upgrade": {
+            "description": "Removes the uses of the APIs deprecated before 21.0.0 and removed in it. Rewrites the renamed inputs and aliases: KbqCodeBlock canLoad/codeFiles, KbqIconButton small and its kbq-icon-button_small class, the unprefixed KbqPopoverTrigger inputs, kbq-dl minWidth, KbqFilterBarRefresher, KbqThemeSelector/KbqThemeNames.Default, KbqDefaultThemes and KbqTheme; drops kbqPipeMinWidth and the longTitle of kbq-navbar-brand. Reports the rest with the replacement to use: the legacy ThemeService, the old password hint engine (KbqPasswordHint, PasswordRules, regExpPasswordValidator, hasPasswordStrengthError, KbqInputPassword.checkRules), the unused members of KbqFormField, the ControlValueAccessor members of KbqCheckbox and KbqToggleComponent with KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR, the validation members of the tag input, KbqDropdown triggerWidth, KbqSelect/KbqTreeSelect offsetY, AUTOCOMPLETE_PANEL_HEIGHT, KbqFilterBar.changes, the navbar title measurement, the ellipsis center resizeStream, getOptionScrollPosition and getKbqPopoverInvalidPositionError.",
+            "factory": "./migrations/v21-upgrade/index",
+            "schema": "./migrations/v21-upgrade/schema.json"
+        },
+        "signal-inputs-subclasses": {
+            "description": "Reports subclasses of KbqCheckbox, KbqToggleComponent, KbqRadioGroup, KbqRadioButton, KbqButtonToggleGroup, KbqButtonToggle, KbqButton, KbqButtonGroupRoot, KbqSplitButton, KbqIcon, KbqIconButton, KbqIconItem and KbqSearchExpandable, of the pop-up triggers (tooltip, popover, popover confirm, app switcher, notification center, password toggle, ellipsis center), and of the tags, file uploads, accordion item, navbar item, notification item and sidebar: their decorator inputs are signal inputs named <member>Input now, handed to the unchanged member from ngOnChanges, so a subclass has to call super.ngOnChanges and override <member>Input instead of redeclaring an @Input. Reads and writes of the members are unchanged. Also reports a pop-up panel that re-declares elementRef with @ViewChild: KbqPopUp.elementRef is a protected getter now. Warn-only.",
+            "factory": "./migrations/signal-inputs-subclasses/index",
+            "schema": "./migrations/signal-inputs-subclasses/schema.json"
+        },
+        "zoneless-change-detection": {
+            "description": "Reports the uses of MockNgZone and its simulateZoneExit(), removed from @koobiq/components/core: the library no longer depends on zone.js and nothing in it waits for NgZone.onStable, so a spec renders with fixture.detectChanges() or waits with fixture.whenStable() instead. Warn-only: which of the two depends on what the spec waited for.",
+            "factory": "./migrations/zoneless-change-detection/index",
+            "schema": "./migrations/zoneless-change-detection/schema.json"
         },
         "title-encapsulation": {
             "description": "Reports the members of KbqTitleDirective that stopped being public in the title review — the removed resizeStream Subject (the directive now injects the CDK SharedResizeObserver and re-measures container resizes on its own, so a manual push has no counterpart), the now-private hasOnlyText, the removed ngOnDestroy declaration that a subclass calling super.ngOnDestroy() depended on, and the child/parent/isHorizontalOverflown/isVerticalOverflown/handleElementEnter/hideTooltip measurement members that became protected. Warn-only: each member is gone or hidden outright, so there is no expression to rewrite a call site to.",
@@ -185,22 +250,22 @@
             "schema": "./migrations/tooltip-pointer-events-and-types/schema.json"
         },
         "toast-stack-and-defaults": {
-            "description": "Reports the breaking parts of the toast review — the members KbqToastComponent lost when it moved from KbqToastService to the KBQ_TOAST_STACK token, the narrowed animation subject and showTemplate context — and notes that the data passed to show() is no longer written to, so its style and icon defaults are resolved inside the toast",
+            "description": "Reports the breaking parts of the toast review — the members KbqToastComponent lost when it moved from KbqToastService to the KBQ_TOAST_STACK token, the removed animation subject and the showTemplate context — and notes that the data passed to show() is no longer written to, so its style and icon defaults are resolved inside the toast",
             "factory": "./migrations/toast-stack-and-defaults/index",
             "schema": "./migrations/toast-stack-and-defaults/schema.json"
         },
         "select-signal-inputs": {
-            "description": "Reports the KbqSelect members that became signal inputs or stopped being public in the select review: hiddenItemsText (accessor pair to InputSignal<string | undefined>, so a write has to become the binding and a read a call), hiddenItemsTextFormatter (an overridable method to an input holding the function), the now-protected overlayDir and triggerRect, the Event instead of any on onRemoveMatcherItem, and the removed selectEvents constant together with the core/select/events module it lived in. Every input kept its alias, so no template needs migrating. Warn-only. Notes the parts with no call site: multiple mode orders the selection by the panel instead of by a default comparator that subtracted the values and never produced that order, the untorn-down locale subscription that retained every destroyed select is gone, and the select carries combobox/listbox/option ARIA.",
+            "description": "Reports the KbqSelect members that became signal inputs or stopped being public in the select review: hiddenItemsText (accessor pair to InputSignal<string | undefined>, so a write has to become the binding and a read a call), hiddenItemsTextFormatter (an overridable method to an input holding the function), the now-protected overlayDir and triggerRect, the Event instead of any on onRemoveMatcherItem, and the removed selectEvents constant together with the core/select/events module it lived in. Every input kept its alias, so no template needs migrating. Warn-only. Notes the parts with no call site: multiple mode orders the selection by the panel instead of by a default comparator that subtracted the values and never produced that order, the untorn-down locale subscription that retained every destroyed select is gone, and the select carries combobox/listbox/option ARIA. Also reports reads of the now-signal hasBackdrop, compareWith and searchMinOptionsThreshold, and assignments to them and to multiple, tabIndex and selectAllHandler, which are signal inputs now.",
             "factory": "./migrations/select-signal-inputs/index",
             "schema": "./migrations/select-signal-inputs/schema.json"
         },
         "tree-select-signals": {
-            "description": "Reports the KbqTreeSelect members that became signal-backed, protected or disappeared in the tree-select review: the removed valueChange output (declared as the other half of a two-way binding on a value input that does not exist, and never emitted, so a (valueChange) binding never fired), the removed getPanelClasses/getPanelTheme/isRtl/transformOrigin template helpers, hiddenItemsText and hiddenItemsTextFormatter as signal inputs, hiddenItems as a WritableSignal and colorForState as a computed, and the options/tags/overlayDir/triggerRect/panelDoneAnimatingStream/changeDetectorRef plumbing that became protected. Warn-only. Notes the parts with no call site: KbqTreeSelectChange is generic with a typed value, the embedded tree is initialised through KbqTreeSelection.initializeForEmbedding() instead of a second manual ngAfterContentInit() that left duplicate subscriptions on the search-filtering hot path, the dead { provide: KbqTree, useExisting: KbqTreeSelect } provider is gone, and the component renders a host id so the form field label no longer dangles.",
+            "description": "Reports the KbqTreeSelect members that became signal-backed, protected or disappeared in the tree-select review: the removed valueChange output (declared as the other half of a two-way binding on a value input that does not exist, and never emitted, so a (valueChange) binding never fired), the removed getPanelClasses/getPanelTheme/isRtl/transformOrigin template helpers, hiddenItemsText and hiddenItemsTextFormatter as signal inputs, hiddenItems as a WritableSignal and colorForState as a computed, and the options/tags/overlayDir/triggerRect/panelDoneAnimatingStream/changeDetectorRef plumbing that became protected. Warn-only. Notes the parts with no call site: KbqTreeSelectChange is generic with a typed value, the embedded tree is initialised through KbqTreeSelection.initializeForEmbedding() instead of a second manual ngAfterContentInit() that left duplicate subscriptions on the search-filtering hot path, the dead { provide: KbqTree, useExisting: KbqTreeSelect } provider is gone, and the component renders a host id so the form field label no longer dangles. Also reports reads of the now-signal searchMinOptionsThreshold, and assignments to it and to multiple, autoSelect, tabIndex and selectAllHandler, which are signal inputs now.",
             "factory": "./migrations/tree-select-signals/index",
             "schema": "./migrations/tree-select-signals/schema.json"
         },
         "tree-signals": {
-            "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws",
+            "description": "Reports the six members of the tree that became read-only — KbqTreeNodeToggle.disabled, KbqTreeBase.nodeDefs, KbqTreeNodePadding.indent/indentUnits, KbqTreeNodeToggleBaseDirective.recursive and KbqTreeOption.onFocus/onBlur — with the call sites that write or read them; assigning any of them now throws Also reports programmatic writes to the KbqTreeSelection and KbqTreeOption inputs that are signal inputs read through a getter now.",
             "factory": "./migrations/tree-signals/index",
             "schema": "./migrations/tree-signals/schema.json"
         },
@@ -255,7 +320,7 @@
             "schema": "./migrations/link-signals/schema.json"
         },
         "code-block-signals": {
-            "description": "Migrates KbqCodeBlock consumers to its finished signal-based API: nothing on the component is a decorator input any more. Rewrites reads of softWrap, viewAll, canDownload, files, activeFileIndex and hideTabs to calls on receivers typed KbqCodeBlock, including reads through template reference variables on <kbq-code-block> (external and inline templates), and rewrites a plain write of any of them to .set(...) - all six are WritableSignals over a backing input, because ModelOptions carries no transform and every one of them needs booleanAttribute or numberAttribute to keep a valueless attribute working. Warns - without auto-fixing - on compound assignments and increments, which would need the receiver spelled twice, on the backing inputs and the deprecated canLoad and codeFiles aliases, which can no longer be written, and on reads through a signal query, which need two calls. Reports that maxHeight now reports number | undefined and never NaN, that KbqCodeBlockHighlight.file is a readable required input instead of a write-only setter, that hideTabs reports what was bound while tabsHidden() is what the header does, that canLoad and codeFiles now fill in for canDownload and files rather than writing into them, and that an out-of-range activeFileIndex renders the first file while an empty files renders no code instead of throwing.",
+            "description": "Migrates KbqCodeBlock consumers to its finished signal-based API: nothing on the component is a decorator input any more. Rewrites reads of softWrap, viewAll, canDownload, files, activeFileIndex and hideTabs to calls on receivers typed KbqCodeBlock, including reads through template reference variables on <kbq-code-block> (external and inline templates), and rewrites a plain write of any of them to .set(...) - all six are WritableSignals over a backing input, because ModelOptions carries no transform and every one of them needs booleanAttribute or numberAttribute to keep a valueless attribute working. Warns - without auto-fixing - on compound assignments and increments, which would need the receiver spelled twice, on the backing inputs, which can no longer be written, and on reads through a signal query, which need two calls. Reports that maxHeight now reports number | undefined and never NaN, that KbqCodeBlockHighlight.file is a readable required input instead of a write-only setter, that hideTabs reports what was bound while tabsHidden() is what the header does, and that an out-of-range activeFileIndex renders the first file while an empty files renders no code instead of throwing.",
             "factory": "./migrations/code-block-signals/index",
             "schema": "./migrations/code-block-signals/schema.json"
         },
@@ -300,7 +365,7 @@
             "schema": "./migrations/empty-state-error-color/schema.json"
         },
         "sidepanel-non-modal-behavior": {
-            "description": "Reports what the sidepanel review changed about the panel's effect on the page around it: a sidepanel opened with hasBackdrop: false no longer gets CDK's BlockScrollStrategy, which pinned the document with position: fixed and contradicted the non-modal mode it is named after (KbqSidepanelConfig gained scrollStrategy for the panels that want the page frozen); trapFocusAutoCapture defaults to true in both modalities instead of following hasBackdrop, so a non-modal panel captures focus on open and returns it to the trigger on close; the container renders role=\"dialog\", aria-modal and an aria-labelledby pointing at the kbq-sidepanel-header title, and a modal sidepanel marks the rest of the page aria-hidden; KbqSidepanelModule no longer swaps FocusTrapFactory for ConfigurableFocusTrapFactory application-wide; and the unstyled kbq-sidepanel-overlay class is no longer stamped on the overlay host. Warn-only. Notes the parts with no call site: a component-provided KbqSidepanelService closes the panels it opened when destroyed, closeAll() no longer reverses the live stack, a second close() no longer overwrites the first result, an outside click only closes the same-position stack, KbqSidepanelService is providedIn root, and KbqSidepanelAnimationState is exported from the entry point.",
+            "description": "Reports what the sidepanel review changed about the panel's effect on the page around it: a sidepanel opened with hasBackdrop: false no longer gets CDK's BlockScrollStrategy, which pinned the document with position: fixed and contradicted the non-modal mode it is named after (KbqSidepanelConfig gained scrollStrategy for the panels that want the page frozen); trapFocusAutoCapture defaults to true in both modalities instead of following hasBackdrop, so a non-modal panel captures focus on open and returns it to the trigger on close; the container renders role=\"dialog\", aria-modal and an aria-labelledby pointing at the kbq-sidepanel-header title, and a modal sidepanel marks the rest of the page aria-hidden; KbqSidepanelModule no longer swaps FocusTrapFactory for ConfigurableFocusTrapFactory application-wide; and the unstyled kbq-sidepanel-overlay class is no longer stamped on the overlay host. Warn-only. Notes the parts with no call site: a component-provided KbqSidepanelService closes the panels it opened when destroyed, closeAll() no longer reverses the live stack, a second close() no longer overwrites the first result, an outside click only closes the same-position stack, and KbqSidepanelService is providedIn root.",
             "factory": "./migrations/sidepanel-non-modal-behavior/index",
             "schema": "./migrations/sidepanel-non-modal-behavior/schema.json"
         },

@@ -29,7 +29,7 @@ export class KbqGutterDirective implements OnInit {
     set direction(direction: Direction);
     // (undocumented)
     dragged: boolean;
-    // Warning: (ae-forgotten-export) The symbol "IPoint" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IPoint" needs to be exported by the entry point koobiq-components-splitter-deprecated.d.ts
     //
     // (undocumented)
     getPosition(): IPoint;
@@ -107,7 +107,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     addArea(area: KbqSplitterAreaDirective): void;
     // (undocumented)
     areaRefs: QueryList<KbqSplitterAreaDirective>;
-    // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "IArea" needs to be exported by the entry point koobiq-components-splitter-deprecated.d.ts
     //
     // (undocumented)
     areas: IArea[];

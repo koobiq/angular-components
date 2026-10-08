@@ -12,9 +12,8 @@ import {
     Type,
     ViewChild
 } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     dispatchMouseEvent,
     KBQ_TITLE_TEXT_REF,
@@ -24,6 +23,7 @@ import {
     PopUpTriggers
 } from '@koobiq/components/core';
 import { Observable, Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KbqTitleDirective } from './title.directive';
 
 /** Drives the directive's resize path by hand — the real observer never emits under JSDOM. */
@@ -45,7 +45,7 @@ const getResizeObserver = (): MockResizeObserver => TestBed.inject(SharedResizeO
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers
     }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
@@ -62,6 +62,8 @@ const getTooltipElement = (): Element | null =>
     TestBed.inject(OverlayContainer).getContainerElement().querySelector('.kbq-tooltip');
 
 describe('KbqTitleDirective', () => {
+    afterEach(() => vi.useRealTimers());
+
     describe('creation', () => {
         it('should create the directive', () => {
             const { debugElement } = createComponent(SimpleTitleComponent);
@@ -126,8 +128,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
 
             expect(directive['isHorizontalOverflown']).toBe(true);
         });
@@ -137,8 +139,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(200);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(100);
 
             expect(directive['isHorizontalOverflown']).toBe(false);
         });
@@ -150,8 +152,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetHeight', 'get').mockReturnValue(30);
-            jest.spyOn(el, 'scrollHeight', 'get').mockReturnValue(60);
+            vi.spyOn(el, 'offsetHeight', 'get').mockReturnValue(30);
+            vi.spyOn(el, 'scrollHeight', 'get').mockReturnValue(60);
 
             expect(directive['isVerticalOverflown']).toBe(true);
         });
@@ -161,8 +163,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetHeight', 'get').mockReturnValue(60);
-            jest.spyOn(el, 'scrollHeight', 'get').mockReturnValue(30);
+            vi.spyOn(el, 'offsetHeight', 'get').mockReturnValue(60);
+            vi.spyOn(el, 'scrollHeight', 'get').mockReturnValue(30);
 
             expect(directive['isVerticalOverflown']).toBe(false);
         });
@@ -174,8 +176,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetHeight', 'get').mockReturnValue(10);
-            jest.spyOn(el, 'scrollHeight', 'get').mockReturnValue(20);
+            vi.spyOn(el, 'offsetHeight', 'get').mockReturnValue(10);
+            vi.spyOn(el, 'scrollHeight', 'get').mockReturnValue(20);
 
             expect(directive.isOverflown).toBe(true);
         });
@@ -185,8 +187,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
 
             expect(directive.isOverflown).toBe(true);
         });
@@ -196,7 +198,7 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             // JSDOM returns 0 for all sizing properties — triggers the special-case branch.
             // hasOnlyText === true → creates a wrapper span and compares getBoundingClientRect widths.
-            const spy = jest
+            const spy = vi
                 .spyOn(Element.prototype, 'getBoundingClientRect')
                 .mockReturnValueOnce({ width: 119, height: 20, top: 0, left: 0, right: 119, bottom: 20 } as DOMRect)
                 .mockReturnValueOnce({ width: 130, height: 20, top: 0, left: 0, right: 130, bottom: 20 } as DOMRect);
@@ -213,7 +215,7 @@ describe('KbqTitleDirective', () => {
             const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
             const textEl = debugElement.query(By.css('.text-el')).nativeElement;
 
-            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
                 width: 100,
                 height: 20,
                 top: 0,
@@ -221,7 +223,7 @@ describe('KbqTitleDirective', () => {
                 right: 100,
                 bottom: 20
             } as DOMRect);
-            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
                 width: 150,
                 height: 20,
                 top: 0,
@@ -238,10 +240,10 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             // JSDOM scrollWidth === 0 → enters the special-case branch; hasOnlyText === true → wrapper-span path.
             // With `clip` a <1px overflow is invisible, so it must not be reported as truncation.
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
-            const rectSpy = jest
+            const rectSpy = vi
                 .spyOn(Element.prototype, 'getBoundingClientRect')
                 .mockReturnValueOnce({ width: 124, height: 20, top: 0, left: 0, right: 124, bottom: 20 } as DOMRect)
                 .mockReturnValueOnce({
@@ -263,10 +265,10 @@ describe('KbqTitleDirective', () => {
             const { debugElement } = createComponent(SimpleTitleComponent);
             const directive = getTitleDirective(debugElement);
             // With `ellipsis` even a sub-pixel overflow drops the trailing glyph for `…`, so the text IS truncated.
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockReturnValue({ textOverflow: 'ellipsis' } as CSSStyleDeclaration);
-            const rectSpy = jest
+            const rectSpy = vi
                 .spyOn(Element.prototype, 'getBoundingClientRect')
                 .mockReturnValueOnce({ width: 124, height: 20, top: 0, left: 0, right: 124, bottom: 20 } as DOMRect)
                 .mockReturnValueOnce({
@@ -287,10 +289,10 @@ describe('KbqTitleDirective', () => {
         it('should be overflown for a >= 1px clip even without ellipsis', () => {
             const { debugElement } = createComponent(SimpleTitleComponent);
             const directive = getTitleDirective(debugElement);
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
-            const rectSpy = jest
+            const rectSpy = vi
                 .spyOn(Element.prototype, 'getBoundingClientRect')
                 .mockReturnValueOnce({ width: 124, height: 20, top: 0, left: 0, right: 124, bottom: 20 } as DOMRect)
                 .mockReturnValueOnce({ width: 130, height: 20, top: 0, left: 0, right: 130, bottom: 20 } as DOMRect);
@@ -307,11 +309,11 @@ describe('KbqTitleDirective', () => {
             const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
             const textEl = debugElement.query(By.css('.text-el')).nativeElement;
             // scrollWidth === 0 (JSDOM) → enters the branch; hasOnlyText === false → parent/child rect comparison.
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
 
-            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
                 width: 100,
                 height: 20,
                 top: 0,
@@ -319,7 +321,7 @@ describe('KbqTitleDirective', () => {
                 right: 100,
                 bottom: 20
             } as DOMRect);
-            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
                 width: 100.4,
                 height: 20,
                 top: 0,
@@ -338,11 +340,11 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
             const textEl = debugElement.query(By.css('.text-el')).nativeElement;
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockReturnValue({ textOverflow: 'ellipsis' } as CSSStyleDeclaration);
 
-            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
                 width: 100,
                 height: 20,
                 top: 0,
@@ -350,7 +352,7 @@ describe('KbqTitleDirective', () => {
                 right: 100,
                 bottom: 20
             } as DOMRect);
-            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
                 width: 100.4,
                 height: 20,
                 top: 0,
@@ -372,14 +374,14 @@ describe('KbqTitleDirective', () => {
             // Mirrors kbq-tree-option: `text-overflow: ellipsis` lives on the wrapping #kbqTitleContainer
             // (the parent), while the measured #kbqTitleText child keeps the default `clip`. A sub-pixel
             // overflow still renders a visible `…` on the container, so it MUST be reported as truncation.
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockImplementation(
                     (element: Element) =>
                         ({ textOverflow: element === containerEl ? 'ellipsis' : 'clip' }) as CSSStyleDeclaration
                 );
 
-            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
                 width: 100,
                 height: 20,
                 top: 0,
@@ -387,7 +389,7 @@ describe('KbqTitleDirective', () => {
                 right: 100,
                 bottom: 20
             } as DOMRect);
-            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
                 width: 100.4,
                 height: 20,
                 top: 0,
@@ -409,11 +411,11 @@ describe('KbqTitleDirective', () => {
             // The other clip tests use a 0.4 fraction that rounds DOWN (124.4 -> 124 == 124 -> not overflown).
             // Here the widths round to different integers (124 vs 125), i.e. a whole visible pixel of clip,
             // so it MUST be reported. Pins the Math.round boundary of isWidthOverflown.
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
 
-            jest.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(containerEl, 'getBoundingClientRect').mockReturnValue({
                 width: 124,
                 height: 20,
                 top: 0,
@@ -421,7 +423,7 @@ describe('KbqTitleDirective', () => {
                 right: 124,
                 bottom: 20
             } as DOMRect);
-            jest.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
+            vi.spyOn(textEl, 'getBoundingClientRect').mockReturnValue({
                 width: 124.5,
                 height: 20,
                 top: 0,
@@ -442,8 +444,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
             directive['handleElementEnter']();
 
             expect(directive.disabled).toBe(false);
@@ -469,8 +471,8 @@ describe('KbqTitleDirective', () => {
             fixture.componentInstance.tooltipDisabled = true;
             fixture.detectChanges();
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
             directive['handleElementEnter']();
 
             // The hover used to write its own verdict through the same setter and take the suppression with it.
@@ -502,8 +504,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
             directive['handleElementEnter']();
             expect(directive.disabled).toBe(false);
 
@@ -518,8 +520,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
             dispatchMouseEvent(el, 'mouseenter');
 
             expect(directive.disabled).toBe(false);
@@ -532,8 +534,8 @@ describe('KbqTitleDirective', () => {
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
             dispatchMouseEvent(el, 'mouseenter');
             expect(directive.disabled).toBe(false);
 
@@ -544,29 +546,33 @@ describe('KbqTitleDirective', () => {
     });
 
     describe('resize handling', () => {
-        it('should update disabled=true after debounceTime(100) on a container resize when not overflown', fakeAsync(() => {
+        it('should update disabled=true after debounceTime(100) on a container resize when not overflown', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
             const directive = getTitleDirective(debugElement);
 
             // JSDOM defaults: all sizing = 0 → isOverflown = false → disabled = !false = true
             getResizeObserver().changes.next([]);
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
 
             expect(directive.disabled).toBe(true);
-        }));
+        });
 
-        it('should set disabled=false after resize when content is overflown', fakeAsync(() => {
+        it('should set disabled=false after resize when content is overflown', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
             getResizeObserver().changes.next([]);
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
 
             expect(directive.disabled).toBe(false);
-        }));
+        });
 
         it('should observe the measured container instead of registering a window listener', () => {
             const { debugElement } = createComponent(WithRefsTitleComponent, [provideMockResizeObserver()]);
@@ -580,28 +586,32 @@ describe('KbqTitleDirective', () => {
 
     describe('contentObserver subscription', () => {
         let contentObserverSubject: Subject<MutationRecord[]>;
-        let fakeContentObserver: { observe: jest.Mock };
+        let fakeContentObserver: { observe: Mock };
 
         beforeEach(() => {
             contentObserverSubject = new Subject<MutationRecord[]>();
-            fakeContentObserver = { observe: jest.fn().mockReturnValue(contentObserverSubject.asObservable()) };
+            fakeContentObserver = { observe: vi.fn().mockReturnValue(contentObserverSubject.asObservable()) };
         });
 
-        it('should set disabled=true when content changes and there is no overflow', fakeAsync(() => {
+        it('should set disabled=true when content changes and there is no overflow', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(ContentObserverTitleComponent, [
                 { provide: ContentObserver, useValue: fakeContentObserver }
             ]);
             const directive = getTitleDirective(debugElement);
 
             // throttleTime(100) leading-edge emits synchronously on the first next(),
-            // so tick(0) only flushes microtasks — no need for tick(100).
+            // so advancing by 0 only flushes microtasks — no need to advance by 100.
             contentObserverSubject.next([]);
-            tick(0);
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(directive.disabled).toBe(true);
-        }));
+        });
 
-        it('should update content to viewValue when content changes', fakeAsync(() => {
+        it('should update content to viewValue when content changes', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(ContentObserverTitleComponent, [
                 { provide: ContentObserver, useValue: fakeContentObserver }
             ]);
@@ -610,51 +620,57 @@ describe('KbqTitleDirective', () => {
 
             el.textContent = ' Updated Text ';
             contentObserverSubject.next([]);
-            tick(0);
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(directive.content).toBe('Updated Text');
-        }));
+        });
     });
 
     describe('keyboard focus', () => {
         /** Mocks the host as clipped, so the tooltip is allowed to open at all. */
         const makeOverflown = (el: HTMLElement) => {
-            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
         };
 
-        it('should open the tooltip on keyboard focus of overflown content', fakeAsync(() => {
+        it('should open the tooltip on keyboard focus of overflown content', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(FocusTitleComponent);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
             makeOverflown(el);
             TestBed.inject(FocusMonitor).focusVia(el, 'keyboard');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             // enterDelay
-            tick(400);
+            await vi.advanceTimersByTimeAsync(400);
 
             expect(getTooltipElement()).not.toBeNull();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should enable but not open the tooltip when the content fits', fakeAsync(() => {
+        it('should enable but not open the tooltip when the content fits', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(FocusTitleComponent);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
             // JSDOM defaults: all sizing = 0 → not overflown
             TestBed.inject(FocusMonitor).focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
 
             expect(directive.disabled).toBe(true);
             expect(getTooltipElement()).toBeNull();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should hide the tooltip when focus arrives from a non-keyboard origin', fakeAsync(() => {
+        it('should hide the tooltip when focus arrives from a non-keyboard origin', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(FocusTitleComponent);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
@@ -662,18 +678,20 @@ describe('KbqTitleDirective', () => {
 
             makeOverflown(el);
             focusMonitor.focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
             expect(getTooltipElement()).not.toBeNull();
 
             focusMonitor.focusVia(el, 'mouse');
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(directive.disabled).toBe(true);
-        }));
+        });
 
-        it('should hide the tooltip on blur', fakeAsync(() => {
+        it('should hide the tooltip on blur', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(FocusTitleComponent);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
@@ -681,17 +699,19 @@ describe('KbqTitleDirective', () => {
 
             makeOverflown(el);
             focusMonitor.focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
 
             el.blur();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(directive.disabled).toBe(true);
-        }));
+        });
 
-        it('should open again on keyboard focus after a pop-up on the same host has closed', fakeAsync(() => {
+        it('should open again on keyboard focus after a pop-up on the same host has closed', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(SiblingPopupTitleComponent);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
             const popup = debugElement.query(By.directive(SiblingPopup)).injector.get(SiblingPopup);
@@ -699,30 +719,30 @@ describe('KbqTitleDirective', () => {
 
             makeOverflown(el);
             focusMonitor.focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
             expect(getTooltipElement()).not.toBeNull();
 
             // The pop-up takes over the anchor, which mutes the tooltip.
             popup.open();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             popup.close();
             popup.detach();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(getTooltipElement()).toBeNull();
 
             // A keyboard-only user leaves and comes back. No pointer ever touches the host, so `mouseleave`
             // never fires and the blur is the only signal that can release the mute.
             el.blur();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             focusMonitor.focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
 
             expect(getTooltipElement()).not.toBeNull();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('template refs (#kbqTitleText and #kbqTitleContainer)', () => {
@@ -739,8 +759,8 @@ describe('KbqTitleDirective', () => {
             const containerEl = debugElement.query(By.css('.container-el')).nativeElement;
             const textEl = debugElement.query(By.css('.text-el')).nativeElement;
 
-            jest.spyOn(containerEl, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(textEl, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(containerEl, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(textEl, 'scrollWidth', 'get').mockReturnValue(200);
 
             expect(directive['isHorizontalOverflown']).toBe(true);
         });
@@ -755,117 +775,131 @@ describe('KbqTitleDirective', () => {
 
             // parentTextElement is not provided → parent falls back to host elementRef.
             // textElement IS provided → child must be the inner span.
-            jest.spyOn(hostEl, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(innerEl, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(hostEl, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(innerEl, 'scrollWidth', 'get').mockReturnValue(200);
 
             expect(directive['isHorizontalOverflown']).toBe(true);
         });
     });
 
     describe('tooltip integration', () => {
-        it('should open tooltip for overflown text', fakeAsync(() => {
+        it('should open tooltip for overflown text', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#overflow-text')).nativeElement;
 
-            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
-            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
+            vi.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
+            vi.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).not.toBeNull();
-        }));
+        });
 
-        it('should let clicks reach whatever the hint floats over', fakeAsync(() => {
+        it('should let clicks reach whatever the hint floats over', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#overflow-text')).nativeElement;
 
-            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
-            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
+            vi.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
+            vi.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()!.closest('.cdk-overlay-pane')!.classList).toContain(
                 'cdk-overlay-pane_ignore-pointer-events'
             );
-        }));
+        });
 
-        it('should not open tooltip for wide parent with short text', fakeAsync(() => {
+        it('should not open tooltip for wide parent with short text', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#wide-text')).nativeElement;
 
-            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(600);
-            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(100);
+            vi.spyOn(host, 'offsetWidth', 'get').mockReturnValue(600);
+            vi.spyOn(host, 'scrollWidth', 'get').mockReturnValue(100);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).toBeNull();
-        }));
+        });
 
-        it('should open tooltip for overflown text with inline element', fakeAsync(() => {
+        it('should open tooltip for overflown text with inline element', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#inline-overflow')).nativeElement;
 
-            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
-            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
+            vi.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
+            vi.spyOn(host, 'scrollWidth', 'get').mockReturnValue(300);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).not.toBeNull();
-        }));
+        });
 
-        it('should open tooltip for overflown complex container', fakeAsync(() => {
+        it('should open tooltip for overflown complex container', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(ComplexTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#complex-overflow')).nativeElement;
             const parent = fixture.debugElement.query(By.css('#complex-overflow .parent')).nativeElement;
             const child = fixture.debugElement.query(By.css('#complex-overflow .child')).nativeElement;
 
-            jest.spyOn(parent, 'offsetWidth', 'get').mockReturnValue(150);
-            jest.spyOn(child, 'scrollWidth', 'get').mockReturnValue(300);
+            vi.spyOn(parent, 'offsetWidth', 'get').mockReturnValue(150);
+            vi.spyOn(child, 'scrollWidth', 'get').mockReturnValue(300);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).not.toBeNull();
-        }));
+        });
 
-        it('should not open tooltip for wide complex container with short text', fakeAsync(() => {
+        it('should not open tooltip for wide complex container with short text', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(ComplexTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#complex-wide')).nativeElement;
             const parent = fixture.debugElement.query(By.css('#complex-wide .parent')).nativeElement;
             const child = fixture.debugElement.query(By.css('#complex-wide .child')).nativeElement;
 
-            jest.spyOn(parent, 'offsetWidth', 'get').mockReturnValue(600);
-            jest.spyOn(child, 'scrollWidth', 'get').mockReturnValue(100);
+            vi.spyOn(parent, 'offsetWidth', 'get').mockReturnValue(600);
+            vi.spyOn(child, 'scrollWidth', 'get').mockReturnValue(100);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).toBeNull();
-        }));
+        });
 
-        it('should open tooltip for vertical overflow', fakeAsync(() => {
+        it('should open tooltip for vertical overflow', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(VerticalOverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('.vertical-overflow')).nativeElement;
 
-            jest.spyOn(host, 'offsetHeight', 'get').mockReturnValue(40);
-            jest.spyOn(host, 'scrollHeight', 'get').mockReturnValue(80);
+            vi.spyOn(host, 'offsetHeight', 'get').mockReturnValue(40);
+            vi.spyOn(host, 'scrollHeight', 'get').mockReturnValue(80);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).not.toBeNull();
-        }));
+        });
     });
 
     describe('explicit content input ([kbq-title])', () => {
@@ -890,58 +924,64 @@ describe('KbqTitleDirective', () => {
             expect(directive.content).toBe('Hello World');
         });
 
-        it('should render the TemplateRef content inside the tooltip on overflow', fakeAsync(() => {
+        it('should render the TemplateRef content inside the tooltip on overflow', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(TemplateContentTitleComponent);
             const host = fixture.debugElement.query(By.css('#tpl-overflow')).nativeElement;
             const textEl = fixture.debugElement.query(By.css('.tpl-text')).nativeElement;
 
-            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
-            jest.spyOn(textEl, 'scrollWidth', 'get').mockReturnValue(300);
+            vi.spyOn(host, 'offsetWidth', 'get').mockReturnValue(150);
+            vi.spyOn(textEl, 'scrollWidth', 'get').mockReturnValue(300);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const tooltip = getTooltipElement();
 
             expect(tooltip).not.toBeNull();
             expect(tooltip?.textContent).toContain('Custom tooltip');
-        }));
+        });
 
-        it('should push a rebound value into an already open tooltip', fakeAsync(() => {
+        it('should push a rebound value into an already open tooltip', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(BoundContentTitleComponent);
             const host = fixture.debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(host, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(host, 'scrollWidth', 'get').mockReturnValue(200);
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(getTooltipElement()?.textContent).toContain('First');
 
             fixture.componentInstance.tooltipText = 'Second';
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()?.textContent).toContain('Second');
-        }));
+        });
 
-        it('should re-evaluate the overflow verdict when the bound value changes', fakeAsync(() => {
+        it('should re-evaluate the overflow verdict when the bound value changes', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(BoundContentTitleComponent);
             const directive = getTitleDirective(fixture.debugElement);
             const host = fixture.debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
-            jest.spyOn(host, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(host, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(host, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(host, 'scrollWidth', 'get').mockReturnValue(200);
 
             fixture.componentInstance.tooltipText = 'Second';
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(directive.content).toBe('Second');
             expect(directive.disabled).toBe(false);
-        }));
+        });
     });
 
     describe('multiple #kbqTitleText children', () => {
@@ -951,8 +991,8 @@ describe('KbqTitleDirective', () => {
             const parentEl = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
             const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
 
-            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(100);
-            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(200);
+            vi.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(100);
+            vi.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(200);
 
             expect(directive.isOverflown).toBe(true);
         });
@@ -964,9 +1004,9 @@ describe('KbqTitleDirective', () => {
             const nameEl = debugElement.query(By.css('.child-name')).nativeElement;
             const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
 
-            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(300);
-            jest.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(100);
-            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(150);
+            vi.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(300);
+            vi.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(100);
+            vi.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(150);
 
             expect(directive.isOverflown).toBe(false);
         });
@@ -979,9 +1019,9 @@ describe('KbqTitleDirective', () => {
 
             // A filter-bar pipe at its max width: the 255px value fits the 296px parent on its own, but the
             // name keeps 55px of it, so the value's own box is 237px wide.
-            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(296);
-            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(255);
-            jest.spyOn(valueEl, 'clientWidth', 'get').mockReturnValue(237);
+            vi.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(296);
+            vi.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(255);
+            vi.spyOn(valueEl, 'clientWidth', 'get').mockReturnValue(237);
 
             expect(directive.isOverflown).toBe(true);
         });
@@ -993,11 +1033,11 @@ describe('KbqTitleDirective', () => {
             const nameEl = debugElement.query(By.css('.child-name')).nativeElement;
             const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
 
-            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(296);
-            jest.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(55);
-            jest.spyOn(nameEl, 'clientWidth', 'get').mockReturnValue(55);
-            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(237);
-            jest.spyOn(valueEl, 'clientWidth', 'get').mockReturnValue(237);
+            vi.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(296);
+            vi.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(55);
+            vi.spyOn(nameEl, 'clientWidth', 'get').mockReturnValue(55);
+            vi.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(237);
+            vi.spyOn(valueEl, 'clientWidth', 'get').mockReturnValue(237);
 
             expect(directive.isOverflown).toBe(false);
         });
@@ -1011,14 +1051,14 @@ describe('KbqTitleDirective', () => {
 
             // Equal integer widths send both children down the sub-pixel branch, which multi-text hosts
             // used to skip entirely — a 0.4px clip is invisible under `text-overflow: clip`.
-            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(124);
-            jest.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(124);
-            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(124);
+            vi.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(124);
+            vi.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(124);
+            vi.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(124);
 
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockReturnValue({ textOverflow: 'clip' } as CSSStyleDeclaration);
-            const rectSpy = jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+            const rectSpy = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
                 this: Element
             ) {
                 const width = this === parentEl ? 124 : 124.4;
@@ -1039,14 +1079,14 @@ describe('KbqTitleDirective', () => {
             const nameEl = debugElement.query(By.css('.child-name')).nativeElement;
             const valueEl = debugElement.query(By.css('.child-value')).nativeElement;
 
-            jest.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(124);
-            jest.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(124);
-            jest.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(124);
+            vi.spyOn(parentEl, 'offsetWidth', 'get').mockReturnValue(124);
+            vi.spyOn(nameEl, 'scrollWidth', 'get').mockReturnValue(124);
+            vi.spyOn(valueEl, 'scrollWidth', 'get').mockReturnValue(124);
 
-            const cssSpy = jest
+            const cssSpy = vi
                 .spyOn(window, 'getComputedStyle')
                 .mockReturnValue({ textOverflow: 'ellipsis' } as CSSStyleDeclaration);
-            const rectSpy = jest.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
+            const rectSpy = vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (
                 this: Element
             ) {
                 const width = this === parentEl ? 124 : 124.4;
@@ -1091,14 +1131,16 @@ describe('KbqTitleDirective', () => {
 
             getTitleDirective(fixture.debugElement);
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const spy = jest.spyOn(focusMonitor, 'stopMonitoring');
+            const spy = vi.spyOn(focusMonitor, 'stopMonitoring');
 
             fixture.destroy();
 
             expect(spy).toHaveBeenCalled();
         });
 
-        it('should not re-evaluate overflow after destroy', fakeAsync(() => {
+        it('should not re-evaluate overflow after destroy', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
             const directive = getTitleDirective(fixture.debugElement);
             const resizeObserver = getResizeObserver();
@@ -1108,10 +1150,10 @@ describe('KbqTitleDirective', () => {
 
             fixture.destroy();
             resizeObserver.changes.next([]);
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
 
             expect(directive.disabled).not.toBe(true);
-        }));
+        });
     });
 
     describe('default placementPriority', () => {

@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ComponentRef } from '@angular/core';
@@ -18,6 +17,7 @@ import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
@@ -49,13 +49,12 @@ export class KbqToastComponent implements OnDestroy {
     readonly $implicit: this;
     constructor();
     // (undocumented)
-    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    protected readonly a11yLocaleConfiguration: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     protected readonly actionsTemplate: TemplateRef<{
         $implicit: KbqToastComponent;
     }> | null;
-    // (undocumented)
-    animationState: string;
+    protected readonly animationsDisabled: boolean;
     // (undocumented)
     protected readonly captionTemplate: TemplateRef<{
         $implicit: KbqToastComponent;
@@ -76,10 +75,8 @@ export class KbqToastComponent implements OnDestroy {
     readonly data: KbqToastData;
     // (undocumented)
     protected readonly defaultIcon: string | null;
-    // (undocumented)
-    readonly focused: BehaviorSubject<boolean>;
-    // (undocumented)
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly focused: Signal<boolean>;
+    readonly hovered: Signal<boolean>;
     // (undocumented)
     protected readonly icon: boolean | TemplateRef<any>;
     // (undocumented)
@@ -90,15 +87,15 @@ export class KbqToastComponent implements OnDestroy {
     id: number;
     // (undocumented)
     get isFocusedOrHovered(): boolean;
+    leave(done: () => void): void;
+    protected readonly leavingHeight: i0.WritableSignal<number | null>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    onAnimation($event: AnimationEvent_2): void;
-    // (undocumented)
     protected readonly readStateDirective: KbqReadStateDirective;
-    protected readonly reducedMotion: boolean;
     // (undocumented)
     protected readonly role: string;
+    protected setHovered(hovered: boolean): void;
     // (undocumented)
     protected readonly style: KbqToastStyle | (string & {});
     // (undocumented)
@@ -209,13 +206,12 @@ export enum KbqToastPosition {
 // @public
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy, KbqToastStack {
     constructor();
-    readonly animation: Subject<AnimationEvent_2>;
-    readonly focused: BehaviorSubject<boolean>;
+    readonly focused: Signal<boolean>;
     // (undocumented)
     hide(id: number): void;
     // (undocumented)
     hideTemplate(id: number): void;
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly hovered: Signal<boolean>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -245,7 +241,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
 // @public
 export interface KbqToastStack {
-    readonly animation: Subject<AnimationEvent_2>;
     hide(id: number): void;
     readonly read: Subject<KbqToastData | null>;
     setFocused(id: number, origin: FocusOrigin): void;

@@ -1,5 +1,5 @@
-import { Component, DebugElement, Directive, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Component, DebugElement, Directive, signal, Type } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
     FormControl,
@@ -22,7 +22,6 @@ import {
     ShowRequiredOnSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
-import { Subject } from 'rxjs';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
 import {
@@ -196,16 +195,15 @@ export class InputFormFieldWithLabel {
     providers: [{ provide: KbqFormFieldControl, useExisting: TestNonLabelableControl }]
 })
 export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
-    value = null;
-    readonly stateChanges = new Subject<void>();
-    readonly id = 'TEST_NON_LABELABLE_CONTROL_ID';
-    readonly placeholder = '';
+    readonly value = signal(null).asReadonly();
+    readonly id = signal('TEST_NON_LABELABLE_CONTROL_ID').asReadonly();
+    readonly placeholder = signal('').asReadonly();
     readonly ngControl = null;
-    focused = false;
-    empty = true;
-    required = false;
-    disabled = false;
-    errorState = false;
+    readonly focused = signal(false).asReadonly();
+    readonly empty = signal(true).asReadonly();
+    readonly required = signal(false).asReadonly();
+    readonly disabled = signal(false).asReadonly();
+    readonly errorState = signal(false).asReadonly();
     readonly isNativeLabelSupported = false;
     onContainerClick(): void {}
     focus(): void {}
@@ -408,25 +406,9 @@ class InputFormFieldWithCrossFieldMatcher {
     );
 }
 
-@Component({
-    selector: 'password-form-field-with-conditional-content',
-    imports: [ReactiveFormsModule, KbqInputModule],
-    template: `
-        <kbq-form-field>
-            <input kbqInputPassword [formControl]="formControl" />
-            @if (visible) {
-                <kbq-password-toggle />
-                <kbq-reactive-password-hint [hasError]="false">Hint</kbq-reactive-password-hint>
-            }
-        </kbq-form-field>
-    `
-})
-class PasswordFormFieldWithConditionalContent {
-    readonly formControl = new FormControl('');
-    visible = true;
-}
-
 describe(KbqFormField.name, () => {
+    afterEach(() => vi.useRealTimers());
+
     it('should provide typed and legacy form-field tokens', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const formField = getFormFieldDebugElement(debugElement);
@@ -461,12 +443,15 @@ describe(KbqFormField.name, () => {
         expect(hint.classList.contains('kbq-hint_compact')).toBe(true);
     });
 
-    it('should display KbqError', () => {
-        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+    it('should display KbqError', async () => {
+        const fixture = createComponent(InputFormFieldWithHintAndError);
+        const { debugElement } = fixture;
         const input = getInputNativeElement(debugElement);
 
         input.focus();
         input.blur();
+
+        await fixture.whenStable();
         const error = getErrorDebugElement(debugElement).nativeElement;
 
         expect(error.classList.contains('kbq-error')).toBe(true);
@@ -502,38 +487,51 @@ describe(KbqFormField.name, () => {
         expect(getCleanerDebugElement(debugElement)).toBeNull();
     });
 
-    it('should display KbqCleaner', () => {
-        const { debugElement } = createComponent(InputFormFieldWithCleaner);
+    it('should display KbqCleaner', async () => {
+        const fixture = createComponent(InputFormFieldWithCleaner);
+        const { debugElement } = fixture;
         const input = getInputNativeElement(debugElement);
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
+
+        await fixture.whenStable();
         expect(getCleanerDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should clean field by KbqCleaner', () => {
-        const { debugElement, componentInstance } = createComponent(InputFormFieldWithCleaner);
+    it('should clean field by KbqCleaner', async () => {
+        const fixture = createComponent(InputFormFieldWithCleaner);
+        const { debugElement, componentInstance } = fixture;
         const input = getInputNativeElement(debugElement);
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
+
+        await fixture.whenStable();
         expect(componentInstance.control.value).toBe('koobiq');
         const cleaner = getCleanerDebugElement(debugElement);
 
         cleaner.nativeElement.click();
+
+        await fixture.whenStable();
         expect(componentInstance.control.value).toBeNull();
     });
 
-    it('should clean field by KbqCleaner on Space', () => {
-        const { debugElement, componentInstance } = createComponent(InputFormFieldWithCleaner);
+    it('should clean field by KbqCleaner on Space', async () => {
+        const fixture = createComponent(InputFormFieldWithCleaner);
+        const { debugElement, componentInstance } = fixture;
         const input = getInputNativeElement(debugElement);
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
 
+        await fixture.whenStable();
+
         getCleanerDebugElement(debugElement).nativeElement.dispatchEvent(
             new KeyboardEvent('keydown', { key: ' ', bubbles: true })
         );
+
+        await fixture.whenStable();
 
         expect(componentInstance.control.value).toBeNull();
     });
@@ -559,7 +557,7 @@ describe(KbqFormField.name, () => {
     });
 
     it('should throw Error for KbqFormField without KbqFormFieldControl', () => {
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        vi.spyOn(console, 'error').mockImplementation(() => {});
 
         expect(() => createComponent(InputFormFieldWithoutFormFieldControl)).toThrow(
             getKbqFormFieldMissingControlError().message
@@ -572,8 +570,9 @@ describe(KbqFormField.name, () => {
         expect(getFormFieldDebugElement(debugElement).classes['ng-untouched']).toBeTruthy();
     });
 
-    it('should add ng-touched selector for KbqFormField after blur', () => {
-        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+    it('should add ng-touched selector for KbqFormField after blur', async () => {
+        const fixture = createComponent(InputFormFieldWithHintAndError);
+        const { debugElement } = fixture;
         const formField = getFormFieldDebugElement(debugElement);
 
         expect(formField.classes['ng-touched']).toBeFalsy();
@@ -581,6 +580,8 @@ describe(KbqFormField.name, () => {
 
         input.focus();
         input.blur();
+
+        await fixture.whenStable();
         expect(formField.classes['ng-touched']).toBeTruthy();
     });
 
@@ -590,8 +591,9 @@ describe(KbqFormField.name, () => {
         expect(getFormFieldDebugElement(debugElement).classes['ng-pristine']).toBeTruthy();
     });
 
-    it('should add ng-dirty selector for KbqFormField after form control change', () => {
-        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+    it('should add ng-dirty selector for KbqFormField after form control change', async () => {
+        const fixture = createComponent(InputFormFieldWithHintAndError);
+        const { debugElement } = fixture;
         const formField = getFormFieldDebugElement(debugElement);
 
         expect(formField.classes['ng-dirty']).toBeFalsy();
@@ -599,15 +601,20 @@ describe(KbqFormField.name, () => {
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
+
+        await fixture.whenStable();
         expect(formField.classes['ng-dirty']).toBeTruthy();
     });
 
-    it('should add ng-valid selector for KbqFormField when form control is valid', () => {
-        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+    it('should add ng-valid selector for KbqFormField when form control is valid', async () => {
+        const fixture = createComponent(InputFormFieldWithHintAndError);
+        const { debugElement } = fixture;
         const input = getInputNativeElement(debugElement);
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
+
+        await fixture.whenStable();
         expect(getFormFieldDebugElement(debugElement).classes['ng-valid']).toBeTruthy();
     });
 
@@ -669,7 +676,7 @@ describe(KbqFormField.name, () => {
         expect(getErrorDebugElement(debugElement)).toBeTruthy();
     });
 
-    it('should add kbq-form-field_invalid selector for KbqFormField on form submission', () => {
+    it('should add kbq-form-field_invalid selector for KbqFormField on form submission', async () => {
         const fixture = createComponent(InputFormFieldWithCustomErrorStateMatcher);
         const { debugElement, componentInstance } = fixture;
 
@@ -679,10 +686,12 @@ describe(KbqFormField.name, () => {
 
         expect(formField.classes['kbq-form-field_invalid']).toBeFalsy();
         getSubmitButtonNativeElement(debugElement).click();
+
+        await fixture.whenStable();
         expect(formField.classes['kbq-form-field_invalid']).toBeTruthy();
     });
 
-    it('should display KbqError on form submission', () => {
+    it('should display KbqError on form submission', async () => {
         const fixture = createComponent(InputFormFieldWithCustomErrorStateMatcher);
         const { debugElement, componentInstance } = fixture;
 
@@ -690,6 +699,8 @@ describe(KbqFormField.name, () => {
         fixture.detectChanges();
         expect(getErrorDebugElement(debugElement)).toBeFalsy();
         getSubmitButtonNativeElement(debugElement).click();
+
+        await fixture.whenStable();
         expect(getErrorDebugElement(debugElement)).toBeTruthy();
     });
 
@@ -766,26 +777,36 @@ describe(KbqFormField.name, () => {
         expect(getPasswordToggleDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display password by click on KbqPasswordToggle', () => {
-        const { debugElement } = createComponent(PasswordFormField);
+    it('should display password by click on KbqPasswordToggle', async () => {
+        const fixture = createComponent(PasswordFormField);
+        const { debugElement } = fixture;
         const input = getPasswordInputNativeElement(debugElement);
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
+
+        await fixture.whenStable();
         expect(input.type).toBe('password');
         getPasswordToggleDebugElement(debugElement).nativeElement.click();
+
+        await fixture.whenStable();
         expect(input.type).toBe('text');
     });
 
-    it('should change KbqPasswordToggle icon by click', () => {
-        const { debugElement } = createComponent(PasswordFormField);
+    it('should change KbqPasswordToggle icon by click', async () => {
+        const fixture = createComponent(PasswordFormField);
+        const { debugElement } = fixture;
         const input = getPasswordInputNativeElement(debugElement);
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
+
+        await fixture.whenStable();
         const passwordToggle = getPasswordToggleDebugElement(debugElement);
 
         passwordToggle.nativeElement.click();
+
+        await fixture.whenStable();
         expect(passwordToggle).toMatchSnapshot();
     });
 
@@ -795,7 +816,8 @@ describe(KbqFormField.name, () => {
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display KbqReactivePasswordHint error for invalid password', fakeAsync(() => {
+    it('should display KbqReactivePasswordHint error for invalid password', async () => {
+        vi.useFakeTimers();
         const fixture = createComponent(PasswordFormField);
         const { debugElement } = fixture;
         const input = getPasswordInputNativeElement(debugElement);
@@ -804,21 +826,24 @@ describe(KbqFormField.name, () => {
         input.dispatchEvent(new Event('input'));
         // `hasError` stays true for an already invalid control, so the color is escalated by the `delay(0)`
         // handler instead of the effect that follows `hasError`.
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         const hint = getReactivePasswordHintDebugElement(debugElement);
 
         expect(hint.nativeElement.classList).toContain('kbq-error');
         expect(hint).toMatchSnapshot();
-    }));
+    });
 
-    it('should display KbqReactivePasswordHint success for valid password', () => {
-        const { debugElement } = createComponent(PasswordFormField);
+    it('should display KbqReactivePasswordHint success for valid password', async () => {
+        const fixture = createComponent(PasswordFormField);
+        const { debugElement } = fixture;
         const input = getPasswordInputNativeElement(debugElement);
 
         input.value = 'koobiq-is-awesome';
         input.dispatchEvent(new Event('input'));
+
+        await fixture.whenStable();
 
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
@@ -888,39 +913,6 @@ describe(KbqFormField.name, () => {
         expect(getContentNativeElement(debugElement).classList.contains('test-content')).toBeTruthy();
     });
 
-    describe('lifecycle', () => {
-        const getStateChangesObserverCount = (debugElement: DebugElement): number => {
-            const control = debugElement.query(By.directive(KbqInputPassword)).injector.get(KbqInputPassword);
-
-            return (control.stateChanges as Subject<void>).observers.length;
-        };
-
-        it('should unsubscribe the projected content from the control stateChanges on destroy', () => {
-            const fixture = createComponent(PasswordFormFieldWithConditionalContent);
-            const { debugElement, componentInstance } = fixture;
-            const initial = getStateChangesObserverCount(debugElement);
-
-            componentInstance.visible = false;
-            fixture.detectChanges();
-            const afterDestroy = getStateChangesObserverCount(debugElement);
-
-            componentInstance.visible = true;
-            fixture.detectChanges();
-
-            expect(afterDestroy).toBeLessThan(initial);
-            expect(getStateChangesObserverCount(debugElement)).toBe(initial);
-        });
-
-        it('should unsubscribe the form field from the control stateChanges on destroy', () => {
-            const fixture = createComponent(PasswordFormFieldWithConditionalContent);
-            const control = fixture.debugElement.query(By.directive(KbqInputPassword)).injector.get(KbqInputPassword);
-
-            expect((control.stateChanges as Subject<void>).observers.length).toBeGreaterThan(0);
-            fixture.destroy();
-            expect((control.stateChanges as Subject<void>).observers.length).toBe(0);
-        });
-    });
-
     describe('accessibility', () => {
         const getDescribedByIds = (debugElement: DebugElement): string[] => {
             return (getInputNativeElement(debugElement).getAttribute('aria-describedby') || '')
@@ -934,23 +926,28 @@ describe(KbqFormField.name, () => {
             expect(getDescribedByIds(debugElement)).toEqual(['test-hint-id']);
         });
 
-        it('should add KbqError to aria-describedby when the control becomes invalid', () => {
-            const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        it('should add KbqError to aria-describedby when the control becomes invalid', async () => {
+            const fixture = createComponent(InputFormFieldWithHintAndError);
+            const { debugElement } = fixture;
             const input = getInputNativeElement(debugElement);
 
             expect(getDescribedByIds(debugElement)).not.toContain('test-error-id');
             input.focus();
             input.blur();
+
+            await fixture.whenStable();
             expect(getDescribedByIds(debugElement)).toEqual(['test-error-id', 'test-hint-id']);
         });
 
-        it('should remove KbqError from aria-describedby when the control becomes valid', () => {
+        it('should remove KbqError from aria-describedby when the control becomes valid', async () => {
             const fixture = createComponent(InputFormFieldWithHintAndError);
             const { debugElement } = fixture;
             const input = getInputNativeElement(debugElement);
 
             input.focus();
             input.blur();
+
+            await fixture.whenStable();
             expect(getDescribedByIds(debugElement)).toContain('test-error-id');
 
             input.value = 'koobiq';
@@ -980,13 +977,16 @@ describe(KbqFormField.name, () => {
             expect(getInputNativeElement(debugElement).hasAttribute('aria-describedby')).toBe(false);
         });
 
-        it('should set aria-invalid on the control according to the error state', () => {
-            const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        it('should set aria-invalid on the control according to the error state', async () => {
+            const fixture = createComponent(InputFormFieldWithHintAndError);
+            const { debugElement } = fixture;
             const input = getInputNativeElement(debugElement);
 
             expect(input.getAttribute('aria-invalid')).toBe('false');
             input.focus();
             input.blur();
+
+            await fixture.whenStable();
             expect(input.getAttribute('aria-invalid')).toBe('true');
         });
 
@@ -998,12 +998,15 @@ describe(KbqFormField.name, () => {
             expect(error.getAttribute('aria-atomic')).toBe('true');
         });
 
-        it('should expose KbqCleaner as a named button', () => {
-            const { debugElement } = createComponent(InputFormFieldWithCleaner);
+        it('should expose KbqCleaner as a named button', async () => {
+            const fixture = createComponent(InputFormFieldWithCleaner);
+            const { debugElement } = fixture;
             const input = getInputNativeElement(debugElement);
 
             input.value = 'koobiq';
             input.dispatchEvent(new Event('input'));
+
+            await fixture.whenStable();
             const cleaner = getCleanerDebugElement(debugElement).nativeElement;
 
             expect(cleaner.getAttribute('role')).toBe('button');
@@ -1011,13 +1014,16 @@ describe(KbqFormField.name, () => {
             expect(cleaner.getAttribute('tabindex')).toBe('0');
         });
 
-        it.each(['Enter', ' '])('should clean field by KbqCleaner on %s', (key) => {
-            const { debugElement, componentInstance } = createComponent(InputFormFieldWithCleaner);
+        it.each(['Enter', ' '])('should clean field by KbqCleaner on %s', async (key) => {
+            const fixture = createComponent(InputFormFieldWithCleaner);
+            const { debugElement, componentInstance } = fixture;
             const input = getInputNativeElement(debugElement);
 
             input.value = 'koobiq';
             input.dispatchEvent(new Event('input'));
             expect(componentInstance.control.value).toBe('koobiq');
+
+            await fixture.whenStable();
 
             const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
 
@@ -1035,25 +1041,32 @@ describe(KbqFormField.name, () => {
             expect(toggle.getAttribute('aria-pressed')).toBe('false');
         });
 
-        it('should reflect the shown password in KbqPasswordToggle aria-pressed and aria-label', () => {
-            const { debugElement } = createComponent(PasswordFormField);
+        it('should reflect the shown password in KbqPasswordToggle aria-pressed and aria-label', async () => {
+            const fixture = createComponent(PasswordFormField);
+            const { debugElement } = fixture;
             const passwordToggle = getPasswordToggleDebugElement(debugElement);
             const toggle = () => passwordToggle.nativeElement.querySelector('i');
             const hiddenLabel = toggle().getAttribute('aria-label');
 
             passwordToggle.nativeElement.click();
+
+            await fixture.whenStable();
             expect(toggle().getAttribute('aria-pressed')).toBe('true');
             expect(toggle().getAttribute('aria-label')).not.toBe(hiddenLabel);
         });
 
-        it.each(['Enter', ' '])('should display password by %s on KbqPasswordToggle', (key) => {
-            const { debugElement } = createComponent(PasswordFormField);
+        it.each(['Enter', ' '])('should display password by %s on KbqPasswordToggle', async (key) => {
+            const fixture = createComponent(PasswordFormField);
+            const { debugElement } = fixture;
             const input = getPasswordInputNativeElement(debugElement);
 
             expect(input.type).toBe('password');
             getPasswordToggleDebugElement(debugElement).nativeElement.dispatchEvent(
                 new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
             );
+
+            await fixture.whenStable();
+
             expect(input.type).toBe('text');
         });
     });

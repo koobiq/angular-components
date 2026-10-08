@@ -342,7 +342,7 @@ describe(SCHEMATIC_NAME, () => {
 
         // A detached reference was the only shape reported while `grow` was public; a call is broken too now.
         expect((await run()).readText(ts)).toBe(source);
-        expect(messages.join('\n')).toContain('`textarea.stateChanges.next()`');
+        expect(messages.join('\n')).toContain('is measured at the next one');
     });
 
     it('rewrites a read through a template reference variable', async () => {

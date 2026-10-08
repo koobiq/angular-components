@@ -73,6 +73,23 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'selectEvents and the core/select/events module were removed. The module exported one constant ' +
             "whose value equalled its own name ('selectEvents') and nothing read it — delete the import."
+    },
+    {
+        anchor: SELECT_TYPE,
+        pattern: '\\.\\s*(?:hasBackdrop|compareWith|searchMinOptionsThreshold)\\b(?!\\s*[=(])',
+        message:
+            'KbqSelect.hasBackdrop, .compareWith and .searchMinOptionsThreshold are signals now: read them as ' +
+            'calls, e.g. `compareWith()(a, b)`. searchMinOptionsThreshold() still reports the resolved number.'
+    },
+    {
+        anchor: SELECT_TYPE,
+        pattern:
+            '\\.\\s*(?:hasBackdrop|compareWith|searchMinOptionsThreshold|multiple|tabIndex|selectAllHandler)\\s*=(?!=)',
+        message:
+            'hasBackdrop, compareWith, searchMinOptionsThreshold, multiple, tabIndex and selectAllHandler of ' +
+            'KbqSelect are signal inputs, so an assignment no longer compiles. Bind them in the template; ' +
+            'multiple, tabIndex and selectAllHandler are still read as properties. This pattern also matches a ' +
+            'write to an unrelated object in the same file — check before changing it.'
     }
 ];
 

@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { createKeyboardEvent, dispatchEvent, ENTER, SPACE } from '@koobiq/components/core';
 import {
     KbqFilter,
@@ -97,8 +96,12 @@ describe('KbqPipeAdd', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         }).compileComponents();
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     const getPipeAdd = (): KbqPipeAdd => {
@@ -134,9 +137,10 @@ describe('KbqPipeAdd', () => {
             expect(pipeAdd.select().panelOpen).toBe(true);
         });
 
-        it('should render one option per pipeTemplate', fakeAsync(() => {
+        it('should render one option per pipeTemplate', async () => {
+            vi.useFakeTimers();
             getPipeAdd().select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
@@ -145,7 +149,7 @@ describe('KbqPipeAdd', () => {
             fixture.componentInstance.pipeTemplates.forEach((template, index) => {
                 expect(options[index].textContent).toContain(template.name);
             });
-        }));
+        });
     });
 
     describe('addedPipes', () => {
@@ -189,157 +193,158 @@ describe('KbqPipeAdd', () => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
             fixture.detectChanges();
+            vi.useFakeTimers();
         });
 
-        it('should create filter from filterTemplate when no filter exists', fakeAsync(() => {
+        it('should create filter from filterTemplate when no filter exists', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
             expect(filterBar.filter()).toBeNull();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(filterBar.filter()).not.toBeNull();
             expect(filterBar.filter()!.name).toBe('DefaultFilter');
-        }));
+        });
 
-        it('should push pipe into filter.pipes', fakeAsync(() => {
+        it('should push pipe into filter.pipes', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(filterBar.filter()!.pipes.length).toBe(1);
             expect(filterBar.filter()!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
-        }));
+        });
 
-        it('should set filter.changed to true', fakeAsync(() => {
+        it('should set filter.changed to true', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(filterBar.filter()!.changed).toBe(true);
-        }));
+        });
 
-        it('should strip values and valueTemplate from added pipe', fakeAsync(() => {
+        it('should strip values and valueTemplate from added pipe', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const addedPipe = filterBar.filter()!.pipes[0];
 
             expect((addedPipe as any).values).toBeUndefined();
             expect((addedPipe as any).valueTemplate).toBeUndefined();
-        }));
+        });
 
-        it('should set openOnAdd: true on added pipe', fakeAsync(() => {
+        it('should set openOnAdd: true on added pipe', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(filterBar.filter()!.pipes[0].openOnAdd).toBe(true);
-        }));
+        });
 
-        it('should emit onAddPipe event with the template value', fakeAsync(() => {
+        it('should emit onAddPipe event with the template value', async () => {
             const pipeAdd = getPipeAdd();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             pipeAdd.onAddPipe.subscribe(spy);
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalledWith(expect.objectContaining({ id: PIPE_TEMPLATE_ID_1 }));
-        }));
+        });
 
-        it('should emit filterBar.filterChange', fakeAsync(() => {
+        it('should emit filterBar.filterChange', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.filter.subscribe(spy);
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should close the select after adding a pipe', fakeAsync(() => {
+        it('should close the select after adding a pipe', async () => {
             const pipeAdd = getPipeAdd();
-            const closeSpy = jest.spyOn(pipeAdd.select(), 'close');
+            const closeSpy = vi.spyOn(pipeAdd.select(), 'close');
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(closeSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should derive from the existing filter when one is already set', fakeAsync(() => {
+        it('should derive from the existing filter when one is already set', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
             const existingFilter = createFilter([]);
@@ -348,13 +353,13 @@ describe('KbqPipeAdd', () => {
             fixture.detectChanges();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Immutable add: a new filter reference derived from the existing one — its data is reused
@@ -362,19 +367,19 @@ describe('KbqPipeAdd', () => {
             expect(filterBar.filter()).not.toBe(existingFilter);
             expect(filterBar.filter()!.name).toBe(existingFilter.name);
             expect(filterBar.filter()!.pipes.length).toBe(1);
-        }));
+        });
 
-        it('should announce the added pipe in the visually-hidden live region (WCAG 4.1.3)', fakeAsync(() => {
+        it('should announce the added pipe in the visually-hidden live region (WCAG 4.1.3)', async () => {
             const pipeAdd = getPipeAdd();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const liveRegion = fixture.debugElement
@@ -383,9 +388,9 @@ describe('KbqPipeAdd', () => {
 
             // Default (ru-RU) locale message with the added template's name interpolated.
             expect(liveRegion.nativeElement.textContent.trim()).toBe('Фильтр PipeA добавлен');
-        }));
+        });
 
-        it('should clear the live region before re-announcing so identical messages re-trigger AT', fakeAsync(() => {
+        it('should clear the live region before re-announcing so identical messages re-trigger AT', async () => {
             const pipeAdd = getPipeAdd();
             const liveText = () =>
                 fixture.debugElement
@@ -394,7 +399,7 @@ describe('KbqPipeAdd', () => {
                     .nativeElement.textContent.trim();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             (document.querySelectorAll('.kbq-option')[0] as HTMLElement).click();
@@ -405,73 +410,73 @@ describe('KbqPipeAdd', () => {
 
             // ... then re-filled on the next macrotask, so even an identical consecutive message changes the
             // text node and is re-announced (a plain same-string signal `set` would be a no-op AT never sees).
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
             expect(liveText()).toBe('Фильтр PipeA добавлен');
-        }));
+        });
 
-        it('should call filterBar.openPipe.next when option is already selected', fakeAsync(() => {
+        it('should call filterBar.openPipe.next when option is already selected', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
-            const openPipeSpy = jest.spyOn(filterBar.openPipe, 'next');
+            const openPipeSpy = vi.spyOn(filterBar.openPipe, 'next');
 
             // First click — add the pipe
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             let options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Second click — option is now selected, should trigger openPipe
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             options = document.querySelectorAll('.kbq-option');
             openPipeSpy.mockClear();
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(openPipeSpy).toHaveBeenCalledWith(PIPE_TEMPLATE_ID_1);
             expect(filterBar.openPipe.value).toBeNull();
-        }));
+        });
 
-        it('should NOT add a duplicate pipe when option is already selected', fakeAsync(() => {
+        it('should NOT add a duplicate pipe when option is already selected', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
             // First click — add the pipe
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             let options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(filterBar.filter()!.pipes.length).toBe(1);
 
             // Second click — should NOT add another pipe
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             options = document.querySelectorAll('.kbq-option');
 
             (options[0] as HTMLElement).click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(filterBar.filter()!.pipes.length).toBe(1);
-        }));
+        });
     });
 
     describe('keyboard (Enter/Space)', () => {
@@ -479,6 +484,7 @@ describe('KbqPipeAdd', () => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
             fixture.detectChanges();
+            vi.useFakeTimers();
         });
 
         const pressEnterOnFirstOption = () => {
@@ -493,82 +499,82 @@ describe('KbqPipeAdd', () => {
             dispatchEvent(option, createKeyboardEvent('keydown', SPACE, undefined, ' '));
         };
 
-        it('should add a pipe when Enter is pressed on a template option', fakeAsync(() => {
+        it('should add a pipe when Enter is pressed on a template option', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             pressEnterOnFirstOption();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(filterBar.filter()!.pipes.length).toBe(1);
             expect(filterBar.filter()!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
-        }));
+        });
 
-        it('should add a pipe when Space is pressed on a template option', fakeAsync(() => {
+        it('should add a pipe when Space is pressed on a template option', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             pressSpaceOnFirstOption();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(filterBar.filter()!.pipes.length).toBe(1);
             expect(filterBar.filter()!.pipes[0].id).toBe(PIPE_TEMPLATE_ID_1);
-        }));
+        });
 
-        it('should emit onAddPipe when Enter is pressed on a template option', fakeAsync(() => {
+        it('should emit onAddPipe when Enter is pressed on a template option', async () => {
             const pipeAdd = getPipeAdd();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             pipeAdd.onAddPipe.subscribe(spy);
 
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             pressEnterOnFirstOption();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalledWith(expect.objectContaining({ id: PIPE_TEMPLATE_ID_1 }));
-        }));
+        });
 
-        it('should call filterBar.openPipe.next when Enter is pressed on an already-added option', fakeAsync(() => {
+        it('should call filterBar.openPipe.next when Enter is pressed on an already-added option', async () => {
             const filterBar = getFilterBar();
             const pipeAdd = getPipeAdd();
-            const openPipeSpy = jest.spyOn(filterBar.openPipe, 'next');
+            const openPipeSpy = vi.spyOn(filterBar.openPipe, 'next');
 
             // First Enter — add the pipe
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             pressEnterOnFirstOption();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Second Enter — option is now selected, should trigger openPipe
             pipeAdd.select().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             openPipeSpy.mockClear();
 
             pressEnterOnFirstOption();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(openPipeSpy).toHaveBeenCalledWith(PIPE_TEMPLATE_ID_1);
-        }));
+        });
     });
 
     describe('compareWith', () => {

@@ -2,7 +2,6 @@
 import { Component, ElementRef, Provider, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
 import {
     dispatchFakeEvent,
@@ -34,7 +33,6 @@ describe('KbqButton', () => {
             imports: [
                 KbqButtonModule,
                 KbqDropdownModule,
-                NoopAnimationsModule,
                 TestApp,
                 AnchorWithoutHrefTestApp,
                 DynamicHrefTestApp,
@@ -470,8 +468,8 @@ describe('KbqButton', () => {
             fixture.detectChanges();
 
             const anchor: HTMLAnchorElement = fixture.debugElement.query(By.css(selector)).nativeElement;
-            const setAttribute = jest.spyOn(anchor, 'setAttribute');
-            const removeAttribute = jest.spyOn(anchor, 'removeAttribute');
+            const setAttribute = vi.spyOn(anchor, 'setAttribute');
+            const removeAttribute = vi.spyOn(anchor, 'removeAttribute');
 
             fixture.detectChanges();
             fixture.detectChanges();
@@ -544,7 +542,7 @@ describe('KbqButton', () => {
         it('should monitor the host element and stop monitoring on destroy', () => {
             const fixture = TestBed.createComponent(TestApp);
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const stopMonitoring = jest.spyOn(focusMonitor, 'stopMonitoring');
+            const stopMonitoring = vi.spyOn(focusMonitor, 'stopMonitoring');
 
             fixture.detectChanges();
 
@@ -573,7 +571,7 @@ describe('KbqButton', () => {
         it('should focus via the FocusMonitor with the keyboard origin', () => {
             const fixture = TestBed.createComponent(TestApp);
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const focusVia = jest.spyOn(focusMonitor, 'focusVia');
+            const focusVia = vi.spyOn(focusMonitor, 'focusVia');
 
             fixture.detectChanges();
 
@@ -587,7 +585,7 @@ describe('KbqButton', () => {
         it('should not move focus while disabled', () => {
             const fixture = TestBed.createComponent(TestApp);
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const focusVia = jest.spyOn(focusMonitor, 'focusVia');
+            const focusVia = vi.spyOn(focusMonitor, 'focusVia');
             const testComponent = fixture.debugElement.componentInstance;
 
             testComponent.isDisabled = true;
@@ -738,9 +736,9 @@ describe('Button with icon', () => {
         expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).toBeFalsy();
     });
 
-    it('should toggle host button class type on icon removal/reveal', (done) => {
+    it('should toggle host button class type on icon removal/reveal', async () => {
         // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
@@ -753,14 +751,13 @@ describe('Button with icon', () => {
         fixture.debugElement.componentInstance.visible = false;
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalsy();
-            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalsy();
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
     });
 
-    it('should toggle the left icon class on icon removal/reveal', (done) => {
+    it('should toggle the left icon class on icon removal/reveal', async () => {
         const fixture = TestBed.createComponent(KbqButtonTextIconLeftNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
@@ -771,13 +768,12 @@ describe('Button with icon', () => {
         fixture.debugElement.componentInstance.visible = false;
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains(buttonLeftIconClassName)).toBeFalsy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+
+        expect(debugElement.nativeElement.classList.contains(buttonLeftIconClassName)).toBeFalsy();
     });
 
-    it('should toggle the right icon class on icon removal/reveal', (done) => {
+    it('should toggle the right icon class on icon removal/reveal', async () => {
         const fixture = TestBed.createComponent(KbqButtonTextIconRightNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
@@ -788,15 +784,14 @@ describe('Button with icon', () => {
         fixture.debugElement.componentInstance.visible = false;
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains(buttonRightIconClassName)).toBeFalsy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+
+        expect(debugElement.nativeElement.classList.contains(buttonRightIconClassName)).toBeFalsy();
     });
 
-    it('should switch to kbq-button-icon via the effect when an icon is revealed while the content observer is disabled', (done) => {
+    it('should switch to kbq-button-icon via the effect when an icon is revealed while the content observer is disabled', async () => {
         // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
@@ -812,11 +807,10 @@ describe('Button with icon', () => {
         fixture.componentInstance.visible = true;
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTruthy();
-            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTruthy();
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
     });
 
     it('should detect an icon-only button when whitespace is preserved', () => {
@@ -830,7 +824,7 @@ describe('Button with icon', () => {
     });
 
     it('should warn in dev mode when an icon-only button has no accessible name', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         try {
             TestBed.createComponent(KbqButtonIconNgIfCaseTestApp).detectChanges();
@@ -842,7 +836,7 @@ describe('Button with icon', () => {
     });
 
     it('should not warn when an icon-only button is labelled', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         try {
             TestBed.createComponent(KbqButtonLabelledIconTestApp).detectChanges();
@@ -1019,7 +1013,7 @@ describe('Button text container', () => {
  * The label box has to be a block container for `text-overflow: ellipsis` to be painted, but only a
  * flex context centres non-text content exactly. A selector cannot tell those cases apart, because it
  * cannot see text nodes — so the styler marks the text-free case and CSS keys off that class.
- * Asserted on the class rather than on a computed style: jest-preset-angular strips component styles,
+ * Asserted on the class rather than on a computed style: the unit tests load no component styles,
  * so `getComputedStyle` reports nothing either way.
  */
 describe('Button without a label', () => {
@@ -1041,7 +1035,7 @@ describe('Button without a label', () => {
 
     it('should mark a button whose only content is an icon', () => {
         // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
 
@@ -1085,7 +1079,7 @@ describe('KbqButtonCssStyler without KbqButton', () => {
     });
 
     it('should warn in dev mode when there is no .kbq-button-wrapper (styler used without KbqButton)', () => {
-        const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = TestBed.createComponent(StylerOnlyTestApp);
 
@@ -1314,8 +1308,8 @@ describe(KbqButtonGroupRoot.name, () => {
 
         const [overridden, inherited] = componentInstance.buttons();
 
-        expect(overridden.color).toBe(KbqComponentColors.Theme);
-        expect(inherited.color).toBe(KbqComponentColors.ThemeFade);
+        expect(overridden.color()).toBe(KbqComponentColors.Theme);
+        expect(inherited.color()).toBe(KbqComponentColors.ThemeFade);
     });
 
     it('should preserve overrides when a button is added to the group', () => {

@@ -2,17 +2,17 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 
 import { F8 } from '@angular/cdk/keycodes';
 import {
-    AfterContentInit,
-    afterNextRender,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     inject,
-    Input,
     input,
+    InputSignal,
     numberAttribute,
     OnDestroy,
+    Signal,
     TemplateRef,
     viewChild,
     ViewEncapsulation
@@ -26,7 +26,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { EMPTY, fromEvent } from 'rxjs';
+import { fromEvent } from 'rxjs';
 import { KBQ_FORM_FIELD } from './form-field';
 import { KbqFormFieldControl } from './form-field-control';
 
@@ -36,7 +36,7 @@ import { KbqFormFieldControl } from './form-field-control';
  */
 type KbqPasswordToggleControl = KbqFormFieldControl<unknown> & {
     readonly controlType: 'input-password';
-    elementType: 'text' | 'password';
+    readonly elementType: Signal<'text' | 'password'>;
     toggleType: () => void;
 };
 
@@ -69,7 +69,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
                 role="button"
                 [attr.aria-label]="accessibleName"
                 [attr.aria-pressed]="!hidden"
-                [color]="hasError ? 'error' : 'contrast-fade'"
+                [color]="hasError() ? 'error' : 'contrast-fade'"
                 [kbq-icon-button]="iconClass"
                 [tabindex]="tabindex()"
             ></i>
@@ -94,7 +94,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     ],
     exportAs: 'kbqPasswordToggle'
 })
-export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
+export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     protected readonly nativeElement = kbqInjectNativeElement();
     protected readonly focusMonitor = inject(FocusMonitor);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
@@ -112,15 +112,19 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      */
     readonly icon = viewChild.required(KbqIconButton);
 
+    /** @docs-private */
+    override readonly contentInput: InputSignal<KbqTooltipTrigger['content'] | undefined> = input<
+        KbqTooltipTrigger['content'] | undefined
+    >(undefined, {
+        alias: 'kbqTooltipNotHidden'
+    });
+
     /**
      * Tooltip shown while the password is visible. Reading it resolves to the tooltip matching the current
      * visibility, so that the base trigger renders the right one.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTooltipNotHidden')
     get content(): string | TemplateRef<any> {
-        return this.control.elementType === 'password' ? this.kbqTooltipHidden() : this._content;
+        return this.control.elementType() === 'password' ? this.kbqTooltipHidden() : this._content;
     }
 
     set content(content: string | TemplateRef<any>) {
@@ -132,7 +136,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     /** Tooltip shown while the password is hidden. */
     readonly kbqTooltipHidden = input<string | TemplateRef<any>>(undefined!);
 
-    protected hasError: boolean = false;
+    protected readonly hasError = computed(() => !!this.formField?.control().errorState());
 
     /** Form field password control. */
     private get control(): KbqPasswordToggleControl {
@@ -149,7 +153,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private
      */
     get hidden(): boolean {
-        return this.control.elementType === 'password';
+        return this.control.elementType() === 'password';
     }
 
     /**
@@ -163,7 +167,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private
      */
     get visibility(): 'hidden' | 'visible' {
-        return this.control.disabled ? 'hidden' : 'visible';
+        return this.control.disabled() ? 'hidden' : 'visible';
     }
 
     /**
@@ -189,18 +193,6 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe((event) => this.onFormFieldKeyDown(event));
         }
-
-        // `stateChanges` is owned by the control and outlives the toggle, so the subscription has to be torn
-        // down explicitly. Subscribing after render also keeps it off the server, matching KbqReactivePasswordHint.
-        afterNextRender(() => {
-            (this.formField?.control()?.stateChanges || EMPTY)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(this.updateState);
-        });
-    }
-
-    ngAfterContentInit(): void {
-        this.updateState();
     }
 
     ngAfterViewInit(): void {
@@ -215,7 +207,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private
      */
     toggle(event: Event): void {
-        if (this.control.disabled) return;
+        if (this.control.disabled()) return;
 
         this.hide();
 
@@ -234,10 +226,4 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
             this.toggle(event);
         }
     }
-
-    private updateState = () => {
-        this.hasError = !!this.control.errorState;
-
-        this.changeDetectorRef.markForCheck();
-    };
 }

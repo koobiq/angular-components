@@ -10,15 +10,17 @@ import * as _angular_core from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import * as i1 from '@koobiq/components/button';
 import * as i2 from '@koobiq/components/title';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public
 export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: Provider;
 
 // @public
-export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     constructor();
     protected readonly ariaChecked: _angular_core.Signal<boolean | null>;
     readonly ariaLabel: _angular_core.InputSignal<string | null>;
@@ -28,20 +30,20 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     get checked(): boolean;
     set checked(value: boolean);
+    readonly checkedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     focus(): void;
     focusViaKeyboard(): void;
     get iconType(): string;
     markForCheck(): void;
     // (undocumented)
-    static ngAcceptInputType_checked: unknown;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -54,8 +56,9 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
     get type(): ToggleType;
     updateIconType(): void;
     value: any;
+    readonly valueInput: _angular_core.InputSignal<{} | null | undefined>;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "change": "change"; }, ["icons"], ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "checkedInput": { "alias": "checked"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "change": "change"; }, ["icons"], ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggle, never>;
 }
@@ -70,19 +73,20 @@ export class KbqButtonToggleChange {
 }
 
 // @public
-export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDestroy {
+export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, OnInit, OnDestroy {
     protected readonly ariaOrientation: _angular_core.Signal<"vertical" | "horizontal" | null>;
     readonly buttonToggles: _angular_core.Signal<readonly KbqButtonToggle[]>;
     readonly change: _angular_core.OutputEmitterRef<KbqButtonToggleChange>;
     controlValueAccessorChangeFn: (value: any) => void;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     emitChangeEvent(source: KbqButtonToggle): void;
     isPrechecked(toggle: KbqButtonToggle): boolean;
     isSelected(toggle: KbqButtonToggle): boolean;
     readonly multiple: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -98,10 +102,11 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, OnDes
     get value(): any;
     set value(newValue: any);
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
+    readonly valueInput: _angular_core.InputSignal<{} | null | undefined>;
     readonly vertical: _angular_core.InputSignalWithTransform<boolean, unknown>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqButtonToggleGroup, "kbq-button-toggle-group", ["kbqButtonToggleGroup"], { "vertical": { "alias": "vertical"; "required": false; "isSignal": true; }; "stretched": { "alias": "stretched"; "required": false; "isSignal": true; }; "multiple": { "alias": "multiple"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "valueChange": "valueChange"; "change": "change"; }, ["buttonToggles"], never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqButtonToggleGroup, never>;
 }

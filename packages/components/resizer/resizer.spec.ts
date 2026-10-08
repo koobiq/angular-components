@@ -1,7 +1,6 @@
 import { Component, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqResizable, KbqResizer, KbqResizerDirection } from './resizer';
 
@@ -17,7 +16,7 @@ const CONTENT_BOX = { width: 100, height: 50 };
 const BORDER_BOX = { width: 122, height: 72 };
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    TestBed.configureTestingModule({ imports: [component], providers });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
@@ -83,8 +82,8 @@ export class TestResizer {
     readonly cursor = signal<string | null>(null);
     readonly disableSizeUpdate = signal(false);
 
-    readonly resizeStart = jest.fn();
-    readonly sizeChange = jest.fn();
+    readonly resizeStart = vi.fn();
+    readonly sizeChange = vi.fn();
 }
 
 describe(KbqResizer.name, () => {
@@ -247,8 +246,8 @@ describe(KbqResizer.name, () => {
     it('should capture only the active pointer and release it when the drag finishes', () => {
         const fixture = createComponent(TestResizer);
         const resizer = getResizerElement(fixture);
-        const setPointerCapture = jest.fn();
-        const releasePointerCapture = jest.fn();
+        const setPointerCapture = vi.fn();
+        const releasePointerCapture = vi.fn();
 
         Object.defineProperties(resizer, {
             hasPointerCapture: { value: () => true },
@@ -335,7 +334,7 @@ describe(KbqResizer.name, () => {
 
         const resizable = getResizableElement(fixture);
 
-        jest.spyOn(resizable, 'getBoundingClientRect').mockReturnValue(BORDER_BOX as DOMRect);
+        vi.spyOn(resizable, 'getBoundingClientRect').mockReturnValue(BORDER_BOX as DOMRect);
 
         getResizerElement(fixture).dispatchEvent(new MouseEvent('pointerdown'));
         document.dispatchEvent(new MouseEvent('pointermove', { buttons: 1, clientX: 30, clientY: 20 }));

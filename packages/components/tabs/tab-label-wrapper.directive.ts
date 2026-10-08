@@ -1,12 +1,14 @@
 import {
     AfterViewInit,
     booleanAttribute,
-    ContentChild,
+    contentChild,
     Directive,
     ElementRef,
     inject,
-    Input,
-    Renderer2
+    input,
+    OnChanges,
+    Renderer2,
+    SimpleChanges
 } from '@angular/core';
 import { KbqTab } from './tab.component';
 
@@ -21,19 +23,28 @@ import { KbqTab } from './tab.component';
         '[attr.disabled]': 'disabled || null'
     }
 })
-export class KbqTabLabelWrapper implements AfterViewInit {
+export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
 
-    @ContentChild('labelContent') labelContent: ElementRef;
+    private readonly labelContentQuery = contentChild<ElementRef>('labelContent');
 
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input() tab: KbqTab;
+    /** The element of the label content, measured to tell whether the label overflows. */
+    get labelContent(): ElementRef {
+        return this.labelContentQuery()!;
+    }
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
+    /** @docs-private */
+    readonly tabInput = input<KbqTab | undefined>(undefined, { alias: 'tab' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    tab: KbqTab;
+
     get disabled(): boolean {
         return this._disabled;
     }
@@ -45,6 +56,21 @@ export class KbqTabLabelWrapper implements AfterViewInit {
     }
 
     private _disabled: boolean = false;
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['tabInput']) {
+            const tab = this.tabInput();
+
+            if (tab !== undefined) this.tab = tab;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
 
     ngAfterViewInit(): void {
         this.addClassModifierForIcons(Array.from(this.elementRef.nativeElement.querySelectorAll('.kbq-icon')));

@@ -20,7 +20,11 @@
     />
     <div class="kbq-toggle-bar-container">
         <div class="kbq-toggle-bar" [class.kbq-progress]="loading()">
-            <div class="kbq-toggle__circle" [@switch]="currentCheckState"></div>
+            <div
+                class="kbq-toggle__circle"
+                [class]="`kbq-toggle__circle_${currentCheckState}`"
+                [class.kbq-animations-disabled]="animationsDisabled"
+            ></div>
             <div class="kbq-toggle__thumb"></div>
         </div>
     </div>
@@ -30,7 +34,7 @@
         [class.kbq-toggle__content_left]="labelPosition() === 'left'"
         [class.kbq-toggle__content_right]="labelPosition() === 'right'"
     >
-        <span class="kbq-toggle-label" (cdkObserveContent)="onLabelTextChange()">
+        <span class="kbq-toggle-label">
             <ng-content />
         </span>
 

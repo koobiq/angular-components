@@ -1,5 +1,14 @@
 import { TitleCasePipe } from '@angular/common';
-import { AfterContentInit, ChangeDetectionStrategy, Component, Input, output, ViewEncapsulation } from '@angular/core';
+import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    Component,
+    input,
+    OnChanges,
+    output,
+    SimpleChanges,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectA11yLocaleConfiguration, KbqOptionModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -35,7 +44,7 @@ export type MonthName = {
     },
     exportAs: 'kbqCalendarHeader'
 })
-export class KbqCalendarHeader<D> implements AfterContentInit {
+export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
     private readonly adapter = injectRequiredDateAdapter<D>();
 
     /** Accessible names for the icon-only month navigation buttons. */
@@ -47,9 +56,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     years: number[] = [];
     selectedYear: number;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get activeDate(): D {
         return this._activeDate;
     }
@@ -63,9 +69,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     private _activeDate: D;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get maxDate(): D | null {
         return this._maxDate;
     }
@@ -82,9 +85,6 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
     private _maxDate = this.adapter.createDate(defaultMaxYear, 11);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get minDate(): D | null {
         return this._minDate;
     }
@@ -100,6 +100,15 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     }
 
     private _minDate = this.adapter.createDate(defaultMinYear, 1);
+
+    /** @docs-private */
+    readonly activeDateInput = input<D | undefined>(undefined, { alias: 'activeDate' });
+
+    /** @docs-private */
+    readonly maxDateInput = input<D | null | undefined>(undefined, { alias: 'maxDate' });
+
+    /** @docs-private */
+    readonly minDateInput = input<D | null | undefined>(undefined, { alias: 'minDate' });
 
     get previousDisabled(): boolean {
         return this.compareDate(this.activeDate, this.minDate!) <= 0;
@@ -124,6 +133,27 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this.monthNames = this.adapter.getMonthNames('long').map((name, i) => {
             return { name, nameShort: this.adapter.getMonthNames('short')[i], value: i, disabled: false };
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['maxDateInput']) {
+            const maxDate = this.maxDateInput();
+
+            if (maxDate !== undefined) this.maxDate = maxDate;
+        }
+
+        if (changes['minDateInput']) {
+            const minDate = this.minDateInput();
+
+            if (minDate !== undefined) this.minDate = minDate;
+        }
+
+        if (changes['activeDateInput']) {
+            const activeDate = this.activeDateInput();
+
+            if (activeDate !== undefined) this.activeDate = activeDate;
+        }
     }
 
     ngAfterContentInit(): void {

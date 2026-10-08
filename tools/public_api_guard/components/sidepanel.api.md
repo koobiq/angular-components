@@ -4,14 +4,12 @@
 
 ```ts
 
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { BasePortalOutlet } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ComponentRef } from '@angular/core';
 import { ComponentType } from '@angular/cdk/portal';
 import { EmbeddedViewRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/overlay';
 import * as i1 from '@koobiq/components/core';
@@ -47,22 +45,6 @@ export class KbqSidepanelActions {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidepanelActions, "kbq-sidepanel-actions, [kbq-sidepanel-actions], kbqSidepanelActions", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelActions, never>;
-}
-
-// @public (undocumented)
-export enum KbqSidepanelAnimationState {
-    // (undocumented)
-    BecomingNormal = "becoming-normal",
-    // (undocumented)
-    BottomPanel = "bottom-panel",
-    // (undocumented)
-    Hidden = "hidden",
-    // (undocumented)
-    Lower = "lower",
-    // (undocumented)
-    Visible = "visible",
-    // (undocumented)
-    Void = "void"
 }
 
 // @public
@@ -111,16 +93,9 @@ export class KbqSidepanelConfig<D = any> {
 
 // @public (undocumented)
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
-    animationState: KbqSidepanelAnimationState;
-    animationStateChanged: EventEmitter<AnimationEvent_2>;
-    animationTransform: {
-        transformIn: string;
-        transformOut: string;
-        lower: string;
-        bottomPanel: string;
-        becomingNormal: string;
-    };
-    ariaLabelledBy: string | null;
+    protected readonly animationsDisabled: boolean;
+    get ariaLabelledBy(): string | null;
+    set ariaLabelledBy(value: string | null);
     attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
     attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
     enter(): void;
@@ -130,17 +105,18 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     protected readonly indentClickEmitter: Subject<MouseEvent>;
     // (undocumented)
     ngOnDestroy(): void;
-    onAnimation(event: AnimationEvent_2): void;
     readonly portalOutlet: i0.Signal<CdkPortalOutlet>;
-    setAnimationState(state: KbqSidepanelAnimationState): void;
     setAriaLabelledBy(id: string): void;
     setWithIndent(withIndent: boolean): void;
     // (undocumented)
     sidepanelConfig: KbqSidepanelConfig<any>;
     get size(): string;
+    protected get stateOpacity(): number | null;
+    protected get stateTransform(): string | null;
     get trapFocus(): boolean;
     get trapFocusAutoCapture(): boolean;
-    withIndent: boolean;
+    get withIndent(): boolean;
+    set withIndent(value: boolean);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelContainerComponent, "kbq-sidepanel-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -198,7 +174,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
     beforeClosed(): Observable<void>;
-    bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
+    readonly bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
     close(result?: R): void;
     // (undocumented)

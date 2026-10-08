@@ -7,8 +7,6 @@
 import { AfterContentInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import * as _angular_forms from '@angular/forms';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { FocusOrigin } from '@angular/cdk/a11y';
@@ -27,6 +25,7 @@ import { KbqPanelWidthOrigin } from '@koobiq/components/core';
 import { KbqPoint } from '@koobiq/components/core';
 import { KbqSiblingPopup } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
+import * as _koobiq_components_dropdown from '@koobiq/components/dropdown';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
@@ -45,9 +44,6 @@ export type DropdownPositionX = KbqDropdownPositionX;
 
 // @public @deprecated (undocumented)
 export type DropdownPositionY = KbqDropdownPositionY;
-
-// @public @deprecated (undocumented)
-export const fadeInItems: AnimationTriggerMetadata;
 
 // @public
 export const KBQ_DROPDOWN_DEFAULT_OPTIONS: InjectionToken<KbqDropdownDefaultOptions>;
@@ -80,7 +76,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     activateSafeArea(owner: KbqDropdownItem, origin: KbqPoint, getPanelRect: () => DOMRect, onExit: () => void): void;
     readonly activeDescendantNavigation: _angular_core.InputSignalWithTransform<boolean, unknown>;
     adoptItems(items: readonly KbqDropdownItem[]): void;
-    animationDone: Subject<AnimationEvent_2>;
     readonly backdropClass: _angular_core.InputSignal<string>;
     protected readonly classList: Signal<Record<string, boolean>>;
     // (undocumented)
@@ -94,7 +89,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     readonly hasSearch: Signal<boolean>;
     hovered(): Observable<KbqDropdownItem>;
     readonly inSearchMode: Signal<boolean>;
-    isAnimating: boolean;
     isSafeAreaActive(): boolean;
     isSafeAreaOwner(item: KbqDropdownItem): boolean;
     readonly items: Signal<readonly KbqDropdownItem[]>;
@@ -105,14 +99,10 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    onAnimationDone(event: AnimationEvent_2): void;
-    // (undocumented)
-    onAnimationStart(event: AnimationEvent_2): void;
     onPanelReached(): Observable<void>;
     onSwitchTarget(): Observable<KbqDropdownItem>;
     readonly overlapTriggerX: _angular_core.ModelSignal<boolean>;
     readonly overlapTriggerY: _angular_core.ModelSignal<boolean>;
-    panelAnimationState: 'void' | 'enter';
     readonly panelClass: _angular_core.InputSignal<string>;
     readonly panelMaxWidth: _angular_core.InputSignalWithTransform<KbqPanelMaxWidth, unknown>;
     readonly panelMinWidth: _angular_core.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
@@ -120,14 +110,11 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth>;
     parent: KbqDropdownPanel | undefined;
     resetActiveItem(): void;
-    resetAnimation(): void;
     restoreFocus(): boolean;
     readonly safeArea: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    setOpened(opened: boolean): void;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
-    startAnimation(): void;
     readonly templateRef: Signal<TemplateRef<any>>;
-    // @deprecated (undocumented)
-    triggerWidth: string;
     readonly xPosition: _angular_core.ModelSignal<KbqDropdownPositionX>;
     readonly yPosition: _angular_core.ModelSignal<KbqDropdownPositionY>;
     // (undocumented)
@@ -135,12 +122,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqDropdown, never>;
 }
-
-// @public
-export const kbqDropdownAnimations: {
-    readonly transformDropdown: AnimationTriggerMetadata;
-    readonly fadeInItems: AnimationTriggerMetadata;
-};
 
 // @public
 export class KbqDropdownContent implements OnDestroy {
@@ -195,7 +176,8 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     haltDisabledEvents(event: Event): void;
     protected handleKeydown(event: KeyboardEvent): void;
     handleMouseEnter(): void;
-    highlighted: boolean;
+    get highlighted(): boolean;
+    set highlighted(value: boolean);
     readonly hovered: Subject<KbqDropdownItem>;
     // (undocumented)
     readonly icon: _angular_core.Signal<KbqIcon | undefined>;
@@ -210,8 +192,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHo
     resetStyles(): void;
     setActiveStyles(): void;
     setInactiveStyles(): void;
-    // (undocumented)
-    textElement: ElementRef;
+    get textElement(): ElementRef;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqDropdownItem, "kbq-dropdown-item, [kbq-dropdown-item]", ["kbqDropdownItem"], { "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "progress": { "alias": "progress"; "required": false; "isSignal": true; }; }, {}, ["icon", "itemAction"], ["[kbq-icon]", "*", "[kbqDropdownItemAction]"], true, never>;
     // (undocumented)
@@ -284,8 +265,6 @@ export interface KbqDropdownPanel {
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
     templateRef: Signal<TemplateRef<any>>;
-    // @deprecated (undocumented)
-    triggerWidth?: string;
     // (undocumented)
     xPosition: WritableSignal<KbqDropdownPositionX>;
     // (undocumented)
@@ -306,7 +285,7 @@ export class KbqDropdownSearch implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     get ngControl(): _angular_forms.NgControl | null;
-    readonly panel: KbqDropdownPanel | null;
+    readonly panel: _koobiq_components_dropdown.KbqDropdownPanel | null;
     reset(): void;
     value(): string;
     // (undocumented)
@@ -376,9 +355,6 @@ export const NESTED_PANEL_LEFT_PADDING = 8;
 
 // @public
 export const NESTED_PANEL_TOP_PADDING = 4;
-
-// @public @deprecated (undocumented)
-export const transformDropdown: AnimationTriggerMetadata;
 
 // (No @packageDocumentation comment for this package)
 

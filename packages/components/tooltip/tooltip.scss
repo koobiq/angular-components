@@ -1,4 +1,5 @@
 @use '../core/pop-up/pop-up';
+@use '../core/styles/common/animation';
 
 @use '../core/styles/common/tokens' as *;
 
@@ -63,12 +64,39 @@ $navbar-trigger-margin: $trigger-margin + 1px;
 
     max-width: var(--kbq-tooltip-size-max-width);
 
+    // Shown once `KbqPopUp.show()` has made it visible.
+    opacity: 0;
+    transform: scale(0);
+
     .kbq-tooltip__inner {
         padding: var(--kbq-tooltip-size-padding-vertical) var(--kbq-tooltip-size-padding-horizontal);
     }
 
     &.kbq-tooltip_arrowless {
         @include pop-up.popup-margins(kbq-tooltip, $trigger-margin_without-arrow);
+    }
+
+    &.kbq-tooltip_visible {
+        opacity: 1;
+        // Rests at exactly 1: a fractional scale leaves the tooltip permanently resampled, which softens its
+        // text for as long as it is on screen. A transform rather than `none`: it makes the tooltip the
+        // stacking context the arrow's negative `z-index` is drawn in, behind the panel but not behind the page.
+        transform: scale(1);
+        animation: kbq-tooltip-enter 200ms cubic-bezier(0, 0, 0.2, 1);
+
+        @include animation.kbq-animations-off();
+    }
+}
+
+@keyframes kbq-tooltip-enter {
+    from {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    50% {
+        opacity: 0.5;
+        transform: scale(0.9);
     }
 }
 

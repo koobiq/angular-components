@@ -1,7 +1,7 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideLocationMocks } from '@angular/common/testing';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { axe } from 'jest-axe';
 import { BehaviorSubject, map, of } from 'rxjs';
@@ -40,14 +40,16 @@ describe(DocsIconsViewerComponent.name, () => {
         Array.from(fixture.nativeElement.querySelectorAll('.docs-icons-viewer__table-cell'));
 
     /** Renders the grid: flushes the metadata request and lets the debounced search pipeline emit. */
-    const renderIcons = () => {
+    const renderIcons = async () => {
         httpMock.expectOne('assets/SVGIcons/kbq-icons-info.json').flush(ICONS_METADATA);
         fixture.detectChanges();
-        tick(SEARCH_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(SEARCH_DEBOUNCE_TIME);
         fixture.detectChanges();
     };
 
     beforeEach(() => {
+        vi.useFakeTimers();
+
         TestBed.configureTestingModule({
             imports: [DocsIconsViewerComponent],
             providers: [
@@ -65,54 +67,58 @@ describe(DocsIconsViewerComponent.name, () => {
         fixture.detectChanges();
     });
 
-    afterEach(() => httpMock.verify());
+    afterEach(() => {
+        vi.useRealTimers();
+        httpMock.verify();
+    });
 
-    it('has no axe violations', fakeAsync(async () => {
-        renderIcons();
+    it('has no axe violations', async () => {
+        await renderIcons();
 
         expect(cells().length).toBe(Object.keys(ICONS_METADATA).length);
+
+        // axe-core schedules its checks on timers.
+        vi.useRealTimers();
+
         expect(await axe(fixture.nativeElement)).toHaveNoViolations();
-    }));
+    });
 
     // The cells used to be bare <div>s with a click handler: no button semantics, no Space (A11Y-02).
-    it('exposes each icon cell as a labelled, focusable button', fakeAsync(() => {
-        renderIcons();
+    it('exposes each icon cell as a labelled, focusable button', async () => {
+        await renderIcons();
 
         for (const cell of cells()) {
             expect(cell.getAttribute('role')).toBe('button');
             expect(cell.getAttribute('tabindex')).toBe('0');
             expect(cell.getAttribute('aria-label')).toBeTruthy();
         }
-    }));
+    });
 
     it.each([
         ['click', () => new MouseEvent('click', { bubbles: true })],
         ['Enter', () => new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })],
         ['Space', () => new KeyboardEvent('keydown', { key: ' ', bubbles: true })]
-    ])(
-        'activates an icon cell on %s',
-        fakeAsync((_name: string, createEvent: () => Event) => {
-            const navigate = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    ])('activates an icon cell on %s', async (_name: string, createEvent: () => Event) => {
+        const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
-            renderIcons();
-            cells()[0].dispatchEvent(createEvent());
+        await renderIcons();
+        cells()[0].dispatchEvent(createEvent());
 
-            expect(navigate).toHaveBeenCalled();
-        })
-    );
+        expect(navigate).toHaveBeenCalled();
+    });
 
     // Typing is not navigation: pushing a history entry per debounced keystroke made "Back" walk the
     // query letter by letter instead of leaving the page.
-    it('replaces the history entry when writing the search query to the URL', fakeAsync(() => {
-        const navigate = jest.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
+    it('replaces the history entry when writing the search query to the URL', async () => {
+        const navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
 
-        renderIcons();
+        await renderIcons();
         fixture.componentInstance.searchControl.setValue('copy');
-        tick(SEARCH_DEBOUNCE_TIME);
+        await vi.advanceTimersByTimeAsync(SEARCH_DEBOUNCE_TIME);
 
         expect(navigate).toHaveBeenCalledWith(
             [],
             expect.objectContaining({ queryParams: { s: 'copy' }, replaceUrl: true })
         );
-    }));
+    });
 });

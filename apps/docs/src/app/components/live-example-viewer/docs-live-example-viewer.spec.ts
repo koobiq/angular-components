@@ -6,6 +6,7 @@ import { KbqStateSavingService } from '@koobiq/components/core';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
 import { axe } from 'jest-axe';
 import { BehaviorSubject, map } from 'rxjs';
+import type { Mock } from 'vitest';
 import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale';
 import { DocsLiveExampleViewerComponent } from './docs-live-example-viewer';
@@ -38,8 +39,8 @@ const provideDocsLocale = (locale: DocsLocale) => {
 describe(DocsLiveExampleViewerComponent.name, () => {
     let fixture: ComponentFixture<DocsLiveExampleViewerComponent>;
     let httpMock: HttpTestingController;
-    let requestFullscreen: jest.Mock<Promise<void>>;
-    let exitFullscreen: jest.Mock<Promise<void>>;
+    let requestFullscreen: Mock<() => Promise<void>>;
+    let exitFullscreen: Mock<() => Promise<void>>;
 
     const fullscreenEnabledDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenEnabled');
     const fullscreenElementDescriptor = Object.getOwnPropertyDescriptor(document, 'fullscreenElement');
@@ -78,8 +79,8 @@ describe(DocsLiveExampleViewerComponent.name, () => {
             files: ['basic-select-example.ts', 'basic-select-example.html']
         } as LiveExample;
 
-        requestFullscreen = jest.fn().mockResolvedValue(undefined);
-        exitFullscreen = jest.fn().mockResolvedValue(undefined);
+        requestFullscreen = vi.fn().mockResolvedValue(undefined);
+        exitFullscreen = vi.fn().mockResolvedValue(undefined);
 
         Object.defineProperty(document, 'fullscreenEnabled', { configurable: true, value: true });
         setFullscreenElement(null);
@@ -231,7 +232,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
         it('holds the place of an example given as a loader with a skeleton until it has loaded', async () => {
             const viewer = TestBed.createComponent(DocsLiveExampleViewerComponent);
             const example = (): HTMLElement => viewer.nativeElement.querySelector('.docs-live-example__example');
-            const load = jest.fn(() => Promise.resolve(BasicSelectExample));
+            const load = vi.fn(() => Promise.resolve(BasicSelectExample));
 
             viewer.componentRef.setInput('example', EXAMPLE_ID);
             viewer.componentRef.setInput('component', { load });
@@ -283,7 +284,7 @@ describe(DocsLiveExampleViewerComponent.name, () => {
             exampleElement.appendChild(insideHost);
             document.body.appendChild(outsideHost);
 
-            const inside = { name: 'inside', key: 'a', enabled: true, state: null, host: insideHost, clear: jest.fn() };
+            const inside = { name: 'inside', key: 'a', enabled: true, state: null, host: insideHost, clear: vi.fn() };
             // The documentation site persists state of its own, and so do the other examples on the page.
             const outside = {
                 name: 'outside',
@@ -291,10 +292,10 @@ describe(DocsLiveExampleViewerComponent.name, () => {
                 enabled: true,
                 state: null,
                 host: outsideHost,
-                clear: jest.fn()
+                clear: vi.fn()
             };
 
-            jest.spyOn(TestBed.inject(KbqStateSavingService), 'components').mockReturnValue([inside, outside]);
+            vi.spyOn(TestBed.inject(KbqStateSavingService), 'components').mockReturnValue([inside, outside]);
 
             try {
                 (fixture.componentInstance as unknown as { reload(): void }).reload();

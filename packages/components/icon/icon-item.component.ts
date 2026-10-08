@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
 import { KbqIcon } from './icon.component';
 
 @Component({
@@ -18,10 +18,8 @@ import { KbqIcon } from './icon.component';
 export class KbqIconItem extends KbqIcon {
     override name = 'KbqIconItem';
 
-    /** Name of an icon within a `@koobiq/icons`. */
-    // Kept as @Input() to stay compatible with KbqIcon.iconName (also @Input()).
-    // Migrate together with the rest of the KbqIcon hierarchy in a follow-up.
-    @Input({ alias: 'kbq-icon-item' }) override iconName: string;
+    /** @docs-private */
+    override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-item' });
 
     readonly fade = input<boolean>(false);
     readonly big = input<boolean>(false);

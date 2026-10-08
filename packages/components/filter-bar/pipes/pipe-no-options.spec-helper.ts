@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, ESCAPE } from '@koobiq/components/core';
 import {
@@ -48,6 +48,8 @@ export const registerNoOptionsTests = (config: PipeNoOptionsConfig): void => {
             overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
         });
 
+        afterEach(() => vi.useRealTimers());
+
         const render = (template: Partial<KbqPipeTemplate>) => {
             fixture.componentInstance.pipeTemplates = [config.createTemplate(template)];
             fixture.componentInstance.activeFilter = config.createFilter([config.createPipe({ search: true })]);
@@ -57,10 +59,10 @@ export const registerNoOptionsTests = (config: PipeNoOptionsConfig): void => {
         const getPipe = () => fixture.debugElement.query(By.css(config.pipeSelector));
 
         /** Opens the pipe the way `openOnAdd` does, then lets the deferred opening run out. */
-        const open = () => {
+        const open = async () => {
             (getPipe().componentInstance as KbqBasePipe<unknown>).open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
         };
 
@@ -69,66 +71,80 @@ export const registerNoOptionsTests = (config: PipeNoOptionsConfig): void => {
 
         const getSearch = () => overlayContainerElement.querySelector('.kbq-select__search-container');
 
-        it('should show the localized message when the template has no values', fakeAsync(() => {
+        it('should show the localized message when the template has no values', async () => {
+            vi.useFakeTimers();
+
             render({ values: [] });
-            open();
+            await open();
 
             expect(getMessage()).toBe(localizedMessage);
-        }));
+        });
 
-        it('should show the message when the template omits values', fakeAsync(() => {
+        it('should show the message when the template omits values', async () => {
+            vi.useFakeTimers();
+
             render({ values: undefined });
-            open();
+            await open();
 
             expect(getMessage()).toBe(localizedMessage);
-        }));
+        });
 
-        it('should show noOptionsText from the pipe template', fakeAsync(() => {
+        it('should show noOptionsText from the pipe template', async () => {
+            vi.useFakeTimers();
+
             render({ values: [], noOptionsText: 'No tenants available' });
-            open();
+            await open();
 
             expect(getMessage()).toBe('No tenants available');
-        }));
+        });
 
-        it('should hide the search field', fakeAsync(() => {
+        it('should hide the search field', async () => {
+            vi.useFakeTimers();
+
             render({ values: [] });
-            open();
+            await open();
 
             expect(getMessage()).toBe(localizedMessage);
             expect(getSearch()).toBeNull();
-        }));
+        });
 
-        it('should move the focus to the trigger', fakeAsync(() => {
+        it('should move the focus to the trigger', async () => {
+            vi.useFakeTimers();
+
             render({ values: [] });
-            open();
+            await open();
 
             expect(document.activeElement).toBe(getPipe().nativeElement.querySelector('[kbq-select-matcher]'));
-        }));
+        });
 
-        it('should close on Escape', fakeAsync(() => {
+        it('should close on Escape', async () => {
+            vi.useFakeTimers();
+
             render({ values: undefined });
-            open();
+            await open();
 
             expect(getMessage()).toBe(localizedMessage);
 
             dispatchKeyboardEvent(document.activeElement!, 'keydown', ESCAPE);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getMessage()).toBeUndefined();
-        }));
+        });
 
-        it('should show the options and the search once the template supplies values', fakeAsync(() => {
+        it('should show the options and the search once the template supplies values', async () => {
+            vi.useFakeTimers();
+
             render({ values: [] });
 
             fixture.componentInstance.pipeTemplates = [config.createTemplate({ values: config.values })];
             fixture.detectChanges();
-            open();
+            await open();
 
             expect(getMessage()).toBeUndefined();
             expect(getSearch()).not.toBeNull();
             expect(overlayContainerElement.querySelector('.kbq-option, .kbq-tree-option')).not.toBeNull();
-        }));
+        });
     });
 };

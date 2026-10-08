@@ -3,20 +3,19 @@ import {
     AfterViewChecked,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
     inject,
     InjectionToken,
-    Input,
     input,
     OnDestroy,
-    Output,
     QueryList,
-    ViewChild,
+    signal,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { ActiveDescendantKeyManager } from '../a11y';
 import { ENTER, hasModifierKey, SPACE } from '../keycodes';
@@ -49,7 +48,11 @@ export interface KbqOptionParentComponent {
     multiSelection?: boolean;
     withVirtualScroll?: boolean;
     keyManager?: ActiveDescendantKeyManager<KbqOption>;
-    setSelectedOptionsByClick: (option: KbqOption) => void;
+    /**
+     * Handles a Shift+click on `option`, e.g. by selecting the range up to it. Without it, the click selects the
+     * option alone.
+     */
+    setSelectedOptionsByClick?(option: KbqOption): void;
 }
 
 /**
@@ -66,10 +69,9 @@ export interface KeyboardNavigationHandler {
 export const KBQ_OPTION_PARENT_COMPONENT = new InjectionToken<KbqOptionParentComponent>('KBQ_OPTION_PARENT_COMPONENT');
 
 export abstract class KbqOptionBase {
-    value: any;
+    abstract get value(): any;
     abstract get viewValue(): string;
     abstract get disabled(): boolean;
-    abstract set disabled(value: any);
 
     abstract readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<any>>;
 
@@ -171,56 +173,63 @@ export class KbqVirtualOption extends KbqOptionBase {
 })
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    protected readonly parent = inject<KbqOptionParentComponent>(KBQ_OPTION_PARENT_COMPONENT, { optional: true })!;
+    protected readonly parent = inject<KbqOptionParentComponent>(KBQ_OPTION_PARENT_COMPONENT, { optional: true });
     readonly group = inject(KbqOptgroup, { optional: true });
-    @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
+
+    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
+
+    /** Element holding the text of the option, measured by `kbq-title`. */
+    get textElement(): ElementRef<HTMLElement> | undefined {
+        return this.titleText();
+    }
+
+    /** @docs-private */
+    readonly valueInput = input<any>(undefined, { alias: 'value' });
 
     /** The form value of the option. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() value: any;
+    get value(): any {
+        return this.valueInput();
+    }
 
     readonly selectable = input<boolean, unknown>(true, { transform: booleanAttribute });
 
     // todo this flag will need to be rethought in the future (added for filter panel)
     readonly userSelect = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get showCheckbox() {
-        return this._showCheckbox === undefined ? this.multiple : this._showCheckbox;
+    /** @docs-private */
+    readonly showCheckboxInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'showCheckbox',
+        transform: booleanAttribute
+    });
+
+    /** Whether the option renders a checkbox. Follows the multiple selection mode of the parent until bound. */
+    get showCheckbox(): boolean {
+        return this.showCheckboxInput() ?? this.multiple;
     }
 
-    set showCheckbox(value) {
-        this._showCheckbox = coerceBooleanProperty(value);
-    }
+    /**
+     * Event emitted when the option is selected or deselected. A stream rather than an `output()`: it keeps
+     * emitting after the option is destroyed, because a select holds on to a selected option that its search or
+     * virtual scroll removed.
+     */
+    readonly onSelectionChange = new EventEmitter<KbqOptionSelectionChange>();
 
-    private _showCheckbox: boolean;
-
-    /** Event emitted when the option is selected or deselected. */
-    @Output() readonly onSelectionChange = new EventEmitter<KbqOptionSelectionChange>();
+    /** @docs-private */
+    readonly selectionChangeOutput = outputFromObservable(this.onSelectionChange, { alias: 'onSelectionChange' });
 
     /** Emits when the state of the option changes and any parents have to be notified. */
     readonly stateChanges = new Subject<void>();
 
+    /** @docs-private */
+    readonly viewValueInput = input<string | undefined>(undefined, { alias: 'viewValue' });
+
     /**
      * The displayed value of the option. It is necessary to show the selected option in the
-     * select's trigger.
+     * select's trigger. Falls back to the text of the option.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get viewValue(): string {
-        return this._viewValue || (this.getHostElement().textContent || '').trim();
+        return this.viewValueInput() || (this.getHostElement().textContent || '').trim();
     }
-
-    set viewValue(value: string) {
-        this._viewValue = value;
-    }
-
-    private _viewValue: string;
 
     /** Whether the wrapping component is in multiple selection mode. */
     get multiple(): boolean {
@@ -234,23 +243,21 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     private _id = `kbq-option-${uniqueIdCounter++}`;
 
     get selected(): boolean {
-        return this._selected;
+        return this.selectedState();
     }
 
-    private _selected = false;
+    private readonly selectedState = signal(false);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get disabled() {
-        return (this.group && this.group.disabled) || this._disabled;
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Whether the option is disabled, through its own input or its group. */
+    get disabled(): boolean {
+        return !!this.group?.disabled() || this.disabledInput();
     }
-
-    set disabled(value: any) {
-        this._disabled = coerceBooleanProperty(value);
-    }
-
-    private _disabled = false;
 
     /**
      * Whether or not the option is currently active and ready to be selected.
@@ -259,10 +266,10 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * for components like autocomplete where focus must remain on the input.
      */
     get active(): boolean {
-        return this._active;
+        return this.activeState();
     }
 
-    private _active = false;
+    private readonly activeState = signal(false);
 
     private mostRecentViewValue = '';
 
@@ -278,7 +285,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         // we have to check for changes in the DOM ourselves and dispatch an event. These checks are
         // relatively cheap, however we still limit them only to selected options in order to avoid
         // hitting the DOM too often.
-        if (this._selected) {
+        if (this.selected) {
             const viewValue = this.viewValue;
 
             if (viewValue !== this.mostRecentViewValue) {
@@ -298,19 +305,17 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     select(emitEvent: boolean = true): void {
-        if (!this._selected) {
-            this._selected = true;
+        if (!this.selected) {
+            this.selectedState.set(true);
 
-            this.changeDetectorRef.markForCheck();
             if (emitEvent) this.emitSelectionChangeEvent();
         }
     }
 
     deselect(emitEvent: boolean = true): void {
-        if (this._selected) {
-            this._selected = false;
+        if (this.selected) {
+            this.selectedState.set(false);
 
-            this.changeDetectorRef.markForCheck();
             if (emitEvent) this.emitSelectionChangeEvent();
         }
     }
@@ -326,10 +331,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * events will display the proper options as active on arrow key events.
      */
     setActiveStyles(): void {
-        if (!this._active) {
-            this._active = true;
-            this.changeDetectorRef.markForCheck();
-        }
+        this.activeState.set(true);
     }
 
     /**
@@ -338,10 +340,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * events will display the proper options as active on arrow key events.
      */
     setInactiveStyles(): void {
-        if (this._active) {
-            this._active = false;
-            this.changeDetectorRef.markForCheck();
-        }
+        this.activeState.set(false);
     }
 
     /** Gets the label to be used when determining whether the option should be focused. */
@@ -351,7 +350,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** @docs-private */
     handleClick(event: MouseEvent): void {
-        if (hasModifierKey(event, 'shiftKey')) {
+        if (hasModifierKey(event, 'shiftKey') && this.parent?.setSelectedOptionsByClick) {
             this.parent.setSelectedOptionsByClick(this);
         } else {
             this.selectViaInteraction();
@@ -381,9 +380,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         if (this.userSelect()) return;
 
         if (!this.disabled && this.selectable()) {
-            this._selected = this.multiple ? !this._selected : true;
+            this.selectedState.set(this.multiple ? !this.selected : true);
 
-            this.changeDetectorRef.markForCheck();
             this.emitSelectionChangeEvent(true);
         }
     }
@@ -451,34 +449,4 @@ export function countGroupLabelsBeforeOption(
     }
 
     return 0;
-}
-
-/**
- * Determines the position to which to scroll a panel in order for an option to be into view.
- * @param optionIndex Index of the option to be scrolled into the view.
- * @param optionHeight Height of the options.
- * @param currentScrollPosition Current scroll position of the panel.
- * @param panelHeight Height of the panel.
- * @docs-private
- * @deprecated Unused — an option reveals itself on focus through `KbqOption.focus`, which lets the
- * browser resolve the scroll container instead of computing an offset from a uniform row height. Will be
- * removed in the next major release.
- */
-export function getOptionScrollPosition(
-    optionIndex: number,
-    optionHeight: number,
-    currentScrollPosition: number,
-    panelHeight: number
-): number {
-    const optionOffset = optionIndex * optionHeight;
-
-    if (optionOffset < currentScrollPosition) {
-        return optionOffset;
-    }
-
-    if (optionOffset + optionHeight > currentScrollPosition + panelHeight) {
-        return Math.max(0, optionOffset - panelHeight + optionHeight);
-    }
-
-    return currentScrollPosition;
 }

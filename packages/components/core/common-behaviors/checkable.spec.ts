@@ -1,5 +1,5 @@
 import { Component, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqCheckable, KbqCheckableClickAction, TransitionCheckState } from './checkable';
@@ -128,7 +128,7 @@ describe(KbqCheckable.name, () => {
         });
 
         it('should notify the registered ControlValueAccessor change handler with the new value', () => {
-            const onChange = jest.fn();
+            const onChange = vi.fn();
 
             checkable.registerOnChange(onChange);
 
@@ -228,7 +228,7 @@ describe(KbqCheckable.name, () => {
         it('should be a no-op when transitioning to the same state', () => {
             checkable.transitionCheckState(TransitionCheckState.Checked);
 
-            const setSpy = jest.spyOn(checkable.currentCheckState, 'set');
+            const setSpy = vi.spyOn(checkable.currentCheckState, 'set');
 
             checkable.transitionCheckState(TransitionCheckState.Checked);
 
@@ -287,7 +287,7 @@ describe(KbqCheckable.name, () => {
         });
 
         it('registerOnChange should wire up notifyFormValueChange', () => {
-            const onChange = jest.fn();
+            const onChange = vi.fn();
 
             checkable.registerOnChange(onChange);
             checkable.notifyFormValueChange(true);
@@ -296,7 +296,7 @@ describe(KbqCheckable.name, () => {
         });
 
         it('registerOnTouched should wire up onTouched', () => {
-            const onTouched = jest.fn();
+            const onTouched = vi.fn();
 
             checkable.registerOnTouched(onTouched);
             checkable.onTouched();
@@ -318,17 +318,17 @@ describe(`${KbqCheckable.name} integration with ngModel`, () => {
         ngModelFixture = createComponent(TestCheckableWithNgModel);
     });
 
-    it('should support two-way binding through the KbqCheckable ControlValueAccessor', fakeAsync(() => {
+    it('should support two-way binding through the KbqCheckable ControlValueAccessor', async () => {
         const testInput = ngModelFixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
 
-        tick();
+        await ngModelFixture.whenStable();
 
         expect(ngModelFixture.componentInstance.checked).toBe(false);
 
         testInput.click();
         ngModelFixture.detectChanges();
-        tick();
+        await ngModelFixture.whenStable();
 
         expect(ngModelFixture.componentInstance.checked).toBe(true);
-    }));
+    });
 });

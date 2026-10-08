@@ -15,6 +15,16 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
 
 const getFocusMonitor = () => TestBed.inject(FocusMonitor);
 
+/**
+ * Renders a change to the projected content and what the component makes of it: the content observer reports the
+ * new text from a mutation callback that runs after the render, and only then is the result rendered.
+ */
+const renderProjectedChange = async (fixture: ComponentFixture<unknown>): Promise<void> => {
+    await fixture.whenStable();
+    await new Promise((resolve) => setTimeout(resolve));
+    await fixture.whenStable();
+};
+
 const getMarkdownDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqMarkdown));
 };
@@ -258,7 +268,7 @@ describe(KbqMarkdown.name, () => {
         expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('first');
 
         fixture.componentInstance.projected.set('# second');
-        await fixture.whenStable();
+        await renderProjectedChange(fixture);
 
         expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('second');
     });
@@ -274,7 +284,7 @@ describe(KbqMarkdown.name, () => {
         // The content is empty at the first render, so a one-off snapshot would freeze the fallback at ''
         // and this would never render.
         fixture.componentInstance.ready.set(true);
-        await fixture.whenStable();
+        await renderProjectedChange(fixture);
 
         expect(output.querySelector('.kbq-markdown__h1')!.textContent).toBe('later');
     });

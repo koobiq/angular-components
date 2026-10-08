@@ -4,21 +4,19 @@ import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     ElementRef,
-    forwardRef,
     inject,
-    Input,
     input,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     output,
+    SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqCheckable, KbqCheckedState, KbqColorDirective, TransitionCheckState } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
@@ -29,18 +27,6 @@ import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-co
  * @deprecated Use `TransitionCheckState` from `@koobiq/components/core` instead.
  */
 export { TransitionCheckState };
-
-/**
- * Provider Expression that allows kbq-checkbox to register as a ControlValueAccessor.
- * This allows it to support [(ngModel)].
- * @docs-private
- * @deprecated Unused - the `ControlValueAccessor` is now registered by the `KbqCheckable` host directive.
- */
-export const KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => KbqCheckbox),
-    multi: true
-};
 
 /** Change event object emitted by KbqCheckbox. */
 export class KbqCheckboxChange {
@@ -79,8 +65,7 @@ export class KbqCheckboxChange {
     hostDirectives: [KbqCheckable],
     exportAs: 'kbqCheckbox'
 })
-export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterViewInit, OnDestroy {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
 
@@ -130,13 +115,62 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     /** Whether the checkbox is required. */
     readonly required = input(false, { transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
+    /** @docs-private */
+    readonly indeterminateInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'indeterminate',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['checkedInput']) {
+            const checked = this.checkedInput();
+
+            if (checked !== undefined) this.checked = checked;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+
+        if (changes['indeterminateInput']) {
+            const indeterminate = this.indeterminateInput();
+
+            if (indeterminate !== undefined) this.indeterminate = indeterminate;
+        }
+    }
+
     /**
      * Whether the checkbox is checked.
      */
     // `checked` is two-way state: the component writes it on click and the `ControlValueAccessor` writes it
-    // through `KbqCheckable`. A `model()` cannot carry a transform, so this stays an accessor input over the
-    // shared signal — the same shape the reviewed `KbqButtonToggle` settled on.
-    @Input({ transform: booleanAttribute })
+    // through `KbqCheckable`, so the property stays an accessor over the shared signal and `checkedInput` feeds it.
     get checked(): boolean {
         return this.checkable.checked();
     }
@@ -146,7 +180,6 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     }
 
     /** Whether the checkbox is disabled. */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.checkable.disabled();
     }
@@ -156,7 +189,6 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     }
 
     /** Tab order of the native input. A disabled checkbox is taken out of the tab order regardless. */
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.checkable.effectiveTabIndex();
     }
@@ -171,7 +203,6 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
      * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
      * set to false.
      */
-    @Input({ transform: booleanAttribute })
     get indeterminate(): boolean {
         return this.checkable.indeterminate();
     }
@@ -194,14 +225,6 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
         }
     }
 
-    /**
-     * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
-     * @docs-private
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    onTouched: () => any = () => {};
-
     ngAfterViewInit() {
         this.focusMonitor
             .monitor(this.inputElement().nativeElement)
@@ -218,46 +241,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
      * @docs-private
      */
     protected onLabelTextChange(): void {
-        // This method is getting called whenever the label of the checkbox changes.
-        // Since the checkbox uses the OnPush strategy we need to notify it about the change
-        // that has been recognized by the cdkObserveContent directive.
-        this.changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Implemented as part of ControlValueAccessor.
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    writeValue(value: any) {
-        this.checkable.checked.set(!!value);
-    }
-
-    /**
-     * Implemented as part of ControlValueAccessor.
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    registerOnChange(fn: (value: any) => void) {
-        this.checkable.registerOnChange(fn);
-    }
-
-    /**
-     * Implemented as part of ControlValueAccessor.
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    registerOnTouched(fn: any) {
-        this.checkable.registerOnTouched(fn);
-    }
-
-    /**
-     * Implemented as part of ControlValueAccessor.
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    setDisabledState(isDisabled: boolean) {
-        this.checkable.disabled.set(isDisabled);
+        // Nothing to do here: the template listener itself re-checks the view, which reads the label text.
     }
 
     /** @docs-private */

@@ -32,6 +32,7 @@ import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ValidationErrors } from '@angular/forms';
 import { Validator } from '@angular/forms';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export function add(value1: number, value2: number): number;
@@ -80,41 +81,33 @@ export const KBQ_MIN_VALIDATOR: Provider;
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
-export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
+export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErrorState {
     constructor();
     readonly autofilled: _angular_core.Signal<boolean>;
     controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
-    protected dirtyCheckNativeValue(): void;
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    dirtyCheckNativeValue(): void;
+    readonly disabled: _angular_core.Signal<boolean>;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     protected elementRef: ElementRef<HTMLInputElement>;
-    get empty(): boolean;
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    readonly empty: _angular_core.Signal<boolean>;
+    readonly errorState: _angular_core.Signal<boolean>;
+    readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     focus(): void;
     focusChanged(isFocused: boolean): void;
-    focused: boolean;
-    get id(): string;
-    set id(value: string);
+    readonly focused: _angular_core.Signal<boolean>;
+    readonly id: _angular_core.Signal<string>;
+    readonly idInput: _angular_core.InputSignal<string | undefined>;
     protected isBadInput(): boolean;
     protected isNeverEmpty(): boolean;
     // (undocumented)
     protected neverEmptyInputTypes: string[];
     // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_required: unknown;
-    // (undocumented)
     ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
-    // (undocumented)
-    ngOnChanges(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     numberInput: KbqNumberInput | null;
     // (undocumented)
@@ -124,23 +117,20 @@ export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy,
     parentForm: NgForm | null;
     // (undocumented)
     parentFormGroup: FormGroupDirective | null;
-    placeholder: string;
-    // (undocumented)
-    protected previousNativeValue: any;
-    get required(): boolean;
-    set required(value: boolean);
-    readonly stateChanges: Subject<void>;
+    readonly placeholder: WritableSignal<string | undefined>;
+    readonly placeholderInput: _angular_core.InputSignal<string | undefined>;
+    readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     get type(): string;
-    set type(value: string);
+    readonly typeInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     protected uid: string;
     // (undocumented)
     updateErrorState(): void;
     protected validateType(): void;
-    get value(): string;
-    set value(value: string);
+    readonly value: WritableSignal<string>;
+    readonly valueInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "type": { "alias": "type"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInput, "input[kbqInput],input[kbqNumberInput]", ["kbqInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "typeInput": { "alias": "type"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInput, never>;
 }
@@ -167,66 +157,50 @@ export class KbqInputMono {
 }
 
 // @public (undocumented)
-export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
+export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanUpdateErrorState {
     constructor();
     readonly autofilled: _angular_core.Signal<boolean>;
-    readonly checkRule: Subject<void>;
-    checkRules(): void;
     controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
-    protected dirtyCheckNativeValue(): void;
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    dirtyCheckNativeValue(): void;
+    readonly disabled: _angular_core.Signal<boolean>;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     protected elementRef: ElementRef<HTMLInputElement>;
-    // (undocumented)
-    elementType: string;
-    get empty(): boolean;
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    readonly elementType: _angular_core.Signal<"text" | "password">;
+    readonly empty: _angular_core.Signal<boolean>;
+    readonly errorState: _angular_core.Signal<boolean>;
+    readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
     focus(): void;
     focusChanged(isFocused: boolean): void;
-    focused: boolean;
-    get id(): string;
-    set id(value: string);
+    readonly focused: _angular_core.Signal<boolean>;
+    readonly id: _angular_core.Signal<string>;
+    readonly idInput: _angular_core.InputSignal<string | undefined>;
     protected isBadInput(): boolean;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_required: unknown;
     // (undocumented)
     ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
-    ngOnChanges(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
     onBlur(): void;
     onContainerClick(): void;
-    // (undocumented)
-    onInput(): void;
     // (undocumented)
     parentForm: NgForm | null;
     // (undocumented)
     parentFormGroup: FormGroupDirective | null;
-    placeholder: string;
-    // (undocumented)
-    protected previousNativeValue: any;
-    get required(): boolean;
-    set required(value: boolean);
-    readonly stateChanges: Subject<any>;
+    readonly placeholder: WritableSignal<string | undefined>;
+    readonly placeholderInput: _angular_core.InputSignal<string | undefined>;
+    readonly required: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     toggleType(): void;
     // (undocumented)
     protected uid: string;
     // (undocumented)
     updateErrorState(): void;
-    get value(): string;
-    set value(value: string);
+    readonly value: WritableSignal<string>;
+    readonly valueInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; "isSignal": true; }; "placeholderInput": { "alias": "placeholder"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqInputPassword, never>;
 }
@@ -271,10 +245,9 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     protected readonly ariaValueMin: _angular_core.Signal<number | null>;
     readonly bigStep: _angular_core.InputSignalWithTransform<number, NumberInput>;
     controlType: string;
-    // (undocumented)
     get disabled(): boolean;
-    set disabled(value: boolean);
     readonly disabledChange: Subject<boolean>;
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -290,8 +263,6 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     readonly min: _angular_core.InputSignalWithTransform<number, NumberInput>;
     // (undocumented)
     get nativeElement(): HTMLInputElement;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -316,11 +287,10 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     stepDown(step: number): void;
     // (undocumented)
     stepUp(step: number): void;
-    // (undocumented)
     get value(): number | null;
-    set value(value: number | null);
     get valueAsNumber(): number | null;
     readonly valueChange: Subject<number | null>;
+    readonly valueInput: _angular_core.InputSignal<number | null | undefined>;
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
@@ -328,7 +298,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     // (undocumented)
     writeValue(value: number | null): void;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumberInput", "kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; "isSignal": true; }; "step": { "alias": "step"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumberInput", "kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; "isSignal": true; }; "bigStep": { "alias": "bigStep"; "required": false; "isSignal": true; }; "step": { "alias": "step"; "required": false; "isSignal": true; }; "min": { "alias": "min"; "required": false; "isSignal": true; }; "max": { "alias": "max"; "required": false; "isSignal": true; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; "isSignal": true; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, never, true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqNumberInput, never>;
 }

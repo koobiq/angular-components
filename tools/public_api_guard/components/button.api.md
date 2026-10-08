@@ -19,7 +19,9 @@ import { KbqEnumValues } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqOrientation } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public
 export const buttonLeftIconClassName = "kbq-button-icon_left";
@@ -28,13 +30,13 @@ export const buttonLeftIconClassName = "kbq-button-icon_left";
 export const buttonRightIconClassName = "kbq-button-icon_right";
 
 // @public (undocumented)
-export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef {
+export class KbqButton extends KbqColorDirective<KbqButtonColor> implements OnChanges, OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef {
     constructor();
     protected get ariaDisabledAttribute(): true | null;
-    get color(): KbqButtonColor;
-    set color(value: KbqButtonColor | null | undefined);
+    readonly color: i0.WritableSignal<"theme" | "theme-fade" | "contrast" | "contrast-fade">;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly disabledSignal: i0.WritableSignal<boolean>;
     // (undocumented)
     focus(): void;
@@ -48,22 +50,21 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     hasFocus: boolean;
     get kbqStyle(): string;
     set kbqStyle(value: KbqButtonStyleInput | null | undefined);
+    readonly kbqStyleInput: i0.InputSignal<KbqButtonStyleInput | null | undefined>;
     protected get nativeDisabledAttribute(): true | null;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     onBlur(): void;
     // (undocumented)
     onFocus(): void;
-    parentTextElement: ElementRef<HTMLElement>;
+    get parentTextElement(): ElementRef<HTMLElement>;
     // (undocumented)
     projectContentChanged(): void;
     setColorFromGroup(value: KbqButtonColor | null | undefined): void;
@@ -75,11 +76,11 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
     get tabIndex(): number;
     set tabIndex(value: number);
     protected get tabIndexAttribute(): number | null;
-    // (undocumented)
-    textElement: ElementRef<HTMLElement>;
+    readonly tabIndexInput: i0.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
+    get textElement(): ElementRef<HTMLElement>;
     updateRole(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyleInput": { "alias": "kbqStyle"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; }, {}, never, ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
 }
@@ -126,19 +127,19 @@ export class KbqButtonGroup {
 }
 
 // @public
-export class KbqButtonGroupRoot extends KbqColorDirective {
+export class KbqButtonGroupRoot extends KbqColorDirective<KbqButtonColor> implements OnChanges {
     constructor();
-    get color(): KbqButtonColor;
-    set color(value: KbqButtonColor | null | undefined);
     get disabled(): boolean | undefined;
     set disabled(value: boolean);
     protected _disabled: boolean | undefined;
+    readonly disabledInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     get kbqStyle(): string;
     set kbqStyle(value: KbqButtonStyleInput | null | undefined);
+    readonly kbqStyleInput: i0.InputSignal<KbqButtonStyleInput | null | undefined>;
     // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonGroupRoot, "[kbqButtonGroupRoot]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "color": { "alias": "color"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["buttons"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqButtonGroupRoot, "[kbqButtonGroupRoot]", never, { "kbqStyleInput": { "alias": "kbqStyle"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, ["buttons"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonGroupRoot, never>;
 }

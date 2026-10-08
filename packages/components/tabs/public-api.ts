@@ -6,5 +6,4 @@ export * from './tab-label-wrapper.directive';
 export * from './tab-label.directive';
 export * from './tab-nav-bar';
 export * from './tab.component';
-export * from './tabs-animations';
 export * from './tabs.module';

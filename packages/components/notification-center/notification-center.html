@@ -13,12 +13,12 @@ to everything the panel renders. -->
                 data-testid="kbq-notification-center-silent-mode-toggle"
                 [kbqDropdownTriggerFor]="notificationSwitcherDropdown"
                 [attr.aria-label]="
-                    service.silentMode.value
+                    service.silentMode()
                         ? localeConfiguration().doNotDisturb
                         : localeConfiguration().showPopUpNotifications
                 "
                 [kbqTooltip]="
-                    service.silentMode.value
+                    service.silentMode()
                         ? localeConfiguration().doNotDisturb
                         : localeConfiguration().showPopUpNotifications
                 "
@@ -28,7 +28,7 @@ to everything the panel renders. -->
                 [kbqStyle]="'transparent'"
                 [color]="'contrast'"
             >
-                <i kbq-icon="{{ service.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
+                <i kbq-icon="{{ service.silentMode() ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"></i>
             </button>
         </div>
         <div class="kbq-notification-center-toolbar">
@@ -80,9 +80,9 @@ to everything the panel renders. -->
         [kbqOverflowShadowBottom]="notificationCenterContainer"
         [shadow]="'var(--kbq-shadow-overflow-normal-bottom)'"
     >
-        @if (!service.errorMode.value) {
-            @if (!service.loadingMode.value) {
-                @for (group of service.groupedItems | async; track group.id) {
+        @if (!service.errorMode()) {
+            @if (!service.loadingMode()) {
+                @for (group of service.groupedItems(); track group.id) {
                     <div
                         class="kbq-notification-center-sub-header"
                         data-testid="kbq-notification-center-group"
@@ -110,7 +110,7 @@ to everything the panel renders. -->
                         <kbq-notification-item [data]="item" />
                     }
                 } @empty {
-                    @if (!service.loadingMore.value && !service.loadMoreErrorMode.value) {
+                    @if (!service.loadingMore() && !service.loadMoreErrorMode()) {
                         <div
                             class="kbq-notification-center-empty-container"
                             data-testid="kbq-notification-center-empty"
@@ -121,11 +121,11 @@ to everything the panel renders. -->
                     }
                 }
 
-                @if (service.loadingMore.value) {
+                @if (service.loadingMore()) {
                     <div class="kbq-notification-center-load-more" data-testid="kbq-notification-center-load-more">
                         <kbq-progress-spinner [mode]="'indeterminate'" [size]="'compact'" />
                     </div>
-                } @else if (service.loadMoreErrorMode.value) {
+                } @else if (service.loadMoreErrorMode()) {
                     <div
                         class="kbq-notification-center-load-more-error"
                         data-testid="kbq-notification-center-load-more-error"
@@ -173,7 +173,7 @@ to everything the panel renders. -->
             <i
                 class="kbq-notification-center-switcher__mark"
                 kbq-icon="kbq-circle-xs_16"
-                [class.kbq-notification-center-switcher__mark_hidden]="service.silentMode.value"
+                [class.kbq-notification-center-switcher__mark_hidden]="service.silentMode()"
             ></i>
             {{ localeConfiguration().showPopUpNotifications }}
         </button>
@@ -185,7 +185,7 @@ to everything the panel renders. -->
             <i
                 class="kbq-notification-center-switcher__mark"
                 kbq-icon="kbq-circle-xs_16"
-                [class.kbq-notification-center-switcher__mark_hidden]="!service.silentMode.value"
+                [class.kbq-notification-center-switcher__mark_hidden]="!service.silentMode()"
             ></i>
             {{ localeConfiguration().doNotDisturb }}
         </button>

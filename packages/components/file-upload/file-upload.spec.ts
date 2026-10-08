@@ -9,7 +9,7 @@ import {
     signal,
     viewChild
 } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
     AsyncValidatorFn,
@@ -21,7 +21,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     DELETE,
     KBQ_LOCALE_SERVICE,
@@ -39,8 +38,9 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 import { axe } from 'jest-axe';
-import { Observable, timer } from 'rxjs';
+import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
 import { KbqFile, KbqFileItem, KbqFileUploadAddStrategy, KbqFileUploadAddStrategyValues } from './file-upload';
@@ -96,6 +96,12 @@ const FILE_NAME = 'test.file';
 
 const createMockFile = (fileName: string = FILE_NAME, options?: FilePropertyBag) =>
     new File(['test'] satisfies BlobPart[], fileName, options);
+
+const createLoadingItem = (fileName: string = FILE_NAME): KbqFileItem => ({
+    file: createMockFile(fileName),
+    loading: new BehaviorSubject<boolean>(false),
+    progress: new BehaviorSubject<number>(0)
+});
 
 /** A real `File` with the `fullPath` the drop path adds, so `size` and `name` survive. */
 const createDroppedFile = (fileName: string): KbqFile =>
@@ -205,7 +211,6 @@ describe(KbqMultipleFileUploadComponent.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqFileUploadModule,
                 FormsModule,
                 ReactiveFormsModule,
@@ -223,15 +228,21 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         fixture.detectChanges();
     });
 
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     describe('with focus and keyboard', () => {
-        it('should toggle label focus state on input focused/blurred', fakeAsync(() => {
+        it('should toggle label focus state on input focused/blurred', async () => {
+            vi.useFakeTimers();
+
             const fileInput: HTMLInputElement = component.fileUpload().input!.nativeElement;
 
             // Simulate focus via keyboard.
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
             fileInput.focus();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
 
@@ -240,12 +251,14 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
             fileInput.blur();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
-        }));
+        });
 
-        it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
+        it('should NOT toggle label focus state on input focus if disabled', async () => {
+            vi.useFakeTimers();
+
             const fileInput: HTMLInputElement = component.fileUpload().input!.nativeElement;
 
             component.disabled = true;
@@ -255,12 +268,12 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
             dispatchFakeEvent(fileInput, 'focusin');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
 
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
-        }));
+        });
 
         it('should remove file via keydown.delete on the focused remove control', () => {
             component.disabled = false;
@@ -271,7 +284,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchEvent(fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
-            const filesChangeSpy = jest.fn();
+            const filesChangeSpy = vi.fn();
             const subscription = fileUpload.filesChange.subscribe(filesChangeSpy);
 
             // Dispatched at the control a keyboard user can actually reach, not at the row, which has
@@ -290,7 +303,9 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.files).toHaveLength(0);
         });
 
-        it('should move focus to the row that took the deleted row place', fakeAsync(() => {
+        it('should move focus to the row that took the deleted row place', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
@@ -304,14 +319,16 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 new KeyboardEvent('keydown', { key: 'Delete', keyCode: DELETE, bubbles: true })
             );
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.fileUpload().files.map(({ file }) => file.name)).toEqual(['a.file', 'c.file']);
             expect(document.activeElement).toBe(actions()[1].nativeElement);
-        }));
+        });
 
-        it('should focus the file input when the last row is deleted', fakeAsync(() => {
+        it('should focus the file input when the last row is deleted', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
@@ -321,13 +338,13 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             actions[1].nativeElement.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             actions[0].nativeElement.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(component.fileUpload().input!.nativeElement);
-        }));
+        });
     });
 
     describe('with accessibility', () => {
@@ -379,40 +396,44 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(row().getAttribute('aria-invalid')).toBe('true');
         });
 
-        it('should announce an added file', fakeAsync(() => {
+        it('should announce an added file', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getLiveRegionText(fixture)).toBe(announcementFor(A11Y_LOCALE.fileAdded, FILE_NAME));
-        }));
+        });
 
-        it('should announce a removed file', fakeAsync(() => {
+        it('should announce a removed file', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getLiveRegionText(fixture)).toBe(announcementFor(A11Y_LOCALE.fileRemoved, FILE_NAME));
-        }));
+        });
 
         it('should report skipped duplicates through rejected', () => {
             component.disabled = false;
             fixture.detectChanges();
 
             const duplicate: Partial<File> = { name: FILE_NAME, size: 4, type: '', lastModified: 1700000000000 };
-            const rejectedSpy = jest.fn();
+            const rejectedSpy = vi.fn();
             const subscription = component.fileUpload().rejected.subscribe(rejectedSpy);
 
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(duplicate));
@@ -495,26 +516,28 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.files).toHaveLength(0);
         });
 
-        it('should focus the file input after the last file is removed', fakeAsync(() => {
+        it('should focus the file input after the last file is removed', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
             emitRemoveEvent();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(component.fileUpload().input!.nativeElement);
-        }));
+        });
 
         it('should NOT throw error on detectChanges in handler', () => {
-            component.onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
+            component.onChange = vi.fn().mockImplementation((files: KbqFileItem[]) => {
                 component.files = files;
                 component.cdr.detectChanges();
             });
 
             const fileUpload = component.fileUpload();
 
-            jest.spyOn(fileUpload, 'deleteFile');
+            vi.spyOn(fileUpload, 'deleteFile');
 
             dispatchEvent(fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
@@ -562,7 +585,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             });
 
             it('should emit filesAdded with an empty array for a skipped duplicate', () => {
-                const filesAddedSpy = jest.fn();
+                const filesAddedSpy = vi.fn();
                 const subscription = component.fileUpload().filesAdded.subscribe(filesAddedSpy);
 
                 dispatchChange(duplicateFile);
@@ -592,7 +615,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             // An empty directory unwraps to zero files, so `filesDropped` can carry an empty array.
             // Replacing the list with it would destroy a selection the user had already built.
             it('should keep the current list when a drop hands over no files', () => {
-                const filesChangeSpy = jest.fn();
+                const filesChangeSpy = vi.fn();
 
                 dispatchChange(duplicateFile);
 
@@ -610,39 +633,41 @@ describe(KbqMultipleFileUploadComponent.name, () => {
     });
 
     describe('with ellipsis in the center', () => {
-        afterEach(() => jest.restoreAllMocks());
+        afterEach(() => vi.restoreAllMocks());
 
-        it('should keep the hint for a long file name while the upload is disabled', fakeAsync(() => {
+        it('should keep the hint for a long file name while the upload is disabled', async () => {
+            vi.useFakeTimers();
+
             // Reading a name the host had to shorten is not an interaction with the control, so blocking the
             // control must not take it away. The single variant never suppressed it; this pins the multiple
             // variant to the same behaviour, which it only diverged from once `kbqTooltipDisabled` started
             // being honoured on a `kbqEllipsisCenter` host.
 
             // 500ms clears the ellipsis debounce (50ms) and the tooltip enterDelay (400ms).
-            const settle = () => tick(500);
+            const settle = () => vi.advanceTimersByTimeAsync(500);
 
-            jest.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);
-            jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
+            vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);
+            vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
 
             const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
 
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(fakeFile));
             fixture.detectChanges();
-            settle();
+            await settle();
 
             component.disabled = true;
             fixture.detectChanges();
-            settle();
+            await settle();
 
             dispatchMouseEvent(
                 fixture.debugElement.query(By.css(`.${fileItemTextCssClass}`)).nativeElement,
                 'mouseenter'
             );
             fixture.detectChanges();
-            settle();
+            await settle();
 
             expect(document.querySelector('.kbq-tooltip')).toBeTruthy();
-        }));
+        });
     });
 
     describe('with ControlValueAccessor', () => {
@@ -731,7 +756,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         });
 
         it('should emit valueChanges once per programmatic value', () => {
-            const valueChangesSpy = jest.fn();
+            const valueChangesSpy = vi.fn();
             const subscription = component.control.valueChanges.subscribe(valueChangesSpy);
 
             component.control.setValue([{ file: createMockFile(FILE_NAME) }]);
@@ -752,7 +777,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         });
 
         it('should NOT emit filesChange for a programmatic value', () => {
-            const filesChangeSpy = jest.fn();
+            const filesChangeSpy = vi.fn();
             const subscription = component.fileUpload().filesChange.subscribe(filesChangeSpy);
 
             component.control.setValue([{ file: createMockFile(FILE_NAME) }]);
@@ -760,6 +785,55 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             subscription.unsubscribe();
 
             expect(filesChangeSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('with upload progress', () => {
+        let fixture: ComponentFixture<ControlValueAccessorMultipleFileUpload>;
+
+        const getSpinners = () =>
+            fixture.debugElement
+                .queryAll(By.directive(KbqProgressSpinner))
+                .map(({ componentInstance }) => componentInstance);
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(ControlValueAccessorMultipleFileUpload);
+            fixture.detectChanges();
+        });
+
+        it('should show the progress of each item while it is loading', () => {
+            const [first, second] = [createLoadingItem('first.txt'), createLoadingItem('second.txt')];
+
+            fixture.componentInstance.control.setValue([first, second]);
+            fixture.detectChanges();
+
+            expect(getSpinners()).toHaveLength(0);
+
+            second.loading!.next(true);
+            second.progress!.next(40);
+            fixture.detectChanges();
+
+            expect(getSpinners().map((spinner) => spinner.value())).toEqual([40]);
+
+            second.loading!.next(false);
+            fixture.detectChanges();
+
+            expect(getSpinners()).toHaveLength(0);
+        });
+
+        it('should stop following the subjects of a removed item', () => {
+            const item = createLoadingItem();
+
+            fixture.componentInstance.control.setValue([item]);
+            fixture.detectChanges();
+
+            expect(item.loading!.observed).toBe(true);
+
+            fixture.componentInstance.control.setValue([]);
+            fixture.detectChanges();
+
+            expect(item.loading!.observed).toBe(false);
+            expect(item.progress!.observed).toBe(false);
         });
     });
 
@@ -774,25 +848,31 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 asyncFixture.detectChanges();
             });
 
-            it('should have PENDING status immediately after files are added', fakeAsync(() => {
+            it('should have PENDING status immediately after files are added', async () => {
+                vi.useFakeTimers();
+
                 dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(asyncComponent.control.status).toBe('PENDING');
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
-            }));
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
+            });
 
-            it('should have VALID status after async validator resolves', fakeAsync(() => {
+            it('should have VALID status after async validator resolves', async () => {
+                vi.useFakeTimers();
+
                 dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
                 expect(asyncComponent.control.status).toBe('VALID');
-            }));
+            });
 
-            it('should emit PENDING then VALID via statusChanges', fakeAsync(() => {
+            it('should emit PENDING then VALID via statusChanges', async () => {
+                vi.useFakeTimers();
+
                 const statuses: FormControlStatus[] = [];
                 const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
 
@@ -801,12 +881,12 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
                 expect(statuses).toEqual(['PENDING']);
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
                 expect(statuses).toEqual(['PENDING', 'VALID']);
 
                 subscription.unsubscribe();
-            }));
+            });
         });
 
         describe('using invalid timer-based validator', () => {
@@ -819,17 +899,21 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 asyncFixture.detectChanges();
             });
 
-            it('should have INVALID status after async validator resolves with errors', fakeAsync(() => {
+            it('should have INVALID status after async validator resolves with errors', async () => {
+                vi.useFakeTimers();
+
                 dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
                 expect(asyncComponent.control.status).toBe('INVALID');
                 expect(asyncComponent.control.errors).toEqual({ asyncError: { actual: false } });
-            }));
+            });
 
-            it('should emit PENDING then INVALID via statusChanges', fakeAsync(() => {
+            it('should emit PENDING then INVALID via statusChanges', async () => {
+                vi.useFakeTimers();
+
                 const statuses: FormControlStatus[] = [];
                 const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
 
@@ -838,22 +922,20 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
                 expect(statuses).toEqual(['PENDING']);
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
                 expect(statuses).toEqual(['PENDING', 'INVALID']);
 
                 subscription.unsubscribe();
-            }));
+            });
         });
     });
 
     describe('with file-drop', () => {
-        // NOTE: KbqFileDropDirective handles drops via Promise.all + then chains scheduled inside
-        // ngZone.run() reached through ngZone.runOutsideAngular(...). NgZone's outer zone is
-        // captured at module bootstrap (before any fakeAsync test runs), so those microtasks
-        // bypass fakeAsync's task queue. Tests use done()/setTimeout to wait — the same pattern
+        // NOTE: KbqFileDropDirective handles drops via Promise.all + then chains, so tests await a
+        // macrotask, by which every hop of the chain has run — the same pattern
         // primitives/file-drop.spec.ts uses for this directive.
-        it('should add files via drag-n-drop', (done) => {
+        it('should add files via drag-n-drop', async () => {
             expect(component.files).toBeUndefined();
 
             component.disabled = false;
@@ -861,26 +943,24 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             dispatchDropEventWithEntry(fixture);
 
-            setTimeout(() => {
-                fixture.detectChanges();
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.files.length).toEqual(1);
-                expect(component.files[0].file.name).toBe(FILE_NAME);
-                done();
-            });
+            await new Promise<void>((resolve) => setTimeout(resolve));
+
+            fixture.detectChanges();
+            expect(component.onChange).toHaveBeenCalledTimes(1);
+            expect(component.files.length).toEqual(1);
+            expect(component.files[0].file.name).toBe(FILE_NAME);
         });
 
-        it('should NOT add files via drag-n-drop if disabled', (done) => {
+        it('should NOT add files via drag-n-drop if disabled', async () => {
             component.disabled = true;
             component.fileUpload().setDisabledState(true);
             fixture.detectChanges();
 
             dispatchDropEventWithEntry(fixture);
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(0);
-                done();
-            });
+            await new Promise<void>((resolve) => setTimeout(resolve));
+
+            expect(component.onChange).toHaveBeenCalledTimes(0);
         });
 
         describe('with ControlValueAccessor', () => {
@@ -893,16 +973,15 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 cvaFixture.detectChanges();
             });
 
-            it('should update form control touched on file dropped', (done) => {
+            it('should update form control touched on file dropped', async () => {
                 expect(cvaComponent.control.touched).toBeFalsy();
 
                 dispatchDropEventWithEntry(cvaFixture);
 
-                setTimeout(() => {
-                    cvaFixture.detectChanges();
-                    expect(cvaComponent.control.touched).toBeTruthy();
-                    done();
-                });
+                await new Promise<void>((resolve) => setTimeout(resolve));
+
+                cvaFixture.detectChanges();
+                expect(cvaComponent.control.touched).toBeTruthy();
             });
         });
     });
@@ -916,18 +995,18 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 .injector.get(KbqFullScreenDropzoneService);
         });
 
-        it('should disable fileDrop directive', fakeAsync(() => {
+        it('should disable fileDrop directive', async () => {
             component.fullScreenDropZone.set(true);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             dispatchDropEventWithEntry(fixture);
 
             expect(component.onChange).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should init dropzone service with provided config', fakeAsync(() => {
-            jest.spyOn(dropzoneService, 'init');
+        it('should init dropzone service with provided config', async () => {
+            vi.spyOn(dropzoneService, 'init');
 
             const config: KbqDropzoneData = {
                 title: 'TITLE',
@@ -937,27 +1016,27 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 
             component.fullScreenDropZone.set(config);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(dropzoneService.init).toHaveBeenCalledWith(config);
-        }));
+        });
 
-        it('should init dropzone service with empty config when boolean true is provided', fakeAsync(() => {
-            jest.spyOn(dropzoneService, 'init');
+        it('should init dropzone service with empty config when boolean true is provided', async () => {
+            vi.spyOn(dropzoneService, 'init');
 
             component.fullScreenDropZone.set(true);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(dropzoneService.init).toHaveBeenCalledWith({});
-        }));
+        });
 
-        it('should stop dropzone service if fullScreen dropzone input changed to false', fakeAsync(() => {
-            const stopSpy = jest.spyOn(dropzoneService, 'stop');
+        it('should stop dropzone service if fullScreen dropzone input changed to false', async () => {
+            const stopSpy = vi.spyOn(dropzoneService, 'stop');
 
             component.fullScreenDropZone.set(true);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             stopSpy.mockClear();
 
@@ -965,7 +1044,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             fixture.detectChanges();
 
             expect(dropzoneService.stop).toHaveBeenCalled();
-        }));
+        });
 
         it('should listen to filesDropped via dropzoneService', () => {
             const mockFiles = [
@@ -978,34 +1057,34 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.files.length).toEqual(mockFiles.length);
         });
 
-        it('should stop listening to the document once the component is destroyed', fakeAsync(() => {
+        it('should stop listening to the document once the component is destroyed', async () => {
             component.fullScreenDropZone.set(true);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
-            const openSpy = jest.spyOn(dropzoneService, 'open');
+            const openSpy = vi.spyOn(dropzoneService, 'open');
 
             fixture.destroy();
             dispatchDragEvent('dragenter', { target: document.body });
 
             expect(openSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should keep a single listener set when the config changes', fakeAsync(() => {
+        it('should keep a single listener set when the config changes', async () => {
             component.fullScreenDropZone.set({ title: 'FIRST' });
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             component.fullScreenDropZone.set({ title: 'SECOND' });
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
-            const onDropSpy = jest.spyOn(dropzoneService, 'onDrop');
+            const onDropSpy = vi.spyOn(dropzoneService, 'onDrop');
 
             dispatchDragEvent('drop', { target: document.body });
 
             expect(onDropSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
     });
 
     describe('with two-way binding', () => {
@@ -1039,7 +1118,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         });
 
         it('should emit filesChange with updated list when file is added', () => {
-            const filesChangeSpy = jest.fn();
+            const filesChangeSpy = vi.fn();
             const subscription = twoWayComponent.fileUpload().filesChange.subscribe(filesChangeSpy);
 
             dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
@@ -1056,7 +1135,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             twoWayFixture.detectChanges();
 
-            const filesChangeSpy = jest.fn();
+            const filesChangeSpy = vi.fn();
             const subscription = twoWayComponent.fileUpload().filesChange.subscribe(filesChangeSpy);
 
             twoWayFixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement.click();
@@ -1077,7 +1156,6 @@ describe(KbqSingleFileUploadComponent.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqFileUploadModule,
                 FormsModule,
                 ReactiveFormsModule,
@@ -1096,15 +1174,21 @@ describe(KbqSingleFileUploadComponent.name, () => {
         fixture.detectChanges();
     });
 
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     describe('with focus and keyboard', () => {
-        it('should toggle label focus state on input focused/blurred', fakeAsync(() => {
+        it('should toggle label focus state on input focused/blurred', async () => {
+            vi.useFakeTimers();
+
             const fileInput: HTMLInputElement = component.fileUpload().input!.nativeElement;
 
             // Simulate focus via keyboard.
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
             fileInput.focus();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
 
@@ -1113,12 +1197,14 @@ describe(KbqSingleFileUploadComponent.name, () => {
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
             fileInput.blur();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
-        }));
+        });
 
-        it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
+        it('should NOT toggle label focus state on input focus if disabled', async () => {
+            vi.useFakeTimers();
+
             const fileInput: HTMLInputElement = component.fileUpload().input!.nativeElement;
 
             component.disabled = true;
@@ -1128,12 +1214,12 @@ describe(KbqSingleFileUploadComponent.name, () => {
             dispatchKeyboardEvent(fixture.nativeElement, 'keydown', TAB);
             dispatchFakeEvent(fileInput, 'focusin');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const label: HTMLLabelElement = fixture.nativeElement.querySelector('label');
 
             expect(label.classList.contains('cdk-keyboard-focused')).toBeFalsy();
-        }));
+        });
 
         it('should remove file via button keydown.delete', () => {
             component.disabled = false;
@@ -1143,7 +1229,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             dispatchEvent(fileUpload.input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
 
-            const fileChangeSpy = jest.fn();
+            const fileChangeSpy = vi.fn();
             const subscription = fileUpload.fileChange.subscribe(fileChangeSpy);
 
             component.elementRef.nativeElement
@@ -1204,53 +1290,56 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(input.getAttribute('aria-invalid')).toBe('true');
         });
 
-        it('should announce an added file', fakeAsync(() => {
+        it('should announce an added file', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getLiveRegionText(fixture)).toBe(announcementFor(A11Y_LOCALE.fileAdded, FILE_NAME));
-        }));
+        });
 
-        it('should announce a removed file', fakeAsync(() => {
+        it('should announce a removed file', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             component.elementRef.nativeElement.querySelector(`.${fileItemActionCssClass}`).click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getLiveRegionText(fixture)).toBe(announcementFor(A11Y_LOCALE.fileRemoved, FILE_NAME));
-        }));
+        });
 
-        it('should report the files a drop discarded through rejected', (done) => {
+        it('should report the files a drop discarded through rejected', async () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            const rejectedSpy = jest.fn();
+            const rejectedSpy = vi.fn();
             const subscription = component.fileUpload().rejected.subscribe(rejectedSpy);
             const dropped = [createDroppedFile('kept.file'), createDroppedFile('dropped.file')];
 
             component.fileUpload().onFileDropped(dropped);
             fixture.detectChanges();
 
-            setTimeout(() => {
-                subscription.unsubscribe();
+            await new Promise<void>((resolve) => setTimeout(resolve));
 
-                expect(component.fileUpload().file?.file.name).toBe('kept.file');
-                expect(rejectedSpy).toHaveBeenCalledTimes(1);
-                expect(rejectedSpy.mock.calls[0][0]).toEqual([dropped[1]]);
-                done();
-            });
+            subscription.unsubscribe();
+
+            expect(component.fileUpload().file?.file.name).toBe('kept.file');
+            expect(rejectedSpy).toHaveBeenCalledTimes(1);
+            expect(rejectedSpy.mock.calls[0][0]).toEqual([dropped[1]]);
         });
 
         it('should have no violations while empty', async () => {
@@ -1292,19 +1381,18 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(component.fileUpload().input!.nativeElement.accept).toBe('*/*');
         });
 
-        it('should still add a dropped file that accept does not cover', (done) => {
+        it('should still add a dropped file that accept does not cover', async () => {
             component.disabled = false;
             component.accept = ['.pdf'];
             fixture.detectChanges();
 
             dispatchDropEventWithEntry(fixture, 'test.test');
 
-            setTimeout(() => {
-                fixture.detectChanges();
+            await new Promise<void>((resolve) => setTimeout(resolve));
 
-                expect(component.fileUpload().file?.file.name).toBe('test.test');
-                done();
-            });
+            fixture.detectChanges();
+
+            expect(component.fileUpload().file?.file.name).toBe('test.test');
         });
     });
 
@@ -1352,22 +1440,26 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(component.file).toBeNull();
         });
 
-        it('should focus the file input after the last file is removed', fakeAsync(() => {
+        it('should focus the file input after the last file is removed', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
             emitRemoveEvent();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(component.fileUpload().input!.nativeElement);
-        }));
+        });
     });
 
     describe('with ellipsis in the center', () => {
-        afterEach(() => jest.restoreAllMocks());
+        afterEach(() => vi.restoreAllMocks());
 
-        it('should add tooltip and ellipsis in the center for a file with a long name', fakeAsync(() => {
+        it('should add tooltip and ellipsis in the center for a file with a long name', async () => {
+            vi.useFakeTimers();
+
             component.disabled = false;
             fixture.detectChanges();
 
@@ -1376,26 +1468,26 @@ describe(KbqSingleFileUploadComponent.name, () => {
             // — which also means this case says nothing about the layout itself; that is covered by
             // `KbqSingleFileUploadComponent truncates a long file name without horizontal scroll` in
             // `e2e.playwright-spec.ts`, at the same 320px the multiple variant is pinned to.
-            jest.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);
-            jest.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
+            vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(100);
+            vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockReturnValue(400);
 
             const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
 
             dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(fakeFile));
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchMouseEvent(
                 fixture.debugElement.query(By.css(`.${fileItemTextCssClass}`)).nativeElement,
                 'mouseenter'
             );
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const tooltipInstance = document.querySelector('.kbq-tooltip');
 
             expect(tooltipInstance).toBeTruthy();
-        }));
+        });
     });
 
     describe('with ControlValueAccessor', () => {
@@ -1481,7 +1573,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         });
 
         it('should emit valueChanges once per programmatic value', () => {
-            const valueChangesSpy = jest.fn();
+            const valueChangesSpy = vi.fn();
             const subscription = component.control.valueChanges.subscribe(valueChangesSpy);
 
             component.control.setValue({ file: createMockFile(FILE_NAME) });
@@ -1502,7 +1594,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         });
 
         it('should NOT emit fileChange for a programmatic value', () => {
-            const fileChangeSpy = jest.fn();
+            const fileChangeSpy = vi.fn();
             const subscription = component.fileUpload().fileChange.subscribe(fileChangeSpy);
 
             component.control.setValue({ file: createMockFile(FILE_NAME) });
@@ -1510,6 +1602,45 @@ describe(KbqSingleFileUploadComponent.name, () => {
             subscription.unsubscribe();
 
             expect(fileChangeSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('with upload progress', () => {
+        let fixture: ComponentFixture<ControlValueAccessorSingleFileUpload>;
+
+        const getSpinner = () => fixture.debugElement.query(By.directive(KbqProgressSpinner));
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(ControlValueAccessorSingleFileUpload);
+            fixture.detectChanges();
+        });
+
+        it('should show the progress the item reports while it is loading', () => {
+            const item = createLoadingItem();
+
+            fixture.componentInstance.control.setValue(item);
+            fixture.detectChanges();
+
+            expect(getSpinner()).toBeNull();
+
+            item.loading!.next(true);
+            item.progress!.next(40);
+            fixture.detectChanges();
+
+            expect(getSpinner().componentInstance.value()).toBe(40);
+
+            item.loading!.next(false);
+            fixture.detectChanges();
+
+            expect(getSpinner()).toBeNull();
+        });
+
+        it('should follow an item without subjects as not loading', () => {
+            fixture.componentInstance.control.setValue({ file: createMockFile() });
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('.kbq-file-item'))).not.toBeNull();
+            expect(getSpinner()).toBeNull();
         });
     });
 
@@ -1524,25 +1655,31 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 asyncFixture.detectChanges();
             });
 
-            it('should have PENDING status immediately after file is selected', fakeAsync(() => {
+            it('should have PENDING status immediately after file is selected', async () => {
+                vi.useFakeTimers();
+
                 dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
                 expect(asyncComponent.control.status).toBe('PENDING');
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
-            }));
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
+            });
 
-            it('should have VALID status after async validator resolves', fakeAsync(() => {
+            it('should have VALID status after async validator resolves', async () => {
+                vi.useFakeTimers();
+
                 dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
                 expect(asyncComponent.control.status).toBe('VALID');
-            }));
+            });
 
-            it('should emit PENDING then VALID via statusChanges', fakeAsync(() => {
+            it('should emit PENDING then VALID via statusChanges', async () => {
+                vi.useFakeTimers();
+
                 const statuses: FormControlStatus[] = [];
                 const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
 
@@ -1551,12 +1688,12 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
                 expect(statuses).toEqual(['PENDING']);
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
                 expect(statuses).toEqual(['PENDING', 'VALID']);
 
                 subscription.unsubscribe();
-            }));
+            });
         });
 
         describe('using invalid timer-based validator', () => {
@@ -1569,17 +1706,21 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 asyncFixture.detectChanges();
             });
 
-            it('should have INVALID status after async validator resolves with errors', fakeAsync(() => {
+            it('should have INVALID status after async validator resolves with errors', async () => {
+                vi.useFakeTimers();
+
                 dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
                 expect(asyncComponent.control.status).toBe('INVALID');
                 expect(asyncComponent.control.errors).toEqual({ asyncError: { actual: false } });
-            }));
+            });
 
-            it('should emit PENDING then INVALID via statusChanges', fakeAsync(() => {
+            it('should emit PENDING then INVALID via statusChanges', async () => {
+                vi.useFakeTimers();
+
                 const statuses: FormControlStatus[] = [];
                 const subscription = asyncComponent.control.statusChanges.subscribe((status) => statuses.push(status));
 
@@ -1588,12 +1729,12 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
                 expect(statuses).toEqual(['PENDING']);
 
-                tick(ASYNC_VALIDATOR_TIMER_DUE);
+                await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
                 expect(statuses).toEqual(['PENDING', 'INVALID']);
 
                 subscription.unsubscribe();
-            }));
+            });
         });
 
         describe('using FileReader-based validator', () => {
@@ -1602,7 +1743,8 @@ describe(KbqSingleFileUploadComponent.name, () => {
             let originalFileReader: typeof FileReader;
 
             const setupFileReaderMock = (content: string, shouldError = false) => {
-                (global as any).FileReader = jest.fn().mockImplementation(() => {
+                // A `function`, not an arrow: the mock is called with `new`.
+                (global as any).FileReader = vi.fn().mockImplementation(function () {
                     const reader: any = { result: null, onload: null, onerror: null };
 
                     reader.readAsText = function () {
@@ -1631,7 +1773,9 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 global.FileReader = originalFileReader;
             });
 
-            it('should have VALID status when file content is within line limit', fakeAsync(() => {
+            it('should have VALID status when file content is within line limit', async () => {
+                vi.useFakeTimers();
+
                 // 2 lines — below MAX_FILE_LINES_FOR_TEST (3)
                 const content = Array.from({ length: 2 }, (_, i) => `line${i}`).join('\n');
 
@@ -1642,13 +1786,15 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
                 expect(asyncComponent.control.status).toBe('PENDING');
 
-                tick(0);
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(asyncComponent.control.status).toBe('VALID');
                 expect(asyncComponent.control.errors).toBeNull();
-            }));
+            });
 
-            it('should have INVALID status when file content exceeds line limit', fakeAsync(() => {
+            it('should have INVALID status when file content exceeds line limit', async () => {
+                vi.useFakeTimers();
+
                 // 4 lines — exceeds MAX_FILE_LINES_FOR_TEST (3)
                 const content = Array.from({ length: 4 }, (_, i) => `line${i}`).join('\n');
 
@@ -1659,31 +1805,33 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
                 expect(asyncComponent.control.status).toBe('PENDING');
 
-                tick(0);
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(asyncComponent.control.status).toBe('INVALID');
                 expect(asyncComponent.control.errors).toEqual({
                     maxLines: { max: MAX_FILE_LINES_FOR_TEST, actual: 4 }
                 });
-            }));
+            });
 
-            it('should have INVALID status with fileReadError when FileReader fails', fakeAsync(() => {
+            it('should have INVALID status with fileReadError when FileReader fails', async () => {
+                vi.useFakeTimers();
+
                 setupFileReaderMock('', true);
 
                 dispatchEvent(asyncComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
                 asyncFixture.detectChanges();
 
-                tick(0);
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(asyncComponent.control.status).toBe('INVALID');
                 expect(asyncComponent.control.errors).toEqual({ fileReadError: true });
-            }));
+            });
         });
     });
 
     describe('with file-drop', () => {
         // see note in the multi-component `with file-drop` block — same constraint applies here.
-        it('should add file via drag-n-drop', (done) => {
+        it('should add file via drag-n-drop', async () => {
             expect(component.file).toBeUndefined();
 
             component.disabled = false;
@@ -1691,26 +1839,24 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             dispatchDropEventWithEntry(fixture);
 
-            setTimeout(() => {
-                fixture.detectChanges();
-                expect(component.onChange).toHaveBeenCalledTimes(1);
-                expect(component.file?.file.name).toBe(FILE_NAME);
-                done();
-            });
+            await new Promise<void>((resolve) => setTimeout(resolve));
+
+            fixture.detectChanges();
+            expect(component.onChange).toHaveBeenCalledTimes(1);
+            expect(component.file?.file.name).toBe(FILE_NAME);
         });
 
-        it('should NOT add file via drag-n-drop if disabled', (done) => {
+        it('should NOT add file via drag-n-drop if disabled', async () => {
             component.disabled = true;
             component.fileUpload().setDisabledState(true);
             fixture.detectChanges();
 
             dispatchDropEventWithEntry(fixture);
 
-            setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(0);
-                expect(component.file).toBeUndefined();
-                done();
-            });
+            await new Promise<void>((resolve) => setTimeout(resolve));
+
+            expect(component.onChange).toHaveBeenCalledTimes(0);
+            expect(component.file).toBeUndefined();
         });
 
         describe('with ControlValueAccessor', () => {
@@ -1723,16 +1869,15 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 cvaFixture.detectChanges();
             });
 
-            it('should update form control touched on file dropped', (done) => {
+            it('should update form control touched on file dropped', async () => {
                 expect(cvaComponent.control.touched).toBeFalsy();
 
                 dispatchDropEventWithEntry(cvaFixture);
 
-                setTimeout(() => {
-                    cvaFixture.detectChanges();
-                    expect(cvaComponent.control.touched).toBeTruthy();
-                    done();
-                });
+                await new Promise<void>((resolve) => setTimeout(resolve));
+
+                cvaFixture.detectChanges();
+                expect(cvaComponent.control.touched).toBeTruthy();
             });
         });
     });
@@ -1746,18 +1891,18 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 .injector.get(KbqFullScreenDropzoneService);
         });
 
-        it('should disable fileDrop directive', fakeAsync(() => {
+        it('should disable fileDrop directive', async () => {
             component.fullScreenDropZone.set(true);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             dispatchDropEventWithEntry(fixture);
 
             expect(component.onChange).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should init dropzone service with provided config', fakeAsync(() => {
-            jest.spyOn(dropzoneService, 'init');
+        it('should init dropzone service with provided config', async () => {
+            vi.spyOn(dropzoneService, 'init');
 
             const config: KbqDropzoneData = {
                 title: 'TITLE',
@@ -1767,27 +1912,27 @@ describe(KbqSingleFileUploadComponent.name, () => {
 
             component.fullScreenDropZone.set(config);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(dropzoneService.init).toHaveBeenCalledWith(config);
-        }));
+        });
 
-        it('should init dropzone service with empty config when boolean true is provided', fakeAsync(() => {
-            jest.spyOn(dropzoneService, 'init');
+        it('should init dropzone service with empty config when boolean true is provided', async () => {
+            vi.spyOn(dropzoneService, 'init');
 
             component.fullScreenDropZone.set(true);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(dropzoneService.init).toHaveBeenCalledWith({});
-        }));
+        });
 
-        it('should stop dropzone service if fullScreen dropzone input changed to false', fakeAsync(() => {
-            const stopSpy = jest.spyOn(dropzoneService, 'stop');
+        it('should stop dropzone service if fullScreen dropzone input changed to false', async () => {
+            const stopSpy = vi.spyOn(dropzoneService, 'stop');
 
             component.fullScreenDropZone.set(true);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             stopSpy.mockClear();
 
@@ -1795,7 +1940,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             fixture.detectChanges();
 
             expect(dropzoneService.stop).toHaveBeenCalled();
-        }));
+        });
 
         it('should listen to filesDropped via dropzoneService', () => {
             const mockFiles = [{ ...createMockFile('test1.txt', { type: 'text/plain' }), fullPath: 'test1.txt' }];
@@ -1805,22 +1950,24 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(component.file?.file).toEqual(mockFiles[0]);
         });
 
-        it('should handle a dropped file once after the config changes', fakeAsync(() => {
+        it('should handle a dropped file once after the config changes', async () => {
+            vi.useFakeTimers();
+
             component.fullScreenDropZone.set({ title: 'FIRST' });
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             component.fullScreenDropZone.set({ title: 'SECOND' });
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
-            const onFileDroppedSpy = jest.spyOn(component.fileUpload(), 'onFileDropped');
+            const onFileDroppedSpy = vi.spyOn(component.fileUpload(), 'onFileDropped');
 
-            dropzoneService.filesDropped.emit([{ ...createMockFile('test1.txt'), fullPath: 'test1.txt' }]);
+            dropzoneService.filesDropped.emit([createDroppedFile('test1.txt')]);
 
             expect(onFileDroppedSpy).toHaveBeenCalledTimes(1);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('with two-way binding', () => {
@@ -1853,7 +2000,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         });
 
         it('should emit fileChange with the selected file', () => {
-            const fileChangeSpy = jest.fn();
+            const fileChangeSpy = vi.fn();
             const subscription = twoWayComponent.fileUpload().fileChange.subscribe(fileChangeSpy);
 
             dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
@@ -1869,7 +2016,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             dispatchEvent(twoWayComponent.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
             twoWayFixture.detectChanges();
 
-            const fileChangeSpy = jest.fn();
+            const fileChangeSpy = vi.fn();
             const subscription = twoWayComponent.fileUpload().fileChange.subscribe(fileChangeSpy);
 
             twoWayComponent.elementRef.nativeElement.querySelector(`.${fileItemActionCssClass}`).click();
@@ -1903,7 +2050,7 @@ describe('KbqFullScreenDropzoneService', () => {
     });
 
     it('should create overlay if not already attached', () => {
-        const create = jest.spyOn(overlay, 'create');
+        const create = vi.spyOn(overlay, 'create');
 
         service.open();
 
@@ -1921,7 +2068,7 @@ describe('KbqFullScreenDropzoneService', () => {
     });
 
     it('should create overlay with correct configuration', () => {
-        jest.spyOn(overlay, 'create');
+        vi.spyOn(overlay, 'create');
 
         service.open();
 
@@ -1938,7 +2085,7 @@ describe('KbqFullScreenDropzoneService', () => {
         it('should set up dragenter event listener', () => {
             const config: KbqDropzoneData = { title: 'Drop files' };
 
-            jest.spyOn(service, 'open');
+            vi.spyOn(service, 'open');
 
             service.init(config);
 
@@ -1948,7 +2095,7 @@ describe('KbqFullScreenDropzoneService', () => {
         });
 
         it('should set up dragleave event listener and close overlay', () => {
-            jest.spyOn(service, 'close');
+            vi.spyOn(service, 'close');
 
             service.init();
 
@@ -1962,7 +2109,7 @@ describe('KbqFullScreenDropzoneService', () => {
         });
 
         it('should not close overlay on dragleave if related target is inside current target', () => {
-            jest.spyOn(service, 'close');
+            vi.spyOn(service, 'close');
 
             service.init();
 
@@ -1985,8 +2132,8 @@ describe('KbqFullScreenDropzoneService', () => {
         });
 
         it('should set up drop event listener', () => {
-            jest.spyOn(service, 'onDrop');
-            jest.spyOn(service, 'close');
+            vi.spyOn(service, 'onDrop');
+            vi.spyOn(service, 'close');
 
             service.init();
 
@@ -2003,7 +2150,7 @@ describe('KbqFullScreenDropzoneService', () => {
                 size: 'normal'
             };
 
-            jest.spyOn(service, 'open');
+            vi.spyOn(service, 'open');
 
             service.init(config);
 
@@ -2015,7 +2162,7 @@ describe('KbqFullScreenDropzoneService', () => {
 
     describe('stop', () => {
         it('should replace the previous listener set when init runs again', () => {
-            const openSpy = jest.spyOn(service, 'open');
+            const openSpy = vi.spyOn(service, 'open');
 
             service.init({ title: 'FIRST' });
             service.init({ title: 'SECOND' });
@@ -2027,7 +2174,7 @@ describe('KbqFullScreenDropzoneService', () => {
         });
 
         it('should stop listening once destroyed', () => {
-            jest.spyOn(service, 'open');
+            vi.spyOn(service, 'open');
 
             service.init();
             service.ngOnDestroy();
@@ -2038,7 +2185,7 @@ describe('KbqFullScreenDropzoneService', () => {
         });
 
         it('should unsubscribe from all event listeners', () => {
-            jest.spyOn(service, 'open');
+            vi.spyOn(service, 'open');
 
             service.init();
             service.stop();
@@ -2049,7 +2196,7 @@ describe('KbqFullScreenDropzoneService', () => {
         });
 
         it('should prevent future events after stop is called', () => {
-            jest.spyOn(service, 'close');
+            vi.spyOn(service, 'close');
 
             service.init();
             service.stop();
@@ -2092,7 +2239,7 @@ describe('KbqLocalDropzone', () => {
     });
 
     it('should set up dragenter listener on host element', () => {
-        jest.spyOn(directive, 'open');
+        vi.spyOn(directive, 'open');
 
         dispatchDragEvent('dragenter', { target: directiveElement });
 
@@ -2103,7 +2250,7 @@ describe('KbqLocalDropzone', () => {
         it('should connect filesDropped to single file upload component', () => {
             const connectedComponent = component.singleFileUpload();
 
-            jest.spyOn(connectedComponent, 'onFileDropped');
+            vi.spyOn(connectedComponent, 'onFileDropped');
             component.connectedComponent = connectedComponent;
             fixture.detectChanges();
 
@@ -2117,7 +2264,7 @@ describe('KbqLocalDropzone', () => {
         it('should connect filesDropped to multiple file upload component', () => {
             const connectedComponent = component.multipleFileUpload();
 
-            jest.spyOn(connectedComponent, 'onFileDropped');
+            vi.spyOn(connectedComponent, 'onFileDropped');
             component.connectedComponent = connectedComponent;
             fixture.detectChanges();
 
@@ -2145,7 +2292,7 @@ describe('KbqLocalDropzone', () => {
 
     describe('open', () => {
         it('should create overlay with correct configuration', () => {
-            jest.spyOn(overlay, 'create');
+            vi.spyOn(overlay, 'create');
             directive.open();
 
             expect(overlay.create).toHaveBeenCalledWith({
@@ -2158,7 +2305,7 @@ describe('KbqLocalDropzone', () => {
         });
 
         it('should call init after attaching overlay', () => {
-            jest.spyOn<any, any>(directive, 'init');
+            vi.spyOn<any, any>(directive, 'init');
 
             directive.open();
 
@@ -2180,7 +2327,7 @@ describe('KbqLocalDropzone', () => {
         it('should close overlay on dragleave when leaving overlay bounds', () => {
             const overlayRef: OverlayRef = (directive as any).overlayRef;
 
-            jest.spyOn(directive, 'close');
+            vi.spyOn(directive, 'close');
 
             const dragleaveEvent = new DragEvent('dragleave', {
                 relatedTarget: null
@@ -2194,7 +2341,7 @@ describe('KbqLocalDropzone', () => {
         it('should not close overlay on dragleave if related target is inside overlay', () => {
             const overlayRef: OverlayRef = (directive as any).overlayRef;
 
-            jest.spyOn(directive, 'close');
+            vi.spyOn(directive, 'close');
 
             const childElement = document.createElement('div');
 
@@ -2217,8 +2364,8 @@ describe('KbqLocalDropzone', () => {
         it('should handle drop event and close overlay', () => {
             const overlayRef: OverlayRef = (directive as any).overlayRef;
 
-            jest.spyOn(directive, 'onDrop');
-            jest.spyOn(directive, 'close');
+            vi.spyOn(directive, 'onDrop');
+            vi.spyOn(directive, 'close');
 
             const dropEvent = dispatchDragEvent('drop', { target: overlayRef.overlayElement });
 
@@ -2236,7 +2383,7 @@ describe('KbqLocalDropzone', () => {
         it('should not keep listeners on a disposed overlay element', () => {
             const disposed: HTMLElement = ((directive as any).overlayRef as OverlayRef).overlayElement;
 
-            jest.spyOn(directive, 'onDrop');
+            vi.spyOn(directive, 'onDrop');
 
             directive.close();
             dispatchDragEvent('drop', { target: disposed });
@@ -2249,8 +2396,8 @@ describe('KbqLocalDropzone', () => {
         it('should create overlay positioned relative to host element', () => {
             const positionStrategy = overlay.position();
 
-            jest.spyOn(overlay, 'position').mockImplementation(() => positionStrategy);
-            const flexibleConnectedToSpy = jest.spyOn(positionStrategy, 'flexibleConnectedTo');
+            vi.spyOn(overlay, 'position').mockImplementation(() => positionStrategy);
+            const flexibleConnectedToSpy = vi.spyOn(positionStrategy, 'flexibleConnectedTo');
 
             directive.open();
 
@@ -2258,7 +2405,7 @@ describe('KbqLocalDropzone', () => {
         });
 
         it('should use element dimensions for overlay size', () => {
-            jest.spyOn(overlay, 'create');
+            vi.spyOn(overlay, 'create');
 
             // Set specific dimensions
             directiveElement.style.width = '300px';
@@ -2345,7 +2492,7 @@ class BasicSingleFileUpload {
     accept: string[] = [];
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
-    onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
+    onChange = vi.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
     });
 }
@@ -2367,7 +2514,7 @@ class ControlValueAccessorSingleFileUpload {
     accept: string[] = [];
     control = new FormControl();
 
-    onChange = jest.fn().mockImplementation((file: KbqFileItem) => {
+    onChange = vi.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
     });
 }
@@ -2397,7 +2544,7 @@ class BasicMultipleFileUpload {
     fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
     addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
-    onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
+    onChange = vi.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
     });
 }
@@ -2424,7 +2571,7 @@ class ControlValueAccessorMultipleFileUpload {
     accept: string[] = [];
     control = new FormControl();
 
-    onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
+    onChange = vi.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
     });
 }

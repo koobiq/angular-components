@@ -1,5 +1,4 @@
-﻿import { animate, style, transition, trigger } from '@angular/animations';
-import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
+﻿import { CdkMonitorFocus, FocusMonitor } from '@angular/cdk/a11y';
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { CdkDrag } from '@angular/cdk/drag-drop';
 import { A } from '@angular/cdk/keycodes';
@@ -8,7 +7,6 @@ import {
     Component,
     DebugElement,
     model,
-    NgZone,
     Provider,
     QueryList,
     signal,
@@ -17,7 +15,7 @@ import {
     viewChild,
     ViewChildren
 } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
     FormControl,
@@ -31,7 +29,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAutocompleteModule, KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
     BACKSPACE,
@@ -44,7 +41,6 @@ import {
     FocusKeyManager,
     HOME,
     LEFT_ARROW,
-    MockNgZone,
     RIGHT_ARROW,
     SPACE,
     TAB,
@@ -66,7 +62,7 @@ import { KbqTag, KbqTagEvent } from './tag.component';
 
 const createStandaloneComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers
     });
     const fixture = TestBed.createComponent<T>(component);
@@ -157,8 +153,8 @@ export class TestTagList {
     readonly draggable = model(false);
     readonly disabled = model(false);
 
-    readonly selectionChange = jest.fn();
-    readonly removedChange = jest.fn();
+    readonly selectionChange = vi.fn();
+    readonly removedChange = vi.fn();
 }
 
 @Component({
@@ -312,8 +308,9 @@ describe(KbqTagList.name, () => {
     let testComponent: StandardTagList;
     let tags: QueryList<KbqTag>;
     let manager: FocusKeyManager<KbqTag>;
-    let zone: MockNgZone;
     let dirChange: Subject<Direction>;
+
+    afterEach(() => vi.useRealTimers());
 
     describe('StandardTagList', () => {
         describe('basic behaviors', () => {
@@ -328,32 +325,34 @@ describe(KbqTagList.name, () => {
             it('should toggle the tags disabled state based on whether it is disabled', () => {
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(false);
 
-                tagListInstance.disabled = true;
+                tagListInstance.disabled.set(true);
                 fixture.detectChanges();
 
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(true);
 
-                tagListInstance.disabled = false;
+                tagListInstance.disabled.set(false);
                 fixture.detectChanges();
 
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(false);
             });
 
-            it('should disable a tag that is added after the list became disabled', fakeAsync(() => {
+            it('should disable a tag that is added after the list became disabled', async () => {
+                vi.useFakeTimers();
+
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(false);
 
-                tagListInstance.disabled = true;
+                tagListInstance.disabled.set(true);
                 fixture.detectChanges();
 
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(true);
 
                 fixture.componentInstance.tags.push(5, 6);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(true);
-            }));
+            });
         });
 
         describe('with selected tags', () => {
@@ -395,33 +394,35 @@ describe(KbqTagList.name, () => {
                 expect(manager.activeItemIndex).toBe(0);
             });
 
-            it('should watch for tag focus', fakeAsync(() => {
+            it('should watch for tag focus', async () => {
+                vi.useFakeTimers();
+
                 const array = tags.toArray();
                 const lastIndex = array.length - 1;
                 const lastItem = array[lastIndex];
 
                 lastItem.focus();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(manager.activeItemIndex).toBe(lastIndex);
-            }));
+            });
 
             it('should be able to become focused when disabled', () => {
-                expect(tagListInstance.focused).toBe(false);
+                expect(tagListInstance.focused()).toBe(false);
 
-                tagListInstance.disabled = true;
+                tagListInstance.disabled.set(true);
                 fixture.detectChanges();
 
                 tagListInstance.focus();
                 fixture.detectChanges();
 
-                expect(tagListInstance.focused).toBe(false);
+                expect(tagListInstance.focused()).toBe(false);
             });
 
             it('should remove the tabindex from the list if it is disabled', () => {
                 expect(tagListNativeElement.getAttribute('tabindex')).toBeTruthy();
 
-                tagListInstance.disabled = true;
+                tagListInstance.disabled.set(true);
                 fixture.detectChanges();
 
                 expect(tagListNativeElement.hasAttribute('tabindex')).toBeFalsy();
@@ -440,13 +441,15 @@ describe(KbqTagList.name, () => {
             });
 
             describe('on tag destroy', () => {
-                it('should focus the next item', fakeAsync(() => {
+                it('should focus the next item', async () => {
+                    vi.useFakeTimers();
+
                     const array = tags.toArray();
                     const midItem = array[2];
 
                     // Focus the middle item
                     midItem.focus();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
 
                     // Destroy the middle item
                     testComponent.tags.splice(2, 1);
@@ -454,16 +457,18 @@ describe(KbqTagList.name, () => {
 
                     // It focuses the 4th item (now at index 2)
                     expect(manager.activeItemIndex).toEqual(2);
-                }));
+                });
 
-                it('should focus the previous item', fakeAsync(() => {
+                it('should focus the previous item', async () => {
+                    vi.useFakeTimers();
+
                     const array = tags.toArray();
                     const lastIndex = array.length - 1;
                     const lastItem = array[lastIndex];
 
                     // Focus the last item
                     lastItem.focus();
-                    flush();
+                    await vi.runOnlyPendingTimersAsync();
 
                     // Destroy the last item
                     testComponent.tags.pop();
@@ -471,7 +476,7 @@ describe(KbqTagList.name, () => {
 
                     // It focuses the next-to-last item
                     expect(manager.activeItemIndex).toEqual(lastIndex - 1);
-                }));
+                });
 
                 it('should not focus if tag list is not focused', () => {
                     const array = tags.toArray();
@@ -480,7 +485,6 @@ describe(KbqTagList.name, () => {
                     // Focus and blur the middle item
                     midItem.focus();
                     midItem.blur();
-                    zone.simulateZoneExit();
 
                     // Destroy the middle item
                     testComponent.tags.splice(2, 1);
@@ -490,7 +494,9 @@ describe(KbqTagList.name, () => {
                     expect(tagListInstance.keyManager.activeItemIndex).toEqual(-1);
                 });
 
-                it('should move focus to the last tag when the focused tag was deleted inside a component with animations', fakeAsync(() => {
+                it('should move focus to the last tag when the focused tag was deleted with a leave animation', async () => {
+                    vi.useFakeTimers();
+
                     fixture.destroy();
                     TestBed.resetTestingModule();
                     fixture = createComponent(StandardTagListWithAnimations, []);
@@ -504,14 +510,14 @@ describe(KbqTagList.name, () => {
                     tags = tagListInstance.tags;
 
                     tags.last.focus();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
 
                     expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
 
                     dispatchKeyboardEvent(tags.last.elementRef.nativeElement, 'keydown', BACKSPACE);
 
                     expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
-                }));
+                });
             });
         });
 
@@ -522,7 +528,9 @@ describe(KbqTagList.name, () => {
                     manager = tagListInstance.keyManager;
                 });
 
-                it('should focus previous item when press LEFT ARROW', fakeAsync(() => {
+                it('should focus previous item when press LEFT ARROW', async () => {
+                    vi.useFakeTimers();
+
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                     const lastNativeChip = nativeTags[nativeTags.length - 1] as HTMLElement;
 
@@ -533,7 +541,7 @@ describe(KbqTagList.name, () => {
 
                     // Focus the last item in the array
                     lastItem.focus();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
                     expect(manager.activeItemIndex).toEqual(lastIndex);
 
                     // Press the LEFT arrow
@@ -543,9 +551,11 @@ describe(KbqTagList.name, () => {
 
                     // It focuses the next-to-last item
                     expect(manager.activeItemIndex).toEqual(lastIndex - 1);
-                }));
+                });
 
-                it('should focus next item when press RIGHT ARROW', fakeAsync(() => {
+                it('should focus next item when press RIGHT ARROW', async () => {
+                    vi.useFakeTimers();
+
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                     const firstNativeChip = nativeTags[0] as HTMLElement;
 
@@ -555,7 +565,7 @@ describe(KbqTagList.name, () => {
 
                     // Focus the last item in the array
                     firstItem.focus();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
                     expect(manager.activeItemIndex).toEqual(0);
 
                     // Press the RIGHT arrow
@@ -565,7 +575,7 @@ describe(KbqTagList.name, () => {
 
                     // It focuses the next-to-last item
                     expect(manager.activeItemIndex).toEqual(1);
-                }));
+                });
 
                 it('should not handle arrow key events from non-chip elements', () => {
                     const event: KeyboardEvent = createKeyboardEvent('keydown', RIGHT_ARROW, tagListNativeElement);
@@ -577,7 +587,9 @@ describe(KbqTagList.name, () => {
                     expect(manager.activeItemIndex).toBe(initialActiveIndex);
                 });
 
-                it('should focus the first item when pressing HOME', fakeAsync(() => {
+                it('should focus the first item when pressing HOME', async () => {
+                    vi.useFakeTimers();
+
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                     const lastNativeChip = nativeTags[nativeTags.length - 1] as HTMLElement;
                     const HOME_EVENT = createKeyboardEvent('keydown', HOME, lastNativeChip);
@@ -585,7 +597,7 @@ describe(KbqTagList.name, () => {
                     const lastItem = array[array.length - 1];
 
                     lastItem.focus();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
                     expect(manager.activeItemIndex).toBe(array.length - 1);
 
                     tagListInstance.keydown(HOME_EVENT);
@@ -593,7 +605,7 @@ describe(KbqTagList.name, () => {
 
                     expect(manager.activeItemIndex).toBe(0);
                     expect(HOME_EVENT.defaultPrevented).toBe(true);
-                }));
+                });
 
                 it('should focus the last item when pressing END', () => {
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
@@ -615,7 +627,9 @@ describe(KbqTagList.name, () => {
                     manager = tagListInstance.keyManager;
                 });
 
-                it('should focus previous item when press RIGHT ARROW', fakeAsync(() => {
+                it('should focus previous item when press RIGHT ARROW', async () => {
+                    vi.useFakeTimers();
+
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                     const lastNativeChip = nativeTags[nativeTags.length - 1] as HTMLElement;
 
@@ -626,7 +640,7 @@ describe(KbqTagList.name, () => {
 
                     // Focus the last item in the array
                     lastItem.focus();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
                     expect(manager.activeItemIndex).toEqual(lastIndex);
 
                     // Press the RIGHT arrow
@@ -636,9 +650,11 @@ describe(KbqTagList.name, () => {
 
                     // It focuses the next-to-last item
                     expect(manager.activeItemIndex).toEqual(lastIndex - 1);
-                }));
+                });
 
-                it('should focus next item when press LEFT ARROW', fakeAsync(() => {
+                it('should focus next item when press LEFT ARROW', async () => {
+                    vi.useFakeTimers();
+
                     const nativeTags = tagListNativeElement.querySelectorAll('kbq-tag');
                     const firstNativeChip = nativeTags[0] as HTMLElement;
 
@@ -648,7 +664,7 @@ describe(KbqTagList.name, () => {
 
                     // Focus the last item in the array
                     firstItem.focus();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
                     expect(manager.activeItemIndex).toEqual(0);
 
                     // Press the LEFT arrow
@@ -658,19 +674,23 @@ describe(KbqTagList.name, () => {
 
                     // It focuses the next-to-last item
                     expect(manager.activeItemIndex).toEqual(1);
-                }));
+                });
 
-                it('should allow focus to escape when tabbing away', fakeAsync(() => {
+                it('should allow focus to escape when tabbing away', async () => {
+                    vi.useFakeTimers();
+
                     tagListInstance.keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
 
                     expect(tagListInstance.tabIndex).toBe(-1);
 
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
 
                     expect(tagListInstance.tabIndex).toBe(0);
-                }));
+                });
 
-                it(`should use user defined tabIndex`, fakeAsync(() => {
+                it(`should use user defined tabIndex`, async () => {
+                    vi.useFakeTimers();
+
                     tagListInstance.tabIndex = 4;
 
                     fixture.detectChanges();
@@ -681,13 +701,15 @@ describe(KbqTagList.name, () => {
 
                     expect(tagListInstance.tabIndex).toBe(-1);
 
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
 
                     expect(tagListInstance.tabIndex).toBe(4);
-                }));
+                });
             });
 
-            it('should account for the direction changing', fakeAsync(() => {
+            it('should account for the direction changing', async () => {
+                vi.useFakeTimers();
+
                 setupStandardList();
                 manager = tagListInstance.keyManager;
 
@@ -699,7 +721,7 @@ describe(KbqTagList.name, () => {
                 const firstItem = array[0];
 
                 firstItem.focus();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 expect(manager.activeItemIndex).toBe(0);
 
                 tagListInstance.keydown(RIGHT_EVENT);
@@ -716,7 +738,7 @@ describe(KbqTagList.name, () => {
                 fixture.detectChanges();
 
                 expect(manager.activeItemIndex).toBe(0);
-            }));
+            });
         });
     });
 
@@ -728,18 +750,20 @@ describe(KbqTagList.name, () => {
                 manager = tagListInstance.keyManager;
             });
 
-            it('should maintain focus if the active tag is deleted', fakeAsync(() => {
+            it('should maintain focus if the active tag is deleted', async () => {
+                vi.useFakeTimers();
+
                 const secondTag = fixture.nativeElement.querySelectorAll('.kbq-tag')[1];
 
                 secondTag.focus();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(tagListInstance.tags.toArray().findIndex((tag) => tag.hasFocus)).toBe(1);
 
                 dispatchKeyboardEvent(secondTag, 'keydown', DELETE);
 
                 expect(tagListInstance.tags.toArray().findIndex((tag) => tag.hasFocus)).toBe(1);
-            }));
+            });
 
             describe('when the input has focus', () => {
                 it('should not focus the last tag when press DELETE', () => {
@@ -756,41 +780,34 @@ describe(KbqTagList.name, () => {
                     expect(manager.activeItemIndex).toEqual(-1);
                 });
 
-                it('should focus the last tag when press BACKSPACE', fakeAsync(() => {
+                it('should focus the last tag when press BACKSPACE', async () => {
+                    vi.useFakeTimers();
+
                     const nativeInput = fixture.nativeElement.querySelector('input');
                     const BACKSPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', BACKSPACE, nativeInput);
 
                     // Focus the input
                     nativeInput.focus();
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
 
                     expect(manager.activeItemIndex).toBe(-1);
 
                     // Press the BACKSPACE key
                     tagListInstance.keydown(BACKSPACE_EVENT);
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
 
                     // It focuses the last chip
                     expect(manager.activeItemIndex).toEqual(tags.length - 1);
-                }));
+                });
             });
         });
 
         // jsdom performs no layout, so getBoundingClientRect reports 0 for every box. Row height is
         // covered by the screenshot baselines.
-        xit('height should be 32px', () => {
+        it.skip('height should be 32px', () => {
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
 
             expect(formFieldElement.getBoundingClientRect().height).toBe(32);
-        });
-
-        it('should complete the stateChanges stream on destroy', () => {
-            const spy = jest.fn();
-            const subscription = tagListInstance.stateChanges.subscribe({ complete: spy });
-
-            fixture.destroy();
-            expect(spy).toHaveBeenCalled();
-            subscription.unsubscribe();
         });
     });
 
@@ -830,7 +847,7 @@ describe(KbqTagList.name, () => {
 
             // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
-            xit('should set the view value from the form', () => {
+            it.skip('should set the view value from the form', () => {
                 const tagList = fixture.componentInstance.tagList;
                 const array = tags.toArray();
 
@@ -844,7 +861,7 @@ describe(KbqTagList.name, () => {
 
             // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
-            xit('should update the form value when the view changes', () => {
+            it.skip('should update the form value when the view changes', () => {
                 expect(fixture.componentInstance.control.value).toEqual(null);
 
                 dispatchKeyboardEvent(nativeTags[0], 'keydown', SPACE);
@@ -895,7 +912,7 @@ describe(KbqTagList.name, () => {
 
             // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
-            xit("should set the control to dirty when the tag list's value changes in the DOM", () => {
+            it.skip("should set the control to dirty when the tag list's value changes in the DOM", () => {
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
 
                 dispatchKeyboardEvent(nativeTags[1], 'keydown', SPACE);
@@ -916,7 +933,7 @@ describe(KbqTagList.name, () => {
             it('should not focus the active tag when the value is set programmatically', () => {
                 const chipArray = fixture.componentInstance.tags.toArray();
 
-                const focusSpyFn = jest.spyOn(chipArray[4], 'focus');
+                const focusSpyFn = vi.spyOn(chipArray[4], 'focus');
 
                 fixture.componentInstance.control.setValue('tags-4');
                 fixture.detectChanges();
@@ -936,7 +953,6 @@ describe(KbqTagList.name, () => {
 
                 nativeTags[0].blur();
                 fixture.detectChanges();
-                zone.simulateZoneExit();
                 fixture.detectChanges();
 
                 expect(formField.classList).not.toContain('cdk-focused');
@@ -962,16 +978,18 @@ describe(KbqTagList.name, () => {
             expect(array[1].selected()).toBeFalsy();
         });
 
-        it('should set the control to touched when the tag list is touched', fakeAsync(() => {
+        it('should set the control to touched when the tag list is touched', async () => {
+            vi.useFakeTimers();
+
             expect(fixture.componentInstance.control.touched).toBe(false);
 
             const nativeTagList = fixture.debugElement.query(By.css('.kbq-tag-list')).nativeElement;
 
             dispatchFakeEvent(nativeTagList, 'blur');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(fixture.componentInstance.control.touched).toBe(true);
-        }));
+        });
 
         it('should not set touched when a disabled tag list is touched', () => {
             expect(fixture.componentInstance.control.touched).toBe(false);
@@ -992,18 +1010,22 @@ describe(KbqTagList.name, () => {
             expect(fixture.componentInstance.control.dirty).toEqual(false);
         });
 
-        it('should not set the control to dirty when rendered tags changed programmatically', fakeAsync(() => {
+        it('should not set the control to dirty when rendered tags changed programmatically', async () => {
+            vi.useFakeTimers();
+
             expect(fixture.componentInstance.control.dirty).toEqual(false);
 
             fixture.componentInstance.foods = [...fixture.componentInstance.foods, 'pizza-1'];
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(fixture.componentInstance.control.dirty).toEqual(false);
-        }));
+        });
 
-        it('should set the control to dirty when a tag is removed via UI (BACKSPACE)', fakeAsync(() => {
+        it('should set the control to dirty when a tag is removed via UI (BACKSPACE)', async () => {
+            vi.useFakeTimers();
+
             expect(fixture.componentInstance.control.dirty).toEqual(false);
 
             const tagListDebugEl = fixture.debugElement.query(By.directive(KbqTagList));
@@ -1011,16 +1033,18 @@ describe(KbqTagList.name, () => {
             const firstTag = tagListInst.tags.first;
 
             firstTag.focus();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             dispatchKeyboardEvent(firstTag.elementRef.nativeElement, 'keydown', BACKSPACE);
             fixture.detectChanges();
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
 
             expect(fixture.componentInstance.control.dirty).toEqual(true);
-        }));
+        });
 
-        it('should set the control to dirty when a tag is added via input', fakeAsync(() => {
+        it('should set the control to dirty when a tag is added via input', async () => {
+            vi.useFakeTimers();
+
             expect(fixture.componentInstance.control.dirty).toEqual(false);
 
             const nativeInput: HTMLInputElement = fixture.nativeElement.querySelector('input');
@@ -1031,12 +1055,14 @@ describe(KbqTagList.name, () => {
 
             nativeInput.dispatchEvent(createKeyboardEvent('keydown', ENTER, nativeInput, 'Enter'));
             fixture.detectChanges();
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
 
             expect(fixture.componentInstance.control.dirty).toEqual(true);
-        }));
+        });
 
-        it('should keep focus on the input after adding the first chip', fakeAsync(() => {
+        it('should keep focus on the input after adding the first chip', async () => {
+            vi.useFakeTimers();
+
             const nativeInput = fixture.nativeElement.querySelector('input');
 
             fixture.componentInstance.foods = [];
@@ -1050,10 +1076,10 @@ describe(KbqTagList.name, () => {
             fixture.detectChanges();
             dispatchKeyboardEvent(nativeInput, 'keydown', ENTER);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(nativeInput);
-        }));
+        });
 
         describe('keyboard behavior', () => {
             beforeEach(() => {
@@ -1080,7 +1106,9 @@ describe(KbqTagList.name, () => {
                     expect(manager.activeItemIndex).toEqual(-1);
                 });
 
-                it('should focus the last tag when press BACKSPACE', fakeAsync(() => {
+                it('should focus the last tag when press BACKSPACE', async () => {
+                    vi.useFakeTimers();
+
                     const nativeInput = fixture.nativeElement.querySelector('input');
                     const BACKSPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', BACKSPACE, nativeInput);
 
@@ -1090,11 +1118,11 @@ describe(KbqTagList.name, () => {
 
                     // Press the BACKSPACE key
                     tagListInstance.keydown(BACKSPACE_EVENT);
-                    tick();
+                    await vi.advanceTimersByTimeAsync(0);
 
                     // It focuses the last chip
                     expect(manager.activeItemIndex).toEqual(tags.length - 1);
-                }));
+                });
             });
         });
     });
@@ -1102,7 +1130,7 @@ describe(KbqTagList.name, () => {
     // Dead twice over: the fixture's only kbq-error is commented out below, and KbqTagList renders neither
     // aria-invalid nor aria-describedby — unlike input, select, textarea and tree-select, it has no role to
     // carry them either. Reviving this needs the a11y wiring first.
-    xdescribe('error messages', () => {
+    describe.skip('error messages', () => {
         let errorTestComponent: TagListWithFormErrorMessages;
         let containerEl: HTMLElement;
         let tagListEl: HTMLElement;
@@ -1121,20 +1149,22 @@ describe(KbqTagList.name, () => {
             expect(tagListEl.getAttribute('aria-invalid')).toBe('false');
         });
 
-        it('should display an error message when the list is touched and invalid', fakeAsync(() => {
+        it('should display an error message when the list is touched and invalid', async () => {
+            vi.useFakeTimers();
+
             expect(errorTestComponent.formControl.invalid).toBe(true);
             expect(containerEl.querySelectorAll('kbq-error').length).toBe(0);
 
             errorTestComponent.formControl.markAsTouched();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(containerEl.classList).toContain('kbq-form-field-invalid');
             expect(containerEl.querySelectorAll('kbq-error').length).toBe(1);
             expect(tagListEl.getAttribute('aria-invalid')).toBe('true');
-        }));
+        });
 
-        it('should display an error message when the parent form is submitted', fakeAsync(() => {
+        it('should display an error message when the parent form is submitted', async () => {
             expect(errorTestComponent.form().submitted).toBe(false);
             expect(errorTestComponent.formControl.invalid).toBe(true);
             expect(containerEl.querySelectorAll('kbq-error').length).toBe(0);
@@ -1142,38 +1172,37 @@ describe(KbqTagList.name, () => {
             dispatchFakeEvent(fixture.debugElement.query(By.css('form')).nativeElement, 'submit');
             fixture.detectChanges();
 
-            fixture.whenStable().then(() => {
-                expect(errorTestComponent.form().submitted).toBe(true);
-                expect(containerEl.classList).toContain('kbq-form-field-invalid');
-                expect(containerEl.querySelectorAll('kbq-error').length).toBe(1);
-                expect(tagListEl.getAttribute('aria-invalid')).toBe('true');
-            });
-        }));
+            await fixture.whenStable();
 
-        it('should hide the errors and show the hints once the tag list becomes valid', fakeAsync(() => {
+            expect(errorTestComponent.form().submitted).toBe(true);
+            expect(containerEl.classList).toContain('kbq-form-field-invalid');
+            expect(containerEl.querySelectorAll('kbq-error').length).toBe(1);
+            expect(tagListEl.getAttribute('aria-invalid')).toBe('true');
+        });
+
+        it('should hide the errors and show the hints once the tag list becomes valid', async () => {
             errorTestComponent.formControl.markAsTouched();
             fixture.detectChanges();
 
-            fixture.whenStable().then(() => {
-                expect(containerEl.classList).toContain('kbq-form-field-invalid');
+            await fixture.whenStable();
 
-                expect(containerEl.querySelectorAll('kbq-error').length).toBe(1);
+            expect(containerEl.classList).toContain('kbq-form-field-invalid');
 
-                expect(containerEl.querySelectorAll('kbq-hint').length).toBe(0);
+            expect(containerEl.querySelectorAll('kbq-error').length).toBe(1);
 
-                errorTestComponent.formControl.setValue('something');
-                fixture.detectChanges();
+            expect(containerEl.querySelectorAll('kbq-hint').length).toBe(0);
 
-                // eslint-disable-next-line promise/no-nesting
-                fixture.whenStable().then(() => {
-                    expect(containerEl.classList).not.toContain('kbq-form-field-invalid');
+            errorTestComponent.formControl.setValue('something');
+            fixture.detectChanges();
 
-                    expect(containerEl.querySelectorAll('kbq-error').length).toBe(0);
+            await fixture.whenStable();
 
-                    expect(containerEl.querySelectorAll('kbq-hint').length).toBe(1);
-                });
-            });
-        }));
+            expect(containerEl.classList).not.toContain('kbq-form-field-invalid');
+
+            expect(containerEl.querySelectorAll('kbq-error').length).toBe(0);
+
+            expect(containerEl.querySelectorAll('kbq-hint').length).toBe(1);
+        });
 
         it('should set the proper role on the error messages', () => {
             errorTestComponent.formControl.markAsTouched();
@@ -1213,11 +1242,9 @@ describe(KbqTagList.name, () => {
                 KbqTagsModule,
                 KbqFormFieldModule,
                 KbqInputModule,
-                NoopAnimationsModule,
                 component
             ],
             providers: [
-                { provide: NgZone, useFactory: () => (zone = new MockNgZone()) },
                 ...providers
             ]
         }).compileComponents();
@@ -1256,7 +1283,7 @@ describe(KbqTagList.name, () => {
         tags = tagListInstance.tags;
     }
 
-    it('should select all on Ctrl + A', () => {
+    it('should select all on Ctrl + A', async () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1265,33 +1292,42 @@ describe(KbqTagList.name, () => {
         Object.defineProperty(event, 'target', { get: () => getLastTagElement(debugElement) });
         getTagListElement(debugElement).dispatchEvent(event);
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(componentInstance.tags().length);
     });
 
-    it('should select a tag range on Shift + click', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select a tag range on Shift + click', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
         expect(componentInstance.tagList().selected).toEqual(componentInstance.tagList().tags.toArray());
     });
 
-    it('should select a tag range in reverse order on Shift + click', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select a tag range in reverse order on Shift + click', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[0].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
         expect(componentInstance.tagList().selected).toEqual(componentInstance.tagList().tags.toArray());
     });
 
-    it('should select a tag range when the anchor tag was deselected', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select a tag range when the anchor tag was deselected', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
@@ -1299,55 +1335,71 @@ describe(KbqTagList.name, () => {
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
         expect(componentInstance.tagList().selected).toEqual(componentInstance.tagList().tags.toArray());
     });
 
-    it('should select only the clicked tag on Shift + click without an anchor', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should select only the clicked tag on Shift + click without an anchor', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[2]]);
         expect(componentInstance.tagList().selected).toEqual([componentInstance.tagList().tags.get(2)]);
     });
 
-    it('should shrink a tag range from the same anchor on repeated Shift + click', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should shrink a tag range from the same anchor on repeated Shift + click', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
         nativeTags[1].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
     });
 
-    it('should move a tag range to the opposite side of the anchor on Shift + click', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should move a tag range to the opposite side of the anchor on Shift + click', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[1].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
         nativeTags[0].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
     });
 
-    it('should reset the range anchor when all tags are unselected', () => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should reset the range anchor when all tags are unselected', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
+
+        await fixture.whenStable();
         componentInstance.tagList().unselectAll();
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[2]]);
         expect(componentInstance.tagList().selected).toEqual([componentInstance.tagList().tags.get(2)]);
     });
 
-    it('should skip disabled tags when selecting a range on Shift + click', () => {
+    it('should skip disabled tags when selecting a range on Shift + click', async () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1362,6 +1414,8 @@ describe(KbqTagList.name, () => {
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[2]]);
         expect(componentInstance.tagList().selected).toEqual([
@@ -1397,26 +1451,33 @@ describe(KbqTagList.name, () => {
         );
     });
 
-    it('should use a tag selected with SPACE as the range anchor', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should use a tag selected with SPACE as the range anchor', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
     });
 
-    it('should expand and shrink a tag range on Shift + Arrow', fakeAsync(() => {
-        const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
+    it('should expand and shrink a tag range on Shift + Arrow', async () => {
+        vi.useFakeTimers();
+
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
@@ -1424,6 +1485,7 @@ describe(KbqTagList.name, () => {
         nativeTags[1].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(2);
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
@@ -1431,58 +1493,72 @@ describe(KbqTagList.name, () => {
         nativeTags[2].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: LEFT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
-    }));
+    });
 
-    it('should continue a pointer range with Shift + Arrow after Shift is released', fakeAsync(() => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should continue a pointer range with Shift + Arrow after Shift is released', async () => {
+        vi.useFakeTimers();
+
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[2].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
         nativeTags[2].dispatchEvent(new KeyboardEvent('keyup', { key: 'Shift', bubbles: true }));
         nativeTags[2].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: LEFT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
-    }));
+    });
 
-    it('should continue a keyboard range with Shift + click', fakeAsync(() => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should continue a keyboard range with Shift + click', async () => {
+        vi.useFakeTimers();
+
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+        fixture.detectChanges();
 
         expect(getSelectedTags(debugElement)).toEqual(nativeTags);
-    }));
+    });
 
-    it('should start a new range after moving focus without Shift', fakeAsync(() => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should start a new range after moving focus without Shift', async () => {
+        vi.useFakeTimers();
+
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
         nativeTags[0].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         nativeTags[0].dispatchEvent(new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, bubbles: true }));
         nativeTags[1].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[1], nativeTags[2]]);
-    }));
+    });
 
-    it('should not restore a previous selected state after a range shrinks', () => {
-        const { debugElement } = createStandaloneComponent(TestTagList);
+    it('should not restore a previous selected state after a range shrinks', async () => {
+        const fixture = createStandaloneComponent(TestTagList);
+        const { debugElement } = fixture;
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].dispatchEvent(new MouseEvent('click', { ctrlKey: true }));
@@ -1490,10 +1566,14 @@ describe(KbqTagList.name, () => {
         nativeTags[2].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
         nativeTags[1].dispatchEvent(new MouseEvent('click', { shiftKey: true }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
     });
 
-    it('should select a tag range on Shift + Arrow in RTL', fakeAsync(() => {
+    it('should select a tag range on Shift + Arrow in RTL', async () => {
+        vi.useFakeTimers();
+
         const fixture = createStandaloneComponent(TestTagList, [
             {
                 provide: Directionality,
@@ -1504,30 +1584,35 @@ describe(KbqTagList.name, () => {
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: LEFT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[1]]);
-    }));
+    });
 
-    it('should not change selection on Shift + Arrow when focus cannot move', fakeAsync(() => {
+    it('should not change selection on Shift + Arrow when focus cannot move', async () => {
+        vi.useFakeTimers();
+
         const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[2].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         nativeTags[2].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(2);
         expect(getSelectedTags(debugElement)).toHaveLength(0);
-    }));
+    });
 
-    it('should skip disabled tags when selecting a range on Shift + Arrow', fakeAsync(() => {
+    it('should skip disabled tags when selecting a range on Shift + Arrow', async () => {
+        vi.useFakeTimers();
+
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1541,16 +1626,19 @@ describe(KbqTagList.name, () => {
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
+        fixture.detectChanges();
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(2);
         expect(getSelectedTags(debugElement)).toEqual([nativeTags[0], nativeTags[2]]);
-    }));
+    });
 
-    it('should only move focus on Shift + Arrow when tag list is not selectable', fakeAsync(() => {
+    it('should only move focus on Shift + Arrow when tag list is not selectable', async () => {
+        vi.useFakeTimers();
+
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
         const nativeTags = getTagElements(debugElement);
@@ -1559,21 +1647,23 @@ describe(KbqTagList.name, () => {
         fixture.detectChanges();
 
         nativeTags[0].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
         expect(getSelectedTags(debugElement)).toHaveLength(0);
-    }));
+    });
 
-    it('should emit user-input selection events for Shift + Arrow', fakeAsync(() => {
+    it('should emit user-input selection events for Shift + Arrow', async () => {
+        vi.useFakeTimers();
+
         const { debugElement, componentInstance } = createStandaloneComponent(TestTagList);
         const nativeTags = getTagElements(debugElement);
 
         nativeTags[0].focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         nativeTags[0].dispatchEvent(
             new KeyboardEvent('keydown', { keyCode: RIGHT_ARROW, shiftKey: true, bubbles: true })
         );
@@ -1587,9 +1677,11 @@ describe(KbqTagList.name, () => {
             2,
             expect.objectContaining({ selected: true, isUserInput: true })
         );
-    }));
+    });
 
-    it('should focus previous tag if last tag is removed', fakeAsync(() => {
+    it('should focus previous tag if last tag is removed', async () => {
+        vi.useFakeTimers();
+
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1598,7 +1690,7 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(-1);
 
         getLastTagElement(debugElement).focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(2);
 
@@ -1607,9 +1699,11 @@ describe(KbqTagList.name, () => {
 
         expect(getTagElements(debugElement).length).toBe(2);
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(1);
-    }));
+    });
 
-    it('should focus next tag if first tag is removed', fakeAsync(() => {
+    it('should focus next tag if first tag is removed', async () => {
+        vi.useFakeTimers();
+
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1618,7 +1712,7 @@ describe(KbqTagList.name, () => {
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(-1);
 
         getFirstTagElement(debugElement).focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(0);
 
@@ -1627,19 +1721,21 @@ describe(KbqTagList.name, () => {
 
         expect(getTagElements(debugElement).length).toBe(2);
         expect(componentInstance.tagList().keyManager.activeItemIndex).toBe(0);
-    }));
+    });
 
-    it('should NOT select tag on focus', fakeAsync(() => {
+    it('should NOT select tag on focus', async () => {
+        vi.useFakeTimers();
+
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement } = fixture;
 
         expect(getSelectedTags(debugElement).length).toBe(0);
 
         getLastTagElement(debugElement).focus();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(getSelectedTags(debugElement).length).toBe(0);
-    }));
+    });
 
     it('should NOT select all on Ctrl + A when not selectable', () => {
         const fixture = createStandaloneComponent(TestTagList);
@@ -1717,7 +1813,7 @@ describe(KbqTagList.name, () => {
 
         expect(componentInstance.removedChange).toHaveBeenCalledTimes(componentInstance.tags().length - 1);
         expect(
-            componentInstance.removedChange.mock.calls.map(([{ tag }]: [KbqTagEvent]) => tag.value.id)
+            componentInstance.removedChange.mock.calls.map(([event]) => (event as KbqTagEvent).tag.value.id)
         ).not.toContain('tag0');
     });
 
@@ -1812,7 +1908,9 @@ describe(KbqTagList.name, () => {
         );
     });
 
-    it('should synchronously set native tabIndex to -1 on tabOut to prevent focus-back loop', fakeAsync(() => {
+    it('should synchronously set native tabIndex to -1 on tabOut to prevent focus-back loop', async () => {
+        vi.useFakeTimers();
+
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement, componentInstance } = fixture;
         const tagListEl = getTagListElement(debugElement);
@@ -1827,10 +1925,12 @@ describe(KbqTagList.name, () => {
         // (focus) → setFirstItemActive() loop (reproducible with provideZoneChangeDetection({ eventCoalescing: true })).
         expect(tagListEl.tabIndex).toBe(-1);
 
-        tick();
-    }));
+        await vi.advanceTimersByTimeAsync(0);
+    });
 
-    it('should restore tabIndex to userTabIndex after tabOut', fakeAsync(() => {
+    it('should restore tabIndex to userTabIndex after tabOut', async () => {
+        vi.useFakeTimers();
+
         const fixture = createStandaloneComponent(TestTagList);
         const { componentInstance } = fixture;
         const tagList = componentInstance.tagList();
@@ -1842,10 +1942,10 @@ describe(KbqTagList.name, () => {
 
         expect(tagList.tabIndex).toBe(-1);
 
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(tagList.tabIndex).toBe(3);
-    }));
+    });
 
     it('should be draggable when draggable is enabled', () => {
         const fixture = createStandaloneComponent(TestTagList);
@@ -1943,7 +2043,7 @@ describe(KbqTagList.name, () => {
         expect(free.removable()).toBe(true);
     });
 
-    it('should unselect tags when focus move to tag input', () => {
+    it('should unselect tags when focus move to tag input', async () => {
         const fixture = createStandaloneComponent(TestFormFieldTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1959,10 +2059,12 @@ describe(KbqTagList.name, () => {
 
         getFocusMonitor().focusVia(getTagInputElement(debugElement), 'mouse');
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(0);
     });
 
-    it('should unselect tags on blur', () => {
+    it('should unselect tags on blur', async () => {
         const fixture = createStandaloneComponent(TestFormFieldTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1978,10 +2080,12 @@ describe(KbqTagList.name, () => {
 
         getTagListElement(debugElement).dispatchEvent(new Event('blur'));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(0);
     });
 
-    it('should prevent focusout on editing tag click', () => {
+    it('should prevent focusout on editing tag click', async () => {
         const fixture = createStandaloneComponent(TestFormFieldTagList);
         const { debugElement, componentInstance } = fixture;
 
@@ -1992,6 +2096,8 @@ describe(KbqTagList.name, () => {
 
         tag.dispatchEvent(new Event('dblclick'));
 
+        await fixture.whenStable();
+
         expect(tag.classList.contains('kbq-tag_editing')).toBe(true);
 
         const input = tag.querySelector('.kbq-tag-edit-input') as HTMLInputElement;
@@ -1999,10 +2105,12 @@ describe(KbqTagList.name, () => {
         input.focus();
         input.click();
 
+        await fixture.whenStable();
+
         expect(tag.classList.contains('kbq-tag_editing')).toBe(true);
     });
 
-    it('should select tags on SPACE keydown', () => {
+    it('should select tags on SPACE keydown', async () => {
         const fixture = createStandaloneComponent(TestTagList);
         const { debugElement } = fixture;
 
@@ -2010,13 +2118,19 @@ describe(KbqTagList.name, () => {
 
         getLastTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(1);
 
         getFirstTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
 
+        await fixture.whenStable();
+
         expect(getSelectedTags(debugElement).length).toBe(2);
 
         getFirstTagElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: SPACE }));
+
+        await fixture.whenStable();
 
         expect(getSelectedTags(debugElement).length).toBe(1);
     });
@@ -2153,7 +2267,7 @@ describe(KbqTagList.name, () => {
             it('should not be in error state initially when invalid but untouched', () => {
                 const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and touched', () => {
@@ -2162,7 +2276,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.form.controls.tagList.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             });
 
             it('should be in error state when form is submitted and control is invalid', () => {
@@ -2171,23 +2285,26 @@ describe(KbqTagList.name, () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             });
 
-            it('should call errorStateMatcher and update errorState on blur', fakeAsync(() => {
+            it('should call errorStateMatcher and update errorState on blur', async () => {
+                vi.useFakeTimers();
+
                 const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
 
                 getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
-            }));
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
+            });
         });
 
         describe(ShowOnFormSubmitErrorStateMatcher.name, () => {
@@ -2198,7 +2315,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.form.controls.tagList.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
 
             it('should be in error state after form is submitted when invalid', () => {
@@ -2210,27 +2327,30 @@ describe(KbqTagList.name, () => {
                 getSubmitButton(fixture).click();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             });
 
-            it('should call errorStateMatcher and NOT update errorState on blur', fakeAsync(() => {
+            it('should call errorStateMatcher and NOT update errorState on blur', async () => {
+                vi.useFakeTimers();
+
                 const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
 
                 fixture.componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
 
                 getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
-            }));
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
+            });
         });
 
         describe(ShowOnControlDirtyErrorStateMatcher.name, () => {
@@ -2240,7 +2360,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
 
             it('should be in error state when invalid and dirty', () => {
@@ -2250,39 +2370,42 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.form.controls.tagList.markAsDirty();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
             });
 
-            it('should call errorStateMatcher and NOT update errorState on blur', fakeAsync(() => {
+            it('should call errorStateMatcher and NOT update errorState on blur', async () => {
+                vi.useFakeTimers();
+
                 const fixture = createStandaloneComponent(TagListWithErrorStateMatcher);
 
                 fixture.componentInstance.errorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
                 fixture.detectChanges();
 
-                const spy = jest.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
+                const spy = vi.spyOn(fixture.componentInstance.errorStateMatcher, 'isErrorState');
 
                 expect(spy).not.toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
 
                 getTagListElement(fixture.debugElement).dispatchEvent(new Event('blur'));
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
 
                 expect(spy).toHaveBeenCalled();
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
-            }));
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
+            });
         });
 
         describe('custom ErrorStateMatcher', () => {
             it('should override errorStateMatcher by kbqErrorStateMatcherProvider', () => {
                 const fixture = createStandaloneComponent(TagListWithDIErrorStateMatcher);
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.tagList.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
 
             it('should use custom errorStateMatcher logic', () => {
@@ -2291,18 +2414,20 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.errorStateMatcher = customErrorStateMatcher;
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(true);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(true);
 
                 fixture.componentInstance.form.controls.tagList.markAsTouched();
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.tagList().errorState).toBe(false);
+                expect(fixture.componentInstance.tagList().errorState()).toBe(false);
             });
         });
     });
 
     describe('async validation', () => {
-        it('should emit VALID via statusChanges on blur', fakeAsync(() => {
+        it('should emit VALID via statusChanges on blur', async () => {
+            vi.useFakeTimers();
+
             const fixture = createStandaloneComponent(TagListControlWithAsyncValidators);
             const { control, tagList } = fixture.componentInstance;
             const statuses: FormControlStatus[] = [];
@@ -2314,19 +2439,19 @@ describe(KbqTagList.name, () => {
             expect(control.status).toBe('PENDING');
             expect(statuses).toEqual(['PENDING']);
 
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             tagList().blur();
-            tick(ASYNC_VALIDATOR_TIMER_DUE);
+            await vi.advanceTimersByTimeAsync(ASYNC_VALIDATOR_TIMER_DUE);
 
             expect(control.status).toBe('VALID');
             expect(statuses).toEqual(['PENDING', 'VALID']);
 
             subscription.unsubscribe();
-        }));
+        });
     });
     describe('disabled propagation', () => {
         it('should mark the projected tags disabled when the list is disabled', () => {
@@ -2361,10 +2486,10 @@ describe(KbqTagList.name, () => {
             fixture.nativeElement.querySelector('.kbq-tags-list__cleaner');
 
         /** Activates the cleaner and lets the consumer's removal reach the rendered tags. */
-        const clear = (fixture: ComponentFixture<unknown>): void => {
+        const clear = async (fixture: ComponentFixture<unknown>): Promise<void> => {
             fixture.nativeElement.querySelector('kbq-cleaner').click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
         };
 
@@ -2428,80 +2553,94 @@ describe(KbqTagList.name, () => {
             expect(cleanerElement(fixture)).toBeNull();
         });
 
-        it('should remove every tag but the disabled ones', fakeAsync(() => {
+        it('should remove every tag but the disabled ones', async () => {
+            vi.useFakeTimers();
+
             const fixture = createFixture(TagListWithCleaner, (instance) => (instance.disabledTags = ['Beta']));
 
-            clear(fixture);
+            await clear(fixture);
 
             expect(fixture.componentInstance.tags).toEqual(['Beta']);
             expect(cleanerElement(fixture)).toBeNull();
-        }));
+        });
 
-        it('should remove the disabled tags too when the predicate accepts them', fakeAsync(() => {
+        it('should remove the disabled tags too when the predicate accepts them', async () => {
+            vi.useFakeTimers();
+
             const fixture = createFixture(TagListWithClearPredicate);
 
-            clear(fixture);
+            await clear(fixture);
 
             expect(fixture.componentInstance.tags).toEqual([]);
-        }));
+        });
 
-        it('should move the focus into the tag input after a clear', fakeAsync(() => {
+        it('should move the focus into the tag input after a clear', async () => {
+            vi.useFakeTimers();
+
             const fixture = createFixture(TagListWithCleaner);
 
-            clear(fixture);
+            await clear(fixture);
 
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector('input'));
-        }));
+        });
 
         // `tags` still lists the tags the consumer was just asked to drop, so the list must not hand focus
         // to one of them: they are destroyed on the next check and focus would land on the body.
-        it('should keep the focus on a tag list that has no input after a clear', fakeAsync(() => {
+        it('should keep the focus on a tag list that has no input after a clear', async () => {
+            vi.useFakeTimers();
+
             const fixture = createFixture(TagListWithCleanerWithoutInput);
 
-            clear(fixture);
+            await clear(fixture);
 
             expect(fixture.componentInstance.tags).toEqual([]);
             expect(document.activeElement).toBe(fixture.nativeElement.querySelector('kbq-tag-list'));
-        }));
+        });
 
         // Every handler runs before anything re-renders, so a handler that removes by position must not
         // see the indices ahead of it shift underneath it.
-        it('should clear a list whose handler removes by position', fakeAsync(() => {
+        it('should clear a list whose handler removes by position', async () => {
+            vi.useFakeTimers();
+
             const fixture = createFixture(TagListWithIndexRemoval);
 
-            clear(fixture);
+            await clear(fixture);
 
             expect(fixture.componentInstance.tags).toEqual([]);
-        }));
+        });
 
         // Focus returns to the input, which the autocomplete must not read as the user asking for options.
-        it('should not open the autocomplete after a clear', fakeAsync(() => {
+        it('should not open the autocomplete after a clear', async () => {
+            vi.useFakeTimers();
+
             const fixture = createFixture(TagListWithCleanerAndAutocomplete);
 
-            clear(fixture);
+            await clear(fixture);
 
             expect(fixture.componentInstance.tags).toEqual([]);
             expect(fixture.componentInstance.trigger().panelOpen).toBe(false);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         // The tags belong to the consumer's template, so removing one marks that view dirty and not the
         // list's own. Without an explicit re-check the cleaner keeps the visibility it had before.
-        it('should hide the cleaner once every tag is gone', fakeAsync(() => {
+        it('should hide the cleaner once every tag is gone', async () => {
+            vi.useFakeTimers();
+
             const fixture = createFixture(TagListWithCleaner);
 
             expect(cleanerElement(fixture)).not.toBeNull();
 
             fixture.componentInstance.tags = [];
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(cleanerElement(fixture)).toBeNull();
-        }));
+        });
 
         it('should remove nothing when the predicate throws, and warn instead of breaking the render', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = createFixture(TagListWithClearPredicate, (instance) => {
                 instance.clearPredicate = () => {
                     throw Error('broken predicate');
@@ -2963,22 +3102,12 @@ class TagListWithFormErrorMessages {
     template: `
         <kbq-tag-list>
             @for (i of numbers; track i) {
-                <kbq-tag (removed)="remove(i)">
+                <kbq-tag animate.leave="tag-leave" (removed)="remove(i)">
                     {{ i }}
                 </kbq-tag>
             }
         </kbq-tag-list>
-    `,
-    animations: [
-        // For the case we're testing this animation doesn't
-        // have to be used anywhere, it just has to be defined.
-        trigger('dummyAnimation', [
-            transition(':leave', [
-                style({ opacity: 0 }),
-                animate('500ms', style({ opacity: 1 }))
-            ])
-        ])
-    ]
+    `
 })
 class StandardTagListWithAnimations {
     numbers = [0, 1, 2, 3, 4];

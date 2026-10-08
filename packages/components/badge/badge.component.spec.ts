@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqIconModule } from '@koobiq/components/icon';
 import {
@@ -17,7 +17,7 @@ describe(KbqBadge.name, () => {
         let fixture: ComponentFixture<TestApp>;
         let badgeNativeElement: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqBadgeModule, TestApp]
             });
@@ -28,7 +28,7 @@ describe(KbqBadge.name, () => {
             fixture.detectChanges();
 
             badgeNativeElement = fixture.debugElement.query(By.directive(KbqBadge)).nativeElement;
-        }));
+        });
 
         it('should add class', () => {
             expect(badgeNativeElement.classList.contains('kbq-badge')).toBe(true);
@@ -164,17 +164,16 @@ describe(KbqBadge.name, () => {
             expect(host.classList.contains(badgeRightIconClassName)).toBe(false);
         });
 
-        it('should add right icon class when icon is projected asynchronously', (done) => {
+        it('should add right icon class when icon is projected asynchronously', async () => {
             testComponent.showIcon.set(true);
             fixture.detectChanges();
 
-            setTimeout(() => {
-                const icon = badgeNativeElement.querySelector('[kbq-icon]')!;
+            await new Promise<void>((resolve) => setTimeout(resolve));
 
-                expect(icon.classList.contains(rightIconClassName)).toBe(true);
-                expect(badgeNativeElement.classList.contains(badgeRightIconClassName)).toBe(true);
-                done();
-            });
+            const icon = badgeNativeElement.querySelector('[kbq-icon]')!;
+
+            expect(icon.classList.contains(rightIconClassName)).toBe(true);
+            expect(badgeNativeElement.classList.contains(badgeRightIconClassName)).toBe(true);
         });
     });
 });

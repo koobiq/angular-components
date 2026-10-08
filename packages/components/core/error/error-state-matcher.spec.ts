@@ -34,7 +34,7 @@ const createGroup = () =>
 
 describe(ShowOnCrossFieldErrorStateMatcher.name, () => {
     afterEach(() => {
-        jest.restoreAllMocks();
+        vi.restoreAllMocks();
     });
 
     it('should NOT show the error while only one of the named controls is touched', () => {
@@ -137,7 +137,7 @@ describe(ShowOnCrossFieldErrorStateMatcher.name, () => {
     });
 
     it('should warn once about a control name that does not resolve', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
         const matcher = new ShowOnCrossFieldErrorStateMatcher((key) => (key === 'mismatch' ? ['typo'] : null));
         const group = createGroup();
 
@@ -150,7 +150,7 @@ describe(ShowOnCrossFieldErrorStateMatcher.name, () => {
     });
 
     it('should require submit when a named control fails to resolve, instead of revealing early on the rest', () => {
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
         const matcher = new ShowOnCrossFieldErrorStateMatcher((key) => (key === 'mismatch' ? ['first', 'typo'] : null));
         const group = createGroup();
 

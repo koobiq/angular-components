@@ -6,16 +6,14 @@ import {
     DestroyRef,
     ElementRef,
     inject,
-    Input,
     input,
     OnChanges,
+    signal,
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqColorDirective } from '@koobiq/components/core';
-import { EMPTY, ReplaySubject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { defer, Subscription } from 'rxjs';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
 
@@ -27,8 +25,8 @@ import { KbqIconRegistry } from './icon-registry';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon',
-        '[class]': 'svgIcon ? null : iconName',
-        '[class.kbq-error]': 'color === "error" || hasError'
+        '[class]': 'svgIcon() ? null : iconName',
+        '[class.kbq-error]': 'color() === "error" || hasError || autoColorError'
     }
 })
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
@@ -44,18 +42,26 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly destroyRef = inject(DestroyRef);
 
     readonly small = input(false);
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() autoColor = false;
+    autoColor = false;
 
     hasError: boolean = false;
 
+    /**
+     * Whether `autoColor` takes the error color from the host's error state.
+     * @docs-private
+     */
+    protected get autoColorError(): boolean {
+        return this.autoColor && !!this.errorStateContext?.errorState();
+    }
+
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
-    // TODO: Skipped for migration because:
-    //  Subclass KbqIconButton overrides this input with `@Input({ alias: 'kbq-icon-button' })`
-    //  using a plain string, which is incompatible with InputSignal<string>.
-    //  Migrate KbqIconButton.iconName together as a follow-up.
-    @Input({ alias: 'kbq-icon' }) iconName: string;
+    iconName: string;
+
+    /** @docs-private */
+    readonly autoColorInput = input<boolean | undefined>(undefined, { alias: 'autoColor' });
+
+    /** @docs-private */
+    readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon' });
 
     protected name = 'KbqIcon';
 
@@ -63,10 +69,25 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * True when icon is being rendered as inline SVG.
      * @docs-private
      */
-    protected svgIcon = false;
+    protected readonly svgIcon = signal(false);
 
-    /** @docs-private */
-    protected readonly svgIconName = new ReplaySubject<string | undefined>(1);
+    /**
+     * Name the inline SVG is resolved for, set through `setIconName()`.
+     * @docs-private
+     */
+    protected readonly svgIconName = signal<string | undefined>(undefined);
+
+    /** Resolution of the inline SVG, replaced whenever the name changes. */
+    private svgIconSubscription = Subscription.EMPTY;
+
+    /** Whether the content is initialized, which is when the inline SVG is first resolved. */
+    private contentInitialized = false;
+
+    constructor() {
+        super();
+
+        this.destroyRef.onDestroy(() => this.svgIconSubscription.unsubscribe());
+    }
 
     getHostElement() {
         return this.elementRef.nativeElement;
@@ -80,7 +101,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      */
     protected setIconName(name: string): void {
         this.iconName = name;
-        this.svgIconName.next(name);
+        this.svgIconName.set(name);
+
+        if (this.contentInitialized) this.resolveSvgIcon();
     }
 
     updateMaxHeight() {
@@ -96,68 +119,70 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.iconName) {
-            this.svgIconName.next(changes['iconName'].currentValue);
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['autoColorInput']) {
+            const autoColor = this.autoColorInput();
+
+            if (autoColor !== undefined) this.autoColor = autoColor;
+        }
+
+        if (changes['iconNameInput']) {
+            const iconName = this.iconNameInput();
+
+            if (iconName !== undefined) this.setIconName(iconName);
         }
     }
 
     ngAfterContentInit(): void {
-        if (this.autoColor) {
-            this.errorStateContext?.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
-            this.updateState();
-        }
-
         this.updateMaxHeight();
 
-        this.svgIconName
-            .pipe(
-                switchMap((name) => {
-                    if (!this.registry || !name) {
-                        this.svgIcon = false;
-
-                        return EMPTY;
-                    }
-
-                    return this.registry.getNamedSvgIcon(name);
-                }),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe({
-                next: (svg) => {
-                    this.svgIcon = true;
-                    const host = this.getHostElement();
-
-                    // Remove any previously injected SVG.
-                    const existing = host.querySelector('svg');
-
-                    if (existing) {
-                        host.removeChild(existing);
-                    }
-
-                    const size = this.parseIconSize();
-
-                    if (size) {
-                        svg.setAttribute('width', `${size}`);
-                        svg.setAttribute('height', `${size}`);
-                    }
-
-                    host.insertBefore(svg, host.firstChild);
-                    this.changeDetectorRef.markForCheck();
-                },
-                error: () => {
-                    // Icon not registered — fall through to font-class path.
-                    this.svgIcon = false;
-                    this.updateMaxHeight();
-                    this.changeDetectorRef.markForCheck();
-                }
-            });
+        this.contentInitialized = true;
+        this.resolveSvgIcon();
     }
 
-    private updateState = () => {
-        this.hasError = !!this.errorStateContext?.errorState;
+    /** Renders `svgIconName` as inline SVG when the registry knows it, dropping a resolution still pending. */
+    private resolveSvgIcon(): void {
+        const name = this.svgIconName();
 
-        this.changeDetectorRef.markForCheck();
-    };
+        this.svgIconSubscription.unsubscribe();
+
+        if (!this.registry || !name) {
+            this.svgIcon.set(false);
+
+            return;
+        }
+
+        const registry = this.registry;
+
+        // Deferred so that a literal the registry fails to parse falls back to the font class as well.
+        this.svgIconSubscription = defer(() => registry.getNamedSvgIcon(name)).subscribe({
+            next: (svg) => {
+                this.svgIcon.set(true);
+                const host = this.getHostElement();
+
+                // Remove any previously injected SVG.
+                const existing = host.querySelector('svg');
+
+                if (existing) {
+                    host.removeChild(existing);
+                }
+
+                const size = this.parseIconSize();
+
+                if (size) {
+                    svg.setAttribute('width', `${size}`);
+                    svg.setAttribute('height', `${size}`);
+                }
+
+                host.insertBefore(svg, host.firstChild);
+            },
+            error: () => {
+                // Icon not registered — fall through to font-class path.
+                this.svgIcon.set(false);
+                this.updateMaxHeight();
+            }
+        });
+    }
 
     private parseIconSize(): number {
         const iconName = this.iconName;

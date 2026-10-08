@@ -156,8 +156,8 @@ export class KbqAlert {
             const icon = this.projectedIcon();
             const nextColor = alertIconColors[this.alertColor()];
 
-            if (icon && (icon.color === KbqComponentColors.Empty || icon.color === this.lastAutoColor)) {
-                icon.color = nextColor;
+            if (icon && (icon.color() === KbqComponentColors.Empty || icon.color() === this.lastAutoColor)) {
+                icon.color.set(nextColor);
                 this.lastAutoColor = nextColor;
             }
         });

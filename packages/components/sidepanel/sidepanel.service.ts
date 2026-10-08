@@ -452,7 +452,7 @@ export class KbqSidepanelService implements OnDestroy {
     private setAnimationState(sidepanelRef: KbqSidepanelRef | undefined, state: KbqSidepanelAnimationState): void {
         const containerInstance = sidepanelRef?.containerInstance;
 
-        if (!containerInstance || containerInstance.animationState === KbqSidepanelAnimationState.Hidden) return;
+        if (!containerInstance || containerInstance.animationState() === KbqSidepanelAnimationState.Hidden) return;
 
         containerInstance.setAnimationState(state);
     }

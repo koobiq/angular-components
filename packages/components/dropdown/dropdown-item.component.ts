@@ -11,7 +11,7 @@ import {
     input,
     OnDestroy,
     signal,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -80,8 +80,12 @@ export class KbqDropdownItem
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private focusMonitor = inject(FocusMonitor);
     parentDropdownPanel? = inject<KbqDropdownPanel>(KBQ_DROPDOWN_PANEL, { optional: true });
-    // Stays a decorator query: `KbqTitle` reads `KbqTitleTextRef.textElement` as a plain property.
-    @ViewChild('kbqTitleText') textElement: ElementRef;
+    private readonly textElementQuery = viewChild<ElementRef>('kbqTitleText');
+
+    /** Element holding the text of the item, measured by `kbq-title`. */
+    get textElement(): ElementRef {
+        return this.textElementQuery()!;
+    }
 
     readonly icon = contentChild(KbqIcon);
 
@@ -101,7 +105,15 @@ export class KbqDropdownItem
     readonly focused = new Subject<KbqDropdownItem>();
 
     /** Whether the dropdown item is highlighted. */
-    highlighted: boolean = false;
+    get highlighted(): boolean {
+        return this.highlightedState();
+    }
+
+    set highlighted(value: boolean) {
+        this.highlightedState.set(value);
+    }
+
+    private readonly highlightedState = signal(false);
 
     /** Whether the item is the panel's active item while DOM focus is held elsewhere. */
     protected readonly active = signal(false);

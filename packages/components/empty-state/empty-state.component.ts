@@ -57,13 +57,13 @@ export class KbqEmptyStateIcon {
      * icon's own change detection to run.
      *
      * Lifting the tint off must not take the class away from an icon that carries `color="error"` of
-     * its own: `KbqColorDirective` adds `kbq-error` from its setter and only ever touches it again
-     * when the bound color changes, and the icon's `[class.kbq-error]` binding stays at `true`
+     * its own: `KbqColorDirective` renders `kbq-error` from a host binding that only touches it
+     * again when the color changes, and the icon's `[class.kbq-error]` binding stays at `true`
      * throughout, so neither would put back a class removed here — the icon would lose the color the
      * consumer set on it, permanently.
      */
     private applyErrorColor(icon: KbqIconItem, errorColor: boolean): void {
-        const ownsErrorColor = icon.color === KbqComponentColors.Error;
+        const ownsErrorColor = icon.color() === KbqComponentColors.Error;
 
         icon.hasError = errorColor;
         icon.elementRef.nativeElement.classList.toggle(`kbq-${KbqComponentColors.Error}`, errorColor || ownsErrorColor);

@@ -1,6 +1,5 @@
 import { Component, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
 
@@ -8,7 +7,6 @@ describe(KbqSidebarModule.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqSidebarModule,
                 TestSidebar
             ]
@@ -63,6 +61,18 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.opened).toBeTruthy();
         });
 
+        it('should render the opened state assigned in code', async () => {
+            const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+
+            sidebarComponent.opened = false;
+            await fixture.whenStable();
+
+            expect(host.classList).not.toContain('kbq-sidebar_opened');
+            expect(host.style.width).toBe('32px');
+            expect(fixture.nativeElement.textContent).toContain('kbq-sidebar-closed');
+            expect(fixture.nativeElement.textContent).not.toContain('kbq-sidebar-opened');
+        });
+
         it('should change position', () => {
             expect(sidebarComponent.position()).toBe(SidebarPositions.Left);
 
@@ -72,8 +82,8 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.position()).toBe(SidebarPositions.Right);
         });
 
-        it('should fire change event', fakeAsync(() => {
-            const changeSpy = jest.fn();
+        it('should fire change event', async () => {
+            const changeSpy = vi.fn();
 
             sidebarComponent.stateChanged.subscribe(changeSpy);
 
@@ -81,14 +91,14 @@ describe(KbqSidebarModule.name, () => {
 
             sidebarComponent.toggle();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(sidebarComponent.opened).toBeFalsy();
             expect(changeSpy).toHaveBeenCalledWith(false);
-        }));
+        });
 
         it('should toggle on `BracketLeft` keypress', () => {
-            const toggleSpy = jest.spyOn(sidebarComponent, 'toggle');
+            const toggleSpy = vi.spyOn(sidebarComponent, 'toggle');
 
             expect(testComponent.position).toBe(SidebarPositions.Left);
 
@@ -98,7 +108,7 @@ describe(KbqSidebarModule.name, () => {
         });
 
         it('should NOT toggle on `BracketRight` keypress', () => {
-            const toggleSpy = jest.spyOn(sidebarComponent, 'toggle');
+            const toggleSpy = vi.spyOn(sidebarComponent, 'toggle');
 
             expect(testComponent.position).toBe(SidebarPositions.Left);
 
@@ -136,7 +146,7 @@ class TestSidebar {
 
     readonly sidebar = viewChild.required(KbqSidebar);
 
-    readonly onStateChanged = jest.fn();
+    readonly onStateChanged = vi.fn();
 }
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
@@ -181,7 +191,7 @@ class UncontrolledSidebar {
     /** An empty key leaves the sidebar on the key derived from its position in the document. */
     stateSavingKey = 'sidebar-key';
 
-    readonly onStateChanged = jest.fn();
+    readonly onStateChanged = vi.fn();
 }
 
 describe(`${KbqSidebarModule.name} state saving`, () => {
@@ -202,7 +212,7 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         store = new InMemoryStateStore();
 
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqSidebarModule, UncontrolledSidebar, TestSidebar]
+            imports: [KbqSidebarModule, UncontrolledSidebar, TestSidebar]
         }).compileComponents();
     });
 
@@ -352,7 +362,7 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         const fixture = create(UncontrolledSidebar);
         const service = TestBed.inject(KbqStateSavingService);
 
-        // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+        // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
         // which throws while building the diff and hides the real failure.
         expect(service.components().map(({ name, key, enabled }) => ({ name, key, enabled }))).toEqual([
             { name: 'kbq-sidebar', key: 'sidebar-key', enabled: true }
@@ -364,7 +374,7 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
     });
 
     it('persists nothing when the sidebar is not in the document as it initializes', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation();
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         store.setState('sidebar-key', { opened: false });
 

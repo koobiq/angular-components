@@ -3,6 +3,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { BACKSPACE, END, HOME, LEFT_ARROW, RIGHT_ARROW, TAB } from '@angular/cdk/keycodes';
 import {
+    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
@@ -11,18 +12,22 @@ import {
     Component,
     computed,
     contentChild,
-    ContentChildren,
+    contentChildren,
     DestroyRef,
     DoCheck,
+    effect,
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
+    linkedSignal,
+    OnChanges,
     OnDestroy,
     output,
     QueryList,
     signal,
+    SimpleChanges,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,6 +38,7 @@ import {
     FocusKeyManager,
     isNull,
     isSelectAll,
+    kbqQueryListFrom,
     runClearPredicate
 } from '@koobiq/components/core';
 import { KbqCleaner, kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -95,7 +101,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
     host: {
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-invalid]': 'errorState',
+        '[class.kbq-invalid]': 'errorState()',
         '[class.kbq-tag-list_selectable]': 'selectable()',
         '[class.kbq-tag-list_editable]': 'editable()',
         '[class.kbq-tag-list_removable]': 'removable()',
@@ -111,6 +117,8 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
 })
 export class KbqTagList
     implements
+        AfterContentChecked,
+        OnChanges,
         KbqFormFieldControl<any>,
         ControlValueAccessor,
         AfterContentInit,
@@ -138,12 +146,7 @@ export class KbqTagList
      */
     readonly controlType: string = 'tag-list';
 
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
+    private readonly errorStateValue = signal(false);
 
     /**
      * Combined stream of all of the child tags' selection change events.
@@ -214,8 +217,10 @@ export class KbqTagList
     }
 
     /**
-     * Marks the list for a change-detection check. The tags are the consumer's content, so a change to one
-     * of them — its `disabled`, its `removable` — does not dirty this view, which decides the cleaner.
+     * Marks the list for a change-detection check.
+     *
+     * Kept for back-compatibility. The cleaner's visibility is derived from signals of the list and its
+     * tags, so the list re-renders on its own and nothing in the library calls this any more.
      *
      * @docs-private
      */
@@ -246,72 +251,49 @@ export class KbqTagList
         return tag.removable() && runClearPredicate(predicate, tag);
     }
 
+    /** @docs-private */
+    readonly valueInput = input<any>(undefined, { alias: 'value' });
+
     /**
-     * Implemented as part of KbqFormFieldControl.
-     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
-     * through that interface.
+     * Implemented as part of KbqFormFieldControl. Set with `[value]`, by the form control and by the rendered
+     * tags.
      * @docs-private
      */
-    @Input()
-    get value(): any {
-        return this._value;
-    }
-
-    set value(value: any) {
-        this._value = value;
-    }
-
-    private _value: any;
+    readonly value = linkedSignal(() => this.valueInput());
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    get id(): string {
-        return this.tagInput ? this.tagInput.id : this.uid;
-    }
+    readonly id = computed(() => this.registeredInput()?.id() ?? this.uid);
 
     /**
      * Implemented as part of KbqFormFieldControl.
-     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
-     * through that interface.
      * @docs-private
      */
-    @Input({ transform: booleanAttribute })
-    get required(): boolean {
-        return this._required;
-    }
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
-    set required(value: boolean) {
-        this._required = value;
-
-        this.stateChanges.next();
-    }
-
-    private _required: boolean = false;
+    /** @docs-private */
+    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
 
     /**
-     * Implemented as part of KbqFormFieldControl.
-     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
-     * through that interface.
+     * Implemented as part of KbqFormFieldControl. Taken from the `kbqTagInput` when there is one.
      * @docs-private
      */
-    @Input()
-    get placeholder(): string {
-        return this.tagInput ? this.tagInput.placeholder : this._placeholder;
-    }
+    readonly placeholder = computed(() => {
+        const tagInput = this.registeredInput();
 
-    set placeholder(value: string) {
-        this._placeholder = value;
-        this.stateChanges.next();
-    }
+        return tagInput ? tagInput.placeholder() : this.placeholderInput();
+    });
 
-    private _placeholder: string;
+    /** Whether one of the tags has focus, mirrored from their focus and blur events. */
+    private readonly tagFocused = signal(false);
+
+    /** Number of the rendered tags, mirrored from the `tags` query. */
+    private readonly tagsCount = signal(0);
 
     /** Whether any tags or the kbqTagInput inside of this tag-list has focus. */
-    get focused(): boolean {
-        return (this.tagInput && this.tagInput.focused) || this.hasFocusedTag();
-    }
+    readonly focused = computed(() => !!this.registeredInput()?.focused() || this.tagFocused());
 
     /**
      * Implemented as part of KbqFormFieldControl. Forwarded from the registered `kbqTagInput`, which
@@ -325,43 +307,37 @@ export class KbqTagList
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    get empty(): boolean {
-        return (!this.tagInput || this.tagInput.empty) && this.tags.length === 0;
-    }
+    readonly empty = computed(() => {
+        const tagInput = this.registeredInput();
+
+        return (!tagInput || tagInput.empty()) && this.tagsCount() === 0;
+    });
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
     get shouldLabelFloat(): boolean {
-        return !this.empty || this.focused;
+        return !this.empty() || this.focused();
     }
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
     /**
-     * Implemented as part of KbqFormFieldControl.
-     * Stays a plain accessor: `KbqFormFieldControl` declares it as one, and the form field reads it
-     * through that interface.
+     * Implemented as part of KbqFormFieldControl. Also set by the bound form control.
      * @docs-private
      */
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this.ngControl ? !!this.ngControl.disabled : this._disabled();
-    }
-
-    set disabled(value: boolean) {
-        this._disabled.set(value);
-        this.syncDropListDisabledState();
-        this.markTagsForCheck();
-    }
-
-    private readonly _disabled = signal(false);
+    readonly disabled = linkedSignal(() => this.disabledInput());
 
     /** Whether the tags in the list can be reordered by dragging. */
     // Stays an accessor: it folds in `disabled`, which comes from the form control when there is one. That
     // is a plain property rather than a signal, so a `computed` would cache it and miss `control.disable()`.
-    @Input({ transform: booleanAttribute })
     get draggable(): boolean {
-        return this._draggable() && !this.disabled;
+        return this._draggable() && !this.disabled();
     }
 
     set draggable(value: boolean) {
@@ -414,17 +390,16 @@ export class KbqTagList
      *
      * @docs-private
      */
-    @Input()
     get tabIndex(): number | null {
-        return this.disabled || this.tagInput ? null : this._tabIndex;
+        return this.disabled() || this.registeredInput() ? null : this._tabIndex();
     }
 
     set tabIndex(value: number) {
         this.userTabIndex = value;
-        this._tabIndex = value;
+        this._tabIndex.set(value);
     }
 
-    private _tabIndex = 0;
+    private readonly _tabIndex = signal(0);
 
     /**
      * Event that emits whenever the raw value of the tag-list changes. This is here primarily
@@ -448,8 +423,7 @@ export class KbqTagList
     keyManager: FocusKeyManager<KbqTag>;
 
     /** An object used to control when error messages are shown. */
-    // Stays a plain member: `CanUpdateErrorState` declares it as one.
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /** Event emitted when the selected tag list value has been changed by the user. */
     readonly change = output<KbqTagListChange>();
@@ -457,24 +431,27 @@ export class KbqTagList
     /** @docs-private */
     readonly cleaner = contentChild(KbqCleaner, { descendants: false });
 
+    private readonly tagsQuery = contentChildren<KbqTag>(
+        forwardRef(() => KbqTag),
+        { descendants: true }
+    );
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+
     /**
      * The tag components contained within this tag list.
      *
      * @docs-private
      */
-    @ContentChildren(forwardRef(() => KbqTag), {
-        // Need to use `descendants: true`,
-        // Ivy will no longer match indirect descendants if it's left as false.
-        descendants: true
-    })
-    tags: QueryList<KbqTag>;
+    get tags(): QueryList<KbqTag> {
+        return this.tagsList();
+    }
 
     /**
      * Whether the component is in an error state.
      *
      * @docs-private
      */
-    errorState: boolean = false;
+    readonly errorState = this.errorStateValue.asReadonly();
 
     /** The tag input to add more tags */
     private tagInput: KbqTagTextControl;
@@ -507,12 +484,43 @@ export class KbqTagList
     /** Triggers unsubscription from all per-tags streams when tags are reset. */
     private readonly tagsSubscriptions$ = new Subject<void>();
 
+    /** @docs-private */
+    readonly draggableInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'draggable',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined>(undefined, { alias: 'tabIndex' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['draggableInput']) {
+            const draggable = this.draggableInput();
+
+            if (draggable !== undefined) this.draggable = draggable;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+    }
+
     constructor() {
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }
 
         this.setupDropListInitialProperties();
+
+        // A disabled list cannot be reordered.
+        effect(() => {
+            this.disabled();
+
+            untracked(() => this.syncDropListDisabledState());
+        });
     }
 
     ngDoCheck() {
@@ -539,14 +547,11 @@ export class KbqTagList
         // Prevents the tag list from capturing focus and redirecting
         // it back to the first tag when the user tabs out.
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this._tabIndex = -1;
+            this._tabIndex.set(-1);
             // Direct DOM write since the binding update is deferred with eventCoalescing.
             this.elementRef.nativeElement.tabIndex = -1;
 
-            setTimeout(() => {
-                this._tabIndex = this.userTabIndex || 0;
-                this.changeDetectorRef.markForCheck();
-            });
+            setTimeout(() => this._tabIndex.set(this.userTabIndex || 0));
         });
 
         // When the list changes, re-subscribe
@@ -570,16 +575,11 @@ export class KbqTagList
                 // Check to see if we have a destroyed tag and need to refocus
                 this.updateFocusForDestroyedTags();
 
-                // The tags are projected content owned by the consumer, so adding or removing one marks
-                // that view dirty and not this one. Without this the cleaner keeps whatever visibility it
-                // had when the list was last checked — it used to survive a clear that emptied the list.
-                this.changeDetectorRef.markForCheck();
+                this.tagsCount.set(this.tags.length);
 
                 // Defer setting the value in order to avoid the "Expression
                 // has changed after it was checked" errors from Angular.
                 Promise.resolve().then(() => {
-                    this.stateChanges.next();
-
                     if (currentTags && this.pendingUIChange) {
                         this.pendingUIChange = false;
 
@@ -595,28 +595,27 @@ export class KbqTagList
             });
     }
 
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.tagsList();
+    }
+
     ngAfterViewInit(): void {
         this.setupFocusMonitor();
     }
 
     ngOnDestroy() {
-        this.stateChanges.complete();
         this.focusMonitor.stopMonitoring(this.elementRef);
         this.tagsSubscriptions$.next();
     }
 
     /** @docs-private */
     updateErrorState() {
-        const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
         const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-        const newState = matcher.isErrorState(control, parent);
 
-        if (newState !== oldState) {
-            this.errorState = newState;
-            this.stateChanges.next();
-        }
+        this.errorStateValue.set(matcher.isErrorState(control, parent));
     }
 
     /** @docs-private */
@@ -644,7 +643,7 @@ export class KbqTagList
      * Implemented as part of ControlValueAccessor.
      */
     writeValue(value: any): void {
-        this.value = value;
+        this.value.set(value);
     }
 
     /**
@@ -665,8 +664,7 @@ export class KbqTagList
      * Implemented as part of ControlValueAccessor.
      */
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
-        this.stateChanges.next();
+        this.disabled.set(isDisabled);
     }
 
     /**
@@ -682,11 +680,10 @@ export class KbqTagList
      * Focuses the tag list. If there is a tag input, focuses that instead.
      */
     focus(): void {
-        if (this.disabled) return;
+        if (this.disabled()) return;
 
         if (this.tagInput) {
             this.focusInput();
-            this.stateChanges.next();
 
             return;
         }
@@ -697,7 +694,6 @@ export class KbqTagList
 
         if (index > -1) {
             this.keyManager.setActiveItem(index);
-            this.stateChanges.next();
 
             return;
         }
@@ -726,7 +722,7 @@ export class KbqTagList
         const tags = this.tags.toArray();
         const tagIndex = tags.indexOf(tag);
 
-        if (this.disabled || !tag.selectable() || tag.disabled || !this.isValidIndex(tagIndex)) return;
+        if (this.disabled() || !tag.selectable() || tag.disabled || !this.isValidIndex(tagIndex)) return;
 
         if (extendRange) {
             this.extendSelectionTo(tag);
@@ -745,7 +741,7 @@ export class KbqTagList
     keydown(event: KeyboardEvent): void {
         const target = event.target as HTMLElement | null;
 
-        if (this.disabled || isNull(target)) return;
+        if (this.disabled() || isNull(target)) return;
 
         const shouldSelectAll = this.selectable() && isSelectAll(event);
         const shouldUpdateKeyboardRange =
@@ -804,8 +800,6 @@ export class KbqTagList
                     }
                 }
             }
-
-            this.stateChanges.next();
         }
     }
 
@@ -815,14 +809,14 @@ export class KbqTagList
             this.keyManager.setActiveItem(-1);
         }
 
-        if (!this.disabled) {
+        if (!this.disabled()) {
             if (this.tagInput) {
                 // If there's a tag input, we should check whether the focus moved to tag input.
                 // If the focus is not moved to tag input, mark the field as touched. If the focus moved
                 // to tag input, do nothing.
                 // Timeout is needed to wait for the focus() event trigger on tag input.
                 setTimeout(() => {
-                    if (!this.focused) {
+                    if (!this.focused()) {
                         this.markAsTouched();
                     }
                 });
@@ -837,7 +831,6 @@ export class KbqTagList
     markAsTouched() {
         this.onTouched();
         this.changeDetectorRef.markForCheck();
-        this.stateChanges.next();
     }
 
     /**
@@ -847,7 +840,7 @@ export class KbqTagList
      */
     protected updateTabIndex(): void {
         // If we have 0 tags, we should not allow keyboard focus
-        this._tabIndex = this.userTabIndex || (this.tags.length === 0 ? -1 : 0);
+        this._tabIndex.set(this.userTabIndex || (this.tags.length === 0 ? -1 : 0));
     }
 
     /**
@@ -952,20 +945,19 @@ export class KbqTagList
     private hasTagsValueChanged(): boolean {
         const currentValue = this.tags.map(({ value }) => value);
 
-        if (!Array.isArray(this._value)) {
+        const value = this.value();
+
+        if (!Array.isArray(value)) {
             return currentValue.length > 0;
         }
 
-        return (
-            this._value.length !== currentValue.length ||
-            currentValue.some((value, index) => value !== this._value[index])
-        );
+        return value.length !== currentValue.length || currentValue.some((item, index) => item !== value[index]);
     }
 
     private propagateTagsChanges(): void {
         const valueToEmit: any = this.tags.map((tag) => tag.value);
 
-        this._value = valueToEmit;
+        this.value.set(valueToEmit);
         this.change.emit(new KbqTagListChange(this, valueToEmit));
         this.valueChange.emit(valueToEmit);
         this.onChange(valueToEmit);
@@ -989,26 +981,23 @@ export class KbqTagList
                 this.keyManager.updateActiveItem(tagIndex);
             }
 
-            this.stateChanges.next();
+            this.tagFocused.set(this.hasFocusedTag());
         });
 
         this.tagBlurChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(() => {
             this.blur();
 
-            this.stateChanges.next();
+            this.tagFocused.set(this.hasFocusedTag());
         });
     }
 
     private listenToTagsRemoved(): void {
-        this.tagRemoveChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe((event) => {
-            const tag = event.tag;
-            const tagIndex = this.tags.toArray().indexOf(event.tag);
-
+        this.tagRemoveChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(({ tag }) => {
             // In case the tag that will be removed is currently focused, we temporarily store
             // the index in order to be able to determine an appropriate sibling tag that will
-            // receive focus.
-            if (this.isValidIndex(tagIndex) && tag.hasFocus) {
-                this.lastDestroyedTagIndex = tagIndex;
+            // receive focus. Taken from the key manager: `tags` no longer holds a destroyed tag.
+            if (tag.hasFocus && this.keyManager.activeItem === tag) {
+                this.lastDestroyedTagIndex = this.keyManager.activeItemIndex;
             }
         });
 
@@ -1030,14 +1019,6 @@ export class KbqTagList
     /** Checks whether any of the tags is focused. */
     private hasFocusedTag() {
         return this.tags.some((tag) => tag.hasFocus);
-    }
-
-    /**
-     * The tags render in the consumer's view, so a change to `disabled` — which they read back off this
-     * list rather than hold themselves — leaves their own views untouched until they are re-checked.
-     */
-    private markTagsForCheck(): void {
-        this.tags?.forEach((tag) => tag.changeDetectorRef.markForCheck());
     }
 
     private setupDropListInitialProperties(): void {

@@ -1,6 +1,5 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, Routes } from '@angular/router';
 import { DevAboutPage, DevApp, DevProductDetailsPage, DevProductsPage } from './module';
 
@@ -32,9 +31,11 @@ export const devRoutes: Routes = [
 
 export const devAppConfig: ApplicationConfig = {
     providers: [
-        provideAnimations(),
         provideRouter(devRoutes)
     ]
 };
 
-bootstrapApplication(DevApp, devAppConfig).catch((error) => console.error(error));
+bootstrapApplication(DevApp, {
+    ...devAppConfig,
+    providers: [provideZonelessChangeDetection(), ...devAppConfig.providers]
+}).catch((error) => console.error(error));

@@ -5,34 +5,38 @@ import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
-    AfterViewInit,
+    afterNextRender,
+    booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ComponentRef,
+    ElementRef,
     inject,
     InjectionToken,
-    Input,
+    Injector,
     input,
-    NgZone,
+    OnChanges,
     OnDestroy,
     output,
+    signal,
+    SimpleChanges,
     viewChild,
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import {
+    ESCAPE,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
     KBQ_OVERLAY_LAYERS,
+    kbqAfterAnimations,
+    kbqAnimationsDisabled,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Subject, Subscription } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendar } from './calendar.component';
-import { kbqDatepickerAnimations } from './datepicker-animations';
 import { injectRequiredDateAdapter } from './datepicker-errors';
 import { KbqDatepickerInput } from './datepicker-input.directive';
 
@@ -81,39 +85,39 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-datepicker__content',
-        '[@transformPanel]': 'animationState',
-        '(@transformPanel.done)': 'animationDone.next()'
+        '[class.kbq-datepicker__content_leave]': "animationState === 'void'",
+        '[class.kbq-animations-disabled]': 'animationsDisabled'
     },
-    animations: [
-        kbqDatepickerAnimations.transformPanel,
-        kbqDatepickerAnimations.fadeInCalendar
-    ],
     exportAs: 'kbqDatepickerContent'
 })
-export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
-    private changeDetectorRef = inject(ChangeDetectorRef);
+export class KbqDatepickerContent<D> implements OnDestroy {
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
 
-    /** Emits when an animation has finished. */
+    /** Whether the panel opens and closes without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /** Emits when the exit animation has finished. */
     readonly animationDone = new Subject<void>();
 
     /** Reference to the datepicker that created the overlay. */
     datepicker: KbqDatepicker<D>;
 
     /** Current state of the animation. */
-    animationState: 'enter' | 'void';
+    get animationState(): 'enter' | 'void' {
+        return this.currentAnimationState();
+    }
+
+    set animationState(value: 'enter' | 'void') {
+        this.currentAnimationState.set(value);
+    }
+
+    private readonly currentAnimationState = signal<'enter' | 'void'>('enter');
 
     /** Reference to the internal calendar component. */
     readonly calendar = viewChild.required(KbqCalendar);
 
     private subscriptions = new Subscription();
-
-    ngAfterViewInit() {
-        this.subscriptions.add(
-            this.datepicker.stateChanges.subscribe(() => {
-                this.changeDetectorRef.markForCheck();
-            })
-        );
-    }
 
     ngOnDestroy() {
         this.subscriptions.unsubscribe();
@@ -122,7 +126,12 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 
     startExitAnimation() {
         this.animationState = 'void';
-        this.changeDetectorRef.markForCheck();
+
+        kbqAfterAnimations(
+            () => this.elementRef.nativeElement,
+            () => this.animationDone.next(),
+            this.injector
+        );
     }
 }
 
@@ -133,7 +142,6 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 @Component({
     selector: 'kbq-datepicker',
     template: '',
-    providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     // The calendar is created through this component's `ViewContainerRef`, so this is the element whose
@@ -143,19 +151,16 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     ],
     exportAs: 'kbqDatepicker'
 })
-export class KbqDatepicker<D> implements OnDestroy {
+export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     private overlay = inject(Overlay);
     private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
-    private ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private viewContainerRef = inject(ViewContainerRef);
     private readonly dateAdapter = injectRequiredDateAdapter<D>();
     private dir = inject(Directionality, { optional: true })!;
 
     protected readonly document = inject<Document>(DOCUMENT);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
     }
@@ -167,13 +172,10 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _hasBackdrop: boolean = false;
 
     /** The date to open the calendar to initially. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get startAt(): D | null {
         // If an explicit startAt is set we start there, otherwise we start at whatever the currently
         // selected value is.
-        return this._startAt || this.datepickerInput?.value;
+        return this._startAt || this.datepickerInput?.value();
     }
 
     set startAt(value: D | null) {
@@ -188,30 +190,26 @@ export class KbqDatepicker<D> implements OnDestroy {
     private _startAt: D | null;
 
     /** Whether the datepicker pop-up should be disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get disabled(): boolean {
-        return this._disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled : this._disabled;
+        const disabled = this.disabledState();
+
+        return disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled() : !!disabled;
     }
 
     set disabled(value: boolean) {
         const newValue = coerceBooleanProperty(value);
 
-        if (newValue !== this._disabled) {
-            this._disabled = newValue;
+        if (newValue !== this.disabledState()) {
+            this.disabledState.set(newValue);
             this.disabledChange.next(newValue);
         }
     }
 
-    private _disabled: boolean;
+    private readonly disabledState = signal<boolean | undefined>(undefined);
 
     /** Whether the calendar is open. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get opened(): boolean {
-        return this._opened;
+        return this.openedState();
     }
 
     set opened(value: boolean) {
@@ -222,7 +220,28 @@ export class KbqDatepicker<D> implements OnDestroy {
         }
     }
 
-    private _opened = false;
+    private readonly openedState = signal(false);
+
+    /** @docs-private */
+    readonly hasBackdropInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'hasBackdrop',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly startAtInput = input<D | null | undefined>(undefined, { alias: 'startAt' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly openedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'opened',
+        transform: booleanAttribute
+    });
 
     /** The currently selected date. */
     get selected(): D | null {
@@ -273,8 +292,6 @@ export class KbqDatepicker<D> implements OnDestroy {
     /** Emits when the datepicker has been closed. */
     readonly closedStream = output<void>({ alias: 'closed' });
 
-    readonly stateChanges: Subject<void> = new Subject<void>();
-
     /** Emits when the datepicker is disabled. */
     readonly disabledChange = new Subject<boolean>();
 
@@ -312,13 +329,37 @@ export class KbqDatepicker<D> implements OnDestroy {
         this.scrollStrategy = inject(KBQ_DATEPICKER_SCROLL_STRATEGY);
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['hasBackdropInput']) {
+            const hasBackdrop = this.hasBackdropInput();
+
+            if (hasBackdrop !== undefined) this.hasBackdrop = hasBackdrop;
+        }
+
+        // A bound `undefined` is handed over too, as an unset date.
+        if (changes['startAtInput']) this.startAt = this.startAtInput() ?? null;
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['openedInput']) {
+            const opened = this.openedInput();
+
+            if (opened !== undefined) this.opened = opened;
+        }
+    }
+
     ngOnDestroy() {
+        // Before `close()`: a datepicker going away takes its popup along without playing the exit animation.
+        this.destroyOverlay();
         this.close();
         this.inputSubscription.unsubscribe();
         this.closeSubscription.unsubscribe();
         this.disabledChange.complete();
-
-        this.destroyOverlay();
     }
 
     /** Selects the given date */
@@ -366,7 +407,7 @@ export class KbqDatepicker<D> implements OnDestroy {
 
     /** Open the calendar. */
     open(): void {
-        if (this._opened || this.disabled) {
+        if (this.openedState() || this.disabled) {
             return;
         }
 
@@ -380,18 +421,21 @@ export class KbqDatepicker<D> implements OnDestroy {
 
         this.openAsPopup();
 
-        this._opened = true;
+        this.openedState.set(true);
         // TODO: The 'emit' function requires a mandatory void argument
         this.openedStream.emit();
     }
 
     /** Close the calendar. */
     close(restoreFocus: boolean = true): void {
-        if (!this._opened) {
+        if (!this.openedState()) {
             return;
         }
 
-        if (this.popupComponentRef) {
+        // A popup the overlay has already taken down, e.g. on scroll, has nothing left to animate.
+        if (this.popupComponentRef?.hostView.destroyed) {
+            this.destroyOverlay();
+        } else if (this.popupComponentRef) {
             const instance = this.popupComponentRef.instance;
 
             instance.startExitAnimation();
@@ -403,7 +447,7 @@ export class KbqDatepicker<D> implements OnDestroy {
             this.focusedElementBeforeOpen!.focus();
         }
 
-        this._opened = false;
+        this.openedState.set(false);
         // TODO: The 'emit' function requires a mandatory void argument
         this.closedStream.emit();
         this.focusedElementBeforeOpen = null;
@@ -414,7 +458,7 @@ export class KbqDatepicker<D> implements OnDestroy {
             return;
         }
 
-        if (this._opened) {
+        if (this.openedState()) {
             this.close();
         } else {
             this.open();
@@ -438,6 +482,11 @@ export class KbqDatepicker<D> implements OnDestroy {
             );
         }
 
+        // The popup of the last opening may still be playing its exit: disposed once that ends, it would close this one.
+        if (this.popupComponentRef?.instance.animationState === 'void') {
+            this.destroyOverlay();
+        }
+
         if (!this.popupRef) {
             this.createPopup();
         }
@@ -447,10 +496,7 @@ export class KbqDatepicker<D> implements OnDestroy {
             this.popupComponentRef.instance.datepicker = this;
 
             // Update the position once the calendar has rendered.
-            this.ngZone.onStable
-                .asObservable()
-                .pipe(take(1))
-                .subscribe(() => this.popupRef?.updatePosition());
+            afterNextRender(() => this.popupRef?.updatePosition(), { injector: this.injector });
         }
     }
 
@@ -469,6 +515,18 @@ export class KbqDatepicker<D> implements OnDestroy {
         this.overlayLayers.adopt(this.popupRef, this.datepickerInput.getOrigin().nativeElement);
 
         this.closeSubscription = this.closingActions().subscribe(() => this.close(this.restoreFocus()));
+
+        // The input handles the keys while it has the focus; this covers a focus inside the calendar. CDK hands a key
+        // only to the topmost overlay listening for keys, so a modal underneath no longer closes on the same Escape.
+        this.closeSubscription.add(
+            this.popupRef
+                .keydownEvents()
+                .pipe(filter((event) => event.keyCode === ESCAPE))
+                .subscribe((event) => {
+                    event.preventDefault();
+                    this.close();
+                })
+        );
     }
 
     private restoreFocus(): boolean {

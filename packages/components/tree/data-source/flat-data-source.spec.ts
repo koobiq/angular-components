@@ -1,4 +1,5 @@
 import { CollectionViewer } from '@angular/cdk/collections';
+import { computed } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { FlatTreeControl } from '../control/flat-tree-control';
 import { KbqTreeFlatDataSource, KbqTreeFlattener } from './flat-data-source';
@@ -144,12 +145,41 @@ describe('KbqTreeFlatDataSource', () => {
         expect(control.dataNodes).toBe(dataSource.flattenedData.value);
     });
 
+    it('should flatten the data handed to its constructor and hand it to the tree control', () => {
+        const data = buildData();
+
+        dataSource = new KbqTreeFlatDataSource(control, flattener, data);
+
+        expect(dataSource.data).toBe(data);
+        expect(names(dataSource.flattenedData.value)).toEqual(['root', 'documents', 'draft', 'images', 'other']);
+        expect(control.dataNodes).toBe(dataSource.flattenedData.value);
+    });
+
+    it('should emit the expanded nodes of the data handed to its constructor on connect', () => {
+        const emissions: string[][] = [];
+
+        dataSource = new KbqTreeFlatDataSource(control, flattener, buildData());
+        dataSource.connect(collectionViewer).subscribe((nodes) => emissions.push(names(nodes)));
+
+        expect(emissions[emissions.length - 1]).toEqual(['root', 'other']);
+    });
+
     it('should report the data it was last given', () => {
         const data = buildData();
 
         dataSource.data = data;
 
         expect(dataSource.data).toBe(data);
+    });
+
+    it('should let a computed follow the data it is given', () => {
+        const rootCount = computed(() => dataSource.data.length);
+
+        expect(rootCount()).toBe(0);
+
+        dataSource.data = buildData();
+
+        expect(rootCount()).toBe(2);
     });
 
     it('should emit the expanded nodes on connect', () => {

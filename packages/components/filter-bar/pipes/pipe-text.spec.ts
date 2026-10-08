@@ -1,8 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, ESCAPE } from '@koobiq/components/core';
 import {
     KbqFilter,
@@ -84,7 +83,7 @@ describe('KbqPipeTextComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [NoopAnimationsModule, KbqFilterBarModule, TestComponent]
+            imports: [KbqFilterBarModule, TestComponent]
         })
             .overrideComponent(KbqPipeTextComponent, {
                 set: {
@@ -200,9 +199,12 @@ describe('KbqPipeTextComponent', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            vi.useFakeTimers();
         });
 
-        it('should set data.value from control value', fakeAsync(() => {
+        afterEach(() => vi.useRealTimers());
+
+        it('should set data.value from control value', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
@@ -210,12 +212,12 @@ describe('KbqPipeTextComponent', () => {
 
             component.control.setValue('new text');
             component.onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.data.value).toBe('new text');
-        }));
+        });
 
-        it('should mark control as pristine after apply', fakeAsync(() => {
+        it('should mark control as pristine after apply', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: null })]);
             fixture.detectChanges();
 
@@ -224,50 +226,50 @@ describe('KbqPipeTextComponent', () => {
             component.control.setValue('new text');
             component.control.markAsDirty();
             component.onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.control.pristine).toBe(true);
-        }));
+        });
 
-        it('should call popover.hide()', fakeAsync(() => {
+        it('should call popover.hide()', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const hideSpy = jest.spyOn(component.popover(), 'hide');
+            const hideSpy = vi.spyOn(component.popover(), 'hide');
 
             component.onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(hideSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should restore focus to the trigger button after apply', fakeAsync(() => {
+        it('should restore focus to the trigger button after apply', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
-            const focusViaSpy = jest.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
+            const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
 
-        it('should emit onChangePipe event', fakeAsync(() => {
+        it('should emit onChangePipe event', async () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ value: 'some text' })]);
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
             getPipeComponent().onApply();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('onKeydown', () => {
@@ -281,7 +283,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ENTER, ctrlKey: true });
 
             component.onKeydown(event);
@@ -294,7 +296,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ENTER, metaKey: true });
 
             component.onKeydown(event);
@@ -307,7 +309,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ENTER, ctrlKey: true });
 
             component.onKeydown(event);
@@ -320,7 +322,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ESCAPE, ctrlKey: true });
 
             component.onKeydown(event);
@@ -333,7 +335,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const applySpy = jest.spyOn(component, 'onApply');
+            const applySpy = vi.spyOn(component, 'onApply');
             const event = new KeyboardEvent('keydown', { keyCode: ENTER });
 
             component.onKeydown(event);
@@ -375,7 +377,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClearPipe.subscribe(spy);
 
@@ -389,7 +391,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onChangePipe.subscribe(spy);
 
@@ -410,7 +412,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            const showSpy = jest.spyOn(component.popover(), 'show');
+            const showSpy = vi.spyOn(component.popover(), 'show');
 
             component.open();
 
@@ -429,7 +431,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClosePipe.subscribe(spy);
 
@@ -443,7 +445,7 @@ describe('KbqPipeTextComponent', () => {
             fixture.detectChanges();
 
             const filterBar = getFilterBar();
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             filterBar.onClosePipe.subscribe(spy);
 

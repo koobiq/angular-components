@@ -125,7 +125,7 @@ describe('KbqOption component', () => {
         fixture.detectChanges();
 
         const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
-        const completeSpy = jest.fn();
+        const completeSpy = vi.fn();
         const subscription = optionInstance.stateChanges.subscribe({ complete: completeSpy });
 
         fixture.destroy();
@@ -140,8 +140,8 @@ describe('KbqOption component', () => {
 
         const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
         const host = option.getHostElement();
-        const focusSpy = jest.spyOn(host, 'focus');
-        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
+        const focusSpy = vi.spyOn(host, 'focus');
+        const scrollSpy = vi.spyOn(host, 'scrollIntoView');
 
         option.focus();
 
@@ -156,8 +156,8 @@ describe('KbqOption component', () => {
 
         const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
         const host = option.getHostElement();
-        const focusSpy = jest.spyOn(host, 'focus');
-        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
+        const focusSpy = vi.spyOn(host, 'focus');
+        const scrollSpy = vi.spyOn(host, 'scrollIntoView');
 
         host.dispatchEvent(new MouseEvent('mouseenter'));
         option.focus();
@@ -175,7 +175,7 @@ describe('KbqOption component', () => {
 
         const option: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
         const host = option.getHostElement();
-        const scrollSpy = jest.spyOn(host, 'scrollIntoView');
+        const scrollSpy = vi.spyOn(host, 'scrollIntoView');
 
         // Hovering the option that is already active never reaches focus(), so a flag cleared only
         // there would stay armed and silently swallow every later reveal.
@@ -184,6 +184,19 @@ describe('KbqOption component', () => {
         option.focus();
 
         expect(scrollSpy).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
+    });
+
+    it('should select an option without a parent on shift + click', () => {
+        const fixture = TestBed.createComponent(OptionWithDisable);
+
+        fixture.detectChanges();
+
+        const option = fixture.debugElement.query(By.directive(KbqOption));
+
+        option.nativeElement.dispatchEvent(new MouseEvent('click', { shiftKey: true }));
+        fixture.detectChanges();
+
+        expect((option.componentInstance as KbqOption).selected).toBe(true);
     });
 
     it('should not emit to `onSelectionChange` if selecting an already-selected option', () => {
@@ -196,7 +209,7 @@ describe('KbqOption component', () => {
         optionInstance.select();
         expect(optionInstance.selected).toBe(true);
 
-        const spy = jest.fn();
+        const spy = vi.fn();
         const subscription = optionInstance.onSelectionChange.subscribe(spy);
 
         optionInstance.select();
@@ -218,7 +231,7 @@ describe('KbqOption component', () => {
         optionInstance.deselect();
         expect(optionInstance.selected).toBe(false);
 
-        const spy = jest.fn();
+        const spy = vi.fn();
         const subscription = optionInstance.onSelectionChange.subscribe(spy);
 
         optionInstance.deselect();

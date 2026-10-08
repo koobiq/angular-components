@@ -1,11 +1,11 @@
 import { CdkMonitorFocus } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, ScrollStrategy } from '@angular/cdk/overlay';
 import { Platform, _getEventTarget } from '@angular/cdk/platform';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
+    AfterViewChecked,
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -15,17 +15,13 @@ import {
     ElementRef,
     EventEmitter,
     InjectionToken,
-    Input,
-    NgZone,
+    Injector,
     OnDestroy,
     OnInit,
-    Output,
     Provider,
     QueryList,
     Renderer2,
     TemplateRef,
-    ViewChild,
-    ViewChildren,
     ViewEncapsulation,
     afterNextRender,
     booleanAttribute,
@@ -34,12 +30,15 @@ import {
     effect,
     inject,
     input,
+    linkedSignal,
     numberAttribute,
     output,
     signal,
-    viewChild
+    viewChild,
+    viewChildren,
+    type AfterRenderRef
 } from '@angular/core';
-import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
@@ -83,8 +82,8 @@ import {
     isInput,
     isSelectAll,
     isUndefined,
+    kbqQueryListFrom,
     kbqResolvePanelMaxHeightToken,
-    kbqSelectAnimations,
     kbqSiblingPopupProvider,
     runClearPredicate,
     shouldSelectSearchText
@@ -221,8 +220,8 @@ export class KbqTreeSelectChange<T = any> {
         class: 'kbq-tree-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline()',
-        '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-invalid]': 'errorState',
+        '[class.kbq-disabled]': 'disabled()',
+        '[class.kbq-invalid]': 'errorState()',
         // The tree-select is not a native control, so its combobox semantics, its accessible name and
         // its invalid/required/disabled states all have to be exposed explicitly.
         //
@@ -236,16 +235,16 @@ export class KbqTreeSelectChange<T = any> {
         // stops being driven by real DOM focus (`KbqTreeOption` paints `kbq-focused` from `hasFocus`),
         // which is `@koobiq/components/tree`'s call to make.
         role: 'combobox',
-        '[attr.id]': 'id',
+        '[attr.id]': 'id()',
         '[attr.aria-expanded]': 'panelOpen',
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
         '[attr.aria-label]': 'ariaLabelText',
-        '[attr.aria-labelledby]': 'resolvedAriaLabelledby()',
-        '[attr.aria-invalid]': 'errorState',
-        '[attr.aria-required]': 'required',
-        '[attr.aria-disabled]': 'disabled || null',
+        '[attr.aria-labelledby]': 'resolvedAriaLabelledby',
+        '[attr.aria-invalid]': 'errorState()',
+        '[attr.aria-required]': 'required()',
+        '[attr.aria-disabled]': 'disabled() || null',
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null',
+        '[attr.disabled]': 'disabled() || null',
         '(click)': 'handleClick()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
@@ -254,14 +253,12 @@ export class KbqTreeSelectChange<T = any> {
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ],
-    animations: [
-        kbqSelectAnimations.fadeInContent
-    ],
     exportAs: 'kbqTreeSelect'
 })
 export class KbqTreeSelect
     extends KbqAbstractSelect
     implements
+        AfterViewChecked,
         AfterContentInit,
         AfterViewInit,
         OnDestroy,
@@ -274,7 +271,7 @@ export class KbqTreeSelect
 {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly ngZone = inject(NgZone);
+    private readonly injector = inject(Injector);
     private readonly renderer = inject(Renderer2);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
@@ -286,14 +283,10 @@ export class KbqTreeSelect
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
+    private readonly errorStateValue = signal(false);
+
     /** Whether the component is in an error state. */
-    errorState: boolean = false;
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
+    readonly errorState = this.errorStateValue.asReadonly();
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -316,20 +309,13 @@ export class KbqTreeSelect
     /** Deals with the selection logic. */
     selectionModel: SelectionModel<any>;
 
-    /** Emits when the panel element is finished transforming in. */
+    /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
     protected readonly panelDoneAnimatingStream = new Subject<string>();
+
+    private panelRender?: AfterRenderRef;
 
     /** Strategy that will be used to handle scrolling while the select panel is open. */
     scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
-
-    /**
-     * The y-offset of the overlay panel in relation to the trigger.
-     *
-     * @deprecated noop. The trigger↔panel gap is now controlled by the `--kbq-connected-overlay-gap` CSS
-     * variable (transparent padding inside the pane via the `kbq-connected-overlay_below/_above` panel
-     * classes), not by a physical overlay offset — so setting this has no effect. Will be removed in 21.0.0.
-     */
-    offsetY = 0;
 
     /**
      * Minimum space to keep between the overlay and the viewport edge.
@@ -378,9 +364,19 @@ export class KbqTreeSelect
     /** The options container's custom scrollbar viewport, flashed when the panel opens. */
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
-    @ViewChild(CdkConnectedOverlay, { static: false }) protected overlayDir: CdkConnectedOverlay;
+    private readonly overlayDirQuery = viewChild(CdkConnectedOverlay);
 
-    @ViewChildren(KbqTag) protected tags: QueryList<KbqTag>;
+    /** Reference to the CDK connected overlay directive. */
+    protected get overlayDir(): CdkConnectedOverlay {
+        return this.overlayDirQuery()!;
+    }
+
+    private readonly tagsQuery = viewChildren(KbqTag);
+    private readonly tagsList = kbqQueryListFrom(this.tagsQuery);
+
+    protected get tags(): QueryList<KbqTag> {
+        return this.tagsList();
+    }
 
     /**
      * Reference to the optional cleaner element for clearing selection.
@@ -427,19 +423,28 @@ export class KbqTreeSelect
      * this element's host reacts to it, so its emission timing (gated on `panelDoneAnimatingStream`, see
      * `ngOnInit`) matters beyond this output's original consumers.
      */
-    @Output() readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+    readonly openedChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly openedChangeOutput = outputFromObservable(this.openedChange, { alias: 'openedChange' });
 
     /** Event emitted when the select has been opened. */
-    @Output('opened') readonly openedStream: Observable<void> = this.openedChange.pipe(
+    readonly openedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => o),
         map(() => {})
     );
 
+    /** @docs-private */
+    readonly openedOutput = outputFromObservable(this.openedStream, { alias: 'opened' });
+
     /** Event emitted when the select has been closed. */
-    @Output('closed') readonly closedStream: Observable<void> = this.openedChange.pipe(
+    readonly closedStream: Observable<void> = this.openedChange.pipe(
         filter((o) => !o),
         map(() => {})
     );
+
+    /** @docs-private */
+    readonly closedOutput = outputFromObservable(this.closedStream, { alias: 'closed' });
 
     /** Event emitted when the selected value has been changed by the user. */
     readonly selectionChange = output<KbqTreeSelectChange>();
@@ -472,30 +477,25 @@ export class KbqTreeSelect
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
     /**
-     * Id of the element that names the control.
+     * Id of the element that names the control. Defaults to the `kbq-label` of a wrapping `kbq-form-field`.
      *
      * A `role="combobox"` element takes its name from the author only, so neither the placeholder nor the
-     * selected values name it. The `<label for>` a wrapping `kbq-form-field` renders does not either —
-     * `for` only names labelable elements, which a custom control is not — so point this at the label, or
-     * at whatever visible text names the control.
+     * selected values name it, and the `<label for>` of the form field names labelable elements only, which
+     * a custom control is not. Without a form-field label, point this at whatever visible text names the
+     * control.
      */
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
 
     /**
-     * The `aria-labelledby` the control actually exposes: an explicit input wins, otherwise a wrapping
-     * `kbq-form-field` names the control through its caption.
-     *
-     * The form field renders a `<span>` caption for this control (`isNativeLabelSupported: false`), so
-     * `label for` cannot associate with it — the relationship is expressed from the control to the label.
-     * @docs-private
+     * Id of the element that names the control: its own `aria-labelledby`, or else the form-field label.
+     * @internal
      */
-    protected readonly resolvedAriaLabelledby = computed(
-        () => this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null
-    );
+    protected get resolvedAriaLabelledby(): string | null {
+        return this.ariaLabelledby() || this.parentFormField?.labelId() || null;
+    }
 
     /** Object used to control when error messages are shown. */
-    // Stays a decorator input: `CanUpdateErrorState` declares it as a plain property.
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /**
      * Function used to sort the values in a select in multiple mode.
@@ -540,10 +540,7 @@ export class KbqTreeSelect
             );
         }
 
-        return this.ngZone.onStable.asObservable().pipe(
-            take(1),
-            switchMap(() => this.optionSelectionChanges)
-        );
+        return this.optionsInitialized.pipe(switchMap(() => this.optionSelectionChanges));
     }) as Observable<KbqTreeSelectChange>;
 
     /** Combined stream of all of the child options userInteraction events. */
@@ -555,71 +552,42 @@ export class KbqTreeSelect
             );
         }
 
-        return this.ngZone.onStable.asObservable().pipe(
-            take(1),
-            switchMap(() => this.userInteractionChanges)
-        );
+        return this.optionsInitialized.pipe(switchMap(() => this.userInteractionChanges));
     });
 
-    // Stays an accessor: `KbqFormFieldControl` declares `placeholder` as a plain string property.
-    @Input()
-    get placeholder(): string {
-        return this._placeholder;
-    }
+    /** Emits once `options` is assigned, for subscribers that arrive before the content is resolved. */
+    private readonly optionsInitialized = new Subject<void>();
 
-    set placeholder(value: string) {
-        this._placeholder = value;
+    /** Placeholder shown in the trigger while nothing is selected. */
+    readonly placeholder = input<string>();
 
-        this.stateChanges.next();
-    }
+    /** Whether the select is required. */
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
-    private _placeholder: string;
+    /** @docs-private */
+    readonly multipleInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'multiple',
+        transform: booleanAttribute
+    });
 
-    // Stays an accessor: `KbqFormFieldControl` declares `required` as a plain boolean property.
-    @Input()
-    get required(): boolean {
-        return this._required;
-    }
-
-    set required(value: boolean) {
-        this._required = coerceBooleanProperty(value);
-
-        this.stateChanges.next();
-    }
-
-    private _required: boolean = false;
-
-    // Stays an accessor: the setter refuses a change once the selection model exists.
-    @Input({ transform: booleanAttribute })
+    /** Whether multiple nodes can be selected. Cannot be changed once the selection model exists. */
     get multiple(): boolean {
-        return this._multiple;
+        return this.multipleValue ?? this.multipleInput();
     }
 
-    set multiple(value: boolean) {
-        if (this.selectionModel) {
-            throw getKbqSelectDynamicMultipleError();
-        }
+    /** The multiplicity the selection model was created with; a later binding change is refused. */
+    private multipleValue: boolean | undefined;
 
-        this._multiple = coerceBooleanProperty(value);
-    }
+    /** @docs-private */
+    readonly autoSelectInput = input<boolean, boolean | string | null | undefined>(true, {
+        alias: 'autoSelect',
+        transform: booleanAttribute
+    });
 
-    private _multiple: boolean = false;
-
-    // Stays an accessor: the getter is not a mirror of the input — multiple selection forces it off.
-    @Input()
+    /** Whether moving the active node selects it. Always off in multiple selection. */
     get autoSelect(): boolean {
-        if (this.multiSelection) {
-            return false;
-        }
-
-        return this._autoSelect;
+        return !this.multiSelection && this.autoSelectInput();
     }
-
-    set autoSelect(value: boolean) {
-        this._autoSelect = coerceBooleanProperty(value);
-    }
-
-    private _autoSelect: boolean = true;
 
     /** When `true`, a repeated Ctrl/Cmd+A deselects all options. Off by default (Ctrl+A only selects). */
     readonly selectAllToggle = input(false, { transform: booleanAttribute });
@@ -634,88 +602,66 @@ export class KbqTreeSelect
      */
     readonly selectAll = input(false, { transform: booleanAttribute });
 
-    get value(): any {
-        return this.tree()!.getSelectedValues();
-    }
+    private readonly valueState = signal<any>(undefined);
 
-    // Stays an accessor: `KbqFormFieldControl` declares `id` as a plain string property, and the form
-    // field's label points at it.
-    @Input()
-    get id(): string {
-        return this._id;
-    }
+    /** Values of the selected nodes: an array in multiple mode. */
+    readonly value = this.valueState.asReadonly();
 
-    set id(value: string) {
-        this._id = value || this.uid;
-        this.stateChanges.next();
-    }
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
-    private _id: string;
+    /** Unique identifier of the select, generated when not provided. */
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /** Whether the overlay panel is rendered on top of a backdrop. */
     readonly hasBackdrop = input(false, { transform: booleanAttribute });
 
-    // Stays an accessor: the getter is not a mirror of the input — a disabled select reports -1.
-    @Input()
+    /** @docs-private */
+    readonly tabIndexInput = input<number | null>(0, { alias: 'tabIndex' });
+
+    /** Tab index of the select, `-1` while it is disabled. A value that is not an integer keeps the last valid one. */
     get tabIndex(): number | null {
-        return this.disabled ? -1 : this._tabIndex;
+        return this.disabled() ? -1 : this.validTabIndex();
     }
 
-    set tabIndex(value: number | null) {
-        if (Number.isInteger(value) || value === null) {
-            this._tabIndex = value;
-        }
-    }
+    private readonly validTabIndex = linkedSignal<number | null, number | null>({
+        source: () => this.tabIndexInput(),
+        computation: (value, previous) => (Number.isInteger(value) || value === null ? value : (previous?.value ?? 0))
+    });
 
-    private _tabIndex: number | null = 0;
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
-    // Stays an accessor: `KbqFormFieldControl` declares `disabled` as a plain boolean property, and the
-    // setter starts and stops the parent form field's focus monitor.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
+    /** Whether the select is disabled. Also set by the bound form control. */
+    readonly disabled = linkedSignal(() => this.disabledInput());
 
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-
-            if (this.parentFormField) {
-                Promise.resolve().then(() => {
-                    if (this._disabled) {
-                        this.parentFormField.stopFocusMonitor();
-                    } else {
-                        this.parentFormField.runFocusMonitor();
-                    }
-                });
+    /** @docs-private */
+    readonly selectAllHandlerInput = input<
+        ((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined,
+        ((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined
+    >(undefined, {
+        alias: 'selectAllHandler',
+        transform: (fn) => {
+            if (fn !== undefined && typeof fn !== 'function') {
+                throw Error('`selectAllHandler` must be a function.');
             }
 
-            // Let the parent form field know to run change detection when the disabled state changes.
-            this.stateChanges.next();
+            return fn;
         }
-    }
-
-    private _disabled: boolean = false;
+    });
 
     /**
      * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
      */
-    // Stays an accessor: the setter rejects a non-function.
-    @Input()
-    get selectAllHandler() {
-        return this._selectAllHandler;
-    }
-
-    set selectAllHandler(fn: (event: KeyboardEvent, select: KbqTreeSelect) => void) {
-        if (typeof fn !== 'function') {
-            throw Error('`selectAllHandler` must be a function.');
-        }
-
-        this._selectAllHandler = fn;
+    get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect) => void {
+        return this.selectAllHandlerInput() ?? this.defaultSelectAllHandler;
     }
 
     /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
-    private _selectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
+    private defaultSelectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
         const searchInput = isInput(event) ? (event.target as HTMLInputElement) : null;
 
         if (shouldSelectSearchText(searchInput)) {
@@ -733,21 +679,16 @@ export class KbqTreeSelect
         select.tree()!.selectAllOptions(select.selectAll() || select.selectAllToggle());
     }
 
-    /** Whether the select is focused. */
-    get focused(): boolean {
-        return this._focused || this._panelOpen;
-    }
+    private readonly focusedValue = signal(false);
+    private readonly panelOpenValue = signal(false);
 
-    set focused(value: boolean) {
-        this._focused = value;
-    }
+    /** Whether the select is focused. */
+    readonly focused = computed(() => this.focusedValue() || this.panelOpenValue());
 
     /** Whether multiple choice is enabled or not. True if multiple or multiline */
     get multiSelection(): boolean {
         return this.multiple || this.multiline();
     }
-
-    private _focused = false;
 
     /**
      * Minimum width of the panel.
@@ -805,26 +746,24 @@ export class KbqTreeSelect
      * Automatically enables search hiding if value provided, even if `defaultOptions.searchMinOptionsThreshold` is provided.
      * @default undefined
      */
-    // Stays an accessor: the setter resolves `'auto'` and the token default into a number.
-    @Input() set searchMinOptionsThreshold(value: 'auto' | number | undefined) {
-        this._searchMinOptionsThreshold =
-            this.resolveSearchMinOptionsThreshold(value) ??
-            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold);
-    }
+    readonly searchMinOptionsThreshold = computed<number | undefined>(
+        () =>
+            this.resolveSearchMinOptionsThreshold(this.searchMinOptionsThresholdInput()) ??
+            this.resolveSearchMinOptionsThreshold(this.defaultOptions?.searchMinOptionsThreshold)
+    );
 
-    get searchMinOptionsThreshold(): number | undefined {
-        return this._searchMinOptionsThreshold;
-    }
-
-    private _searchMinOptionsThreshold = this.resolveSearchMinOptionsThreshold();
+    /** @docs-private */
+    readonly searchMinOptionsThresholdInput = input<'auto' | number | undefined>(undefined, {
+        alias: 'searchMinOptionsThreshold'
+    });
 
     get panelOpen(): boolean {
-        return this._panelOpen;
+        return this.panelOpenValue();
     }
 
     /** Whether the overlay panel is currently on screen. Part of the `KbqSiblingPopup` contract. */
     get isAttached(): boolean {
-        return this._panelOpen;
+        return this.panelOpenValue();
     }
 
     /**
@@ -876,7 +815,7 @@ export class KbqTreeSelect
     /** Full set of classes for the panel: base class, form-field theme and custom `panelClass`. */
     protected readonly panelClasses = computed<string>(() => {
         const panelClass = this.panelClass();
-        const formFieldColor = this.formFieldColor();
+        const formFieldColor = this.parentFormField?.color();
         const classes = ['kbq-tree-select__panel', formFieldColor ? `kbq-${formFieldColor}` : ''];
 
         if (typeof panelClass === 'string') {
@@ -907,7 +846,7 @@ export class KbqTreeSelect
      * repository is in. Left off while `aria-labelledby` is set, which outranks `aria-label` anyway.
      */
     protected get ariaLabelText(): string | null {
-        return this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder || null;
+        return this.resolvedAriaLabelledby ? null : this.ariaLabel() || this.placeholder() || null;
     }
 
     isEmptySearchResult: boolean;
@@ -915,8 +854,6 @@ export class KbqTreeSelect
     triggerValues: KbqTreeSelectTriggerValue[] = [];
 
     private closeSubscription = Subscription.EMPTY;
-
-    private _panelOpen = false;
 
     /** The scroll offset the panel is restored to when it attaches — the list always opens at the top. */
     private scrollTop = 0;
@@ -936,11 +873,11 @@ export class KbqTreeSelect
     /** Reactive mirror of the state the error colour is derived from. */
     private readonly invalidState = signal(false);
 
-    /** Reactive mirror of the wrapping form field's colour, which is a plain input on `KbqColorDirective`. */
-    private readonly formFieldColor = signal<string | undefined>(this.parentFormField?.color);
-
     // Used for storing the values that were assigned before the options were initialized.
     private tempValues: string | string[] | null;
+
+    /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
+    private writingValue = false;
 
     /** Handles of the timers that outlive the call that scheduled them. */
     private readonly pendingTimers = new Set<ReturnType<typeof setTimeout>>();
@@ -949,6 +886,34 @@ export class KbqTreeSelect
 
     constructor() {
         super();
+
+        // The selection model is created with the multiplicity of the first binding and cannot follow a change.
+        effect(() => {
+            const multiple = this.multipleInput();
+
+            if (this.multipleValue !== undefined && multiple !== this.multipleValue) {
+                throw getKbqSelectDynamicMultipleError();
+            }
+        });
+
+        // A disabled select reports no focus to its form field.
+        let wasDisabled = false;
+
+        effect(() => {
+            const disabled = this.disabled();
+
+            if (disabled === wasDisabled) return;
+
+            wasDisabled = disabled;
+
+            const formField = this.parentFormField;
+
+            if (formField) {
+                Promise.resolve().then(() =>
+                    this.disabled() ? formField.stopFocusMonitor() : formField.runFocusMonitor()
+                );
+            }
+        });
 
         // The tree owns the "select all" row — it is the only place that can put it in front of the nodes
         // and into the key manager's list. Mirrored through an effect rather than assigned once in
@@ -991,9 +956,6 @@ export class KbqTreeSelect
             this.ngControl.valueAccessor = this;
         }
 
-        // Force setter to be called in case id was not specified.
-        this.id = this.id;
-
         afterNextRender(() => {
             if (this.multiple && !this.multiline()) {
                 merge(fromEvent(this.window, 'resize'), this.tags.changes)
@@ -1004,8 +966,6 @@ export class KbqTreeSelect
     }
 
     ngOnInit() {
-        this.stateChanges.next();
-
         // We need `distinctUntilChanged` here, because some browsers will
         // fire the animation end event twice for the same animation. See:
         // https://github.com/angular/angular/issues/24084
@@ -1039,15 +999,13 @@ export class KbqTreeSelect
             this.updateErrorState();
         }
 
-        // The two values below are read through plain properties — `KbqColorDirective.color` is a
-        // decorator input, and the legacy `kbqValidate` directive marks the host with a class. Mirroring
-        // them here is what lets everything derived from them be a `computed()` instead of a getter
+        // The legacy `kbqValidate` directive marks the host with a class, which no signal observes.
+        // Mirroring it here is what lets everything derived from it be a `computed()` instead of a getter
         // re-evaluated by every binding on every pass.
-        this.formFieldColor.set(this.parentFormField?.color);
         // A disjunction, not a choice between the two: `errorState` still colours the control when the
         // legacy directive is present, which is how `KbqSelect` reads it. A consumer matcher that reports
         // an error for a valid control is the state the two forms disagree on.
-        this.invalidState.set((this.hasLegacyValidateDirective() && !!this.ngControl?.invalid) || this.errorState);
+        this.invalidState.set((this.hasLegacyValidateDirective() && !!this.ngControl?.invalid) || this.errorState());
     }
 
     ngAfterContentInit() {
@@ -1057,14 +1015,24 @@ export class KbqTreeSelect
 
         tree.resetFocusedItemOnBlur = false;
 
+        this.multipleValue = this.multipleInput();
         this.selectionModel = new SelectionModel<any>(this.multiSelection);
 
+        this.syncSelectionState();
+
         this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.onChange(this.selectedValues);
+            this.syncSelectionState();
+
+            if (!this.writingValue) {
+                this.onChange(this.selectedValues);
+            }
 
             if (this.multiSelection) {
                 this.refreshTriggerValues();
             }
+
+            // The trigger renders the selection, whichever way it changed (a click, `writeValue`, select all).
+            this.changeDetectorRef.markForCheck();
         });
 
         this.selectionModel.changed.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -1151,6 +1119,8 @@ export class KbqTreeSelect
         }
 
         this.contentInitialized.set(true);
+        this.optionsInitialized.next();
+        this.optionsInitialized.complete();
     }
 
     ngAfterViewInit() {
@@ -1163,8 +1133,12 @@ export class KbqTreeSelect
             .subscribe(() => this.setOverlayPosition());
     }
 
+    ngAfterViewChecked(): void {
+        // Emits `changes` where a decorator query did: once this view is checked.
+        this.tagsList();
+    }
+
     ngOnDestroy() {
-        this.stateChanges.complete();
         this.panelDoneAnimatingStream.complete();
         this.openedChange.complete();
         this.closeSubscription.unsubscribe();
@@ -1172,16 +1146,11 @@ export class KbqTreeSelect
     }
 
     updateErrorState() {
-        const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
         const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-        const newState = matcher.isErrorState(control, parent);
 
-        if (newState !== oldState) {
-            this.errorState = newState;
-            this.stateChanges.next();
-        }
+        this.errorStateValue.set(matcher.isErrorState(control, parent));
     }
 
     /**
@@ -1250,7 +1219,7 @@ export class KbqTreeSelect
     }
 
     open(): void {
-        if (this.disabled || !this.options || this._panelOpen) return;
+        if (this.disabled() || !this.options || this.panelOpenValue()) return;
 
         if (!this.options.length && !this.noOptionsMessage()) return;
 
@@ -1272,15 +1241,13 @@ export class KbqTreeSelect
 
         this.updateOverlayWidth(this.panelWidth(), this.panelMinWidth(), this.overlayOrigin ?? this.elementRef);
 
-        this._panelOpen = true;
+        this.panelOpenValue.set(true);
 
         this.changeDetectorRef.markForCheck();
 
         // Set the font size on the panel element once it exists.
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
+        afterNextRender(
+            () => {
                 if (this.triggerFontSize && this.overlayDir.overlayRef && this.overlayDir.overlayRef.overlayElement) {
                     this.overlayDir.overlayRef.overlayElement.style.fontSize = `${this.triggerFontSize}px`;
                 }
@@ -1288,16 +1255,20 @@ export class KbqTreeSelect
                 if (this.search()) {
                     this.lockOverlayWidthForSearch(this.panel());
                 }
-            });
+            },
+            { injector: this.injector }
+        );
+
+        this.reportPanelRendered('showing');
     }
 
     /** Closes the overlay panel and focuses the host element. */
     close(): void {
-        if (!this._panelOpen) {
+        if (!this.panelOpenValue()) {
             return;
         }
 
-        this._panelOpen = false;
+        this.panelOpenValue.set(false);
         this.unsubscribeFromPanelResize();
         // Back to the two default sides, so the next open is not resolved against a first row that has since
         // changed height.
@@ -1311,6 +1282,23 @@ export class KbqTreeSelect
         if (search) {
             search.reset();
         }
+
+        this.reportPanelRendered('void');
+    }
+
+    /**
+     * Reports the panel rendered or removed once the next render has applied `panelOpen`; only the latest
+     * report of a frame is delivered.
+     */
+    private reportPanelRendered(state: 'showing' | 'void'): void {
+        this.panelRender?.destroy();
+
+        // The overlay detaching while the select is destroyed closes it too.
+        if (this.destroyRef.destroyed) return;
+
+        this.panelRender = afterNextRender(() => this.panelDoneAnimatingStream.next(state), {
+            injector: this.injector
+        });
     }
 
     /**
@@ -1356,9 +1344,7 @@ export class KbqTreeSelect
      * @param isDisabled Sets whether the component is disabled.
      */
     setDisabledState(isDisabled: boolean) {
-        this.disabled = isDisabled;
-        this.changeDetectorRef.markForCheck();
-        this.stateChanges.next();
+        this.disabled.set(isDisabled);
     }
 
     get selected(): any {
@@ -1372,16 +1358,17 @@ export class KbqTreeSelect
     }
 
     get triggerValue(): string {
-        if (this.empty) {
+        if (this.empty()) {
             return '';
         }
 
         return this.tree()!.treeControl.getViewValue(this.selected);
     }
 
-    get empty(): boolean {
-        return !this.selectionModel || this.selectionModel.isEmpty();
-    }
+    private readonly emptyValue = signal(true);
+
+    /** Whether no node is selected. */
+    readonly empty = this.emptyValue.asReadonly();
 
     /** First selected node that is not disabled — the one the panel highlights when it opens. */
     protected get firstSelected() {
@@ -1397,7 +1384,7 @@ export class KbqTreeSelect
 
         if (customMatcher && !customMatcher.useDefaultHandlers()) return;
 
-        if (!this.disabled) {
+        if (!this.disabled()) {
             if (this.panelOpen) {
                 this.panelKeydownHandler(event);
             } else {
@@ -1411,10 +1398,8 @@ export class KbqTreeSelect
 
         if (customMatcher && !customMatcher.useDefaultHandlers()) return;
 
-        if (!this.disabled) {
-            this._focused = true;
-
-            this.stateChanges.next();
+        if (!this.disabled()) {
+            this.focusedValue.set(true);
         }
     }
 
@@ -1427,12 +1412,11 @@ export class KbqTreeSelect
 
         if (customMatcher && !customMatcher.useDefaultHandlers()) return;
 
-        this._focused = false;
+        this.focusedValue.set(false);
 
-        if (!this.disabled && !this.panelOpen) {
+        if (!this.disabled() && !this.panelOpen) {
             this.onTouched();
             this.changeDetectorRef.markForCheck();
-            this.stateChanges.next();
         }
     }
 
@@ -1466,7 +1450,7 @@ export class KbqTreeSelect
     }
 
     protected isPanelOpen(): boolean {
-        return this._panelOpen;
+        return this.panelOpenValue();
     }
 
     focus() {
@@ -1535,13 +1519,13 @@ export class KbqTreeSelect
             !this.isBrowser ||
             this.customTrigger() ||
             this.customMatcher() ||
-            this.empty ||
+            this.empty() ||
             !this.multiple ||
             this.multiline()
         )
             return;
 
-        const { totalItemsWidth, totalVisibleItemsWidth, visibleItems } = this.measureMatcherItems();
+        const { totalItemsWidth, visibleItems } = this.measureMatcherItems();
 
         this.hiddenItems.set(this.selectionModel.selected.length - visibleItems);
         this.changeDetectorRef.detectChanges();
@@ -1550,11 +1534,7 @@ export class KbqTreeSelect
             const itemsCounter = this.trigger().nativeElement.querySelector('.kbq-select__match-hidden-text');
             const matcherList = this.trigger().nativeElement.querySelector('.kbq-select__match-list');
 
-            if (!itemsCounter || !matcherList) {
-                this.changeDetectorRef.markForCheck();
-
-                return;
-            }
+            if (!itemsCounter || !matcherList) return;
 
             const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
             const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
@@ -1566,18 +1546,7 @@ export class KbqTreeSelect
                 this.hiddenItems.set(0);
                 this.changeDetectorRef.detectChanges();
             }
-
-            if (
-                totalVisibleItemsWidth === matcherListWidth ||
-                totalVisibleItemsWidth + itemsCounterWidth < matcherListWidth
-            ) {
-                this.changeDetectorRef.markForCheck();
-
-                return;
-            }
         }
-
-        this.changeDetectorRef.markForCheck();
     };
 
     triggerKeydownHandler(event: KeyboardEvent) {
@@ -1710,9 +1679,9 @@ export class KbqTreeSelect
         const optionsCount = this.tree()?.nodesCount ?? this.options.length;
 
         return (
-            isUndefined(this.searchMinOptionsThreshold) ||
+            isUndefined(this.searchMinOptionsThreshold()) ||
             !!this.search()?.value() ||
-            optionsCount >= this.searchMinOptionsThreshold
+            optionsCount >= this.searchMinOptionsThreshold()!
         );
     }
 
@@ -1755,7 +1724,7 @@ export class KbqTreeSelect
      * built, appended and removed once, and the only thing separating the two passes is the counter,
      * which the second pass drops from the copy.
      */
-    private measureMatcherItems(): { totalItemsWidth: number; totalVisibleItemsWidth: number; visibleItems: number } {
+    private measureMatcherItems(): { totalItemsWidth: number; visibleItems: number } {
         const triggerClone = this.buildTriggerClone();
         const hiddenText = triggerClone.querySelector('.kbq-select__match-hidden-text');
 
@@ -1765,12 +1734,10 @@ export class KbqTreeSelect
 
         this.renderer.appendChild(this.trigger().nativeElement, triggerClone);
 
-        let totalVisibleItemsWidth: number = 0;
         let visibleItems: number = 0;
 
         triggerClone.querySelectorAll<HTMLElement>('kbq-tag').forEach((item) => {
             if (item.offsetTop < item.offsetHeight) {
-                totalVisibleItemsWidth += this.getItemWidth(item);
                 visibleItems++;
             }
         });
@@ -1785,7 +1752,7 @@ export class KbqTreeSelect
 
         triggerClone.remove();
 
-        return { totalItemsWidth, totalVisibleItemsWidth, visibleItems };
+        return { totalItemsWidth, visibleItems };
     }
 
     private buildTriggerClone(): HTMLDivElement {
@@ -1844,16 +1811,22 @@ export class KbqTreeSelect
      * found with the designated value, the select trigger is cleared.
      */
     private setSelectionByValue(value: any | any[]) {
-        if (this.multiSelection && value) {
-            if (!Array.isArray(value)) {
-                throw getKbqSelectNonArrayValueError();
+        this.writingValue = true;
+
+        try {
+            if (this.multiSelection && value) {
+                if (!Array.isArray(value)) {
+                    throw getKbqSelectNonArrayValueError();
+                }
+
+                this.tree()!.setOptionsFromValues(value);
+
+                this.sortValues();
+            } else {
+                this.tree()!.setOptionsFromValues([value]);
             }
-
-            this.tree()!.setOptionsFromValues(value);
-
-            this.sortValues();
-        } else {
-            this.tree()!.setOptionsFromValues([value]);
+        } finally {
+            this.writingValue = false;
         }
 
         this.changeDetectorRef.detectChanges();
@@ -1873,9 +1846,15 @@ export class KbqTreeSelect
         tree.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             const treeValue = this.tree()!;
 
-            if (this._panelOpen && this.panel()) {
+            if (this.panelOpenValue() && this.panel()) {
                 this.scrollActiveOptionIntoView();
-            } else if (!this._panelOpen && !this.multiSelection && treeValue.keyManager.activeItem) {
+            } else if (
+                !this.panelOpenValue() &&
+                !this.multiSelection &&
+                treeValue.keyManager.activeItem &&
+                // The active option follows a written value; selecting it again would report it as the user's.
+                !this.writingValue
+            ) {
                 treeValue.keyManager.activeItem.selectViaInteraction();
             }
         });
@@ -1892,8 +1871,14 @@ export class KbqTreeSelect
                 return sortComparator ? sortComparator(a, b, options) : options.indexOf(a) - options.indexOf(b);
             });
 
-            this.stateChanges.next();
+            this.syncSelectionState();
         }
+    }
+
+    /** Mirrors the selection into the `value` and `empty` signals. */
+    private syncSelectionState(): void {
+        this.emptyValue.set(this.selectionModel.isEmpty());
+        this.valueState.set(this.tree()!.getSelectedValues());
     }
 
     /**

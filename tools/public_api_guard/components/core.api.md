@@ -9,8 +9,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_forms from '@angular/forms';
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
@@ -39,6 +37,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InjectOptions } from '@angular/core';
+import { Injector } from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { ModelSignal } from '@angular/core';
 import { NgControl } from '@angular/forms';
@@ -214,30 +213,14 @@ export const C = 67;
 // @public (undocumented)
 export interface CanColor {
     // (undocumented)
-    color: KbqComponentColors | ThemePalette | string;
+    readonly color: Signal<KbqComponentColors | ThemePalette | string>;
 }
-
-// @public (undocumented)
-export interface CanDisable {
-    // (undocumented)
-    disabled: boolean;
-}
-
-// Warning: (ae-forgotten-export) The symbol "Constructor" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "AbstractConstructor" needs to be exported by the entry point index.d.ts
-//
-// @public
-export type CanDisableCtor = Constructor<CanDisable> & AbstractConstructor<CanDisable>;
 
 // @public
 export interface CanUpdateErrorState {
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    readonly errorState: Signal<boolean>;
     updateErrorState(): void;
 }
-
-// @public
-export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
 // @public (undocumented)
 export const CAPS_LOCK = 20;
@@ -994,9 +977,6 @@ export const F8 = 119;
 export const F9 = 120;
 
 // @public (undocumented)
-export const fadeAnimation: AnimationTriggerMetadata;
-
-// @public (undocumented)
 export const FF_EQUALS = 61;
 
 // @public (undocumented)
@@ -1073,9 +1053,6 @@ export function getKbqSelectNonFunctionValueError(): Error;
 // @public (undocumented)
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
-// @public @deprecated
-export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
-
 // @public
 export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): KbqTriangle;
 
@@ -1085,19 +1062,10 @@ export function getSelectAllState<T>(adapter: KbqSelectAllAdapter<T>): KbqPseudo
 // @public (undocumented)
 export const H = 72;
 
-// Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public (undocumented)
 export function hasModifierKey(event: KeyboardEvent | MouseEvent, ...modifiers: ModifierKey[]): boolean;
-
-// @public (undocumented)
-export interface HasTabIndex {
-    // (undocumented)
-    tabIndex: number;
-}
-
-// @public (undocumented)
-export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
 
 // @public
 export interface Highlightable extends ListKeyManagerOption {
@@ -1202,6 +1170,9 @@ export const K = 75;
 
 // @public
 export const KBQ_A11Y_LOCALE_CONFIGURATION: InjectionToken<KbqA11yLocaleConfiguration>;
+
+// @public
+export const KBQ_ANIMATIONS_CONFIG: InjectionToken<KbqAnimationsConfig>;
 
 // @public
 export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
@@ -2562,7 +2533,7 @@ export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
 // @public
 export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
 
-// Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point koobiq-components-core.d.ts
 //
 // @public (undocumented)
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
@@ -2786,6 +2757,11 @@ export type KbqActionsPanelLocaleConfiguration = {
 };
 
 // @public
+export function kbqAfterAnimations(element: () => Element | null | undefined, callback: () => void, injector: Injector): {
+    destroy(): void;
+};
+
+// @public
 export enum KbqAnimationCurves {
     // (undocumented)
     AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
@@ -2816,6 +2792,17 @@ export enum KbqAnimationDurations {
     // (undocumented)
     Rapid = "100ms"
 }
+
+// @public
+export interface KbqAnimationsConfig {
+    animationsDisabled?: boolean;
+}
+
+// @public
+export function kbqAnimationsDisabled(): boolean;
+
+// @public
+export function kbqAnimationsSettled(element: Element | null | undefined): Promise<void> | null;
 
 // @public
 export type KbqAppSwitcherLocaleConfiguration = {
@@ -2936,22 +2923,18 @@ export type KbqCodeBlockLocaleConfiguration = {
     openExternalSystemTooltip: string;
 };
 
-// @public (undocumented)
-export class KbqColorDirective {
-    constructor();
-    // (undocumented)
-    get color(): KbqComponentColors | ThemePalette | string;
-    set color(value: KbqComponentColors | ThemePalette | string);
-    // (undocumented)
-    protected _color: KbqComponentColors | ThemePalette | string;
-    get colorClassName(): KbqComponentColors | ThemePalette | string;
-    protected defaultColor: KbqComponentColors | ThemePalette | string;
+// @public
+export class KbqColorDirective<T extends string = KbqComponentColors | ThemePalette | string> {
+    readonly color: WritableSignal<T>;
+    get colorClassName(): string;
+    readonly colorInput: i0.InputSignal<T | null | undefined>;
+    protected readonly defaultColor: Signal<T>;
     readonly elementRef: ElementRef<HTMLElement>;
-    setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
+    setDefaultColor(color: T): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective, never, never, { "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective<any>, never, never, { "colorInput": { "alias": "color"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective<any>, never>;
 }
 
 // @public (undocumented)
@@ -3047,9 +3030,6 @@ export type KbqDeepPartial<T> = T extends (...args: never[]) => unknown ? T : T 
 // @public
 export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 
-// @public @deprecated (undocumented)
-export const KbqDefaultThemes: KbqThemeConfig[];
-
 // @public
 export class KbqDurationLongPipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, [
 units?: DurationUnit[],
@@ -3100,9 +3080,9 @@ export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMa
 
 // @public
 export class KbqErrorStateTracker implements CanUpdateErrorState {
-    constructor(defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, parentFormGroup: FormGroupDirective | null, parentForm: NgForm | null, stateChanges: Subject<void>);
-    errorState: boolean;
-    errorStateMatcher: ErrorStateMatcher;
+    constructor(defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, parentFormGroup: FormGroupDirective | null, parentForm: NgForm | null);
+    readonly errorState: Signal<boolean>;
+    errorStateMatcher: ErrorStateMatcher | null | undefined;
     // (undocumented)
     ngControl: NgControl | null;
     updateErrorState(): void;
@@ -3262,22 +3242,19 @@ export class KbqFormElement implements AfterContentInit {
 // @public
 export interface KbqFormFieldControlRef<T = unknown> {
     readonly controlType?: string;
-    readonly disabled: boolean;
-    readonly empty: boolean;
-    readonly errorState: boolean;
-    readonly focused: boolean;
-    readonly id: string;
+    readonly disabled: Signal<boolean>;
+    readonly empty: Signal<boolean>;
+    readonly errorState: Signal<boolean>;
+    readonly focused: Signal<boolean>;
+    readonly id: Signal<string>;
     readonly ngControl: NgControl | null;
-    placeholder: string;
-    readonly required: boolean;
-    readonly stateChanges: Observable<void>;
-    value: T | null;
+    readonly placeholder: Signal<string | null | undefined>;
+    readonly required: Signal<boolean>;
+    readonly value: Signal<T | null>;
 }
 
 // @public @deprecated
 export interface KbqFormFieldRef {
-    // (undocumented)
-    canCleanerClearByEsc: boolean;
     // (undocumented)
     readonly control: Signal<KbqFormFieldControlRef>;
     // (undocumented)
@@ -3663,16 +3640,12 @@ export interface KbqNumericPipe {
 
 // @public
 export class KbqOptgroup {
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     readonly label: i0.InputSignal<string>;
     labelId: string;
     // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroup, never>;
 }
@@ -3682,9 +3655,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     get active(): boolean;
     // (undocumented)
     deselect(emitEvent?: boolean): void;
-    // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    readonly disabledInput: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     focus(): void;
     protected getAriaSelected(): boolean | null;
     getHeight(): number;
@@ -3708,29 +3680,29 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     protected onMouseleave(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
-    protected readonly parent: KbqOptionParentComponent;
+    protected readonly parent: KbqOptionParentComponent | null;
     // (undocumented)
     select(emitEvent?: boolean): void;
     // (undocumented)
     readonly selectable: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     get selected(): boolean;
+    readonly selectionChangeOutput: i0.OutputRef<KbqOptionSelectionChange<KbqOption>>;
     selectViaInteraction(): void;
     setActiveStyles(): void;
     setInactiveStyles(): void;
-    // (undocumented)
     get showCheckbox(): boolean;
-    set showCheckbox(value: boolean);
+    readonly showCheckboxInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly stateChanges: Subject<void>;
-    // (undocumented)
-    textElement: ElementRef;
+    get textElement(): ElementRef<HTMLElement> | undefined;
     // (undocumented)
     readonly userSelect: i0.InputSignalWithTransform<boolean, unknown>;
-    value: any;
+    get value(): any;
+    readonly valueInput: i0.InputSignal<any>;
     get viewValue(): string;
-    set viewValue(value: string);
+    readonly viewValueInput: i0.InputSignal<string | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "userSelect": { "alias": "userSelect"; "required": false; "isSignal": true; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "viewValue": { "alias": "viewValue"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "selectable": { "alias": "selectable"; "required": false; "isSignal": true; }; "userSelect": { "alias": "userSelect"; "required": false; "isSignal": true; }; "showCheckboxInput": { "alias": "showCheckbox"; "required": false; "isSignal": true; }; "viewValueInput": { "alias": "viewValue"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "selectionChangeOutput": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, never>;
 }
@@ -3740,15 +3712,11 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
     readonly ariaLabel: i0.InputSignal<string>;
-    // (undocumented)
-    get disabled(): boolean;
-    set disabled(value: boolean);
+    readonly disabled: i0.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     // (undocumented)
     hasFocus: boolean;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -3759,7 +3727,7 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onKeyDown($event: any): void;
     protected get resolvedAriaLabel(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-icon]"], true, [{ directive: typeof KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
@@ -3792,14 +3760,13 @@ export abstract class KbqOptionBase {
     abstract deselect(): void;
     // (undocumented)
     abstract get disabled(): boolean;
-    abstract set disabled(value: any);
     protected emitSelectionChangeEvent(isUserInput?: boolean): void;
     // (undocumented)
     abstract readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<any>>;
     // (undocumented)
     abstract select(): void;
     // (undocumented)
-    value: any;
+    abstract get value(): any;
     // (undocumented)
     abstract get viewValue(): string;
 }
@@ -3822,8 +3789,7 @@ export interface KbqOptionParentComponent {
     multiple?: boolean;
     // (undocumented)
     multiSelection?: boolean;
-    // (undocumented)
-    setSelectedOptionsByClick: (option: KbqOption) => void;
+    setSelectedOptionsByClick?(option: KbqOption): void;
     // (undocumented)
     withVirtualScroll?: boolean;
 }
@@ -3956,15 +3922,14 @@ export const kbqPopoverConfirmLocaleConfigurationProvider: (configuration: KbqDe
 export abstract class KbqPopUp implements OnDestroy {
     protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
-    animationDone(input: AnimationEvent_2): void;
-    // (undocumented)
-    animationStart(): void;
+    protected afterShowAnimation(): void;
+    protected readonly animationsDisabled: boolean;
     // (undocumented)
     arrow: boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    classMap: {};
+    get classMap(): {};
+    set classMap(value: {});
     // (undocumented)
     protected closeOnInteraction: boolean;
     // (undocumented)
@@ -3979,14 +3944,13 @@ export abstract class KbqPopUp implements OnDestroy {
     readonly destroyRef: DestroyRef;
     // (undocumented)
     detectChanges(): void;
-    // (undocumented)
-    protected readonly elementRef: ElementRef<HTMLElement>;
+    protected get elementRef(): ElementRef<HTMLElement>;
     // (undocumented)
     handleBodyInteraction(): void;
     // (undocumented)
     header: string | TemplateRef<unknown>;
     hide(delay: number): void;
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly hovered: Signal<boolean>;
     // (undocumented)
     isTemplateRef(value: any): boolean;
     // (undocumented)
@@ -4002,6 +3966,7 @@ export abstract class KbqPopUp implements OnDestroy {
     protected prefix: string;
     // (undocumented)
     protected readonly renderer: Renderer2;
+    protected setHovered(value: boolean): void;
     // (undocumented)
     protected setStickPosition(): void;
     // (undocumented)
@@ -4010,8 +3975,8 @@ export abstract class KbqPopUp implements OnDestroy {
     trigger: KbqPopUpTrigger<unknown>;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
-    // (undocumented)
-    visibility: PopUpVisibility;
+    get visibility(): PopUpVisibility;
+    set visibility(value: PopUpVisibility);
     // (undocumented)
     visibleChange: EventEmitter<boolean>;
     // (undocumented)
@@ -4066,7 +4031,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
     protected readonly hostView: ViewContainerRef;
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly hovered: Signal<boolean>;
     initListeners(): void;
     protected instance: any | null;
     get isAttached(): boolean;
@@ -4096,6 +4061,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected readonly scrollDispatcher: ScrollDispatcher;
     protected abstract scrollStrategy: () => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
+    protected setHovered(value: boolean): void;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues;
     protected strategy: FlexibleConnectedPositionStrategy;
@@ -4144,6 +4110,9 @@ export class KbqPseudoCheckboxModule {
 
 // @public (undocumented)
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
+
+// @public
+export function kbqQueryListFrom<T>(query: Signal<readonly T[]>): () => QueryList<T>;
 
 // @public (undocumented)
 export class KbqRangeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D[] | string[] | null | undefined, []> implements PipeTransform {
@@ -4334,7 +4303,7 @@ export const kbqRevealSelection: (element: HTMLInputElement) => void;
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point koobiq-components-core.d.ts
     //
     // (undocumented)
     roundingOptions: RoundDecimalOptions;
@@ -4375,12 +4344,6 @@ export class KbqSelectAllEvent<T, S = unknown> {
     readonly selected: boolean;
     readonly source: S;
 }
-
-// @public
-export const kbqSelectAnimations: {
-    readonly transformPanel: AnimationTriggerMetadata;
-    readonly fadeInContent: AnimationTriggerMetadata;
-};
 
 // @public (undocumented)
 export class KbqSelectFooter {
@@ -4628,17 +4591,6 @@ export interface KbqTextQueryOptions {
     triggers?: readonly string[];
 }
 
-// @public @deprecated (undocumented)
-export interface KbqTheme {
-    className: string;
-    // (undocumented)
-    colorScheme?: KbqThemeColorScheme;
-    // (undocumented)
-    name: string;
-    // @deprecated (undocumented)
-    selected?: boolean;
-}
-
 // @public
 export type KbqThemeColorScheme = 'light' | 'dark';
 
@@ -4690,8 +4642,6 @@ export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
 // @public
 export enum KbqThemeNames {
     Dark = "dark",
-    // @deprecated (undocumented)
-    Default = "light",
     Light = "light"
 }
 
@@ -4701,8 +4651,6 @@ export const kbqThemeProvider: <T extends KbqThemeConfig = KbqThemeConfig>(confi
 // @public
 export enum KbqThemeSelector {
     Dark = "kbq-dark",
-    // @deprecated (undocumented)
-    Default = "kbq-light",
     Light = "kbq-light"
 }
 
@@ -4952,34 +4900,6 @@ export const MAC_WK_CMD_RIGHT = 93;
 
 // @public (undocumented)
 export const META = 91;
-
-// @public
-export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
-
-// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point index.d.ts
-//
-// @public
-export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
-
-// @public
-export function mixinTabIndex<T extends AbstractConstructor<CanDisable>>(base: T, defaultTabIndex?: number): HasTabIndexCtor & T;
-
-// @public
-export class MockNgZone extends NgZone {
-    constructor();
-    // (undocumented)
-    onStable: EventEmitter<any>;
-    // (undocumented)
-    run(fn: () => void): any;
-    // (undocumented)
-    runOutsideAngular(fn: () => void): any;
-    // (undocumented)
-    simulateZoneExit(): void;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<MockNgZone, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<MockNgZone>;
-}
 
 // @public (undocumented)
 export enum MultipleMode {
@@ -6026,26 +5946,6 @@ export enum ThemePalette {
     Success = "success",
     // (undocumented)
     Warning = "warning"
-}
-
-// @public @deprecated (undocumented)
-export class ThemeService<T extends KbqTheme = KbqTheme> implements OnDestroy {
-    constructor();
-    // @deprecated (undocumented)
-    readonly current: BehaviorSubject<T | null>;
-    // @deprecated (undocumented)
-    getTheme(): T | null;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // @deprecated (undocumented)
-    setTheme(value: T | number): void;
-    // @deprecated (undocumented)
-    get themes(): T[];
-    set themes(items: T[]);
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ThemeService<any>>;
 }
 
 // @public (undocumented)

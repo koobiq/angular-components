@@ -16,14 +16,17 @@ import {
     forwardRef,
     inject,
     Injector,
-    Input,
+    input,
     isDevMode,
+    linkedSignal,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     Renderer2,
     signal,
+    SimpleChanges,
     untracked,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -321,8 +324,8 @@ export class KbqButtonCssStyler implements AfterContentInit {
     }
 })
 export class KbqButton
-    extends KbqColorDirective
-    implements OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef
+    extends KbqColorDirective<KbqButtonColor>
+    implements OnChanges, OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef
 {
     private focusMonitor = inject(FocusMonitor);
     protected styler = inject(KbqButtonCssStyler);
@@ -338,10 +341,18 @@ export class KbqButton
 
     hasFocus: boolean = false;
 
-    @ViewChild('kbqTitleText') textElement: ElementRef<HTMLElement>;
+    private readonly titleText = viewChild<ElementRef<HTMLElement>>('kbqTitleText');
+    private readonly parentText = viewChild<ElementRef<HTMLElement>>('parentTextElement');
+
+    /** The text box of the button, measured by `kbq-title`. Always rendered by the template. */
+    get textElement(): ElementRef<HTMLElement> {
+        return this.titleText()!;
+    }
 
     /** The flex row that lays out the icons and text, used as the overflow width constraint. */
-    @ViewChild('parentTextElement') parentTextElement: ElementRef<HTMLElement>;
+    get parentTextElement(): ElementRef<HTMLElement> {
+        return this.parentText()!;
+    }
 
     /**
      * Visual style of the button. Setting it to a value marks that value as owned by the button, so
@@ -350,9 +361,6 @@ export class KbqButton
      * Reads back as the resulting host class rather than the value that was set, because the host
      * `[class]` binding is what consumes it.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get kbqStyle(): string {
         return this._kbqStyleClassName;
     }
@@ -366,39 +374,22 @@ export class KbqButton
     private _kbqStyle: KbqButtonStyleInput = KbqButtonStyles.Filled;
     private _kbqStyleClassName = `kbq-button_${KbqButtonStyles.Filled}`;
 
+    /** Color propagated by a surrounding `KbqButtonGroupRoot`. */
+    private readonly groupColor = signal<KbqButtonColor | null | undefined>(undefined);
+
     /**
-     * Color of the button. Setting it to a value marks that value as owned by the button, so a
-     * surrounding `KbqButtonGroupRoot` no longer overrides it.
-     *
-     * Left unset — or set to a falsy value — the button follows the default color of its current
-     * `kbqStyle` and keeps following it when the style changes.
+     * Color of the button. The button's own `color` wins over the one of a surrounding
+     * `KbqButtonGroupRoot`, which wins over the default color of the current `kbqStyle`.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    override get color(): KbqButtonColor {
-        // `KbqColorDirective` stores the widened type, but this setter is the only writer and
-        // every value it forwards is a button color.
-        return super.color as KbqButtonColor;
-    }
-
-    override set color(value: KbqButtonColor | null | undefined) {
-        this.colorSetExplicitly = !!value;
-        this.colorSetFromGroup = false;
-
-        // A falsy value falls back to `defaultColor`, which `applyDefaultColor` keeps in sync with
-        // the current style.
-        super.color = value!;
-    }
+    override readonly color = linkedSignal<KbqButtonColor>(
+        () => this.colorInput() || this.groupColor() || this.defaultColor()
+    );
 
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /**
      * Whether the button is disabled. A surrounding `KbqButtonGroupRoot` can disable the button in
      * addition to this input, but never re-enables a button disabled through it.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this.disabledSignal();
     }
@@ -412,16 +403,6 @@ export class KbqButton
     /** Whether `kbqStyle` was set from the outside rather than propagated by a button group. */
     private kbqStyleSetExplicitly = false;
 
-    /** Whether `color` was set from the outside rather than propagated by a button group. */
-    private colorSetExplicitly = false;
-
-    /**
-     * Whether the current color was propagated by a surrounding `KbqButtonGroupRoot`. Kept apart
-     * from `colorSetExplicitly` because the three sources rank: the button's own `color` wins over
-     * the group's, which in turn wins over the default color of the current style.
-     */
-    private colorSetFromGroup = false;
-
     /** Disabled state requested through the `disabled` input. */
     private ownDisabled = false;
 
@@ -431,9 +412,6 @@ export class KbqButton
     /** @docs-private */
     readonly disabledSignal = signal(false);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
     }
@@ -467,15 +445,46 @@ export class KbqButton
         return this.hostSupportsNativeDisabled && this._tabIndex === 0 ? null : this._tabIndex;
     }
 
+    /** @docs-private */
+    readonly kbqStyleInput = input<KbqButtonStyleInput | null | undefined>(undefined, { alias: 'kbqStyle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['kbqStyleInput']) {
+            const kbqStyle = this.kbqStyleInput();
+
+            if (kbqStyle !== undefined) this.kbqStyle = kbqStyle;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+    }
+
     constructor() {
         super();
 
-        // `KbqColorDirective`'s constructor assigns `this.color`, which dispatches to the override
-        // above and flips the flag. Reset it here rather than relying on the field initializer
-        // happening to run after `super()`, so that `applyDefaultColor` below is free to apply.
-        this.colorSetExplicitly = false;
-
-        this.applyDefaultColor();
+        this.setDefaultColor(getDefaultColorForStyle(this._kbqStyle));
 
         // Native capture-phase listeners instead of host listeners: Angular coalesces listeners
         // for the same event on the same element, so stopImmediatePropagation from a host listener
@@ -494,13 +503,7 @@ export class KbqButton
      * @docs-private
      */
     setColorFromGroup(value: KbqButtonColor | null | undefined): void {
-        if (this.colorSetExplicitly) return;
-
-        this.colorSetFromGroup = !!value;
-
-        // A falsy value falls back to `defaultColor`, which `applyDefaultColor` keeps in sync with
-        // the current style.
-        super.color = value!;
+        this.groupColor.set(value);
     }
 
     /**
@@ -628,26 +631,11 @@ export class KbqButton
         this._kbqStyle = kbqStyle;
         this._kbqStyleClassName = `kbq-button_${kbqStyle}`;
 
-        this.applyDefaultColor();
+        // The design system defines a different neutral color per style, which a button without a
+        // color of its own or of its group keeps following.
+        this.setDefaultColor(getDefaultColorForStyle(kbqStyle));
 
         this.changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Applies the default color of the current style. Re-evaluated on every style change, because
-     * the design system defines a different neutral color per style. A color set from the outside or
-     * propagated by a group always wins; one that was never set — or was set to a falsy value —
-     * keeps following the style.
-     */
-    private applyDefaultColor(): void {
-        const color = getDefaultColorForStyle(this._kbqStyle);
-
-        this.setDefaultColor(color);
-
-        if (this.colorSetExplicitly || this.colorSetFromGroup) return;
-
-        // Through `super` so that the default does not count as an explicit color.
-        super.color = color;
     }
 
     private applyDisabledState(): void {

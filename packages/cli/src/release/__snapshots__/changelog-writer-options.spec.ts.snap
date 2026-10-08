@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`createChangelogWriterOptions Documentation section renders a Documentation section, after package sections, for docs-typed and docs-scoped commits 1`] = `
+exports[`createChangelogWriterOptions > Documentation section > renders a Documentation section, after package sections, for docs-typed and docs-scoped commits 1`] = `
 "# Test Release (2026-01-01)
 
 ### Koobiq
@@ -16,7 +16,7 @@ exports[`createChangelogWriterOptions Documentation section renders a Documentat
 "
 `;
 
-exports[`createChangelogWriterOptions renders the full multi-commit output shape 1`] = `
+exports[`createChangelogWriterOptions > renders the full multi-commit output shape 1`] = `
 "# Test Release (2026-01-01)
 
 ### Cli

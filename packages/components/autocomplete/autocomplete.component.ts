@@ -1,12 +1,11 @@
 ﻿import { _IdGenerator } from '@angular/cdk/a11y';
 import {
+    AfterContentChecked,
     AfterContentInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
-    ContentChildren,
     contentChildren,
     DestroyRef,
     Directive,
@@ -31,8 +30,10 @@ import {
     kbqInjectNativeElement,
     KbqOptgroup,
     KbqOption,
+    KbqOptionParentComponent,
     KbqPanelMaxWidth,
-    KbqPanelWidth
+    KbqPanelWidth,
+    kbqQueryListFrom
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
@@ -107,8 +108,7 @@ function normalizeClassInput(
     },
     exportAs: 'kbqAutocomplete'
 })
-export class KbqAutocomplete implements AfterContentInit {
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+export class KbqAutocomplete implements AfterContentChecked, AfterContentInit, KbqOptionParentComponent {
     private readonly nativeElement = kbqInjectNativeElement();
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
     private readonly destroyRef = inject(DestroyRef);
@@ -144,7 +144,12 @@ export class KbqAutocomplete implements AfterContentInit {
 
     private readonly scrollbarViewport = viewChild(KbqScrollbarViewport);
 
-    @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
+    private readonly optionsQuery = contentChildren(KbqOption, { descendants: true });
+    private readonly optionsList = kbqQueryListFrom(this.optionsQuery);
+
+    get options(): QueryList<KbqOption> {
+        return this.optionsList();
+    }
 
     readonly optionGroups = contentChildren(KbqOptgroup);
 
@@ -271,6 +276,11 @@ export class KbqAutocomplete implements AfterContentInit {
             });
     }
 
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.optionsList();
+    }
+
     /** @docs-private */
     setScrollTop(scrollTop: number): void {
         this.scrollbarViewport()?.scrollTo({ top: scrollTop });
@@ -286,8 +296,6 @@ export class KbqAutocomplete implements AfterContentInit {
         this.showPanel.set(!!this.options.length);
 
         this.updateFocusClass();
-
-        this.changeDetectorRef.markForCheck();
     }
 
     /** @docs-private */

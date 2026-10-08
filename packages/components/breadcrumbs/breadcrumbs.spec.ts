@@ -1,7 +1,6 @@
 import { Component, DebugElement, EnvironmentProviders, Provider, Type, viewChildren } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -66,6 +65,8 @@ function getRovingGroup(fixture: ComponentFixture<unknown>): RdxRovingFocusGroup
 const customBreadcrumbsProvider = kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: true, max: null });
 
 describe(KbqBreadcrumbs.name, () => {
+    afterEach(() => vi.useRealTimers());
+
     describe('core', () => {
         it('should have the correct number of breadcrumb items', () => {
             const fixture = createComponent(SimpleBreadcrumbs, [
@@ -145,7 +146,7 @@ describe(KbqBreadcrumbs.name, () => {
             // ASSERT
             // The Karma version asserted `findVisibleOverflowItems(...).length === max - 1`,
             // which depends on KbqOverflowItem.hidden() — driven by real widths + ResizeObserver,
-            // both of which are no-ops in jsdom (see tools/jest/setup.ts). Narrowed to the
+            // both of which are no-ops in jsdom (see tools/vitest/setup-angular.ts). Narrowed to the
             // observable contract: input is wired and the overflow render path is exercised.
             expect(componentInstance.items.length).toBeGreaterThan(componentInstance.max);
             expect(debugElement.queryAll(By.directive(KbqOverflowItem)).length).toBe(componentInstance.items.length);
@@ -170,17 +171,13 @@ describe(KbqBreadcrumbs.name, () => {
             expect(breadcrumbsElementRef.nativeElement.style.maxWidth).toBeFalsy();
         });
 
-        it('should open dropdown on ArrowDown if item is Dropdown trigger', fakeAsync(() => {
-            const fixture = createComponent(
-                DropdownBreadcrumbs,
-                [
-                    provideRouter([]),
-                    customBreadcrumbsProvider
-                ],
-                [
-                    NoopAnimationsModule
-                ]
-            );
+        it('should open dropdown on ArrowDown if item is Dropdown trigger', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(DropdownBreadcrumbs, [
+                provideRouter([]),
+                customBreadcrumbsProvider
+            ]);
             const { debugElement } = fixture;
 
             fixture.detectChanges();
@@ -190,12 +187,12 @@ describe(KbqBreadcrumbs.name, () => {
 
             dispatchEvent(lastBreadcrumbItem.nativeElement, new KeyboardEvent('keydown', { keyCode: DOWN_ARROW }));
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(dropdownTrigger).toBeTruthy();
             expect(dropdownTrigger?.opened).toBeTruthy();
             expect(dropdownTrigger?.openedBy).toBe('keyboard');
-        }));
+        });
     });
 
     describe('accessibility', () => {
@@ -500,19 +497,21 @@ describe(KbqBreadcrumbs.name, () => {
                 expect(getRovingGroup(fixture).resolvedDir()).toBe('rtl');
             });
 
-            it('should map the arrow keys against it', fakeAsync(() => {
+            it('should map the arrow keys against it', async () => {
+                vi.useFakeTimers();
+
                 const fixture = createComponent(NonLoopingBreadcrumbs, [provideRouter([])]);
                 const anchors = fixture.debugElement.queryAll(By.css('a[kbq-button]')).map((de) => de.nativeElement);
 
                 anchors[1].focus();
                 dispatchEvent(anchors[1], new KeyboardEvent('keydown', { key: 'ArrowLeft', cancelable: true }));
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 // The left arrow walks *forward* through a right-to-left trail.
                 expect(document.activeElement).toBe(anchors[2]);
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
         });
     });
 
@@ -536,106 +535,112 @@ describe(KbqBreadcrumbs.name, () => {
             return debugElement.query(By.directive(KbqOverflowItemsResult)).injector.get(KbqOverflowItemsResult);
         }
 
-        it('should restore hidden items and hide expand button when max becomes null', fakeAsync(() => {
+        it('should restore hidden items and hide expand button when max becomes null', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
             const { debugElement, componentInstance } = fixture;
 
             componentInstance.items = ITEMS;
             fixture.detectChanges();
-            tick(); // flush KbqOverflowItems debounceTime(0) — shows all items in jsdom
+            await vi.advanceTimersByTimeAsync(0); // flush KbqOverflowItems debounceTime(0) — shows all items in jsdom
 
             componentInstance.max = 4; // maxVisibleItems = 3 → hides 3 middle items
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
             expect(getResult(debugElement).hidden()).toBe(false);
 
             componentInstance.max = null;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(0);
             expect(getResult(debugElement).hidden()).toBe(true);
-        }));
+        });
 
-        it('should restore hidden items and hide expand button when max exceeds item count', fakeAsync(() => {
+        it('should restore hidden items and hide expand button when max exceeds item count', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
             const { debugElement, componentInstance } = fixture;
 
             componentInstance.items = ITEMS;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             componentInstance.max = 4;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
 
             componentInstance.max = 6; // 6 >= items.length → maxVisibleItems = null
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(0);
             expect(getResult(debugElement).hidden()).toBe(true);
-        }));
+        });
 
-        it('should hide fewer items when max increases', fakeAsync(() => {
+        it('should hide fewer items when max increases', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
             const { debugElement, componentInstance } = fixture;
 
             componentInstance.items = ITEMS;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             componentInstance.max = 4; // maxVisibleItems = 3 → hides 3
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             componentInstance.max = 5; // maxVisibleItems = 4 → hides 2
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(2);
             expect(getResult(debugElement).hidden()).toBe(false);
-        }));
+        });
 
-        it('should hide more items when max decreases', fakeAsync(() => {
+        it('should hide more items when max decreases', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
             const { debugElement, componentInstance } = fixture;
 
             componentInstance.items = ITEMS;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             componentInstance.max = 5; // maxVisibleItems = 4 → hides 2
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             componentInstance.max = 4; // maxVisibleItems = 3 → hides 3
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(getOverflowItems(debugElement).filter((i) => i.hidden()).length).toBe(3);
             expect(getResult(debugElement).hidden()).toBe(false);
-        }));
+        });
     });
 
     describe('collapsed items dropdown', () => {
-        it('should render the custom template of a hidden item instead of a blank row', fakeAsync(() => {
-            const fixture = createComponent(
-                CollapsibleCustomViewBreadcrumbs,
-                [provideRouter([])],
-                [NoopAnimationsModule]
-            );
+        it('should render the custom template of a hidden item instead of a blank row', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(CollapsibleCustomViewBreadcrumbs, [provideRouter([])]);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             fixture.debugElement.query(By.css('.kbq-breadcrumb__expand')).nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const rows = Array.from(document.querySelectorAll<HTMLElement>('[kbq-dropdown-item]'));
 
@@ -643,18 +648,16 @@ describe(KbqBreadcrumbs.name, () => {
             rows.forEach((row) => expect(row.textContent?.trim()).not.toBe(''));
             expect(rows.some((row) => row.querySelector('.custom-breadcrumb'))).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not register a hidden item a second time when its dropdown copy renders', fakeAsync(() => {
-            const fixture = createComponent(
-                CollapsibleCustomViewBreadcrumbs,
-                [provideRouter([])],
-                [NoopAnimationsModule]
-            );
+        it('should not register a hidden item a second time when its dropdown copy renders', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(CollapsibleCustomViewBreadcrumbs, [provideRouter([])]);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const { nativeElement: host } = getBreadcrumbsDebugElement(fixture.debugElement);
             const group = getRovingGroup(fixture);
@@ -662,7 +665,7 @@ describe(KbqBreadcrumbs.name, () => {
 
             fixture.debugElement.query(By.css('.kbq-breadcrumb__expand')).nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // A `*kbqBreadcrumbView` template resolves the roving group through its declaration site
             // (inside the trail), even when `ngTemplateOutlet` replays it a second time inside the
@@ -671,13 +674,13 @@ describe(KbqBreadcrumbs.name, () => {
             expect(group.focusableItems().length).toBe(beforeOpen.length);
             group.focusableItems().forEach((item) => expect(host.contains(item)).toBe(true));
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('inside a form', () => {
         function createFixture(): ComponentFixture<BreadcrumbsInForm> {
-            return createComponent(BreadcrumbsInForm, [provideRouter([])], [NoopAnimationsModule]);
+            return createComponent(BreadcrumbsInForm, [provideRouter([])]);
         }
 
         function query(debugElement: DebugElement, selector: string): HTMLButtonElement {

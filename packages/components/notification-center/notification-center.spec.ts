@@ -3,9 +3,8 @@ import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqMomentDateModule } from '@koobiq/angular-moment-adapter/adapter';
 import {
@@ -29,12 +28,6 @@ import { KbqToastService } from '@koobiq/components/toast';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 
-/**
- * Macrotask budget for `flush()` while the panel is opening: the overlay, the focus trap, the
- * toolbar tooltips and the dropdown each queue their own, well past the default of 20.
- */
-const maxFlushTurns = 200;
-
 /** Mirrors the panel's own rate-limit window for the scroll-to-bottom check. */
 const SCROLLED_TO_BOTTOM_AUDIT_TIME = 100;
 
@@ -53,7 +46,8 @@ describe('KbqNotificationCenter', () => {
         Object.defineProperty(global.window, 'getComputedStyle', {
             configurable: true,
             value: () => ({
-                getPropertyValue: (_property: string) => ''
+                getPropertyValue: (_property: string) => '',
+                textOverflow: ''
             })
         });
     });
@@ -67,7 +61,7 @@ describe('KbqNotificationCenter', () => {
 
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
-            imports: [component, NoopAnimationsModule, KbqLuxonDateModule, KbqFormattersModule],
+            imports: [component, KbqLuxonDateModule, KbqFormattersModule],
             providers
         });
         const componentFixture = TestBed.createComponent<T>(component);
@@ -122,26 +116,31 @@ describe('KbqNotificationCenter', () => {
 
     afterEach(() => {
         overlayContainer?.ngOnDestroy();
+        vi.useRealTimers();
     });
 
     describe('trigger', () => {
         beforeEach(() => setUpDefaultFixture());
 
-        it('show() renders the panel', fakeAsync(() => {
+        it('show() renders the panel', async () => {
+            vi.useFakeTimers();
+
             expect(debugElement.query(By.css('.kbq-notification-center'))).toBe(null);
 
             openCenter();
 
             expect(debugElement.query(By.css('.kbq-notification-center'))).not.toBe(null);
             expect(debugElement.query(By.css('.kbq-notification-center-header'))).not.toBe(null);
-        }));
+        });
 
-        it('opens on click, and a repeat click is not a toggle', fakeAsync(() => {
+        it('opens on click, and a repeat click is not a toggle', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = debugElement.query(By.css('button')).nativeElement as HTMLElement;
 
             triggerElement.click();
             fixture.detectChanges();
-            flush(maxFlushTurns);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(componentInstance.trigger().isOpen).toBe(true);
 
@@ -149,57 +148,67 @@ describe('KbqNotificationCenter', () => {
             // trigger, so it stays open. Closing is covered by the "closing actions" cases below.
             triggerElement.click();
             fixture.detectChanges();
-            flush(maxFlushTurns);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(componentInstance.trigger().isOpen).toBe(true);
-        }));
+        });
 
-        it('opens from the keyboard', fakeAsync(() => {
+        it('opens from the keyboard', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = debugElement.query(By.css('button')).nativeElement as HTMLElement;
 
             dispatchKeyboardEvent(triggerElement, 'keydown', ENTER, undefined, 'Enter');
             fixture.detectChanges();
-            flush(maxFlushTurns);
+            // The keydown defers the show to a timer, and the show schedules the panel's own.
+            await vi.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(componentInstance.trigger().isOpen).toBe(true);
-        }));
+        });
 
-        it('does not open while disabled', fakeAsync(() => {
+        it('does not open while disabled', async () => {
+            vi.useFakeTimers();
+
             componentInstance.disabled = true;
             fixture.detectChanges();
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPanel()).toBeNull();
-        }));
+        });
 
-        it('emits kbqVisibleChange on open and close', fakeAsync(() => {
+        it('emits kbqVisibleChange on open and close', async () => {
+            vi.useFakeTimers();
+
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(componentInstance.visibleChanges).toEqual([true]);
 
             componentInstance.trigger().hide();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(componentInstance.visibleChanges).toEqual([true, false]);
-        }));
+        });
 
-        it('reflects the panel state through aria-expanded and aria-controls', fakeAsync(() => {
+        it('reflects the panel state through aria-expanded and aria-controls', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = debugElement.query(By.css('button')).nativeElement as HTMLElement;
 
             expect(triggerElement.getAttribute('aria-expanded')).toBe('false');
             expect(triggerElement.getAttribute('aria-controls')).toBeNull();
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(triggerElement.getAttribute('aria-expanded')).toBe('true');
             expect(triggerElement.getAttribute('aria-controls')).toBe(getPanel()!.getAttribute('id'));
-        }));
+        });
 
         it('keeps the side placement when popoverMode is explicitly turned off', () => {
             const trigger = componentInstance.trigger();
@@ -220,7 +229,9 @@ describe('KbqNotificationCenter', () => {
             const getService = () =>
                 (componentInstance.trigger() as unknown as { service: KbqNotificationCenterService }).service;
 
-            it('carries a tooltip with the localized "remove all" text', fakeAsync(() => {
+            it('carries a tooltip with the localized "remove all" text', async () => {
+                vi.useFakeTimers();
+
                 getService().items = [{ title: 'a', date: new Date().toISOString() }];
 
                 componentInstance.trigger().show();
@@ -231,12 +242,14 @@ describe('KbqNotificationCenter', () => {
                 expect(button.injector.get(KbqTooltipTrigger).content).toBe(
                     ruRULocaleData.notificationCenter.removeAll
                 );
-            }));
+            });
         });
 
-        it('propagates popoverHeight to an already open panel, including clearing it', fakeAsync(() => {
+        it('propagates popoverHeight to an already open panel, including clearing it', async () => {
+            vi.useFakeTimers();
+
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             componentInstance.trigger().popoverHeight = '500px';
 
@@ -245,7 +258,7 @@ describe('KbqNotificationCenter', () => {
             componentInstance.trigger().popoverHeight = '';
 
             expect(getPanel()!.style.getPropertyValue('--kbq-notification-center-popover-height')).toBe('');
-        }));
+        });
     });
 
     describe('accessibility', () => {
@@ -263,8 +276,8 @@ describe('KbqNotificationCenter', () => {
             document.dispatchEvent(event);
         };
 
-        // Not `fakeAsync`: a keyboard-origin focus opens the switcher's own tooltip, whose delay tracker
-        // keeps rescheduling, and `flush()` gives up on it. The focus class lands synchronously anyway.
+        // No timers are run: a keyboard-origin focus opens the switcher's own tooltip, whose delay tracker
+        // keeps rescheduling, so they never drain. The focus class lands synchronously anyway.
         it('paints a focus ring on the silent-mode toggle when the panel is opened from the keyboard', () => {
             useModality(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
             openCenter();
@@ -272,19 +285,23 @@ describe('KbqNotificationCenter', () => {
             expect(silentModeToggle().classList).toContain('cdk-keyboard-focused');
         });
 
-        it('leaves the silent-mode toggle without a focus ring when the panel is opened by mouse', fakeAsync(() => {
+        it('leaves the silent-mode toggle without a focus ring when the panel is opened by mouse', async () => {
+            vi.useFakeTimers();
+
             // Both `buttons` and `detail` are set: CDK calls a mousedown with either at zero the fake one a screen
             // reader emits and attributes it to the keyboard instead.
             useModality(new MouseEvent('mousedown', { bubbles: true, buttons: 1, detail: 1 }));
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(silentModeToggle().classList).not.toContain('cdk-keyboard-focused');
-        }));
+        });
 
-        it('names the panel with its own title', fakeAsync(() => {
+        it('names the panel with its own title', async () => {
+            vi.useFakeTimers();
+
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const panel = getPanel()!;
             const title = queryPanel('.kbq-notification-center-title__text')!;
@@ -292,23 +309,27 @@ describe('KbqNotificationCenter', () => {
             expect(panel.getAttribute('role')).toBe('dialog');
             expect(panel.getAttribute('aria-labelledby')).toBe(title.getAttribute('id'));
             expect(title.textContent!.trim().length).toBeGreaterThan(0);
-        }));
+        });
 
-        it('traps focus inside the panel', fakeAsync(() => {
+        it('traps focus inside the panel', async () => {
+            vi.useFakeTimers();
+
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const trap = debugElement.query(By.directive(CdkTrapFocus));
 
             expect(trap).not.toBe(null);
             expect(trap.injector.get(CdkTrapFocus).enabled).toBe(true);
-        }));
+        });
 
-        it('gives every icon-only button an accessible name', fakeAsync(() => {
+        it('gives every icon-only button an accessible name', async () => {
+            vi.useFakeTimers();
+
             getService().items = [createItem('a')];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const buttons = queryAllInPanel('button');
@@ -320,13 +341,15 @@ describe('KbqNotificationCenter', () => {
 
                 expect(name.length).toBeGreaterThan(0);
             });
-        }));
+        });
 
-        it('renders both delete buttons enabled', fakeAsync(() => {
+        it('renders both delete buttons enabled', async () => {
+            vi.useFakeTimers();
+
             getService().items = [createItem('a')];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const deleteButtonTestIds = [
@@ -334,8 +357,8 @@ describe('KbqNotificationCenter', () => {
                 'kbq-notification-item-remove-button'
             ];
 
-            // Whether they are in the tab order is a question about the stylesheet, which Jest never
-            // applies (jest-preset-angular drops `styleUrls` outright) — that is pinned by the
+            // Whether they are in the tab order is a question about the stylesheet, which the unit tests
+            // never apply (they load no `styleUrls`) — that is pinned by the
             // Playwright test "the delete buttons are reachable with the keyboard".
             deleteButtonTestIds.forEach((testId) => {
                 const button = queryPanel(`[data-testid="${testId}"]`)!;
@@ -343,32 +366,36 @@ describe('KbqNotificationCenter', () => {
                 expect(button).not.toBeNull();
                 expect(button.hasAttribute('disabled')).toBe(false);
             });
-        }));
+        });
 
-        it('conveys the unread state with text, not with the indicator dot alone', fakeAsync(() => {
+        it('conveys the unread state with text, not with the indicator dot alone', async () => {
+            vi.useFakeTimers();
+
             getService().items = [
                 createItem('a', '2025-10-02T12:00:00.000Z'),
                 { ...createItem('b', '2025-10-01T12:00:00.000Z'), read: true }
             ];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const items = queryAllInPanel('kbq-notification-item');
 
             expect(items[0].textContent).toContain('Не прочитано');
             expect(items[1].textContent).not.toContain('Не прочитано');
-        }));
+        });
 
-        it('marks an item read after dwelling on it with the keyboard', fakeAsync(() => {
+        it('marks an item read after dwelling on it with the keyboard', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
             const item = createItem('a');
 
             service.items = [item];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemElement = queryPanel('kbq-notification-item')!;
@@ -376,82 +403,94 @@ describe('KbqNotificationCenter', () => {
             // The dwell used to be tracked for `mouseenter`/`mouseleave` only, so an item could never
             // be read without a pointer.
             dispatchFakeEvent(itemElement, 'focusin', true);
-            tick(600);
+            await vi.advanceTimersByTimeAsync(600);
             dispatchFakeEvent(itemElement, 'focusout', true);
 
             expect(item.read).toBe(true);
-        }));
+        });
 
-        it('closes on Escape from an element inside the panel', fakeAsync(() => {
+        it('closes on Escape from an element inside the panel', async () => {
+            vi.useFakeTimers();
+
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchKeyboardEvent(queryPanel('button')!, 'keydown', ESCAPE, undefined, 'Escape');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(componentInstance.trigger().isOpen).toBe(false);
-        }));
+        });
 
-        it('returns focus to the trigger when the panel closes', fakeAsync(() => {
+        it('returns focus to the trigger when the panel closes', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = debugElement.query(By.css('button')).nativeElement as HTMLElement;
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             componentInstance.trigger().hide();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(triggerElement);
-        }));
+        });
 
-        it('keeps focus inside the panel after every notification is removed', fakeAsync(() => {
+        it('keeps focus inside the panel after every notification is removed', async () => {
+            vi.useFakeTimers();
+
             getService().items = [createItem('a')];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             queryPanel('[data-testid="kbq-notification-center-remove-all-button"]')!.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPanel()!.contains(document.activeElement)).toBe(true);
-        }));
+        });
 
-        it('keeps focus inside the panel after a day group is removed', fakeAsync(() => {
+        it('keeps focus inside the panel after a day group is removed', async () => {
+            vi.useFakeTimers();
+
             getService().items = [createItem('a', '2025-10-01T12:00:00.000Z'), createItem('b')];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             queryPanel('[data-testid="kbq-notification-center-remove-group-button"]')!.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPanel()!.contains(document.activeElement)).toBe(true);
-        }));
+        });
 
-        it('removes a notification from its own delete button', fakeAsync(() => {
+        it('removes a notification from its own delete button', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             service.items = [createItem('a')];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             queryPanel('[data-testid="kbq-notification-item-remove-button"]')!.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(service.isEmpty).toBe(true);
             expect(getPanel()!.contains(document.activeElement)).toBe(true);
-        }));
+        });
 
-        it('moves focus to a delete button next to the removed one, never to the topmost group', fakeAsync(() => {
+        it('moves focus to a delete button next to the removed one, never to the topmost group', async () => {
+            vi.useFakeTimers();
+
             getService().items = [
                 createItem('a', '2025-10-03T12:00:00.000Z'),
                 createItem('b', '2025-10-02T12:00:00.000Z'),
@@ -459,7 +498,7 @@ describe('KbqNotificationCenter', () => {
             ];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemButtons = queryAllInPanel('[data-testid="kbq-notification-item-remove-button"]');
@@ -469,20 +508,22 @@ describe('KbqNotificationCenter', () => {
             lastItemButton.focus();
             lastItemButton.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Focus used to go wherever `querySelector` answered first — always the topmost day group's
             // "delete this day" button, a destructive control the user never aimed at and one that sits
             // behind its own sticky header.
             expect(document.activeElement).not.toBe(firstGroupButton);
             expect(document.activeElement).toBe(itemButtons[itemButtons.length - 2]);
-        }));
+        });
 
-        it('announces the panel status through a single persistent live region', fakeAsync(() => {
+        it('announces the panel status through a single persistent live region', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const status = queryPanel('[data-testid="kbq-notification-center-status"]')!;
@@ -497,13 +538,15 @@ describe('KbqNotificationCenter', () => {
 
             // The region is never re-created, so the announcement is not lost.
             expect(queryPanel('[data-testid="kbq-notification-center-status"]')).toBe(status);
-        }));
+        });
 
-        it('announces loading, not emptiness, while the full-screen loader replaces the list', fakeAsync(() => {
+        it('announces loading, not emptiness, while the full-screen loader replaces the list', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const status = queryPanel('[data-testid="kbq-notification-center-status"]')!;
@@ -515,13 +558,15 @@ describe('KbqNotificationCenter', () => {
             // "no notifications" over the spinning loader.
             expect(queryPanel('[data-testid="kbq-notification-center-loader"]')).not.toBeNull();
             expect(status.textContent!.trim()).toBe(ruRULocaleData.notificationCenter.loadingMore);
-        }));
+        });
 
-        it('announces the bottom row the template actually renders when both flags are set', fakeAsync(() => {
+        it('announces the bottom row the template actually renders when both flags are set', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const status = queryPanel('[data-testid="kbq-notification-center-status"]')!;
@@ -534,7 +579,7 @@ describe('KbqNotificationCenter', () => {
             // first and announce a failure that is nowhere on screen.
             expect(queryPanel('[data-testid="kbq-notification-center-load-more"]')).not.toBeNull();
             expect(status.textContent!.trim()).toBe(ruRULocaleData.notificationCenter.loadingMore);
-        }));
+        });
 
         it('has no axe violations with notifications', async () => {
             getService().items = [createItem('a'), createItem('b', '2025-10-01T12:00:00.000Z')];
@@ -561,7 +606,7 @@ describe('KbqNotificationCenter', () => {
             const push = (overrides: Partial<KbqNotificationItem>) => {
                 const item: KbqNotificationItem = { title: 'a', date: new Date().toISOString(), ...overrides };
 
-                jest.spyOn(TestBed.inject(KbqToastService), 'show').mockReturnValue({ id: 1, ref: {} as any });
+                vi.spyOn(TestBed.inject(KbqToastService), 'show').mockReturnValue({ id: 1, ref: {} as any });
 
                 getService().push(item);
 
@@ -594,15 +639,7 @@ describe('KbqNotificationCenter', () => {
     describe('unparsable dates', () => {
         beforeEach(() => setUpDefaultFixture());
 
-        const readGroups = (): KbqNotificationsGroup[] => {
-            let result: KbqNotificationsGroup[] = [];
-
-            getService()
-                .groupedItems.subscribe((groups) => (result = groups))
-                .unsubscribe();
-
-            return result;
-        };
+        const readGroups = (): KbqNotificationsGroup[] => getService().groupedItems();
 
         it('groups a value the adapter cannot parse instead of throwing', () => {
             getService().items = [createItem('a', '04.07.2026')];
@@ -628,17 +665,21 @@ describe('KbqNotificationCenter', () => {
             expect(groups[1].items.map((item) => item.title)).toEqual(['invalid']);
         });
 
-        it('renders the item with an empty time instead of failing change detection', fakeAsync(() => {
+        it('renders the item with an empty time instead of failing change detection', async () => {
+            vi.useFakeTimers();
+
             getService().items = [createItem('a', 'garbage')];
 
-            expect(() => {
-                openCenter();
-                flush();
-                fixture.detectChanges();
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    openCenter();
+                    await vi.runOnlyPendingTimersAsync();
+                    fixture.detectChanges();
+                })()
+            ).resolves.not.toThrow();
 
             expect(queryPanel('.kbq-notification-item-time__value')!.textContent!.trim()).toBe('');
-        }));
+        });
     });
 
     describe('grouping', () => {
@@ -649,34 +690,37 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [createItem('a', '2025-10-01T12:00:00.000Z'), createItem('b', '2025-10-02T12:00:00.000Z')];
 
-            let first: KbqNotificationsGroup[] = [];
-            let second: KbqNotificationsGroup[] = [];
+            const first = service.groupedItems();
 
-            service.groupedItems.subscribe((groups) => (first = groups)).unsubscribe();
-            service.groupedItems.subscribe((groups) => (second = groups)).unsubscribe();
+            service.items = [...service.items];
 
+            const second = service.groupedItems();
+
+            expect(second).not.toBe(first);
             expect(first.map((group) => group.id)).toEqual(second.map((group) => group.id));
             expect(new Set(first.map((group) => group.id)).size).toBe(2);
         });
 
-        it('keeps the rendered items when the list is appended to', fakeAsync(() => {
+        it('keeps the rendered items when the list is appended to', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             service.items = [createItem('a', '2025-10-01T12:00:00.000Z')];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const before = queryPanel('kbq-notification-item');
 
             service.push(createItem('b', '2025-10-01T13:00:00.000Z'));
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Tracking by identity used to throw every rendered row away on each emission.
             expect(queryAllInPanel('kbq-notification-item')).toContain(before);
-        }));
+        });
     });
 
     describe('infinite scroll', () => {
@@ -703,7 +747,9 @@ describe('KbqNotificationCenter', () => {
             dispatchFakeEvent(getCenter().scrollContainer().getNativeElement(), 'scroll');
         };
 
-        it('shows the bottom "load more" spinner without replacing the list', fakeAsync(() => {
+        it('shows the bottom "load more" spinner without replacing the list', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
@@ -716,9 +762,11 @@ describe('KbqNotificationCenter', () => {
             );
             // the full-screen loader must NOT replace the list
             expect(debugElement.query(By.css('.kbq-loader-overlay'))).toBe(null);
-        }));
+        });
 
-        it('shows the bottom "load more" error row, separate from the full-screen error', fakeAsync(() => {
+        it('shows the bottom "load more" error row, separate from the full-screen error', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
@@ -732,9 +780,11 @@ describe('KbqNotificationCenter', () => {
             expect(errorRow.query(By.css('button'))).not.toBe(null);
             // full-screen error state must NOT be shown
             expect(debugElement.query(By.css('.kbq-notification-center-error-container'))).toBe(null);
-        }));
+        });
 
-        it('never shows the spinner and the error row at the same time', fakeAsync(() => {
+        it('never shows the spinner and the error row at the same time', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
@@ -745,11 +795,13 @@ describe('KbqNotificationCenter', () => {
 
             expect(debugElement.query(By.css('.kbq-notification-center-load-more'))).not.toBe(null);
             expect(debugElement.query(By.css('.kbq-notification-center-load-more-error'))).toBe(null);
-        }));
+        });
 
-        it('re-emits onNextPage and clears the error when the bottom retry button is clicked', fakeAsync(() => {
+        it('re-emits onNextPage and clears the error when the bottom retry button is clicked', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -762,12 +814,14 @@ describe('KbqNotificationCenter', () => {
 
             expect(emitSpy).toHaveBeenCalled();
             // retry must reset the error state itself so the spinner and the error row can never coexist
-            expect(service.loadMoreErrorMode.value).toBe(false);
-        }));
+            expect(service.loadMoreErrorMode()).toBe(false);
+        });
 
-        it('keeps paging when a completed load leaves the list still at the bottom', fakeAsync(() => {
+        it('keeps paging when a completed load leaves the list still at the bottom', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -777,15 +831,17 @@ describe('KbqNotificationCenter', () => {
 
             service.setLoadingMore(true);
             service.setLoadingMore(false);
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('requests the first page when the initial list does not fill the viewport', fakeAsync(() => {
+        it('requests the first page when the initial list does not fill the viewport', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -793,31 +849,33 @@ describe('KbqNotificationCenter', () => {
             // itself or infinite scroll never starts.
             setGeometry({ scrollHeight: 400, clientHeight: 500, scrollTop: 0 });
             service.setHasMore(true);
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('does not request a page on its own when there is nothing more to load', fakeAsync(() => {
+        it('does not request a page on its own when there is nothing more to load', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
             setGeometry({ scrollHeight: 400, clientHeight: 500, scrollTop: 0 });
             service.setHasMore(false);
-            // `flush()` alone will not do: rxjs schedules the audit window with `setInterval`, and
-            // Angular deliberately leaves periodic timers out of `flush()`.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('keeps the full-screen error path emitting onReload', fakeAsync(() => {
+        it('keeps the full-screen error path emitting onReload', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const reloadSpy = jest.spyOn(service.onReload, 'next');
+            const reloadSpy = vi.spyOn(service.onReload, 'next');
 
             openCenter();
 
@@ -833,7 +891,7 @@ describe('KbqNotificationCenter', () => {
             errorContainer.query(By.css('button')).triggerEventHandler('click', {});
 
             expect(reloadSpy).toHaveBeenCalled();
-        }));
+        });
 
         it('reports loadingMore / loadMoreErrorMode updates through the changes stream', () => {
             const service = getService();
@@ -841,88 +899,89 @@ describe('KbqNotificationCenter', () => {
             let emissions = 0;
             const subscription = service.changes.subscribe(() => emissions++);
 
-            const afterSubscribe = emissions;
+            // A ping reports changes, so subscribing replays nothing.
+            expect(emissions).toBe(0);
 
             service.setLoadingMore(true);
-            expect(emissions).toBe(afterSubscribe + 1);
-
-            const afterLoadingMore = emissions;
+            expect(emissions).toBe(1);
 
             service.setLoadMoreErrorMode(true);
-            expect(emissions).toBe(afterLoadingMore + 1);
+            expect(emissions).toBe(2);
 
             subscription.unsubscribe();
         });
 
-        it('emits onNextPage when scrolled to the bottom with more to load', fakeAsync(() => {
+        it('emits onNextPage when scrolled to the bottom with more to load', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
             scrollToBottom();
-            // `flush()` alone will not do: rxjs schedules the audit window with `setInterval`, and
-            // Angular deliberately leaves periodic timers out of `flush()`.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('does not emit onNextPage when there is nothing more to load', fakeAsync(() => {
+        it('does not emit onNextPage when there is nothing more to load', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
             service.setHasMore(false);
 
             scrollToBottom();
-            // `flush()` alone will not do: rxjs schedules the audit window with `setInterval`, and
-            // Angular deliberately leaves periodic timers out of `flush()`.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('does not emit onNextPage while a page is already loading', fakeAsync(() => {
+        it('does not emit onNextPage while a page is already loading', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
             service.setLoadingMore(true);
 
             scrollToBottom();
-            // `flush()` alone will not do: rxjs schedules the audit window with `setInterval`, and
-            // Angular deliberately leaves periodic timers out of `flush()`.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('does not emit onNextPage while the load-more error is shown', fakeAsync(() => {
+        it('does not emit onNextPage while the load-more error is shown', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
             service.setLoadMoreErrorMode(true);
 
             scrollToBottom();
-            // `flush()` alone will not do: rxjs schedules the audit window with `setInterval`, and
-            // Angular deliberately leaves periodic timers out of `flush()`.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('emits onNextPage at the bottom when fractional zoom leaves a sub-pixel gap', fakeAsync(() => {
+        it('emits onNextPage at the bottom when fractional zoom leaves a sub-pixel gap', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
@@ -930,30 +989,34 @@ describe('KbqNotificationCenter', () => {
             // `scrollTop` stays fractional, so the true bottom reports a residual distance instead of 0.
             setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 499.6 });
             dispatchFakeEvent(getCenter().scrollContainer().getNativeElement(), 'scroll');
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('does not emit onNextPage while the list is still a few pixels from the bottom', fakeAsync(() => {
+        it('does not emit onNextPage while the list is still a few pixels from the bottom', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             openCenter();
 
             // The sub-pixel tolerance must not stretch into a visible early trigger.
             setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 495 });
             dispatchFakeEvent(getCenter().scrollContainer().getNativeElement(), 'scroll');
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('emits onNextPage within scrolledToBottomOffset of the bottom', fakeAsync(() => {
+        it('emits onNextPage within scrolledToBottomOffset of the bottom', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             componentInstance.scrolledToBottomOffset = 100;
             fixture.detectChanges();
@@ -962,15 +1025,17 @@ describe('KbqNotificationCenter', () => {
             // 50px from the actual bottom — within the 100px threshold
             setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 450 });
             dispatchFakeEvent(getCenter().scrollContainer().getNativeElement(), 'scroll');
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('does not emit onNextPage when the distance exceeds scrolledToBottomOffset', fakeAsync(() => {
+        it('does not emit onNextPage when the distance exceeds scrolledToBottomOffset', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
-            const emitSpy = jest.spyOn(service.onNextPage, 'next');
+            const emitSpy = vi.spyOn(service.onNextPage, 'next');
 
             componentInstance.scrolledToBottomOffset = 100;
             fixture.detectChanges();
@@ -979,69 +1044,77 @@ describe('KbqNotificationCenter', () => {
             // 150px from the actual bottom — outside the 100px threshold
             setGeometry({ scrollHeight: 1000, clientHeight: 500, scrollTop: 350 });
             dispatchFakeEvent(getCenter().scrollContainer().getNativeElement(), 'scroll');
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(emitSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('scrolls the list to the bottom when the load-more spinner appears', fakeAsync(() => {
+        it('scrolls the list to the bottom when the load-more spinner appears', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
             setAtBottomGeometry();
 
-            const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+            const scrollSpy = vi.spyOn(getCenter().scrollContainer(), 'scrollTo');
 
             service.setLoadingMore(true);
             fixture.detectChanges();
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(scrollSpy).toHaveBeenCalledWith({ top: 1000 });
-        }));
+        });
 
-        it('scrolls the list to the bottom when the load-more error row appears', fakeAsync(() => {
+        it('scrolls the list to the bottom when the load-more error row appears', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
             setAtBottomGeometry();
 
-            const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+            const scrollSpy = vi.spyOn(getCenter().scrollContainer(), 'scrollTo');
 
             service.setLoadMoreErrorMode(true);
             fixture.detectChanges();
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(scrollSpy).toHaveBeenCalledWith({ top: 1000 });
-        }));
+        });
 
-        it('does not scroll again when the spinner is turned off', fakeAsync(() => {
+        it('does not scroll again when the spinner is turned off', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
             setAtBottomGeometry();
 
-            const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+            const scrollSpy = vi.spyOn(getCenter().scrollContainer(), 'scrollTo');
 
             service.setLoadingMore(true);
             fixture.detectChanges();
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             scrollSpy.mockClear();
 
             // true -> false must NOT scroll
             service.setLoadingMore(false);
             fixture.detectChanges();
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(scrollSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('does not scroll to the bottom on open when a load-more error is already shown', fakeAsync(() => {
+        it('does not scroll to the bottom on open when a load-more error is already shown', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             // Error left over from a previous session, before the panel is opened.
@@ -1050,17 +1123,15 @@ describe('KbqNotificationCenter', () => {
             openCenter();
             setAtBottomGeometry();
 
-            const scrollSpy = jest.spyOn(getCenter().scrollContainer(), 'scrollTo');
+            const scrollSpy = vi.spyOn(getCenter().scrollContainer(), 'scrollTo');
 
             // The replayed BehaviorSubject value must not be treated as a fresh appearance: the panel
             // always opens scrolled to the top.
-            // `flush()` alone will not do: rxjs schedules the audit window with `setInterval`, and
-            // Angular deliberately leaves periodic timers out of `flush()`.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(scrollSpy).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('closing actions', () => {
@@ -1079,54 +1150,59 @@ describe('KbqNotificationCenter', () => {
             outerFixture.detectChanges();
         };
 
-        it('stays open while its own list is scrolled', fakeAsync(() => {
+        it('stays open while its own list is scrolled', async () => {
+            vi.useFakeTimers();
+
             openOuterCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const panel = overlayContainer
                 .getContainerElement()
                 .querySelector<HTMLElement>('[data-testid="kbq-notification-center-container"]')!;
 
             dispatchFakeEvent(panel, 'scroll');
-            // ScrollDispatcher rate-limits with setInterval, which flush() leaves alone.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(outerFixture.componentInstance.trigger().isOpen).toBe(true);
-        }));
+        });
 
-        it('closes when something outside the panel scrolls', fakeAsync(() => {
+        it('closes when something outside the panel scrolls', async () => {
+            vi.useFakeTimers();
+
             openOuterCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchFakeEvent(outerFixture.componentInstance.outer().nativeElement, 'scroll');
-            // ScrollDispatcher rate-limits with setInterval, which flush() leaves alone.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(outerFixture.componentInstance.trigger().isOpen).toBe(false);
-        }));
+        });
 
-        it('never writes its own flags onto the shared scrollable', fakeAsync(() => {
+        it('never writes its own flags onto the shared scrollable', async () => {
+            vi.useFakeTimers();
+
             openOuterCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const scrollable = getOuterScrollable() as unknown as Record<string, unknown>;
 
             dispatchFakeEvent(outerFixture.componentInstance.outer().nativeElement, 'scroll');
-            // ScrollDispatcher rate-limits with setInterval, which flush() leaves alone.
-            tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-            flush();
+            await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+            await vi.runOnlyPendingTimersAsync();
 
             // The panel used to tag the emitted CdkScrollable so the base trigger would skip the close.
             // The tag was never cleared and disabled close-on-scroll for every other pop-up as well.
             expect(scrollable.kbqPopoverPreventHide).toBeUndefined();
             expect(scrollable.type).toBeUndefined();
-        }));
+        });
 
-        it('does not throw when a scroll arrives after the panel was destroyed while open', fakeAsync(() => {
+        it('does not throw when a scroll arrives after the panel was destroyed while open', async () => {
+            vi.useFakeTimers();
+
             openOuterCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const scrollDispatcher = TestBed.inject(ScrollDispatcher);
             // Destroying the fixture also unregisters its own CdkScrollable, so a scroll dispatched on
@@ -1137,14 +1213,16 @@ describe('KbqNotificationCenter', () => {
 
             outerFixture.destroy();
 
-            expect(() => {
-                dispatchFakeEvent(document, 'scroll');
-                tick(SCROLLED_TO_BOTTOM_AUDIT_TIME);
-                flush();
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    dispatchFakeEvent(document, 'scroll');
+                    await vi.advanceTimersByTimeAsync(SCROLLED_TO_BOTTOM_AUDIT_TIME);
+                    await vi.runOnlyPendingTimersAsync();
+                })()
+            ).resolves.not.toThrow();
 
             keepDispatcherArmed.unsubscribe();
-        }));
+        });
     });
 
     describe('onDelete', () => {
@@ -1156,7 +1234,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [item];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.remove(item);
 
@@ -1169,7 +1247,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [createItem('a')];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             // An equal but not identical object used to be filtered out silently while still reporting
             // a deletion the consumer would then replay against its backend.
@@ -1185,7 +1263,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [item];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.removeGroup({ id: 'group', title: 'group', items: [item] });
 
@@ -1198,7 +1276,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [createItem('a')];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             // A group reference kept from an earlier groupedItems emission, after the list was
             // replaced: nothing is removed locally, so nothing may be replayed against a backend.
@@ -1214,7 +1292,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [present];
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.removeGroup({ id: 'group', title: 'group', items: [present, createItem('gone')] });
 
@@ -1227,7 +1305,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = items;
 
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.removeAll();
 
@@ -1237,7 +1315,7 @@ describe('KbqNotificationCenter', () => {
 
         it('stays silent when removeAll() runs on an already empty list', () => {
             const service = getService();
-            const emitSpy = jest.spyOn(service.onDelete, 'next');
+            const emitSpy = vi.spyOn(service.onDelete, 'next');
 
             service.removeAll();
 
@@ -1269,7 +1347,7 @@ describe('KbqNotificationCenter', () => {
         it('ignores a push of a notification that is already in the list', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const showSpy = jest.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
+            const showSpy = vi.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
             const item = createItem('a');
 
             service.push(item);
@@ -1282,7 +1360,7 @@ describe('KbqNotificationCenter', () => {
         it('adds a pushed notification whose id is already taken, under a generated one', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const showSpy = jest.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
+            const showSpy = vi.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
             const date = new Date().toISOString();
 
             service.items = [{ id: 'n1', title: 'a', date }];
@@ -1329,7 +1407,7 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [item];
 
-            const onReadSpy = jest.spyOn(service.onRead, 'next');
+            const onReadSpy = vi.spyOn(service.onRead, 'next');
 
             toastService.read.next({ id: item.id });
 
@@ -1345,7 +1423,7 @@ describe('KbqNotificationCenter', () => {
         it('suppresses the toast of a pushed notification', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const showSpy = jest.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
+            const showSpy = vi.spyOn(toastService, 'show').mockReturnValue({ id: 1, ref: createToastRef() });
 
             service.setSilentMode(true);
             service.push(createItem('a'));
@@ -1354,36 +1432,30 @@ describe('KbqNotificationCenter', () => {
             expect(service.items).toHaveLength(1);
         });
 
-        it('is switched from the panel dropdown options', fakeAsync(() => {
+        it('is switched from the panel dropdown options', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             queryPanel('[data-testid="kbq-notification-center-silent-mode-toggle"]')!.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             queryPanel('[data-testid="kbq-notification-center-do-not-disturb-button"]')!.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            expect(service.silentMode.value).toBe(true);
-        }));
+            expect(service.silentMode()).toBe(true);
+        });
     });
 
     describe('unreadItemsCounter', () => {
         beforeEach(() => setUpDefaultFixture());
 
-        const readCounter = (): string => {
-            let value = '';
-
-            getService()
-                .unreadItemsCounter.subscribe((counter) => (value = counter))
-                .unsubscribe();
-
-            return value;
-        };
+        const readCounter = (): string => getService().unreadItemsCounter();
 
         const createItems = (count: number) => Array.from({ length: count }, (_, index) => createItem(`item-${index}`));
 
@@ -1411,10 +1483,29 @@ describe('KbqNotificationCenter', () => {
             expect(readCounter()).toBe('99+');
         });
 
-        it('is shared between subscribers instead of re-created on every read', () => {
+        it('is shared between readers instead of re-created on every read', () => {
             const service = getService();
 
             expect(service.unreadItemsCounter).toBe(service.unreadItemsCounter);
+        });
+
+        it('follows a notification being read, although the list itself does not change', () => {
+            const service = getService();
+            const item = createItem('a');
+
+            service.items = [item, createItem('b')];
+
+            expect(readCounter()).toBe('2');
+
+            TestBed.inject(KbqToastService).read.next({ id: item.id });
+
+            expect(readCounter()).toBe('1');
+        });
+
+        it('is read by the trigger', () => {
+            getService().items = [createItem('a')];
+
+            expect(componentInstance.trigger().unreadItemsCounter()).toBe('1');
         });
     });
 
@@ -1425,7 +1516,7 @@ describe('KbqNotificationCenter', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
 
-            jest.spyOn(toastService, 'show').mockReturnValue({ id: 42, ref: createToastRef() });
+            vi.spyOn(toastService, 'show').mockReturnValue({ id: 42, ref: createToastRef() });
 
             const item = createItem('a');
 
@@ -1437,7 +1528,7 @@ describe('KbqNotificationCenter', () => {
         it('hides the toast by the stored toastId and clears it', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+            const hideSpy = vi.spyOn(toastService, 'hide').mockImplementation(() => {});
 
             const item: KbqNotificationItem = { ...createItem('a'), toastId: 42 };
 
@@ -1450,7 +1541,7 @@ describe('KbqNotificationCenter', () => {
         it('does nothing when the item has no toastId', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
-            const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+            const hideSpy = vi.spyOn(toastService, 'hide').mockImplementation(() => {});
 
             service.hideToast(createItem('a'));
 
@@ -1461,8 +1552,8 @@ describe('KbqNotificationCenter', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
 
-            jest.spyOn(toastService, 'show').mockReturnValue({ id: 7, ref: createToastRef() });
-            const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+            vi.spyOn(toastService, 'show').mockReturnValue({ id: 7, ref: createToastRef() });
+            const hideSpy = vi.spyOn(toastService, 'hide').mockImplementation(() => {});
 
             const item = createItem('a');
 
@@ -1476,10 +1567,10 @@ describe('KbqNotificationCenter', () => {
             const service = getService();
             const toastService = TestBed.inject(KbqToastService);
 
-            jest.spyOn(toastService, 'show')
+            vi.spyOn(toastService, 'show')
                 .mockReturnValueOnce({ id: 1, ref: createToastRef() })
                 .mockReturnValueOnce({ id: 2, ref: createToastRef() });
-            const hideSpy = jest.spyOn(toastService, 'hide').mockImplementation();
+            const hideSpy = vi.spyOn(toastService, 'hide').mockImplementation(() => {});
 
             service.push(createItem('a'));
             service.push(createItem('b'));
@@ -1493,16 +1584,8 @@ describe('KbqNotificationCenter', () => {
     describe('ordering', () => {
         beforeEach(() => setUpDefaultFixture());
 
-        // groupedItems is built from a BehaviorSubject, so it emits synchronously on subscribe.
-        const readTitles = (service: KbqNotificationCenterService): string[][] => {
-            let titles: string[][] = [];
-
-            service.groupedItems
-                .subscribe((groups) => (titles = groups.map((group) => group.items.map((item) => String(item.title)))))
-                .unsubscribe();
-
-            return titles;
-        };
+        const readTitles = (service: KbqNotificationCenterService): string[][] =>
+            service.groupedItems().map((group) => group.items.map((item) => String(item.title)));
 
         it('always orders groups and items from newest to oldest, regardless of input order', () => {
             const service = getService();
@@ -1529,21 +1612,23 @@ describe('KbqNotificationCenter', () => {
 
         // The rendered notification item hosts KbqReadStateDirective, whose (click) handler emits
         // read=true on every click. onRead must still fire only on the unread -> read transition.
-        it('emits onRead only once per item across repeated read events', fakeAsync(() => {
+        it('emits onRead only once per item across repeated read events', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
             const item = createItem('a');
 
             service.items = [item];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const itemElement = queryPanel('kbq-notification-item');
 
             expect(itemElement).not.toBeNull();
 
-            const onReadSpy = jest.spyOn(service.onRead, 'next');
+            const onReadSpy = vi.spyOn(service.onRead, 'next');
 
             itemElement!.click();
             itemElement!.click();
@@ -1552,7 +1637,65 @@ describe('KbqNotificationCenter', () => {
             expect(onReadSpy).toHaveBeenCalledTimes(1);
             expect(onReadSpy).toHaveBeenCalledWith(item);
             expect(item.read).toBe(true);
-        }));
+        });
+
+        // The dot and the label a screen reader gets, as rendered.
+        const renderedReadState = (row: HTMLElement) => ({
+            dotRead: row
+                .querySelector('.kbq-notification-item-time')!
+                .classList.contains('kbq-notification-item-time_read'),
+            unreadLabel: row.textContent!.includes('Не прочитано')
+        });
+
+        const openWithUnreadItem = async (): Promise<{ item: KbqNotificationItem; row: HTMLElement }> => {
+            vi.useFakeTimers();
+
+            const item = createItem('a');
+
+            getService().items = [item];
+
+            openCenter();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const row = queryPanel('kbq-notification-item')!;
+
+            expect(renderedReadState(row)).toEqual({ dotRead: false, unreadLabel: true });
+
+            return { item, row };
+        };
+
+        // `read` is flipped in place on the consumer's object, so the row is handed no new input.
+        it('re-renders an open row when its toast is read', async () => {
+            const { item, row } = await openWithUnreadItem();
+
+            TestBed.inject(KbqToastService).read.next({ id: item.id });
+            fixture.detectChanges();
+
+            expect(renderedReadState(row)).toEqual({ dotRead: true, unreadLabel: false });
+        });
+
+        it('re-renders an open row when the list is handed back with the item read in place', async () => {
+            const { item, row } = await openWithUnreadItem();
+            const service = getService();
+
+            item.read = true;
+            service.items = [...service.items];
+            fixture.detectChanges();
+
+            expect(renderedReadState(row)).toEqual({ dotRead: true, unreadLabel: false });
+        });
+
+        it('re-renders an open row read by dwelling on it', async () => {
+            const { row } = await openWithUnreadItem();
+
+            dispatchFakeEvent(row, 'focusin', true);
+            await vi.advanceTimersByTimeAsync(600);
+            dispatchFakeEvent(row, 'focusout', true);
+            fixture.detectChanges();
+
+            expect(renderedReadState(row)).toEqual({ dotRead: true, unreadLabel: false });
+        });
     });
 
     describe('templates', () => {
@@ -1563,7 +1706,9 @@ describe('KbqNotificationCenter', () => {
             overlayContainer = TestBed.inject(OverlayContainer);
         });
 
-        it('renders the consumer templates with the item as the context', fakeAsync(() => {
+        it('renders the consumer templates with the item as the context', async () => {
+            vi.useFakeTimers();
+
             const service = TestBed.inject(KbqNotificationCenterService);
             const host = templateFixture.componentInstance;
 
@@ -1577,7 +1722,7 @@ describe('KbqNotificationCenter', () => {
 
             host.trigger().show();
             templateFixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             templateFixture.detectChanges();
 
             const panel = overlayContainer.getContainerElement();
@@ -1585,11 +1730,13 @@ describe('KbqNotificationCenter', () => {
             // The context exposes the notification, not the item component that renders it.
             expect(panel.querySelector('[data-testid="template-title"]')!.textContent).toContain('templated');
             expect(panel.querySelector('[data-testid="template-caption"]')!.textContent).toContain('templated');
-        }));
+        });
     });
 
     describe('configuration override', () => {
-        it('renders the strings registered through kbqNotificationCenterLocaleConfigurationProvider', fakeAsync(() => {
+        it('renders the strings registered through kbqNotificationCenterLocaleConfigurationProvider', async () => {
+            vi.useFakeTimers();
+
             setUpDefaultFixture([
                 kbqNotificationCenterLocaleConfigurationProvider({
                     notifications: 'Custom notifications',
@@ -1598,49 +1745,55 @@ describe('KbqNotificationCenter', () => {
             ]);
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(queryPanel('.kbq-notification-center-title__text')!.textContent).toContain('Custom notifications');
             expect(queryPanel('[data-testid="kbq-notification-center-empty"]')!.textContent).toContain('Custom empty');
-        }));
+        });
 
-        it('leaves the sections it does not name following the locale', fakeAsync(() => {
+        it('leaves the sections it does not name following the locale', async () => {
+            vi.useFakeTimers();
+
             setUpDefaultFixture([kbqNotificationCenterLocaleConfigurationProvider({ notifications: 'Custom' })]);
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(queryPanel('[data-testid="kbq-notification-center-empty"]')!.textContent).toContain(
                 ruRULocaleData.notificationCenter.noNotifications
             );
-        }));
+        });
     });
 
     describe('loading and empty states', () => {
         beforeEach(() => setUpDefaultFixture());
 
-        it('replaces the list with the full-screen loader in loading mode', fakeAsync(() => {
+        it('replaces the list with the full-screen loader in loading mode', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             service.items = [createItem('a')];
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             service.setLoadingMode(true);
             fixture.detectChanges();
 
             expect(queryPanel('[data-testid="kbq-notification-center-loader"]')).not.toBeNull();
             expect(queryPanel('kbq-notification-item')).toBeNull();
-        }));
+        });
 
-        it('hides the remove-all button while the list is empty', fakeAsync(() => {
+        it('hides the remove-all button while the list is empty', async () => {
+            vi.useFakeTimers();
+
             const service = getService();
 
             openCenter();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(queryPanel('[data-testid="kbq-notification-center-remove-all-button"]')).toBeNull();
 
@@ -1648,23 +1801,27 @@ describe('KbqNotificationCenter', () => {
             fixture.detectChanges();
 
             expect(queryPanel('[data-testid="kbq-notification-center-remove-all-button"]')).not.toBeNull();
-        }));
+        });
     });
 
     describe('standalone usage', () => {
-        it('opens without KbqNotificationCenterModule', fakeAsync(() => {
+        it('opens without KbqNotificationCenterModule', async () => {
+            vi.useFakeTimers();
+
             const standaloneFixture = createComponent(StandaloneNotificationCenter);
 
             overlayContainer = TestBed.inject(OverlayContainer);
 
-            expect(() => {
-                standaloneFixture.componentInstance.trigger().show();
-                standaloneFixture.detectChanges();
-                flush();
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    standaloneFixture.componentInstance.trigger().show();
+                    standaloneFixture.detectChanges();
+                    await vi.runOnlyPendingTimersAsync();
+                })()
+            ).resolves.not.toThrow();
 
             expect(overlayContainer.getContainerElement().querySelector('.kbq-notification-center')).not.toBeNull();
-        }));
+        });
     });
 
     describe('stickToWindow', () => {
@@ -1685,12 +1842,14 @@ describe('KbqNotificationCenter', () => {
         const getOverlayPane = (): HTMLElement =>
             overlayContainer.getContainerElement().querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        it('should re-apply stick position on window resize', fakeAsync(() => {
+        it('should re-apply stick position on window resize', async () => {
+            vi.useFakeTimers();
+
             const stickFixture = createStickComponent(NotificationCenterWithStick);
 
             stickFixture.componentInstance.trigger().show();
             stickFixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const pane = getOverlayPane();
 
@@ -1702,18 +1861,20 @@ describe('KbqNotificationCenter', () => {
             pane.style.left = '50px';
 
             dispatchFakeEvent(window, 'resize');
-            tick(20);
+            await vi.advanceTimersByTimeAsync(20);
 
             expect(pane.style.right).toMatch(/^0(px)?$/);
             expect(pane.style.left).toBe('unset');
-        }));
+        });
 
-        it('should re-apply stick position when the panel list is scrolled', fakeAsync(() => {
+        it('should re-apply stick position when the panel list is scrolled', async () => {
+            vi.useFakeTimers();
+
             const stickFixture = createStickComponent(NotificationCenterWithStick);
 
             stickFixture.componentInstance.trigger().show();
             stickFixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const pane = getOverlayPane();
             const list = overlayContainer
@@ -1726,63 +1887,66 @@ describe('KbqNotificationCenter', () => {
             pane.style.left = '50px';
 
             dispatchFakeEvent(list, 'scroll');
-            tick(20);
+            await vi.advanceTimersByTimeAsync(20);
 
             expect(pane.style.right).toMatch(/^0(px)?$/);
             expect(pane.style.left).toBe('unset');
-        }));
+        });
 
-        it('should recalculate stick position against the container on window resize', fakeAsync(() => {
+        it('should recalculate stick position against the container on window resize', async () => {
+            vi.useFakeTimers();
+
             const stickFixture = createStickComponent(NotificationCenterWithStickContainer);
 
             stickFixture.componentInstance.trigger().show();
             stickFixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const pane = getOverlayPane();
             const panel = overlayContainer.getContainerElement().querySelector('.kbq-notification-center')!;
 
-            jest.spyOn(panel, 'getBoundingClientRect').mockReturnValue({ width: 400, height: 300 } as DOMRect);
-            jest.spyOn(
-                stickFixture.componentInstance.container().nativeElement,
-                'getBoundingClientRect'
-            ).mockReturnValue({
-                left: 0,
-                right: 800,
-                top: 0,
-                bottom: 500
-            } as DOMRect);
+            vi.spyOn(panel, 'getBoundingClientRect').mockReturnValue({ width: 400, height: 300 } as DOMRect);
+            vi.spyOn(stickFixture.componentInstance.container().nativeElement, 'getBoundingClientRect').mockReturnValue(
+                {
+                    left: 0,
+                    right: 800,
+                    top: 0,
+                    bottom: 500
+                } as DOMRect
+            );
 
             dispatchFakeEvent(window, 'resize');
-            tick(20);
+            await vi.advanceTimersByTimeAsync(20);
 
             expect(pane.style.left).toBe('400px');
             expect(pane.style.right).toBe('unset');
-        }));
+        });
 
-        it('should stop re-applying stick position after the panel is closed', fakeAsync(() => {
+        it('should stop re-applying stick position after the panel is closed', async () => {
+            vi.useFakeTimers();
+
             const stickFixture = createStickComponent(NotificationCenterWithStick);
             const trigger = stickFixture.componentInstance.trigger();
 
             trigger.show();
             stickFixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const pane = getOverlayPane();
 
             trigger.hide();
             stickFixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             pane.style.right = '';
             pane.style.left = '50px';
 
             dispatchFakeEvent(window, 'resize');
-            tick(20);
+            await vi.advanceTimersByTimeAsync(20);
 
             expect(pane.style.right).toBe('');
             expect(pane.style.left).toBe('50px');
-        }));
+        });
     });
 
     describe('locale', () => {
@@ -1834,13 +1998,8 @@ describe('KbqNotificationCenter', () => {
             // Every heading is produced by DateFormatter, which re-localizes at runtime.
             const cyrillic = /[а-яё]/i;
 
-            const readTitles = (service: KbqNotificationCenterService): string[] => {
-                let titles: string[] = [];
-
-                service.groupedItems.subscribe((groups) => (titles = groups.map((group) => group.title))).unsubscribe();
-
-                return titles;
-            };
+            const readTitles = (service: KbqNotificationCenterService): string[] =>
+                service.groupedItems().map((group) => group.title);
 
             it('renders every heading in the active locale, groups built before the change included', () => {
                 const service = TestBed.inject(KbqNotificationCenterService);
@@ -1866,23 +2025,18 @@ describe('KbqNotificationCenter', () => {
                 expect(titles.some((title) => cyrillic.test(title))).toBe(false);
             });
 
-            it('re-emits the grouped items when the locale changes', () => {
+            it('regroups the items when the locale changes', () => {
                 const service = TestBed.inject(KbqNotificationCenterService);
-                const emissions: string[][] = [];
 
                 service.items = [createItem('a', '2026-07-04T12:00:00.000Z')];
 
-                const subscription = service.groupedItems.subscribe((groups) =>
-                    emissions.push(groups.map((group) => group.title))
-                );
+                const before = readTitles(service);
 
                 localeService.setLocale('en-US');
-                subscription.unsubscribe();
 
-                // A rendered panel holds one `| async` subscription: without a re-emission the
-                // headings would only catch up on the next change to the list.
-                expect(emissions).toHaveLength(2);
-                expect(emissions[1]).not.toEqual(emissions[0]);
+                // A rendered panel reads the signal: without a recomputation the headings would only
+                // catch up on the next change to the list.
+                expect(readTitles(service)).not.toEqual(before);
             });
         });
     });
@@ -1903,11 +2057,7 @@ describe('KbqNotificationCenter with the Moment adapter', () => {
             { title: 'b', date: '2026-07-11T12:00:00.000Z' }
         ];
 
-        let groups: KbqNotificationsGroup[] = [];
-
-        service.groupedItems.subscribe((value) => (groups = value)).unsubscribe();
-
-        expect(groups).toHaveLength(2);
+        expect(service.groupedItems()).toHaveLength(2);
     });
 });
 

@@ -6,9 +6,9 @@ import {
     AfterContentInit,
     afterNextRender,
     booleanAttribute,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    computed,
     contentChild,
     DestroyRef,
     effect,
@@ -36,6 +36,7 @@ const LONG_TITLE_CLASS = 'kbq-navbar-brand_long-title';
     styleUrls: [
         './navbar-brand.scss'
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-navbar-brand',
         [`[class.${LONG_TITLE_CLASS}]`]: 'longTitleEnabled()',
@@ -91,20 +92,12 @@ export class KbqNavbarBrand implements AfterContentInit {
     /** @docs-private */
     readonly title = contentChild(KbqNavbarTitle);
 
-    /** Whether the title has been measured as not fitting into a single line. */
-    private readonly autoLongTitle = signal(false);
-
     /**
-     * Alternative display of the brand name in two lines.
-     *
-     * @deprecated The mode is now detected automatically when the title does not fit into a single line.
-     * Leave unset for auto-detection; `true` and `false` force the mode on and off respectively.
-     * Will be removed in the next major release.
+     * Whether the title has been measured as not fitting into a single line, which switches it to the compact
+     * two-line presentation.
+     * @docs-private
      */
-    readonly longTitle = input<boolean>();
-
-    /** @docs-private */
-    protected readonly longTitleEnabled = computed(() => this.longTitle() ?? this.autoLongTitle());
+    protected readonly longTitleEnabled = signal(false);
 
     /** text that will be displayed in the tooltip. By default, the text is taken from kbq-navbar-title. */
     readonly collapsedText = input<string>('');
@@ -159,11 +152,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     }
 
     constructor() {
-        this.rectangleElement.state.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.updateTooltip();
-
-            this.changeDetectorRef.markForCheck();
-        });
+        this.rectangleElement.state.pipe(takeUntilDestroyed()).subscribe(() => this.updateTooltip());
 
         this.tooltip.arrow = false;
         this.tooltip.offset = 0;
@@ -259,7 +248,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     }
 
     private updateAutoLongTitle(): void {
-        this.autoLongTitle.set(this.measureNeedsLongTitle());
+        this.longTitleEnabled.set(this.measureNeedsLongTitle());
 
         // The clamp state feeds into `hasCroppedText`, which the tooltip's content depends on - refresh it
         // so a title that becomes clamped after the initial render doesn't show stale/empty tooltip content.
@@ -278,7 +267,7 @@ export class KbqNavbarBrand implements AfterContentInit {
 
         // A collapsed title is `display: none`, so it measures as 0 - keep the last known value instead.
         if (!title || this.rectangleElement.collapsed) {
-            return this.autoLongTitle();
+            return this.longTitleEnabled();
         }
 
         const host = this.nativeElement;

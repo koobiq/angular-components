@@ -1,6 +1,7 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Platform } from '@angular/cdk/platform';
 import {
+    AfterContentChecked,
     AfterContentInit,
     afterNextRender,
     AfterViewInit,
@@ -8,7 +9,6 @@ import {
     ChangeDetectorRef,
     Component,
     contentChildren,
-    ContentChildren,
     DestroyRef,
     Directive,
     effect,
@@ -29,6 +29,7 @@ import {
     isVerticalMovement,
     KBQ_WINDOW,
     KbqOverlayLayerExclude,
+    kbqQueryListFrom,
     LEFT_ARROW,
     RIGHT_ARROW,
     TAB
@@ -44,7 +45,7 @@ import {
 import { getOuterWidth } from './outer-width';
 
 @Directive()
-export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqFocusableComponent implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
@@ -54,9 +55,16 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
 
+    private readonly focusableItemsQuery = contentChildren<KbqNavbarFocusableItem>(
+        forwardRef(() => KbqNavbarFocusableItem),
+        { descendants: true }
+    );
+    private readonly focusableItemsList = kbqQueryListFrom(this.focusableItemsQuery);
+
     /** @docs-private */
-    @ContentChildren(forwardRef(() => KbqNavbarFocusableItem), { descendants: true })
-    focusableItems: QueryList<KbqNavbarFocusableItem>;
+    get focusableItems(): QueryList<KbqNavbarFocusableItem> {
+        return this.focusableItemsList();
+    }
 
     /** @docs-private */
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
@@ -94,13 +102,13 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.tabIndex.set(-1);
+            // Also written to the DOM right away: the browser moves the focus as soon as this Tab is handled, and
+            // the binding is only applied by the change detection that runs after it.
+            this.elementRef.nativeElement.tabIndex = -1;
 
             // Restored on a macrotask so the browser has moved focus out of the navbar first. Bound to the
             // component's lifetime: without it the callback can run against a destroyed view.
-            const timeoutId = setTimeout(() => {
-                this.tabIndex.set(0);
-                this.changeDetectorRef.markForCheck();
-            });
+            const timeoutId = setTimeout(() => this.tabIndex.set(0));
 
             this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
         });
@@ -116,10 +124,13 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     /**
      * Monitored with `checkChildren`, because the navbar is one composite widget: the host owns the tab stop
      * but hands focus straight to an item, and without it that hand-off reads as the navbar being blurred.
-     * The origin would reset to `null` on the very first item, leaving every later arrow key with no keyboard
-     * origin to pass on — the key manager would move its active item while nothing moved in the DOM.
      * @docs-private
      */
+    ngAfterContentChecked(): void {
+        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        this.focusableItemsList();
+    }
+
     ngAfterViewInit(): void {
         this.focusMonitor
             .monitor(this.elementRef, true)
@@ -362,6 +373,9 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     /** @docs-private */
     protected onKeyDown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
+
+        // The origin of the last focus event may be a click, and an item takes no DOM focus for a pointer origin.
+        this.keyManager.setFocusOrigin('keyboard');
 
         if (!this.eventFromInput(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) {
             event.preventDefault();

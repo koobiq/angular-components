@@ -4,13 +4,11 @@
 
 ```ts
 
-import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentType } from '@angular/cdk/overlay';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
@@ -23,6 +21,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -65,8 +64,9 @@ export class KbqActionsPanelConfig<D = unknown> {
 
 // @public
 export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
-    protected animationState: 'void' | 'visible' | 'hidden';
-    readonly animationStateChanged: EventEmitter<AnimationEvent_2>;
+    readonly animationDone: Subject<"visible" | "hidden">;
+    protected readonly animationsDisabled: boolean;
+    protected readonly animationState: i0.WritableSignal<"void" | "visible" | "hidden">;
     protected close(): void;
     protected readonly config: KbqActionsPanelConfig<any>;
     protected _contentAttached(): void;
@@ -74,8 +74,6 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     protected readonly localeConfiguration: i0.Signal<KbqActionsPanelLocaleConfiguration>;
     // (undocumented)
     ngOnDestroy(): void;
-    protected onAnimationDone(event: AnimationEvent_2): void;
-    protected onAnimationStart(event: AnimationEvent_2): void;
     startCloseAnimation(): void;
     startOpenAnimation(): void;
     // (undocumented)

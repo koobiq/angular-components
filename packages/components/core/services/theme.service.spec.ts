@@ -2,9 +2,9 @@ import { DOCUMENT } from '@angular/common';
 import { PLATFORM_ID, REQUEST } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
+import type { Mocked } from 'vitest';
 import { KBQ_WINDOW } from '../tokens/window';
 import {
-    KBQ_DEFAULT_THEMES,
     KBQ_THEME_CONFIG,
     KBQ_THEME_STORE,
     KbqThemeCookieStore,
@@ -12,8 +12,7 @@ import {
     KbqThemeMode,
     kbqThemeProvider,
     KbqThemeService,
-    KbqThemeStore,
-    ThemeService
+    KbqThemeStore
 } from './theme.service';
 
 /** Minimal fake `MediaQueryList` that lets tests flip `matches` and trigger the `change` listener. */
@@ -94,17 +93,17 @@ function fakeStorageEvents() {
 }
 
 describe('KbqThemeService', () => {
-    let store: jest.Mocked<KbqThemeStore>;
+    let store: Mocked<KbqThemeStore>;
 
     function setup(matches = false, render = true) {
         const media = fakeMediaQueryList(matches);
-        const matchMedia = jest.fn().mockReturnValue(media.mql);
+        const matchMedia = vi.fn().mockReturnValue(media.mql);
 
         store = {
-            getMode: jest.fn().mockReturnValue(null),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue(null),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn().mockReturnValue(null),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue(null),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -238,7 +237,12 @@ describe('KbqThemeService', () => {
         // The `MediaQueryList` an app hands back is hand-written (see `provideServerWindow`), so it may be
         // missing pieces a real one always has.
         TestBed.configureTestingModule({
-            providers: [{ provide: KBQ_WINDOW, useValue: { matchMedia: () => ({ matches: true }) } }]
+            providers: [
+                {
+                    provide: KBQ_WINDOW,
+                    useValue: fakeWindow({ matchMedia: () => ({ matches: true }) as MediaQueryList })
+                }
+            ]
         });
 
         const service = TestBed.inject(KbqThemeService);
@@ -267,7 +271,10 @@ describe('KbqThemeService', () => {
             providers: [
                 {
                     provide: KBQ_WINDOW,
-                    useValue: { matchMedia: () => ({ matches: false, media: '', addEventListener: () => {} }) }
+                    useValue: fakeWindow({
+                        matchMedia: () =>
+                            ({ matches: false, media: '', addEventListener: () => {} }) as unknown as MediaQueryList
+                    })
                 }
             ]
         });
@@ -502,10 +509,10 @@ describe('KbqThemeService', () => {
         let storedMode: KbqThemeMode | null = null;
 
         store = {
-            getMode: jest.fn(() => storedMode),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue(null),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn(() => storedMode),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue(null),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -574,10 +581,10 @@ describe('KbqThemeService', () => {
         const changes = new Subject<void>();
 
         store = {
-            getMode: jest.fn().mockReturnValue(null),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue(null),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn().mockReturnValue(null),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue(null),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -642,10 +649,10 @@ describe('KbqThemeService', () => {
         const media = fakeMediaQueryList(false);
 
         store = {
-            getMode: jest.fn().mockReturnValue('dark'),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue('dark'),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn().mockReturnValue('dark'),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue('dark'),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -766,10 +773,10 @@ describe('KbqThemeService', () => {
         const media = fakeMediaQueryList(false);
 
         store = {
-            getMode: jest.fn().mockReturnValue(null),
-            setMode: jest.fn(),
-            getStaticTheme: jest.fn().mockReturnValue('dark'),
-            setStaticTheme: jest.fn()
+            getMode: vi.fn().mockReturnValue(null),
+            setMode: vi.fn(),
+            getStaticTheme: vi.fn().mockReturnValue('dark'),
+            setStaticTheme: vi.fn()
         };
 
         TestBed.configureTestingModule({
@@ -841,70 +848,6 @@ describe('KbqThemeService', () => {
 
         expect(service.staticTheme()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
-    });
-});
-
-describe('ThemeService', () => {
-    function setup(matches = false) {
-        const media = fakeMediaQueryList(matches);
-
-        TestBed.configureTestingModule({
-            providers: [{ provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) }]
-        });
-
-        const service = TestBed.inject(ThemeService);
-
-        TestBed.tick();
-
-        return { service, media };
-    }
-
-    afterEach(() => {
-        document.body.className = '';
-        localStorage.clear();
-    });
-
-    it('shares state with the injected KbqThemeService (single source of truth)', () => {
-        const { service } = setup(false);
-        const kbqThemeService = TestBed.inject(KbqThemeService);
-
-        kbqThemeService.setMode('dark');
-        TestBed.tick();
-
-        expect(service.current.value?.name).toBe('dark');
-    });
-
-    it('keeps the deprecated `selected` field in sync for backward compatibility', () => {
-        const { service } = setup(true);
-
-        const themes = service.themes;
-
-        expect(themes.find((theme) => theme.name === 'dark')?.selected).toBe(true);
-        expect(themes.find((theme) => theme.name === 'light')?.selected).toBe(false);
-    });
-
-    it('exposes the deprecated `setTheme`/`getTheme` shims', () => {
-        const { service } = setup(false);
-
-        service.setTheme(1);
-        TestBed.tick();
-        expect(service.getTheme()?.name).toBe('dark');
-
-        service.setTheme(KBQ_DEFAULT_THEMES[0]);
-        TestBed.tick();
-        expect(service.getTheme()?.name).toBe('light');
-    });
-
-    it('keeps the deprecated `current` BehaviorSubject in sync with `getTheme()`', () => {
-        const { service } = setup(false);
-
-        expect(service.current.value?.name).toBe('light');
-
-        service.setTheme(KBQ_DEFAULT_THEMES[1]);
-        TestBed.tick();
-
-        expect(service.current.value?.name).toBe('dark');
-        expect(service.current.value).toBe(service.getTheme());
     });
 });
 
@@ -1215,7 +1158,7 @@ describe('KbqThemeCookieStore', () => {
 
         store.setMode('dark');
 
-        const cookieSetter = jest.spyOn(document, 'cookie', 'set');
+        const cookieSetter = vi.spyOn(document, 'cookie', 'set');
 
         store.setMode('dark');
 

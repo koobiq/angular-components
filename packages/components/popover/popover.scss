@@ -1,4 +1,5 @@
 @use '../core/pop-up/pop-up';
+@use '../core/styles/common/animation';
 @use '../core/styles/common';
 
 @use '../core/styles/common/tokens' as *;
@@ -29,6 +30,10 @@ $z-index-above-content: 2;
 
     z-index: $z-index-panel;
 
+    // Shown once `KbqPopUp.show()` has made it visible.
+    opacity: 0;
+    transform: scale(1, 0.8);
+
     &.kbq-popover_small {
         width: var(--kbq-popover-size-container-width-small);
 
@@ -46,6 +51,16 @@ $z-index-above-content: 2;
     }
 
     @include pop-up.popup-margins(kbq-popover, 8px);
+
+    &.kbq-popover_visible {
+        opacity: 1;
+        transform: none;
+        transition:
+            opacity 120ms cubic-bezier(0, 0, 0.2, 1),
+            transform 120ms cubic-bezier(0, 0, 0.2, 1);
+
+        @include animation.kbq-animations-off();
+    }
 }
 
 .kbq-popover__content {

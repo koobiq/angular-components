@@ -56,12 +56,6 @@ test.describe('KbqNavbarModule', () => {
             await expect(getTitle(page, 'wraps')).toHaveCSS('font-size', '14px');
         });
 
-        test('should keep the explicit longTitle=false override', async ({ page }) => {
-            await page.goto('/E2eVerticalNavbarBrandAutoLongTitle');
-
-            await expect(getTitle(page, 'forced-off')).toHaveCSS('font-size', '18px');
-        });
-
         /**
          * `-webkit-line-clamp` does nothing without `display: -webkit-box`, and the per-orientation rules set
          * `display` on the title at the same specificity. Asserting the type alone would not notice: the font
@@ -185,9 +179,9 @@ test.describe('KbqNavbarModule', () => {
         test('arrow keys should move the roving focus between items', async ({ page }) => {
             await page.goto('/E2eNavbarInteractions');
 
-            // A scripted `.focus()` carries no keyboard origin, and the navbar only moves real DOM focus onto
-            // an item — and shows its `cdk-keyboard-focused` class — for a focus event CDK attributes to the
-            // keyboard. A real Tab press is what the roving-tabindex container actually reacts to.
+            // A scripted `.focus()` carries no keyboard origin, and an item shows its `cdk-keyboard-focused`
+            // class only for a focus event CDK attributes to the keyboard. A real Tab press is what the
+            // roving-tabindex container actually reacts to.
             await page.keyboard.press('Tab');
 
             await expect(page.getByTestId('horizontal-dropdown-trigger')).toHaveClass(/cdk-keyboard-focused/);
@@ -288,8 +282,10 @@ test.describe('KbqNavbarModule', () => {
                     (frame as HTMLElement).style.width = `${width}px`;
                     window.dispatchEvent(new Event('resize'));
 
-                    // Queued after the navbar's 100ms resize debounce, whose update renders synchronously.
+                    // Queued after the navbar's 100ms resize debounce, then a frame more: the update it makes is
+                    // rendered by the change detection it schedules, not synchronously.
                     await new Promise((resolve) => setTimeout(resolve, 100));
+                    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve)));
 
                     const contentRight = Math.max(
                         ...Array.from(navbar.children, (container) => container.getBoundingClientRect().right)

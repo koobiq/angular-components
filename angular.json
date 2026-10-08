@@ -26,7 +26,7 @@
             "prefix": "docs",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "optimization": {
                             "styles": {
@@ -37,7 +37,6 @@
                             "base": "dist/releases/koobiq-docs"
                         },
                         "index": "apps/docs/src/index.html",
-                        "polyfills": ["zone.js"],
                         "tsConfig": "apps/docs/tsconfig.app.json",
                         "assets": [
                             {
@@ -125,7 +124,7 @@
                     "defaultConfiguration": "production"
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "configurations": {
                         "production": {
                             "buildTarget": "koobiq-docs:build:production"
@@ -135,14 +134,6 @@
                         }
                     },
                     "defaultConfiguration": "development"
-                },
-                "test": {
-                    "builder": "@angular-builders/jest:run",
-                    "options": {
-                        "roots": ["apps/docs"],
-                        "configPath": "../../jest.config.js",
-                        "tsConfig": "tsconfig.spec.json"
-                    }
                 }
             }
         },
@@ -152,7 +143,7 @@
             "sourceRoot": "packages/components",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/components/tsconfig.lib.json",
                         "project": "packages/components/ng-package.json"
@@ -165,14 +156,6 @@
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
-                },
-                "test": {
-                    "builder": "@angular-builders/jest:run",
-                    "options": {
-                        "roots": ["packages/components"],
-                        "configPath": "../../jest.config.js",
-                        "tsConfig": "tsconfig.spec.json"
-                    }
                 }
             }
         },
@@ -182,7 +165,7 @@
             "sourceRoot": "packages/components-experimental",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/components-experimental/tsconfig.lib.json",
                         "project": "packages/components-experimental/ng-package.json"
@@ -195,15 +178,6 @@
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
-                },
-                "test": {
-                    "builder": "@angular-builders/jest:run",
-                    "options": {
-                        "roots": ["packages/components-experimental"],
-                        "configPath": "../../jest.config.js",
-                        "tsConfig": "tsconfig.spec.json",
-                        "passWithNoTests": true
-                    }
                 }
             }
         },
@@ -213,7 +187,7 @@
             "sourceRoot": "packages/angular-moment-adapter",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/angular-moment-adapter/tsconfig.lib.json",
                         "project": "packages/angular-moment-adapter/ng-package.json"
@@ -226,14 +200,6 @@
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
-                },
-                "test": {
-                    "builder": "@angular-builders/jest:run",
-                    "options": {
-                        "roots": ["packages/angular-moment-adapter"],
-                        "configPath": "../../jest.config.js",
-                        "tsConfig": "tsconfig.spec.json"
-                    }
                 }
             }
         },
@@ -243,7 +209,7 @@
             "sourceRoot": "packages/angular-luxon-adapter",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/angular-luxon-adapter/tsconfig.lib.json",
                         "project": "packages/angular-luxon-adapter/ng-package.json"
@@ -256,14 +222,6 @@
                         "versionPlaceholder": "{{VERSION}}",
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
-                },
-                "test": {
-                    "builder": "@angular-builders/jest:run",
-                    "options": {
-                        "roots": ["packages/angular-luxon-adapter"],
-                        "configPath": "../../jest.config.js",
-                        "tsConfig": "tsconfig.spec.json"
-                    }
                 }
             }
         },
@@ -273,7 +231,7 @@
             "sourceRoot": "packages/docs-examples",
             "architect": {
                 "packagr": {
-                    "builder": "@angular-devkit/build-angular:ng-packagr",
+                    "builder": "@angular/build:ng-packagr",
                     "options": {
                         "tsConfig": "packages/docs-examples/tsconfig.lib.json",
                         "project": "packages/docs-examples/ng-package.json"
@@ -295,7 +253,7 @@
             "sourceRoot": "packages/components-dev/accordion",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/accordion"
@@ -303,7 +261,6 @@
                         "tsConfig": "packages/components-dev/accordion/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -312,7 +269,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-accordion:build"
                     }
@@ -325,7 +282,7 @@
             "sourceRoot": "packages/components-dev/actions-panel",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/actions-panel"
@@ -333,7 +290,6 @@
                         "tsConfig": "packages/components-dev/actions-panel/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -342,7 +298,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-actions-panel:build"
                     }
@@ -355,7 +311,7 @@
             "sourceRoot": "packages/components-dev/ag-grid",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/ag-grid"
@@ -363,7 +319,6 @@
                         "tsConfig": "packages/components-dev/ag-grid/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -372,7 +327,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-ag-grid:build"
                     }
@@ -385,7 +340,7 @@
             "sourceRoot": "packages/components-dev/alert",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/alert"
@@ -393,7 +348,6 @@
                         "tsConfig": "packages/components-dev/alert/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -402,7 +356,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-alert:build"
                     }
@@ -415,7 +369,7 @@
             "sourceRoot": "packages/components-dev/all",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/all"
@@ -423,7 +377,6 @@
                         "tsConfig": "packages/components-dev/all/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -432,7 +385,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-all:build"
                     }
@@ -445,7 +398,7 @@
             "sourceRoot": "packages/components-dev/app-switcher",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/app-switcher"
@@ -453,7 +406,6 @@
                         "tsConfig": "packages/components-dev/app-switcher/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -462,7 +414,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-app-switcher:build"
                     }
@@ -475,7 +427,7 @@
             "sourceRoot": "packages/components-dev/autocomplete",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/autocomplete"
@@ -483,7 +435,6 @@
                         "tsConfig": "packages/components-dev/autocomplete/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -492,7 +443,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-autocomplete:build"
                     }
@@ -505,7 +456,7 @@
             "sourceRoot": "packages/components-dev/badge",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/badge"
@@ -513,7 +464,6 @@
                         "tsConfig": "packages/components-dev/badge/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -522,7 +472,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-badge:build"
                     }
@@ -535,7 +485,7 @@
             "sourceRoot": "packages/components-dev/flag",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/flag"
@@ -543,7 +493,6 @@
                         "tsConfig": "packages/components-dev/flag/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -552,7 +501,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-flag:build"
                     }
@@ -565,7 +514,7 @@
             "sourceRoot": "packages/components-dev/breadcrumbs",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/breadcrumbs"
@@ -573,7 +522,6 @@
                         "tsConfig": "packages/components-dev/breadcrumbs/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -582,7 +530,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-breadcrumbs:build"
                     }
@@ -595,7 +543,7 @@
             "sourceRoot": "packages/components-dev/button",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/button"
@@ -603,7 +551,6 @@
                         "tsConfig": "packages/components-dev/button/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -612,7 +559,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-button:build"
                     }
@@ -625,7 +572,7 @@
             "sourceRoot": "packages/components-dev/icon-adopted-stylesheets",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/icon-adopted-stylesheets"
@@ -640,7 +587,6 @@
                                 "output": "assets/kbq-icons"
                             }
                         ],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -649,7 +595,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-icon-adopted-stylesheets:build"
                     }
@@ -662,7 +608,7 @@
             "sourceRoot": "packages/components-dev/button-toggle",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/button-toggle"
@@ -670,7 +616,6 @@
                         "tsConfig": "packages/components-dev/button-toggle/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -679,7 +624,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-button-toggle:build"
                     }
@@ -692,7 +637,7 @@
             "sourceRoot": "packages/components-dev/checkbox",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/checkbox"
@@ -700,7 +645,6 @@
                         "tsConfig": "packages/components-dev/checkbox/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -709,7 +653,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-checkbox:build"
                     }
@@ -722,7 +666,7 @@
             "sourceRoot": "packages/components-dev/clamped-text",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/clamped-text"
@@ -730,7 +674,6 @@
                         "tsConfig": "packages/components-dev/clamped-text/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -739,7 +682,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-clamped-text:build"
                     }
@@ -752,7 +695,7 @@
             "sourceRoot": "packages/components-dev/code-block",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/code-block"
@@ -760,7 +703,6 @@
                         "tsConfig": "packages/components-dev/code-block/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -769,7 +711,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-code-block:build"
                     }
@@ -782,7 +724,7 @@
             "sourceRoot": "packages/components-dev/content-panel",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/content-panel"
@@ -790,7 +732,6 @@
                         "tsConfig": "packages/components-dev/content-panel/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -799,7 +740,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-content-panel:build"
                     }
@@ -812,7 +753,7 @@
             "sourceRoot": "packages/components-dev/date-formatter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/date-formatter"
@@ -820,7 +761,6 @@
                         "tsConfig": "packages/components-dev/date-formatter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -829,7 +769,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-date-formatter:build"
                     }
@@ -842,7 +782,7 @@
             "sourceRoot": "packages/components-dev/date-pipes",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/date-pipes"
@@ -850,7 +790,6 @@
                         "tsConfig": "packages/components-dev/date-pipes/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -859,7 +798,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-date-pipes:build"
                     }
@@ -872,7 +811,7 @@
             "sourceRoot": "packages/components-dev/datepicker",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/datepicker"
@@ -880,7 +819,6 @@
                         "tsConfig": "packages/components-dev/datepicker/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -889,7 +827,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-datepicker:build"
                     }
@@ -902,7 +840,7 @@
             "sourceRoot": "packages/components-dev/divider",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/divider"
@@ -910,7 +848,6 @@
                         "tsConfig": "packages/components-dev/divider/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -919,7 +856,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-divider:build"
                     }
@@ -932,7 +869,7 @@
             "sourceRoot": "packages/components-dev/dl",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/dl"
@@ -940,7 +877,6 @@
                         "tsConfig": "packages/components-dev/dl/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -949,7 +885,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-dl:build"
                     }
@@ -962,7 +898,7 @@
             "sourceRoot": "packages/components-dev/dynamic-translation",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/dynamic-translation"
@@ -970,7 +906,6 @@
                         "tsConfig": "packages/components-dev/dynamic-translation/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -979,7 +914,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-dynamic-translation:build"
                     }
@@ -992,7 +927,7 @@
             "sourceRoot": "packages/components-dev/dropdown",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/dropdown"
@@ -1000,7 +935,6 @@
                         "tsConfig": "packages/components-dev/dropdown/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1009,7 +943,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-dropdown:build"
                     }
@@ -1022,7 +956,7 @@
             "sourceRoot": "packages/e2e",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/e2e"
@@ -1038,7 +972,6 @@
                         "tsConfig": "packages/e2e/tsconfig.app.json",
                         "index": "packages/e2e/index.html",
                         "styles": ["packages/e2e/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1070,7 +1003,7 @@
                     "defaultConfiguration": "production"
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "configurations": {
                         "production": {
                             "buildTarget": "dev-e2e:build:production"
@@ -1089,7 +1022,7 @@
             "sourceRoot": "packages/components-dev/empty-state",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/empty-state"
@@ -1104,7 +1037,6 @@
                         "tsConfig": "packages/components-dev/empty-state/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1113,7 +1045,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-empty-state:build"
                     }
@@ -1126,7 +1058,7 @@
             "sourceRoot": "packages/components-dev/form-field",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/form-field"
@@ -1134,7 +1066,6 @@
                         "tsConfig": "packages/components-dev/form-field/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1143,7 +1074,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-form-field:build"
                     }
@@ -1156,7 +1087,7 @@
             "sourceRoot": "packages/components-dev/forms",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/forms"
@@ -1164,7 +1095,6 @@
                         "tsConfig": "packages/components-dev/forms/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1173,7 +1103,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-forms:build"
                     }
@@ -1186,7 +1116,7 @@
             "sourceRoot": "packages/components-dev/flex-layout",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/flex-layout"
@@ -1194,7 +1124,6 @@
                         "tsConfig": "packages/components-dev/flex-layout/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1203,7 +1132,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-flex-layout:build"
                     }
@@ -1216,7 +1145,7 @@
             "sourceRoot": "packages/components-dev/file-upload",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/file-upload"
@@ -1224,7 +1153,6 @@
                         "tsConfig": "packages/components-dev/file-upload/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1233,7 +1161,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-file-upload:build"
                     }
@@ -1246,7 +1174,7 @@
             "sourceRoot": "packages/components-dev/filesize-formatter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/filesize-formatter"
@@ -1254,7 +1182,6 @@
                         "tsConfig": "packages/components-dev/filesize-formatter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1263,7 +1190,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-filesize-formatter:build"
                     }
@@ -1276,7 +1203,7 @@
             "sourceRoot": "packages/components-dev/filter-bar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/filter-bar"
@@ -1284,7 +1211,6 @@
                         "tsConfig": "packages/components-dev/filter-bar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1293,7 +1219,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-filter-bar:build"
                     }
@@ -1306,7 +1232,7 @@
             "sourceRoot": "packages/components-dev/icon",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/icon"
@@ -1326,7 +1252,6 @@
                         "tsConfig": "packages/components-dev/icon/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1335,7 +1260,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-icon:build"
                     }
@@ -1348,7 +1273,7 @@
             "sourceRoot": "packages/components-dev/icon-item",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/icon-item"
@@ -1356,7 +1281,6 @@
                         "tsConfig": "packages/components-dev/icon-item/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1365,7 +1289,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-icon-item:build"
                     }
@@ -1378,7 +1302,7 @@
             "sourceRoot": "packages/components-dev/highlight",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/highlight"
@@ -1386,7 +1310,6 @@
                         "tsConfig": "packages/components-dev/highlight/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1395,7 +1318,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-highlight:build"
                     }
@@ -1408,7 +1331,7 @@
             "sourceRoot": "packages/components-dev/hint",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/hint"
@@ -1416,7 +1339,6 @@
                         "tsConfig": "packages/components-dev/hint/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1425,7 +1347,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-hint:build"
                     }
@@ -1438,7 +1360,7 @@
             "sourceRoot": "packages/components-dev/inline-edit",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/inline-edit"
@@ -1446,7 +1368,6 @@
                         "tsConfig": "packages/components-dev/inline-edit/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1455,7 +1376,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-inline-edit:build"
                     }
@@ -1468,7 +1389,7 @@
             "sourceRoot": "packages/components-dev/input",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/input"
@@ -1476,7 +1397,6 @@
                         "tsConfig": "packages/components-dev/input/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1485,7 +1405,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-input:build"
                     }
@@ -1498,7 +1418,7 @@
             "sourceRoot": "packages/components-dev/link",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/link"
@@ -1506,7 +1426,6 @@
                         "tsConfig": "packages/components-dev/link/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1515,7 +1434,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-link:build"
                     }
@@ -1528,7 +1447,7 @@
             "sourceRoot": "packages/components-dev/list",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/list"
@@ -1536,7 +1455,6 @@
                         "tsConfig": "packages/components-dev/list/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1545,7 +1463,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-list:build"
                     }
@@ -1558,7 +1476,7 @@
             "sourceRoot": "packages/components-dev/loader-overlay",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/loader-overlay"
@@ -1566,7 +1484,6 @@
                         "tsConfig": "packages/components-dev/loader-overlay/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1575,7 +1492,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-loader-overlay:build"
                     }
@@ -1588,7 +1505,7 @@
             "sourceRoot": "packages/components-dev/locale",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/locale"
@@ -1596,7 +1513,6 @@
                         "tsConfig": "packages/components-dev/locale/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1605,7 +1521,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-locale:build"
                     }
@@ -1618,7 +1534,7 @@
             "sourceRoot": "packages/markdown-dev/markdown",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/markdown"
@@ -1626,7 +1542,6 @@
                         "tsConfig": "packages/components-dev/markdown/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1635,7 +1550,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-markdown:build"
                     }
@@ -1648,7 +1563,7 @@
             "sourceRoot": "packages/components-dev/modal",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/modal"
@@ -1656,7 +1571,6 @@
                         "tsConfig": "packages/components-dev/modal/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1665,7 +1579,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-modal:build"
                     }
@@ -1678,7 +1592,7 @@
             "sourceRoot": "packages/components-dev/navbar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/navbar"
@@ -1686,7 +1600,6 @@
                         "tsConfig": "packages/components-dev/navbar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1695,7 +1608,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-navbar:build"
                     }
@@ -1708,7 +1621,7 @@
             "sourceRoot": "packages/components-dev/number-formatter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/number-formatter"
@@ -1716,7 +1629,6 @@
                         "tsConfig": "packages/components-dev/number-formatter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1725,7 +1637,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-number-formatter:build"
                     }
@@ -1738,7 +1650,7 @@
             "sourceRoot": "packages/components-dev/notification-center",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/notification-center"
@@ -1746,7 +1658,6 @@
                         "tsConfig": "packages/components-dev/notification-center/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1755,7 +1666,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-notification-center:build"
                     }
@@ -1768,7 +1679,7 @@
             "sourceRoot": "packages/components-dev/overflow-items",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/overflow-items"
@@ -1776,7 +1687,6 @@
                         "tsConfig": "packages/components-dev/overflow-items/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1785,7 +1695,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-overflow-items:build"
                     }
@@ -1798,7 +1708,7 @@
             "sourceRoot": "packages/components-dev/popover",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/popover"
@@ -1806,7 +1716,6 @@
                         "tsConfig": "packages/components-dev/popover/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1815,7 +1724,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-popover:build"
                     }
@@ -1828,7 +1737,7 @@
             "sourceRoot": "packages/components-dev/progress-bar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/progress-bar"
@@ -1836,7 +1745,6 @@
                         "tsConfig": "packages/components-dev/progress-bar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1845,7 +1753,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-progress-bar:build"
                     }
@@ -1858,7 +1766,7 @@
             "sourceRoot": "packages/components-dev/progress-spinner",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/progress-spinner"
@@ -1866,7 +1774,6 @@
                         "tsConfig": "packages/components-dev/progress-spinner/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1875,7 +1782,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-progress-spinner:build"
                     }
@@ -1888,7 +1795,7 @@
             "sourceRoot": "packages/components-dev/radio",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/radio"
@@ -1896,7 +1803,6 @@
                         "tsConfig": "packages/components-dev/radio/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1905,7 +1811,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-radio:build"
                     }
@@ -1918,7 +1824,7 @@
             "sourceRoot": "packages/components-dev/resizer",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/resizer"
@@ -1926,7 +1832,6 @@
                         "tsConfig": "packages/components-dev/resizer/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1935,7 +1840,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-resizer:build"
                     }
@@ -1948,7 +1853,7 @@
             "sourceRoot": "packages/components-dev/scrollbar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/scrollbar"
@@ -1956,7 +1861,6 @@
                         "tsConfig": "packages/components-dev/scrollbar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1965,7 +1869,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-scrollbar:build"
                     }
@@ -1978,7 +1882,7 @@
             "sourceRoot": "packages/components-dev/search-expandable",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/search-expandable"
@@ -1986,7 +1890,6 @@
                         "tsConfig": "packages/components-dev/search-expandable/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -1995,7 +1898,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-search-expandable:build"
                     }
@@ -2008,7 +1911,7 @@
             "sourceRoot": "packages/components-dev/select",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/select"
@@ -2016,7 +1919,6 @@
                         "tsConfig": "packages/components-dev/select/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2025,7 +1927,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-select:build"
                     }
@@ -2038,7 +1940,7 @@
             "sourceRoot": "packages/components-dev/sidebar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/sidebar"
@@ -2046,7 +1948,6 @@
                         "tsConfig": "packages/components-dev/sidebar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2055,7 +1956,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-sidebar:build"
                     }
@@ -2068,7 +1969,7 @@
             "sourceRoot": "packages/components-dev/sidepanel",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/sidepanel"
@@ -2076,7 +1977,6 @@
                         "tsConfig": "packages/components-dev/sidepanel/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2085,7 +1985,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-sidepanel:build"
                     }
@@ -2098,7 +1998,7 @@
             "sourceRoot": "packages/components-dev/skeleton",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/skeleton"
@@ -2106,7 +2006,6 @@
                         "tsConfig": "packages/components-dev/skeleton/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2115,7 +2014,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-skeleton:build"
                     }
@@ -2128,7 +2027,7 @@
             "sourceRoot": "packages/components-dev/splitter",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/splitter"
@@ -2136,7 +2035,6 @@
                         "tsConfig": "packages/components-dev/splitter/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2145,7 +2043,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-splitter:build"
                     }
@@ -2158,7 +2056,7 @@
             "sourceRoot": "packages/components-dev/split-button",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/split-button"
@@ -2166,7 +2064,6 @@
                         "tsConfig": "packages/components-dev/split-button/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2175,7 +2072,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-split-button:build"
                     }
@@ -2188,7 +2085,7 @@
             "sourceRoot": "packages/components-dev/ssr",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/ssr"
@@ -2196,7 +2093,6 @@
                         "tsConfig": "packages/components-dev/ssr/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "browser": "packages/components-dev/ssr/main.ts",
                         "server": "packages/components-dev/ssr/main.server.ts",
                         "prerender": true,
@@ -2222,7 +2118,7 @@
                     "defaultConfiguration": "production"
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "configurations": {
                         "production": {
                             "buildTarget": "dev-ssr:build:production"
@@ -2241,7 +2137,7 @@
             "sourceRoot": "packages/components-dev/table",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/table"
@@ -2249,7 +2145,6 @@
                         "tsConfig": "packages/components-dev/table/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2258,7 +2153,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-table:build"
                     }
@@ -2271,7 +2166,7 @@
             "sourceRoot": "packages/components-dev/tabs",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tabs"
@@ -2279,7 +2174,6 @@
                         "tsConfig": "packages/components-dev/tabs/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2288,7 +2182,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tabs:build"
                     }
@@ -2301,7 +2195,7 @@
             "sourceRoot": "packages/components-dev/tag",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tag"
@@ -2309,7 +2203,6 @@
                         "tsConfig": "packages/components-dev/tag/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2318,7 +2211,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tag:build"
                     }
@@ -2331,7 +2224,7 @@
             "sourceRoot": "packages/components-dev/textarea",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/textarea"
@@ -2339,7 +2232,6 @@
                         "tsConfig": "packages/components-dev/textarea/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2348,7 +2240,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-textarea:build"
                     }
@@ -2361,7 +2253,7 @@
             "sourceRoot": "packages/components-dev/timepicker",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/timepicker"
@@ -2369,7 +2261,6 @@
                         "tsConfig": "packages/components-dev/timepicker/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2378,7 +2269,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-timepicker:build"
                     }
@@ -2391,7 +2282,7 @@
             "sourceRoot": "packages/components-dev/time-range",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/time-range"
@@ -2399,7 +2290,6 @@
                         "tsConfig": "packages/components-dev/time-range/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2408,7 +2298,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-time-range:build"
                     }
@@ -2421,7 +2311,7 @@
             "sourceRoot": "packages/components-dev/timezone",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/timezone"
@@ -2429,7 +2319,6 @@
                         "tsConfig": "packages/components-dev/timezone/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2438,7 +2327,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-timezone:build"
                     }
@@ -2451,14 +2340,13 @@
             "sourceRoot": "packages/components-dev/toast",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": "dist/components-dev/toast",
                         "tsConfig": "packages/components-dev/toast/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
                         "browser": "packages/components-dev/toast/main.ts",
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2466,7 +2354,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-toast:build"
                     }
@@ -2479,14 +2367,13 @@
             "sourceRoot": "packages/components-dev/toast-shadow-dom",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": "dist/components-dev/toast-shadow-dom",
                         "tsConfig": "packages/components-dev/toast-shadow-dom/tsconfig.app.json",
                         "index": "packages/components-dev/toast-shadow-dom/index.html",
                         "styles": ["packages/components-dev/main.scss"],
                         "browser": "packages/components-dev/toast-shadow-dom/main.ts",
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2494,7 +2381,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-toast-shadow-dom:build"
                     }
@@ -2507,7 +2394,7 @@
             "sourceRoot": "packages/components-dev/toggle",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/toggle"
@@ -2515,7 +2402,6 @@
                         "tsConfig": "packages/components-dev/toggle/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2524,7 +2410,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-toggle:build"
                     }
@@ -2537,7 +2423,7 @@
             "sourceRoot": "packages/components-dev/top-bar",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/top-bar"
@@ -2545,7 +2431,6 @@
                         "tsConfig": "packages/components-dev/top-bar/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2554,7 +2439,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-top-bar:build"
                     }
@@ -2567,7 +2452,7 @@
             "sourceRoot": "packages/components-dev/tooltip",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tooltip"
@@ -2575,7 +2460,6 @@
                         "tsConfig": "packages/components-dev/tooltip/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2584,7 +2468,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tooltip:build"
                     }
@@ -2597,7 +2481,7 @@
             "sourceRoot": "packages/components-dev/tree",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tree"
@@ -2605,7 +2489,6 @@
                         "tsConfig": "packages/components-dev/tree/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2614,7 +2497,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tree:build"
                     }
@@ -2627,7 +2510,7 @@
             "sourceRoot": "packages/components-dev/tree-select",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/tree-select"
@@ -2635,7 +2518,6 @@
                         "tsConfig": "packages/components-dev/tree-select/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2644,7 +2526,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-tree-select:build"
                     }
@@ -2657,7 +2539,7 @@
             "sourceRoot": "packages/components-dev/typography",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/typography"
@@ -2665,7 +2547,6 @@
                         "tsConfig": "packages/components-dev/typography/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2674,7 +2555,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-typography:build"
                     }
@@ -2687,7 +2568,7 @@
             "sourceRoot": "packages/components-dev/title",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/title"
@@ -2695,7 +2576,6 @@
                         "tsConfig": "packages/components-dev/title/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2704,7 +2584,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-title:build"
                     }
@@ -2717,7 +2597,7 @@
             "sourceRoot": "packages/components-dev/username",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/username"
@@ -2725,7 +2605,6 @@
                         "tsConfig": "packages/components-dev/username/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2734,7 +2613,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-username:build"
                     }
@@ -2747,7 +2626,7 @@
             "sourceRoot": "packages/components-dev/validation",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/validation"
@@ -2755,7 +2634,6 @@
                         "tsConfig": "packages/components-dev/validation/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2764,7 +2642,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-validation:build"
                     }
@@ -2777,7 +2655,7 @@
             "sourceRoot": "packages/components-dev/z-index",
             "architect": {
                 "build": {
-                    "builder": "@angular-devkit/build-angular:application",
+                    "builder": "@angular/build:application",
                     "options": {
                         "outputPath": {
                             "base": "dist/components-dev/z-index"
@@ -2785,7 +2663,6 @@
                         "tsConfig": "packages/components-dev/z-index/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
-                        "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
@@ -2794,7 +2671,7 @@
                     }
                 },
                 "serve": {
-                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "builder": "@angular/build:dev-server",
                     "options": {
                         "buildTarget": "dev-z-index:build"
                     }

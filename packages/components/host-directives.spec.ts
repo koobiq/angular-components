@@ -21,7 +21,7 @@ interface HostDirectivesScan {
 }
 
 // Resolving the directives takes a TypeScript program over the library.
-jest.setTimeout(20_000);
+vi.setConfig({ testTimeout: 20_000 });
 
 const libraryRoot = __dirname;
 const repositoryRoot = join(libraryRoot, '../..');

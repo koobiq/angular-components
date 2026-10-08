@@ -57,8 +57,8 @@ export class KbqTimezoneModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimezoneModule>;
-    // Warning: (ae-forgotten-export) The symbol "UtcOffsetPipe" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "CitiesByFilterPipe" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "UtcOffsetPipe" needs to be exported by the entry point koobiq-components-timezone.d.ts
+    // Warning: (ae-forgotten-export) The symbol "CitiesByFilterPipe" needs to be exported by the entry point koobiq-components-timezone.d.ts
     //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof i1.OverlayModule, typeof i2.KbqOptionModule, typeof i3.KbqSelectModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqToolTipModule, typeof i2.KbqHighlightModule, typeof i7.KeyValuePipe, typeof i8.A11yModule, typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger], [typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger, typeof i14.KbqFormFieldModule]>;
@@ -69,17 +69,17 @@ export class KbqTimezoneOption extends KbqOption {
     readonly foldDiacritics: i0.InputSignal<boolean>;
     // (undocumented)
     readonly highlightText: i0.InputSignal<string | readonly string[]>;
-    // (undocumented)
     get timezone(): KbqTimezoneZone;
-    set timezone(zone: KbqTimezoneZone);
+    readonly timezoneInput: i0.InputSignal<KbqTimezoneZone>;
     // (undocumented)
     readonly tooltipContent: i0.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
     readonly tooltipContentWrapper: i0.Signal<ElementRef<HTMLElement>>;
+    get value(): string;
     // (undocumented)
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "foldDiacritics": { "alias": "foldDiacritics"; "required": false; "isSignal": true; }; "timezone": { "alias": "timezone"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "foldDiacritics": { "alias": "foldDiacritics"; "required": false; "isSignal": true; }; "timezoneInput": { "alias": "timezone"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneOption, never>;
 }

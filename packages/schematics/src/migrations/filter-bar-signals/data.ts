@@ -39,8 +39,7 @@ export interface Replacement {
 
 /**
  * Safe, idempotent identifier renames applied to `.ts` files. The `\b…\b` boundaries make each rule
- * idempotent. `KbqFilterBarRefresher` is still re-exported as an alias of `KbqFilterRefresher`, so this
- * is optional cleanup that can never break a consumer build.
+ * idempotent. The `KbqFilterBarRefresher` alias was removed in 21.0.0.
  */
 export const tsRenameReplacements: Replacement[] = [{ from: '\\bKbqFilterBarRefresher\\b', to: 'KbqFilterRefresher' }];
 

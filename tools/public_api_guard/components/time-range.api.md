@@ -22,7 +22,6 @@ import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimeRangeLocaleConfiguration } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
@@ -129,7 +128,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     constructor();
     readonly availableTimeRangeTypes: _angular_core.InputSignal<KbqTimeRangeType[]>;
     protected readonly boundsHint: _angular_core.Signal<string>;
-    // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "FormValue" needs to be exported by the entry point koobiq-components-time-range.d.ts
     protected readonly form: FormGroup<FormValue<T>>;
     protected readonly isRangeVisible: _angular_core.Signal<boolean>;
     // (undocumented)
@@ -138,7 +137,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     readonly minDate: _angular_core.InputSignal<T | null>;
     // (undocumented)
     ngOnInit(): void;
-    // Warning: (ae-forgotten-export) The symbol "RangeBorder" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "RangeBorder" needs to be exported by the entry point koobiq-components-time-range.d.ts
     protected onBorderFocusOut(border: RangeBorder, input: FocusEvent): void;
     protected onBorderInput(border: RangeBorder): void;
     onChange: (_value: KbqTimeRangeRange) => void;
@@ -146,7 +145,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     onTouch: () => void;
     readonly optionTemplate: _angular_core.InputSignal<TemplateRef<KbqTimeRangeOptionContext> | undefined>;
     protected outOfBoundsMessage(): string;
-    // Warning: (ae-forgotten-export) The symbol "RangeErrorStateMatcher" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "RangeErrorStateMatcher" needs to be exported by the entry point koobiq-components-time-range.d.ts
     protected readonly rangeStateMatcher: RangeErrorStateMatcher;
     readonly rangeValue: _angular_core.InputSignal<Required<KbqRangeValue<T>>>;
     registerOnChange(fn: (value: KbqTimeRangeRange) => void): void;
@@ -210,20 +209,19 @@ export class KbqTimeRangeTitle {
 // @public
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     protected readonly ariaLabelledby: _angular_core.Signal<string | null>;
-    controlType: string;
-    disabled: boolean;
-    empty: boolean;
-    errorState: boolean;
+    readonly controlType = "select";
+    readonly disabled: _angular_core.Signal<boolean>;
+    readonly empty: _angular_core.Signal<boolean>;
+    readonly errorState: _angular_core.Signal<boolean>;
     focus(_options?: FocusOptions): void;
-    focused: boolean;
-    id: string;
+    readonly focused: _angular_core.Signal<boolean>;
+    readonly id: _angular_core.Signal<string>;
     readonly isNativeLabelSupported = false;
-    ngControl: NgControl | null;
+    readonly ngControl: NgControl | null;
     onContainerClick(_event: MouseEvent): void;
-    placeholder: string;
-    required: boolean;
-    stateChanges: Observable<void>;
-    value: any;
+    readonly placeholder: _angular_core.Signal<string | undefined>;
+    readonly required: _angular_core.Signal<boolean>;
+    readonly value: _angular_core.Signal<any>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRangeTitleAsControl, "kbq-time-range-title-as-control", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -259,7 +257,7 @@ export type KbqTimeRangeTypeContext = {
 export interface KbqTimeRangeUnits extends DurationObjectUnits {
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqTimeRangeService" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "KbqTimeRangeService" needs to be exported by the entry point koobiq-components-time-range.d.ts
 //
 // @public
 export const rangeValidator: <T>(timeRangeService: KbqTimeRangeService<T>) => ValidatorFn;

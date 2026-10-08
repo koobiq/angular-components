@@ -1,8 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import {
     KbqButton,
@@ -27,7 +26,6 @@ describe('KbqSplitButton', () => {
                 KbqSplitButtonModule,
                 KbqButtonModule,
                 KbqDropdownModule,
-                NoopAnimationsModule,
                 TestApp,
                 TestAppEnabled,
                 TestAppInputs,
@@ -176,7 +174,7 @@ describe('KbqSplitButton', () => {
 
         it('should default color on nested buttons to contrast-fade', () => {
             buttons.forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.ContrastFade);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.ContrastFade);
             });
         });
 
@@ -185,7 +183,7 @@ describe('KbqSplitButton', () => {
             fixture.detectChanges();
 
             buttons.forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.Theme);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.Theme);
             });
         });
 
@@ -197,7 +195,7 @@ describe('KbqSplitButton', () => {
             fixture.detectChanges();
 
             buttons.forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.ContrastFade);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.ContrastFade);
             });
         });
 
@@ -207,7 +205,7 @@ describe('KbqSplitButton', () => {
             unboundFixture.detectChanges();
 
             unboundFixture.debugElement.queryAll(By.directive(KbqButton)).forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.Contrast);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.Contrast);
             });
         });
 
@@ -219,7 +217,7 @@ describe('KbqSplitButton', () => {
             fixture.detectChanges();
 
             buttons.forEach((btn) => {
-                expect(btn.injector.get(KbqButton).color).toBe(KbqComponentColors.Theme);
+                expect(btn.injector.get(KbqButton).color()).toBe(KbqComponentColors.Theme);
             });
         });
     });
@@ -384,12 +382,14 @@ describe('KbqSplitButton', () => {
 
             const [first, second] = getButtons(fixture);
 
-            expect(first.color).toBe(KbqComponentColors.Theme);
-            expect(second.color).toBe(KbqComponentColors.ContrastFade);
+            expect(first.color()).toBe(KbqComponentColors.Theme);
+            expect(second.color()).toBe(KbqComponentColors.ContrastFade);
         });
     });
 
     describe('dynamic buttons', () => {
+        afterEach(() => vi.useRealTimers());
+
         it('should reassign the position classes when a button is added', () => {
             const fixture = TestBed.createComponent(TestAppDynamicButtons);
 
@@ -438,7 +438,9 @@ describe('KbqSplitButton', () => {
             });
         });
 
-        it('should stop reacting to button changes once the split button is destroyed', fakeAsync(() => {
+        it('should stop reacting to button changes once the split button is destroyed', async () => {
+            vi.useFakeTimers();
+
             const fixture = TestBed.createComponent(TestAppDynamicButtons);
 
             fixture.componentInstance.showSecond = true;
@@ -454,10 +456,10 @@ describe('KbqSplitButton', () => {
             first.classList.remove('kbq-split-button_first');
             fixture.destroy();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(first.classList.contains('kbq-split-button_first')).toBe(false);
-        }));
+        });
     });
 
     describe('dropdown integration', () => {
@@ -486,8 +488,8 @@ describe('KbqSplitButton', () => {
             const hostEl = fixture.debugElement.query(By.directive(KbqSplitButton)).nativeElement;
             const triggerDebugEl = fixture.debugElement.query(By.directive(KbqDropdownTrigger));
 
-            jest.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({ width: 600 } as DOMRect);
-            jest.spyOn(triggerDebugEl.nativeElement, 'getBoundingClientRect').mockReturnValue({ width: 50 } as DOMRect);
+            vi.spyOn(hostEl, 'getBoundingClientRect').mockReturnValue({ width: 600 } as DOMRect);
+            vi.spyOn(triggerDebugEl.nativeElement, 'getBoundingClientRect').mockReturnValue({ width: 50 } as DOMRect);
 
             fixture.detectChanges();
 

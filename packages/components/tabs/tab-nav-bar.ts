@@ -8,22 +8,23 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChildren,
+    contentChildren,
     Directive,
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     QueryList,
     Renderer2,
-    ViewChild,
+    SimpleChanges,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isUndefined } from '@koobiq/components/core';
+import { isUndefined, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { startWith } from 'rxjs/operators';
@@ -68,13 +69,45 @@ const TAB_PADDING = 12;
     exportAs: 'kbqTabNavBar'
 })
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {
-    @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
-    @ViewChild('tabListContainer', { static: true, read: KbqScrollbarViewport })
-    protected readonly scrollbarViewport: KbqScrollbarViewport;
-    @ViewChild('tabList', { static: true }) readonly tabList: ElementRef;
-    @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
-    @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
-    @ContentChildren(forwardRef(() => KbqTabLink), { descendants: true }) readonly items: QueryList<KbqTabLink>;
+    private readonly tabListContainerQuery = viewChild.required<ElementRef>('tabListContainer');
+    private readonly scrollbarViewportQuery = viewChild.required('tabListContainer', { read: KbqScrollbarViewport });
+    private readonly tabListQuery = viewChild.required<ElementRef>('tabList');
+    private readonly nextPaginatorQuery = viewChild.required<ElementRef<HTMLElement>>('nextPaginator');
+    private readonly previousPaginatorQuery = viewChild.required<ElementRef<HTMLElement>>('previousPaginator');
+    private readonly itemsQuery = contentChildren(
+        forwardRef(() => KbqTabLink),
+        { descendants: true }
+    );
+    private readonly itemsList = kbqQueryListFrom(this.itemsQuery);
+
+    /** The scroll container of the tab links. */
+    get tabListContainer(): ElementRef {
+        return this.tabListContainerQuery();
+    }
+
+    protected get scrollbarViewport(): KbqScrollbarViewport {
+        return this.scrollbarViewportQuery();
+    }
+
+    /** The element that holds the tab links. */
+    get tabList(): ElementRef {
+        return this.tabListQuery();
+    }
+
+    /** The pagination arrow towards the end of the tab list. */
+    get nextPaginator(): ElementRef<HTMLElement> {
+        return this.nextPaginatorQuery();
+    }
+
+    /** The pagination arrow towards the beginning of the tab list. */
+    get previousPaginator(): ElementRef<HTMLElement> {
+        return this.previousPaginatorQuery();
+    }
+
+    /** The tab links of the nav bar. */
+    get items(): QueryList<KbqTabLink> {
+        return this.itemsList();
+    }
 
     private readonly isBrowser = inject(Platform).isBrowser;
 
@@ -118,6 +151,9 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         return !!this.items.get(this.selectedIndex)?.disabled;
     }
 
+    /** `activeTabDisabled` as this view last rendered it: a link's `disabled` input gives this view no notice. */
+    private checkedActiveTabDisabled = false;
+
     override ngAfterContentInit() {
         // We need this to run before the `changes` subscription in parent to ensure that the `selectedIndex` is
         // up-to-date by the time the `KbqPaginatedTabHeader` starts looking for it.
@@ -126,6 +162,17 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         });
 
         super.ngAfterContentInit();
+    }
+
+    override ngAfterContentChecked(): void {
+        super.ngAfterContentChecked();
+
+        const activeTabDisabled = this.activeTabDisabled;
+
+        if (activeTabDisabled !== this.checkedActiveTabDisabled) {
+            this.checkedActiveTabDisabled = activeTabDisabled;
+            this.changeDetectorRef.markForCheck();
+        }
     }
 
     protected itemSelected() {}
@@ -141,6 +188,7 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         for (let i = 0; i < items.length; i++) {
             if (items[i].active) {
                 this.selectedIndex = i;
+                // Also marks the ancestors, whose check runs `ngAfterContentChecked` and scrolls to the link.
                 this.changeDetectorRef.markForCheck();
 
                 const tabNavPanel = this.tabNavPanel();
@@ -185,16 +233,32 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
     },
     exportAs: 'kbqTabLink'
 })
-export class KbqTabLink implements OnDestroy, AfterViewInit {
+export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
+
+    /** @docs-private */
+    readonly activeInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'active',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
     /** Unique id for the link. */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input() id = `kbq-tab-link-${nextUniqueId++}`;
+    id = `kbq-tab-link-${nextUniqueId++}`;
 
     /** Whether the link is active. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get active(): boolean {
         return this._active;
     }
@@ -218,14 +282,9 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
     }
 
     /** Whether the tab link is disabled. */
-    // TODO: Skipped for migration because:
-    //  Class of this input is referenced in the signature of another class.
-    @Input({ transform: booleanAttribute }) disabled: boolean = false;
+    disabled: boolean = false;
 
     /** Link tab index. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         if (this.tabNavBar.tabNavPanel()) {
             return this.active && !this.disabled ? this._tabIndex : -1;
@@ -270,6 +329,34 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly renderer = inject(Renderer2);
     private readonly tabNavBar = inject(KbqTabNavBar);
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['idInput']) {
+            const id = this.idInput();
+
+            if (id !== undefined) this.id = id;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+
+        // Last: the nav bar reads the id of the link that becomes active.
+        if (changes['activeInput']) {
+            const active = this.activeInput();
+
+            if (active !== undefined) this.active = active;
+        }
+    }
 
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef.nativeElement);

@@ -77,14 +77,10 @@ describe(`ng add '@koobiq/components'`, () => {
         expect(missing).toEqual([]);
     });
 
-    it(`should install '@angular/animations' at the range the application uses for '@angular/core'`, async () => {
-        const angularCore = getPackageJsonDependencies(appTree)['@angular/core'];
+    it(`should not install '@angular/animations', which the components no longer need`, async () => {
         const tree = await runner.runSchematic('ng-add', {}, appTree);
 
-        // Every `@angular/animations` release pins `@angular/core` exactly, so installing the range
-        // this repository builds with would produce ERESOLVE for applications on any other version.
-        expect(angularCore).toBeDefined();
-        expect(getPackageJsonDependencies(tree)['@angular/animations']).toBe(angularCore);
+        expect(getPackageJsonDependencies(tree)['@angular/animations']).toBeUndefined();
     });
 
     it(`should report when specified 'project' is not found`, async () => {
@@ -93,7 +89,7 @@ describe(`ng add '@koobiq/components'`, () => {
         );
     });
 
-    describe('styles, theme and animations', () => {
+    describe('styles and theme', () => {
         it(`should install the auto theme by default`, async () => {
             const tree = await runner.runSchematic('ng-add', { project: 'app' }, appTree);
 
@@ -166,14 +162,8 @@ describe(`ng add '@koobiq/components'`, () => {
             expect(bootstrapSource).toContain('inject(KbqThemeService)');
         });
 
-        it(`should add 'provideAnimations()' by default`, async () => {
+        it(`should not add 'provideAnimations()'`, async () => {
             const tree = await runner.runSchematic('ng-add', { project: 'app' }, appTree);
-
-            expect(getBootstrapSource(tree, 'app')).toContain('provideAnimations()');
-        });
-
-        it(`should skip 'provideAnimations()' when 'animations' is false`, async () => {
-            const tree = await runner.runSchematic('ng-add', { project: 'app', animations: false }, appTree);
 
             expect(getBootstrapSource(tree, 'app')).not.toContain('provideAnimations');
         });
@@ -216,7 +206,6 @@ describe(`ng add '@koobiq/components'`, () => {
             const bootstrapSource = getBootstrapSource(tree, 'app');
 
             expect(bootstrapSource.match(/kbqThemeProvider\(/g)).toHaveLength(1);
-            expect(bootstrapSource.match(/provideAnimations\(/g)).toHaveLength(1);
         });
 
         it(`should switch the theme in place when run again with a different theme`, async () => {
@@ -245,8 +234,8 @@ describe(`ng add '@koobiq/components'`, () => {
         it(`should not mistake a library's shipped '.d.ts' declarations for an already-registered provider`, async () => {
             // The default project of a plain `ng new` workspace has `root: ''`, so `tree.getDir(root)`
             // walks the whole tree, including `node_modules` — a real npm package's `.d.ts` can
-            // contain the exact text of a provider call (e.g. `declare function provideAnimations()`
-            // in `@angular/platform-browser`'s own types) well before `ng-add` ever runs.
+            // contain the exact text of a provider call (e.g. `declare function kbqThemeProvider()`
+            // in `@koobiq/components`' own types) well before `ng-add` ever runs.
             let tree = await runner.runExternalSchematic('@schematics/angular', 'workspace', {
                 name: 'workspace',
                 version: '20.0.0',
@@ -261,13 +250,13 @@ describe(`ng add '@koobiq/components'`, () => {
             );
 
             tree.create(
-                '/node_modules/@angular/platform-browser/animations/animations.d.ts',
-                'export declare function provideAnimations(): unknown;\n'
+                '/node_modules/@koobiq/components/core/index.d.ts',
+                'export declare function kbqThemeProvider(): unknown;\n'
             );
 
             const result = await runner.runSchematic('ng-add', { project: 'app' }, tree);
 
-            expect(result.get('/src/app/app.config.ts')!.content.toString()).toContain('provideAnimations()');
+            expect(result.get('/src/app/app.config.ts')!.content.toString()).toContain('kbqThemeProvider(');
         });
 
         it(`should still update package.json/angular.json/index.html and log a warning when the bootstrap file can't be analyzed`, async () => {
@@ -289,9 +278,6 @@ describe(`ng add '@koobiq/components'`, () => {
             ).toBe(true);
             expect(
                 warnings.some((message) => message.includes("Could not automatically start 'KbqThemeService'"))
-            ).toBe(true);
-            expect(
-                warnings.some((message) => message.includes("Could not automatically register 'provideAnimations()'"))
             ).toBe(true);
         });
 
@@ -368,7 +354,7 @@ describe(`ng add '@koobiq/components'`, () => {
             expect(bootstrapSource).toContain('if (isPlatformBrowser(inject(PLATFORM_ID))) inject(KbqThemeService);');
         });
 
-        it(`should still show the animations instruction when no application project is found`, async () => {
+        it(`should report when no application project is found`, async () => {
             let tree = await runner.runExternalSchematic('@schematics/angular', 'workspace', {
                 name: 'workspace',
                 version: '20.0.0',
@@ -386,11 +372,6 @@ describe(`ng add '@koobiq/components'`, () => {
             await runner.runSchematic('ng-add', { project: 'my-lib' }, tree);
 
             expect(warnings.some((message) => message.includes('No application project was found'))).toBe(true);
-            expect(
-                warnings.some((message) =>
-                    message.includes('Angular animations have to be provided by the application.')
-                )
-            ).toBe(true);
         });
     });
 });

@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
 import { ErrorStateMatcher, KbqNormalizeWhitespace } from '@koobiq/components/core';
-import { PasswordRules } from '@koobiq/components/form-field';
 import { KbqInputModule } from './input.module';
 
 type InputStates = {
@@ -133,9 +132,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
                     <kbq-password-toggle />
 
-                    <kbq-password-hint [min]="8" [max]="15" [rule]="passwordRules.Length">
-                        8 - 15 symbols
-                    </kbq-password-hint>
+                    <kbq-reactive-password-hint>8 - 15 symbols</kbq-reactive-password-hint>
 
                     <kbq-reactive-password-hint [hasError]="true">Min length</kbq-reactive-password-hint>
                 </kbq-form-field>
@@ -211,6 +208,4 @@ export class E2eInputStateAndStyle {
         [{ state: ['error', 'focused'] }],
         [{ state: ['disabled'] }]
     ];
-
-    protected readonly passwordRules = PasswordRules;
 }

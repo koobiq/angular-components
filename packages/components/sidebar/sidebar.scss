@@ -1,9 +1,25 @@
+@use '../core/styles/common/animation';
+
 .kbq-sidebar {
     display: inline-block;
 
     height: 100%;
 
     overflow: hidden;
+
+    transition:
+        min-width 100ms,
+        width 100ms,
+        max-width 100ms;
+    // An unconfigured bound is `inherit`, which does not interpolate: it flips halfway instead of clamping the
+    // width at once.
+    transition-behavior: allow-discrete;
+
+    &.kbq-sidebar_opened {
+        transition-duration: 200ms;
+    }
+
+    @include animation.kbq-animations-off();
 }
 
 .kbq-sidebar-opened,

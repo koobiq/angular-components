@@ -3,7 +3,8 @@
  *
  * The full review of `@koobiq/components/form-field` finished the migration of `KbqFormField` and `KbqHint`
  * to a signal-based public API, removed the deprecated `mixinColor` from `core`, and gave the icon-only
- * cleaner and password toggle real button semantics.
+ * cleaner and password toggle real button semantics. `KbqFormFieldControl` followed: the state of every control
+ * is a signal, and `stateChanges` is gone.
  *
  * Value-preserving property → signal reads are auto-fixed; everything whose value or type semantics changed
  * is surfaced as a warning.
@@ -37,12 +38,10 @@ export const FORM_FIELD_TARGET: Target = {
         'cleaner',
         'passwordToggle',
         'hint',
-        'passwordHints',
         'prefix',
         'suffix',
         'hasCleaner',
         'hasHint',
-        'hasPasswordHint',
         'hasPasswordToggle',
         'hasPrefix',
         'hasStepper',
@@ -54,28 +53,74 @@ export const FORM_FIELD_TARGET: Target = {
 /** `fillTextOff` and `compact` became signal inputs on the whole hint family. */
 export const HINT_TARGET: Target = {
     id: 'KbqHint',
-    types: ['KbqHint', 'KbqError', 'KbqPasswordHint', 'KbqReactivePasswordHint'],
-    elements: ['kbq-hint', 'kbq-error', 'kbq-password-hint', 'kbq-reactive-password-hint'],
+    types: ['KbqHint', 'KbqError', 'KbqReactivePasswordHint'],
+    elements: ['kbq-hint', 'kbq-error', 'kbq-reactive-password-hint'],
     signalMembers: ['fillTextOff', 'compact'],
     writableMembers: new Set<string>()
 };
 
-/** `KbqPasswordHint.regex` became a `model()`, so it is both readable as a call and writable via `.set()`. */
-export const PASSWORD_HINT_TARGET: Target = {
-    id: 'KbqPasswordHint',
-    types: ['KbqPasswordHint'],
-    elements: ['kbq-password-hint'],
-    signalMembers: ['regex'],
-    writableMembers: new Set<string>(['regex'])
+/** The `KbqFormFieldControl` state: a signal on every control, read-only unless a target says otherwise. */
+const CONTROL_MEMBERS: readonly string[] = [
+    'value',
+    'id',
+    'placeholder',
+    'focused',
+    'empty',
+    'required',
+    'disabled',
+    'errorState'
+];
+
+/** Controls whose `disabled` the form control also sets, so it stays writable through `.set()`. */
+export const SELECT_CONTROL_TARGET: Target = {
+    id: 'KbqSelect',
+    types: ['KbqSelect', 'KbqTreeSelect', 'KbqTimezoneSelect', 'KbqTimepicker', 'KbqDatepickerInput'],
+    elements: ['kbq-select', 'kbq-tree-select', 'kbq-timezone-select'],
+    signalMembers: CONTROL_MEMBERS,
+    writableMembers: new Set<string>(['disabled'])
 };
 
-export const TARGETS: readonly Target[] = [FORM_FIELD_TARGET, HINT_TARGET, PASSWORD_HINT_TARGET];
+/** `KbqTagList`: `disabled` and `value` are both writable. */
+export const TAG_LIST_CONTROL_TARGET: Target = {
+    id: 'KbqTagList',
+    types: ['KbqTagList'],
+    elements: ['kbq-tag-list'],
+    signalMembers: CONTROL_MEMBERS,
+    writableMembers: new Set<string>(['disabled', 'value'])
+};
+
+/** Native-element controls: `value` is written to the element, `disabled` follows the input and the form control. */
+export const INPUT_CONTROL_TARGET: Target = {
+    id: 'KbqInput',
+    types: ['KbqInput', 'KbqInputPassword', 'KbqTextarea'],
+    elements: [],
+    signalMembers: CONTROL_MEMBERS,
+    writableMembers: new Set<string>(['value'])
+};
+
+/** A receiver typed with the contract itself, which declares every member a read-only signal. */
+export const FORM_FIELD_CONTROL_TARGET: Target = {
+    id: 'KbqFormFieldControl',
+    types: ['KbqFormFieldControl'],
+    elements: [],
+    signalMembers: CONTROL_MEMBERS,
+    writableMembers: new Set<string>()
+};
+
+export const TARGETS: readonly Target[] = [
+    FORM_FIELD_TARGET,
+    HINT_TARGET,
+    SELECT_CONTROL_TARGET,
+    TAG_LIST_CONTROL_TARGET,
+    INPUT_CONTROL_TARGET,
+    FORM_FIELD_CONTROL_TARGET
+];
 
 /**
  * `KbqFormField` members that were a `QueryList` and are now a `readonly` array. The call syntax is
  * auto-fixed, but the `QueryList` API is gone.
  */
-export const QUERY_LIST_MEMBERS: readonly string[] = ['hint', 'passwordHints', 'prefix', 'suffix'];
+export const QUERY_LIST_MEMBERS: readonly string[] = ['hint', 'prefix', 'suffix'];
 
 /** `QueryList` members that a plain array does not have. Detected right after a migrated query member. */
 export const QUERY_LIST_ONLY_API: readonly string[] = [
@@ -93,11 +138,11 @@ export const QUERY_LIST_ONLY_API: readonly string[] = [
 /** `KbqFormField` members whose empty value changed from `null` to `undefined`. */
 export const NULLABILITY_CHANGED_MEMBERS: readonly string[] = ['cleaner', 'passwordToggle'];
 
-/** Members that moved from `public` to `protected` and can no longer be read from outside the component. */
-export const PROTECTED_MEMBERS: readonly string[] = ['icon'];
-
-/** Inputs that were writable properties and are now read-only signal inputs. */
-export const READ_ONLY_INPUT_MEMBERS: readonly string[] = ['fillTextOff', 'compact'];
+/**
+ * Members that were writable properties and are now read-only signals: inputs, or state the control derives.
+ * Scoped by each target's `writableMembers`, so a member writable on one control is not reported on it.
+ */
+export const READ_ONLY_INPUT_MEMBERS: readonly string[] = ['fillTextOff', 'compact', ...CONTROL_MEMBERS];
 
 /**
  * `KbqFormField` content queries that were writable properties and are now read-only signals. `cleaner` was
@@ -108,7 +153,6 @@ export const READ_ONLY_QUERY_MEMBERS: readonly string[] = [
     'cleaner',
     'passwordToggle',
     'hint',
-    'passwordHints',
     'prefix',
     'suffix'
 ];
@@ -134,6 +178,47 @@ export const warnPatterns: WarnPattern[] = [
         message: '`CanColorCtor` was removed together with `mixinColor`. The `CanColor` interface is still exported.'
     },
     {
+        pattern: 'implements[^{]*\\bKbqFormFieldControl\\b',
+        message:
+            '`KbqFormFieldControl` is signal-based: `value`, `id`, `placeholder`, `focused`, `empty`, `required`, ' +
+            '`disabled` and `errorState` are `Signal`s, and `stateChanges` was removed. A custom control exposes ' +
+            'its state as signals and drops `stateChanges`: the form field derives its own state from them.'
+    },
+    {
+        pattern: 'control\\(\\)\\??\\.stateChanges\\b',
+        message:
+            'The form field control no longer has `stateChanges`. Read its state signals in a `computed()` or an ' +
+            '`effect()` instead, or turn one into a stream with `toObservable()`.'
+    },
+    {
+        pattern: '\\bKbqErrorStateTracker\\b',
+        message:
+            '`KbqErrorStateTracker` no longer takes a `stateChanges` subject, and its `errorState` is a ' +
+            '`Signal<boolean>`: call `updateErrorState()` from `ngDoCheck` and read `errorState()`.'
+    },
+    {
+        pattern: '\\bmixinErrorState\\s*\\(|\\bCanUpdateErrorStateCtor\\b',
+        message:
+            'The deprecated `mixinErrorState` and `CanUpdateErrorStateCtor` were removed. Track the error state ' +
+            'with `KbqErrorStateTracker` from @koobiq/components/core instead.'
+    },
+    {
+        pattern: '\\bCanUpdateErrorState\\b',
+        message:
+            '`CanUpdateErrorState.errorState` is a `Signal<boolean>`, and the interface no longer declares ' +
+            '`errorStateMatcher`.'
+    },
+    {
+        pattern: '\\bKbqTagTextControl\\b',
+        message: 'The `id`, `placeholder`, `focused` and `empty` members of `KbqTagTextControl` are signals.'
+    },
+    {
+        pattern: '\\bKbqIconErrorStateContext\\b|\\bkbqIconErrorStateContextFactoryProvider\\b',
+        message:
+            '`KbqIconErrorStateContext.errorState` is a `Signal<boolean>` and `stateChanges` was removed: ' +
+            '`KbqIcon` follows the signal.'
+    },
+    {
         pattern: '\\bKBQ_FORM_FIELD_REF\\b',
         message:
             '`KbqFormFieldRef.control` is no longer `any`: it is `Signal<KbqFormFieldControlRef>`. Reads written ' +
@@ -146,19 +231,6 @@ export const warnPatterns: WarnPattern[] = [
             '`KbqA11yLocaleConfiguration` gained three required keys — `clear`, `showPassword` and ' +
             '`hidePassword` — for the accessible names of the form-field cleaner and password toggle. A custom ' +
             'locale object literal has to provide them.'
-    },
-    {
-        pattern: '\\bregExpPasswordValidator\\b',
-        message:
-            '`regExpPasswordValidator` is deprecated and is now typed `Partial<Record<PasswordRules, RegExp>>`, ' +
-            'so indexing it yields `RegExp | undefined`. It never had entries for `Length`/`Custom`.'
-    },
-    {
-        pattern: '\\bKbqPasswordHint\\b|\\bPasswordRules\\b|\\bhasPasswordStrengthError\\b',
-        message:
-            'The `KbqPasswordHint` rules engine (`PasswordRules`, `regExpPasswordValidator`, ' +
-            '`hasPasswordStrengthError`) is deprecated and will be removed in the next major release. Migrate to ' +
-            '`KbqReactivePasswordHint`, which derives its state from the form control validators.'
     },
     {
         pattern: '\\bKbqTrim\\b',

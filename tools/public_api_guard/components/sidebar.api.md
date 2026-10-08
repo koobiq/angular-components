@@ -5,77 +5,81 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
 import * as i1 from '@koobiq/components/core';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 
 // @public (undocumented)
-export class KbqSidebar implements OnDestroy, AfterContentInit {
+export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point index.d.ts
-    get animationState(): KbqSidebarAnimationState;
+    protected readonly animationsDisabled: boolean;
     clearSavedState(): void;
-    readonly closedContent: i0.Signal<KbqSidebarClosed | undefined>;
+    readonly closedContent: _angular_core.Signal<KbqSidebarClosed | undefined>;
     protected readonly document: Document;
     get hasSavedState(): boolean;
-    internalState: boolean;
+    get internalState(): boolean;
+    set internalState(value: boolean);
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
     ngOnDestroy(): void;
-    onAnimationDone(): void;
-    onAnimationStart(): void;
     // (undocumented)
     get opened(): boolean;
     set opened(value: boolean);
-    readonly openedContent: i0.Signal<KbqSidebarOpened | undefined>;
-    // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point index.d.ts
-    params: KbqSidebarParams;
+    readonly openedContent: _angular_core.Signal<KbqSidebarOpened | undefined>;
+    readonly openedInput: _angular_core.InputSignal<boolean | undefined>;
+    // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point koobiq-components-sidebar.d.ts
+    get params(): KbqSidebarParams;
+    set params(value: KbqSidebarParams);
     // (undocumented)
-    readonly position: i0.InputSignal<SidebarPositions>;
+    readonly position: _angular_core.InputSignal<SidebarPositions>;
     saveState(): void;
     // (undocumented)
-    readonly stateChanged: i0.OutputEmitterRef<boolean>;
+    readonly stateChanged: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "opened": { "alias": "opened"; "required": false; }; "position": { "alias": "position"; "required": false; "isSignal": true; }; }, { "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened]", "[kbq-sidebar-closed]"], true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "position": { "alias": "position"; "required": false; "isSignal": true; }; "openedInput": { "alias": "opened"; "required": false; "isSignal": true; }; }, { "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened]", "[kbq-sidebar-closed]"], true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebar, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSidebar, never>;
 }
 
 // @public (undocumented)
 export class KbqSidebarClosed {
     // (undocumented)
-    readonly width: i0.InputSignal<string>;
+    readonly width: _angular_core.InputSignal<string>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarClosed, "[kbq-sidebar-closed]", ["kbqSidebarClosed"], { "width": { "alias": "width"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSidebarClosed, "[kbq-sidebar-closed]", ["kbqSidebarClosed"], { "width": { "alias": "width"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarClosed, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSidebarClosed, never>;
 }
 
 // @public (undocumented)
 export class KbqSidebarModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSidebarModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqSidebarModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqSidebarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, never, [typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar], [typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqSidebarModule, never, [typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar], [typeof KbqSidebarClosed, typeof KbqSidebarOpened, typeof KbqSidebar]>;
 }
 
 // @public (undocumented)
 export class KbqSidebarOpened {
     // (undocumented)
-    readonly maxWidth: i0.InputSignal<string>;
+    readonly maxWidth: _angular_core.InputSignal<string>;
     // (undocumented)
-    readonly minWidth: i0.InputSignal<string>;
+    readonly minWidth: _angular_core.InputSignal<string>;
     // (undocumented)
-    readonly width: i0.InputSignal<string>;
+    readonly width: _angular_core.InputSignal<string>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarOpened, "[kbq-sidebar-opened]", ["kbqSidebarOpened"], { "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqSidebarOpened, "[kbq-sidebar-opened]", ["kbqSidebarOpened"], { "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarOpened, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqSidebarOpened, never>;
 }
 
 // @public

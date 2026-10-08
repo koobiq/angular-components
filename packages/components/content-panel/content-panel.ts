@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -6,12 +5,16 @@ import {
     computed,
     contentChild,
     Directive,
+    effect,
+    ElementRef,
     inject,
+    Injector,
     input,
     linkedSignal,
     numberAttribute,
     OnInit,
     output,
+    signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -19,8 +22,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     KBQ_A11Y_LOCALE_CONFIGURATION,
-    KbqAnimationCurves,
-    KbqAnimationDurations,
+    kbqAfterAnimations,
+    kbqAnimationsDisabled,
     KbqComponentColors,
     KbqLocaleOverridesDirective,
     KbqOverflowShadowContainer,
@@ -32,29 +35,6 @@ import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
-const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [
-    state('false', style({ 'margin-right': 0 })),
-    state('true', style({ 'margin-right': '{{ marginRight }}px' }), { params: { marginRight: 0 } }),
-    transition('true => false', [animate(`${KbqAnimationDurations.Entering} ${KbqAnimationCurves.AccelerationCurve}`)]),
-    transition('false => true', [animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.DecelerationCurve}`)])
-]);
-
-const KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION = trigger('panelAnimation', [
-    transition(':enter', [
-        style({ transform: 'translateX(100%)' }),
-        animate(
-            `${KbqAnimationDurations.Entering} ${KbqAnimationCurves.DecelerationCurve}`,
-            style({ transform: 'translateX(0%)' })
-        )
-    ]),
-    transition(':leave', [
-        animate(
-            `${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.AccelerationCurve}`,
-            style({ transform: 'translateX(100%)' })
-        )
-    ])
-]);
 
 @Component({
     selector: 'kbq-content-panel-aside',
@@ -254,16 +234,23 @@ const normalizeContentPanelState = (parsed: unknown): KbqContentPanelState | nul
     selector: 'kbq-content-panel-container',
     imports: [KbqResizable, KbqResizer, KbqScrollbar],
     template: `
-        <kbq-scrollbar [@contentAnimation]="contentAnimationState()">
+        <kbq-scrollbar
+            class="kbq-content-panel-container__scrollbar"
+            [class.kbq-content-panel-container__scrollbar_animating]="contentAnimating()"
+            [class.kbq-animations-disabled]="animationsDisabled"
+            [style.margin-right.px]="contentMargin()"
+        >
             <div class="kbq-content-panel-container__content">
                 <ng-content />
             </div>
         </kbq-scrollbar>
         @if (openedState()) {
             <div
-                @panelAnimation
+                animate.enter="kbq-content-panel-container__panel_enter"
+                animate.leave="kbq-content-panel-container__panel_leave"
                 class="kbq-content-panel-container__panel"
                 kbqResizable
+                [class.kbq-animations-disabled]="animationsDisabled"
                 [style.min-width.px]="minWidth()"
                 [style.width.px]="widthState()"
                 [style.max-width.px]="maxWidth()"
@@ -286,15 +273,11 @@ const normalizeContentPanelState = (parsed: unknown): KbqContentPanelState | nul
     host: {
         class: 'kbq-content-panel-container',
         '[class.kbq-content-panel-container__opened]': 'openedState()',
-        '(keydown.escape)': 'handleEscapeKeydown($event)'
+        '(keydown.escape)': 'handleEscapeKeydown($any($event))'
     },
     // `useStateSaving` and `stateSavingKey` are the directive's inputs, surfaced on the container.
     hostDirectives: [
         { directive: KbqStateSaving, inputs: ['useStateSaving', 'stateSavingKey'] }
-    ],
-    animations: [
-        KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION,
-        KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION
     ],
     exportAs: 'kbqContentPanelContainer'
 })
@@ -380,14 +363,26 @@ export class KbqContentPanelContainer implements OnInit {
     readonly isOpened = computed(() => this.openedState());
 
     /**
+     * The room the content leaves for the opened panel.
      * @docs-private
      */
-    protected readonly contentAnimationState = computed(() => {
-        return {
-            value: this.openedState(),
-            params: { marginRight: this.widthState() + (parseInt(SizeL) || 16) }
-        };
-    });
+    protected readonly contentMargin = computed(() =>
+        this.openedState() ? this.widthState() + (parseInt(SizeL) || 16) : 0
+    );
+
+    /**
+     * Whether the margin of the content transitions: only while it makes room for the panel opening or
+     * closing, so that a resize of the panel moves the content at once.
+     * @docs-private
+     */
+    protected readonly contentAnimating = signal(false);
+
+    /** @docs-private */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    private readonly content = viewChild.required(KbqScrollbar, { read: ElementRef });
+    private readonly injector = inject(Injector);
+    private contentAnimation?: { destroy(): void };
 
     /**
      * Resizing reports on every pointer move, so the width is written once the drag settles rather than
@@ -402,10 +397,32 @@ export class KbqContentPanelContainer implements OnInit {
 
         // The state lives under the new key now, so restore from it.
         this.stateSaving.keyChanges.subscribe(() => this.restoreState());
+
+        let opened: boolean | undefined;
+
+        effect(() => {
+            const previous = opened;
+
+            opened = this.openedState();
+
+            if (previous !== undefined && previous !== opened) {
+                this.animateContent();
+            }
+        });
     }
 
     ngOnInit(): void {
         this.restoreState();
+    }
+
+    private animateContent(): void {
+        this.contentAnimating.set(true);
+        this.contentAnimation?.destroy();
+        this.contentAnimation = kbqAfterAnimations(
+            () => this.content().nativeElement,
+            () => this.contentAnimating.set(false),
+            this.injector
+        );
     }
 
     /** Reads the persisted state and applies it. Runs while initializing, and again on a key change. */

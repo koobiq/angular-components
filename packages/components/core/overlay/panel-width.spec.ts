@@ -7,7 +7,7 @@ import { kbqGetPanelWidthOrigin, kbqResolvePanelWidth } from './panel-width';
 const elementOfWidth = (width: number): HTMLElement => {
     const element = document.createElement('div');
 
-    jest.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
+    vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width } as DOMRect);
 
     return element;
 };

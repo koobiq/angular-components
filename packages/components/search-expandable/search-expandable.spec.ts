@@ -1,14 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { KbqButton } from '@koobiq/components/button';
 import { ruRULocaleData } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
 import {
+    defaultEmitValueTimeout,
     defaultValue,
     KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION,
     KbqSearchExpandable,
@@ -43,7 +43,6 @@ describe('KbqSearchExpandable', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
-                NoopAnimationsModule,
                 KbqSearchExpandableModule,
                 TestSearchExpandable,
                 TestSearchExpandableExternalToggle,
@@ -66,6 +65,8 @@ describe('KbqSearchExpandable', () => {
         nativeElement = debugElement.nativeElement;
         fixture.detectChanges();
     });
+
+    afterEach(() => vi.useRealTimers());
 
     describe('initialization', () => {
         it('should have kbq-search-expandable class', () => {
@@ -122,25 +123,27 @@ describe('KbqSearchExpandable', () => {
             expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(0);
         });
 
-        it('should reset value when closing', fakeAsync(() => {
+        it('should reset value when closing', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.openedState = true;
             fixture.detectChanges();
 
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
-            component.value.next('some value');
-            tick(300);
+            component.value.set('some value');
+            await vi.advanceTimersByTimeAsync(300);
             fixture.detectChanges();
 
             component.toggle();
             fixture.detectChanges();
 
-            expect(component.value.getValue()).toBe(defaultValue);
-        }));
+            expect(component.value()).toBe(defaultValue);
+        });
 
         it('should emit isOpenedChange on toggle', () => {
             const component = debugElement.componentInstance as KbqSearchExpandable;
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             component.isOpenedChange.subscribe(spy);
 
@@ -309,19 +312,21 @@ describe('KbqSearchExpandable', () => {
         it('should have default empty value', () => {
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
-            expect(component.value.getValue()).toBeFalsy();
+            expect(component.value()).toBeFalsy();
         });
 
-        it('should update value via ngModel', fakeAsync(() => {
+        it('should update value via ngModel', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.openedState = true;
             fixture.componentInstance.search = 'test value';
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
-            expect(component.value.getValue()).toBe('test value');
-        }));
+            expect(component.value()).toBe('test value');
+        });
     });
 
     describe('with formControl', () => {
@@ -346,18 +351,39 @@ describe('KbqSearchExpandable', () => {
             expect(debugElement.query(By.directive(KbqInput)).nativeElement.hasAttribute('disabled')).toBe(true);
         });
 
-        it('should update value via formControl', fakeAsync(() => {
+        it('should update value via formControl', async () => {
+            vi.useFakeTimers();
+
             formFixture.componentInstance.openedState = true;
             formFixture.detectChanges();
 
             formFixture.componentInstance.searchControl.setValue('form value');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             formFixture.detectChanges();
 
             const component = debugElement.componentInstance as KbqSearchExpandable;
 
-            expect(component.value.getValue()).toBe('form value');
-        }));
+            expect(component.value()).toBe('form value');
+        });
+
+        it('should hand a value written into `value` to the field and, after the timeout, to the control', async () => {
+            vi.useFakeTimers();
+
+            formFixture.componentInstance.openedState = true;
+            formFixture.detectChanges();
+
+            const component = debugElement.componentInstance as KbqSearchExpandable;
+
+            component.value.set('written');
+            formFixture.detectChanges();
+
+            expect(debugElement.query(By.css('input')).nativeElement.value).toBe('written');
+            expect(formFixture.componentInstance.searchControl.value).toBe(defaultValue);
+
+            await vi.advanceTimersByTimeAsync(defaultEmitValueTimeout);
+
+            expect(formFixture.componentInstance.searchControl.value).toBe('written');
+        });
     });
 
     describe('validation', () => {
@@ -392,12 +418,14 @@ describe('KbqSearchExpandable', () => {
     });
 
     describe('auto-open when model has value', () => {
-        it('should open when ngModel has an initial value', fakeAsync(() => {
+        it('should open when ngModel has an initial value', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandable);
 
             local.componentInstance.search = 'seed';
             local.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             local.detectChanges();
 
             const host = local.debugElement.query(By.directive(KbqSearchExpandable)).nativeElement as HTMLElement;
@@ -405,7 +433,7 @@ describe('KbqSearchExpandable', () => {
             expect(host.classList.contains('kbq-search-expandable_opened')).toBe(true);
             expect(host.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
             expect(host.querySelectorAll('.kbq-search-expandable__button').length).toBe(0);
-        }));
+        });
 
         it('should open when formControl has an initial value', () => {
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
@@ -420,7 +448,9 @@ describe('KbqSearchExpandable', () => {
             expect(host.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
         });
 
-        it('should open when a value is set programmatically while collapsed', fakeAsync(() => {
+        it('should open when a value is set programmatically while collapsed', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
@@ -431,16 +461,18 @@ describe('KbqSearchExpandable', () => {
             expect(component.isOpened).toBe(false);
 
             local.componentInstance.searchControl.setValue('later');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             local.detectChanges();
 
             expect(component.isOpened).toBe(true);
             expect((debug.nativeElement as HTMLElement).querySelectorAll('.kbq-search-expandable__search').length).toBe(
                 1
             );
-        }));
+        });
 
-        it('should not collapse when the value is cleared', fakeAsync(() => {
+        it('should not collapse when the value is cleared', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.componentInstance.searchControl.setValue('seed');
@@ -452,44 +484,50 @@ describe('KbqSearchExpandable', () => {
             expect(component.isOpened).toBe(true);
 
             local.componentInstance.searchControl.setValue('');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             local.detectChanges();
 
             expect(component.isOpened).toBe(true);
-        }));
+        });
 
-        it('should not focus the input when opened from an initial value', fakeAsync(() => {
+        it('should not focus the input when opened from an initial value', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandable);
 
             local.componentInstance.search = 'seed';
             local.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             local.detectChanges();
 
             const inputEl = local.debugElement.query(By.css('input')).nativeElement;
 
             expect(document.activeElement).not.toBe(inputEl);
-        }));
+        });
 
-        it('should emit isOpenedChange when auto-opening from a model value', fakeAsync(() => {
+        it('should emit isOpenedChange when auto-opening from a model value', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
 
             const component = local.debugElement.query(By.directive(KbqSearchExpandable))
                 .componentInstance as KbqSearchExpandable;
-            const spy = jest.fn();
+            const spy = vi.fn();
 
             component.isOpenedChange.subscribe(spy);
 
             local.componentInstance.searchControl.setValue('seed');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             local.detectChanges();
 
             expect(spy).toHaveBeenCalledWith(true);
-        }));
+        });
 
-        it('should not auto-open when the control is disabled', fakeAsync(() => {
+        it('should not auto-open when the control is disabled', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
@@ -499,16 +537,18 @@ describe('KbqSearchExpandable', () => {
 
             local.componentInstance.searchControl.disable();
             local.componentInstance.searchControl.setValue('seed');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             local.detectChanges();
 
             expect(component.isOpened).toBe(false);
             expect((debug.nativeElement as HTMLElement).querySelectorAll('.kbq-search-expandable__search').length).toBe(
                 0
             );
-        }));
+        });
 
-        it('should not leave suppressInputFocus stuck after a close races the auto-open', fakeAsync(() => {
+        it('should not leave suppressInputFocus stuck after a close races the auto-open', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
@@ -532,10 +572,12 @@ describe('KbqSearchExpandable', () => {
 
             expect(document.activeElement).toBe(inputEl);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should move focus into the input when the toggle button was focused at auto-open time', fakeAsync(() => {
+        it('should move focus into the input when the toggle button was focused at auto-open time', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
@@ -548,17 +590,19 @@ describe('KbqSearchExpandable', () => {
             (component as unknown as { lastFocusOrigin: string }).lastFocusOrigin = 'keyboard';
 
             local.componentInstance.searchControl.setValue('seed');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             local.detectChanges();
 
             const inputEl = debug.query(By.css('input')).nativeElement;
 
             expect(document.activeElement).toBe(inputEl);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not steal focus when nothing was focused inside the component at auto-open time', fakeAsync(() => {
+        it('should not steal focus when nothing was focused inside the component at auto-open time', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
@@ -566,17 +610,19 @@ describe('KbqSearchExpandable', () => {
             const debug = local.debugElement.query(By.directive(KbqSearchExpandable));
 
             local.componentInstance.searchControl.setValue('seed');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             local.detectChanges();
 
             const inputEl = debug.query(By.css('input')).nativeElement;
 
             expect(document.activeElement).not.toBe(inputEl);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should force-emit the reset value on close even mid-debounce', fakeAsync(() => {
+        it('should force-emit the reset value on close even mid-debounce', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
@@ -595,9 +641,9 @@ describe('KbqSearchExpandable', () => {
 
             expect(local.componentInstance.searchControl.value).toBe(defaultValue);
 
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
             local.detectChanges();
-        }));
+        });
     });
 
     describe('configuration token', () => {
@@ -615,7 +661,9 @@ describe('KbqSearchExpandable', () => {
     });
 
     describe('emitValueTimeout', () => {
-        it('should emit the typed value only after the configured timeout', fakeAsync(() => {
+        it('should emit the typed value only after the configured timeout', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithEmitValueTimeout);
 
             local.detectChanges();
@@ -624,30 +672,34 @@ describe('KbqSearchExpandable', () => {
 
             typeIntoInput(local, debug, 'typed');
 
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
 
             expect(local.componentInstance.searchControl.value).toBe(defaultValue);
 
-            tick(200);
+            await vi.advanceTimersByTimeAsync(200);
 
             expect(local.componentInstance.searchControl.value).toBe('typed');
-        }));
+        });
     });
 
     describe('isEmitValueByEnterEnabled', () => {
-        it('should not emit while typing', fakeAsync(() => {
+        it('should not emit while typing', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
 
             local.detectChanges();
 
             typeIntoInput(local, local.debugElement.query(By.directive(KbqSearchExpandable)), 'typed');
 
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
 
             expect(local.componentInstance.searchControl.value).toBe(defaultValue);
-        }));
+        });
 
-        it('should emit on enter', fakeAsync(() => {
+        it('should emit on enter', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
 
             local.detectChanges();
@@ -659,10 +711,12 @@ describe('KbqSearchExpandable', () => {
 
             expect(local.componentInstance.searchControl.value).toBe('typed');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not re-dirty the control when enter repeats an unchanged value', fakeAsync(() => {
+        it('should not re-dirty the control when enter repeats an unchanged value', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
 
             local.detectChanges();
@@ -678,10 +732,12 @@ describe('KbqSearchExpandable', () => {
 
             expect(local.componentInstance.searchControl.pristine).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should prevent the default action of the enter it handles', fakeAsync(() => {
+        it('should prevent the default action of the enter it handles', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithEmitByEnter);
 
             local.detectChanges();
@@ -692,10 +748,12 @@ describe('KbqSearchExpandable', () => {
 
             expect(pressEnter(debug).defaultPrevented).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should leave the default action of enter alone when it does not emit', fakeAsync(() => {
+        it('should leave the default action of enter alone when it does not emit', async () => {
+            vi.useFakeTimers();
+
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.componentInstance.openedState = true;
@@ -707,8 +765,8 @@ describe('KbqSearchExpandable', () => {
 
             expect(pressEnter(debug).defaultPrevented).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('value accessor', () => {
@@ -722,75 +780,87 @@ describe('KbqSearchExpandable', () => {
             localDebugElement = local.debugElement.query(By.directive(KbqSearchExpandable));
         });
 
-        it('should keep the control pristine on a programmatic write', fakeAsync(() => {
+        it('should keep the control pristine on a programmatic write', async () => {
+            vi.useFakeTimers();
+
             local.componentInstance.searchControl.setValue('programmatic');
 
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
 
             expect(local.componentInstance.searchControl.pristine).toBe(true);
-        }));
+        });
 
-        it('should not echo a programmatic write back into valueChanges', fakeAsync(() => {
-            const spy = jest.fn();
+        it('should not echo a programmatic write back into valueChanges', async () => {
+            vi.useFakeTimers();
+
+            const spy = vi.fn();
 
             local.componentInstance.searchControl.valueChanges.subscribe(spy);
 
             local.componentInstance.searchControl.setValue('programmatic');
 
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
 
             expect(spy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should update the bound control only after the debounce', fakeAsync(() => {
+        it('should update the bound control only after the debounce', async () => {
+            vi.useFakeTimers();
+
             typeIntoInput(local, localDebugElement, 'typed');
 
             expect(local.componentInstance.searchControl.value).toBe(defaultValue);
 
-            tick(200);
+            await vi.advanceTimersByTimeAsync(200);
 
             expect(local.componentInstance.searchControl.value).toBe('typed');
-        }));
+        });
 
-        it('should emit an emptied field after a programmatic write', fakeAsync(() => {
+        it('should emit an emptied field after a programmatic write', async () => {
+            vi.useFakeTimers();
+
             local.componentInstance.searchControl.setValue('programmatic');
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
 
             typeIntoInput(local, localDebugElement, defaultValue);
-            tick(200);
+            await vi.advanceTimersByTimeAsync(200);
 
             expect(local.componentInstance.searchControl.value).toBe(defaultValue);
-        }));
+        });
 
-        it('should emit a value retyped after a programmatic reset', fakeAsync(() => {
+        it('should emit a value retyped after a programmatic reset', async () => {
+            vi.useFakeTimers();
+
             typeIntoInput(local, localDebugElement, 'a');
-            tick(200);
+            await vi.advanceTimersByTimeAsync(200);
 
             expect(local.componentInstance.searchControl.value).toBe('a');
 
             local.componentInstance.searchControl.setValue(defaultValue);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             typeIntoInput(local, localDebugElement, 'a');
-            tick(200);
+            await vi.advanceTimersByTimeAsync(200);
 
             expect(local.componentInstance.searchControl.value).toBe('a');
-        }));
+        });
 
-        it('should drop a pending emission when the model is written to mid-typing', fakeAsync(() => {
+        it('should drop a pending emission when the model is written to mid-typing', async () => {
+            vi.useFakeTimers();
+
             typeIntoInput(local, localDebugElement, 'typed');
 
             local.componentInstance.searchControl.setValue('programmatic');
 
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
 
             expect(local.componentInstance.searchControl.value).toBe('programmatic');
-        }));
+        });
     });
 
     describe('focus monitoring', () => {
         it('should monitor the host element once', () => {
-            const monitor = jest.spyOn(TestBed.inject(FocusMonitor), 'monitor');
+            const monitor = vi.spyOn(TestBed.inject(FocusMonitor), 'monitor');
             const local = TestBed.createComponent(TestSearchExpandableWithFormControl);
 
             local.detectChanges();
@@ -801,7 +871,7 @@ describe('KbqSearchExpandable', () => {
         });
 
         it('should not monitor a control that starts disabled', () => {
-            const monitor = jest.spyOn(TestBed.inject(FocusMonitor), 'monitor');
+            const monitor = vi.spyOn(TestBed.inject(FocusMonitor), 'monitor');
             const local = TestBed.createComponent(TestSearchExpandableWithDisabledFormControl);
 
             local.detectChanges();

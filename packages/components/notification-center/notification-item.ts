@@ -1,5 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    input,
+    OnChanges,
+    SimpleChanges,
+    TemplateRef,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter, KbqReadStateDirective, PopUpPlacements } from '@koobiq/components/core';
@@ -32,7 +41,7 @@ import { KBQ_NOTIFICATION_CENTER_PANEL } from './notification-center.tokens';
     },
     hostDirectives: [KbqReadStateDirective]
 })
-export class KbqNotificationItemComponent {
+export class KbqNotificationItemComponent implements OnChanges {
     private readonly adapter: DateAdapter<unknown> = inject(DateAdapter);
     protected readonly service = inject(KbqNotificationCenterService);
     protected readonly readStateDirective = inject<KbqReadStateDirective>(KbqReadStateDirective, { host: true });
@@ -60,9 +69,10 @@ export class KbqNotificationItemComponent {
         return this.data.icon ?? true;
     }
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    protected get read(): boolean {
+        return this.service.isRead(this.data);
+    }
+
     get data(): KbqNotificationItem {
         return this._data;
     }
@@ -82,6 +92,18 @@ export class KbqNotificationItemComponent {
     }
 
     private _data: KbqNotificationItem;
+
+    /** @docs-private */
+    readonly dataInput = input<KbqNotificationItem | undefined>(undefined, { alias: 'data' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['dataInput']) {
+            const data = this.dataInput();
+
+            if (data !== undefined) this.data = data;
+        }
+    }
 
     constructor() {
         this.readStateDirective.read

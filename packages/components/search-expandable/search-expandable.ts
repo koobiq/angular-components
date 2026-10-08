@@ -7,15 +7,19 @@ import {
     ChangeDetectorRef,
     Component,
     DestroyRef,
+    effect,
     ElementRef,
     inject,
     InjectionToken,
-    Input,
     input,
     numberAttribute,
+    OnChanges,
     OnDestroy,
     output,
     Provider,
+    signal,
+    SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -43,7 +47,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { BehaviorSubject, distinctUntilChanged, filter, Subject, Subscription, timer } from 'rxjs';
+import { filter, Subject, Subscription, timer } from 'rxjs';
 import { map, switchMap, takeUntil } from 'rxjs/operators';
 
 /** default configuration of search-expandable */
@@ -110,7 +114,9 @@ class BoundControlErrorStateMatcher implements ErrorStateMatcher {
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
     ]
 })
-export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy {
+export class KbqSearchExpandable
+    implements OnChanges, ControlValueAccessor, AfterViewInit, AfterViewChecked, OnDestroy
+{
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */
@@ -159,8 +165,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     /** Icon of the collapsed button and of the expanded field's prefix. */
     protected readonly searchIconName = 'kbq-magnifying-glass_16';
 
-    /** Current value in input. */
-    value = new BehaviorSubject(defaultValue);
+    /** Current value in input. A write reaches the field, and the bound control once `emitValueTimeout` passes. */
+    readonly value = signal(defaultValue);
 
     protected lastFocusOrigin: 'touch' | 'mouse' | 'keyboard' | 'program' | null = null;
 
@@ -178,18 +184,22 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private focusMonitorSubscription: Subscription | null = null;
 
     /** state of component. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute }) isOpened = false;
+    get isOpened(): boolean {
+        return this.openedState();
+    }
+
+    set isOpened(value: boolean) {
+        this.openedState.set(value);
+    }
+
+    private readonly openedState = signal(false);
+
     /** Emit event by enter or not. Default is false */
     readonly isEmitValueByEnterEnabled = input(false, { transform: booleanAttribute });
     /** Timeout in milliseconds for emit event. The default value is taken from defaultEmitValueTimeout */
     readonly emitValueTimeout = input(defaultEmitValueTimeout, { transform: numberAttribute });
 
     /** Tooltip text for the search button. When set, overrides the locale tooltip */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get tooltipText(): string {
         return this._tooltipText ?? this.localeConfiguration().tooltip;
     }
@@ -201,9 +211,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private _tooltipText: string | null;
 
     /** Placeholder for input when expanded */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get placeholder(): string {
         return this._placeholder ?? this.localeConfiguration().placeholder;
     }
@@ -215,19 +222,16 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
     private _placeholder: string | null = null;
 
     /** Whether the component is disabled. Also set by the bound control through `setDisabledState`. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
 
     set disabled(value: boolean) {
-        this._disabled = value;
+        this.disabledState.set(value);
 
         // `emitEvent: false`: `disable()`/`enable()` re-emit the current value, which would restart the
         // debounce and emit a value the user never typed.
-        if (this._disabled) {
+        if (value) {
             this.control.disable({ emitEvent: false });
             this.stopFocusMonitor();
         } else {
@@ -236,12 +240,10 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         }
     }
 
-    private _disabled: boolean = false;
+    // A signal: `setDisabledState` reaches the setter from the forms API, outside any binding of this view.
+    private readonly disabledState = signal(false);
 
     /** Tab index of the collapsed button and of the expanded input. Always `-1` while disabled. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex;
     }
@@ -257,6 +259,68 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
     private lastEmittedValue = defaultValue;
 
+    /** @docs-private */
+    readonly isOpenedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'isOpened',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tooltipTextInput = input<string | null | undefined>(undefined, { alias: 'tooltipText' });
+
+    /** @docs-private */
+    readonly placeholderInput = input<string | null | undefined>(undefined, { alias: 'placeholder' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['isOpenedInput']) {
+            const isOpened = this.isOpenedInput();
+
+            // A form directive on the element writes its value before this hook runs, and expands the field when the
+            // value is not empty: a first binding of `false` must not collapse it again. A decorator input was
+            // applied before that write, so it never could.
+            if (isOpened !== undefined && (isOpened || !changes['isOpenedInput'].firstChange)) {
+                this.isOpened = isOpened;
+            }
+        }
+
+        if (changes['tooltipTextInput']) {
+            const tooltipText = this.tooltipTextInput();
+
+            if (tooltipText !== undefined) this.tooltipText = tooltipText;
+        }
+
+        if (changes['placeholderInput']) {
+            const placeholder = this.placeholderInput();
+
+            if (placeholder !== undefined) this.placeholder = placeholder;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) {
+            const tabIndex = this.tabIndexInput();
+
+            if (tabIndex !== undefined) this.tabIndex = tabIndex;
+        }
+    }
+
     constructor() {
         if (!this.ngControl) {
             throw Error(`kbq-search-expandable must be used with the [formControl], [formControlName] or [(ngModel)].`);
@@ -267,13 +331,17 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         // `value` predates the internal control and stays part of the public API: writes into it must
         // still reach the field, and reads must still observe the current value. Both directions are
         // guarded on the current value, so the pair cannot loop.
-        this.value.pipe(distinctUntilChanged(), takeUntilDestroyed()).subscribe((value) => {
-            if (this.control.value !== value) {
-                this.control.setValue(value);
-            }
+        effect(() => {
+            const value = this.value();
+
+            untracked(() => {
+                if (this.control.value !== value) {
+                    this.control.setValue(value);
+                }
+            });
         });
 
-        this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.syncValueSubject(value));
+        this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value) => this.value.set(value));
 
         this.control.valueChanges
             .pipe(
@@ -376,7 +444,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         // `emitEvent: false` keeps a programmatic write out of the debounced pipeline — feeding it back
         // through `onChange` would mark the consumer's control dirty and double-fire its `valueChanges`.
         this.control.setValue(nextValue, { emitEvent: false });
-        this.syncValueSubject(nextValue);
+        this.value.set(nextValue);
 
         // Expand automatically when the model already holds a value, without stealing focus —
         // unless focus is already inside the component (e.g. on the collapsed toggle button
@@ -430,7 +498,7 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
             // `emitEvent: false`: the reset reaches the consumer through the forced emit below, so
             // routing it through the debounce as well would only schedule a redundant no-op emission.
             this.control.setValue(defaultValue, { emitEvent: false });
-            this.syncValueSubject(defaultValue);
+            this.value.set(defaultValue);
             // Force the emit — closing must always synchronize the bound control to the reset
             // value, rather than relying on the debounce to eventually settle (it can be raced
             // by a value pushed just before close, silently leaving the control at a stale value).
@@ -438,11 +506,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
         }
 
         this.isOpenedChange.emit(this.isOpened);
-
-        // Ensure the OnPush view re-renders for callers that mutate isOpened from outside this
-        // component's own template (e.g. a parent-owned button), whose click marks the parent —
-        // not this component — dirty.
-        this.changeDetectorRef.markForCheck();
     }
 
     /** Moves focus back onto the collapsed button, keeping its tooltip from opening on the way. */
@@ -457,12 +520,6 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
 
         if (tooltip) {
             tooltip.disabled = false;
-        }
-    }
-
-    private syncValueSubject(value: string): void {
-        if (this.value.value !== value) {
-            this.value.next(value);
         }
     }
 

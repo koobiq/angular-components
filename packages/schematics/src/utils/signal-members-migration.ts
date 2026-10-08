@@ -55,6 +55,11 @@ export interface SignalMembersConfig {
     exportAsToType: Readonly<Record<string, string>>;
     /** Element selector → type, for the bare `#ref` form on a component's own element. */
     elementToType: Readonly<Record<string, string>>;
+    /**
+     * Attribute selector → type, for the bare `#ref` form on an element a component claims by attribute
+     * (`<button kbq-button #b>`). Only components: a bare ref on a directive's host is the element.
+     */
+    attributeToType?: Readonly<Record<string, string>>;
     /** Members that stay writable, so `x.member = v` becomes `x.member.set(v)` rather than being warned about. */
     writableMembers: ReadonlySet<string>;
     /** Members that moved to `protected` and can no longer be read from outside the component. */
@@ -635,7 +640,9 @@ class TemplateScanner implements Visitor {
         for (const { name, value } of references) {
             // `#t="kbqDropdownTrigger"` names a directive on the element; a bare `#d` on the element is the
             // component itself. `#d="cdkOverlayOrigin"` names something else entirely and must be ignored.
-            const type = value ? this.config.exportAsToType[value] : this.config.elementToType[element.name];
+            const type = value
+                ? this.config.exportAsToType[value]
+                : (this.config.elementToType[element.name] ?? this.attributeType(element));
 
             if (type) this.refs.push({ name, type, ...this.view });
             else this.otherNames.add(name);
@@ -675,6 +682,19 @@ class TemplateScanner implements Visitor {
         const span = decl.valueSpan ?? decl.sourceSpan;
 
         if (span) this.expressions.push({ start: span.start.offset, end: span.end.offset });
+    }
+
+    /** The type of the component an attribute of `element` selects, whether the attribute is bound or not. */
+    private attributeType(element: any): string | undefined {
+        const types = this.config.attributeToType ?? {};
+
+        for (const attr of element.attrs ?? []) {
+            const name = typeof attr.name === 'string' ? attr.name.replace(/^\[(.*)\]$/, '$1') : '';
+
+            if (Object.hasOwn(types, name)) return types[name];
+        }
+
+        return undefined;
     }
 
     /** Runs `walk` with the embedded view narrowed to `span`, if the node opens one. */
@@ -838,7 +858,8 @@ const untouched = (template: string): TemplateResult => ({
 function rendersComponent(template: string, config: SignalMembersConfig): boolean {
     return (
         Object.keys(config.elementToType).some((element) => template.includes(`<${element}`)) ||
-        Object.keys(config.exportAsToType).some((exportAs) => template.includes(exportAs))
+        Object.keys(config.exportAsToType).some((exportAs) => template.includes(exportAs)) ||
+        Object.keys(config.attributeToType ?? {}).some((attribute) => template.includes(attribute))
     );
 }
 

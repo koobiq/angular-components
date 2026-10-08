@@ -1,7 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Injectable } from '@angular/core';
+import { Injectable, provideZonelessChangeDetection } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { kbqLocaleServiceProvider } from '@koobiq/components/core';
 import { DevApp, DevPage1, DevPage2 } from './module';
@@ -21,7 +20,7 @@ export class DevCustomOverlayContainer extends OverlayContainer {
 
 bootstrapApplication(DevApp, {
     providers: [
-        provideAnimations(),
+        provideZonelessChangeDetection(),
         provideRouter([
             { path: '', redirectTo: 'page-1', pathMatch: 'full' },
             { path: 'page-1', component: DevPage1 },

@@ -1,7 +1,7 @@
 /**
  * Data for the `dl-attribute-coercion` migration.
  *
- * `KbqDlComponent` was already fully signal-based; the review found the five inputs that never got a
+ * `KbqDlComponent` was already fully signal-based; the review found the four inputs that never got a
  * coercion transform, so a static attribute reached them as a string and a binding reached them raw.
  *
  * - `<kbq-dl wide>` and `<kbq-dl wide="">` passed the empty string, which is falsy - the attribute did
@@ -9,7 +9,7 @@
  * - `<kbq-dl wide="false">` passed a non-empty string, which is truthy - it meant true, and means false now
  * - `vertical` is tri-state, so it keeps `null` through a transform that preserves it rather than
  *   `booleanAttribute`, which would fold "decide from the breakpoint" into false
- * - `minWidth`, `dtMinWidth` and `ddMinWidth` reached the layout arithmetic as strings; a value that is
+ * - `dtMinWidth` and `ddMinWidth` reached the layout arithmetic as strings; a value that is
  *   not a finite number now reads as `undefined` rather than reaching it at all
  *
  * Warn-only: every one of these is a template change, and which markup relied on the old reading is a
@@ -26,7 +26,7 @@ export const DL_ELEMENT = 'kbq-dl';
 export const BOOLEAN_ATTRIBUTES: readonly string[] = ['wide', 'vertical'];
 
 /** Numeric inputs that gained a coercion transform. */
-export const NUMERIC_ATTRIBUTES: readonly string[] = ['minWidth', 'dtMinWidth', 'ddMinWidth', 'dtWidth'];
+export const NUMERIC_ATTRIBUTES: readonly string[] = ['dtMinWidth', 'ddMinWidth', 'dtWidth'];
 
 /** `dtWidth` is the one numeric input whose "no width" state is `null` rather than `undefined`. */
 const NULL_FALLBACK_ATTRIBUTES: readonly string[] = ['dtWidth'];
@@ -85,6 +85,6 @@ export const SUMMARY = [
     '  `vertical` keeps `null` as its default - the state that lets the list decide from ' +
         '`verticalBreakpoint` - so it is coerced with a transform that preserves null rather than with ' +
         '`booleanAttribute`, which would have folded it into false.',
-    '  `minWidth`, `dtMinWidth` and `ddMinWidth` report `number | undefined`. A value that is not a ' +
+    '  `dtMinWidth` and `ddMinWidth` report `number | undefined`. A value that is not a ' +
         'finite number reads as `undefined` rather than as `NaN`, so `?? fallback` at a call site fires.'
 ];

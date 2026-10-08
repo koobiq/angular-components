@@ -1,23 +1,29 @@
-import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     Directive,
     ElementRef,
+    Injector,
     OnDestroy,
+    Signal,
     TemplateRef,
     ViewEncapsulation,
-    inject
+    inject,
+    signal
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, KbqReadStateDirective, kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
+import {
+    KbqReadStateDirective,
+    kbqAfterAnimations,
+    kbqAnimationsDisabled,
+    kbqInjectA11yLocaleConfiguration
+} from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { BehaviorSubject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { kbqToastAnimations } from './toast-animations';
 import { KBQ_TOAST_STACK, KbqToastData, KbqToastStyle } from './toast.type';
 
 @Directive({
@@ -62,16 +68,14 @@ const assertiveStyles: string[] = [KbqToastStyle.Warning, KbqToastStyle.Error];
         // wrapper has to be in the accessibility tree before its content changes.
         '[attr.role]': 'role',
         'aria-atomic': 'true',
-        '[@state]': 'animationState',
-        '[@.disabled]': 'reducedMotion',
-        '(@state.start)': 'onAnimation($event)',
-        '(@state.done)': 'onAnimation($event)',
-        '(mouseenter)': 'hovered.next(true)',
-        '(mouseleave)': 'hovered.next(false)',
+        '[class.kbq-toast_leaving]': 'leavingHeight() !== null',
+        '[style.--kbq-toast-leaving-height.px]': 'leavingHeight()',
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
+        '(mouseenter)': 'setHovered(true)',
+        '(mouseleave)': 'setHovered(false)',
         '(keydown.esc)': 'close()'
     },
-    hostDirectives: [KbqReadStateDirective],
-    animations: [kbqToastAnimations.toastState]
+    hostDirectives: [KbqReadStateDirective]
 })
 export class KbqToastComponent implements OnDestroy {
     readonly data = inject(KbqToastData);
@@ -79,21 +83,25 @@ export class KbqToastComponent implements OnDestroy {
     private readonly stack = inject(KBQ_TOAST_STACK);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly focusMonitor = inject(FocusMonitor);
-    private readonly window = inject(KBQ_WINDOW);
+    private readonly injector = inject(Injector);
 
     protected readonly readStateDirective = inject(KbqReadStateDirective, { host: true });
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
-    /**
-     * Animations are the only motion a toast carries, so disabling them honors the user's system setting.
-     * `matchMedia` is absent outside a real browser (server-side rendering, jsdom), where nothing animates anyway.
-     */
-    protected readonly reducedMotion = this.window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    /** Whether the toast appears and leaves without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
-    animationState = 'void';
+    /** Height the exit animation collapses from, set once the toast leaves. */
+    protected readonly leavingHeight = signal<number | null>(null);
 
-    readonly hovered = new BehaviorSubject<boolean>(false);
-    readonly focused = new BehaviorSubject<boolean>(false);
+    private readonly _hovered = signal(false);
+    private readonly _focused = signal(false);
+
+    /** Whether the pointer is over the toast. */
+    readonly hovered: Signal<boolean> = this._hovered.asReadonly();
+
+    /** Whether the toast or an element inside it holds the focus. */
+    readonly focused: Signal<boolean> = this._focused.asReadonly();
 
     id = id++;
 
@@ -120,15 +128,11 @@ export class KbqToastComponent implements OnDestroy {
     private alreadyRead = false;
 
     get isFocusedOrHovered(): boolean {
-        return this.hovered.getValue() || this.focused.getValue();
+        return this.hovered() || this.focused();
     }
 
     constructor() {
-        this.animationState = 'visible';
-
-        this.runFocusMonitor();
-
-        this.hovered.pipe(takeUntilDestroyed()).subscribe((hovered) => this.stack.setHovered(this.id, hovered));
+        this.runFocusMonitor(inject(DestroyRef));
 
         // `read` is a `BehaviorSubject` re-emitted by every hover long enough to count as read, while a toast
         // is read exactly once.
@@ -149,8 +153,21 @@ export class KbqToastComponent implements OnDestroy {
         this.stack.hide(this.id);
     }
 
-    onAnimation($event: AnimationEvent) {
-        this.stack.animation.next($event);
+    /**
+     * Plays the exit animation of a toast taken off the stack, then calls `done`.
+     * @docs-private
+     */
+    leave(done: () => void): void {
+        // `auto` does not animate, so the collapse starts from the measured height.
+        this.leavingHeight.set(this.elementRef.nativeElement.offsetHeight);
+
+        kbqAfterAnimations(() => this.elementRef.nativeElement, done, this.injector);
+    }
+
+    /** @docs-private */
+    protected setHovered(hovered: boolean): void {
+        this._hovered.set(hovered);
+        this.stack.setHovered(this.id, hovered);
     }
 
     private markAsRead(): void {
@@ -166,12 +183,12 @@ export class KbqToastComponent implements OnDestroy {
         return value instanceof TemplateRef ? value : null;
     }
 
-    private runFocusMonitor() {
+    private runFocusMonitor(destroyRef: DestroyRef) {
         this.focusMonitor
             .monitor(this.elementRef.nativeElement, true)
-            .pipe(takeUntilDestroyed())
+            .pipe(takeUntilDestroyed(destroyRef))
             .subscribe((origin: FocusOrigin) => {
-                this.focused.next(!!origin);
+                this._focused.set(!!origin);
                 this.stack.setFocused(this.id, origin);
             });
     }

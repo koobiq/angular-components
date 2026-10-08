@@ -3,19 +3,19 @@ import {
     ChangeDetectionStrategy,
     Component,
     Directive,
-    InjectionToken,
-    Input,
-    ViewEncapsulation,
     effect,
     inject,
+    InjectionToken,
+    input,
     output,
-    signal
+    signal,
+    SimpleChanges,
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqInjectPopoverConfirmLocaleConfiguration, kbqSiblingPopupProvider } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
-import { kbqPopoverAnimations } from './popover-animations';
 import { KBQ_POPOVER_FOCUS_TRAP_PROVIDERS, KbqPopoverComponent, KbqPopoverTrigger } from './popover.component';
 
 /**
@@ -43,7 +43,6 @@ export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT = new InjectionToken<string>('KbqPo
     providers: KBQ_POPOVER_FOCUS_TRAP_PROVIDERS,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    animations: [kbqPopoverAnimations.popoverState],
     preserveWhitespaces: false
 })
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
@@ -56,10 +55,26 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     readonly onConfirm = new Subject<void>();
 
     /** Caption of the confirm button. Written by the trigger. */
-    confirmButtonText: string;
+    get confirmButtonText(): string {
+        return this.confirmButtonTextState();
+    }
+
+    set confirmButtonText(value: string) {
+        this.confirmButtonTextState.set(value);
+    }
+
+    private readonly confirmButtonTextState = signal<string>(undefined!);
 
     /** Question rendered in the panel. Written by the trigger. */
-    confirmText: string;
+    get confirmText(): string {
+        return this.confirmTextState();
+    }
+
+    set confirmText(value: string) {
+        this.confirmTextState.set(value);
+    }
+
+    private readonly confirmTextState = signal<string>(undefined!);
 }
 
 @Directive({
@@ -89,9 +104,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
      * Input (`kbqPopoverConfirmText`) — question rendered in the panel. Falls back to
      * {@link KBQ_POPOVER_CONFIRM_TEXT} and then to the `popoverConfirm` section of the active locale.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverConfirmText')
     get confirmText(): string {
         return this._confirmText() ?? this.externalConfirmText ?? this.localeConfiguration().confirmText;
     }
@@ -108,9 +120,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
      * Input (`kbqPopoverConfirmButtonText`) — caption of the confirm button. Falls back to
      * {@link KBQ_POPOVER_CONFIRM_BUTTON_TEXT} and then to the `popoverConfirm` section of the active locale.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPopoverConfirmButtonText')
     get confirmButtonText(): string {
         return (
             this._confirmButtonText() ?? this.externalConfirmButtonText ?? this.localeConfiguration().confirmButtonText
@@ -128,6 +137,29 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     /** Panel the confirm handler is currently wired to, so it is wired once per attach. */
     private wiredInstance: KbqPopoverConfirmComponent | null = null;
 
+    /** @docs-private */
+    readonly confirmTextInput = input<string | undefined>(undefined, { alias: 'kbqPopoverConfirmText' });
+
+    /** @docs-private */
+    readonly confirmButtonTextInput = input<string | undefined>(undefined, { alias: 'kbqPopoverConfirmButtonText' });
+
+    override ngOnChanges(changes: SimpleChanges): void {
+        super.ngOnChanges(changes);
+
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['confirmTextInput']) {
+            const confirmText = this.confirmTextInput();
+
+            if (confirmText !== undefined) this.confirmText = confirmText;
+        }
+
+        if (changes['confirmButtonTextInput']) {
+            const confirmButtonText = this.confirmButtonTextInput();
+
+            if (confirmButtonText !== undefined) this.confirmButtonText = confirmButtonText;
+        }
+    }
+
     constructor() {
         super();
 
@@ -141,7 +173,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
             this.instance.confirmText = confirmText;
             this.instance.confirmButtonText = confirmButtonText;
-            this.instance.markForCheck();
         });
     }
 
@@ -151,6 +182,10 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
             return;
         }
 
+        // Before `super.updateData()`, which renders the panel.
+        this.instance.confirmButtonText = this.confirmButtonText;
+        this.instance.confirmText = this.confirmText;
+
         super.updateData();
 
         if (this.wiredInstance !== this.instance) {
@@ -158,9 +193,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
             this.setupButtonEvents();
         }
-
-        this.instance.confirmButtonText = this.confirmButtonText;
-        this.instance.confirmText = this.confirmText;
     }
 
     /**

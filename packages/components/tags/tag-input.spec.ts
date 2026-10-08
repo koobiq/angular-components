@@ -3,7 +3,7 @@ import { DASH } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
 import { APP_ID, Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
     FormControl,
@@ -14,7 +14,6 @@ import {
     Validators
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     KbqAutocompleteModule,
     KbqAutocompleteSelectedEvent,
@@ -39,7 +38,7 @@ import { KbqTagList } from './tag-list.component';
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
+        imports: [component],
         providers
     });
 
@@ -88,7 +87,7 @@ class TestTagInputDistinct {
     readonly distinct = signal(false);
     separatorKeyCodes: number[] = [ENTER];
     readonly tags: string[] = ['existing-tag'];
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -101,7 +100,7 @@ class TestTagInputDistinct {
 })
 class TestTagInputDefaultSeparators {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 
     addOnBlur = true;
 }
@@ -119,7 +118,7 @@ class TestTagInputDefaultSeparators {
 })
 class TestTagInputStandaloneWithoutModule {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -139,7 +138,7 @@ class TestTagInputStandaloneWithoutModule {
 })
 class TestTagInputWithDashSeparator {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -162,7 +161,7 @@ class TestTagInputWithDashSeparator {
 })
 class TestTagInputWithPasteOnlySpace {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -185,7 +184,7 @@ class TestTagInputWithPasteOnlySpace {
 })
 class TestTagInputWithKeylessWhitespaceSeparator {
     readonly tagInput = viewChild.required(KbqTagInput);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -207,7 +206,7 @@ class TestTagInputSeparators {
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly separatorKeyCodes = signal<number[]>([ENTER]);
     readonly addOnPaste = signal(true);
-    readonly add = jest.fn();
+    readonly add = vi.fn();
 }
 
 @Component({
@@ -716,13 +715,13 @@ describe(KbqTagInput.name, () => {
                 overlayContainer.ngOnDestroy();
             });
 
-            it('opens the panel from the caret of the input inside the tag list', fakeAsync(() => {
+            it('opens the panel from the caret of the input inside the tag list', async () => {
                 componentInstance.relativeToCaret.set(true);
                 fixture.detectChanges();
 
                 dispatchFakeEvent(inputElement, 'focusin');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 const trigger = fixture.debugElement
                     .query(By.directive(KbqAutocompleteTrigger))
@@ -734,17 +733,17 @@ describe(KbqTagInput.name, () => {
                 expect((overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(
                     ''
                 );
-            }));
+            });
 
-            it('adds only the selected option, not the typed text, when an option is picked from the panel', fakeAsync(() => {
+            it('adds only the selected option, not the typed text, when an option is picked from the panel', async () => {
                 dispatchFakeEvent(inputElement, 'focusin');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 inputElement.value = 'hi';
                 dispatchFakeEvent(inputElement, 'input');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
@@ -753,27 +752,27 @@ describe(KbqTagInput.name, () => {
                 inputElement.dispatchEvent(new FocusEvent('blur', { relatedTarget: option }));
                 option.click();
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 expect(componentInstance.tags).toEqual(['HIPS alert']);
-            }));
+            });
 
-            it('still converts typed text into a tag on blur when focus does not move to an option', fakeAsync(() => {
+            it('still converts typed text into a tag on blur when focus does not move to an option', async () => {
                 dispatchFakeEvent(inputElement, 'focusin');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 inputElement.value = 'custom text';
                 dispatchFakeEvent(inputElement, 'input');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 inputElement.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 expect(componentInstance.tags).toEqual(['custom text']);
-            }));
+            });
         });
 
         describe('accessibility with a real autocomplete panel', () => {
@@ -842,7 +841,7 @@ describe(KbqTagInput.name, () => {
             expect(componentInstance.form.controls.tags.hasError('maxTagCount')).toBe(true);
         });
 
-        it('should not mark the list control dirty after the consumer rejected a tag', fakeAsync(() => {
+        it('should not mark the list control dirty after the consumer rejected a tag', async () => {
             const fixture = createComponent(TestTagListRejectingValidation);
             const { componentInstance } = fixture;
             const inputElement = getInputElement(fixture);
@@ -850,21 +849,21 @@ describe(KbqTagInput.name, () => {
             inputElement.value = 'rejected';
             componentInstance.tagInput().onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(componentInstance.control.value).toEqual(['a']);
             expect(componentInstance.control.dirty).toBe(false);
 
             componentInstance.control.setValue(['x', 'y']);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(componentInstance.control.dirty).toBe(false);
-        }));
+        });
 
-        describe('with a deprecated form control bound to the input', () => {
+        describe('with a form control bound to the input', () => {
             it('should not block (tagEnd) on ENTER when the input control is invalid', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
                 const inputElement = getInputElement(fixture);
 
@@ -882,7 +881,7 @@ describe(KbqTagInput.name, () => {
             });
 
             it('should not block (tagEnd) on paste when the input control is invalid', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
 
                 componentInstance.inputControl.setValue('NOT-LATIN-LOWERCASE');
@@ -896,7 +895,7 @@ describe(KbqTagInput.name, () => {
             });
 
             it('should not overwrite tag list errors with the input control status', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
                 const inputElement = getInputElement(fixture);
 
@@ -917,7 +916,7 @@ describe(KbqTagInput.name, () => {
             });
 
             it('should not block (tagEnd) on blur when the input control is invalid', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
                 const inputElement = getInputElement(fixture);
 
@@ -934,7 +933,7 @@ describe(KbqTagInput.name, () => {
             });
 
             it('should not emit (tagEnd) on a blur caused by disabling the input', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
                 const inputElement = getInputElement(fixture);
 
@@ -946,17 +945,6 @@ describe(KbqTagInput.name, () => {
                 componentInstance.tagInput().blur({} as FocusEvent);
 
                 expect(componentInstance.add).not.toHaveBeenCalled();
-            });
-
-            it('should keep triggerValidation() as a no-op', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
-                const { componentInstance } = fixture;
-                const statusChangesSpy = jest.fn();
-
-                componentInstance.inputControl.statusChanges.subscribe(statusChangesSpy);
-                componentInstance.tagInput().triggerValidation();
-
-                expect(statusChangesSpy).not.toHaveBeenCalled();
             });
         });
     });
@@ -976,7 +964,6 @@ describe('KbqTagInput', () => {
                 PlatformModule,
                 KbqTagsModule,
                 KbqFormFieldModule,
-                NoopAnimationsModule,
                 TestTagInput
             ],
             providers: [
@@ -1005,7 +992,7 @@ describe('KbqTagInput', () => {
         it('emits the (tagEnd) on enter keyup', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
 
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             tagInputDirective.onKeydown(ENTER_EVENT);
             expect(addSpyFn).toHaveBeenCalled();
@@ -1027,7 +1014,7 @@ describe('KbqTagInput', () => {
 
     describe('[addOnBlur]', () => {
         it('allows (tagEnd) when true', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnBlur = true;
             fixture.detectChanges();
@@ -1037,7 +1024,7 @@ describe('KbqTagInput', () => {
         });
 
         it('disallows (tagEnd) when false', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnBlur = false;
             fixture.detectChanges();
@@ -1057,7 +1044,7 @@ describe('KbqTagInput', () => {
         };
 
         it('allows (tagEnd) when true', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = true;
             fixture.detectChanges();
@@ -1067,7 +1054,7 @@ describe('KbqTagInput', () => {
         });
 
         it('disallows (tagEnd) when false', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = false;
             fixture.detectChanges();
@@ -1077,7 +1064,7 @@ describe('KbqTagInput', () => {
         });
 
         it('divide string by kbqTagInputSeparatorKeyCodes and add 4 item', () => {
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.addOnPaste = true;
             testTagInput.separatorKeyCodes = [COMMA, SEMICOLON, SPACE, ENTER];
@@ -1103,7 +1090,7 @@ describe('KbqTagInput', () => {
     describe('[separatorKeyCodes]', () => {
         it('does not emit (tagEnd) when a non-separator key is pressed', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement);
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
@@ -1114,7 +1101,7 @@ describe('KbqTagInput', () => {
 
         it('emits (tagEnd) when a custom separator key was pressed', () => {
             const COMMA_EVENT = createKeyboardEvent('keydown', COMMA, inputNativeElement, ',');
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.separatorKeyCodes = [COMMA];
             fixture.detectChanges();
@@ -1134,7 +1121,7 @@ describe('KbqTagInput', () => {
                 createKeyboardEvent('keydown', keyCode, inputNativeElement, key)
             );
 
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             testTagInput.separatorKeyCodes = separators.map((separator) => separator.keyCode);
 
@@ -1152,7 +1139,7 @@ describe('KbqTagInput', () => {
             // emission for a non-default separator (COMMA in this case).
             testTagInput.separatorKeyCodes = [COMMA];
 
-            const addSpyFn = jest.spyOn(testTagInput, 'add');
+            const addSpyFn = vi.spyOn(testTagInput, 'add');
 
             (inputNativeElement as HTMLInputElement).value = 'pending-tag';
             fixture.detectChanges();
@@ -1170,7 +1157,7 @@ describe('KbqTagInput', () => {
                 const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
 
                 Object.defineProperty(ENTER_EVENT, modifierKey, { get: () => true });
-                const addSpyFn = jest.spyOn(testTagInput, 'add');
+                const addSpyFn = vi.spyOn(testTagInput, 'add');
 
                 testTagInput.separatorKeyCodes = [ENTER];
                 (inputNativeElement as HTMLInputElement).value = 'tag-value';
@@ -1183,7 +1170,7 @@ describe('KbqTagInput', () => {
 
         it('should prevent default when a separator key is pressed with empty input', () => {
             const SPACE_EVENT = createKeyboardEvent('keydown', SPACE, inputNativeElement, ' ');
-            const preventDefaultSpy = jest.spyOn(SPACE_EVENT, 'preventDefault');
+            const preventDefaultSpy = vi.spyOn(SPACE_EVENT, 'preventDefault');
 
             testTagInput.separatorKeyCodes = [SPACE];
             (inputNativeElement as HTMLInputElement).value = '';
@@ -1195,7 +1182,7 @@ describe('KbqTagInput', () => {
 
         it('should not prevent default when TAB separator is pressed with empty input', () => {
             const TAB_EVENT = createKeyboardEvent('keydown', TAB, inputNativeElement, 'Tab');
-            const preventDefaultSpy = jest.spyOn(TAB_EVENT, 'preventDefault');
+            const preventDefaultSpy = vi.spyOn(TAB_EVENT, 'preventDefault');
 
             testTagInput.separatorKeyCodes = [TAB];
             (inputNativeElement as HTMLInputElement).value = '';
@@ -1255,7 +1242,7 @@ describe('KbqTagInput', () => {
             // The CDK `_IdGenerator` omits the default `ng`, so a normal app keeps `kbq-tag-list-input-0`;
             // only an explicit APP_ID surfaces, right before the counter. The deleted module counter never
             // included it, so this is the one shape the switch actually changes.
-            expect(directive.id).toMatch(/^kbq-tag-list-input-custom\d+$/);
+            expect(directive.id()).toMatch(/^kbq-tag-list-input-custom\d+$/);
         });
 
         it('should tolerate a tag list that resolves after the first pass', () => {
@@ -1270,7 +1257,7 @@ describe('KbqTagInput', () => {
             const directive = fixture.debugElement.query(By.directive(KbqTagInput)).injector.get(KbqTagInput);
 
             // The list reports the registered input's id as its own, so this is the registration landing.
-            expect(host.tagListInstance().id).toBe(directive.id);
+            expect(host.tagListInstance().id()).toBe(directive.id());
         });
     });
 });
@@ -1425,13 +1412,13 @@ class TestTagListRejectingValidation {
         </kbq-form-field>
     `
 })
-class TestTagInputWithDeprecatedInputControl {
+class TestTagInputWithInputControl {
     readonly tagList = viewChild.required(KbqTagList);
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly listControl = new FormControl<string[]>(['a', 'b'], [maxTagCount(2)]);
     readonly inputControl = new FormControl('', [Validators.pattern(/^[a-z]*$/)]);
     readonly addOnBlur = signal(false);
-    readonly add = jest.fn(({ value, input }: KbqTagInputEvent) => {
+    readonly add = vi.fn(({ value, input }: KbqTagInputEvent) => {
         if (value) {
             this.listControl.setValue([...(this.listControl.value || []), value]);
         }

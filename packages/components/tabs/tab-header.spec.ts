@@ -3,7 +3,7 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, Injectable, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, dispatchKeyboardEvent } from '@koobiq/components/core';
 import { Observable, Subject } from 'rxjs';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
@@ -12,6 +12,9 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
 /** Audit interval (ms) the header waits before re-checking pagination after a scroll-box resize. See `RESIZE_AUDIT_TIME`. */
 const RESIZE_AUDIT_TIME = 100;
+
+/** How long (ms) a scroll waits before the header renders the arrows again. See `SCROLL_CD_THROTTLE`. */
+const SCROLL_CD_THROTTLE = 48;
 
 @Injectable()
 class MockResizeObserver extends SharedResizeObserver {
@@ -30,6 +33,16 @@ describe('KbqTabHeader', () => {
     let change: Subject<Direction>;
     let fixture: ComponentFixture<SimpleTabHeaderApp>;
     let appComponent: SimpleTabHeaderApp;
+
+    /** Scrolls the strip, and renders the header once the re-render the scroll asks for is due. */
+    const scrollStrip = (container: HTMLElement, scrollLeft: number): void => {
+        vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+        container.scrollLeft = scrollLeft;
+        container.dispatchEvent(new Event('scroll'));
+        vi.advanceTimersByTime(SCROLL_CD_THROTTLE);
+        vi.useRealTimers();
+        fixture.detectChanges();
+    };
 
     beforeEach(() => {
         change = new Subject();
@@ -54,6 +67,8 @@ describe('KbqTabHeader', () => {
             ]
         }).compileComponents();
     });
+
+    afterEach(() => vi.useRealTimers());
 
     describe('focusing', () => {
         let tabListContainer: HTMLElement;
@@ -280,9 +295,7 @@ describe('KbqTabHeader', () => {
 
                 expect(header.disableScrollAfter).toBe(false);
 
-                container.scrollLeft = 820;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 820);
 
                 expect(header.disableScrollAfter).toBe(true);
             });
@@ -300,15 +313,11 @@ describe('KbqTabHeader', () => {
                 header.updatePagination();
                 fixture.detectChanges();
 
-                container.scrollLeft = 297;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 297);
 
                 expect(header.disableScrollAfter).toBe(false);
 
-                container.scrollLeft = 299;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 299);
 
                 expect(header.disableScrollAfter).toBe(true);
             });
@@ -327,9 +336,7 @@ describe('KbqTabHeader', () => {
 
                 expect(header.disableScrollBefore).toBe(true);
 
-                container.scrollLeft = 1;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 1);
 
                 expect(header.disableScrollBefore).toBe(false);
             });
@@ -355,7 +362,9 @@ describe('KbqTabHeader', () => {
                 expect(header.showPaginationControls).toBe(false);
             });
 
-            it('should scroll to bring a focused, out-of-view tab label into view', fakeAsync(() => {
+            it('should scroll to bring a focused, out-of-view tab label into view', async () => {
+                vi.useFakeTimers();
+
                 const header = appComponent.tabHeader();
                 const container = header.tabListContainer.nativeElement;
 
@@ -363,7 +372,7 @@ describe('KbqTabHeader', () => {
                 Object.defineProperty(container, 'clientWidth', { configurable: true, value: 100 });
 
                 // Real browsers clamp `scrollLeft` to [0, scrollWidth - clientWidth]; the shared
-                // `scrollTo` polyfill in `tools/jest/setup.ts` doesn't, so an out-of-range target (e.g.
+                // `scrollTo` polyfill in `tools/vitest/setup-angular.ts` doesn't, so an out-of-range target (e.g.
                 // the overscroll below the first tab) would otherwise assert a value no browser
                 // actually produces.
                 let scrollLeft = 0;
@@ -391,7 +400,7 @@ describe('KbqTabHeader', () => {
 
                 header.focusIndex = 3;
                 fixture.detectChanges();
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 // labelAfterPos(330) > afterVisiblePos(100) -> scroll by (330 - 100 + overscroll(20)) = 250
                 expect(container.scrollLeft).toBe(250);
@@ -407,31 +416,33 @@ describe('KbqTabHeader', () => {
 
                 header.focusIndex = 0;
                 fixture.detectChanges();
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 // labelBeforePos(0) < beforeVisiblePos(250) -> target (0 - overscroll(20)) = -20,
                 // clamped to the real minimum of 0.
                 expect(container.scrollLeft).toBe(0);
-            }));
+            });
 
-            it('should not drop the scroll-into-view request for a selectedIndex set before the first change detection', fakeAsync(() => {
+            it('should not drop the scroll-into-view request for a selectedIndex set before the first change detection', async () => {
+                vi.useFakeTimers();
+
                 // `ngAfterContentChecked` (a content hook) queues this request before
                 // `ngAfterViewInit` (a view hook) has run and subscribed to it — a plain `Subject`
                 // would silently drop it, and `<kbq-tab-group [selectedIndex]="6">` would render
                 // with the selected tab off-screen and no scroll ever happening.
-                const scrollCorrectionSpy = jest.spyOn(KbqPaginatedTabHeader.prototype as any, 'scrollCorrection');
+                const scrollCorrectionSpy = vi.spyOn(KbqPaginatedTabHeader.prototype as any, 'scrollCorrection');
 
                 fixture = TestBed.createComponent(SimpleTabHeaderApp);
                 appComponent = fixture.componentInstance;
                 appComponent.selectedIndex = 3;
 
                 fixture.detectChanges();
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(scrollCorrectionSpy).toHaveBeenCalledWith(3, 'smooth');
 
                 scrollCorrectionSpy.mockRestore();
-            }));
+            });
         });
 
         describe('in RTL direction', () => {
@@ -444,7 +455,9 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
             });
 
-            it('should scroll towards negative scrollLeft to bring a focused, out-of-view tab label into view', fakeAsync(() => {
+            it('should scroll towards negative scrollLeft to bring a focused, out-of-view tab label into view', async () => {
+                vi.useFakeTimers();
+
                 const header = appComponent.tabHeader();
                 const container = header.tabListContainer.nativeElement;
 
@@ -471,11 +484,11 @@ describe('KbqTabHeader', () => {
 
                 header.focusIndex = 3;
                 fixture.detectChanges();
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 // Same logical math as LTR (250), mirrored onto native scrollLeft's negative RTL range.
                 expect(container.scrollLeft).toBe(-250);
-            }));
+            });
 
             it('should toggle the pagination arrows from the negative RTL scrollLeft range', () => {
                 const header = appComponent.tabHeader();
@@ -494,9 +507,7 @@ describe('KbqTabHeader', () => {
 
                 // Native RTL `scrollLeft` runs from 0 to -(scrollWidth - clientWidth) as the user
                 // scrolls towards the end of the (reading-order) list.
-                container.scrollLeft = -300;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, -300);
 
                 expect(header.disableScrollBefore).toBe(false);
                 expect(header.disableScrollAfter).toBe(true);
@@ -507,35 +518,33 @@ describe('KbqTabHeader', () => {
                 Object.defineProperty(container, 'scrollWidth', { configurable: true, value: 1139 });
                 Object.defineProperty(container, 'clientWidth', { configurable: true, value: 318 });
 
-                container.scrollLeft = 0;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, 0);
 
                 expect(header.disableScrollAfter).toBe(false);
 
-                container.scrollLeft = -820;
-                container.dispatchEvent(new Event('scroll'));
-                fixture.detectChanges();
+                scrollStrip(container, -820);
 
                 expect(header.disableScrollAfter).toBe(true);
             });
         });
 
         describe('scroll box resize', () => {
-            it('should recheck pagination when the scroll box is resized', fakeAsync(() => {
+            it('should recheck pagination when the scroll box is resized', async () => {
+                vi.useFakeTimers();
+
                 fixture = TestBed.createComponent(SimpleTabHeaderApp);
                 fixture.detectChanges();
 
                 const header = fixture.componentInstance.tabHeader();
                 const mockResizeObserver = TestBed.inject(SharedResizeObserver) as unknown as MockResizeObserver;
-                const checkPaginationEnabledSpy = jest.spyOn(header, 'checkPaginationEnabled');
+                const checkPaginationEnabledSpy = vi.spyOn(header, 'checkPaginationEnabled');
 
                 mockResizeObserver.changes.next([]);
-                tick(RESIZE_AUDIT_TIME);
+                await vi.advanceTimersByTimeAsync(RESIZE_AUDIT_TIME);
                 fixture.detectChanges();
 
                 expect(checkPaginationEnabledSpy).toHaveBeenCalled();
-            }));
+            });
         });
     });
 
@@ -543,7 +552,7 @@ describe('KbqTabHeader', () => {
         let header: KbqTabHeader;
 
         // Inertia coasts via `requestAnimationFrame`; drive it deterministically with explicit
-        // timestamps instead of relying on real frame timing or zone.js's fakeAsync rAF patch.
+        // timestamps instead of relying on real frame timing.
         let pendingFrame: FrameRequestCallback | null;
 
         const flushFrame = (timestamp: number) => {
@@ -597,12 +606,12 @@ describe('KbqTabHeader', () => {
 
         beforeEach(() => {
             pendingFrame = null;
-            jest.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
+            vi.spyOn(window, 'requestAnimationFrame').mockImplementation((callback) => {
                 pendingFrame = callback;
 
                 return 0;
             });
-            jest.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {
+            vi.spyOn(window, 'cancelAnimationFrame').mockImplementation(() => {
                 pendingFrame = null;
             });
 
@@ -624,7 +633,7 @@ describe('KbqTabHeader', () => {
         });
 
         afterEach(() => {
-            jest.restoreAllMocks();
+            vi.restoreAllMocks();
         });
 
         it('should toggle kbq-disabled on the previous/next arrows at each scroll bound without removing them from the DOM', () => {
@@ -635,9 +644,7 @@ describe('KbqTabHeader', () => {
             expect(after.classList.contains('kbq-disabled')).toBe(false);
 
             // scrollWidth(400) - clientWidth(100) = 300, i.e. the max scrollLeft a real browser would allow.
-            header.tabListContainer.nativeElement.scrollLeft = 300;
-            header.tabListContainer.nativeElement.dispatchEvent(new Event('scroll'));
-            fixture.detectChanges();
+            scrollStrip(header.tabListContainer.nativeElement, 300);
 
             expect(before.classList.contains('kbq-disabled')).toBe(false);
             expect(after.classList.contains('kbq-disabled')).toBe(true);
@@ -698,14 +705,17 @@ describe('KbqTabHeader', () => {
             expect(tabListContainer.scrollLeft).toBe(20);
         });
 
-        it('should reset click suppression after a drag even without a trailing click', fakeAsync(() => {
+        it('should reset click suppression after a drag even without a trailing click', async () => {
+            // Leaves `requestAnimationFrame` to the spy above.
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
             const tabListContainer = header.tabListContainer.nativeElement;
 
             tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0 }));
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -20 }));
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: -20 }));
 
-            tick(0);
+            await vi.advanceTimersByTimeAsync(0);
 
             const label = header.items.get(2)!.elementRef.nativeElement;
 
@@ -713,7 +723,7 @@ describe('KbqTabHeader', () => {
             fixture.detectChanges();
 
             expect(appComponent.selectedIndex).toBe(2);
-        }));
+        });
 
         it('should not drag for touch pointers, leaving the existing touch/arrow interactions untouched', () => {
             const tabListContainer = header.tabListContainer.nativeElement;
@@ -868,6 +878,27 @@ describe('KbqTabHeader', () => {
 
             appComponent = fixture.componentInstance;
             header = appComponent.tabHeader();
+        });
+
+        it('renders the underline again when the active label resizes without notice', () => {
+            const underline = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+            Object.defineProperty(header.items.get(0)!.elementRef.nativeElement, 'offsetWidth', {
+                configurable: true,
+                value: 120
+            });
+            fixture.detectChanges();
+
+            expect(underline.style.width).toBe('96px');
+        });
+
+        it('renders the underline as disabled when the active tab gets disabled', () => {
+            const underline = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+            appComponent.tabs[0].disabled = true;
+            fixture.detectChanges();
+
+            expect(underline.classList).toContain('kbq-disabled');
         });
 
         describe('activeTabOffsetWidth', () => {

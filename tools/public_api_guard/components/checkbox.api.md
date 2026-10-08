@@ -7,77 +7,63 @@
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
-import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqCheckableClickAction } from '@koobiq/components/core';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { SimpleChanges } from '@angular/core';
 import { TransitionCheckState } from '@koobiq/components/core';
 
 // @public
 export const KBQ_CHECKBOX_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
 
-// @public @deprecated
-export const KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR: any;
-
 // @public (undocumented)
 export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public
-export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterViewInit, OnDestroy {
     readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly change: _angular_core.OutputEmitterRef<KbqCheckboxChange>;
     get checked(): boolean;
     set checked(value: boolean);
+    readonly checkedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     readonly clickAction: _angular_core.InputSignal<_koobiq_components_core.KbqCheckableClickAction>;
     get disabled(): boolean;
     set disabled(value: boolean);
+    readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     focus(): void;
     protected getAriaChecked(): KbqCheckedState;
     readonly id: _angular_core.InputSignalWithTransform<string, string | null | undefined>;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
     readonly indeterminateChange: _angular_core.OutputEmitterRef<boolean>;
+    readonly indeterminateInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     protected readonly inputElement: _angular_core.Signal<ElementRef<HTMLInputElement>>;
     protected readonly inputId: _angular_core.Signal<string>;
     readonly labelPosition: _angular_core.InputSignal<"before" | "after">;
     readonly name: _angular_core.InputSignal<string | null>;
     // (undocumented)
-    static ngAcceptInputType_checked: unknown;
-    // (undocumented)
-    static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_indeterminate: unknown;
-    // (undocumented)
-    static ngAcceptInputType_tabIndex: unknown;
-    // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     protected onInputClick(event: Event): void;
     protected onInteractionEvent(event: Event): void;
     protected onLabelTextChange(): void;
-    // @deprecated
-    onTouched: () => any;
-    // @deprecated
-    registerOnChange(fn: (value: any) => void): void;
-    // @deprecated
-    registerOnTouched(fn: any): void;
     readonly required: _angular_core.InputSignalWithTransform<boolean, unknown>;
-    // @deprecated
-    setDisabledState(isDisabled: boolean): void;
     get tabIndex(): number;
     set tabIndex(value: number);
+    readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     toggle(): void;
     readonly value: _angular_core.InputSignal<string | undefined>;
-    // @deprecated
-    writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, [{ directive: typeof _koobiq_components_core.KbqCheckable; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "id": { "alias": "id"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "clickAction": { "alias": "clickAction"; "required": false; "isSignal": true; }; "required": { "alias": "required"; "required": false; "isSignal": true; }; "checkedInput": { "alias": "checked"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "indeterminateInput": { "alias": "indeterminate"; "required": false; "isSignal": true; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, [{ directive: typeof _koobiq_components_core.KbqCheckable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCheckbox, never>;
 }

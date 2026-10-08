@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
 
 @Component({
@@ -7,6 +7,7 @@ import { KbqAccordionContentDirective } from './accordion-content.directive';
     // block content (a `<div>` would auto-close it), and keeping padding off the animated
     // `.kbq-accordion-content` host lets it collapse cleanly to `height: 0`.
     template: '<div class="kbq-accordion-content__body"><ng-content /></div>',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-accordion-content'
     },

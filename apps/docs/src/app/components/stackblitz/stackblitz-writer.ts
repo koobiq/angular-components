@@ -234,7 +234,6 @@ export class DocsStackblitzWriter {
         const ngVersion = `^${VERSION.major}`;
         const koobiqVersion = `^${docsKoobiqVersion}`;
         const dependencies = {
-            '@angular/animations': ngVersion,
             '@angular/cdk': ngVersion,
             '@angular/common': ngVersion,
             '@angular/compiler': ngVersion,
@@ -252,16 +251,15 @@ export class DocsStackblitzWriter {
             '@messageformat/core': '^3.4.0',
             luxon: '^3.7.2',
             rxjs: '^7.8.2',
-            tslib: '^2.8.1',
-            'zone.js': '~0.15.0'
+            tslib: '^2.8.1'
         };
 
         const devDependencies = {
-            '@angular-devkit/build-angular': ngVersion,
+            '@angular/build': ngVersion,
             '@angular/cli': ngVersion,
             '@angular/compiler-cli': ngVersion,
             '@types/luxon': '^3.7.1',
-            typescript: '5.8.3'
+            typescript: '~5.9.2'
         };
 
         for (const pattern of patterns) {

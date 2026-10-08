@@ -23,36 +23,20 @@ updates:
       # accumulate advisories whose only fix lives in a newer major.
       - dependency-name: '@angular/*'
         update-types: ['version-update:semver-major']
-      - dependency-name: '@angular-builders/*'
-        update-types: ['version-update:semver-major']
       - dependency-name: '@angular-devkit/*'
         update-types: ['version-update:semver-major']
       - dependency-name: '@schematics/angular'
         update-types: ['version-update:semver-major']
       - dependency-name: 'angular-eslint'
         update-types: ['version-update:semver-major']
-      # ESLint is coupled to angular-eslint, and therefore to Angular: the template parser of
-      # angular-eslint 20.x builds a ScopeManager without a global scope, which makes ESLint 10
-      # crash on every template. ESLint 10 support lands in angular-eslint 21.4, which requires
-      # Angular 21 — so the major has to wait for the framework upgrade.
-      - dependency-name: 'eslint'
-        update-types: ['version-update:semver-major']
-      # Released in lockstep with eslint and consumed as `eslint.configs.recommended`, so it cannot
-      # cross a major on its own — see the `eslint` entry above.
-      - dependency-name: '@eslint/js'
-        update-types: ['version-update:semver-major']
-      # Requires ESLint 10 since v4 — see the `eslint` entry above.
-      - dependency-name: 'eslint-plugin-file-progress'
-        update-types: ['version-update:semver-major']
-      - dependency-name: 'jest-preset-angular'
+      # `@angular/build` 21 declares `vitest ^4` as its peer.
+      - dependency-name: 'vitest'
         update-types: ['version-update:semver-major']
       - dependency-name: 'ng-packagr'
         update-types: ['version-update:semver-major']
       - dependency-name: 'rxjs'
         update-types: ['version-update:semver-major']
       - dependency-name: 'typescript'
-        update-types: ['version-update:semver-major']
-      - dependency-name: 'zone.js'
         update-types: ['version-update:semver-major']
       # AG Grid packages must stay on the same major and be upgraded together deliberately.
       - dependency-name: 'ag-grid-*'
@@ -102,8 +86,6 @@ updates:
         patterns:
           - '@angular/*'
           - 'rxjs'
-          - 'zone.js'
-          - '@angular-builders/*'
           - '@angular-devkit/*'
           - '@schematics/angular'
           - 'ng-packagr'
@@ -126,11 +108,12 @@ updates:
         patterns:
           - 'conventional-changelog*'
           - '@conventional-changelog/*'
-      jest:
+      vitest:
         patterns:
-          - 'jest*'
-          - '@types/jest'
-          - 'ts-jest'
+          - 'vitest'
+          - '@vitest/*'
+          - '@analogjs/*'
+          - 'jsdom'
       # The MDX compiler of the documentation pages (tools/docs-pages). The remark plugins and the
       # mdast utilities are released together and share the `mdast` types, so a version that lands
       # alone leaves the compiler with two incompatible node models.

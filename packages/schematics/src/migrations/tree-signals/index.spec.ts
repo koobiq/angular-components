@@ -59,6 +59,25 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('KbqTreeNodeToggle.disabled is a read-only getter');
     });
 
+    it('reports writes to the tree selection and option inputs', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';\n" +
+                'export class App { set(tree: KbqTreeSelection, option: KbqTreeOption) { tree.dataSource = null; option.showCheckbox = true; } }\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('treeControl, dataSource, disabled, tabIndex, multiple and selectAllHandler');
+        expect(log).toContain('KbqTreeOption.disabled and .showCheckbox are signal inputs');
+    });
+
     it('reports the QueryList API lost by nodeDefs', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

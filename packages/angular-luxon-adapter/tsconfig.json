@@ -1,7 +1,7 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
-        "types": ["node", "jest"],
+        "types": ["node", "vitest/globals"],
         "paths": {
             "@koobiq/components/*": ["./dist/components/*"]
         }

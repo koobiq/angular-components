@@ -7,7 +7,6 @@ import {
     DestroyRef,
     inject,
     InjectionToken,
-    Input,
     input,
     OnDestroy,
     OutputRef,
@@ -51,9 +50,9 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
         class: 'kbq-option-action',
         role: 'button',
         '[class.kbq-expanded]': 'false',
-        '[class.kbq-disabled]': 'disabled',
-        '[attr.disabled]': 'disabled || null',
-        '[attr.aria-disabled]': 'disabled || null',
+        '[class.kbq-disabled]': 'disabled()',
+        '[attr.disabled]': 'disabled() || null',
+        '[attr.aria-disabled]': 'disabled() || null',
         '[attr.aria-label]': 'resolvedAriaLabel',
         '[attr.tabIndex]': '-1',
         '(click)': 'onClick($event)',
@@ -96,20 +95,8 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         );
     }
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
-    private _disabled: boolean = false;
+    /** Whether the action is disabled. */
+    readonly disabled = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
     hasFocus: boolean = false;
 

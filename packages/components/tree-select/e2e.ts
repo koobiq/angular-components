@@ -342,7 +342,7 @@ export class E2eMultilineTreeSelectStates extends BaseTreeSelectStates {}
 /*  tree-select.component.karma-spec.ts and from xit blocks in                */
 /*  tree-select.component.spec.ts. They rely on real layout (bounding boxes,  */
 /*  cursor styles from .scss, CDK overlay flexible-position math) and so     */
-/*  cannot run under Jest/JSDOM.                                              */
+/*  cannot run under jsdom.                                                   */
 /* -------------------------------------------------------------------------- */
 
 @Component({

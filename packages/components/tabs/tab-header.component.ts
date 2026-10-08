@@ -4,15 +4,15 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChildren,
+    contentChildren,
     ElementRef,
     inject,
     input,
     QueryList,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { isUndefined } from '@koobiq/components/core';
+import { isUndefined, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
@@ -40,7 +40,7 @@ const TAB_PADDING = 12;
     imports: [KbqIconModule, CdkObserveContent, KbqScrollbarViewport],
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
-    changeDetection: ChangeDetectionStrategy.Default,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tab-header',
@@ -55,15 +55,47 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     /** Whether the tabs are underlined. */
     readonly underlined = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    @ContentChildren(KbqTabLabelWrapper, { descendants: false }) readonly items: QueryList<KbqTabLabelWrapper>;
-    @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
-    @ViewChild('tabListContainer', { static: true, read: KbqScrollbarViewport })
-    protected readonly scrollbarViewport: KbqScrollbarViewport;
-    @ViewChild('tabList', { static: true }) readonly tabList: ElementRef;
-    @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
-    @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
+    private readonly itemsQuery = contentChildren(KbqTabLabelWrapper, { descendants: false });
+    private readonly itemsList = kbqQueryListFrom(this.itemsQuery);
+    private readonly tabListContainerQuery = viewChild.required<ElementRef>('tabListContainer');
+    private readonly scrollbarViewportQuery = viewChild.required('tabListContainer', { read: KbqScrollbarViewport });
+    private readonly tabListQuery = viewChild.required<ElementRef>('tabList');
+    private readonly nextPaginatorQuery = viewChild.required<ElementRef<HTMLElement>>('nextPaginator');
+    private readonly previousPaginatorQuery = viewChild.required<ElementRef<HTMLElement>>('previousPaginator');
+
+    /** The label wrappers of the tabs. */
+    get items(): QueryList<KbqTabLabelWrapper> {
+        return this.itemsList();
+    }
+
+    /** The scroll container of the tab labels. */
+    get tabListContainer(): ElementRef {
+        return this.tabListContainerQuery();
+    }
+
+    protected get scrollbarViewport(): KbqScrollbarViewport {
+        return this.scrollbarViewportQuery();
+    }
+
+    /** The element that holds the tab labels. */
+    get tabList(): ElementRef {
+        return this.tabListQuery();
+    }
+
+    /** The pagination arrow towards the end of the tab list. */
+    get nextPaginator(): ElementRef<HTMLElement> {
+        return this.nextPaginatorQuery();
+    }
+
+    /** The pagination arrow towards the beginning of the tab list. */
+    get previousPaginator(): ElementRef<HTMLElement> {
+        return this.previousPaginatorQuery();
+    }
 
     private readonly isBrowser = inject(Platform).isBrowser;
+
+    /** The underline as the last check of the tab group measured it, see `ngAfterContentChecked`. */
+    private checkedUnderline?: string;
 
     protected get activeTabOffsetWidth(): number | undefined {
         if (!this.isBrowser) return undefined;
@@ -89,6 +121,19 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
 
     protected get activeTabDisabled(): boolean {
         return !!this.items.get(this.selectedIndex)?.disabled;
+    }
+
+    override ngAfterContentChecked(): void {
+        super.ngAfterContentChecked();
+
+        // The labels belong to the view of the tab group, so a change of their size or state gives this view no
+        // notice: the underline is measured again whenever the group is checked, as it was before OnPush.
+        const underline = `${this.activeTabOffsetLeft}:${this.activeTabOffsetWidth}:${this.activeTabDisabled}`;
+
+        if (underline !== this.checkedUnderline) {
+            this.checkedUnderline = underline;
+            this.changeDetectorRef.markForCheck();
+        }
     }
 
     protected itemSelected(event: KeyboardEvent): void {

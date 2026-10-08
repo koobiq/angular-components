@@ -12,24 +12,24 @@ import {
     EventEmitter,
     Injectable,
     InjectionToken,
-    Input,
+    InputSignal,
     OnChanges,
     OnDestroy,
-    Output,
     Renderer2,
     SimpleChanges,
     TemplateRef,
     Type,
-    ViewChild,
     ViewEncapsulation,
     WritableSignal,
     booleanAttribute,
     effect,
     inject,
     input,
-    numberAttribute
+    numberAttribute,
+    untracked,
+    viewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     ESCAPE,
     KBQ_PARENT_POPUP,
@@ -54,7 +54,6 @@ import {
 import { EMPTY, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqExclusiveTooltip, KbqTooltipRegistry } from './tooltip-registry';
-import { kbqTooltipAnimations } from './tooltip.animations';
 
 /**
  * What the tooltip is vertically anchored to when it is positioned relative to the caret:
@@ -139,8 +138,7 @@ let nextTooltipUniqueId = 0;
     templateUrl: './tooltip.component.html',
     styleUrls: ['./tooltip.scss', './tooltip-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None,
-    animations: [kbqTooltipAnimations.tooltipState]
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqTooltipComponent extends KbqPopUp {
     private readonly delayTracker = inject(KbqTooltipDelayTracker);
@@ -156,7 +154,12 @@ export class KbqTooltipComponent extends KbqPopUp {
      */
     id: string = `kbq-tooltip-${nextTooltipUniqueId++}`;
 
-    @ViewChild('tooltip') elementRef: ElementRef;
+    private readonly tooltipElement = viewChild<ElementRef<HTMLElement>>('tooltip');
+
+    /** The tooltip panel, which the base pop-up measures and decorates instead of the host. */
+    override get elementRef(): ElementRef<HTMLElement> {
+        return this.tooltipElement()!;
+    }
 
     show(delay: number) {
         if (!this.content) {
@@ -275,7 +278,7 @@ export class KbqTooltipTrigger
 
     /**
      * Per-instance override for the scroll strategy, taking precedence over `KBQ_TOOLTIP_SCROLL_STRATEGY`
-     * when set. An `@Input` rather than a DI override so it applies to this tooltip instance only, without
+     * when set. An input rather than a DI override so it applies to this tooltip instance only, without
      * leaking into other `kbqTooltip`s nested inside the same host (DI overrides are visible to every
      * descendant in the element-injector tree, not just the element they're declared on).
      * @docs-private
@@ -346,15 +349,9 @@ export class KbqTooltipTrigger
      * Setting hideWithTimeout to true will delay tooltip hiding and will not hide when the mouse moves from trigger
      * to tooltip.
      */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input({ transform: booleanAttribute }) hideWithTimeout: boolean = false;
+    hideWithTimeout: boolean = false;
 
     /** Input (`kbqVisible`) that programmatically shows or hides the tooltip; reflects the current `visible` state. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqVisible')
     get tooltipVisible(): boolean {
         return this.visible;
     }
@@ -364,9 +361,6 @@ export class KbqTooltipTrigger
     }
 
     /** Input (`kbqPlacement`) that sets the tooltip placement relative to its trigger; reflects the current `placement`. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPlacement')
     get tooltipPlacement(): KbqPopUpPlacementValues {
         return this.placement;
     }
@@ -379,10 +373,7 @@ export class KbqTooltipTrigger
      * Positions the tooltip relative to the mouse cursor. Only available for top and bottom kbqPlacement.
      * Does not work with kbqPlacementPriority.
      */
-    // TODO: Skipped for migration because:
-    //  Class of this input is manually instantiated. This is discouraged and prevents
-    //  migration.
-    @Input({ alias: 'kbqRelativeToPointer', transform: booleanAttribute }) relativeToPointer: boolean = false;
+    relativeToPointer: boolean = false;
 
     /**
      * Positions the tooltip relative to the text caret of the field it is attached to, following it while the
@@ -393,15 +384,12 @@ export class KbqTooltipTrigger
      *
      * The field is the host element itself when it is editable, otherwise the first editable it wraps.
      */
-    @Input({ alias: 'kbqRelativeToCaret', transform: booleanAttribute }) relativeToCaret: boolean = false;
+    relativeToCaret: boolean = false;
 
     /** What the tooltip is vertically anchored to while `kbqRelativeToCaret` is enabled. */
-    @Input('kbqRelativeToCaretVertical') relativeToCaretVertical: KbqCaretVerticalAnchor = 'auto';
+    relativeToCaretVertical: KbqCaretVerticalAnchor = 'auto';
 
     /** Input (`kbqPlacementPriority`) that sets the ordered fallback placements; reflects the current `placementPriority`. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqPlacementPriority')
     get tooltipPlacementPriority() {
         return this.placementPriority;
     }
@@ -411,9 +399,6 @@ export class KbqTooltipTrigger
     }
 
     /** Input (`kbqTooltip`) with the tooltip content — a string or a template. Updating it refreshes an open tooltip. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTooltip')
     get content(): string | TemplateRef<unknown> {
         return this._content;
     }
@@ -430,9 +415,6 @@ export class KbqTooltipTrigger
      * Reads back the *effective* state, which for subclasses that derive one of their own (see
      * `foldDisabled`) is not necessarily the value that was written.
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTooltipDisabled')
     get disabled(): boolean {
         return this._disabled;
     }
@@ -462,19 +444,11 @@ export class KbqTooltipTrigger
     protected derivedDisabled: boolean | undefined;
 
     /** Input (`kbqEnterDelay`) — delay in milliseconds before the tooltip is shown. Defaults to `400`. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input('kbqEnterDelay') enterDelay = 400;
+    enterDelay = 400;
     /** Input (`kbqLeaveDelay`) — delay in milliseconds before the tooltip is hidden. Defaults to `0`. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input('kbqLeaveDelay') leaveDelay = 0;
+    leaveDelay = 0;
 
     /** Input (`kbqTrigger`) with the comma-separated trigger events. An empty value resets to hover + focus and rebinds listeners. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTrigger')
     get trigger(): string {
         return this._trigger;
     }
@@ -493,9 +467,6 @@ export class KbqTooltipTrigger
     protected _trigger = `${PopUpTriggers.Hover}, ${PopUpTriggers.Focus}`;
 
     /** Input (`kbqTooltipClass`) with an extra CSS class applied to the tooltip; updating it refreshes the class map. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTooltipClass')
     get customClass(): string {
         return this._customClass || '';
     }
@@ -511,9 +482,6 @@ export class KbqTooltipTrigger
     }
 
     /** Input (`kbqTooltipContext`) with the context object passed to a template tooltip; updating it refreshes the open tooltip. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTooltipContext')
     get context(): unknown {
         return this._context;
     }
@@ -527,9 +495,6 @@ export class KbqTooltipTrigger
     private _context: unknown = null;
 
     /** Input (`kbqTooltipColor`) with the tooltip color theme. Defaults to `KbqComponentColors.Contrast`. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input('kbqTooltipColor')
     get color(): KbqComponentColors | string {
         return this._color;
     }
@@ -547,19 +512,21 @@ export class KbqTooltipTrigger
     private _color: KbqComponentColors | string = KbqComponentColors.Contrast;
 
     /** Input (`kbqTooltipArrow`) — whether to render the tooltip's arrow/pointer. Defaults to `false`. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ alias: 'kbqTooltipArrow', transform: booleanAttribute }) arrow: boolean = false;
+    arrow: boolean = false;
     /** Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger; `null` uses the default. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ alias: 'kbqTooltipOffset', transform: numberAttribute }) offset: number | null = null;
+    offset: number | null = null;
 
     /** Output (`kbqPlacementChange`) that emits the new placement whenever the tooltip repositions. */
-    @Output('kbqPlacementChange') readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+    readonly placementChange = new EventEmitter<KbqPopUpPlacementValues>();
+
+    /** @docs-private */
+    readonly placementChangeOutput = outputFromObservable(this.placementChange, { alias: 'kbqPlacementChange' });
 
     /** Output (`kbqVisibleChange`) that emits when the tooltip's visibility changes. */
-    @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
+    readonly visibleChange = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    readonly visibleChangeOutput = outputFromObservable(this.visibleChange, { alias: 'kbqVisibleChange' });
 
     /** Whether the configured trigger list includes the `click` trigger. */
     private get hasClickInTrigger(): boolean {
@@ -580,39 +547,145 @@ export class KbqTooltipTrigger
      * subclasses — to render a warning tooltip use `kbqTooltipModifier="warning"`,
      * and `kbqTooltipModifier="extended"` for the extended variant (combine with `kbqTooltipHeader`).
      */
-    // TODO: Skipped for migration because:
-    //  Class of this input is manually instantiated. This is discouraged and prevents
-    //  migration.
-    @Input('kbqTooltipModifier') modifier: KbqEnumValues<TooltipModifier> = TooltipModifier.Default;
+    modifier: KbqEnumValues<TooltipModifier> = TooltipModifier.Default;
 
     /**
      * Header text or template, rendered above the tooltip content. Only meaningful with
      * `kbqTooltipModifier="extended"`. Replaces the removed `KbqExtendedTooltipTrigger.header`.
      */
-    // TODO: Skipped for migration because:
-    //  Class of this input is manually instantiated. This is discouraged and prevents
-    //  migration.
-    @Input('kbqTooltipHeader') header: string | TemplateRef<unknown>;
+    header: string | TemplateRef<unknown>;
 
     /**
-     * The old `KbqWarningTooltipTrigger` / `KbqExtendedTooltipTrigger` subclasses had
-     * setters on their content/header inputs that pushed updates into the open tooltip.
-     * Now that `modifier`, `header`, `arrow` and `offset` are plain `@Input` fields on this base class,
-     * we need to mirror that reactivity manually — without it, changing the inputs
-     * while a tooltip is open silently leaves the overlay showing stale data until
-     * the next show/hide cycle.
+     * Hands each bound input to its member, and pushes a later change of `modifier`, `header`, `arrow` or
+     * `offset` — plain fields — into an open tooltip, which would otherwise show stale data until the next
+     * show/hide cycle.
      */
     ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        if (changes['triggerInput']) {
+            const trigger = this.triggerInput();
+
+            if (trigger !== undefined) this.trigger = trigger;
+        }
+
+        if (changes['hideWithTimeoutInput']) {
+            const hideWithTimeout = this.hideWithTimeoutInput();
+
+            if (hideWithTimeout !== undefined) this.hideWithTimeout = hideWithTimeout;
+        }
+
+        if (changes['enterDelayInput']) {
+            const enterDelay = this.enterDelayInput();
+
+            if (enterDelay !== undefined) this.enterDelay = enterDelay;
+        }
+
+        if (changes['leaveDelayInput']) {
+            const leaveDelay = this.leaveDelayInput();
+
+            if (leaveDelay !== undefined) this.leaveDelay = leaveDelay;
+        }
+
+        if (changes['relativeToPointerInput']) {
+            const relativeToPointer = this.relativeToPointerInput();
+
+            if (relativeToPointer !== undefined) this.relativeToPointer = relativeToPointer;
+        }
+
+        if (changes['relativeToCaretInput']) {
+            const relativeToCaret = this.relativeToCaretInput();
+
+            if (relativeToCaret !== undefined) this.relativeToCaret = relativeToCaret;
+        }
+
+        if (changes['relativeToCaretVerticalInput']) {
+            const relativeToCaretVertical = this.relativeToCaretVerticalInput();
+
+            if (relativeToCaretVertical !== undefined) this.relativeToCaretVertical = relativeToCaretVertical;
+        }
+
+        if (changes['contentInput']) {
+            const content = this.contentInput();
+
+            if (content !== undefined) this.content = content;
+        }
+
+        if (changes['headerInput']) {
+            const header = this.headerInput();
+
+            if (header !== undefined) this.header = header;
+        }
+
+        if (changes['modifierInput']) {
+            const modifier = this.modifierInput();
+
+            if (modifier !== undefined) this.modifier = modifier;
+        }
+
+        if (changes['contextInput']) {
+            const context = this.contextInput();
+
+            if (context !== undefined) this.context = context;
+        }
+
+        if (changes['customClassInput']) {
+            const customClass = this.customClassInput();
+
+            if (customClass !== undefined) this.customClass = customClass;
+        }
+
+        if (changes['colorInput']) {
+            const color = this.colorInput();
+
+            if (color !== undefined) this.color = color;
+        }
+
+        if (changes['arrowInput']) {
+            const arrow = this.arrowInput();
+
+            if (arrow !== undefined) this.arrow = arrow;
+        }
+
+        if (changes['offsetInput']) {
+            const offset = this.offsetInput();
+
+            if (offset !== undefined) this.offset = offset;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tooltipPlacementPriorityInput']) {
+            const tooltipPlacementPriority = this.tooltipPlacementPriorityInput();
+
+            if (tooltipPlacementPriority !== undefined) this.tooltipPlacementPriority = tooltipPlacementPriority;
+        }
+
+        if (changes['tooltipPlacementInput']) {
+            const tooltipPlacement = this.tooltipPlacementInput();
+
+            if (tooltipPlacement !== undefined) this.tooltipPlacement = tooltipPlacement;
+        }
+
+        if (changes['tooltipVisibleInput']) {
+            const tooltipVisible = this.tooltipVisibleInput();
+
+            if (tooltipVisible !== undefined) this.tooltipVisible = tooltipVisible;
+        }
+
         if (!this.instance) return;
 
-        if (changes.modifier && !changes.modifier.firstChange) {
+        if (changes['modifierInput'] && !changes['modifierInput'].firstChange) {
             this.updateClassMap();
         }
 
         if (
-            (changes.header && !changes.header.firstChange) ||
-            (changes.arrow && !changes.arrow.firstChange) ||
-            (changes.offset && !changes.offset.firstChange)
+            (changes['headerInput'] && !changes['headerInput'].firstChange) ||
+            (changes['arrowInput'] && !changes['arrowInput'].firstChange) ||
+            (changes['offsetInput'] && !changes['offsetInput'].firstChange)
         ) {
             this.updateData();
         }
@@ -666,6 +739,95 @@ export class KbqTooltipTrigger
      * additionally covers a trigger destroyed while its tooltip is still visible — that path disposes the
      * overlay without emitting `visibleChange(false)`.
      */
+    /** @docs-private */
+    readonly triggerInput = input<string | undefined>(undefined, { alias: 'kbqTrigger' });
+
+    /** @docs-private */
+    readonly hideWithTimeoutInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'hideWithTimeout',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly enterDelayInput = input<number | undefined>(undefined, { alias: 'kbqEnterDelay' });
+
+    /** @docs-private */
+    readonly leaveDelayInput = input<number | undefined>(undefined, { alias: 'kbqLeaveDelay' });
+
+    /** @docs-private */
+    readonly relativeToPointerInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqRelativeToPointer',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly relativeToCaretInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqRelativeToCaret',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly relativeToCaretVerticalInput = input<KbqCaretVerticalAnchor | undefined>(undefined, {
+        alias: 'kbqRelativeToCaretVertical'
+    });
+
+    /** @docs-private */
+    readonly contentInput: InputSignal<KbqTooltipTrigger['content'] | undefined> = input<
+        KbqTooltipTrigger['content'] | undefined
+    >(undefined, {
+        alias: 'kbqTooltip'
+    });
+
+    /** @docs-private */
+    readonly headerInput: InputSignal<KbqTooltipTrigger['header'] | undefined> = input<
+        KbqTooltipTrigger['header'] | undefined
+    >(undefined, {
+        alias: 'kbqTooltipHeader'
+    });
+
+    /** @docs-private */
+    readonly modifierInput = input<KbqEnumValues<TooltipModifier> | undefined>(undefined, {
+        alias: 'kbqTooltipModifier'
+    });
+
+    /** @docs-private */
+    readonly contextInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'kbqTooltipContext' });
+
+    /** @docs-private */
+    readonly customClassInput = input<string | undefined>(undefined, { alias: 'kbqTooltipClass' });
+
+    /** @docs-private */
+    readonly colorInput = input<KbqComponentColors | string | undefined>(undefined, { alias: 'kbqTooltipColor' });
+
+    /** @docs-private */
+    readonly arrowInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqTooltipArrow',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly offsetInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
+        alias: 'kbqTooltipOffset',
+        transform: numberAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'kbqTooltipDisabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tooltipPlacementPriorityInput = input<string | string[] | null | undefined>(undefined, {
+        alias: 'kbqPlacementPriority'
+    });
+
+    /** @docs-private */
+    readonly tooltipPlacementInput = input<KbqPopUpPlacementValues | undefined>(undefined, { alias: 'kbqPlacement' });
+
+    /** @docs-private */
+    readonly tooltipVisibleInput = input<boolean | undefined>(undefined, { alias: 'kbqVisible' });
+
     constructor() {
         super();
 
@@ -811,7 +973,7 @@ export class KbqTooltipTrigger
         // `KbqSiblingPopup` contract, so checking it here closes that gap regardless of the cause. Gated by
         // `hasInteractiveTrigger` for the same reason as the constructor subscription: a `manual`/`none`
         // tooltip is driven imperatively and must not be muted by a sibling at all.
-        if (this.hasInteractiveTrigger && this.siblingPopups.some(({ isAttached }) => isAttached)) {
+        if (this.hasInteractiveTrigger && this.siblingPopupAttached) {
             return;
         }
 
@@ -838,11 +1000,19 @@ export class KbqTooltipTrigger
      * not be mistaken for the user leaving.
      */
     hide(delay: number = this.leaveDelay) {
-        if (RELEASE_TRIGGERS.includes(this.triggerName) && !this.siblingPopups.some(({ isAttached }) => isAttached)) {
+        if (RELEASE_TRIGGERS.includes(this.triggerName) && !this.siblingPopupAttached) {
             this.mutedBySiblingPopup = false;
         }
 
         super.hide(delay);
+    }
+
+    /**
+     * Whether a pop-up on the same element is attached. Untracked: the siblings keep it in signals, and a consumer
+     * `effect()` that shows or hides the tooltip must not run again whenever one of them opens or closes.
+     */
+    private get siblingPopupAttached(): boolean {
+        return untracked(() => this.siblingPopups.some(({ isAttached }) => isAttached));
     }
 
     /**
@@ -885,7 +1055,7 @@ export class KbqTooltipTrigger
         // Re-anchoring an open tooltip has to move the description itself: the `visibleChange(true)` edge that
         // normally drives it is swallowed by `distinctUntilChanged` while the pop-up stays attached. A tooltip
         // that is not open yet is left to that edge, which describes the element anchored by then.
-        if (this.isOpen) {
+        if (untracked(() => this.isOpen)) {
             this.describeTrigger();
         }
 
@@ -966,7 +1136,6 @@ export class KbqTooltipTrigger
         this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], `${this.customClass} ${this.colorClass}`, {
             modifier: this.modifier
         });
-        this.instance.markForCheck();
     }
 
     /**

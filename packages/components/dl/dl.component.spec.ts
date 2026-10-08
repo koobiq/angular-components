@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Component, Injectable, Provider, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { enUSLocaleData, kbqA11yLocaleConfigurationProvider } from '@koobiq/components/core';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
@@ -37,6 +37,10 @@ const getResizeHandle = ({ nativeElement }: ComponentFixture<unknown>): HTMLElem
 };
 
 describe(KbqDlComponent.name, () => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('should use start alignment by default', () => {
         const fixture = createComponent(KbqDlComponent);
 
@@ -190,7 +194,9 @@ describe(KbqDlComponent.name, () => {
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_resized');
     });
 
-    it('should coerce a string dtWidth and clamp it against dtMinWidth', fakeAsync(() => {
+    it('should coerce a string dtWidth and clamp it against dtMinWidth', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(KbqDlComponent);
 
         fixture.componentRef.setInput('resizable', true);
@@ -204,14 +210,14 @@ describe(KbqDlComponent.name, () => {
 
         // What a consumer without `strictTemplates` sends with `<kbq-dl dtWidth="120">`.
         fixture.componentRef.setInput('dtWidth', '120');
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
 
         // Untransformed the string never reached the clamp: `setDtWidth` opens with
         // `Number.isFinite(width)`, which is false for '120', so the column stayed below its own minimum.
         expect(fixture.componentInstance.dtWidth()).toBe(200);
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
     it('should report a dtWidth that is not a finite number as null', () => {
         const fixture = createComponent(KbqDlComponent);
@@ -553,7 +559,9 @@ describe(KbqDlComponent.name, () => {
         expect(getResizeHandle(fixture)!.getAttribute('aria-valuemin')).toBe('0');
     });
 
-    it('should auto-detect the vertical layout from the host width via the resize observer', fakeAsync(() => {
+    it('should auto-detect the vertical layout from the host width via the resize observer', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(KbqDlComponent);
 
         // The layout decision reads `getClientRects()`; report a width below the default `verticalBreakpoint` (400).
@@ -563,15 +571,17 @@ describe(KbqDlComponent.name, () => {
         });
 
         // Flush the resize-observer debounce so the initial `startWith(null)` emission runs `updateLayout`.
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
         expect(getResizeHandle(fixture)).toBeNull();
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
-    it('should keep the horizontal layout when the host is wider than verticalBreakpoint', fakeAsync(() => {
+    it('should keep the horizontal layout when the host is wider than verticalBreakpoint', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(KbqDlComponent);
 
         fixture.componentRef.setInput('resizable', true);
@@ -580,15 +590,17 @@ describe(KbqDlComponent.name, () => {
             value: () => [{ width: 800 } as DOMRect]
         });
 
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
         expect(getResizeHandle(fixture)).not.toBeNull();
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
-    it('should let an explicit vertical input override the auto-detection', fakeAsync(() => {
+    it('should let an explicit vertical input override the auto-detection', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(KbqDlComponent);
 
         // Host is narrow (auto-detection would choose vertical), but the explicit input forces horizontal.
@@ -598,14 +610,16 @@ describe(KbqDlComponent.name, () => {
             value: () => [{ width: 200 } as DOMRect]
         });
 
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
-    it('should re-evaluate the layout against verticalBreakpoint on every resize while in auto mode', fakeAsync(() => {
+    it('should re-evaluate the layout against verticalBreakpoint on every resize while in auto mode', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(KbqDlComponent);
         const observer = TestBed.inject(SharedResizeObserver) as MockResizeObserver;
 
@@ -616,27 +630,29 @@ describe(KbqDlComponent.name, () => {
             value: () => [{ width } as DOMRect]
         });
 
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
 
         // Shrink below the threshold: the layout must switch to vertical, not stay locked to the first measurement.
         width = 300;
         observer.changes.next([]);
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
 
         // Grow back above the threshold: it must switch back to horizontal.
         width = 800;
         observer.changes.next([]);
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
-    it('should honor a custom verticalBreakpoint as the vertical-layout threshold', fakeAsync(() => {
+    it('should honor a custom verticalBreakpoint as the vertical-layout threshold', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(KbqDlComponent);
 
         // 600px is above the default threshold (400) but below the custom one (700), so only a working
@@ -647,14 +663,16 @@ describe(KbqDlComponent.name, () => {
             value: () => [{ width: 600 } as DOMRect]
         });
 
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
-    it('should stay horizontal when the host is wider than a custom verticalBreakpoint', fakeAsync(() => {
+    it('should stay horizontal when the host is wider than a custom verticalBreakpoint', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(KbqDlComponent);
 
         fixture.componentRef.setInput('verticalBreakpoint', 500);
@@ -663,30 +681,16 @@ describe(KbqDlComponent.name, () => {
             value: () => [{ width: 600 } as DOMRect]
         });
 
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
-    it('should still honor the deprecated minWidth alias as the vertical-layout threshold', fakeAsync(() => {
-        const fixture = createComponent(KbqDlComponent);
+    it('should re-evaluate the layout when the breakpoint changes', async () => {
+        vi.useFakeTimers();
 
-        // 600px is above the default (400) but below the alias value, so only a working `minWidth` makes it vertical.
-        fixture.componentRef.setInput('minWidth', 700);
-        Object.defineProperty(getDlElement(fixture), 'getClientRects', {
-            configurable: true,
-            value: () => [{ width: 600 } as DOMRect]
-        });
-
-        tick(100);
-        fixture.detectChanges();
-
-        expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
-        flush();
-    }));
-    it('should re-evaluate the layout when the breakpoint changes', fakeAsync(() => {
         const fixture = createComponent(KbqDlComponent);
 
         Object.defineProperty(getDlElement(fixture), 'getClientRects', {
@@ -694,7 +698,7 @@ describe(KbqDlComponent.name, () => {
             value: () => [{ width: 600 } as DOMRect]
         });
 
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
@@ -704,10 +708,12 @@ describe(KbqDlComponent.name, () => {
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
-    it('should hand the decision back to the breakpoint when vertical returns to null', fakeAsync(() => {
+    it('should hand the decision back to the breakpoint when vertical returns to null', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(KbqDlComponent);
 
         Object.defineProperty(getDlElement(fixture), 'getClientRects', {
@@ -717,7 +723,7 @@ describe(KbqDlComponent.name, () => {
 
         // The default breakpoint is 400, so the first measurement answers "horizontal" - that is the stale
         // answer the decision must not fall back to at the end.
-        tick(100);
+        await vi.advanceTimersByTimeAsync(100);
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).not.toContain('kbq-dl_vertical');
@@ -733,8 +739,8 @@ describe(KbqDlComponent.name, () => {
         fixture.detectChanges();
 
         expect(getDlElement(fixture).classList).toContain('kbq-dl_vertical');
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
     it('should treat a valueless wide attribute as true', () => {
         const fixture = createComponent(DlWithValuelessAttributes);
@@ -810,7 +816,7 @@ describe(KbqDlComponent.name, () => {
 
         const dl = fixture.debugElement.query(By.directive(KbqDlComponent)).componentInstance as KbqDlComponent;
 
-        expect(dl.minWidth()).toBe(700);
+        expect(dl.verticalBreakpoint()).toBe(700);
         expect(dl.dtMinWidth()).toBe(120);
         expect(dl.ddMinWidth()).toBe(80);
     });
@@ -857,7 +863,7 @@ class DlWithInvalidWidths {}
 @Component({
     imports: [KbqDlModule],
     template: `
-        <kbq-dl minWidth="700" dtMinWidth="120" ddMinWidth="80">
+        <kbq-dl verticalBreakpoint="700" dtMinWidth="120" ddMinWidth="80">
             <kbq-dt>term</kbq-dt>
             <kbq-dd>description</kbq-dd>
         </kbq-dl>

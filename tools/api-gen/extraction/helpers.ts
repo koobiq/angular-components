@@ -656,8 +656,16 @@ function mergeBackingInputs(members: MemberEntry[]): MemberEntry[] {
                 member.memberTags.includes(MemberTags.Output) &&
                 ((member as PropertyEntry).outputAlias ?? member.name) === `${name}Change`
         );
+        // A getter the input feeds through a setter of its own — an accessor kept writable for code — is one member.
+        const setter =
+            target.memberType === MemberType.Getter
+                ? result.find(
+                      (member) => member.name === name && member.memberType === MemberType.Setter && isPublic(member)
+                  )
+                : undefined;
         const merged: PropertyEntry = {
             ...target,
+            description: target.description || setter?.description || '',
             memberType: MemberType.Property,
             memberTags: [...target.memberTags, MemberTags.Input, ...(change ? [MemberTags.Output] : [])],
             inputAlias: name,
@@ -670,7 +678,9 @@ function mergeBackingInputs(members: MemberEntry[]): MemberEntry[] {
             })
         };
 
-        return result.filter((member) => member !== change).map((member) => (member === target ? merged : member));
+        return result
+            .filter((member) => member !== change && member !== setter)
+            .map((member) => (member === target ? merged : member));
     }, members);
 }
 

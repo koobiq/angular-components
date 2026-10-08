@@ -6,6 +6,7 @@ import { kbqInjectNativeElement } from '../utils';
 
 const overlayLayerClass = 'kbq-overlay-layer';
 const overlayLayerExcludeClass = 'kbq-overlay-layer-exclude';
+const overlayPopoverClass = 'cdk-overlay-popover';
 
 /** Element an overlay is anchored to, or a getter read again on every attach of the overlay. */
 export type KbqOverlayLayerOrigin = Element | (() => Element | null | undefined);
@@ -85,6 +86,47 @@ class KbqOverlayLayerRegistry implements KbqOverlayLayers {
         }
 
         target.appendChild(host);
+        this.setInTopLayer(overlayRef, target === root);
+    }
+
+    /**
+     * CDK shows an overlay host as a popover, in the top layer above the whole page, where the `z-index` of a layer
+     * does not reach it. A host moved into a layer leaves the top layer and is laid out as without popovers, its
+     * backdrop before it; one moved back to the application-wide container returns to the top layer.
+     */
+    private setInTopLayer(overlayRef: OverlayRef, inTopLayer: boolean): void {
+        if (!overlayRef.getConfig().usePopover) {
+            return;
+        }
+
+        const host = overlayRef.hostElement;
+        const backdrop = overlayRef.backdropElement;
+
+        if (inTopLayer) {
+            host.setAttribute('popover', 'manual');
+            host.classList.add(overlayPopoverClass);
+
+            if (backdrop?.nextElementSibling === host) {
+                host.prepend(backdrop);
+            }
+
+            if (overlayRef.hasAttached()) {
+                host.showPopover();
+            }
+
+            return;
+        }
+
+        if (host.hasAttribute('popover')) {
+            host.hidePopover();
+        }
+
+        host.removeAttribute('popover');
+        host.classList.remove(overlayPopoverClass);
+
+        if (backdrop?.parentElement === host) {
+            host.before(backdrop);
+        }
     }
 
     private findLayer(origin: Element | null | undefined): KbqOverlayLayer | null {

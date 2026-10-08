@@ -5,45 +5,46 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import * as i0 from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { SimpleChanges } from '@angular/core';
 
 // @public
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     constructor();
-    readonly charWidth: i0.InputSignal<number>;
-    readonly debounceInterval: i0.InputSignalWithTransform<number, unknown>;
+    readonly charWidth: _angular_core.InputSignal<number>;
+    readonly debounceInterval: _angular_core.InputSignalWithTransform<number, unknown>;
     protected foldDisabled(): boolean;
-    readonly ignoreTooltipPointerEvents: i0.InputSignal<boolean>;
+    readonly ignoreTooltipPointerEvents: _angular_core.InputSignal<boolean>;
     // (undocumented)
     set kbqEllipsisCenter(value: string);
-    readonly minVisibleLength: i0.InputSignal<number>;
+    readonly kbqEllipsisCenterInput: _angular_core.InputSignal<string | undefined>;
+    readonly minVisibleLength: _angular_core.InputSignal<number>;
     // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
     refresh(): void;
-    // @deprecated (undocumented)
-    readonly resizeStream: Subject<Event>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqEllipsisCenterDirective, "[kbqEllipsisCenter]", never, { "kbqEllipsisCenter": { "alias": "kbqEllipsisCenter"; "required": false; }; "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; "minVisibleLength": { "alias": "minVisibleLength"; "required": false; "isSignal": true; }; "charWidth": { "alias": "charWidth"; "required": false; "isSignal": true; }; "debounceInterval": { "alias": "debounceInterval"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqEllipsisCenterDirective, "[kbqEllipsisCenter]", never, { "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; "minVisibleLength": { "alias": "minVisibleLength"; "required": false; "isSignal": true; }; "charWidth": { "alias": "charWidth"; "required": false; "isSignal": true; }; "debounceInterval": { "alias": "debounceInterval"; "required": false; "isSignal": true; }; "kbqEllipsisCenterInput": { "alias": "kbqEllipsisCenter"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqEllipsisCenterDirective, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqEllipsisCenterDirective, never>;
 }
 
 // @public (undocumented)
 export class KbqEllipsisCenterModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqEllipsisCenterModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqEllipsisCenterModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqEllipsisCenterModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqEllipsisCenterModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEllipsisCenterModule, never, [typeof KbqEllipsisCenterDirective], [typeof KbqEllipsisCenterDirective]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqEllipsisCenterModule, never, [typeof KbqEllipsisCenterDirective], [typeof KbqEllipsisCenterDirective]>;
 }
 
 // (No @packageDocumentation comment for this package)

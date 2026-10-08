@@ -13,8 +13,8 @@ const jsdoc = require('eslint-plugin-jsdoc');
 // eslint-plugin-file-progress ships as ESM since v2 (the plugin object lives under `.default`)
 const progress = require('eslint-plugin-file-progress').default;
 const prettierRecommended = require('eslint-plugin-prettier/recommended');
-const jest = require('eslint-plugin-jest');
 const playwright = require('eslint-plugin-playwright');
+const vitest = require('@vitest/eslint-plugin');
 
 const isCI = !!process.env.CI;
 
@@ -68,6 +68,24 @@ const makeNamingConventionOptions = (prefix) => {
         { selector: 'classProperty', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow' }
     ];
 };
+
+/**
+ * `@angular/animations` is deprecated: the components animate with CSS, waited for with `kbqAfterAnimations`, and
+ * templates with `animate.enter`/`animate.leave`.
+ *
+ * @see https://eslint.org/docs/latest/rules/no-restricted-imports
+ */
+const noAngularAnimationsImports = [
+    {
+        group: [
+            '@angular/animations',
+            '@angular/animations/*',
+            '@angular/platform-browser/animations',
+            '@angular/platform-browser/animations/*'
+        ],
+        message: 'Animate with CSS and `animate.enter`/`animate.leave`: @angular/animations is deprecated.'
+    }
+];
 
 /**
  * @see https://eslint.org/docs/latest/rules/no-restricted-globals
@@ -141,6 +159,8 @@ module.exports = tseslint.config(
             // files there belong to no tsconfig project, so the type-aware rules fail on them
             '.ai',
             '.claude',
+            // a separate npm project with its own Angular and its own runner, see its README
+            'tools/check-angular',
             // ignore build tokens
             'apps/docs/src/styles/koobiq/default-theme/',
             // ignore index.html
@@ -253,6 +273,8 @@ module.exports = tseslint.config(
             }
         },
         rules: {
+            'no-restricted-imports': [2, { patterns: noAngularAnimationsImports }],
+
             // plugin:@typescript-eslint
             '@typescript-eslint/no-explicit-any': 0,
             '@typescript-eslint/no-var-requires': 0,
@@ -289,6 +311,7 @@ module.exports = tseslint.config(
 
             '@angular-eslint/prefer-signals': 0,
             '@angular-eslint/prefer-output-emitter-ref': 0,
+            '@angular-eslint/prefer-signal-model': 0,
             '@angular-eslint/prefer-inject': 0,
 
             // plugin:rxjs-x
@@ -331,6 +354,7 @@ module.exports = tseslint.config(
             '@angular-eslint/template/no-any': 0,
             '@angular-eslint/template/prefer-static-string-properties': 0,
             '@angular-eslint/template/cyclomatic-complexity': 0,
+            '@angular-eslint/template/no-non-null-assertion': 0,
             // Allow combining a static `class`/`style` attribute with its `[class]`/`[style]` binding.
             // Angular merges them via styling precedence, so this is a valid pattern (e.g. after the
             // NgClass -> [class] migration). Genuine duplicates (two static `class`, two `[class]`) are
@@ -459,7 +483,35 @@ module.exports = tseslint.config(
             'no-restricted-globals': [
                 1,
                 ...noRestrictedGlobalsOptionsForSSR
+            ],
+            // Components render without zone.js, where these events never fire.
+            'no-restricted-syntax': [
+                1,
+                {
+                    selector: 'MemberExpression[property.name=/^(onStable|onUnstable|onMicrotaskEmpty)$/]',
+                    message:
+                        'NgZone never emits this without zone.js: run the work in afterNextRender, or notify change ' +
+                        'detection with a signal or markForCheck().'
+                }
             ]
+        }
+    },
+
+    // The API of packages/components is signal-based: no decorator inputs, outputs or queries, and no component on
+    // the default change detection. The deprecated sub-entry points stay as they are until their removal in 22.0.0.
+    {
+        files: ['packages/components/**/*.ts'],
+        ignores: [
+            '**/*.spec.ts',
+            '**/*.spec-helper.ts',
+            '**/*.playwright-spec.ts',
+            '**/e2e.ts',
+            'packages/components/**/deprecated/**'
+        ],
+        rules: {
+            '@angular-eslint/prefer-signals': 2,
+            '@angular-eslint/prefer-output-emitter-ref': 2,
+            '@angular-eslint/prefer-on-push-component-change-detection': 2
         }
     },
 
@@ -497,15 +549,15 @@ module.exports = tseslint.config(
     // Override rules for specs
     {
         files: ['**/*.spec.ts', '**/*.spec-helper.ts'],
-        plugins: { jest },
+        plugins: { vitest },
         rules: {
-            // plugin:jest — the classes of defect this suite has actually shipped: a test with no
+            // plugin:vitest — the classes of defect this suite has actually shipped: a test with no
             // assertion at all, an assertion reachable only through a branch that may not be taken,
             // an assertion outside the test that is supposed to own it, and a focused test.
             // A helper that holds a test's assertions is listed by its exact name: a wildcard also matches
             // any call on a variable named the same way, such as `checkbox.click()`. A premise guard in a
             // hook is deliberate here, so no-standalone-expect stays off.
-            'jest/expect-expect': [
+            'vitest/expect-expect': [
                 2,
                 {
                     assertFunctionNames: [
@@ -523,11 +575,11 @@ module.exports = tseslint.config(
                     ]
                 }
             ],
-            'jest/no-conditional-expect': 2,
-            'jest/no-focused-tests': 2,
-            'jest/no-identical-title': 2,
-            'jest/valid-expect': [2, { alwaysAwait: true }],
-            'jest/no-commented-out-tests': 2,
+            'vitest/no-conditional-expect': 2,
+            'vitest/no-focused-tests': 2,
+            'vitest/no-identical-title': 2,
+            'vitest/valid-expect': [2, { alwaysAwait: true }],
+            'vitest/no-commented-out-tests': 2,
 
             // plugin:eslint
             // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
@@ -536,6 +588,35 @@ module.exports = tseslint.config(
             // plugin:@angular-eslint
             '@angular-eslint/use-component-selector': 0,
             '@angular-eslint/prefer-on-push-component-change-detection': 0
+        }
+    },
+
+    // The tests run without zone.js, as the library does: a spec awaits `fixture.whenStable()` and drives time with
+    // Vitest's fake timers.
+    {
+        files: ['**/*.spec.ts', '**/*.spec-helper.ts'],
+        rules: {
+            'no-restricted-imports': [
+                2,
+                {
+                    patterns: noAngularAnimationsImports,
+                    paths: [
+                        {
+                            name: '@angular/core/testing',
+                            importNames: [
+                                'fakeAsync',
+                                'tick',
+                                'flush',
+                                'flushMicrotasks',
+                                'discardPeriodicTasks',
+                                'waitForAsync'
+                            ],
+                            message:
+                                'The tests run without zone.js: await fixture.whenStable() and use vi.useFakeTimers() instead.'
+                        }
+                    ]
+                }
+            ]
         }
     },
 

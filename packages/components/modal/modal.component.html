@@ -134,7 +134,7 @@
                                 [attr.kbq-modal-main-action]="button.kbqModalMainAction"
                                 [class.kbq-progress]="getButtonCallableProp(button, 'loading')"
                                 [color]="button.type"
-                                [disabled]="getButtonCallableProp(button, 'disabled')"
+                                [disabled]="!!getButtonCallableProp(button, 'disabled')"
                                 (click)="onButtonClick(button)"
                             >
                                 {{ button.label }}
@@ -147,6 +147,7 @@
                         <button
                             kbq-button
                             [attr.autofocus]="true"
+                            [class.kbq-progress]="kbqOkLoading"
                             [color]="componentColors.Contrast"
                             (click)="onClickOkCancel('ok')"
                         >
@@ -154,7 +155,7 @@
                         </button>
                     }
                     @if (kbqCancelText) {
-                        <button kbq-button (click)="onClickOkCancel('cancel')">
+                        <button kbq-button [class.kbq-progress]="kbqCancelLoading" (click)="onClickOkCancel('cancel')">
                             {{ cancelText }}
                         </button>
                     }
@@ -187,12 +188,18 @@
     @if (kbqOkText || kbqCancelText) {
         <div class="kbq-confirm-footer">
             @if (kbqOkText) {
-                <button kbq-button [attr.autofocus]="true" [color]="kbqOkType" (click)="onClickOkCancel('ok')">
+                <button
+                    kbq-button
+                    [attr.autofocus]="true"
+                    [class.kbq-progress]="kbqOkLoading"
+                    [color]="kbqOkType"
+                    (click)="onClickOkCancel('ok')"
+                >
                     {{ okText }}
                 </button>
             }
             @if (kbqCancelText) {
-                <button kbq-button (click)="onClickOkCancel('cancel')">
+                <button kbq-button [class.kbq-progress]="kbqCancelLoading" (click)="onClickOkCancel('cancel')">
                     {{ cancelText }}
                 </button>
             }

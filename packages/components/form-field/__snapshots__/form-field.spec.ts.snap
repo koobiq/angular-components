@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`KbqFormField should change KbqPasswordToggle icon by click 1`] = `
+exports[`KbqFormField > should change KbqPasswordToggle icon by click 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
@@ -19,7 +19,7 @@ DebugElement {
 }
 `;
 
-exports[`KbqFormField should display KbqCleaner 1`] = `
+exports[`KbqFormField > should display KbqCleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
     aria-label="Очистить"
@@ -30,7 +30,7 @@ DebugElement {
 }
 `;
 
-exports[`KbqFormField should display KbqLabel 1`] = `
+exports[`KbqFormField > should display KbqLabel 1`] = `
 DebugElement {
   "nativeNode": <kbq-label
     class="kbq-label"
@@ -40,7 +40,7 @@ DebugElement {
 }
 `;
 
-exports[`KbqFormField should display KbqPasswordToggle by input 1`] = `
+exports[`KbqFormField > should display KbqPasswordToggle by input 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
@@ -59,7 +59,7 @@ DebugElement {
 }
 `;
 
-exports[`KbqFormField should display KbqReactivePasswordHint error for invalid password 1`] = `
+exports[`KbqFormField > should display KbqReactivePasswordHint error for invalid password 1`] = `
 DebugElement {
   "nativeNode": <kbq-reactive-password-hint
     class="kbq-reactive-password-hint kbq-hint kbq-hint_fill-text-off kbq-error"
@@ -80,7 +80,7 @@ DebugElement {
 }
 `;
 
-exports[`KbqFormField should display KbqReactivePasswordHint initially 1`] = `
+exports[`KbqFormField > should display KbqReactivePasswordHint initially 1`] = `
 DebugElement {
   "nativeNode": <kbq-reactive-password-hint
     class="kbq-reactive-password-hint kbq-hint kbq-contrast-fade kbq-hint_fill-text-off"
@@ -101,7 +101,7 @@ DebugElement {
 }
 `;
 
-exports[`KbqFormField should display KbqReactivePasswordHint success for valid password 1`] = `
+exports[`KbqFormField > should display KbqReactivePasswordHint success for valid password 1`] = `
 DebugElement {
   "nativeNode": <kbq-reactive-password-hint
     class="kbq-reactive-password-hint kbq-hint kbq-hint_fill-text-off kbq-success"
@@ -121,7 +121,7 @@ DebugElement {
 }
 `;
 
-exports[`KbqFormField should hide KbqPasswordToggle initially 1`] = `
+exports[`KbqFormField > should hide KbqPasswordToggle initially 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"

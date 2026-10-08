@@ -9,12 +9,12 @@ import {
     forwardRef,
     inject,
     InjectionToken,
-    Input,
     input,
     NgZone,
     OnDestroy,
     Provider,
     Renderer2,
+    signal,
     untracked
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -191,7 +191,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
         '(focus)': 'focusChanged(true)',
         '(paste)': 'onPaste($event)',
         '(keydown)': 'onKeyDown($event)',
-        '(input)': 'onInput($event)'
+        '(input)': 'onInput($any($event))'
     },
     hostDirectives: [
         { directive: KbqLocaleOverridesDirective, inputs: ['kbqLocaleOverrides: localeOverrides'] }
@@ -244,54 +244,28 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
      */
     readonly startFormattingFrom = input<number>();
 
-    // Deliberately an accessor, not a `model()`: the setter reformats the field and notifies the
-    // `ControlValueAccessor`, and a `ModelSignal` cannot intercept a write, so an external `[(value)]`
-    // would silently skip both.
-    @Input()
+    /** @docs-private */
+    readonly valueInput = input<number | null | undefined>(undefined, { alias: 'value' });
+
+    /** The numeric value of the field, bound with `[value]` or written by a form control. */
     get value(): number | null {
-        return this._value;
+        return this.valueState() ?? null;
     }
 
-    set value(value: number | null) {
-        const oldValue = this.value;
+    private readonly valueState = signal<number | null | undefined>(undefined);
 
-        this._value = value;
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
 
-        if (oldValue !== value) {
-            this.setViewValue(this.formatNumber(value));
-
-            this.valueChange.next(value);
-        }
-    }
-
-    private _value: number | null;
-
-    // Deliberately an accessor, for the same reason as `value`: the setter blurs the element so a
-    // field disabled while focused does not leave the browser stuck without a `blur` event.
-    @Input({ transform: booleanAttribute })
+    /** Whether the field is disabled, bound with `[disabled]` or set by a form control. */
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
 
-    set disabled(value: boolean) {
-        const newValue = value;
-        const element = this.nativeElement;
-
-        if (this._disabled !== newValue) {
-            this._disabled = newValue;
-            this.disabledChange.next(newValue);
-        }
-
-        // We need to null check the `blur` method, because it's undefined during SSR.
-        if (newValue && element.blur) {
-            // Normally, native input elements automatically blur if they turn disabled. This behavior
-            // is problematic, because it would mean that it triggers another change detection cycle,
-            // which then causes a changed after checked error if the input element was focused before.
-            element.blur();
-        }
-    }
-
-    private _disabled: boolean = false;
+    private readonly disabledState = signal(false);
 
     focused: boolean = false;
 
@@ -352,6 +326,20 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     private readonly pendingReformats = new Set<ReturnType<typeof setTimeout>>();
 
     constructor() {
+        // The inputs stay `undefined` until a template binds them, so an unbound one does not override what a
+        // form control wrote through `writeValue` / `setDisabledState`.
+        effect(() => {
+            const value = this.valueInput();
+
+            if (value !== undefined) untracked(() => this.setValue(value));
+        });
+
+        effect(() => {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) untracked(() => this.setDisabled(disabled));
+        });
+
         // Re-render the value in the separators of the new locale. `untracked` keeps the configuration the
         // only dependency: formatting also reads the `withThousandSeparator` input, which must not rewrite
         // what the user is typing on its own.
@@ -383,7 +371,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     // Implemented as part of ControlValueAccessor.
     writeValue(value: number | null): void {
-        this.value = value;
+        this.setValue(value);
     }
 
     // Implemented as part of ControlValueAccessor.
@@ -398,7 +386,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     // Implemented as part of ControlValueAccessor.
     setDisabledState(isDisabled: boolean): void {
-        this.disabled = isDisabled;
+        this.setDisabled(isDisabled);
     }
 
     focusChanged(isFocused: boolean) {
@@ -530,7 +518,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
         this.setViewValue(this.formatNumber(res));
 
-        this._value = res;
+        this.valueState.set(res);
         this.cvaOnChange(res);
         this.valueChange.next(res);
     }
@@ -542,7 +530,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
         this.setViewValue(this.formatNumber(res));
 
-        this._value = res;
+        this.valueState.set(res);
         this.cvaOnChange(res);
         this.valueChange.next(res);
     }
@@ -601,11 +589,40 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
         }
     }
 
+    /** Writes a value from outside the field: reformats it and reports the change. */
+    private setValue(value: number | null): void {
+        const oldValue = this.valueState();
+
+        this.valueState.set(value);
+
+        if (oldValue !== value) {
+            this.setViewValue(this.formatNumber(value));
+
+            this.valueChange.next(value);
+        }
+    }
+
+    private setDisabled(disabled: boolean): void {
+        if (this.disabledState() !== disabled) {
+            this.disabledState.set(disabled);
+            this.disabledChange.next(disabled);
+            this.stateChanges.next();
+        }
+
+        // We need to null check the `blur` method, because it's undefined during SSR.
+        if (disabled && this.nativeElement.blur) {
+            // Normally, native input elements automatically blur if they turn disabled. This behavior
+            // is problematic, because it would mean that it triggers another change detection cycle,
+            // which then causes a changed after checked error if the input element was focused before.
+            this.nativeElement.blur();
+        }
+    }
+
     private viewToModelUpdate(newValue: string | null) {
         const normalizedValue = newValue === null ? null : +normalizeNumber(newValue, this.config);
 
         if (normalizedValue !== this.value) {
-            this._value = normalizedValue;
+            this.valueState.set(normalizedValue);
             // `cvaOnChange` routes through `FormControl.setValue`, which re-runs the validators itself.
             this.cvaOnChange(normalizedValue);
             this.valueChange.next(normalizedValue);
