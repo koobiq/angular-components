@@ -1,4 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
+import { join } from 'node:path';
 import { DOCS_SEO_DESCRIPTIONS } from './src/app/seo-descriptions';
 
 /**
@@ -42,10 +43,24 @@ const collectErrors = (page: Page): string[] => {
     return errors;
 };
 
+const VERSIONS_URL = 'https://next.koobiq.io/assets/versions.json';
+
 // The smoke stays off Yandex.Metrika, which the app skips for a browser that sends Do Not Track: its requests
 // never settle for `networkidle`, and every run would count as visits to the production counter.
-test.beforeEach(async ({ context }) => {
+//
+// Nor does it reach any host but the one serving the build: a single stalled request keeps `networkidle` from
+// arriving at all. The version picker gets the committed copy of the list it fetches from next.koobiq.io.
+test.beforeEach(async ({ context, baseURL }) => {
+    const origin = new URL(baseURL!).origin;
+
     await context.addInitScript(() => Object.defineProperty(navigator, 'doNotTrack', { value: '1' }));
+    await context.route(
+        (url) => url.origin !== origin,
+        (route) =>
+            route.request().url() === VERSIONS_URL
+                ? route.fulfill({ path: join(__dirname, 'src/assets/versions.json') })
+                : route.abort()
+    );
 });
 
 test.describe('docs app', () => {
