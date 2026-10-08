@@ -4,7 +4,6 @@ import {
     AfterContentInit,
     afterNextRender,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     contentChild,
     Directive,
@@ -17,7 +16,9 @@ import {
     OnDestroy,
     output,
     Renderer2,
+    signal,
     SimpleChanges,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -119,7 +120,6 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
      */
     protected readonly document = inject<Document>(DOCUMENT);
     private readonly renderer = inject(Renderer2);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly isBrowser = inject(Platform).isBrowser;
     private readonly injector = inject(Injector);
 
@@ -138,36 +138,15 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     private readonly stateSaving = inject(KbqStateSaving);
 
     get opened(): boolean {
-        return this._opened;
+        return this.openedState();
     }
 
     set opened(value: boolean) {
-        this.openedWritten = true;
-
-        if (this._opened) {
-            this.saveWidth();
-        }
-
-        const changed = value !== this._opened;
-
-        this._opened = value;
-
-        if (changed) {
-            // The opened content is in place while the sidebar widens, the closed one once it has narrowed.
-            if (value) {
-                this.internalState = true;
-            }
-
-            this.waitForStateAnimation();
-        }
-
-        // The single choke point for `toggle()` and the bracket shortcut alike. Writing is a no-op until
-        // the state has been read, so the input binding that runs before initialization cannot overwrite
-        // what is stored.
-        this.saveState();
+        // Untracked: an `effect` that assigns `opened` must not come to depend on the state it replaces.
+        untracked(() => this.setOpened(value));
     }
 
-    private _opened: boolean = true;
+    private readonly openedState = signal(true);
 
     /**
      * Whether anything has assigned `opened`. Snapshotted while initializing, where only an input binding
@@ -183,13 +162,22 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     /**
      * @docs-private
      */
-    params: KbqSidebarParams = {
+    get params(): KbqSidebarParams {
+        return this.paramsState();
+    }
+
+    /** @docs-private */
+    set params(value: KbqSidebarParams) {
+        this.paramsState.set(value);
+    }
+
+    private readonly paramsState = signal<KbqSidebarParams>({
         openedStateWidth: 'inherit',
         openedStateMinWidth: 'inherit',
         openedStateMaxWidth: 'inherit',
 
         closedStateWidth: '32px'
-    };
+    });
 
     readonly stateChanged = output<boolean>();
 
@@ -206,7 +194,16 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     /**
      * @docs-private
      */
-    internalState: boolean = true;
+    get internalState(): boolean {
+        return this.internalStateSignal();
+    }
+
+    /** @docs-private */
+    set internalState(value: boolean) {
+        this.internalStateSignal.set(value);
+    }
+
+    private readonly internalStateSignal = signal(true);
 
     private unbindKeydownListener: ReturnType<Renderer2['listen']> | null = null;
 
@@ -247,7 +244,7 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         this.restoreState();
 
         // The first render shows the content of the initial state; `stateChanged` reports it once rendered.
-        this.internalState = this._opened;
+        this.internalState = this.openedState();
         this.waitForStateAnimation();
     }
 
@@ -262,17 +259,15 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         this.stateSaving.applying(() => {
             // Past the setter on purpose: it captures the current `offsetWidth` on the way out, which
             // would overwrite the width being restored on the line below.
-            this._opened = savedState.opened;
+            this.openedState.set(savedState.opened);
 
             // `internalState` otherwise only catches up once the width transition ends.
             this.internalState = savedState.opened;
 
             if (savedState.width) {
-                this.params.openedStateWidth = savedState.width;
+                this.params = { ...this.params, openedStateWidth: savedState.width };
             }
         });
-
-        this.changeDetectorRef.markForCheck();
     }
 
     ngOnDestroy(): void {
@@ -309,8 +304,33 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     }
 
     toggle(): void {
-        this.opened = !this.opened;
-        this.changeDetectorRef.markForCheck();
+        this.opened = !untracked(this.openedState);
+    }
+
+    private setOpened(value: boolean): void {
+        this.openedWritten = true;
+
+        if (this.openedState()) {
+            this.saveWidth();
+        }
+
+        const changed = value !== this.openedState();
+
+        this.openedState.set(value);
+
+        if (changed) {
+            // The opened content is in place while the sidebar widens, the closed one once it has narrowed.
+            if (value) {
+                this.internalState = true;
+            }
+
+            this.waitForStateAnimation();
+        }
+
+        // The single choke point for `toggle()` and the bracket shortcut alike. Writing is a no-op until
+        // the state has been read, so the input binding that runs before initialization cannot overwrite
+        // what is stored.
+        this.saveState();
     }
 
     /** Switches the content and reports the state once the width transition has ended. */
@@ -319,9 +339,8 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         this.stateAnimation = kbqAfterAnimations(
             () => this.elementRef.nativeElement,
             () => {
-                this.internalState = this._opened;
-                this.stateChanged.emit(this._opened);
-                this.changeDetectorRef.markForCheck();
+                this.internalState = this.openedState();
+                this.stateChanged.emit(this.openedState());
             },
             this.injector
         );
@@ -365,13 +384,14 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     /** The whole state, with the width left out while it is the one the content declares. */
     private snapshot(): KbqSidebarState {
         const width = this.params.openedStateWidth;
+        const opened = this.openedState();
 
-        return width && width !== 'inherit' ? { opened: this._opened, width } : { opened: this._opened };
+        return width && width !== 'inherit' ? { opened, width } : { opened };
     }
 
     private saveWidth() {
         if (!this.isBrowser) return;
 
-        this.params.openedStateWidth = `${this.elementRef.nativeElement.offsetWidth}px`;
+        this.params = { ...this.params, openedStateWidth: `${this.elementRef.nativeElement.offsetWidth}px` };
     }
 }

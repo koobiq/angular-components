@@ -48,8 +48,8 @@ describe('KbqTabGroup', () => {
                 TabGroupWithSimpleApi,
                 TemplateTabs,
                 TabGroupWithIsActiveBinding,
-                TestSelectionByIndexOrTabIdApp,
-                TabsWithDisabledFirstTab
+                TabGroupWithSelectedIndexBinding,
+                TestSelectionByIndexOrTabIdApp
             ]
         }).compileComponents();
     });
@@ -560,6 +560,19 @@ describe('KbqTabGroup', () => {
             expect(() => fixture.detectChanges()).not.toThrow();
 
             expect(fixture.nativeElement.textContent).toContain('pizza is active');
+        });
+
+        it('should not throw an error when binding selectedIndex to the view', () => {
+            const fixture = TestBed.createComponent(TabGroupWithSelectedIndexBinding);
+            const selectedIndex = (): string => fixture.nativeElement.querySelector('.selected-index').textContent;
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(selectedIndex()).toBe('0');
+
+            fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1].nativeElement.click();
+
+            expect(() => fixture.detectChanges()).not.toThrow();
+            expect(selectedIndex()).toBe('1');
         });
     });
 
@@ -1133,6 +1146,19 @@ class TemplateTabs {}
     `
 })
 class TabGroupWithIsActiveBinding {}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group #group="kbqTabGroup" [useStateSaving]="false">
+            <kbq-tab label="Junk food">Pizza, fries</kbq-tab>
+            <kbq-tab label="Vegetables">Broccoli, spinach</kbq-tab>
+        </kbq-tab-group>
+
+        <div class="selected-index">{{ group.selectedIndex }}</div>
+    `
+})
+class TabGroupWithSelectedIndexBinding {}
 
 @Component({
     imports: [KbqTabsModule],
