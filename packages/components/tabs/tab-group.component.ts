@@ -29,7 +29,7 @@ import {
 import { KBQ_PARENT_ANIMATION_COMPONENT, kbqQueryListFrom, KbqStateSaving } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { KbqTabBody } from './tab-body.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
@@ -633,17 +633,16 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     }
 
     private subscribeToResize() {
-        if (!this.vertical()) {
-            return;
-        }
-
-        if (this.resizeSubscription) {
-            this.resizeSubscription.unsubscribe();
-        }
-
+        // `vertical` is read per resize: called from the constructor, the input is not bound yet.
         this.resizeSubscription = this.resizeStream
-            .pipe(debounceTime(this.resizeDebounceInterval))
-            .subscribe(this.checkOverflow);
+            .pipe(
+                debounceTime(this.resizeDebounceInterval),
+                filter(() => this.vertical())
+            )
+            .subscribe(() => {
+                this.checkOverflow();
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
     /** Clamps the given index to the bounds of 0 and the tabs length. */

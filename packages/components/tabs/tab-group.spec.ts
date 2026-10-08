@@ -10,6 +10,7 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/components/core';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
 import { KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
 import { KbqTab } from './tab.component';
@@ -32,7 +33,9 @@ describe('KbqTabGroup', () => {
                 TemplateTabs,
                 TabGroupWithIsActiveBinding,
                 TabGroupWithSelectedIndexBinding,
-                TestSelectionByIndexOrTabIdApp
+                TestSelectionByIndexOrTabIdApp,
+                VerticalTabs,
+                TabsWithTooltipTitle
             ]
         }).compileComponents();
     });
@@ -558,6 +561,53 @@ describe('KbqTabGroup', () => {
         });
     });
 
+    describe('label tooltips', () => {
+        const labelTooltips = (fixture: ComponentFixture<unknown>): KbqTooltipTrigger[] =>
+            fixture.debugElement
+                .queryAll(By.css('.kbq-tab-label'))
+                .map((label) => label.injector.get(KbqTooltipTrigger));
+
+        it('re-checks the overflow of the labels of a vertical group on window resize', async () => {
+            vi.useFakeTimers();
+
+            const fixture = TestBed.createComponent(VerticalTabs);
+
+            fixture.detectChanges();
+
+            const [labelTooltip] = labelTooltips(fixture);
+            const labelContent: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-label__content');
+
+            expect(labelTooltip.disabled).toBe(true);
+
+            // jsdom has no layout: the label is made to overflow as the window narrows.
+            Object.defineProperty(labelContent, 'scrollWidth', { configurable: true, value: 200 });
+            Object.defineProperty(labelContent, 'clientWidth', { configurable: true, value: 100 });
+            Object.defineProperty(labelContent, 'innerText', { configurable: true, value: 'Long label' });
+
+            window.dispatchEvent(new Event('resize'));
+            await vi.advanceTimersByTimeAsync(100);
+            fixture.detectChanges();
+
+            expect(labelTooltip.disabled).toBe(false);
+            expect(labelTooltip.content).toBe('Long label\n');
+        });
+
+        it('updates the label tooltip when the bound tooltipTitle changes', () => {
+            const fixture = TestBed.createComponent(TabsWithTooltipTitle);
+
+            fixture.detectChanges();
+
+            const [labelTooltip] = labelTooltips(fixture);
+
+            expect(labelTooltip.content).toBe('First hint');
+
+            fixture.componentInstance.tooltipTitle = 'Second hint';
+            fixture.detectChanges();
+
+            expect(labelTooltip.content).toBe('Second hint');
+        });
+    });
+
     /**
      * Checks that the `selectedIndex` has been updated; checks that the label and body have their
      * respective `active` classes
@@ -840,6 +890,30 @@ class TabGroupWithSelectedIndexBinding {}
 class TestSelectionByIndexOrTabIdApp {
     readonly tabs = viewChildren(KbqTab);
     selectBy: KbqTabSelectBy = 1;
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group vertical>
+            <kbq-tab label="Long label">One</kbq-tab>
+            <kbq-tab label="Two">Two</kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class VerticalTabs {}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group>
+            <kbq-tab empty label="One" [tooltipTitle]="tooltipTitle">One</kbq-tab>
+            <kbq-tab label="Two">Two</kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class TabsWithTooltipTitle {
+    tooltipTitle = 'First hint';
 }
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
