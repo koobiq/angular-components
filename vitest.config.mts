@@ -74,6 +74,8 @@ export default defineConfig({
                         'packages/cli/**/*.spec.ts',
                         'tools/**/*.spec.ts'
                     ],
+                    // A separate npm project with its own Angular and its own runner.
+                    exclude: ['**/node_modules/**', 'tools/check-angular/**'],
                     setupFiles: ['tools/vitest/setup-node.ts']
                 }
             }
