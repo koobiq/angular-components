@@ -434,6 +434,8 @@ The inputs of `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconCom
 ng g @koobiq/components:datepicker-signals --project "<your project>"
 ```
 
+**Without a locale service, the placeholder follows the date locale.** It used to be the `ru-RU` one whatever locale the date adapter parsed in. It now comes from `KBQ_DATE_LOCALE` — Angular's `LOCALE_ID` unless provided — so with the default `en-US` it reads `yyyy-mm-dd`, the format the input takes; a locale the library ships no strings for keeps the `ru-RU` placeholder. To keep the former one, bind `[placeholder]` or pass it to `kbqDatepickerLocaleConfigurationProvider()`. With a locale service nothing changes.
+
 #### Modal
 
 The inputs of `KbqModalComponent` are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`, and `kbqAfterOpen`, `kbqAfterClose`, `kbqBeforeClose`, `kbqOnOk` and `kbqOnCancel` are outputs named `<member>Output` over the unchanged emitters. Bindings, the options of `KbqModalService`, and reads and writes through `getInstance()` work as before.

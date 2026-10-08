@@ -50,6 +50,7 @@ export class KbqDatepickerToggleIcon {}
         class: 'kbq-datepicker-toggle-icon',
         '[attr.aria-expanded]': 'datepicker().opened',
         '[attr.aria-disabled]': 'disabled',
+        '(mousedown)': 'onMousedown($event)',
         '(click)': 'open($event)'
     }
 })
@@ -101,6 +102,9 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     private readonly cdr = inject(ChangeDetectorRef);
     private stateChangesSubscription = Subscription.EMPTY;
 
+    /** Whether the calendar was open when the toggle was pressed. */
+    private openedOnPress = false;
+
     ngOnChanges(changes: SimpleChanges) {
         // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
         if (changes['disabledInput']) {
@@ -122,14 +126,36 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
         this.stateChangesSubscription.unsubscribe();
     }
 
-    /** Open datepicker */
+    /** Opens the calendar, moving the focus to its input; closes it instead when it was open at the press. */
     open($event: MouseEvent) {
         const datepicker = this.datepicker();
+        const openedOnPress = this.openedOnPress;
 
-        if (datepicker && !this.disabled) {
-            datepicker.open();
-            $event.stopPropagation();
+        this.openedOnPress = false;
+
+        if (!datepicker || this.disabled) return;
+
+        $event.stopPropagation();
+
+        // A click on the toggle of an open calendar closes it. The overlay has usually done so before the click gets
+        // here, taking it for a click outside the calendar.
+        if (openedOnPress) {
+            datepicker.close();
+
+            return;
         }
+
+        // The input, not the icon, handles the keys of the datepicker and gets the focus back once it closes.
+        datepicker.datepickerInput.focus();
+        datepicker.open();
+    }
+
+    /** @internal */
+    protected onMousedown(event: MouseEvent): void {
+        // A press on the icon, focusable by its `tabindex`, would take the focus from the input.
+        event.preventDefault();
+
+        this.openedOnPress = !!this.datepicker()?.opened;
     }
 
     private watchStateChanges() {

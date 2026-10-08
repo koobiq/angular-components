@@ -49,12 +49,15 @@ import {
     isLetterKey,
     isVerticalMovement,
     KBQ_DATE_FORMATS,
+    KBQ_DATE_LOCALE,
+    KBQ_DEFAULT_LOCALE_DATA_FACTORY,
     KbqDateFormats,
     KbqDatepickerLocaleConfiguration,
     KbqDateTimezoneService,
     KbqDeepPartial,
     KbqErrorStateTracker,
     kbqLocaleConfigurationOverrideProvider,
+    KbqLocaleDataInput,
     KbqLocaleOverridesDirective,
     kbqRevealSelection,
     kbqSetSelectionRange,
@@ -198,11 +201,24 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
 /** @docs-private */
 export const KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION = ruRULocaleData.datepicker;
 
+/** The `datepicker` section of the shipped locale `localeId`, or of the default locale when none is shipped. */
+const shippedDatepickerLocaleConfiguration = (localeId: string): KbqDatepickerLocaleConfiguration => {
+    const shipped: KbqLocaleDataInput = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
+    const locale = shipped[localeId];
+
+    if (!locale || Array.isArray(locale)) return KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION;
+
+    // A shipped locale is complete, its sections included.
+    return locale.datepicker as KbqDatepickerLocaleConfiguration;
+};
+
 /** Injection Token for providing configuration of datepicker */
 /** @docs-private */
 export const KBQ_DATEPICKER_LOCALE_CONFIGURATION = new InjectionToken<KbqDatepickerLocaleConfiguration>(
     'KbqDatepickerLocaleConfiguration',
-    { factory: () => KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION }
+    // Without a locale service the date adapter takes `KBQ_DATE_LOCALE`: following it, the placeholder names the
+    // format the input parses.
+    { factory: () => shippedDatepickerLocaleConfiguration(inject(KBQ_DATE_LOCALE)) }
 );
 
 /**

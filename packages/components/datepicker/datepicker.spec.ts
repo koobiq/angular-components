@@ -1,6 +1,15 @@
 ﻿import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, FactoryProvider, inject as inject_1, Type, ValueProvider, viewChild } from '@angular/core';
+import {
+    Component,
+    FactoryProvider,
+    inject as inject_1,
+    LOCALE_ID,
+    Provider,
+    Type,
+    ValueProvider,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -16,7 +25,7 @@ import {
 } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
-import { KBQ_LUXON_DATE_FORMATS, KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { KBQ_LUXON_DATE_FORMATS, KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     createKeyboardEvent,
     DateAdapter,
@@ -31,7 +40,8 @@ import {
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     kbqErrorStateMatcherProvider,
-    KbqOverlayLayer,
+    kbqLocaleIDProvider,
+    kbqLocaleServiceProvider,
     ONE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
@@ -84,6 +94,26 @@ const getSubmitButton = (fixture: ComponentFixture<unknown>): HTMLButtonElement 
 
 const getDatepickerToggleIconElement = (fixture: ComponentFixture<unknown>): HTMLElement =>
     fixture.debugElement.query(By.css('kbq-datepicker-toggle-icon i[kbq-icon-button]')).nativeElement;
+
+/** A primary-button click the way a browser delivers it: the press moves the focus unless it is prevented. */
+const clickWithMouse = (element: HTMLElement): void => {
+    const mousedown = new MouseEvent('mousedown', { bubbles: true, cancelable: true });
+
+    element.dispatchEvent(mousedown);
+
+    if (!mousedown.defaultPrevented) {
+        const focusable = element.closest<HTMLElement>('[tabindex], button, input');
+
+        if (focusable) {
+            focusable.focus();
+        } else {
+            (document.activeElement as HTMLElement | null)?.blur();
+        }
+    }
+
+    element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+    element.click();
+};
 
 const customErrorStateMatcher: ErrorStateMatcher = {
     isErrorState: (control) => !!control?.untouched
@@ -300,6 +330,26 @@ describe('KbqDatepicker', () => {
                 await vi.runOnlyPendingTimersAsync();
 
                 expect(testComponent.datepicker().opened).toBe(false);
+            });
+
+            it('should stay open when opened again before the closing has finished', async () => {
+                const datepicker = testComponent.datepicker();
+                const closed = vi.fn();
+
+                datepicker.closedStream.subscribe(closed);
+
+                datepicker.open();
+                fixture.detectChanges();
+
+                datepicker.close();
+                datepicker.open();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(datepicker.opened).toBe(true);
+                expect(document.querySelector('.kbq-datepicker__content')).not.toBeNull();
+                expect(closed).toHaveBeenCalledTimes(1);
             });
 
             it('clicking the currently selected date should close the calendar without firing selectedChanged', async () => {
@@ -1208,6 +1258,56 @@ describe('KbqDatepicker', () => {
 
                 expect(innerIcon.classList).not.toContain('kbq-active');
             });
+
+            it('should return the focus to the input once a day is picked in a calendar opened from the toggle', async () => {
+                clickWithMouse(getDatepickerToggleIconElement(fixture));
+                fixture.detectChanges();
+
+                clickWithMouse(document.querySelectorAll<HTMLElement>('.kbq-calendar__body-cell')[5]);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(testComponent.datepicker().opened).toBe(false);
+                expect(document.activeElement).toBe(testComponent.input().elementRef.nativeElement);
+            });
+
+            it('should close on ESCAPE a calendar opened from the toggle', async () => {
+                clickWithMouse(getDatepickerToggleIconElement(fixture));
+                fixture.detectChanges();
+
+                dispatchKeyboardEvent(document.activeElement!, 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(testComponent.datepicker().opened).toBe(false);
+            });
+
+            it('should close on a second click on the toggle and open on the next one', async () => {
+                const datepicker = testComponent.datepicker();
+                const toggle = getDatepickerToggleIconElement(fixture);
+                const events: string[] = [];
+
+                datepicker.openedStream.subscribe(() => events.push('opened'));
+                datepicker.closedStream.subscribe(() => events.push('closed'));
+
+                clickWithMouse(toggle);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                clickWithMouse(toggle);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(datepicker.opened).toBe(false);
+                expect(document.querySelector('.kbq-datepicker__content')).toBeNull();
+                expect(events).toEqual(['opened', 'closed']);
+
+                clickWithMouse(toggle);
+                fixture.detectChanges();
+
+                expect(datepicker.opened).toBe(true);
+            });
         });
 
         describe('datepicker with custom kbq-datepicker-toggle icon', () => {
@@ -1813,6 +1913,40 @@ describe('KbqDatepicker', () => {
         });
     });
 
+    describe('placeholder', () => {
+        const renderPlaceholder = (providers: Provider[]): string => {
+            TestBed.configureTestingModule({ imports: [LuxonDateModule, DatepickerWithDefaultPlaceholder], providers });
+
+            const fixture = TestBed.createComponent(DatepickerWithDefaultPlaceholder);
+
+            fixture.detectChanges();
+
+            return getDatepickerInputElement(fixture).placeholder;
+        };
+
+        it('should follow LOCALE_ID without a locale service', () => {
+            expect(renderPlaceholder([{ provide: LOCALE_ID, useValue: 'en-US' }])).toBe('yyyy-mm-dd');
+        });
+
+        it('should follow KBQ_DATE_LOCALE without a locale service', () => {
+            expect(renderPlaceholder([{ provide: KBQ_DATE_LOCALE, useValue: 'es-LA' }])).toBe('dd/mm/aaaa');
+        });
+
+        it('should fall back to ru-RU for a date locale the library ships no strings for', () => {
+            expect(renderPlaceholder([{ provide: KBQ_DATE_LOCALE, useValue: 'zh-CN' }])).toBe('дд.мм.гггг');
+        });
+
+        it('should follow the locale service over KBQ_DATE_LOCALE', () => {
+            const placeholder = renderPlaceholder([
+                { provide: KBQ_DATE_LOCALE, useValue: 'en-US' },
+                kbqLocaleIDProvider('pt-BR'),
+                kbqLocaleServiceProvider()
+            ]);
+
+            expect(placeholder).toBe('dd/mm/yyyy');
+        });
+    });
+
     // @koobiq/luxon-date-adapter carries locale data for a fixed set of locales, and its base constructor
     // calls setLocale before the subclass field that would widen it exists. KBQ_DATE_LOCALE: 'de-DE' therefore
     // throws inside the adapter constructor, before any assertion here runs.
@@ -2130,6 +2264,15 @@ class DatepickerWithEvents {
     closedSpy = vi.fn();
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
 }
+
+@Component({
+    imports: [KbqDatepickerModule],
+    template: `
+        <input [kbqDatepicker]="d" />
+        <kbq-datepicker #d />
+    `
+})
+class DatepickerWithDefaultPlaceholder {}
 
 @Component({
     imports: [

@@ -434,6 +434,8 @@ ng g @koobiq/components:signal-inputs-subclasses --project "<your project>"
 ng g @koobiq/components:datepicker-signals --project "<your project>"
 ```
 
+**Без сервиса локали плейсхолдер следует локали дат.** Раньше он всегда был из `ru-RU`, в какой бы локали ни разбирал дату адаптер. Теперь он берётся из `KBQ_DATE_LOCALE` (если токен не предоставлен — из `LOCALE_ID` Angular): с `en-US` по умолчанию это `yyyy-mm-dd`, формат, который принимает поле; для локали, строк которой библиотека не поставляет, остаётся плейсхолдер `ru-RU`. Чтобы вернуть прежний, задайте `[placeholder]` или передайте его в `kbqDatepickerLocaleConfigurationProvider()`. С сервисом локали ничего не меняется.
+
 #### Модальное окно
 
 Инпуты `KbqModalComponent` стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член; `kbqAfterOpen`, `kbqAfterClose`, `kbqBeforeClose`, `kbqOnOk` и `kbqOnCancel` стали выходами с именем `<член>Output` поверх прежних эмиттеров. Привязки, параметры `KbqModalService`, а также чтение и запись через `getInstance()` работают как раньше.
