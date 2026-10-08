@@ -495,7 +495,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
             // A group header toggles its aliases; any other item activates its underlying link.
             if (activeItem instanceof KbqAppSwitcherListItem && activeItem.toggle()) {
                 activeItem.collapsed.set(!activeItem.collapsed());
-                this.markForCheck();
             } else {
                 activeItem.getHostElement().click();
             }
@@ -531,14 +530,12 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         if (activeItem.toggle()) {
             if (keyCode === expandKey && activeItem.collapsed()) {
                 activeItem.collapsed.set(false);
-                this.markForCheck();
 
                 return true;
             }
 
             if (keyCode === collapseKey && !activeItem.collapsed()) {
                 activeItem.collapsed.set(true);
-                this.markForCheck();
 
                 return true;
             }

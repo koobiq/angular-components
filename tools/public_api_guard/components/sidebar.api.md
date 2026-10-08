@@ -19,7 +19,8 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     readonly closedContent: _angular_core.Signal<KbqSidebarClosed | undefined>;
     protected readonly document: Document;
     get hasSavedState(): boolean;
-    internalState: boolean;
+    get internalState(): boolean;
+    set internalState(value: boolean);
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -32,7 +33,8 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     readonly openedContent: _angular_core.Signal<KbqSidebarOpened | undefined>;
     readonly openedInput: _angular_core.InputSignal<boolean | undefined>;
     // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point koobiq-components-sidebar.d.ts
-    params: KbqSidebarParams;
+    get params(): KbqSidebarParams;
+    set params(value: KbqSidebarParams);
     // (undocumented)
     readonly position: _angular_core.InputSignal<SidebarPositions>;
     saveState(): void;

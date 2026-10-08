@@ -23,7 +23,9 @@ import {
     OnChanges,
     OnDestroy,
     QueryList,
-    SimpleChanges
+    signal,
+    SimpleChanges,
+    untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -142,19 +144,19 @@ export abstract class KbqPaginatedTabHeader
 
     /** The index of the active tab. */
     get selectedIndex(): number {
-        return this._selectedIndex;
+        return this.selectedIndexState();
     }
 
     set selectedIndex(value: number) {
         const coercedValue = coerceNumberProperty(value);
 
-        this.selectedIndexChanged = this._selectedIndex !== coercedValue;
-        this._selectedIndex = coercedValue;
+        this.selectedIndexChanged = untracked(this.selectedIndexState) !== coercedValue;
+        this.selectedIndexState.set(coercedValue);
 
         this.keyManager?.updateActiveItem(coercedValue);
     }
 
-    private _selectedIndex = 0;
+    private readonly selectedIndexState = signal(0);
 
     /** Tracks which element has focus; used for keyboard navigation */
     get focusIndex(): number {
@@ -423,7 +425,7 @@ export abstract class KbqPaginatedTabHeader
             this.getLayoutDirection()
         );
 
-        this.keyManager.updateActiveItem(this._selectedIndex);
+        this.keyManager.updateActiveItem(this.selectedIndex);
 
         // Defer the first call in order to allow for slower browsers to lay out the elements.
         // This helps in cases where the user lands directly on a page with paginated tabs.
@@ -464,7 +466,6 @@ export abstract class KbqPaginatedTabHeader
 
             this.updatePagination();
             this.tabLabelCount = this.items.length;
-            this.changeDetectorRef.markForCheck();
 
             // Briefly reveals the scrollbar when the strip arrives or gains tabs, so whether it scrolls
             // is answered on sight rather than only once the pointer enters it. Vertical only: a
@@ -484,8 +485,7 @@ export abstract class KbqPaginatedTabHeader
         // If the selected index has changed, scroll to the label.
         if (this.selectedIndexChanged) {
             this.selectedIndexChanged = false;
-            this.scrollCorrectionRequest.next({ index: this._selectedIndex, behavior: 'smooth' });
-            this.changeDetectorRef.markForCheck();
+            this.scrollCorrectionRequest.next({ index: this.selectedIndex, behavior: 'smooth' });
         }
     }
 
@@ -543,10 +543,7 @@ export abstract class KbqPaginatedTabHeader
 
             // The content observer runs outside the `NgZone` by default, which
             // means that we need to bring the callback back in ourselves.
-            this.ngZone.run(() => {
-                this.updatePagination();
-                this.changeDetectorRef.markForCheck();
-            });
+            this.ngZone.run(() => this.updatePagination());
         }
     }
 

@@ -108,10 +108,7 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
 
             // Restored on a macrotask so the browser has moved focus out of the navbar first. Bound to the
             // component's lifetime: without it the callback can run against a destroyed view.
-            const timeoutId = setTimeout(() => {
-                this.tabIndex.set(0);
-                this.changeDetectorRef.markForCheck();
-            });
+            const timeoutId = setTimeout(() => this.tabIndex.set(0));
 
             this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
         });

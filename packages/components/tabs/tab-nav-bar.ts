@@ -188,6 +188,7 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
         for (let i = 0; i < items.length; i++) {
             if (items[i].active) {
                 this.selectedIndex = i;
+                // Also marks the ancestors, whose check runs `ngAfterContentChecked` and scrolls to the link.
                 this.changeDetectorRef.markForCheck();
 
                 const tabNavPanel = this.tabNavPanel();

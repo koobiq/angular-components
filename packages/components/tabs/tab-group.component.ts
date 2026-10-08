@@ -21,6 +21,7 @@ import {
     OnDestroy,
     output,
     QueryList,
+    signal,
     SimpleChanges,
     viewChild,
     ViewEncapsulation
@@ -193,14 +194,14 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
     /** The index of the active tab. */
     get selectedIndex(): number {
-        return this._selectedIndex;
+        return this.selectedIndexState()!;
     }
 
     set selectedIndex(value: number) {
         this.activeTab = value;
     }
 
-    private _selectedIndex: number;
+    private readonly selectedIndexState = signal<number | undefined>(undefined);
 
     get activeTab(): KbqTab | null {
         switch (typeof this.attributeToSelectBy) {
@@ -348,15 +349,15 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
             // Maintain the previously-selected tab if a new tab is added or removed and there is no
             // explicit change that selects a different tab.
-            if (indexToSelect === this._selectedIndex) {
+            if (indexToSelect === this.selectedIndexState()) {
                 const tabs = this.tabs.toArray();
 
                 for (let i = 0; i < tabs.length; i++) {
                     if (tabs[i].isActive) {
-                        // Assign both to the `activeTab` and `_selectedIndex` so we don't fire a changed
+                        // Assign both to the `activeTab` and the selected index so we don't fire a changed
                         // event, otherwise the consumer may end up in an infinite loop in some edge cases like
                         // adding a tab within the `selectedIndexChange` event.
-                        this._selectedIndex = i;
+                        this.selectedIndexState.set(i);
                         this.onSelectFocusedIndex(i);
                         break;
                     }
@@ -364,6 +365,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
             }
 
             this.subscribeToTabLabels();
+            // Also marks the ancestors, whose check runs `ngAfterContentChecked` and positions the tabs.
             this.changeDetectorRef.markForCheck();
         });
     }
@@ -385,8 +387,8 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
         // If there is a change in selected index, emit a change event. Should not trigger if
         // the selected index has not yet been initialized.
-        if (this._selectedIndex !== indexToSelect) {
-            const isFirstRun = this._selectedIndex == null;
+        if (this.selectedIndexState() !== indexToSelect) {
+            const isFirstRun = this.selectedIndexState() == null;
 
             if (!isFirstRun) {
                 this.selectedTabChange.emit(this.createChangeEvent(indexToSelect));
@@ -410,6 +412,8 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
             });
         }
 
+        const selectedIndex = this.selectedIndexState();
+
         // Setup the position for each tab and optionally setup an origin on the next selected tab.
         this.tabs.forEach((tab: KbqTab, index: number) => {
             tab.position = index - indexToSelect;
@@ -417,15 +421,12 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
             // If there is already a selected tab, then set up an origin for the next selected tab
             // if it doesn't have one already.
 
-            if (this._selectedIndex != null && tab.position === 0 && !tab.origin) {
-                tab.origin = indexToSelect - this._selectedIndex;
+            if (selectedIndex != null && tab.position === 0 && !tab.origin) {
+                tab.origin = indexToSelect - selectedIndex;
             }
         });
 
-        if (this._selectedIndex !== indexToSelect) {
-            this._selectedIndex = indexToSelect;
-            this.changeDetectorRef.markForCheck();
-        }
+        this.selectedIndexState.set(indexToSelect);
     }
 
     ngAfterViewInit(): void {

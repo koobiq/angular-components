@@ -152,11 +152,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     }
 
     constructor() {
-        this.rectangleElement.state.pipe(takeUntilDestroyed()).subscribe(() => {
-            this.updateTooltip();
-
-            this.changeDetectorRef.markForCheck();
-        });
+        this.rectangleElement.state.pipe(takeUntilDestroyed()).subscribe(() => this.updateTooltip());
 
         this.tooltip.arrow = false;
         this.tooltip.offset = 0;

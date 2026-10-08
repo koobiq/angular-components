@@ -170,6 +170,20 @@ describe(KbqTabNavBar.name, () => {
             navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance;
         });
 
+        it('should move the underline to an index assigned in code', async () => {
+            const underline: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+            Object.defineProperty(navBar.items.get(1)!.elementRef.nativeElement, 'offsetLeft', {
+                configurable: true,
+                value: 100
+            });
+
+            navBar.selectedIndex = 1;
+            await fixture.whenStable();
+
+            expect(underline.style.left).toBe('112px');
+        });
+
         describe('activeTabOffsetWidth', () => {
             it('subtracts TAB_PADDING * 2 from offsetWidth', () => {
                 const item = navBar.items.get(0)!;

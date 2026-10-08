@@ -1239,6 +1239,22 @@ describe('KbqNavbar', () => {
             expect(disabledItem.nativeElement.hasAttribute('disabled')).toBe(false);
         });
 
+        it('should reflect a disabled state assigned in code', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const itemDebugEl = fixture.debugElement.query(By.directive(KbqNavbarFocusableItem));
+
+            itemDebugEl.injector.get(KbqNavbarFocusableItem).disabled = true;
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(itemDebugEl.nativeElement.classList).toContain('kbq-disabled');
+            expect(itemDebugEl.nativeElement.getAttribute('aria-disabled')).toBe('true');
+        });
+
         it('onFocusHandler should not emit onFocus when item is disabled', async () => {
             const fixture = TestBed.createComponent(TestItemApp);
 

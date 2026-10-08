@@ -61,6 +61,18 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.opened).toBeTruthy();
         });
 
+        it('should render the opened state assigned in code', async () => {
+            const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+
+            sidebarComponent.opened = false;
+            await fixture.whenStable();
+
+            expect(host.classList).not.toContain('kbq-sidebar_opened');
+            expect(host.style.width).toBe('32px');
+            expect(fixture.nativeElement.textContent).toContain('kbq-sidebar-closed');
+            expect(fixture.nativeElement.textContent).not.toContain('kbq-sidebar-opened');
+        });
+
         it('should change position', () => {
             expect(sidebarComponent.position()).toBe(SidebarPositions.Left);
 
