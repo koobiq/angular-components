@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, inject, viewChild } from '@angular/core';
+import { AfterViewInit, Directive, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
@@ -29,15 +29,15 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     protected readonly colors = KbqComponentColors;
 
     /** Whether the current state is list of periods. When false will displayed control for set custom period */
-    protected isListMode = true;
+    protected readonly isListMode = signal(true);
 
     /** @docs-private */
     protected formGroup: FormGroup;
 
     /** @docs-private */
-    protected showStartCalendar: boolean = false;
+    protected readonly showStartCalendar = signal(false);
     /** @docs-private */
-    protected showEndCalendar: boolean = false;
+    protected readonly showEndCalendar = signal(false);
 
     // Loosely typed (`any`) so the values bind cleanly to the generic date directives: on a native
     // `<input>`, `[min]`/`[max]` resolve to the DOM property (`string | number`), which a concrete `D`
@@ -333,7 +333,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
                 if (visible) {
                     // Move keyboard focus onto the period list so Enter selects a preset
                     // instead of the focus trap landing on the "custom period" row.
-                    if (this.isListMode) {
+                    if (this.isListMode()) {
                         setTimeout(() => this.listSelection()?.focus());
                     }
                 } else {
@@ -380,9 +380,9 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     }
 
     showPeriod() {
-        this.isListMode = false;
-        this.showStartCalendar = false;
-        this.showEndCalendar = false;
+        this.isListMode.set(false);
+        this.showStartCalendar.set(false);
+        this.showEndCalendar.set(false);
 
         this.initFormGroup();
         this.changeDetectorRef.markForCheck();
@@ -401,8 +401,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     }
 
     showList() {
-        this.isListMode = true;
-        this.changeDetectorRef.markForCheck();
+        this.isListMode.set(true);
 
         setTimeout(() => this.listSelection()?.focus());
         this.popover().updatePosition(true);
@@ -422,23 +421,20 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     }
 
     onFocusStartInput() {
-        this.showStartCalendar = true;
-        this.showEndCalendar = false;
-        this.changeDetectorRef.markForCheck();
+        this.showStartCalendar.set(true);
+        this.showEndCalendar.set(false);
 
         this.popover().updatePosition(true);
     }
 
     onFocusEndInput() {
-        this.showEndCalendar = true;
-        this.showStartCalendar = false;
-        this.changeDetectorRef.markForCheck();
+        this.showEndCalendar.set(true);
+        this.showStartCalendar.set(false);
     }
 
     hideCalendars() {
-        this.showStartCalendar = false;
-        this.showEndCalendar = false;
-        this.changeDetectorRef.markForCheck();
+        this.showStartCalendar.set(false);
+        this.showEndCalendar.set(false);
     }
 
     /**

@@ -1159,19 +1159,12 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            let lastFiltered: any[] = [];
-
-            // Subscribe before emitting: filteredOptions is a cold merge with no replay, so the
-            // subscription must be active when searchControl emits.
-            component.filteredOptions.subscribe((filtered) => {
-                lastFiltered = filtered;
-            });
 
             component.searchControl.setValue('Option 1');
             await vi.runOnlyPendingTimersAsync();
 
-            expect(lastFiltered.length).toBe(1);
-            expect(lastFiltered[0].name).toBe('Option 1');
+            expect(component.filteredOptions().length).toBe(1);
+            expect(component.filteredOptions()[0].name).toBe('Option 1');
         });
 
         it('should return all options when search is empty', async () => {
@@ -1183,18 +1176,13 @@ describe('KbqPipeMultiSelectComponent', () => {
             fixture.detectChanges();
 
             const component = getPipeComponent();
-            let lastFiltered: any[] = [];
-
-            component.filteredOptions.subscribe((filtered) => {
-                lastFiltered = filtered;
-            });
 
             component.searchControl.setValue('Option 1');
             await vi.runOnlyPendingTimersAsync();
             component.searchControl.setValue('');
             await vi.runOnlyPendingTimersAsync();
 
-            expect(lastFiltered.length).toBe(SELECT_VALUES.length);
+            expect(component.filteredOptions().length).toBe(SELECT_VALUES.length);
         });
 
         describe('by caption', () => {
@@ -1223,16 +1211,11 @@ describe('KbqPipeMultiSelectComponent', () => {
                 fixture.detectChanges();
 
                 const component = getPipeComponent();
-                let lastFiltered: KbqSelectValue[] = [];
-
-                component.filteredOptions.subscribe((filtered) => {
-                    lastFiltered = filtered;
-                });
 
                 component.searchControl.setValue(query);
                 await vi.runOnlyPendingTimersAsync();
 
-                return lastFiltered;
+                return component.filteredOptions();
             };
 
             it('should match an option whose caption contains the query', async () => {

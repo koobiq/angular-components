@@ -296,14 +296,14 @@ describe('KbqPipeDatetimeComponent', () => {
 
             internal.popover = () => ({ updatePosition });
             internal.returnButton = stubReturnButton();
-            internal.showStartCalendar = true;
-            internal.showEndCalendar = true;
+            internal.showStartCalendar.set(true);
+            internal.showEndCalendar.set(true);
 
             component.showPeriod();
 
-            expect(internal.isListMode).toBe(false);
-            expect(internal.showStartCalendar).toBe(false);
-            expect(internal.showEndCalendar).toBe(false);
+            expect(internal.isListMode()).toBe(false);
+            expect(internal.showStartCalendar()).toBe(false);
+            expect(internal.showEndCalendar()).toBe(false);
             expect(internal.formGroup).toBeDefined();
             expect(internal.formGroup.controls.start.value.equals(component.defaultStart)).toBe(true);
             expect(internal.formGroup.controls.end.value.equals(component.defaultEnd)).toBe(true);
@@ -364,11 +364,11 @@ describe('KbqPipeDatetimeComponent', () => {
 
             internal.popover = () => ({ updatePosition });
             internal.listSelection = () => ({ focus });
-            internal.isListMode = false;
+            internal.isListMode.set(false);
 
             component.showList();
 
-            expect(internal.isListMode).toBe(true);
+            expect(internal.isListMode()).toBe(true);
             expect(updatePosition).toHaveBeenCalledWith(true);
 
             await vi.runOnlyPendingTimersAsync();
@@ -599,19 +599,19 @@ describe('KbqPipeDatetimeComponent', () => {
 
             component.onFocusStartInput();
 
-            expect(internal.showStartCalendar).toBe(true);
-            expect(internal.showEndCalendar).toBe(false);
+            expect(internal.showStartCalendar()).toBe(true);
+            expect(internal.showEndCalendar()).toBe(false);
             expect(updatePosition).toHaveBeenCalledWith(true);
 
             component.onFocusEndInput();
 
-            expect(internal.showStartCalendar).toBe(false);
-            expect(internal.showEndCalendar).toBe(true);
+            expect(internal.showStartCalendar()).toBe(false);
+            expect(internal.showEndCalendar()).toBe(true);
 
             component.hideCalendars();
 
-            expect(internal.showStartCalendar).toBe(false);
-            expect(internal.showEndCalendar).toBe(false);
+            expect(internal.showStartCalendar()).toBe(false);
+            expect(internal.showEndCalendar()).toBe(false);
         });
     });
 
@@ -674,7 +674,7 @@ describe('KbqPipeDatetimeComponent', () => {
             const component = getPipeComponent();
             const focus = vi.fn();
 
-            asInternal(component).isListMode = true;
+            asInternal(component).isListMode.set(true);
             asInternal(component).listSelection = () => ({ focus });
 
             component.popover().visibleChange.emit(true);

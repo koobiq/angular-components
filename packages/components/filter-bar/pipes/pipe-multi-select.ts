@@ -1,14 +1,15 @@
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     OnInit,
+    Signal,
     viewChild,
     viewChildren,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -18,7 +19,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge, Observable } from 'rxjs';
+import { merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
@@ -42,7 +43,6 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
         KbqIconModule,
         KbqInputModule,
         ReactiveFormsModule,
-        AsyncPipe,
         KbqPseudoCheckboxModule
     ],
     templateUrl: 'pipe-multi-select.html',
@@ -59,8 +59,11 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
     /** control for search options */
     readonly searchControl = new FormControl<string | null>(null);
-    /** filtered by search options */
-    filteredOptions: Observable<KbqSelectValue[]>;
+    /**
+     * Options of the pipe template that match the search query. Follows the templates too, so options
+     * supplied after initialization render on first open.
+     */
+    readonly filteredOptions: Signal<KbqSelectValue[]>;
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -160,16 +163,18 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.filterBar?.internalTemplatesChanges
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.multiSelect.normalizeValue());
+
+        this.filteredOptions = toSignal(
+            merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
+                map(() => this.getFilteredOptions())
+            ),
+            { requireSync: true }
+        );
     }
 
     /** @docs-private */
     ngOnInit(): void {
         this.multiSelect.updateInternalSelected();
-
-        this.filteredOptions = merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
-            map(this.getFilteredOptions),
-            takeUntilDestroyed(this.destroyRef)
-        );
     }
 
     override ngAfterViewInit() {
@@ -281,6 +286,11 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.select().open();
     }
 
-    private getFilteredOptions = (): KbqSelectValue[] =>
-        kbqFilterSelectValuesBySearch(this.values, this.searchControl.value, !this.isTemplateRef(this.valueTemplate));
+    private getFilteredOptions(): KbqSelectValue[] {
+        return kbqFilterSelectValuesBySearch(
+            this.values,
+            this.searchControl.value,
+            !this.isTemplateRef(this.valueTemplate)
+        );
+    }
 }

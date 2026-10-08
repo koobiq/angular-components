@@ -74,7 +74,7 @@
         </kbq-option>
     }
 
-    @for (item of filteredOptions | async; track item) {
+    @for (item of filteredOptions(); track item) {
         <!-- Declared inside the loop: an `@let` among projected content fails the prerender with NG0502. -->
         @let optionTemplate = isTemplateRef(valueTemplate) ? $any(valueTemplate) : null;
         @let caption = optionTemplate ? null : item.caption;

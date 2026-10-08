@@ -13,7 +13,7 @@
     [kbqPopoverDefaultPaddings]="false"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
-    (kbqPopoverVisibleChange)="isListMode = true"
+    (kbqPopoverVisibleChange)="isListMode.set(true)"
 >
     <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
     <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!formattedValue">
@@ -26,7 +26,7 @@
 }
 
 <ng-template #content>
-    @if (isListMode) {
+    @if (isListMode()) {
         <div class="kbq-date-list">
             <kbq-list-selection
                 #listSelection
@@ -67,7 +67,10 @@
             <form class="kbq-date-period__content kbq-form-horizontal" [formGroup]="formGroup">
                 <label class="kbq-form__label">{{ localeConfiguration().datePipe.customPeriodFrom }}</label>
 
-                <kbq-form-field class="kbq-date-period__date kbq-form__control" [class.kbq-focused]="showStartCalendar">
+                <kbq-form-field
+                    class="kbq-date-period__date kbq-form__control"
+                    [class.kbq-focused]="showStartCalendar()"
+                >
                     <input
                         formControlName="start"
                         [kbqCalendar]="startDateCalendar"
@@ -81,7 +84,7 @@
 
                 <kbq-calendar
                     #startDateCalendar
-                    [class.kbq-calendar_hidden]="!showStartCalendar"
+                    [class.kbq-calendar_hidden]="!showStartCalendar()"
                     [minDate]="min"
                     [maxDate]="startMax"
                     (selectedChange)="onSelectStartDate($event)"
@@ -89,7 +92,7 @@
 
                 <label class="kbq-form__label">{{ localeConfiguration().datePipe.customPeriodTo }}</label>
 
-                <kbq-form-field class="kbq-date-period__date kbq-form__control" [class.kbq-focused]="showEndCalendar">
+                <kbq-form-field class="kbq-date-period__date kbq-form__control" [class.kbq-focused]="showEndCalendar()">
                     <input
                         formControlName="end"
                         [kbqCalendar]="endDateCalendar"
@@ -117,7 +120,7 @@
 
                 <kbq-calendar
                     #endDateCalendar
-                    [class.kbq-calendar_hidden]="!showEndCalendar"
+                    [class.kbq-calendar_hidden]="!showEndCalendar()"
                     [minDate]="min"
                     [maxDate]="max"
                     (selectedChange)="onSelectEndDate($event)"
