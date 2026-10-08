@@ -3,7 +3,7 @@ import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayContainer } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Component, Directive, ElementRef, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, flushMicrotasks, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -31,9 +31,9 @@ import { KbqToolTipModule } from './tooltip.module';
 const tooltipDefaultEnterDelayWithDefer = 410;
 const defaultLeaveDelay = 100;
 
-function openAndAssertTooltip<T>(componentFixture: ComponentFixture<T>, triggerElement: ElementRef) {
+async function openAndAssertTooltip<T>(componentFixture: ComponentFixture<T>, triggerElement: ElementRef) {
     dispatchMouseEvent(coerceElement(triggerElement), 'mouseenter');
-    tick();
+    await vi.advanceTimersByTimeAsync(0);
     componentFixture.detectChanges();
 
     const tooltip = componentFixture.debugElement.query(By.css('.kbq-tooltip'));
@@ -44,21 +44,21 @@ function openAndAssertTooltip<T>(componentFixture: ComponentFixture<T>, triggerE
 }
 
 /** Opens a tooltip by hover and settles the deferred show, the reposition timeout and change detection. */
-function showByHover<T>(componentFixture: ComponentFixture<T>, element: HTMLElement) {
+async function showByHover<T>(componentFixture: ComponentFixture<T>, element: HTMLElement) {
     dispatchMouseEvent(element, 'mouseenter');
     componentFixture.detectChanges();
-    tick(tooltipDefaultEnterDelayWithDefer);
+    await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
     componentFixture.detectChanges();
-    tick();
+    await vi.advanceTimersByTimeAsync(0);
     componentFixture.detectChanges();
 }
 
 /** Opens a tooltip by keyboard focus — a non-keyboard focus origin is ignored by the trigger. */
-function showByKeyboardFocus<T>(componentFixture: ComponentFixture<T>, element: HTMLElement) {
+async function showByKeyboardFocus<T>(componentFixture: ComponentFixture<T>, element: HTMLElement) {
     dispatchKeyboardEvent(document, 'keydown', TAB);
     dispatchFakeEvent(element, 'focus');
     componentFixture.detectChanges();
-    flush();
+    await vi.runOnlyPendingTimersAsync();
     componentFixture.detectChanges();
 }
 
@@ -85,11 +85,12 @@ describe('KbqTooltip', () => {
 
     afterEach(() => {
         overlayContainer.ngOnDestroy();
+        vi.useRealTimers();
     });
 
-    const getTooltip = (trigger: ElementRef, selector = '.kbq-tooltip'): Element | null => {
+    const getTooltip = async (trigger: ElementRef, selector = '.kbq-tooltip'): Promise<Element | null> => {
         dispatchMouseEvent(trigger.nativeElement, 'mouseenter');
-        tick(tooltipDefaultEnterDelayWithDefer);
+        await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
 
         return overlayContainer.getContainerElement().querySelector(selector);
     };
@@ -104,13 +105,15 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should remove the tooltip only once the hide scheduled on mouseleave has run', fakeAsync(() => {
+        it('should remove the tooltip only once the hide scheduled on mouseleave has run', async () => {
+            vi.useFakeTimers();
+
             const featureKey = 'MOST-SIMPLE';
             const triggerElement = component.mostSimpleTrigger().nativeElement;
 
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
 
-            showByHover(fixture, triggerElement);
+            await showByHover(fixture, triggerElement);
 
             expect(overlayContainerElement.textContent).toContain(featureKey);
 
@@ -122,13 +125,15 @@ describe('KbqTooltip', () => {
 
             expect(overlayContainerElement.textContent).toContain(featureKey);
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
-        }));
+        });
 
-        it('should show/hide normal tooltip', fakeAsync(() => {
+        it('should show/hide normal tooltip', async () => {
+            vi.useFakeTimers();
+
             const featureKey = 'NORMAL';
             const triggerElement = component.normalTrigger().nativeElement;
 
@@ -136,38 +141,42 @@ describe('KbqTooltip', () => {
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
-            tick(defaultLeaveDelay);
+            await vi.advanceTimersByTimeAsync(defaultLeaveDelay);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
-        }));
+        });
 
-        it('should show/hide tooltip by focus', fakeAsync(() => {
+        it('should show/hide tooltip by focus', async () => {
+            vi.useFakeTimers();
+
             const featureKey = 'FOCUS';
             const triggerElement = component.focusTrigger().nativeElement;
 
             dispatchKeyboardEvent(document, 'keydown', TAB);
             dispatchFakeEvent(triggerElement, 'focus');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(overlayContainerElement.textContent).toContain(featureKey);
 
             dispatchFakeEvent(triggerElement, 'blur');
-            tick(defaultLeaveDelay);
+            await vi.advanceTimersByTimeAsync(defaultLeaveDelay);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
-        }));
+        });
 
-        it('should not render arrow when kbqTooltipArrow is false', fakeAsync(() => {
-            let tooltip = getTooltip(component.dynamicArrowAndOffsetTrigger(), '.kbq-tooltip_arrowless');
+        it('should not render arrow when kbqTooltipArrow is false', async () => {
+            vi.useFakeTimers();
+
+            let tooltip = await getTooltip(component.dynamicArrowAndOffsetTrigger(), '.kbq-tooltip_arrowless');
 
             expect(tooltip).toBeFalsy();
 
@@ -175,16 +184,16 @@ describe('KbqTooltip', () => {
 
             dispatchMouseEvent(dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
             fixture.detectChanges();
-            tick(defaultLeaveDelay);
+            await vi.advanceTimersByTimeAsync(defaultLeaveDelay);
 
             component.arrow = false;
             fixture.detectChanges();
 
-            tooltip = getTooltip(dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
+            tooltip = await getTooltip(dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
 
             expect(tooltip).toBeTruthy();
             expect(tooltip?.querySelector('.kbq-tooltip__arrow')).toBeFalsy();
-        }));
+        });
     });
 
     describe('kbqTooltipDisabled', () => {
@@ -197,31 +206,35 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should not show tooltip when disabled', fakeAsync(() => {
+        it('should not show tooltip when disabled', async () => {
+            vi.useFakeTimers();
+
             const featureKey = 'DISABLED';
             const tooltipDirective = component.disabledDirective();
 
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.show();
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
-        }));
+        });
 
-        it('should show tooltip after kbqTooltipDisabled is set to false', fakeAsync(() => {
+        it('should show tooltip after kbqTooltipDisabled is set to false', async () => {
+            vi.useFakeTimers();
+
             const featureKey = 'DISABLED';
             const tooltipDirective = component.disabledDirective();
 
             tooltipDirective.disabled = false;
             tooltipDirective.show();
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
-        }));
+        });
     });
 
     describe('with TemplateRef', () => {
@@ -234,15 +247,17 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should pass kbqTooltipContext into TemplateRef content', fakeAsync(() => {
+        it('should pass kbqTooltipContext into TemplateRef content', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.trigger().nativeElement;
 
             trigger.click();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).toEqual(component.tooltipContext.content);
-        }));
+        });
     });
 
     describe('Overlay offset', () => {
@@ -255,7 +270,9 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should add offset for position config if element is less than arrow margin', fakeAsync(() => {
+        it('should add offset for position config if element is less than arrow margin', async () => {
+            vi.useFakeTimers();
+
             const rect = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT * 2 - 1;
 
             componentInstance.triggerElementRef().nativeElement.getBoundingClientRect = () => ({
@@ -264,7 +281,7 @@ describe('KbqTooltip', () => {
             });
             fixture.detectChanges();
 
-            openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
+            await openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
 
             const strategy: FlexibleConnectedPositionStrategy = componentInstance
                 .tooltipTrigger()
@@ -272,16 +289,18 @@ describe('KbqTooltip', () => {
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeTruthy();
-        }));
+        });
 
-        it('should not add offset to tooltip position config if element is large', fakeAsync(() => {
+        it('should not add offset to tooltip position config if element is large', async () => {
+            vi.useFakeTimers();
+
             componentInstance.triggerElementRef().nativeElement.getBoundingClientRect = () => ({
                 width: 100,
                 height: 100
             });
             fixture.detectChanges();
 
-            openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
+            await openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
 
             const strategy: FlexibleConnectedPositionStrategy = componentInstance
                 .tooltipTrigger()
@@ -289,13 +308,15 @@ describe('KbqTooltip', () => {
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
-        }));
+        });
 
-        it('should not apply adjusted positions if tooltip initialized without arrow', fakeAsync(() => {
+        it('should not apply adjusted positions if tooltip initialized without arrow', async () => {
+            vi.useFakeTimers();
+
             componentInstance.tooltipTrigger().arrow = false;
             fixture.detectChanges();
 
-            openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
+            await openAndAssertTooltip(fixture, componentInstance.triggerElementRef());
 
             const strategy: FlexibleConnectedPositionStrategy = componentInstance
                 .tooltipTrigger()
@@ -303,7 +324,7 @@ describe('KbqTooltip', () => {
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
 
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
-        }));
+        });
     });
 
     describe('forDisabledComponent input', () => {
@@ -316,7 +337,9 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should set attributes for kbqButton', fakeAsync(() => {
+        it('should set attributes for kbqButton', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = component.buttonTooltip().getNativeElement();
 
             expect(triggerElement.getAttribute('tabindex')).toBe('-1');
@@ -327,9 +350,11 @@ describe('KbqTooltip', () => {
 
             expect(triggerElement.getAttribute('tabindex')).toBe('0');
             expect(component.buttonTooltip().disabled).toBe(false);
-        }));
+        });
 
-        it('should set attributes for kbqIconButton', fakeAsync(() => {
+        it('should set attributes for kbqIconButton', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = component.iconButtonTooltip().getNativeElement();
 
             expect(triggerElement.getAttribute('tabindex')).toBe('-1');
@@ -340,9 +365,11 @@ describe('KbqTooltip', () => {
 
             expect(triggerElement.getAttribute('tabindex')).toBe('0');
             expect(component.iconButtonTooltip().disabled).toBe(false);
-        }));
+        });
 
-        it('should set attributes for kbqLink', fakeAsync(() => {
+        it('should set attributes for kbqLink', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = component.linkTooltip().getNativeElement();
 
             expect(triggerElement.getAttribute('tabindex')).toBe('-1');
@@ -353,7 +380,7 @@ describe('KbqTooltip', () => {
 
             expect(triggerElement.getAttribute('tabindex')).toBe('0');
             expect(component.linkTooltip().disabled).toBe(false);
-        }));
+        });
     });
 
     describe('reactive modifier and header inputs', () => {
@@ -375,34 +402,38 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should refresh the tooltip class map when [kbqTooltipModifier] changes while open', fakeAsync(() => {
-            openAndAssertTooltip(fixture, component.triggerElementRef());
+        it('should refresh the tooltip class map when [kbqTooltipModifier] changes while open', async () => {
+            vi.useFakeTimers();
 
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await openAndAssertTooltip(fixture, component.triggerElementRef());
+
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-tooltip_warning')).toBeFalsy();
 
             component.modifier = 'warning';
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(overlayContainerElement.querySelector('.kbq-tooltip_warning')).toBeTruthy();
 
             // Cleanup the open overlay so trailing timers don't leak into other tests.
             component.tooltipTrigger().hide();
-            tick(defaultLeaveDelay);
-            flush();
-        }));
+            await vi.advanceTimersByTimeAsync(defaultLeaveDelay);
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should refresh the rendered header when [kbqTooltipHeader] changes while open', fakeAsync(() => {
+        it('should refresh the rendered header when [kbqTooltipHeader] changes while open', async () => {
+            vi.useFakeTimers();
+
             component.modifier = 'extended';
             component.header = 'initial header';
             fixture.detectChanges();
 
-            openAndAssertTooltip(fixture, component.triggerElementRef());
+            await openAndAssertTooltip(fixture, component.triggerElementRef());
 
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             const headerEl = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-tooltip__header');
@@ -411,14 +442,14 @@ describe('KbqTooltip', () => {
 
             component.header = 'updated header';
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(headerEl()?.textContent?.trim()).toBe('updated header');
 
             component.tooltipTrigger().hide();
-            tick(defaultLeaveDelay);
-            flush();
-        }));
+            await vi.advanceTimersByTimeAsync(defaultLeaveDelay);
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('single visible tooltip', () => {
@@ -442,35 +473,41 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should hide the previously visible tooltip when another one is shown', fakeAsync(() => {
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+        it('should hide the previously visible tooltip when another one is shown', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
 
-            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
+            await showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('FOCUS-B');
             expect(overlayContainerElement.textContent).not.toContain('HOVER-A');
-        }));
+        });
 
-        it('should hide the previously visible tooltip opened by click', fakeAsync(() => {
+        it('should hide the previously visible tooltip opened by click', async () => {
+            vi.useFakeTimers();
+
             dispatchMouseEvent(component.clickTrigger().nativeElement, 'click');
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).toContain('CLICK-E');
 
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
             expect(overlayContainerElement.textContent).not.toContain('CLICK-E');
-        }));
+        });
 
-        it('should close the previous tooltip when shown via showForMouseEvent', fakeAsync(() => {
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+        it('should close the previous tooltip when shown via showForMouseEvent', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
 
@@ -481,17 +518,19 @@ describe('KbqTooltip', () => {
             element.addEventListener('mouseover', (event) => clickDirective.showForMouseEvent(event as MouseEvent));
             dispatchMouseEvent(element, 'mouseover');
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).toContain('CLICK-E');
             expect(overlayContainerElement.textContent).not.toContain('HOVER-A');
-        }));
+        });
 
-        it('should force-close a tooltip via hideAsInactive even while its own overlay is hovered', fakeAsync(() => {
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+        it('should force-close a tooltip via hideAsInactive even while its own overlay is hovered', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
 
@@ -502,96 +541,108 @@ describe('KbqTooltip', () => {
             hoverDirective['instance'].hovered.next(true);
             hoverDirective.triggerName = 'mouseleave';
             hoverDirective.hide(0);
-            tick(defaultLeaveDelay);
+            await vi.advanceTimersByTimeAsync(defaultLeaveDelay);
             fixture.detectChanges();
 
             // Confirms the guard: an ordinary hide() attempt in this state is indeed a no-op.
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
 
             // hideAsInactive() (triggered by the registry below) is documented to bypass that guard.
-            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
+            await showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('FOCUS-B');
             expect(overlayContainerElement.textContent).not.toContain('HOVER-A');
-        }));
+        });
 
-        it('should keep both tooltips visible when kbqTooltipSingleInstance is false', fakeAsync(() => {
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
-            showByHover(fixture, component.independentTrigger().nativeElement);
+        it('should keep both tooltips visible when kbqTooltipSingleInstance is false', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
+            await showByHover(fixture, component.independentTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('INDEPENDENT-D');
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
-        }));
+        });
 
-        it('should not close a manually controlled tooltip', fakeAsync(() => {
-            component.manualDirective().show(0);
-            fixture.detectChanges();
-            tick();
-            fixture.detectChanges();
-
-            expect(overlayContainerElement.textContent).toContain('MANUAL-C');
-
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
-
-            expect(overlayContainerElement.textContent).toContain('HOVER-A');
-            expect(overlayContainerElement.textContent).toContain('MANUAL-C');
-        }));
-
-        it('should not be closed by a manually controlled tooltip', fakeAsync(() => {
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+        it('should not close a manually controlled tooltip', async () => {
+            vi.useFakeTimers();
 
             component.manualDirective().show(0);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('MANUAL-C');
+
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
+
+            expect(overlayContainerElement.textContent).toContain('HOVER-A');
+            expect(overlayContainerElement.textContent).toContain('MANUAL-C');
+        });
+
+        it('should not be closed by a manually controlled tooltip', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
+
+            component.manualDirective().show(0);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).toContain('MANUAL-C');
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
-        }));
+        });
 
-        it('should emit kbqVisibleChange(false) for the automatically closed tooltip', fakeAsync(() => {
+        it('should emit kbqVisibleChange(false) for the automatically closed tooltip', async () => {
+            vi.useFakeTimers();
+
             const visibleChangeSpy = vi.fn();
 
             component.hoverDirective()!.visibleChange.subscribe(visibleChangeSpy);
 
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(visibleChangeSpy).toHaveBeenLastCalledWith(true);
 
-            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
+            await showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
 
             expect(visibleChangeSpy).toHaveBeenLastCalledWith(false);
             expect(component.hoverDirective()!.isOpen).toBe(false);
-        }));
+        });
 
-        it('should release the destroyed trigger so it is not retained as the visible one', fakeAsync(() => {
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+        it('should release the destroyed trigger so it is not retained as the visible one', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(registry['visibleTooltip']).toBe(component.hoverDirective());
 
             component.hoverTriggerRendered = false;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(registry['visibleTooltip']).toBeNull();
-        }));
+        });
 
-        it('should not retroactively exempt a tooltip that is toggled out of the group while still open', fakeAsync(() => {
-            showByHover(fixture, component.toggleableTrigger().nativeElement);
+        it('should not retroactively exempt a tooltip that is toggled out of the group while still open', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.toggleableTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('TOGGLE-F');
 
             component.toggleableSingleInstance = false;
             fixture.detectChanges();
 
-            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
+            await showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('FOCUS-B');
             // Characterizes current behavior: `participatesInSingleInstance` is only read once, inside the
             // `visibleChange` subscription set up in the constructor — flipping `kbqTooltipSingleInstance`
             // while the tooltip is already open does not retroactively free its registry slot.
             expect(overlayContainerElement.textContent).not.toContain('TOGGLE-F');
-        }));
+        });
     });
 
     describe('single visible tooltip / app-wide default disabled via DI', () => {
@@ -614,16 +665,18 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should keep both tooltips visible when the app-wide default is provided as false', fakeAsync(() => {
-            showByHover(fixture, component.hoverTrigger()!.nativeElement);
+        it('should keep both tooltips visible when the app-wide default is provided as false', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.hoverTrigger()!.nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
 
-            showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
+            await showByKeyboardFocus(fixture, component.focusTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('FOCUS-B');
             expect(overlayContainerElement.textContent).toContain('HOVER-A');
-        }));
+        });
     });
 
     describe('pop-up on the same element', () => {
@@ -639,118 +692,136 @@ describe('KbqTooltip', () => {
             trigger = component.trigger().nativeElement;
         });
 
-        it('should hide a visible tooltip when the pop-up opens', fakeAsync(() => {
-            showByHover(fixture, trigger);
+        it('should hide a visible tooltip when the pop-up opens', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, trigger);
 
             expect(overlayContainerElement.textContent).toContain('SIBLING');
 
             component.popup().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toContain('SIBLING');
-        }));
+        });
 
-        it('should cancel a pending show when the pop-up opens', fakeAsync(() => {
+        it('should cancel a pending show when the pop-up opens', async () => {
+            vi.useFakeTimers();
+
             dispatchMouseEvent(trigger, 'mouseenter');
             fixture.detectChanges();
 
             component.popup().open();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toContain('SIBLING');
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not show the tooltip while a sibling is attached, even before it announces opening', fakeAsync(() => {
+        it('should not show the tooltip while a sibling is attached, even before it announces opening', async () => {
+            vi.useFakeTimers();
+
             // Models the gap between a sibling's overlay attaching and its `openedChange` actually firing —
             // e.g. select/tree-select only emit it once their open CSS animation finishes.
             component.popup().isAttached = true;
 
             dispatchMouseEvent(trigger, 'mouseenter');
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toContain('SIBLING');
-        }));
+        });
 
-        it('should not show the tooltip on hover while the pop-up is open', fakeAsync(() => {
+        it('should not show the tooltip on hover while the pop-up is open', async () => {
+            vi.useFakeTimers();
+
             component.popup().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            showByHover(fixture, trigger);
+            await showByHover(fixture, trigger);
 
             expect(overlayContainerElement.textContent).not.toContain('SIBLING');
-        }));
+        });
 
-        it('should not show the tooltip when the closing pop-up restores focus to the trigger', fakeAsync(() => {
+        it('should not show the tooltip when the closing pop-up restores focus to the trigger', async () => {
+            vi.useFakeTimers();
+
             component.popup().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // How `KbqPopoverComponent.onEscape` closes: it restores focus to the trigger with a `keyboard`
             // origin (passing the tooltip's own focus-origin gate) before the overlay is actually detached —
             // `isAttached` is still `true` at this point, which is what must keep the tooltip suppressed.
-            showByKeyboardFocus(fixture, trigger);
+            await showByKeyboardFocus(fixture, trigger);
 
             expect(overlayContainerElement.textContent).not.toContain('SIBLING');
-        }));
+        });
 
-        it('should not show the tooltip on the mouseenter replayed when the pop-up overlay is removed', fakeAsync(() => {
-            showByHover(fixture, trigger);
+        it('should not show the tooltip on the mouseenter replayed when the pop-up overlay is removed', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, trigger);
 
             component.popup().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             // Inserting a backdrop over the trigger makes the browser fire `mouseleave` without the pointer
             // having moved; removing it fires the matching `mouseenter`.
             dispatchMouseEvent(trigger, 'mouseleave');
             component.popup().close();
             component.popup().detach();
 
-            showByHover(fixture, trigger);
+            await showByHover(fixture, trigger);
 
             expect(overlayContainerElement.textContent).not.toContain('SIBLING');
-        }));
+        });
 
-        it('should show the tooltip again after the pointer leaves the trigger', fakeAsync(() => {
+        it('should show the tooltip again after the pointer leaves the trigger', async () => {
+            vi.useFakeTimers();
+
             component.popup().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             component.popup().close();
             component.popup().detach();
 
             dispatchMouseEvent(trigger, 'mouseleave');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            showByHover(fixture, trigger);
+            await showByHover(fixture, trigger);
 
             expect(overlayContainerElement.textContent).toContain('SIBLING');
-        }));
+        });
 
-        it('should show the tooltip again after the focus leaves the trigger', fakeAsync(() => {
+        it('should show the tooltip again after the focus leaves the trigger', async () => {
+            vi.useFakeTimers();
+
             component.popup().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             component.popup().close();
             component.popup().detach();
 
             dispatchFakeEvent(trigger, 'blur');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
-            showByKeyboardFocus(fixture, trigger);
+            await showByKeyboardFocus(fixture, trigger);
 
             expect(overlayContainerElement.textContent).toContain('SIBLING');
-        }));
+        });
 
-        it('should not mute a tooltip that is driven imperatively', fakeAsync(() => {
+        it('should not mute a tooltip that is driven imperatively', async () => {
+            vi.useFakeTimers();
+
             component.manualPopup().open();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             component.manualTooltip().show();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).toContain('MANUAL');
-        }));
+        });
     });
 
     describe('accessibility', () => {
@@ -765,71 +836,83 @@ describe('KbqTooltip', () => {
 
         const tooltipElement = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-tooltip');
 
-        it('should render the tooltip as role="tooltip" with an id', fakeAsync(() => {
-            showByHover(fixture, component.trigger().nativeElement);
+        it('should render the tooltip as role="tooltip" with an id', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(tooltipElement()?.getAttribute('role')).toBe('tooltip');
             expect(tooltipElement()?.id).toBeTruthy();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should mark the arrow as decorative', fakeAsync(() => {
-            showByHover(fixture, component.trigger().nativeElement);
+        it('should mark the arrow as decorative', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(tooltipElement()?.querySelector('.kbq-tooltip__arrow')?.getAttribute('aria-hidden')).toBe('true');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should describe the trigger by the open tooltip and stop describing it once hidden', fakeAsync(() => {
+        it('should describe the trigger by the open tooltip and stop describing it once hidden', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = component.trigger().nativeElement;
 
             expect(triggerElement.hasAttribute('aria-describedby')).toBe(false);
 
-            showByHover(fixture, triggerElement);
+            await showByHover(fixture, triggerElement);
 
             expect(triggerElement.getAttribute('aria-describedby')).toBe(tooltipElement()?.id);
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(triggerElement.hasAttribute('aria-describedby')).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should keep the ids the consumer already put on the trigger', fakeAsync(() => {
+        it('should keep the ids the consumer already put on the trigger', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = component.describedTrigger().nativeElement;
 
-            showByHover(fixture, triggerElement);
+            await showByHover(fixture, triggerElement);
 
             expect(triggerElement.getAttribute('aria-describedby')).toBe(`external-hint ${tooltipElement()?.id}`);
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(triggerElement.getAttribute('aria-describedby')).toBe('external-hint');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not describe a trigger whose tooltip only repeats its own text', fakeAsync(() => {
+        it('should not describe a trigger whose tooltip only repeats its own text', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = component.selfDescribingTrigger().nativeElement;
 
-            showByHover(fixture, triggerElement);
+            await showByHover(fixture, triggerElement);
 
             expect(triggerElement.hasAttribute('aria-describedby')).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should drop the description when the trigger is destroyed while the tooltip is open', fakeAsync(() => {
+        it('should drop the description when the trigger is destroyed while the tooltip is open', async () => {
+            vi.useFakeTimers();
+
             const triggerElement = component.trigger().nativeElement;
 
-            showByHover(fixture, triggerElement);
+            await showByHover(fixture, triggerElement);
 
             expect(triggerElement.hasAttribute('aria-describedby')).toBe(true);
 
@@ -837,41 +920,47 @@ describe('KbqTooltip', () => {
 
             expect(triggerElement.hasAttribute('aria-describedby')).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should close a hover tooltip on Escape even though the trigger has no focus', fakeAsync(() => {
-            showByHover(fixture, component.trigger().nativeElement);
+        it('should close a hover tooltip on Escape even though the trigger has no focus', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
             dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not close an imperatively driven tooltip on Escape', fakeAsync(() => {
+        it('should not close an imperatively driven tooltip on Escape', async () => {
+            vi.useFakeTimers();
+
             component.manualTooltip().show(0);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(component.manualTooltip().isOpen).toBe(true);
 
             dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(component.manualTooltip().isOpen).toBe(true);
 
             component.manualTooltip().hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should leave Escape for the overlay underneath the tooltip', fakeAsync(() => {
+        it('should leave Escape for the overlay underneath the tooltip', async () => {
+            vi.useFakeTimers();
+
             const underlyingOverlay = TestBed.inject(Overlay).create();
 
             underlyingOverlay.attach(new ComponentPortal(OverlayPanel));
@@ -880,12 +969,12 @@ describe('KbqTooltip', () => {
 
             underlyingOverlay.keydownEvents().subscribe(keydown);
 
-            showByHover(fixture, component.trigger().nativeElement);
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
             dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             // CDK hands each keydown to the last attached overlay that has subscribers and stops there. A
@@ -895,8 +984,8 @@ describe('KbqTooltip', () => {
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
             underlyingOverlay.dispose();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('has no axe violations while a tooltip is open', async () => {
             component.tooltipTrigger().show(0);
@@ -925,56 +1014,64 @@ describe('KbqTooltip', () => {
         // The origin is set through `focusVia` rather than a synthetic `mousedown`: CDK reads pointer
         // interactions from `InputModalityDetector`, which treats a `MouseEvent` carrying no pressed button
         // as a screen-reader-synthesized click and reports it as `keyboard`.
-        it('should not show the tooltip on the focus that follows a pointer interaction', fakeAsync(() => {
+        it('should not show the tooltip on the focus that follows a pointer interaction', async () => {
+            vi.useFakeTimers();
+
             TestBed.inject(FocusMonitor).focusVia(triggerElement, 'mouse');
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should show the tooltip on keyboard focus', fakeAsync(() => {
-            showByKeyboardFocus(fixture, triggerElement);
+        it('should show the tooltip on keyboard focus', async () => {
+            vi.useFakeTimers();
+
+            await showByKeyboardFocus(fixture, triggerElement);
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not show the tooltip on an unattributed focus', fakeAsync(() => {
+        it('should not show the tooltip on an unattributed focus', async () => {
+            vi.useFakeTimers();
+
             // CDK reports `program` both for focus the application moved and for any focus it could not
             // attribute, so the gate cannot admit it. Deliberate programmatic focus goes through
             // `focusVia(element, 'keyboard')`, which the case above covers.
             dispatchFakeEvent(triggerElement, 'focus');
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should open on Enter for a keydown trigger even after a pointer-originated focus', fakeAsync(() => {
+        it('should open on Enter for a keydown trigger even after a pointer-originated focus', async () => {
+            vi.useFakeTimers();
+
             TestBed.inject(FocusMonitor).focusVia(triggerElement, 'mouse');
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
 
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
             dispatchKeyboardEvent(triggerElement, 'keydown', ENTER);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('enter delay', () => {
@@ -987,34 +1084,38 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should apply the full enter delay to the first tooltip', fakeAsync(() => {
+        it('should apply the full enter delay to the first tooltip', async () => {
+            vi.useFakeTimers();
+
             dispatchMouseEvent(component.first().nativeElement, 'mouseenter');
             fixture.detectChanges();
-            tick(399);
+            await vi.advanceTimersByTimeAsync(399);
 
             expect(component.firstTrigger().isOpen).toBe(false);
 
-            tick(2);
+            await vi.advanceTimersByTimeAsync(2);
 
             expect(component.firstTrigger().isOpen).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should show a following tooltip without the enter delay', fakeAsync(() => {
-            showByHover(fixture, component.first().nativeElement);
+        it('should show a following tooltip without the enter delay', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.first().nativeElement);
             dispatchMouseEvent(component.first().nativeElement, 'mouseleave');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             dispatchMouseEvent(component.second().nativeElement, 'mouseenter');
             fixture.detectChanges();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(component.secondTrigger().isOpen).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('enter delay / instant-show window disabled via DI', () => {
@@ -1037,24 +1138,26 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should apply the enter delay to every tooltip when the window is zero', fakeAsync(() => {
-            showByHover(fixture, component.first().nativeElement);
+        it('should apply the enter delay to every tooltip when the window is zero', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.first().nativeElement);
             dispatchMouseEvent(component.first().nativeElement, 'mouseleave');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             dispatchMouseEvent(component.second().nativeElement, 'mouseenter');
             fixture.detectChanges();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
 
             expect(component.secondTrigger().isOpen).toBe(false);
 
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
 
             expect(component.secondTrigger().isOpen).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('hideWithTimeout and kbqLeaveDelay', () => {
@@ -1070,70 +1173,78 @@ describe('KbqTooltip', () => {
             triggerElement = component.trigger().nativeElement;
         });
 
-        it('should hide exactly one leave delay after the pointer leaves', fakeAsync(() => {
-            showByHover(fixture, triggerElement);
+        it('should hide exactly one leave delay after the pointer leaves', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, triggerElement);
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
             fixture.detectChanges();
-            tick(999);
+            await vi.advanceTimersByTimeAsync(999);
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
-            tick(2);
+            await vi.advanceTimersByTimeAsync(2);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should cancel the pending hide when the pointer comes back', fakeAsync(() => {
-            showByHover(fixture, triggerElement);
+        it('should cancel the pending hide when the pointer comes back', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, triggerElement);
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(1500);
+            await vi.advanceTimersByTimeAsync(1500);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
             component.tooltipTrigger().hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should cancel the pending hide while the pointer rests on the tooltip', fakeAsync(() => {
-            showByHover(fixture, triggerElement);
+        it('should cancel the pending hide while the pointer rests on the tooltip', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, triggerElement);
 
             const popUpElement = overlayContainerElement.querySelector<HTMLElement>('kbq-tooltip-component')!;
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
             dispatchMouseEvent(popUpElement, 'mouseenter');
             fixture.detectChanges();
-            tick(1500);
+            await vi.advanceTimersByTimeAsync(1500);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
             component.tooltipTrigger().hideAsInactive();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should leave no pending hide behind when the trigger is destroyed during the leave delay', fakeAsync(() => {
-            showByHover(fixture, triggerElement);
+        it('should leave no pending hide behind when the trigger is destroyed during the leave delay', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, triggerElement);
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             fixture.destroy();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeNull();
-        }));
+        });
     });
 
     describe('kbqLeaveDelay without hideWithTimeout', () => {
@@ -1151,39 +1262,43 @@ describe('KbqTooltip', () => {
 
         // `hideWithTimeout` only adds the hover watchdog on top: the delay itself is what `hide()` defaults to,
         // so it applies to every hide. Both API tables document it that way.
-        it('should wait out the leave delay on mouseleave', fakeAsync(() => {
-            showByHover(fixture, triggerElement);
+        it('should wait out the leave delay on mouseleave', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, triggerElement);
 
             dispatchMouseEvent(triggerElement, 'mouseleave');
             fixture.detectChanges();
-            tick(999);
+            await vi.advanceTimersByTimeAsync(999);
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
-            tick(2);
+            await vi.advanceTimersByTimeAsync(2);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should wait out the leave delay on blur', fakeAsync(() => {
-            showByKeyboardFocus(fixture, triggerElement);
+        it('should wait out the leave delay on blur', async () => {
+            vi.useFakeTimers();
+
+            await showByKeyboardFocus(fixture, triggerElement);
 
             dispatchFakeEvent(triggerElement, 'blur');
             fixture.detectChanges();
-            tick(999);
+            await vi.advanceTimersByTimeAsync(999);
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
-            tick(2);
+            await vi.advanceTimersByTimeAsync(2);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('reactive arrow and offset inputs', () => {
@@ -1198,35 +1313,39 @@ describe('KbqTooltip', () => {
 
         const tooltipElement = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-tooltip');
 
-        it('should render the arrow when [kbqTooltipArrow] is set while the tooltip is open', fakeAsync(() => {
-            showByHover(fixture, component.trigger().nativeElement);
+        it('should render the arrow when [kbqTooltipArrow] is set while the tooltip is open', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(tooltipElement()?.querySelector('.kbq-tooltip__arrow')).toBeFalsy();
 
             component.arrow = true;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(tooltipElement()?.querySelector('.kbq-tooltip__arrow')).toBeTruthy();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should re-apply the margins when [kbqTooltipOffset] changes while the tooltip is open', fakeAsync(() => {
-            showByHover(fixture, component.trigger().nativeElement);
+        it('should re-apply the margins when [kbqTooltipOffset] changes while the tooltip is open', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(tooltipElement()?.style.marginBottom).toBe('');
 
             component.offset = 24;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(tooltipElement()?.style.marginBottom).toBe('24px');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('kbqTooltipColor', () => {
@@ -1241,28 +1360,34 @@ describe('KbqTooltip', () => {
 
         const tooltipClasses = () => overlayContainerElement.querySelector('.kbq-tooltip')!.classList;
 
-        it('should default to the contrast color class', fakeAsync(() => {
-            showByHover(fixture, component.trigger().nativeElement);
+        it('should default to the contrast color class', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(tooltipClasses()).toContain('kbq-contrast');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         for (const color of ['contrast-fade', 'theme', 'warning', 'error']) {
-            it(`should apply the ${color} color class`, fakeAsync(() => {
+            it(`should apply the ${color} color class`, async () => {
+                vi.useFakeTimers();
+
                 component.color = color;
                 fixture.detectChanges();
 
-                showByHover(fixture, component.trigger().nativeElement);
+                await showByHover(fixture, component.trigger().nativeElement);
 
                 expect(tooltipClasses()).toContain(`kbq-${color}`);
 
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
         }
 
-        it('should read back the assigned color rather than its CSS class', fakeAsync(() => {
+        it('should read back the assigned color rather than its CSS class', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.tooltipTrigger();
 
             trigger.color = 'error';
@@ -1275,12 +1400,12 @@ describe('KbqTooltip', () => {
 
             expect(trigger.color).toBe('error');
 
-            showByHover(fixture, component.trigger().nativeElement);
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(tooltipClasses()).toContain('kbq-error');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('kbqTooltipContext', () => {
@@ -1293,13 +1418,15 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should pass a falsy context into the template', fakeAsync(() => {
-            showByHover(fixture, component.trigger().nativeElement);
+        it('should pass a falsy context into the template', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('0');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('kbqRelativeToPointer', () => {
@@ -1312,31 +1439,35 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should anchor the tooltip to the cursor instead of the host element', fakeAsync(() => {
+        it('should anchor the tooltip to the cursor instead of the host element', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.tooltipTrigger();
 
             trigger.createOverlay();
 
             const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
 
-            showByHover(fixture, component.trigger().nativeElement);
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: expect.any(Number) }));
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should keep [kbqPlacementPriority] intact across a cursor-relative show', fakeAsync(() => {
+        it('should keep [kbqPlacementPriority] intact across a cursor-relative show', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.tooltipTrigger();
 
             expect(trigger['placementPriority']).toEqual(['top', 'bottom']);
 
-            showByHover(fixture, component.trigger().nativeElement);
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(trigger['placementPriority']).toEqual(['top', 'bottom']);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('kbqRelativeToCaret', () => {
@@ -1344,13 +1475,13 @@ describe('KbqTooltip', () => {
         let component: TooltipRelativeToCaret;
 
         /** Opens a manually triggered tooltip and hands back the spy on its position strategy. */
-        const showAndSpy = (trigger: KbqTooltipTrigger) => {
+        const showAndSpy = async (trigger: KbqTooltipTrigger) => {
             trigger.createOverlay();
 
             const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
 
             trigger.show();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             return setOrigin;
@@ -1362,8 +1493,10 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should anchor the tooltip to the caret of the host field', fakeAsync(() => {
-            const setOrigin = showAndSpy(component.fieldTooltip());
+        it('should anchor the tooltip to the caret of the host field', async () => {
+            vi.useFakeTimers();
+
+            const setOrigin = await showAndSpy(component.fieldTooltip());
 
             expect(setOrigin).toHaveBeenCalledWith(
                 expect.objectContaining({
@@ -1375,32 +1508,38 @@ describe('KbqTooltip', () => {
             );
 
             component.fieldTooltip().hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should anchor the tooltip to the field the host wraps', fakeAsync(() => {
-            const setOrigin = showAndSpy(component.wrapperTooltip());
+        it('should anchor the tooltip to the field the host wraps', async () => {
+            vi.useFakeTimers();
+
+            const setOrigin = await showAndSpy(component.wrapperTooltip());
 
             expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ height: expect.any(Number) }));
 
             component.wrapperTooltip().hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should fall back to the host element when there is no field to measure', fakeAsync(() => {
+        it('should fall back to the host element when there is no field to measure', async () => {
+            vi.useFakeTimers();
+
             const host = component.plain().nativeElement;
 
             host.getBoundingClientRect = () => ({ left: 5, top: 7, width: 40, height: 20 }) as DOMRect;
 
-            const setOrigin = showAndSpy(component.plainTooltip());
+            const setOrigin = await showAndSpy(component.plainTooltip());
 
             expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ x: 5, y: 7, width: 40, height: 20 }));
 
             component.plainTooltip().hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should measure nothing while nothing lays the tooltip out, as on the server', fakeAsync(() => {
+        it('should measure nothing while nothing lays the tooltip out, as on the server', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.fieldTooltip();
 
             trigger.createOverlay();
@@ -1411,40 +1550,46 @@ describe('KbqTooltip', () => {
                 configurable: true
             });
 
-            expect(() => {
-                trigger.show();
-                tick(tooltipDefaultEnterDelayWithDefer);
-                fixture.detectChanges();
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    trigger.show();
+                    await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
+                    fixture.detectChanges();
+                })()
+            ).resolves.toBeUndefined();
 
             trigger.hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should measure the caret again whenever the origin is read', fakeAsync(() => {
+        it('should measure the caret again whenever the origin is read', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.fieldTooltip();
-            const setOrigin = showAndSpy(trigger);
+            const setOrigin = await showAndSpy(trigger);
             const origin = setOrigin.mock.calls[0][0] as { x: number };
             const field = component.field().nativeElement;
 
             field.getBoundingClientRect = () => ({ left: 10, top: 100, width: 200, height: 32 }) as DOMRect;
-            flushMicrotasks();
+            await fixture.whenStable();
 
             const before = origin.x;
 
             field.getBoundingClientRect = () => ({ left: 60, top: 100, width: 200, height: 32 }) as DOMRect;
-            flushMicrotasks();
+            await fixture.whenStable();
 
             expect(origin.x - before).toBe(50);
 
             trigger.hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should follow the caret while the field is edited, free to change the placement', fakeAsync(() => {
+        it('should follow the caret while the field is edited, free to change the placement', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.fieldTooltip();
 
-            showAndSpy(trigger);
+            await showAndSpy(trigger);
 
             const updatePosition = vi.spyOn(trigger['overlayRef']!, 'updatePosition');
             const withLockedPosition = vi.spyOn(trigger['strategy'], 'withLockedPosition');
@@ -1455,45 +1600,49 @@ describe('KbqTooltip', () => {
             expect(withLockedPosition.mock.calls).toEqual([[false], [true]]);
 
             trigger.hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should stop following the caret once the tooltip is closed', fakeAsync(() => {
+        it('should stop following the caret once the tooltip is closed', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.fieldTooltip();
 
-            showAndSpy(trigger);
+            await showAndSpy(trigger);
 
             const updatePosition = vi.spyOn(trigger['overlayRef']!, 'updatePosition');
 
             trigger.hide(0);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             updatePosition.mockClear();
 
             dispatchFakeEvent(component.field().nativeElement, 'input');
 
             expect(updatePosition).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should anchor to the host element again once kbqRelativeToCaret is switched off', fakeAsync(() => {
+        it('should anchor to the host element again once kbqRelativeToCaret is switched off', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.fieldTooltip();
-            const setOrigin = showAndSpy(trigger);
+            const setOrigin = await showAndSpy(trigger);
             const origin = setOrigin.mock.calls[0][0] as { height: number };
 
             component.field().nativeElement.getBoundingClientRect = () =>
                 ({ left: 10, top: 100, width: 200, height: 48 }) as DOMRect;
             trigger.relativeToCaretVertical = 'line';
-            flushMicrotasks();
+            await fixture.whenStable();
 
             expect(origin.height).not.toBe(48);
 
             trigger.relativeToCaret = false;
-            flushMicrotasks();
+            await fixture.whenStable();
 
             expect(origin.height).toBe(48);
 
             trigger.hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should align the arrow against the caret instead of the whole field', () => {
             const trigger = component.fieldTooltip();
@@ -1515,67 +1664,77 @@ describe('KbqTooltip', () => {
                     ({ left: 10, top, width: 200, height, right: 210, bottom: top + height, x: 10, y: top }) as DOMRect;
             };
 
-            it('should anchor to the whole single-line input by default', fakeAsync(() => {
+            it('should anchor to the whole single-line input by default', async () => {
+                vi.useFakeTimers();
+
                 setFieldBox(component.field().nativeElement, 100, 32);
 
-                const setOrigin = showAndSpy(component.fieldTooltip());
+                const setOrigin = await showAndSpy(component.fieldTooltip());
 
                 expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: 100, height: 32 }));
 
                 component.fieldTooltip().hide(0);
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should anchor to the caret line of a textarea by default', fakeAsync(() => {
+            it('should anchor to the caret line of a textarea by default', async () => {
+                vi.useFakeTimers();
+
                 setFieldBox(component.textarea().nativeElement, 200, 80);
 
-                const setOrigin = showAndSpy(component.wrapperTooltip());
+                const setOrigin = await showAndSpy(component.wrapperTooltip());
 
                 expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ height: expect.any(Number) }));
                 expect(setOrigin).not.toHaveBeenCalledWith(expect.objectContaining({ height: 80 }));
 
                 component.wrapperTooltip().hide(0);
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should anchor to the caret line of an input when set to line', fakeAsync(() => {
+            it('should anchor to the caret line of an input when set to line', async () => {
+                vi.useFakeTimers();
+
                 component.fieldVertical = 'line';
                 fixture.detectChanges();
                 setFieldBox(component.field().nativeElement, 100, 32);
 
-                const setOrigin = showAndSpy(component.fieldTooltip());
+                const setOrigin = await showAndSpy(component.fieldTooltip());
 
                 expect(setOrigin).not.toHaveBeenCalledWith(expect.objectContaining({ height: 32 }));
 
                 component.fieldTooltip().hide(0);
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
 
-            it('should anchor to the whole textarea when set to field', fakeAsync(() => {
+            it('should anchor to the whole textarea when set to field', async () => {
+                vi.useFakeTimers();
+
                 component.wrapperVertical = 'field';
                 fixture.detectChanges();
                 setFieldBox(component.textarea().nativeElement, 200, 80);
 
-                const setOrigin = showAndSpy(component.wrapperTooltip());
+                const setOrigin = await showAndSpy(component.wrapperTooltip());
 
                 expect(setOrigin).toHaveBeenCalledWith(expect.objectContaining({ y: 200, height: 80 }));
 
                 component.wrapperTooltip().hide(0);
-                flush();
-            }));
+                await vi.runOnlyPendingTimersAsync();
+            });
         });
 
-        it('should take precedence over kbqRelativeToPointer', fakeAsync(() => {
+        it('should take precedence over kbqRelativeToPointer', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.fieldTooltip();
             const applyRelativeToPointer = vi.spyOn(trigger as never, 'applyRelativeToPointer');
 
-            showAndSpy(trigger);
+            await showAndSpy(trigger);
 
             expect(applyRelativeToPointer).not.toHaveBeenCalled();
 
             trigger.hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('imperative show', () => {
@@ -1588,31 +1747,37 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should not attach an overlay while the content is empty', fakeAsync(() => {
-            showByHover(fixture, component.emptyTrigger().nativeElement);
+        it('should not attach an overlay while the content is empty', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.emptyTrigger().nativeElement);
 
             expect(component.emptyTooltip().isAttached).toBe(false);
 
             component.content = 'FILLED';
             fixture.detectChanges();
 
-            showByHover(fixture, component.emptyTrigger().nativeElement);
+            await showByHover(fixture, component.emptyTrigger().nativeElement);
 
             expect(overlayContainerElement.textContent).toContain('FILLED');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should no-op instead of throwing when showForElement runs on a disabled trigger', fakeAsync(() => {
+        it('should no-op instead of throwing when showForElement runs on a disabled trigger', async () => {
+            vi.useFakeTimers();
+
             const host = component.emptyTrigger().nativeElement;
 
             expect(() => component.disabledTooltip().showForElement(host)).not.toThrow();
             expect(component.disabledTooltip().isAttached).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should anchor showForElement to the passed element', fakeAsync(() => {
+        it('should anchor showForElement to the passed element', async () => {
+            vi.useFakeTimers();
+
             const host = component.emptyTrigger().nativeElement;
             const trigger = component.enabledTooltip();
 
@@ -1621,23 +1786,25 @@ describe('KbqTooltip', () => {
             const setOrigin = vi.spyOn(trigger['strategy'], 'setOrigin');
 
             trigger.showForElement(host);
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(setOrigin).toHaveBeenCalledWith(host);
 
             trigger.hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should reset the open state when the overlay is detached without a hide', fakeAsync(() => {
+        it('should reset the open state when the overlay is detached without a hide', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.enabledTooltip();
             const visibility: boolean[] = [];
 
             trigger.visibleChange.subscribe((value) => visibility.push(value));
 
             trigger.show(0);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(trigger.isOpen).toBe(true);
@@ -1650,15 +1817,15 @@ describe('KbqTooltip', () => {
             expect(visibility).toEqual([true, false]);
 
             trigger.show(0);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(trigger.isOpen).toBe(true);
             expect(overlayContainerElement.textContent).toContain('ENABLED');
 
             trigger.hide(0);
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('showForMouseEvent re-anchoring', () => {
@@ -1680,12 +1847,14 @@ describe('KbqTooltip', () => {
             cell.removeEventListener('mouseover', listener);
         };
 
-        it('should move aria-describedby onto the element the tooltip is re-anchored to', fakeAsync(() => {
+        it('should move aria-describedby onto the element the tooltip is re-anchored to', async () => {
+            vi.useFakeTimers();
+
             const cellA = component.cellA().nativeElement;
             const cellB = component.cellB().nativeElement;
 
             showForCell(cellA);
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             const tooltipId = overlayContainerElement.querySelector('.kbq-tooltip')!.id;
@@ -1701,15 +1870,17 @@ describe('KbqTooltip', () => {
             expect(cellA.hasAttribute('aria-describedby')).toBe(false);
             expect(cellB.getAttribute('aria-describedby')).toBe(tooltipId);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should not attach a pane while the shared tooltip has no content', fakeAsync(() => {
+        it('should not attach a pane while the shared tooltip has no content', async () => {
+            vi.useFakeTimers();
+
             component.tooltip().content = '';
             fixture.detectChanges();
 
             showForCell(component.cellA().nativeElement);
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeNull();
@@ -1720,13 +1891,13 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
 
             showForCell(component.cellA().nativeElement);
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-tooltip')).not.toBeNull();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('parent pop-up', () => {
@@ -1739,19 +1910,21 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should hide the tooltip when the parent pop-up closes', fakeAsync(() => {
-            showByHover(fixture, component.trigger().nativeElement);
+        it('should hide the tooltip when the parent pop-up closes', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.trigger().nativeElement);
 
             expect(component.tooltipTrigger().isOpen).toBe(true);
 
             component.parentPopup().closedStream.next(false);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(component.tooltipTrigger().isOpen).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('ignoreTooltipPointerEvents', () => {
@@ -1766,31 +1939,37 @@ describe('KbqTooltip', () => {
 
         const paneClasses = (trigger: KbqTooltipTrigger) => trigger['overlayRef']!.overlayElement.classList;
 
-        it('should keep the pane hoverable by default', fakeAsync(() => {
-            showByHover(fixture, component.hoverable().nativeElement);
+        it('should keep the pane hoverable by default', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.hoverable().nativeElement);
 
             expect(paneClasses(component.hoverableTooltip())).not.toContain('cdk-overlay-pane_ignore-pointer-events');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should make the pane click-through when the input is set', fakeAsync(() => {
-            showByHover(fixture, component.clickThrough().nativeElement);
+        it('should make the pane click-through when the input is set', async () => {
+            vi.useFakeTimers();
+
+            await showByHover(fixture, component.clickThrough().nativeElement);
 
             expect(paneClasses(component.clickThroughTooltip())).toContain('cdk-overlay-pane_ignore-pointer-events');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should make the pane click-through for a trigger the pointer cannot drive', fakeAsync(() => {
+        it('should make the pane click-through for a trigger the pointer cannot drive', async () => {
+            vi.useFakeTimers();
+
             component.manualTooltip().show(0);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(paneClasses(component.manualTooltip())).toContain('cdk-overlay-pane_ignore-pointer-events');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('lifecycle', () => {
@@ -1803,23 +1982,27 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        it('should complete the pop-up visibility stream when the tooltip is torn down', fakeAsync(() => {
+        it('should complete the pop-up visibility stream when the tooltip is torn down', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.tooltipTrigger();
 
-            showByHover(fixture, component.triggerElementRef().nativeElement);
+            await showByHover(fixture, component.triggerElementRef().nativeElement);
 
             let completed = false;
 
             trigger['instance'].visibleChange.subscribe({ complete: () => (completed = true) });
 
             trigger.hide(0);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(completed).toBe(true);
-        }));
+        });
 
-        it('should complete the hover stream when the trigger is destroyed', fakeAsync(() => {
+        it('should complete the hover stream when the trigger is destroyed', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.tooltipTrigger();
 
             let completed = false;
@@ -1829,18 +2012,20 @@ describe('KbqTooltip', () => {
             fixture.destroy();
 
             expect(completed).toBe(true);
-        }));
+        });
 
-        it('should subscribe to the closing actions once per open', fakeAsync(() => {
+        it('should subscribe to the closing actions once per open', async () => {
+            vi.useFakeTimers();
+
             const trigger = component.tooltipTrigger();
             const closingActions = vi.spyOn(trigger, 'closingActions');
 
-            showByHover(fixture, component.triggerElementRef().nativeElement);
+            await showByHover(fixture, component.triggerElementRef().nativeElement);
 
             expect(closingActions).toHaveBeenCalledTimes(1);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('forDisabledComponent precedence', () => {
@@ -1885,13 +2070,15 @@ describe('KbqTooltip', () => {
             expect(component.enabledTooltip().disabled).toBe(false);
         });
 
-        it('should hide an open tooltip once the wrapped control stops being disabled', fakeAsync(() => {
+        it('should hide an open tooltip once the wrapped control stops being disabled', async () => {
+            vi.useFakeTimers();
+
             component.controlDisabled = true;
             fixture.detectChanges();
 
             component.derivedTooltip().show();
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).toContain('DERIVED');
@@ -1901,11 +2088,11 @@ describe('KbqTooltip', () => {
             // leaves — the pane may be sitting over the control that just became clickable.
             component.controlDisabled = false;
             fixture.detectChanges();
-            tick(tooltipDefaultEnterDelayWithDefer);
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toContain('DERIVED');
-        }));
+        });
     });
 });
 

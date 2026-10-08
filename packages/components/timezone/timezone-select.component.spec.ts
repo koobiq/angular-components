@@ -1,7 +1,7 @@
 ﻿import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, Type, getDebugNode, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
@@ -283,7 +283,14 @@ describe('KbqTimezoneSelect', () => {
         })();
     }
 
-    afterEach(() => overlayContainer.ngOnDestroy());
+    beforeEach(() => {
+        vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+        overlayContainer.ngOnDestroy();
+        vi.useRealTimers();
+    });
 
     describe('panel width', () => {
         /**
@@ -376,7 +383,7 @@ describe('KbqTimezoneSelect', () => {
 
     describe('keyboard navigation and tabindex', () => {
         describe('disabled behavior', () => {
-            it('should not open the panel when the control is disabled and reopen when re-enabled', fakeAsync(() => {
+            it('should not open the panel when the control is disabled and reopen when re-enabled', async () => {
                 const fixture = TestBed.createComponent(BasicTimezoneSelect);
 
                 fixture.detectChanges();
@@ -387,7 +394,7 @@ describe('KbqTimezoneSelect', () => {
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(overlayContainerElement.textContent).toEqual('');
                 expect(fixture.componentInstance.select().panelOpen).toBe(false);
@@ -397,11 +404,11 @@ describe('KbqTimezoneSelect', () => {
 
                 trigger.click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(overlayContainerElement.textContent).toContain('UTC−02:00city1city4');
                 expect(fixture.componentInstance.select().panelOpen).toBe(true);
-            }));
+            });
         });
 
         let fixture: ComponentFixture<BasicTimezoneSelect>;
@@ -409,37 +416,37 @@ describe('KbqTimezoneSelect', () => {
 
         beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(BasicTimezoneSelect);
             fixture.detectChanges();
             select = fixture.debugElement.query(By.css('kbq-timezone-select')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should set the tabindex of the select to 0 by default', () => {
             expect(select.getAttribute('tabindex')).toEqual('0');
         });
 
-        it('should be able to override the tabindex', fakeAsync(() => {
+        it('should be able to override the tabindex', async () => {
             fixture.componentInstance.tabIndexOverride = 3;
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(select.getAttribute('tabindex')).toBe('3');
-        }));
+        });
 
-        it('should set the tabindex of the select to -1 if disabled', fakeAsync(() => {
+        it('should set the tabindex of the select to -1 if disabled', async () => {
             fixture.componentInstance.control.disable();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(select.getAttribute('tabindex')).toEqual('-1');
 
             fixture.componentInstance.control.enable();
             fixture.detectChanges();
             expect(select.getAttribute('tabindex')).toEqual('0');
-        }));
+        });
 
-        it('should select options via the UP/DOWN arrow keys on a closed select', fakeAsync(() => {
+        it('should select options via the UP/DOWN arrow keys on a closed select', async () => {
             const formControl = fixture.componentInstance.control;
             const options = fixture.componentInstance.options();
 
@@ -458,13 +465,13 @@ describe('KbqTimezoneSelect', () => {
             expect(formControl.value).toBe(options[2].value);
 
             dispatchKeyboardEvent(select, 'keydown', UP_ARROW);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(options[0].selected).toBe(true);
             expect(formControl.value).toBe(options[0].value);
-        }));
+        });
 
-        it('should keep the selected option as the active one after click selection', fakeAsync(() => {
+        it('should keep the selected option as the active one after click selection', async () => {
             const formControl = fixture.componentInstance.control;
             const options = fixture.componentInstance.options();
 
@@ -472,22 +479,22 @@ describe('KbqTimezoneSelect', () => {
 
             fixture.componentInstance.select().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             (overlayContainerElement.querySelectorAll('kbq-timezone-option')[2] as HTMLElement).click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(formControl.value).toBe(options[2].value);
 
             dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(formControl.value).toBe(options[2].value);
-        }));
+        });
 
-        it('should select options via LEFT/RIGHT arrow keys on a closed select', fakeAsync(() => {
+        it('should select options via LEFT/RIGHT arrow keys on a closed select', async () => {
             const formControl = fixture.componentInstance.control;
             const options = fixture.componentInstance.options();
 
@@ -506,35 +513,32 @@ describe('KbqTimezoneSelect', () => {
             expect(formControl.value).toBe(options[2].value);
 
             dispatchKeyboardEvent(select, 'keydown', LEFT_ARROW);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(options[0].selected).toBe(true);
             expect(formControl.value).toBe(options[0].value);
-        }));
+        });
 
         it.each([
             ['DOWN_ARROW', DOWN_ARROW],
             ['UP_ARROW', UP_ARROW]
-        ])(
-            'should open the select using ALT + %s',
-            fakeAsync((_label: string, keyCode: number) => {
-                const { control: formControl, select: selectInput } = fixture.componentInstance;
-                const selectInstance = selectInput();
+        ])('should open the select using ALT + %s', async (_label: string, keyCode: number) => {
+            const { control: formControl, select: selectInput } = fixture.componentInstance;
+            const selectInstance = selectInput();
 
-                expect(selectInstance.panelOpen).toBe(false);
-                expect(formControl.value).toBeFalsy();
+            expect(selectInstance.panelOpen).toBe(false);
+            expect(formControl.value).toBeFalsy();
 
-                const event = createKeyboardEvent('keydown', keyCode);
+            const event = createKeyboardEvent('keydown', keyCode);
 
-                Object.defineProperty(event, 'altKey', { get: () => true });
+            Object.defineProperty(event, 'altKey', { get: () => true });
 
-                dispatchEvent(select, event);
-                flush();
+            dispatchEvent(select, event);
+            await vi.runOnlyPendingTimersAsync();
 
-                expect(selectInstance.panelOpen).toBe(true);
-                expect(formControl.value).toBeFalsy();
-            })
-        );
+            expect(selectInstance.panelOpen).toBe(true);
+            expect(formControl.value).toBeFalsy();
+        });
     });
 
     describe('overlay panel', () => {
@@ -543,74 +547,74 @@ describe('KbqTimezoneSelect', () => {
 
         beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(BasicTimezoneSelect);
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should open the panel when trigger is clicked', fakeAsync(() => {
+        it('should open the panel when trigger is clicked', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.select().panelOpen).toBe(true);
             expect(overlayContainerElement.textContent).toContain('city1');
             expect(overlayContainerElement.textContent).toContain('city7');
             expect(overlayContainerElement.textContent).toContain('city17');
-        }));
+        });
 
-        it('should close the panel when an item is clicked', fakeAsync(() => {
+        it('should close the panel when an item is clicked', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
 
             option.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.textContent).toEqual('');
             expect(fixture.componentInstance.select().panelOpen).toBe(false);
-        }));
+        });
 
-        it('should close the panel when a click occurs outside the panel', fakeAsync(() => {
+        it('should close the panel when a click occurs outside the panel', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             document.body.click();
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.textContent).toEqual('');
             expect(fixture.componentInstance.select().panelOpen).toBe(false);
-        }));
+        });
 
-        it('should not attempt to open a select that does not have any options', fakeAsync(() => {
+        it('should not attempt to open a select that does not have any options', async () => {
             fixture.componentInstance.zones = [];
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             trigger.click();
             fixture.detectChanges();
 
             expect(fixture.componentInstance.select().panelOpen).toBe(false);
-        }));
+        });
 
-        it('should be able to set extra classes on the panel', fakeAsync(() => {
+        it('should be able to set extra classes on the panel', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const panel = overlayContainerElement.querySelector('.kbq-select__panel') as HTMLElement;
 
             expect(panel.classList).toContain('custom-one');
             expect(panel.classList).toContain('custom-two');
-        }));
+        });
     });
 
     describe('selection logic', () => {
@@ -619,39 +623,39 @@ describe('KbqTimezoneSelect', () => {
 
         beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(BasicTimezoneSelect);
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should select an option when it is clicked', fakeAsync(() => {
+        it('should select an option when it is clicked', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             let option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
 
             option.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
 
             expect(option.classList).toContain('kbq-selected');
             expect(fixture.componentInstance.options().at(0)!.selected).toBe(true);
             expect(fixture.componentInstance.select().selected).toBe(fixture.componentInstance.options().at(0)!);
-        }));
+        });
 
-        it('should be able to select an option using the KbqOption API', fakeAsync(() => {
+        it('should be able to select an option using the KbqOption API', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const optionInstances = fixture.componentInstance.options();
             const optionNodes: NodeListOf<HTMLElement> =
@@ -659,33 +663,33 @@ describe('KbqTimezoneSelect', () => {
 
             optionInstances[2].select();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(optionNodes[2].classList).toContain('kbq-selected');
             expect(optionInstances[2].selected).toBe(true);
             expect(fixture.componentInstance.select().selected).toBe(optionInstances[2]);
-        }));
+        });
 
-        it('should display the selected option in the trigger', fakeAsync(() => {
+        it('should display the selected option in the trigger', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
 
             option.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const value = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
 
             expect(value.textContent).toContain('city4, city5');
-        }));
+        });
 
-        it('should emit to `optionSelectionChanges` when an option is selected', fakeAsync(() => {
+        it('should emit to `optionSelectionChanges` when an option is selected', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const spy = vi.fn();
             const subscription = fixture.componentInstance.select().optionSelectionChanges.subscribe(spy);
@@ -693,12 +697,12 @@ describe('KbqTimezoneSelect', () => {
 
             option.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(spy).toHaveBeenCalledWith(expect.any(KbqOptionSelectionChange));
 
             subscription.unsubscribe();
-        }));
+        });
     });
 
     describe('forms integration', () => {
@@ -707,14 +711,14 @@ describe('KbqTimezoneSelect', () => {
 
         beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(BasicTimezoneSelect);
             fixture.detectChanges();
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should take an initial view value with reactive forms', fakeAsync(() => {
+        it('should take an initial view value with reactive forms', async () => {
             fixture.componentInstance.control = new FormControl('Europe/city17');
             fixture.detectChanges();
 
@@ -725,14 +729,14 @@ describe('KbqTimezoneSelect', () => {
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
 
             expect(options[2].classList).toContain('kbq-selected');
-        }));
+        });
 
-        it('should clear the selection when the control is reset', fakeAsync(() => {
+        it('should clear the selection when the control is reset', async () => {
             fixture.componentInstance.control.setValue('Europe/city17');
             fixture.componentInstance.control.reset();
             fixture.detectChanges();
@@ -744,12 +748,12 @@ describe('KbqTimezoneSelect', () => {
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
 
             expect(options[1].classList).not.toContain('kbq-selected');
-        }));
+        });
     });
 
     describe('with a search', () => {
@@ -758,36 +762,36 @@ describe('KbqTimezoneSelect', () => {
 
         beforeEach(() => configureTestingModule([TimezoneSelectWithSearch]));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TimezoneSelectWithSearch);
             fixture.detectChanges();
 
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should have search input', fakeAsync(() => {
+        it('should have search input', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
-        }));
+        });
 
-        it('should focus the search field after opening', fakeAsync(() => {
+        it('should focus the search field after opening', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const input = fixture.debugElement.query(By.css('input')).nativeElement;
 
             expect(input).toBe(document.activeElement);
-        }));
+        });
 
-        it('should filter options by the search input value', fakeAsync(() => {
+        it('should filter options by the search input value', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const inputElementDebug = fixture.debugElement.query(By.css('input'));
 
@@ -795,15 +799,15 @@ describe('KbqTimezoneSelect', () => {
 
             inputElementDebug.triggerEventHandler('input', { target: inputElementDebug.nativeElement });
             fixture.detectChanges();
-            flush();
-            tick(1);
+            await vi.runOnlyPendingTimersAsync();
+            await vi.advanceTimersByTimeAsync(1);
 
             const options = fixture.debugElement.queryAll(By.css('.kbq-timezone-option__offset-wrapper'));
 
             expect(options.length).toBe(2);
             expect(options[0].nativeElement.textContent.replace(/[\r\n]/g, ' ')).toContain('UTC−02:00');
             expect(options[1].nativeElement.textContent.replace(/[\r\n]/g, ' ')).toContain('UTC+04:00');
-        }));
+        });
 
         it('should clear search by esc', () => {
             trigger.click();
@@ -838,35 +842,35 @@ describe('KbqTimezoneSelect', () => {
             expect(selectInstance.panelOpen).toBe(false);
         });
 
-        it('should hide the search input when option count is below the threshold', fakeAsync(() => {
+        it('should hide the search input when option count is below the threshold', async () => {
             const { componentInstance } = fixture;
 
             componentInstance.minOptionsThreshold = 10;
             fixture.detectChanges();
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeFalsy();
-        }));
+        });
 
-        it('should show the search input when option count is at or above the threshold', fakeAsync(() => {
+        it('should show the search input when option count is at or above the threshold', async () => {
             const { componentInstance } = fixture;
 
             componentInstance.minOptionsThreshold = 2;
             fixture.detectChanges();
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.debugElement.query(By.css('input'))).toBeTruthy();
-        }));
+        });
     });
 
     describe('option tooltip', () => {
@@ -906,7 +910,7 @@ describe('KbqTimezoneSelect', () => {
 
         beforeEach(() => configureTestingModule([BasicTimezoneSelect]));
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             originalResizeObserver = window.ResizeObserver;
             (window as any).ResizeObserver = MockedResizeObserver;
 
@@ -914,14 +918,14 @@ describe('KbqTimezoneSelect', () => {
             fixture.detectChanges();
 
             trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         afterEach(() => {
             window.ResizeObserver = originalResizeObserver;
         });
 
-        it('should not display the tooltip when option text fits within the visible-rows clamp', fakeAsync(() => {
+        it('should not display the tooltip when option text fits within the visible-rows clamp', async () => {
             trigger.click();
             fixture.detectChanges();
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-timezone-option');
@@ -929,18 +933,18 @@ describe('KbqTimezoneSelect', () => {
             options[0].style.width = '200px';
 
             dispatchMouseEvent(options[0], 'mouseenter');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
 
             expect(tooltips.length).toEqual(0);
-        }));
+        });
 
-        it('should display tooltip when option text wraps beyond the visible rows count', fakeAsync(() => {
+        it('should display tooltip when option text wraps beyond the visible rows count', async () => {
             trigger.click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             const optionInstances = fixture.componentInstance.options();
             const tooltipContentEl = optionInstances[2].tooltipContent().nativeElement;
@@ -956,19 +960,18 @@ describe('KbqTimezoneSelect', () => {
 
             dispatchMouseEvent(optionEls[2], 'mouseenter');
             fixture.detectChanges();
-            tick(500);
-            discardPeriodicTasks();
+            await vi.advanceTimersByTimeAsync(500);
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
 
             expect(tooltips.length).toEqual(1);
             expect(tooltips[0].textContent).toContain(longOptionText);
-        }));
+        });
 
-        it('should reactively update disabled via ResizeObserver without mouseenter', fakeAsync(() => {
+        it('should reactively update disabled via ResizeObserver without mouseenter', async () => {
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const optionInstances = fixture.componentInstance.options();
             const tooltipContentEl = optionInstances[2].tooltipContent().nativeElement;
@@ -982,12 +985,12 @@ describe('KbqTimezoneSelect', () => {
                 new Array(TOOLTIP_VISIBLE_ROWS_COUNT + 1).fill({}) as unknown as DOMRectList
             );
             window.dispatchEvent(new Event('resize'));
-            tick(150); // past debounceTime(100)
+            await vi.advanceTimersByTimeAsync(150); // past debounceTime(100)
 
             expect(directive.disabled).toBe(false);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     // `KbqTimezoneSelect` is exported standalone, so `imports: [KbqTimezoneSelect]` is a legitimate way to

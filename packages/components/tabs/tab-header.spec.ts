@@ -3,7 +3,7 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, Injectable, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, dispatchKeyboardEvent } from '@koobiq/components/core';
 import { Observable, Subject } from 'rxjs';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
@@ -67,6 +67,8 @@ describe('KbqTabHeader', () => {
             ]
         }).compileComponents();
     });
+
+    afterEach(() => vi.useRealTimers());
 
     describe('focusing', () => {
         let tabListContainer: HTMLElement;
@@ -360,7 +362,9 @@ describe('KbqTabHeader', () => {
                 expect(header.showPaginationControls).toBe(false);
             });
 
-            it('should scroll to bring a focused, out-of-view tab label into view', fakeAsync(() => {
+            it('should scroll to bring a focused, out-of-view tab label into view', async () => {
+                vi.useFakeTimers();
+
                 const header = appComponent.tabHeader();
                 const container = header.tabListContainer.nativeElement;
 
@@ -396,7 +400,7 @@ describe('KbqTabHeader', () => {
 
                 header.focusIndex = 3;
                 fixture.detectChanges();
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 // labelAfterPos(330) > afterVisiblePos(100) -> scroll by (330 - 100 + overscroll(20)) = 250
                 expect(container.scrollLeft).toBe(250);
@@ -412,14 +416,16 @@ describe('KbqTabHeader', () => {
 
                 header.focusIndex = 0;
                 fixture.detectChanges();
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 // labelBeforePos(0) < beforeVisiblePos(250) -> target (0 - overscroll(20)) = -20,
                 // clamped to the real minimum of 0.
                 expect(container.scrollLeft).toBe(0);
-            }));
+            });
 
-            it('should not drop the scroll-into-view request for a selectedIndex set before the first change detection', fakeAsync(() => {
+            it('should not drop the scroll-into-view request for a selectedIndex set before the first change detection', async () => {
+                vi.useFakeTimers();
+
                 // `ngAfterContentChecked` (a content hook) queues this request before
                 // `ngAfterViewInit` (a view hook) has run and subscribed to it — a plain `Subject`
                 // would silently drop it, and `<kbq-tab-group [selectedIndex]="6">` would render
@@ -431,12 +437,12 @@ describe('KbqTabHeader', () => {
                 appComponent.selectedIndex = 3;
 
                 fixture.detectChanges();
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 expect(scrollCorrectionSpy).toHaveBeenCalledWith(3, 'smooth');
 
                 scrollCorrectionSpy.mockRestore();
-            }));
+            });
         });
 
         describe('in RTL direction', () => {
@@ -449,7 +455,9 @@ describe('KbqTabHeader', () => {
                 fixture.detectChanges();
             });
 
-            it('should scroll towards negative scrollLeft to bring a focused, out-of-view tab label into view', fakeAsync(() => {
+            it('should scroll towards negative scrollLeft to bring a focused, out-of-view tab label into view', async () => {
+                vi.useFakeTimers();
+
                 const header = appComponent.tabHeader();
                 const container = header.tabListContainer.nativeElement;
 
@@ -476,11 +484,11 @@ describe('KbqTabHeader', () => {
 
                 header.focusIndex = 3;
                 fixture.detectChanges();
-                tick(150);
+                await vi.advanceTimersByTimeAsync(150);
 
                 // Same logical math as LTR (250), mirrored onto native scrollLeft's negative RTL range.
                 expect(container.scrollLeft).toBe(-250);
-            }));
+            });
 
             it('should toggle the pagination arrows from the negative RTL scrollLeft range', () => {
                 const header = appComponent.tabHeader();
@@ -521,7 +529,9 @@ describe('KbqTabHeader', () => {
         });
 
         describe('scroll box resize', () => {
-            it('should recheck pagination when the scroll box is resized', fakeAsync(() => {
+            it('should recheck pagination when the scroll box is resized', async () => {
+                vi.useFakeTimers();
+
                 fixture = TestBed.createComponent(SimpleTabHeaderApp);
                 fixture.detectChanges();
 
@@ -530,11 +540,11 @@ describe('KbqTabHeader', () => {
                 const checkPaginationEnabledSpy = vi.spyOn(header, 'checkPaginationEnabled');
 
                 mockResizeObserver.changes.next([]);
-                tick(RESIZE_AUDIT_TIME);
+                await vi.advanceTimersByTimeAsync(RESIZE_AUDIT_TIME);
                 fixture.detectChanges();
 
                 expect(checkPaginationEnabledSpy).toHaveBeenCalled();
-            }));
+            });
         });
     });
 
@@ -542,7 +552,7 @@ describe('KbqTabHeader', () => {
         let header: KbqTabHeader;
 
         // Inertia coasts via `requestAnimationFrame`; drive it deterministically with explicit
-        // timestamps instead of relying on real frame timing or zone.js's fakeAsync rAF patch.
+        // timestamps instead of relying on real frame timing.
         let pendingFrame: FrameRequestCallback | null;
 
         const flushFrame = (timestamp: number) => {
@@ -695,14 +705,17 @@ describe('KbqTabHeader', () => {
             expect(tabListContainer.scrollLeft).toBe(20);
         });
 
-        it('should reset click suppression after a drag even without a trailing click', fakeAsync(() => {
+        it('should reset click suppression after a drag even without a trailing click', async () => {
+            // Leaves `requestAnimationFrame` to the spy above.
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
             const tabListContainer = header.tabListContainer.nativeElement;
 
             tabListContainer.dispatchEvent(createPointerEvent('pointerdown', { clientX: 0 }));
             document.dispatchEvent(createPointerEvent('pointermove', { clientX: -20 }));
             document.dispatchEvent(createPointerEvent('pointerup', { clientX: -20 }));
 
-            tick(0);
+            await vi.advanceTimersByTimeAsync(0);
 
             const label = header.items.get(2)!.elementRef.nativeElement;
 
@@ -710,7 +723,7 @@ describe('KbqTabHeader', () => {
             fixture.detectChanges();
 
             expect(appComponent.selectedIndex).toBe(2);
-        }));
+        });
 
         it('should not drag for touch pointers, leaving the existing touch/arrow interactions untouched', () => {
             const tabListContainer = header.tabListContainer.nativeElement;

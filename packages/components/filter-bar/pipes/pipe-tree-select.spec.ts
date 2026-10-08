@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     kbqBuildTree,
@@ -122,6 +122,8 @@ describe('KbqPipeTreeSelectComponent', () => {
             .compileComponents();
     });
 
+    afterEach(() => vi.useRealTimers());
+
     const getPipeComponent = (index: number = 0): KbqPipeTreeSelectComponent => {
         const pipes = fixture.debugElement.queryAll(By.css('kbq-pipe-tree-select'));
 
@@ -224,7 +226,9 @@ describe('KbqPipeTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should emit onChangePipe event on selection', fakeAsync(() => {
+        it('should emit onChangePipe event on selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
@@ -237,12 +241,14 @@ describe('KbqPipeTreeSelectComponent', () => {
             filterBar.onChangePipe.subscribe(spy);
 
             component.onSelect({ value: SINGLE_VALUE } as KbqTreeOption);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should set data.value to selected item value', fakeAsync(() => {
+        it('should set data.value to selected item value', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
@@ -252,12 +258,14 @@ describe('KbqPipeTreeSelectComponent', () => {
             const mockItem = { value: SINGLE_VALUE } as KbqTreeOption;
 
             component.onSelect(mockItem);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.data.value).toEqual(SINGLE_VALUE);
-        }));
+        });
 
-        it('should close select after selection', fakeAsync(() => {
+        it('should close select after selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
@@ -268,12 +276,14 @@ describe('KbqPipeTreeSelectComponent', () => {
             const mockItem = { value: SINGLE_VALUE } as KbqTreeOption;
 
             component.onSelect(mockItem);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(closeSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should restore focus to the trigger button after selection', fakeAsync(() => {
+        it('should restore focus to the trigger button after selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null })
             ]);
@@ -282,10 +292,10 @@ describe('KbqPipeTreeSelectComponent', () => {
             const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onSelect({ value: SINGLE_VALUE } as KbqTreeOption);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
     });
 
     describe('updateTemplates', () => {
@@ -327,7 +337,9 @@ describe('KbqPipeTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should forward panelMaxHeight from the pipe template to the panel', fakeAsync(() => {
+        it('should forward panelMaxHeight from the pipe template to the panel', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.pipeTemplates = [
                 {
                     name: 'TreeSelect',
@@ -344,23 +356,25 @@ describe('KbqPipeTreeSelectComponent', () => {
             fixture.detectChanges();
 
             openPanel();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('300px');
-        }));
+        });
 
-        it('should leave the token unset when the template omits panelMaxHeight', fakeAsync(() => {
+        it('should leave the token unset when the template omits panelMaxHeight', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openPanel();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // No inline custom property at all, so the select-family default of 256px applies.
             expect(readPanelMaxHeightToken()).toBe('');
-        }));
+        });
     });
 
     describe('onClear', () => {
@@ -465,7 +479,9 @@ describe('KbqPipeTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should filter tree nodes when search value changes', fakeAsync(() => {
+        it('should filter tree nodes when search value changes', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null, search: true })
             ]);
@@ -475,9 +491,9 @@ describe('KbqPipeTreeSelectComponent', () => {
             const filterNodesSpy = vi.spyOn(component.treeControl, 'filterNodes');
 
             component.searchControl.setValue('Admin');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(filterNodesSpy).toHaveBeenCalledWith('Admin');
-        }));
+        });
     });
 });

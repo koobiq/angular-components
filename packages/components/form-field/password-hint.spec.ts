@@ -1,5 +1,5 @@
 import { Component, DebugElement, signal, Type, ViewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
@@ -291,36 +291,44 @@ describe(KbqPasswordHint.name, () => {
     });
 
     describe('password strength error', () => {
-        it('should keep the errors of the other validators', fakeAsync(() => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should keep the errors of the other validators', async () => {
             const fixture = createComponent(PasswordFormFieldWithValidators);
 
             enterValue(fixture, 'kbq');
             // The form field applies the strength error from a `delay(0)` handler.
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.control.errors).toEqual({
                 minlength: { requiredLength: 10, actualLength: 3 },
                 passwordStrength: true
             });
-        }));
+        });
 
-        it('should clear the error once the password satisfies the rule', fakeAsync(() => {
+        it('should clear the error once the password satisfies the rule', async () => {
             const fixture = createComponent(PasswordFormFieldWithHint);
             const { control } = fixture.componentInstance;
 
             enterValue(fixture, 'kbq');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(control.errors).toEqual({ passwordStrength: true });
 
             enterValue(fixture, 'koobiq');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(control.errors).toBeNull();
-        }));
+        });
     });
 
     describe(hasPasswordStrengthError.name, () => {

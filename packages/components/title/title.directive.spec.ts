@@ -12,7 +12,7 @@ import {
     Type,
     ViewChild
 } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     dispatchMouseEvent,
@@ -62,6 +62,8 @@ const getTooltipElement = (): Element | null =>
     TestBed.inject(OverlayContainer).getContainerElement().querySelector('.kbq-tooltip');
 
 describe('KbqTitleDirective', () => {
+    afterEach(() => vi.useRealTimers());
+
     describe('creation', () => {
         it('should create the directive', () => {
             const { debugElement } = createComponent(SimpleTitleComponent);
@@ -544,18 +546,22 @@ describe('KbqTitleDirective', () => {
     });
 
     describe('resize handling', () => {
-        it('should update disabled=true after debounceTime(100) on a container resize when not overflown', fakeAsync(() => {
+        it('should update disabled=true after debounceTime(100) on a container resize when not overflown', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
             const directive = getTitleDirective(debugElement);
 
             // JSDOM defaults: all sizing = 0 → isOverflown = false → disabled = !false = true
             getResizeObserver().changes.next([]);
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
 
             expect(directive.disabled).toBe(true);
-        }));
+        });
 
-        it('should set disabled=false after resize when content is overflown', fakeAsync(() => {
+        it('should set disabled=false after resize when content is overflown', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
@@ -563,10 +569,10 @@ describe('KbqTitleDirective', () => {
             vi.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
             vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
             getResizeObserver().changes.next([]);
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
 
             expect(directive.disabled).toBe(false);
-        }));
+        });
 
         it('should observe the measured container instead of registering a window listener', () => {
             const { debugElement } = createComponent(WithRefsTitleComponent, [provideMockResizeObserver()]);
@@ -587,21 +593,25 @@ describe('KbqTitleDirective', () => {
             fakeContentObserver = { observe: vi.fn().mockReturnValue(contentObserverSubject.asObservable()) };
         });
 
-        it('should set disabled=true when content changes and there is no overflow', fakeAsync(() => {
+        it('should set disabled=true when content changes and there is no overflow', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(ContentObserverTitleComponent, [
                 { provide: ContentObserver, useValue: fakeContentObserver }
             ]);
             const directive = getTitleDirective(debugElement);
 
             // throttleTime(100) leading-edge emits synchronously on the first next(),
-            // so tick(0) only flushes microtasks — no need for tick(100).
+            // so advancing by 0 only flushes microtasks — no need to advance by 100.
             contentObserverSubject.next([]);
-            tick(0);
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(directive.disabled).toBe(true);
-        }));
+        });
 
-        it('should update content to viewValue when content changes', fakeAsync(() => {
+        it('should update content to viewValue when content changes', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(ContentObserverTitleComponent, [
                 { provide: ContentObserver, useValue: fakeContentObserver }
             ]);
@@ -610,10 +620,10 @@ describe('KbqTitleDirective', () => {
 
             el.textContent = ' Updated Text ';
             contentObserverSubject.next([]);
-            tick(0);
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(directive.content).toBe('Updated Text');
-        }));
+        });
     });
 
     describe('keyboard focus', () => {
@@ -623,38 +633,44 @@ describe('KbqTitleDirective', () => {
             vi.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
         };
 
-        it('should open the tooltip on keyboard focus of overflown content', fakeAsync(() => {
+        it('should open the tooltip on keyboard focus of overflown content', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(FocusTitleComponent);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
             makeOverflown(el);
             TestBed.inject(FocusMonitor).focusVia(el, 'keyboard');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             // enterDelay
-            tick(400);
+            await vi.advanceTimersByTimeAsync(400);
 
             expect(getTooltipElement()).not.toBeNull();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should enable but not open the tooltip when the content fits', fakeAsync(() => {
+        it('should enable but not open the tooltip when the content fits', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(FocusTitleComponent);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
             // JSDOM defaults: all sizing = 0 → not overflown
             TestBed.inject(FocusMonitor).focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
 
             expect(directive.disabled).toBe(true);
             expect(getTooltipElement()).toBeNull();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should hide the tooltip when focus arrives from a non-keyboard origin', fakeAsync(() => {
+        it('should hide the tooltip when focus arrives from a non-keyboard origin', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(FocusTitleComponent);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
@@ -662,18 +678,20 @@ describe('KbqTitleDirective', () => {
 
             makeOverflown(el);
             focusMonitor.focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
             expect(getTooltipElement()).not.toBeNull();
 
             focusMonitor.focusVia(el, 'mouse');
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(directive.disabled).toBe(true);
-        }));
+        });
 
-        it('should hide the tooltip on blur', fakeAsync(() => {
+        it('should hide the tooltip on blur', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(FocusTitleComponent);
             const directive = getTitleDirective(debugElement);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
@@ -681,17 +699,19 @@ describe('KbqTitleDirective', () => {
 
             makeOverflown(el);
             focusMonitor.focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
 
             el.blur();
-            tick();
-            flush();
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.runOnlyPendingTimersAsync();
 
             expect(directive.disabled).toBe(true);
-        }));
+        });
 
-        it('should open again on keyboard focus after a pop-up on the same host has closed', fakeAsync(() => {
+        it('should open again on keyboard focus after a pop-up on the same host has closed', async () => {
+            vi.useFakeTimers();
+
             const { debugElement } = createComponent(SiblingPopupTitleComponent);
             const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
             const popup = debugElement.query(By.directive(SiblingPopup)).injector.get(SiblingPopup);
@@ -699,30 +719,30 @@ describe('KbqTitleDirective', () => {
 
             makeOverflown(el);
             focusMonitor.focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
             expect(getTooltipElement()).not.toBeNull();
 
             // The pop-up takes over the anchor, which mutes the tooltip.
             popup.open();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             popup.close();
             popup.detach();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(getTooltipElement()).toBeNull();
 
             // A keyboard-only user leaves and comes back. No pointer ever touches the host, so `mouseleave`
             // never fires and the blur is the only signal that can release the mute.
             el.blur();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             focusMonitor.focusVia(el, 'keyboard');
-            tick();
-            tick(400);
+            await vi.advanceTimersByTimeAsync(0);
+            await vi.advanceTimersByTimeAsync(400);
 
             expect(getTooltipElement()).not.toBeNull();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('template refs (#kbqTitleText and #kbqTitleContainer)', () => {
@@ -763,7 +783,9 @@ describe('KbqTitleDirective', () => {
     });
 
     describe('tooltip integration', () => {
-        it('should open tooltip for overflown text', fakeAsync(() => {
+        it('should open tooltip for overflown text', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#overflow-text')).nativeElement;
 
@@ -772,12 +794,14 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).not.toBeNull();
-        }));
+        });
 
-        it('should let clicks reach whatever the hint floats over', fakeAsync(() => {
+        it('should let clicks reach whatever the hint floats over', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#overflow-text')).nativeElement;
 
@@ -786,14 +810,16 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()!.closest('.cdk-overlay-pane')!.classList).toContain(
                 'cdk-overlay-pane_ignore-pointer-events'
             );
-        }));
+        });
 
-        it('should not open tooltip for wide parent with short text', fakeAsync(() => {
+        it('should not open tooltip for wide parent with short text', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#wide-text')).nativeElement;
 
@@ -802,12 +828,14 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).toBeNull();
-        }));
+        });
 
-        it('should open tooltip for overflown text with inline element', fakeAsync(() => {
+        it('should open tooltip for overflown text with inline element', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(OverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#inline-overflow')).nativeElement;
 
@@ -816,12 +844,14 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).not.toBeNull();
-        }));
+        });
 
-        it('should open tooltip for overflown complex container', fakeAsync(() => {
+        it('should open tooltip for overflown complex container', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(ComplexTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#complex-overflow')).nativeElement;
             const parent = fixture.debugElement.query(By.css('#complex-overflow .parent')).nativeElement;
@@ -832,12 +862,14 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).not.toBeNull();
-        }));
+        });
 
-        it('should not open tooltip for wide complex container with short text', fakeAsync(() => {
+        it('should not open tooltip for wide complex container with short text', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(ComplexTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('#complex-wide')).nativeElement;
             const parent = fixture.debugElement.query(By.css('#complex-wide .parent')).nativeElement;
@@ -848,12 +880,14 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).toBeNull();
-        }));
+        });
 
-        it('should open tooltip for vertical overflow', fakeAsync(() => {
+        it('should open tooltip for vertical overflow', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(VerticalOverflowTooltipTitleComponent);
             const host = fixture.debugElement.query(By.css('.vertical-overflow')).nativeElement;
 
@@ -862,10 +896,10 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()).not.toBeNull();
-        }));
+        });
     });
 
     describe('explicit content input ([kbq-title])', () => {
@@ -890,7 +924,9 @@ describe('KbqTitleDirective', () => {
             expect(directive.content).toBe('Hello World');
         });
 
-        it('should render the TemplateRef content inside the tooltip on overflow', fakeAsync(() => {
+        it('should render the TemplateRef content inside the tooltip on overflow', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(TemplateContentTitleComponent);
             const host = fixture.debugElement.query(By.css('#tpl-overflow')).nativeElement;
             const textEl = fixture.debugElement.query(By.css('.tpl-text')).nativeElement;
@@ -900,15 +936,17 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const tooltip = getTooltipElement();
 
             expect(tooltip).not.toBeNull();
             expect(tooltip?.textContent).toContain('Custom tooltip');
-        }));
+        });
 
-        it('should push a rebound value into an already open tooltip', fakeAsync(() => {
+        it('should push a rebound value into an already open tooltip', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(BoundContentTitleComponent);
             const host = fixture.debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
 
@@ -917,17 +955,19 @@ describe('KbqTitleDirective', () => {
 
             dispatchMouseEvent(host, 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             expect(getTooltipElement()?.textContent).toContain('First');
 
             fixture.componentInstance.tooltipText = 'Second';
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getTooltipElement()?.textContent).toContain('Second');
-        }));
+        });
 
-        it('should re-evaluate the overflow verdict when the bound value changes', fakeAsync(() => {
+        it('should re-evaluate the overflow verdict when the bound value changes', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(BoundContentTitleComponent);
             const directive = getTitleDirective(fixture.debugElement);
             const host = fixture.debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
@@ -937,11 +977,11 @@ describe('KbqTitleDirective', () => {
 
             fixture.componentInstance.tooltipText = 'Second';
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(directive.content).toBe('Second');
             expect(directive.disabled).toBe(false);
-        }));
+        });
     });
 
     describe('multiple #kbqTitleText children', () => {
@@ -1098,7 +1138,9 @@ describe('KbqTitleDirective', () => {
             expect(spy).toHaveBeenCalled();
         });
 
-        it('should not re-evaluate overflow after destroy', fakeAsync(() => {
+        it('should not re-evaluate overflow after destroy', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleTitleComponent, [provideMockResizeObserver()]);
             const directive = getTitleDirective(fixture.debugElement);
             const resizeObserver = getResizeObserver();
@@ -1108,10 +1150,10 @@ describe('KbqTitleDirective', () => {
 
             fixture.destroy();
             resizeObserver.changes.next([]);
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
 
             expect(directive.disabled).not.toBe(true);
-        }));
+        });
     });
 
     describe('default placementPriority', () => {

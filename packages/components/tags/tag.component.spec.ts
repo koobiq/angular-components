@@ -2,7 +2,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/components/core';
@@ -217,7 +217,7 @@ describe(KbqTag.name, () => {
                 expect(tagNativeElement.classList).not.toContain('kbq-basic-tag');
             });
 
-            it('emits focus only once for multiple clicks', fakeAsync(() => {
+            it('emits focus only once for multiple clicks', async () => {
                 let counter = 0;
 
                 tagInstance.onFocus.subscribe(() => {
@@ -226,10 +226,10 @@ describe(KbqTag.name, () => {
 
                 tagNativeElement.focus();
                 tagNativeElement.focus();
-                tick();
+                await fixture.whenStable();
 
                 expect(counter).toBe(1);
-            }));
+            });
 
             it('emits destroy on destruction', () => {
                 const tagDestroySpyFn = vi.spyOn(testComponent, 'tagDestroy');
@@ -521,39 +521,41 @@ describe(KbqTag.name, () => {
         expect(isTagEditing(debugElement)).toBeFalsy();
     });
 
-    it('should cancel editing on blur', fakeAsync(() => {
-        const { debugElement } = createComponent(TestTag);
+    it('should cancel editing on blur', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement } = fixture;
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
         // dblclick in tests does not focus the tag, so we need to use FocusMonitor to simulate real user behavior
         getFocusMonitor().focusVia(tag, 'mouse');
-        tick();
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeTruthy();
 
         getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
-        tick();
+        await fixture.whenStable();
 
         expect(isTagEditing(debugElement)).toBeFalsy();
-    }));
+    });
 
-    it('should emit KbqTagEditChange event when editing cancelled', fakeAsync(() => {
-        const { debugElement, componentInstance } = createComponent(TestTag);
+    it('should emit KbqTagEditChange event when editing cancelled', async () => {
+        const fixture = createComponent(TestTag);
+        const { debugElement, componentInstance } = fixture;
         const tag = getTagElement(debugElement);
 
         tag.dispatchEvent(new MouseEvent('dblclick'));
         // dblclick in tests does not focus the tag, so we need to use FocusMonitor to simulate real user behavior
         getFocusMonitor().focusVia(tag, 'mouse');
-        tick();
+        await fixture.whenStable();
 
         getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
-        tick();
+        await fixture.whenStable();
 
         expect(componentInstance.editChange).toHaveBeenCalledWith(
             expect.objectContaining({ type: 'cancel', reason: 'blur' })
         );
-    }));
+    });
 
     it('should submit editing on ENTER press', async () => {
         const fixture = createComponent(TestTag);
@@ -800,7 +802,7 @@ describe(KbqTag.name, () => {
         expect(isTagSelected(debugElement)).toBeFalsy();
     });
 
-    it('should toggle selection on click for standalone selectable tag', fakeAsync(() => {
+    it('should toggle selection on click for standalone selectable tag', async () => {
         const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
@@ -812,7 +814,7 @@ describe(KbqTag.name, () => {
         expect(isTagSelected(debugElement)).toBeFalsy();
 
         getFocusMonitor().focusVia(tag, 'mouse');
-        tick();
+        await fixture.whenStable();
 
         expect(isTagSelected(debugElement)).toBeFalsy();
 
@@ -825,9 +827,9 @@ describe(KbqTag.name, () => {
         fixture.detectChanges();
 
         expect(isTagSelected(debugElement)).toBeFalsy();
-    }));
+    });
 
-    it('should emit KbqTagSelectionChange event on click for standalone selectable tag', fakeAsync(() => {
+    it('should emit KbqTagSelectionChange event on click for standalone selectable tag', async () => {
         const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
@@ -837,7 +839,7 @@ describe(KbqTag.name, () => {
         const tag = getTagElement(debugElement);
 
         getFocusMonitor().focusVia(tag, 'mouse');
-        tick();
+        await fixture.whenStable();
 
         tag.dispatchEvent(new MouseEvent('click'));
 
@@ -850,7 +852,7 @@ describe(KbqTag.name, () => {
         expect(componentInstance.selectionChange).toHaveBeenCalledWith(
             expect.objectContaining({ selected: false, isUserInput: true })
         );
-    }));
+    });
 
     it('should emit KbqTagSelectionChange event on Ctrl + click', () => {
         const { debugElement, componentInstance } = createComponent(TestTagInsideTagList);
@@ -1008,7 +1010,7 @@ describe(KbqTag.name, () => {
         expect(componentInstance.removedChange).toHaveBeenCalledTimes(0);
     });
 
-    it('should toggle tag selection tag on focus/blur', fakeAsync(() => {
+    it('should toggle tag selection tag on focus/blur', async () => {
         const fixture = createComponent(TestTag);
         const { debugElement, componentInstance } = fixture;
 
@@ -1019,17 +1021,17 @@ describe(KbqTag.name, () => {
         expect(isTagSelected(debugElement)).toBeFalsy();
 
         getTagElement(debugElement).focus();
-        tick();
+        await fixture.whenStable();
 
         expect(isTagFocused(debugElement)).toBeTruthy();
         expect(isTagSelected(debugElement)).toBeTruthy();
 
         getTagElement(debugElement).blur();
-        tick();
+        await fixture.whenStable();
 
         expect(isTagFocused(debugElement)).toBeFalsy();
         expect(isTagSelected(debugElement)).toBeFalsy();
-    }));
+    });
 
     it('should toggle tag selection on SPACE keydown', async () => {
         const fixture = createComponent(TestTag);

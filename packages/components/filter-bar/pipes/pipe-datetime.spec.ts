@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, DebugElement, inject, LOCALE_ID } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -91,6 +91,8 @@ describe('KbqPipeDatetimeComponent', () => {
     afterAll(() => {
         window.structuredClone = originalStructuredClone;
     });
+
+    afterEach(() => vi.useRealTimers());
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -285,7 +287,9 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: PRESET_VALUES[0] });
         });
 
-        it('should switch to custom period mode and initialize form', fakeAsync(() => {
+        it('should switch to custom period mode and initialize form', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const internal = asInternal(component);
             const updatePosition = vi.fn();
@@ -304,16 +308,16 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(internal.formGroup.controls.start.value.equals(component.defaultStart)).toBe(true);
             expect(internal.formGroup.controls.end.value.equals(component.defaultEnd)).toBe(true);
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(updatePosition).toHaveBeenCalledWith(true);
-        }));
+        });
 
         /**
          * The "back" button must always receive focus (the period list it replaces is destroyed), but with
          * the origin the user actually interacted with — the ring is painted off `.cdk-keyboard-focused`.
          */
-        const shouldFocusReturnButtonWith = (modality: 'mouse' | 'keyboard') => {
+        const shouldFocusReturnButtonWith = async (modality: 'mouse' | 'keyboard') => {
             const component = getPipeComponent();
             const internal = asInternal(component);
             const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
@@ -324,7 +328,7 @@ describe('KbqPipeDatetimeComponent', () => {
             setInputModality(modality);
 
             component.showPeriod();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(
                 expect.objectContaining({ nativeElement: expect.any(HTMLButtonElement) }),
@@ -332,13 +336,17 @@ describe('KbqPipeDatetimeComponent', () => {
             );
         };
 
-        it('should focus the "back" button with the keyboard origin when opened from the keyboard', fakeAsync(() => {
-            shouldFocusReturnButtonWith('keyboard');
-        }));
+        it('should focus the "back" button with the keyboard origin when opened from the keyboard', async () => {
+            vi.useFakeTimers();
 
-        it('should focus the "back" button with the mouse origin when opened with the mouse', fakeAsync(() => {
-            shouldFocusReturnButtonWith('mouse');
-        }));
+            await shouldFocusReturnButtonWith('keyboard');
+        });
+
+        it('should focus the "back" button with the mouse origin when opened with the mouse', async () => {
+            vi.useFakeTimers();
+
+            await shouldFocusReturnButtonWith('mouse');
+        });
     });
 
     describe('showList', () => {
@@ -346,7 +354,9 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: PRESET_VALUES[0] });
         });
 
-        it('should switch back to preset list', fakeAsync(() => {
+        it('should switch back to preset list', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const internal = asInternal(component);
             const updatePosition = vi.fn();
@@ -361,10 +371,10 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(internal.isListMode).toBe(true);
             expect(updatePosition).toHaveBeenCalledWith(true);
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focus).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('open', () => {
@@ -388,7 +398,9 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should set data.value, emit onChangePipe, hide popover and restore focus', fakeAsync(() => {
+        it('should set data.value, emit onChangePipe, hide popover and restore focus', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const filterBar = getFilterBar();
             const spy = vi.fn();
@@ -404,10 +416,10 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(spy).toHaveBeenCalledWith(component.data);
             expect(hide).toHaveBeenCalled();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
     });
 
     describe('onApplyPeriod', () => {
@@ -415,7 +427,9 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should save custom period as ISO strings, emit onChangePipe and restore focus', fakeAsync(() => {
+        it('should save custom period as ISO strings, emit onChangePipe and restore focus', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const internal = asInternal(component);
             const filterBar = getFilterBar();
@@ -441,10 +455,10 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(spy).toHaveBeenCalledWith(component.data);
             expect(hide).toHaveBeenCalled();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
     });
 
     describe('disabled', () => {
@@ -654,7 +668,9 @@ describe('KbqPipeDatetimeComponent', () => {
             expect(spy).toHaveBeenCalledWith(component.data);
         });
 
-        it('should focus the period list when the popover opens so Enter can pick a preset', fakeAsync(() => {
+        it('should focus the period list when the popover opens so Enter can pick a preset', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const focus = vi.fn();
 
@@ -662,10 +678,10 @@ describe('KbqPipeDatetimeComponent', () => {
             asInternal(component).listSelection = () => ({ focus });
 
             component.popover().visibleChange.emit(true);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focus).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('onClear', () => {
@@ -702,13 +718,15 @@ describe('KbqPipeDatetimeComponent', () => {
             setupSinglePipe({ value: null });
         });
 
-        it('should render chevron icon inside list text, not in leading icon slot', fakeAsync(() => {
+        it('should render chevron icon inside list text, not in leading icon slot', async () => {
+            vi.useFakeTimers();
+
             const component = getPipeComponent();
             const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
 
             component.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const customPeriodOption = overlayContainer.querySelector('kbq-list-option')!;
@@ -716,7 +734,7 @@ describe('KbqPipeDatetimeComponent', () => {
             const icon = customPeriodOption.querySelector('i[kbq-icon]');
 
             expect(listText?.contains(icon)).toBe(true);
-        }));
+        });
     });
 
     describe('min / max bounds', () => {
@@ -1079,7 +1097,9 @@ describe('KbqPipeDatetimeComponent', () => {
     });
 
     describe('interval hint rendering', () => {
-        it('should render the interpolated minInterval hint text in the popover', fakeAsync(() => {
+        it('should render the interpolated minInterval hint text in the popover', async () => {
+            vi.useFakeTimers();
+
             fixture = TestBed.createComponent(TestComponent);
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
             fixture.componentInstance.pipeTemplates = [
@@ -1102,7 +1122,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
             component.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const internal = asInternal(component);
@@ -1113,7 +1133,7 @@ describe('KbqPipeDatetimeComponent', () => {
 
             component.showPeriod();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const start = adapter.today().set({ hour: 9, minute: 0, second: 0, millisecond: 0 });
 
@@ -1124,6 +1144,6 @@ describe('KbqPipeDatetimeComponent', () => {
             const hint = overlayContainer.querySelector('.kbq-date-period__hint');
 
             expect(hint?.textContent?.trim()).toBe(component.minIntervalErrorHint);
-        }));
+        });
     });
 });

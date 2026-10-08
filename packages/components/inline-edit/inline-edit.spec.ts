@@ -7,7 +7,7 @@ import {
     RepositionScrollStrategy
 } from '@angular/cdk/overlay';
 import { Component, DebugElement, model, Provider, signal, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
@@ -122,6 +122,8 @@ const dispatchTab = (element: HTMLElement, backwards = false): KeyboardEvent => 
 };
 
 describe('KbqInlineEdit', () => {
+    afterEach(() => vi.useRealTimers());
+
     it('should setup with default parameters', () => {
         const { debugElement } = setup(TestComponent);
 
@@ -493,34 +495,40 @@ describe('KbqInlineEdit', () => {
     });
 
     describe('focus anchor', () => {
-        it('should render focus anchor when interactive content exists', fakeAsync(() => {
+        it('should render focus anchor when interactive content exists', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTagContent);
             const { debugElement } = fixture;
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor));
 
             expect(anchor).toBeTruthy();
             expect(anchor.nativeElement.getAttribute('tabindex')).toBe('0');
-        }));
+        });
 
-        it('should set view content tabindex to -1 when interactive content exists', fakeAsync(() => {
+        it('should set view content tabindex to -1 when interactive content exists', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTagContent);
             const { debugElement } = fixture;
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(getViewContentDebugElement(debugElement).nativeElement.getAttribute('tabindex')).toBe('-1');
-        }));
+        });
 
-        it('should add anchor-focused class to host when focus anchor receives focus', fakeAsync(() => {
+        it('should add anchor-focused class to host when focus anchor receives focus', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTagContent);
             const { debugElement } = fixture;
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor));
@@ -529,13 +537,15 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
 
             expect(getInlineEditDebugElement(debugElement).classes['kbq-inline-edit_anchor-focused']).toBeTruthy();
-        }));
+        });
 
-        it('should remove anchor-focused class from host when focus anchor loses focus', fakeAsync(() => {
+        it('should remove anchor-focused class from host when focus anchor loses focus', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTagContent);
             const { debugElement } = fixture;
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor));
@@ -547,14 +557,16 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
 
             expect(getInlineEditDebugElement(debugElement).classes['kbq-inline-edit_anchor-focused']).toBeFalsy();
-        }));
+        });
 
-        it('should open edit mode on Enter keydown on focus anchor', fakeAsync(() => {
+        it('should open edit mode on Enter keydown on focus anchor', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTagContent);
             const { componentInstance, debugElement } = fixture;
             const spyFn = vi.spyOn(componentInstance, 'onModeChange');
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor));
@@ -563,31 +575,35 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
 
             expect(spyFn).toHaveBeenCalledWith('edit');
-        }));
+        });
 
-        it('should not render focus anchor in edit mode', fakeAsync(() => {
+        it('should not render focus anchor in edit mode', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTagContent);
             const { debugElement } = fixture;
             const inlineEditEl = getInlineEditDebugElement(debugElement).nativeElement;
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             inlineEditEl.click();
             fixture.detectChanges();
 
             expect(debugElement.query(By.css(componentCssClasses.focusAnchor))).toBeNull();
-        }));
+        });
 
-        it('should not render focus anchor when no interactive content exists', fakeAsync(() => {
+        it('should not render focus anchor when no interactive content exists', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestComponent);
             const { debugElement } = fixture;
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(debugElement.query(By.css(componentCssClasses.focusAnchor))).toBeNull();
-        }));
+        });
     });
 
     it('should open select panel on mode toggle', async () => {
@@ -927,7 +943,9 @@ describe('KbqInlineEdit', () => {
             expect(showSpy).not.toHaveBeenCalled();
         });
 
-        it('should hide the tooltip once the control becomes valid again', fakeAsync(() => {
+        it('should hide the tooltip once the control becomes valid again', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithDynamicValidationTooltip);
             const { componentInstance } = fixture;
 
@@ -939,7 +957,7 @@ describe('KbqInlineEdit', () => {
             clickSave();
 
             // `show()` reveals the tooltip after `kbqEnterDelay` (400ms by default) plus a small buffer for the deferred show.
-            tick(tooltipTrigger.enterDelay + 10);
+            await vi.advanceTimersByTimeAsync(tooltipTrigger.enterDelay + 10);
             expect(tooltipTrigger.isOpen).toBe(true);
 
             const hideSpy = vi.spyOn(tooltipTrigger, 'hide');
@@ -948,10 +966,10 @@ describe('KbqInlineEdit', () => {
             componentInstance.control.updateValueAndValidity();
             fixture.detectChanges();
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             expect(hideSpy).toHaveBeenCalled();
             expect(tooltipTrigger.isOpen).toBe(false);
-        }));
+        });
 
         it('should show the tooltip immediately when the control is already fully visible', () => {
             const onscreenRect: DOMRect = {
@@ -986,7 +1004,9 @@ describe('KbqInlineEdit', () => {
         });
 
         describe('when the control is scrolled out of view', () => {
-            it('should scroll the control into view immediately and show tooltip once scrollend fires', fakeAsync(() => {
+            it('should scroll the control into view immediately and show tooltip once scrollend fires', async () => {
+                vi.useFakeTimers();
+
                 const fixture = setup(TestWithDynamicValidationTooltip);
                 const { scrollIntoViewSpy, updatePositionSpy, showSpy } = setupOffscreen(fixture);
 
@@ -1006,23 +1026,25 @@ describe('KbqInlineEdit', () => {
 
                 // Flush the tooltip's own `kbqEnterDelay` timer (default 400ms) scheduled by `show()` —
                 // the scrollend above already settled the scroll-into-view request, so nothing else is pending.
-                tick(800);
-            }));
+                await vi.advanceTimersByTimeAsync(800);
+            });
 
-            it('should show the tooltip after a timeout if scrollend never fires', fakeAsync(() => {
+            it('should show the tooltip after a timeout if scrollend never fires', async () => {
+                vi.useFakeTimers();
+
                 const fixture = setup(TestWithDynamicValidationTooltip);
                 const { showSpy } = setupOffscreen(fixture);
 
                 clickSave();
                 expect(showSpy).not.toHaveBeenCalled();
 
-                tick(800);
+                await vi.advanceTimersByTimeAsync(800);
                 expect(showSpy).toHaveBeenCalledTimes(1);
 
                 // A late scrollend must not show the tooltip a second time.
                 window.dispatchEvent(new Event('scrollend'));
                 expect(showSpy).toHaveBeenCalledTimes(1);
-            }));
+            });
         });
 
         it('should use a reposition scroll strategy instead of the tooltip default close strategy', () => {
@@ -1055,7 +1077,9 @@ describe('KbqInlineEdit', () => {
             expect(projectedTooltipTrigger.scrollStrategy()).not.toBeInstanceOf(RepositionScrollStrategy);
         });
 
-        it('should show the tooltip with showTooltipOnError left at its default', fakeAsync(() => {
+        it('should show the tooltip with showTooltipOnError left at its default', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithDynamicValidationTooltip);
             const { componentInstance } = fixture;
 
@@ -1066,12 +1090,14 @@ describe('KbqInlineEdit', () => {
 
             clickSave();
 
-            tick(tooltipTrigger.enterDelay + 10);
+            await vi.advanceTimersByTimeAsync(tooltipTrigger.enterDelay + 10);
 
             expect(tooltipTrigger.isOpen).toBe(true);
-        }));
+        });
 
-        it('should keep the scrollend listener until the overlay detaches', fakeAsync(() => {
+        it('should keep the scrollend listener until the overlay detaches', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithDynamicValidationTooltip);
 
             setupOffscreen(fixture);
@@ -1079,32 +1105,34 @@ describe('KbqInlineEdit', () => {
 
             // The fallback fires without a scrollend, and the listener has to survive it: only `cancel()`
             // removes it, and `cancel()` is reachable only through the handle the fallback used to drop.
-            tick(800);
+            await vi.advanceTimersByTimeAsync(800);
 
             const removeListenerSpy = vi.spyOn(window, 'removeEventListener');
 
             dispatchEvent(getOverlayElement()!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(removeListenerSpy).toHaveBeenCalledWith('scrollend', expect.any(Function), { capture: true });
-        }));
+        });
 
-        it('should register exactly one scrollend listener across two rejected saves', fakeAsync(() => {
+        it('should register exactly one scrollend listener across two rejected saves', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithDynamicValidationTooltip);
             const addListenerSpy = vi.spyOn(window, 'addEventListener');
 
             setupOffscreen(fixture);
 
             clickSave();
-            tick(800);
+            await vi.advanceTimersByTimeAsync(800);
             clickSave();
-            tick(800);
+            await vi.advanceTimersByTimeAsync(800);
 
             const scrollEndListeners = addListenerSpy.mock.calls.filter(([type]) => type === 'scrollend');
 
             expect(scrollEndListeners).toHaveLength(1);
-        }));
+        });
     });
 
     describe('accessibility', () => {
@@ -1191,11 +1219,13 @@ describe('KbqInlineEdit', () => {
             expect(viewContent.getAttribute('tabindex')).toBe('-1');
         });
 
-        it('should move the widget semantics to the focus anchor when the view content is interactive', fakeAsync(() => {
+        it('should move the widget semantics to the focus anchor when the view content is interactive', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTagContent);
             const { debugElement } = fixture;
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const anchor = debugElement.query(By.css(componentCssClasses.focusAnchor)).nativeElement;
@@ -1204,99 +1234,111 @@ describe('KbqInlineEdit', () => {
             expect(getViewContentDebugElement(debugElement).nativeElement.hasAttribute('role')).toBe(false);
             expect(anchor.getAttribute('role')).toBe('button');
             expect(anchor.getAttribute('aria-label')).toBe(ruRULocaleData.a11y.edit);
-        }));
+        });
     });
 
     describe('focus management', () => {
-        it('should return focus to the view content after cancel', fakeAsync(() => {
+        it('should return focus to the view content after cancel', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestComponent);
             const { debugElement } = fixture;
 
             getInlineEditDebugElement(debugElement).nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             dispatchEvent(getOverlayElement()!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(document.activeElement).toBe(getViewContentDebugElement(debugElement).nativeElement);
-        }));
+        });
 
-        it('should return focus to the view content after a successful save', fakeAsync(() => {
+        it('should return focus to the view content after a successful save', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestComponent);
             const { debugElement } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             (inlineEditDebugElement.componentInstance as KbqInlineEdit).commit();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(document.activeElement).toBe(getViewContentDebugElement(debugElement).nativeElement);
-        }));
+        });
 
-        it('should return focus to the recreated focus anchor of an interactive view', fakeAsync(() => {
+        it('should return focus to the recreated focus anchor of an interactive view', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTagContent);
             const { debugElement } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             (inlineEditDebugElement.componentInstance as KbqInlineEdit).commit();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // The anchor that was focused on the way in is gone; the restore has to resolve the new one.
             expect(document.activeElement).toBe(
                 debugElement.query(By.css(componentCssClasses.focusAnchor)).nativeElement
             );
-        }));
+        });
     });
 
     describe('tab out', () => {
-        const openEditor = (fixture: ComponentFixture<unknown>): HTMLInputElement => {
+        const openEditor = async (fixture: ComponentFixture<unknown>): Promise<HTMLInputElement> => {
             getInlineEditDebugElement(fixture.debugElement).nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             return getOverlayElement()!.querySelector<HTMLInputElement>('input')!;
         };
 
-        it('should move focus to the tab stop that follows the field', fakeAsync(() => {
+        it('should move focus to the tab stop that follows the field', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSurroundingControls);
-            const input = openEditor(fixture);
+            const input = await openEditor(fixture);
 
             // Left to the browser, a Tab from the detached panel would restart the sequence at the top.
             const tabEvent = dispatchTab(input);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(tabEvent.defaultPrevented).toBe(true);
             expect(document.activeElement).toBe(getNamedButton(fixture.debugElement, 'middle'));
-        }));
+        });
 
-        it('should move focus to the tab stop before the field on Shift+Tab', fakeAsync(() => {
+        it('should move focus to the tab stop before the field on Shift+Tab', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSurroundingControls);
-            const input = openEditor(fixture);
+            const input = await openEditor(fixture);
 
             dispatchTab(input, true);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(document.activeElement).toBe(getNamedButton(fixture.debugElement, 'before'));
-        }));
+        });
 
-        it('should skip a tab stop that refuses the focus', fakeAsync(() => {
+        it('should skip a tab stop that refuses the focus', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSurroundingControls);
             const { debugElement } = fixture;
             const middle = getNamedButton(debugElement, 'middle');
@@ -1304,20 +1346,22 @@ describe('KbqInlineEdit', () => {
             // A hidden control passes `isTabbable` and then takes no focus; jsdom focuses one happily, hence the stub.
             vi.spyOn(middle, 'focus').mockImplementation(() => {});
 
-            const input = openEditor(fixture);
+            const input = await openEditor(fixture);
 
             dispatchTab(input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(document.activeElement).toBe(getNamedButton(debugElement, 'after'));
-        }));
+        });
 
-        it('should leave the editor open when a control in the panel answers Tab itself', fakeAsync(() => {
+        it('should leave the editor open when a control in the panel answers Tab itself', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSurroundingControls);
             const { debugElement } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
-            const input = openEditor(fixture);
+            const input = await openEditor(fixture);
 
             // Stands in for a select stepping through its own footer: moves the focus and prevents the default.
             input.addEventListener('keydown', (event) => {
@@ -1327,16 +1371,18 @@ describe('KbqInlineEdit', () => {
 
             dispatchTab(input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
             expect(document.activeElement).toBe(getNamedButton(debugElement, 'after'));
-        }));
+        });
 
-        it('should leave the field when the control kept the focus it prevented the default for', fakeAsync(() => {
+        it('should leave the field when the control kept the focus it prevented the default for', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSurroundingControls);
             const { debugElement } = fixture;
-            const input = openEditor(fixture);
+            const input = await openEditor(fixture);
 
             expect(document.activeElement).toBe(input);
 
@@ -1345,43 +1391,47 @@ describe('KbqInlineEdit', () => {
 
             dispatchTab(input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(getInlineEditDebugElement(debugElement).classes['kbq-inline-edit_view']).toBe(true);
             expect(document.activeElement).toBe(getNamedButton(debugElement, 'middle'));
-        }));
+        });
 
-        it('should not carry the origin of one editing session into the next', fakeAsync(() => {
+        it('should not carry the origin of one editing session into the next', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSurroundingControls);
             const { debugElement } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
             // Opened by pointer, left with the key: the chain skips the path that would consume the origin.
-            dispatchTab(openEditor(fixture));
+            dispatchTab(await openEditor(fixture));
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             inlineEdit.mode.set('edit');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             inlineEdit.commit();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(inlineEditDebugElement.nativeElement.classList).toContain('cdk-program-focused');
             expect(inlineEditDebugElement.nativeElement.classList).not.toContain('cdk-mouse-focused');
-        }));
+        });
 
-        it('should bring focus back into the editor a rejected value keeps open', fakeAsync(() => {
+        it('should bring focus back into the editor a rejected value keeps open', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithValidatedControl);
             const { debugElement } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const control = getOverlayElement()!.querySelector<HTMLTextAreaElement>('textarea')!;
 
@@ -1392,113 +1442,123 @@ describe('KbqInlineEdit', () => {
 
             dispatchTab(control);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
             expect(document.activeElement).toBe(control);
-        }));
+        });
 
-        it('should keep focus on the control while the value is invalid', fakeAsync(() => {
+        it('should keep focus on the control while the value is invalid', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithValidatedControl);
             const { debugElement } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(debugElement);
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const control = getOverlayElement()!.querySelector<HTMLTextAreaElement>('textarea')!;
             const tabEvent = dispatchTab(control);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // Nothing was saved, so the editor stays open and the focus stays in it.
             expect(tabEvent.defaultPrevented).toBe(true);
             expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
             expect(document.activeElement).toBe(control);
-        }));
+        });
 
-        it('should open the next inline edit even when it has interactive content', fakeAsync(() => {
+        it('should open the next inline edit even when it has interactive content', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTwoFields);
             const { debugElement } = fixture;
             const [first, second] = debugElement.queryAll(By.directive(KbqInlineEdit));
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             first.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             dispatchTab(getOverlayElement()!.querySelector<HTMLInputElement>('input')!);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(second.classes['kbq-inline-edit_edit']).toBe(true);
-        }));
+        });
 
-        it('should restore a keyboard focus ring once the chained editor closes', fakeAsync(() => {
+        it('should restore a keyboard focus ring once the chained editor closes', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTwoFields);
             const { debugElement } = fixture;
             const [first, second] = debugElement.queryAll(By.directive(KbqInlineEdit));
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             first.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             dispatchTab(getOverlayElement()!.querySelector<HTMLInputElement>('input')!);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             dispatchEvent(getOverlayElement()!, createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // Tab is what opened it, so the ring the host draws for `cdk-keyboard-focused` has to come back.
             expect(second.nativeElement.classList).toContain('cdk-keyboard-focused');
-        }));
+        });
 
-        it('should leave the field it was tabbed out of in view mode', fakeAsync(() => {
+        it('should leave the field it was tabbed out of in view mode', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithTwoFields);
             const { debugElement } = fixture;
             const [first] = debugElement.queryAll(By.directive(KbqInlineEdit));
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             first.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             dispatchTab(getOverlayElement()!.querySelector<HTMLInputElement>('input')!);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(first.classes['kbq-inline-edit_view']).toBe(true);
-        }));
+        });
 
-        it('should take focus back when nothing follows the field', fakeAsync(() => {
+        it('should take focus back when nothing follows the field', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestComponent);
             const { debugElement } = fixture;
 
             getInlineEditDebugElement(debugElement).nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             dispatchTab(getOverlayElement()!.querySelector<HTMLInputElement>('input')!);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // Left on `<body>`, the next Tab would start the sequence over from the top of the document.
             expect(document.activeElement).toBe(getViewContentDebugElement(debugElement).nativeElement);
-        }));
+        });
     });
 
     describe('validation gating', () => {
@@ -1563,16 +1623,18 @@ describe('KbqInlineEdit', () => {
     });
 
     describe('interactive content detection', () => {
-        it('should ignore interactive content that lives in the label', fakeAsync(() => {
+        it('should ignore interactive content that lives in the label', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithLabelAction);
             const { debugElement } = fixture;
 
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(debugElement.query(By.css(componentCssClasses.focusAnchor))).toBeNull();
             expect(getViewContentDebugElement(debugElement).nativeElement.getAttribute('tabindex')).toBe('0');
-        }));
+        });
 
         it('should pick up interactive content that arrives after the first pass', async () => {
             const fixture = setup(TestWithLateContent);
@@ -1624,12 +1686,12 @@ describe('KbqInlineEdit', () => {
     });
 
     describe('saveHandler', () => {
-        const openEditMode = (fixture: ComponentFixture<TestWithSaveHandler>) => {
+        const openEditMode = async (fixture: ComponentFixture<TestWithSaveHandler>) => {
             const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             return inlineEditDebugElement;
         };
@@ -1658,10 +1720,12 @@ describe('KbqInlineEdit', () => {
         const getViewText = (inlineEditDebugElement: DebugElement) =>
             inlineEditDebugElement.nativeElement.querySelector('.kbq-inline-edit__view-content').textContent.trim();
 
-        it('should return to view mode with the entered value while the request is in flight', fakeAsync(() => {
+        it('should return to view mode with the entered value while the request is in flight', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
 
             typeInControl(fixture, 'Changed');
             clickSave(fixture);
@@ -1677,69 +1741,75 @@ describe('KbqInlineEdit', () => {
 
             expect(componentInstance.update).toHaveBeenCalledTimes(1);
             expect(inlineEditDebugElement.classes['kbq-inline-edit_save-error']).toBeFalsy();
-        }));
+        });
 
-        it('should not show the progress state when the request settles before the delay', fakeAsync(() => {
+        it('should not show the progress state when the request settles before the delay', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
 
             clickSave(fixture);
-            tick(kbqInlineEditSaveProgressDelay - 1);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressDelay - 1);
             fixture.detectChanges();
 
             expect(inlineEditDebugElement.classes['kbq-progress']).toBeFalsy();
 
             componentInstance.request$.next();
             fixture.detectChanges();
-            tick(kbqInlineEditSaveProgressMinimumDuration);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressMinimumDuration);
             fixture.detectChanges();
 
             expect(inlineEditDebugElement.classes['kbq-progress']).toBeFalsy();
             expect(componentInstance.update).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should show the progress state after the delay and keep it for the minimum time', fakeAsync(() => {
+        it('should show the progress state after the delay and keep it for the minimum time', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
             // Spent inside the progress window before the server answers, so the remaining hold is what is left
             // of the minimum display time rather than the whole of it.
             const elapsedBeforeResponse = 10;
 
             clickSave(fixture);
-            tick(kbqInlineEditSaveProgressDelay - 1);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressDelay - 1);
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBeFalsy();
 
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBe(true);
             expect(getLiveRegionText(inlineEditDebugElement)).toBe('Сохранение');
 
-            tick(elapsedBeforeResponse);
+            await vi.advanceTimersByTimeAsync(elapsedBeforeResponse);
             componentInstance.request$.next();
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBe(true);
             expect(componentInstance.update).not.toHaveBeenCalled();
 
-            tick(kbqInlineEditSaveProgressMinimumDuration - elapsedBeforeResponse - 1);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressMinimumDuration - elapsedBeforeResponse - 1);
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBe(true);
 
-            tick(1);
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
             expect(inlineEditDebugElement.classes['kbq-progress']).toBeFalsy();
             expect(componentInstance.update).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should report a failed save and keep the unsaved value marked', fakeAsync(() => {
+        it('should report a failed save and keep the unsaved value marked', async () => {
+            vi.useFakeTimers();
+
             const saveErrorHandler = vi.fn();
             const fixture = setup(TestWithSaveHandler, [
                 { provide: KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, useValue: saveErrorHandler }
             ]);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
             const error = new Error('Server error');
 
@@ -1759,9 +1829,11 @@ describe('KbqInlineEdit', () => {
 
             expect(componentInstance.onSaveError).toHaveBeenCalledWith(context);
             expect(saveErrorHandler).toHaveBeenCalledWith(context);
-        }));
+        });
 
-        it('should let saveErrorHandler override the handler provided for the application', fakeAsync(() => {
+        it('should let saveErrorHandler override the handler provided for the application', async () => {
+            vi.useFakeTimers();
+
             const providedHandler = vi.fn();
             const fixture = setup(TestWithSaveErrorHandler, [
                 { provide: KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, useValue: providedHandler }
@@ -1771,7 +1843,7 @@ describe('KbqInlineEdit', () => {
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             document
                 .querySelector<HTMLButtonElement>(
@@ -1787,12 +1859,14 @@ describe('KbqInlineEdit', () => {
                 inlineEdit: inlineEditDebugElement.componentInstance
             });
             expect(providedHandler).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should restore the last saved value on rollback', fakeAsync(() => {
+        it('should restore the last saved value on rollback', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
             typeInControl(fixture, 'Changed');
@@ -1807,12 +1881,14 @@ describe('KbqInlineEdit', () => {
             expect(getViewText(inlineEditDebugElement)).toBe('Initial');
             expect(inlineEditDebugElement.classes['kbq-inline-edit_save-error']).toBeFalsy();
             expect(inlineEdit.saveStatus()).toBe('idle');
-        }));
+        });
 
-        it('should roll back to the value of the last successful save', fakeAsync(() => {
+        it('should roll back to the value of the last successful save', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
             typeInControl(fixture, 'Saved');
@@ -1821,7 +1897,7 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
 
             componentInstance.request$ = new Subject<void>();
-            openEditMode(fixture);
+            await openEditMode(fixture);
             typeInControl(fixture, 'Rejected');
             clickSave(fixture);
             componentInstance.request$.error(new Error('Server error'));
@@ -1831,9 +1907,11 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
 
             expect(componentInstance.control.value).toBe('Saved');
-        }));
+        });
 
-        it('should roll back an editor that has no form field', fakeAsync(() => {
+        it('should roll back an editor that has no form field', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithoutFormField);
             const { componentInstance } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
@@ -1841,7 +1919,7 @@ describe('KbqInlineEdit', () => {
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             componentInstance.control.setValue('Changed');
             inlineEdit.commit();
@@ -1855,12 +1933,14 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
 
             expect(componentInstance.control.value).toBe('Initial');
-        }));
+        });
 
-        it('should ignore toggleMode while the request is in flight', fakeAsync(() => {
+        it('should ignore toggleMode while the request is in flight', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
             clickSave(fixture);
@@ -1873,13 +1953,15 @@ describe('KbqInlineEdit', () => {
 
             componentInstance.request$.next();
             fixture.detectChanges();
-            tick(kbqInlineEditSaveProgressMinimumDuration);
-        }));
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressMinimumDuration);
+        });
 
-        it('should close the editor on rollback', fakeAsync(() => {
+        it('should close the editor on rollback', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
             typeInControl(fixture, 'Rejected');
@@ -1887,19 +1969,21 @@ describe('KbqInlineEdit', () => {
             componentInstance.request$.error(new Error('Server error'));
             fixture.detectChanges();
 
-            openEditMode(fixture);
+            await openEditMode(fixture);
             inlineEdit.rollback();
             fixture.detectChanges();
 
             expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
             expect(componentInstance.control.value).toBe('Initial');
-        }));
+        });
 
-        it('should not save on Enter from a control that runs its own action', fakeAsync(() => {
+        it('should not save on Enter from a control that runs its own action', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
 
-            openEditMode(fixture);
+            await openEditMode(fixture);
 
             const cancelButton = document.querySelectorAll<HTMLButtonElement>(
                 `${componentCssClasses.panel} ${componentCssClasses.terminalButtons} button`
@@ -1911,15 +1995,17 @@ describe('KbqInlineEdit', () => {
 
             expect(event.defaultPrevented).toBe(false);
             expect(componentInstance.saveHandler).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should let canSaveOnEnter opt back into saving from a button', fakeAsync(() => {
+        it('should let canSaveOnEnter opt back into saving from a button', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithCanSaveOnEnter);
             const { componentInstance } = fixture;
 
             getInlineEditDebugElement(fixture.debugElement).nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const cancelButton = document.querySelectorAll<HTMLButtonElement>(
                 `${componentCssClasses.panel} ${componentCssClasses.terminalButtons} button`
@@ -1927,54 +2013,60 @@ describe('KbqInlineEdit', () => {
 
             dispatchEvent(cancelButton, createKeyboardEvent('keydown', ENTER, cancelButton, 'Enter'));
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(componentInstance.saved).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should finish a failed save after the inline edit is destroyed', fakeAsync(() => {
+        it('should finish a failed save after the inline edit is destroyed', async () => {
+            vi.useFakeTimers();
+
             const saveErrorHandler = vi.fn();
             const fixture = setup(TestWithSaveHandler, [
                 { provide: KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER, useValue: saveErrorHandler }
             ]);
             const { componentInstance } = fixture;
 
-            openEditMode(fixture);
+            await openEditMode(fixture);
             clickSave(fixture);
 
             fixture.destroy();
             componentInstance.request$.error(new Error('Server error'));
-            tick(kbqInlineEditSaveProgressMinimumDuration);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressMinimumDuration);
 
             // The handler is a plain function, so it still reports; the output belongs to a view that is gone.
             expect(saveErrorHandler).toHaveBeenCalledTimes(1);
             expect(componentInstance.onSaveError).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should finish a successful save after the inline edit is destroyed', fakeAsync(() => {
+        it('should finish a successful save after the inline edit is destroyed', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
 
-            openEditMode(fixture);
+            await openEditMode(fixture);
             clickSave(fixture);
 
             fixture.destroy();
             componentInstance.request$.next();
-            tick(kbqInlineEditSaveProgressMinimumDuration);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressMinimumDuration);
 
             // The fail-on-console hook is what guards the point here: emitting `saved` on a destroyed output would
             // log NG0953 and fail this test.
             expect(componentInstance.subscriptions).toBe(1);
-        }));
+        });
 
-        it('should let a broken saveHandler fail loudly instead of marking the value', fakeAsync(() => {
+        it('should let a broken saveHandler fail loudly instead of marking the value', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithUnboundSaveHandler);
             const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
@@ -1986,16 +2078,18 @@ describe('KbqInlineEdit', () => {
             expect(inlineEdit.saveStatus()).toBe('idle');
             expect(inlineEditDebugElement.classes['kbq-inline-edit_save-error']).toBeFalsy();
             expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
-        }));
+        });
 
-        it('should not save a value the editor opened with', fakeAsync(() => {
+        it('should not save a value the editor opened with', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithDefaultCompareWith);
             const { componentInstance } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             document
                 .querySelector<HTMLButtonElement>(
@@ -2006,16 +2100,18 @@ describe('KbqInlineEdit', () => {
 
             expect(componentInstance.saveHandler).not.toHaveBeenCalled();
             expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
-        }));
+        });
 
-        it('should save once the value differs', fakeAsync(() => {
+        it('should save once the value differs', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithDefaultCompareWith);
             const { componentInstance } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
 
             inlineEditDebugElement.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const input = getOverlayElement()!.querySelector('input')!;
 
@@ -2031,16 +2127,18 @@ describe('KbqInlineEdit', () => {
             fixture.detectChanges();
 
             expect(componentInstance.saveHandler).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should retry an unchanged value after a failed save', fakeAsync(() => {
+        it('should retry an unchanged value after a failed save', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithDefaultCompareWith);
             const { componentInstance } = fixture;
             const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
-            const open = () => {
+            const open = async () => {
                 inlineEditDebugElement.nativeElement.click();
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
             };
             const save = () => {
                 document
@@ -2051,7 +2149,7 @@ describe('KbqInlineEdit', () => {
                 fixture.detectChanges();
             };
 
-            open();
+            await open();
 
             const input = getOverlayElement()!.querySelector('input')!;
 
@@ -2065,16 +2163,18 @@ describe('KbqInlineEdit', () => {
 
             componentInstance.request$ = new Subject<void>();
             // Nothing changed since, but the server never accepted this value.
-            open();
+            await open();
             save();
 
             expect(componentInstance.saveHandler).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('should repeat the request on retrySave and do nothing without a failed save', fakeAsync(() => {
+        it('should repeat the request on retrySave and do nothing without a failed save', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
             clickSave(fixture);
@@ -2090,7 +2190,7 @@ describe('KbqInlineEdit', () => {
 
             componentInstance.request$.next();
             fixture.detectChanges();
-            tick(kbqInlineEditSaveProgressMinimumDuration);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressMinimumDuration);
 
             expect(componentInstance.update).toHaveBeenCalledTimes(1);
             expect(inlineEdit.saveStatus()).toBe('idle');
@@ -2098,18 +2198,20 @@ describe('KbqInlineEdit', () => {
             inlineEdit.retrySave();
 
             expect(componentInstance.saveHandler).toHaveBeenCalledTimes(2);
-        }));
+        });
 
-        it('should stay focusable but inert while the request is in flight', fakeAsync(() => {
+        it('should stay focusable but inert while the request is in flight', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
 
             // The tab stop lives on the view content, which is where the widget semantics are.
             const viewContent = getViewContentDebugElement(fixture.debugElement).nativeElement;
 
             clickSave(fixture);
-            tick(kbqInlineEditSaveProgressDelay);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressDelay);
             fixture.detectChanges();
 
             expect(viewContent.getAttribute('tabindex')).toBe('0');
@@ -2125,23 +2227,25 @@ describe('KbqInlineEdit', () => {
 
             componentInstance.request$.next();
             fixture.detectChanges();
-            tick(kbqInlineEditSaveProgressMinimumDuration);
+            await vi.advanceTimersByTimeAsync(kbqInlineEditSaveProgressMinimumDuration);
             fixture.detectChanges();
 
             expect(viewContent.getAttribute('tabindex')).toBe('0');
-        }));
+        });
 
-        it('should keep the failed state while the rejected value is edited again', fakeAsync(() => {
+        it('should keep the failed state while the rejected value is edited again', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
             const inlineEdit = inlineEditDebugElement.componentInstance as KbqInlineEdit;
 
             clickSave(fixture);
             componentInstance.request$.error(new Error('Server error'));
             fixture.detectChanges();
 
-            openEditMode(fixture);
+            await openEditMode(fixture);
             typeInControl(fixture, 'Fixed');
 
             expect(inlineEdit.saveStatus()).toBe('error');
@@ -2156,12 +2260,14 @@ describe('KbqInlineEdit', () => {
 
             expect(inlineEdit.saveStatus()).toBe('idle');
             expect(getViewText(inlineEditDebugElement)).toBe('Fixed');
-        }));
+        });
 
-        it('should treat an observable completing without values as success', fakeAsync(() => {
+        it('should treat an observable completing without values as success', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
-            const inlineEditDebugElement = openEditMode(fixture);
+            const inlineEditDebugElement = await openEditMode(fixture);
 
             clickSave(fixture);
             componentInstance.request$.complete();
@@ -2169,23 +2275,29 @@ describe('KbqInlineEdit', () => {
 
             expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
             expect(componentInstance.update).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should subscribe to the request once when the progress state is shown', fakeAsync(() => {
+        it('should subscribe to the request once when the progress state is shown', async () => {
+            vi.useFakeTimers();
+
             const fixture = setup(TestWithSaveHandler);
             const { componentInstance } = fixture;
 
-            openEditMode(fixture);
+            await openEditMode(fixture);
             clickSave(fixture);
-            tick(kbqInlineEditSaveProgressDelay + kbqInlineEditSaveProgressMinimumDuration);
+            await vi.advanceTimersByTimeAsync(
+                kbqInlineEditSaveProgressDelay + kbqInlineEditSaveProgressMinimumDuration
+            );
             componentInstance.request$.next();
             fixture.detectChanges();
 
             expect(componentInstance.subscriptions).toBe(1);
             expect(componentInstance.update).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should close edit mode on tab out without waiting for the request', fakeAsync(() => {
+        it('should close edit mode on tab out without waiting for the request', async () => {
+            vi.useFakeTimers();
+
             // The editor closes with the key, not with the response, long before the request settles.
             const fixture = setup(TestWithSaveHandlerList);
             const { componentInstance } = fixture;
@@ -2193,7 +2305,7 @@ describe('KbqInlineEdit', () => {
 
             first.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // The boundary is the panel's own last tabbable control, not a sentinel around it.
             const inputs = getOverlayElement()!.querySelectorAll<HTMLInputElement>('input');
@@ -2206,10 +2318,10 @@ describe('KbqInlineEdit', () => {
 
             componentInstance.request$.next();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(first.classes['kbq-inline-edit_save-error']).toBeFalsy();
-        }));
+        });
     });
 
     describe('programmatic mode', () => {

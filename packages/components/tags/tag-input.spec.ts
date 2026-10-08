@@ -3,7 +3,7 @@ import { DASH } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
 import { APP_ID, Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, inject, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
     FormControl,
@@ -715,13 +715,13 @@ describe(KbqTagInput.name, () => {
                 overlayContainer.ngOnDestroy();
             });
 
-            it('opens the panel from the caret of the input inside the tag list', fakeAsync(() => {
+            it('opens the panel from the caret of the input inside the tag list', async () => {
                 componentInstance.relativeToCaret.set(true);
                 fixture.detectChanges();
 
                 dispatchFakeEvent(inputElement, 'focusin');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 const trigger = fixture.debugElement
                     .query(By.directive(KbqAutocompleteTrigger))
@@ -733,17 +733,17 @@ describe(KbqTagInput.name, () => {
                 expect((overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement).style.width).toBe(
                     ''
                 );
-            }));
+            });
 
-            it('adds only the selected option, not the typed text, when an option is picked from the panel', fakeAsync(() => {
+            it('adds only the selected option, not the typed text, when an option is picked from the panel', async () => {
                 dispatchFakeEvent(inputElement, 'focusin');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 inputElement.value = 'hi';
                 dispatchFakeEvent(inputElement, 'input');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
@@ -752,27 +752,27 @@ describe(KbqTagInput.name, () => {
                 inputElement.dispatchEvent(new FocusEvent('blur', { relatedTarget: option }));
                 option.click();
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 expect(componentInstance.tags).toEqual(['HIPS alert']);
-            }));
+            });
 
-            it('still converts typed text into a tag on blur when focus does not move to an option', fakeAsync(() => {
+            it('still converts typed text into a tag on blur when focus does not move to an option', async () => {
                 dispatchFakeEvent(inputElement, 'focusin');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 inputElement.value = 'custom text';
                 dispatchFakeEvent(inputElement, 'input');
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 inputElement.dispatchEvent(new FocusEvent('blur', { relatedTarget: null }));
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 expect(componentInstance.tags).toEqual(['custom text']);
-            }));
+            });
         });
 
         describe('accessibility with a real autocomplete panel', () => {
@@ -841,7 +841,7 @@ describe(KbqTagInput.name, () => {
             expect(componentInstance.form.controls.tags.hasError('maxTagCount')).toBe(true);
         });
 
-        it('should not mark the list control dirty after the consumer rejected a tag', fakeAsync(() => {
+        it('should not mark the list control dirty after the consumer rejected a tag', async () => {
             const fixture = createComponent(TestTagListRejectingValidation);
             const { componentInstance } = fixture;
             const inputElement = getInputElement(fixture);
@@ -849,17 +849,17 @@ describe(KbqTagInput.name, () => {
             inputElement.value = 'rejected';
             componentInstance.tagInput().onKeydown(createKeyboardEvent('keydown', ENTER, inputElement, 'Enter'));
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(componentInstance.control.value).toEqual(['a']);
             expect(componentInstance.control.dirty).toBe(false);
 
             componentInstance.control.setValue(['x', 'y']);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(componentInstance.control.dirty).toBe(false);
-        }));
+        });
 
         describe('with a deprecated form control bound to the input', () => {
             it('should not block (tagEnd) on ENTER when the input control is invalid', () => {

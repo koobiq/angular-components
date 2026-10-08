@@ -1,7 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ChangeDetectorRef, Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KBQ_LOCALE_SERVICE, KbqFilterBarLocaleConfiguration } from '@koobiq/components/core';
 import {
@@ -129,6 +129,8 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             .compileComponents();
     });
 
+    afterEach(() => vi.useRealTimers());
+
     const getPipeComponent = (index: number = 0): KbqPipeMultiTreeSelectComponent => {
         const pipes = fixture.debugElement.queryAll(By.css('kbq-pipe-multi-tree-select'));
 
@@ -249,44 +251,50 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should return unchecked when no options selected', fakeAsync(() => {
+        it('should return unchecked when no options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPipeComponent().selectAllCheckboxState).toBe('unchecked');
-        }));
+        });
 
-        it('should return checked when all options selected', fakeAsync(() => {
+        it('should return checked when all options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.allOptionsSelected).toBe(true);
             expect(component.selectAllCheckboxState).toBe('checked');
-        }));
+        });
 
-        it('should return indeterminate when some options selected', fakeAsync(() => {
+        it('should return indeterminate when some options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ['value 0'], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -294,7 +302,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(component.select().selected.length).toBeGreaterThan(0);
             expect(component.allOptionsSelected).toBe(false);
             expect(component.selectAllCheckboxState).toBe('indeterminate');
-        }));
+        });
     });
 
     describe('onSelect', () => {
@@ -303,7 +311,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should emit onChangePipe event on selection', fakeAsync(() => {
+        it('should emit onChangePipe event on selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ['value 0'] })
             ]);
@@ -315,17 +325,17 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBar.onChangePipe.subscribe(spy);
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.onSelect({ value: { data: component.treeControl.dataNodes[0], selected: true } });
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(spy).toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('toggleSelectAllNode', () => {
@@ -334,51 +344,57 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should select all nodes when none selected', fakeAsync(() => {
+        it('should select all nodes when none selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.tree().selectionModel.selected.length).toBeGreaterThan(0);
-        }));
+        });
 
-        it('should deselect all nodes when all selected', fakeAsync(() => {
+        it('should deselect all nodes when all selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.allOptionsSelected).toBe(true);
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.tree().selectionModel.selected.length).toBe(0);
-        }));
+        });
 
-        it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', fakeAsync(() => {
+        it('should set data.value to empty when selectedAllEqualsSelectedNothing and all toggled on', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
@@ -386,19 +402,19 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.allOptionsSelected).toBe(true);
             expect(component.selectedAllEqualsSelectedNothing).toBe(true);
             expect(component.data.value).toEqual([]);
-        }));
+        });
     });
 
     describe('select all without options', () => {
@@ -417,19 +433,21 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(getPipeComponent().dataSource.data).toEqual([]);
         });
 
-        it('should keep the value and emit nothing on Ctrl+A', fakeAsync(() => {
+        it('should keep the value and emit nothing on Ctrl+A', async () => {
+            vi.useFakeTimers();
+
             const changeSpy = vi.fn();
 
             getFilterBar().onChangePipe.subscribe(changeSpy);
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             getPipeComponent().selectAllHandler(new KeyboardEvent('keydown'));
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPipeComponent().data.value).toBeNull();
             expect(changeSpy).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('updateTemplates', () => {
@@ -491,7 +509,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should forward panelMaxHeight from the pipe template to the panel', fakeAsync(() => {
+        it('should forward panelMaxHeight from the pipe template to the panel', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.pipeTemplates = [
                 {
                     name: 'MultiTreeSelect',
@@ -508,23 +528,25 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(readPanelMaxHeightToken()).toBe('300px');
-        }));
+        });
 
-        it('should leave the token unset when the template omits panelMaxHeight', fakeAsync(() => {
+        it('should leave the token unset when the template omits panelMaxHeight', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [] })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // No inline custom property at all, so the select-family default of 256px applies.
             expect(readPanelMaxHeightToken()).toBe('');
-        }));
+        });
     });
 
     describe('onClear', () => {
@@ -585,7 +607,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should expand all tree nodes on open', fakeAsync(() => {
+        it('should expand all tree nodes on open', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [] })
             ]);
@@ -597,9 +621,11 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             component.onOpen();
 
             expect(expandAllSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should update internalSelected on close when all options selected', fakeAsync(() => {
+        it('should update internalSelected on close when all options selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.selectedAllEqualsSelectedNothing = true;
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ['value 0'], selectAll: true })
@@ -607,7 +633,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -615,7 +641,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             // Select every option. Under selectedAllEqualsSelectedNothing this collapses data.value
             // to [], while internalSelected still holds the previously committed value (stale).
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.allOptionsSelected).toBe(true);
@@ -625,28 +651,30 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             // onClose refreshes internalSelected from the current data.value.
             component.onClose();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.selected).toEqual([]);
-        }));
+        });
 
-        it('should restore focus to the trigger button on close', fakeAsync(() => {
+        it('should restore focus to the trigger button on close', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             getPipeComponent().onClose();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(expect.any(HTMLButtonElement), expect.anything());
-        }));
+        });
     });
 
     describe('numberOfSelectedLeaves', () => {
@@ -655,14 +683,16 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should count selected items excluding selectAll value', fakeAsync(() => {
+        it('should count selected items excluding selectAll value', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: ['value 0', 'value 2'], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -673,7 +703,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
                 .selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
 
             expect(selectedCount).toBe(selectedWithoutSelectAll);
-        }));
+        });
     });
 
     describe('hasChild / isNodeSelectAll', () => {
@@ -721,7 +751,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should filter tree nodes when search value changes', fakeAsync(() => {
+        it('should filter tree nodes when search value changes', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], search: true })
             ]);
@@ -731,10 +763,10 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             const filterNodesSpy = vi.spyOn(component.treeControl, 'filterNodes');
 
             component.searchControl.setValue('Admin');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(filterNodesSpy).toHaveBeenCalledWith('Admin');
-        }));
+        });
     });
 
     describe('selectAllHandler', () => {
@@ -743,14 +775,16 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
         });
 
-        it('should prevent default and toggle select all', fakeAsync(() => {
+        it('should prevent default and toggle select all', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -762,7 +796,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             expect(preventSpy).toHaveBeenCalled();
             expect(toggleSpy).toHaveBeenCalled();
-        }));
+        });
     });
 
     // The select-all node is synthesized by `updateTemplates`, which only re-runs when `pipeTemplates`
@@ -873,12 +907,14 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(isDisabled('value 2')).toBe(false);
         });
 
-        it('should render the locked option as disabled and selected', fakeAsync(() => {
+        it('should render the locked option as disabled and selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const locked = getPipeComponent()
@@ -887,30 +923,32 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             expect(locked.disabled).toBe(true);
             expect(locked.selected).toBe(true);
-        }));
+        });
 
-        it('should keep the locked node selected after "select all" and reopening the panel', fakeAsync(() => {
+        it('should keep the locked node selected after "select all" and reopening the panel', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             component.onClose();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Closing over a full selection re-snapshots from the "all selected = nothing selected"
@@ -920,7 +958,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(component.tree().renderedOptions.find((option) => option.value === LOCKED_LEAF)!.selected).toBe(
                 true
             );
-        }));
+        });
 
         it('should append the missing locked values without emitting a change', () => {
             const changeSpy = vi.fn();
@@ -963,31 +1001,33 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(clearSpy).toHaveBeenCalledWith(expect.objectContaining({ value: [LOCKED_LEAF] }));
         });
 
-        it('should keep the locked nodes selected when all nodes are deselected', fakeAsync(() => {
+        it('should keep the locked nodes selected when all nodes are deselected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.allOptionsSelected).toBe(true);
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.select().selectedValues).toEqual([LOCKED_LEAF]);
             expect(component.data.value).toEqual([LOCKED_LEAF]);
-        }));
+        });
 
         it('should expose no built-in select cleaner, which would bypass onClear', () => {
             fixture.componentInstance.activeFilter = createFilter([
@@ -1004,20 +1044,22 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(select.canShowCleaner).toBe(false);
         });
 
-        it('should keep the "all selected" sentinel across a later template update', fakeAsync(() => {
+        it('should keep the "all selected" sentinel across a later template update', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.data.value).toEqual([]);
@@ -1029,7 +1071,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             expect(component.data.value).toEqual([]);
-        }));
+        });
 
         it('should read as empty when only the locked values are selected', () => {
             fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: [LOCKED_LEAF] })]);
@@ -1050,20 +1092,24 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(getPipeComponent().isEmpty).toBe(false);
         });
 
-        it('should keep the select-all checkbox unchecked when only the locked values are selected', fakeAsync(() => {
+        it('should keep the select-all checkbox unchecked when only the locked values are selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [LOCKED_LEAF], selectAll: true })
             ]);
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getPipeComponent().selectAllCheckboxState).toBe('unchecked');
-        }));
+        });
 
-        it('should keep the select-all checkbox unchecked when every node is locked', fakeAsync(() => {
+        it('should keep the select-all checkbox unchecked when every node is locked', async () => {
+            vi.useFakeTimers();
+
             setLockedTemplate(ALL_LOCKED);
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null, selectAll: true })
@@ -1071,7 +1117,7 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
@@ -1080,9 +1126,11 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             // master checkbox would promise an action the user cannot take.
             expect(component.allOptionsSelected).toBe(false);
             expect(component.selectAllCheckboxState).toBe('unchecked');
-        }));
+        });
 
-        it('should keep the locked values when "select all" is toggled with every node locked', fakeAsync(() => {
+        it('should keep the locked values when "select all" is toggled with every node locked', async () => {
+            vi.useFakeTimers();
+
             setLockedTemplate(ALL_LOCKED);
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: null, selectAll: true })
@@ -1090,20 +1138,20 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
 
             component.toggleSelectAllNode();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             // Reporting a full selection here would commit the "all selected = nothing selected"
             // sentinel and drop the locked values, which no later normalization puts back.
             expect(component.data.value).not.toEqual([]);
             expect(component.data.value).toEqual(expect.arrayContaining([LOCKED_LEAF, ...BRANCH_LEAVES]));
-        }));
+        });
 
         it('should lock the whole subtree of a locked branch', () => {
             setLockedTemplate([LOCKED_BRANCH]);
@@ -1120,7 +1168,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             expect(component.data.value).toEqual([LOCKED_BRANCH, ...BRANCH_LEAVES]);
         });
 
-        it('should keep a locked child selected when its parent is deselected', fakeAsync(() => {
+        it('should keep a locked child selected when its parent is deselected', async () => {
+            vi.useFakeTimers();
+
             setLockedTemplate(['value 4']);
             fixture.componentInstance.activeFilter = createFilter([
                 createPipe({ name: 'test', value: [LOCKED_BRANCH, ...BRANCH_LEAVES] })
@@ -1128,18 +1178,18 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
             fixture.detectChanges();
 
             openSelect();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const component = getPipeComponent();
             const parent = component.tree().renderedOptions.find((option) => option.value === LOCKED_BRANCH)!;
 
             component.onSelect({ value: parent });
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(component.data.value).toContain('value 4');
             expect(component.data.value).not.toContain('value 5');
-        }));
+        });
     });
 });

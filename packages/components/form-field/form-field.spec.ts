@@ -1,5 +1,5 @@
-import { Component, DebugElement, Directive, Type } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { Component, DebugElement, Type } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
     FormControl,
@@ -408,6 +408,8 @@ class InputFormFieldWithCrossFieldMatcher {
 }
 
 describe(KbqFormField.name, () => {
+    afterEach(() => vi.useRealTimers());
+
     it('should provide typed and legacy form-field tokens', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const formField = getFormFieldDebugElement(debugElement);
@@ -815,7 +817,8 @@ describe(KbqFormField.name, () => {
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display KbqReactivePasswordHint error for invalid password', fakeAsync(() => {
+    it('should display KbqReactivePasswordHint error for invalid password', async () => {
+        vi.useFakeTimers();
         const fixture = createComponent(PasswordFormField);
         const { debugElement } = fixture;
         const input = getPasswordInputNativeElement(debugElement);
@@ -824,14 +827,14 @@ describe(KbqFormField.name, () => {
         input.dispatchEvent(new Event('input'));
         // `hasError` stays true for an already invalid control, so the color is escalated by the `delay(0)`
         // handler instead of the effect that follows `hasError`.
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         const hint = getReactivePasswordHintDebugElement(debugElement);
 
         expect(hint.nativeElement.classList).toContain('kbq-error');
         expect(hint).toMatchSnapshot();
-    }));
+    });
 
     it('should display KbqReactivePasswordHint success for valid password', async () => {
         const fixture = createComponent(PasswordFormField);

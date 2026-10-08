@@ -21,7 +21,7 @@ import {
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
@@ -110,6 +110,8 @@ describe('KbqDropdown', () => {
         overlayContainer.ngOnDestroy();
     }));
 
+    afterEach(() => vi.useRealTimers());
+
     it('should remove the host box via display: contents', () => {
         // jsdom doesn't do layout, so this only guards the `display` value itself; the actual
         // no-layout-box behavior is covered by the navbar Playwright baseline (packages/components/navbar/e2e.ts).
@@ -137,7 +139,9 @@ describe('KbqDropdown', () => {
         }).not.toThrow();
     });
 
-    it('should close the dropdown when a click occurs outside the dropdown', fakeAsync(() => {
+    it('should close the dropdown when a click occurs outside the dropdown', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -147,12 +151,14 @@ describe('KbqDropdown', () => {
 
         backdrop.click();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         expect(overlayContainerElement.textContent).toBe('');
-    }));
+    });
 
-    it('should be able to remove the backdrop', fakeAsync(() => {
+    it('should be able to remove the backdrop', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -163,26 +169,28 @@ describe('KbqDropdown', () => {
 
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
-    }));
+    });
 
-    it('should be able to remove the backdrop on repeat openings', fakeAsync(() => {
+    it('should be able to remove the backdrop on repeat openings', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
 
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         // Start off with a backdrop.
         expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeTruthy();
 
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         // Change `hasBackdrop` after the first open.
         fixture.componentInstance.hasBackdrop = false;
@@ -191,12 +199,14 @@ describe('KbqDropdown', () => {
         // Reopen the dropdown.
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         expect(overlayContainerElement.querySelector('.cdk-overlay-backdrop')).toBeFalsy();
-    }));
+    });
 
-    it('should restore focus to the trigger when the dropdown was opened by keyboard', fakeAsync(() => {
+    it('should restore focus to the trigger when the dropdown was opened by keyboard', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -210,27 +220,31 @@ describe('KbqDropdown', () => {
 
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
 
         expect(document.activeElement).toBe(triggerEl);
-    }));
+    });
 
-    it('should be able to set a custom class on the backdrop', fakeAsync(() => {
+    it('should be able to set a custom class on the backdrop', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.componentInstance.backdropClass = 'custom-backdrop';
         fixture.detectChanges();
         fixture.componentInstance.trigger().open();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
 
         expect(backdrop.classList).toContain('custom-backdrop');
-    }));
+    });
 
-    it('should restore focus to the root trigger when the dropdown was opened by mouse', fakeAsync(() => {
+    it('should restore focus to the root trigger when the dropdown was opened by mouse', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -245,12 +259,14 @@ describe('KbqDropdown', () => {
 
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         expect(document.activeElement).toBe(triggerEl);
-    }));
+    });
 
-    it('should restore focus to the root trigger when the dropdown was opened by touch', fakeAsync(() => {
+    it('should restore focus to the root trigger when the dropdown was opened by touch', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -265,12 +281,14 @@ describe('KbqDropdown', () => {
 
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(document.activeElement).toBe(triggerEl);
-    }));
+    });
 
-    it('should scroll the panel to the top on open, when it is scrollable', fakeAsync(() => {
+    it('should scroll the panel to the top on open, when it is scrollable', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -286,12 +304,14 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
 
         // Flush due to the additional tick that is necessary for the FocusMonitor.
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(overlayContainerElement.querySelector(PANEL_SELECTOR)!.scrollTop).toBe(0);
-    }));
+    });
 
-    it('should set the proper focus origin when restoring focus after opening by keyboard', fakeAsync(() => {
+    it('should set the proper focus origin when restoring focus after opening by keyboard', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -304,14 +324,16 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
 
         expect(triggerEl.classList).toContain('cdk-program-focused');
         focusMonitor.stopMonitoring(triggerEl);
-    }));
+    });
 
-    it('should set the proper focus origin when restoring focus after opening by mouse', fakeAsync(() => {
+    it('should set the proper focus origin when restoring focus after opening by mouse', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -325,14 +347,16 @@ describe('KbqDropdown', () => {
         focusMonitor.monitor(triggerEl, false);
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
 
         expect(triggerEl.classList).toContain('cdk-mouse-focused');
         focusMonitor.stopMonitoring(triggerEl);
-    }));
+    });
 
-    it('should set proper focus origin when right clicking on trigger, before opening by keyboard', fakeAsync(() => {
+    it('should set proper focus origin when right clicking on trigger, before opening by keyboard', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -351,14 +375,16 @@ describe('KbqDropdown', () => {
 
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
 
         expect(triggerEl.classList).toContain('cdk-program-focused');
         focusMonitor.stopMonitoring(triggerEl);
-    }));
+    });
 
-    it('should set the proper focus origin when restoring focus after opening by touch', fakeAsync(() => {
+    it('should set the proper focus origin when restoring focus after opening by touch', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -372,15 +398,17 @@ describe('KbqDropdown', () => {
         focusMonitor.monitor(triggerEl, false);
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(triggerEl.classList).toContain('cdk-touch-focused');
         focusMonitor.stopMonitoring(triggerEl);
-    }));
+    });
 
-    it('should close the dropdown when pressing ESCAPE', fakeAsync(() => {
+    it('should close the dropdown when pressing ESCAPE', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -391,10 +419,10 @@ describe('KbqDropdown', () => {
 
         dispatchEvent(panel, event);
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         expect(overlayContainerElement.textContent).toBe('');
-    }));
+    });
 
     it('should open a custom dropdown', () => {
         const fixture = createComponent(CustomDropdown, [], [CustomDropdownPanel]);
@@ -482,7 +510,9 @@ describe('KbqDropdown', () => {
         expect(fixture.componentInstance.items().at(-1)!.getLabel()).toBe('Item with an icon');
     });
 
-    it('should focus the panel instead of the first item when opening by mouse', fakeAsync(() => {
+    it('should focus the panel instead of the first item when opening by mouse', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -493,16 +523,18 @@ describe('KbqDropdown', () => {
         dispatchMouseEvent(triggerEl, 'mousedown');
         triggerEl.click();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
 
         expect(focusSpyFn).not.toHaveBeenCalled();
         expect(document.activeElement).toBe(overlayContainerElement.querySelector(PANEL_SELECTOR));
         expect(items.some((item) => item.classList.contains('cdk-focused'))).toBe(false);
-    }));
+    });
 
-    it('should focus the panel instead of the first item when opening by touch', fakeAsync(() => {
+    it('should focus the panel instead of the first item when opening by touch', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -513,18 +545,18 @@ describe('KbqDropdown', () => {
         dispatchMouseEvent(triggerEl, 'touchstart');
         triggerEl.click();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
 
         expect(focusSpyFn).not.toHaveBeenCalled();
         expect(document.activeElement).toBe(overlayContainerElement.querySelector(PANEL_SELECTOR));
         expect(items.some((item) => item.classList.contains('cdk-focused'))).toBe(false);
+    });
 
-        discardPeriodicTasks();
-    }));
+    it('should focus the first item when opening by keyboard', async () => {
+        vi.useFakeTimers();
 
-    it('should focus the first item when opening by keyboard', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -534,12 +566,14 @@ describe('KbqDropdown', () => {
 
         dispatchKeyboardEvent(triggerEl, 'keydown', ENTER);
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         expect(focusSpyFn).toHaveBeenCalledWith('keyboard');
-    }));
+    });
 
-    it('should close the dropdown when using the CloseScrollStrategy', fakeAsync(() => {
+    it('should close the dropdown when using the CloseScrollStrategy', async () => {
+        vi.useFakeTimers();
+
         const scrolledSubject = new Subject();
 
         // KbqDropdownModule (imported by SimpleDropdown as a standalone-component import)
@@ -578,13 +612,15 @@ describe('KbqDropdown', () => {
         expect(trigger.opened).toBe(true);
 
         scrolledSubject.next(null);
-        flush();
+        await vi.runOnlyPendingTimersAsync();
         fixture.detectChanges();
 
         expect(trigger.opened).toBe(false);
-    }));
+    });
 
-    it('should switch to keyboard focus when using the keyboard after opening using the mouse', fakeAsync(() => {
+    it('should switch to keyboard focus when using the keyboard after opening using the mouse', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -600,8 +636,8 @@ describe('KbqDropdown', () => {
 
         items.forEach(patchElementFocus);
 
-        tick(500);
-        tick();
+        await vi.advanceTimersByTimeAsync(500);
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
         expect(items.some((item) => item.classList.contains('cdk-keyboard-focused'))).toBe(false);
 
@@ -609,7 +645,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
 
         // Flush due to the additional tick that is necessary for the FocusMonitor.
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         // Since no item was active after opening by mouse, the first arrow press
         // should highlight the first item.
@@ -618,14 +654,16 @@ describe('KbqDropdown', () => {
 
         dispatchKeyboardEvent(panel, 'keydown', DOWN_ARROW);
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         // We skip to the third item, because the second one is disabled.
         expect(items[2].classList).toContain('cdk-focused');
         expect(items[2].classList).toContain('cdk-keyboard-focused');
-    }));
+    });
 
-    it('should highlight an item on hover after opening by mouse', fakeAsync(() => {
+    it('should highlight an item on hover after opening by mouse', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleDropdown, [], []);
 
         fixture.detectChanges();
@@ -635,7 +673,7 @@ describe('KbqDropdown', () => {
         dispatchMouseEvent(triggerEl, 'mousedown');
         triggerEl.click();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         const items: HTMLElement[] = Array.from(overlayContainerElement.querySelectorAll(ITEM_SELECTOR));
 
@@ -643,12 +681,12 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
 
         // Flush due to the additional tick that is necessary for the FocusMonitor.
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(document.activeElement).toBe(items[2]);
         expect(items[2].classList).toContain('cdk-focused');
         expect(items[2].classList).toContain('cdk-mouse-focused');
-    }));
+    });
 
     it('should throw the correct error if the dropdown is not defined after init', () => {
         const fixture = createComponent(DynamicPanelDropdown, [], []);
@@ -665,7 +703,9 @@ describe('KbqDropdown', () => {
         }).toThrow(/must pass in an kbq-dropdown instance/);
     });
 
-    it('should be able to swap out a dropdown after the first time it is opened', fakeAsync(() => {
+    it('should be able to swap out a dropdown after the first time it is opened', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(DynamicPanelDropdown);
 
         fixture.detectChanges();
@@ -679,7 +719,7 @@ describe('KbqDropdown', () => {
 
         fixture.componentInstance.trigger().close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
 
         expect(overlayContainerElement.textContent).toBe('');
@@ -697,13 +737,15 @@ describe('KbqDropdown', () => {
 
         trigger.close();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
 
         expect(overlayContainerElement.textContent).toBe('');
-    }));
+    });
 
-    it('should apply open state changes when parent uses onPush strategy', fakeAsync(() => {
+    it('should apply open state changes when parent uses onPush strategy', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(OnPushContainer, [], []);
 
         fixture.detectChanges();
@@ -712,20 +754,22 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
         fixture.componentInstance.itemRef().nativeElement.click();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
         fixture.detectChanges();
 
         expect(fixture.componentInstance.triggerEl().nativeElement.classList.contains('kbq-pressed')).toBeFalsy();
-    }));
+    });
 
     describe('lazy rendering', () => {
-        it('should be able to render the dropdown content lazily', fakeAsync(() => {
+        it('should be able to render the dropdown content lazily', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleLazyDropdown);
 
             fixture.detectChanges();
             fixture.componentInstance.triggerEl().nativeElement.click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             const panel = overlayContainerElement.querySelector(PANEL_SELECTOR)!;
 
@@ -734,27 +778,31 @@ describe('KbqDropdown', () => {
             expect(panel.textContent).toContain('Another item');
 
             expect(fixture.componentInstance.trigger().opened).toBe(true);
-        }));
+        });
 
-        it('should detach the lazy content when the dropdown is closed', fakeAsync(() => {
+        it('should detach the lazy content when the dropdown is closed', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleLazyDropdown);
 
             fixture.detectChanges();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlayContainerElement.querySelectorAll('.kbq-dropdown__panel').length).toBeGreaterThan(0);
 
             fixture.componentInstance.trigger().close();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('.kbq-dropdown__panel').length).toBe(0);
-        }));
+        });
 
-        it('should consider the panel closed at once, with no exit animation to wait for', fakeAsync(() => {
+        it('should consider the panel closed at once, with no exit animation to wait for', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleLazyDropdown);
 
             fixture.detectChanges();
@@ -764,16 +812,18 @@ describe('KbqDropdown', () => {
 
             trigger.open();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(trigger.opened).toBe(true);
 
             trigger.close();
 
             expect(trigger.opened).toBe(false);
-        }));
+        });
 
-        it('should focus the first dropdown item when opening a lazy dropdown via keyboard', fakeAsync(() => {
+        it('should focus the first dropdown item when opening a lazy dropdown via keyboard', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleLazyDropdown);
 
             fixture.detectChanges();
@@ -781,23 +831,25 @@ describe('KbqDropdown', () => {
             // A click without a mousedown before it is considered a keyboard open.
             fixture.componentInstance.triggerEl().nativeElement.click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             // Flush due to the additional tick that is necessary for the FocusMonitor.
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const item = document.querySelector(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`)!;
 
             expect(document.activeElement).toBe(item);
-        }));
+        });
 
-        it('should be able to open the same dropdown with a different context', fakeAsync(() => {
+        it('should be able to open the same dropdown with a different context', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(LazyDropdownWithContext);
 
             fixture.detectChanges();
             fixture.componentInstance.triggerOne().open();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             let item = overlayContainerElement.querySelector(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`)!;
 
@@ -805,15 +857,15 @@ describe('KbqDropdown', () => {
 
             fixture.componentInstance.triggerOne().close();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             fixture.componentInstance.triggerTwo().open();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             item = overlayContainerElement.querySelector(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`)!;
 
             expect(item.textContent!.trim()).toBe('two');
-        }));
+        });
     });
 
     describe('positions', () => {
@@ -1238,7 +1290,9 @@ describe('KbqDropdown', () => {
             }
         };
 
-        it('does not close when a scrollbar gesture produces a panel click', fakeAsync(() => {
+        it('does not close when a scrollbar gesture produces a panel click', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleDropdown, [], []);
 
             fixture.detectChanges();
@@ -1248,7 +1302,7 @@ describe('KbqDropdown', () => {
             const panel = overlayContainerElement.querySelector(PANEL_SELECTOR) as HTMLElement;
 
             setMetrics(panel, { clientHeight: 100, scrollHeight: 500, clientWidth: 100, scrollWidth: 100 });
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
             fixture.detectChanges();
 
             const bar = panel.querySelector('.kbq-scrollbar-track__bar_vertical') as HTMLElement;
@@ -1261,9 +1315,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.closeCallback).not.toHaveBeenCalled();
-
-            discardPeriodicTasks();
-        }));
+        });
     });
 
     describe('footer', () => {
@@ -1300,7 +1352,9 @@ describe('KbqDropdown', () => {
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
         });
 
-        it(`should still close the panel when an item is clicked`, fakeAsync(() => {
+        it(`should still close the panel when an item is clicked`, async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(FooterDropdown, [], []);
 
             fixture.detectChanges();
@@ -1311,19 +1365,21 @@ describe('KbqDropdown', () => {
 
             item.click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeNull();
-        }));
+        });
     });
 
-    it('should lend a nested panel the parent items when it has none of its own', fakeAsync(() => {
+    it('should lend a nested panel the parent items when it has none of its own', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(BorrowingNestedDropdown);
 
         fixture.detectChanges();
         fixture.componentInstance.rootTrigger().open();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         const root = fixture.componentInstance.root();
         const borrower = fixture.componentInstance.borrower();
@@ -1332,15 +1388,15 @@ describe('KbqDropdown', () => {
 
         fixture.componentInstance.nestedTrigger().open();
         fixture.detectChanges();
-        tick(500);
+        await vi.advanceTimersByTimeAsync(500);
 
         // The panel is declared outside the root's content, so its own content query matches nothing.
         // `adoptItems` replaces the `QueryList.reset()` the trigger used to perform in place.
         expect(borrower.items()).toEqual(root.items());
         expect(borrower.items().length).toBeGreaterThan(0);
 
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
     describe('typeahead label', () => {
         const openSimple = () => {
@@ -1353,7 +1409,9 @@ describe('KbqDropdown', () => {
             return fixture;
         };
 
-        it('should type ahead past a disabled item to the next match', fakeAsync(() => {
+        it('should type ahead past a disabled item to the next match', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(TypeaheadDropdown);
 
             fixture.detectChanges();
@@ -1370,13 +1428,13 @@ describe('KbqDropdown', () => {
             // that path: read as a plain property a signal is always truthy, so every item would look
             // disabled and "b" would match nothing at all rather than skipping to `Bravado`.
             dispatchKeyboardEvent(panel, 'keydown', B, undefined, 'b');
-            tick(300);
+            await vi.advanceTimersByTimeAsync(300);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(items[1].classList).not.toContain('cdk-focused');
             expect(items[2].classList).toContain('cdk-focused');
-        }));
+        });
 
         it('should read the label without icons or the projected action', () => {
             const fixture = openSimple();
@@ -1632,7 +1690,9 @@ describe('KbqDropdown', () => {
             subscription.unsubscribe();
         });
 
-        it('should toggle a nested dropdown when its trigger is hovered', fakeAsync(() => {
+        it('should toggle a nested dropdown when its trigger is hovered', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
@@ -1643,7 +1703,7 @@ describe('KbqDropdown', () => {
 
             dispatchMouseEvent(levelOneTrigger, 'mouseenter');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(levelOneTrigger.classList).toContain('kbq-dropdown-item_highlighted');
@@ -1651,13 +1711,15 @@ describe('KbqDropdown', () => {
 
             dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
             expect(levelOneTrigger.classList).not.toContain('kbq-dropdown-item-highlighted');
-        }));
+        });
 
-        it('should close all the open nested dropdowns when the hover state is changed at the root', fakeAsync(() => {
+        it('should close all the open nested dropdowns when the hover state is changed at the root', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
@@ -1667,34 +1729,36 @@ describe('KbqDropdown', () => {
 
             dispatchMouseEvent(levelOneTrigger, 'mouseenter');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const levelTwoTrigger = overlay.querySelector('#level-two-trigger')! as HTMLElement;
 
             dispatchMouseEvent(levelTwoTrigger, 'mouseenter');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(3);
 
             dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-        }));
+        });
 
-        it('should close nested dropdown when hovering over disabled sibling item', fakeAsync(() => {
+        it('should close nested dropdown when hovering over disabled sibling item', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             const items = fixture.debugElement.queryAll(By.directive(KbqDropdownItem));
 
             dispatchFakeEvent(items[0].nativeElement, 'mouseenter');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
 
@@ -1704,16 +1768,18 @@ describe('KbqDropdown', () => {
             // Invoke the handler directly since the fake events are flaky on disabled elements.
             items[1].componentInstance.handleMouseEnter();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-        }));
+        });
 
-        it('should not open nested dropdown when hovering over disabled trigger', fakeAsync(() => {
+        it('should not open nested dropdown when hovering over disabled trigger', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
 
@@ -1725,17 +1791,17 @@ describe('KbqDropdown', () => {
             // Invoke the handler directly since the fake events are flaky on disabled elements.
             item.componentInstance.handleMouseEnter();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-        }));
+        });
 
         describe('safe area', () => {
             /**
              * Opens the level-one nested dropdown with `safeArea` enabled and mocks its overlay
              * pane's rect to a fixed, predictable box (jsdom otherwise reports an all-zero rect).
              */
-            const openLevelOneWithSafeArea = (): HTMLElement => {
+            const openLevelOneWithSafeArea = async (): Promise<HTMLElement> => {
                 compileTestComponent();
                 instance.safeAreaEnabled = true;
                 fixture.detectChanges();
@@ -1747,7 +1813,7 @@ describe('KbqDropdown', () => {
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseenter');
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 const overlayPanes = overlay.querySelectorAll('.cdk-overlay-pane');
@@ -1768,7 +1834,9 @@ describe('KbqDropdown', () => {
                 return levelOneTrigger;
             };
 
-            it('should close immediately on a sibling hover when disabled (default)', fakeAsync(() => {
+            it('should close immediately on a sibling hover when disabled (default)', async () => {
+                vi.useFakeTimers();
+
                 compileTestComponent();
                 instance.rootTriggerEl().nativeElement.click();
                 fixture.detectChanges();
@@ -1778,20 +1846,22 @@ describe('KbqDropdown', () => {
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseenter');
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
                 dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
                 fixture.detectChanges();
-                tick(500);
+                await vi.advanceTimersByTimeAsync(500);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-            }));
+            });
 
-            it('should keep the submenu open while a sibling crossed en route is hovered', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should keep the submenu open while a sibling crossed en route is hovered', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
                 const items = Array.from(overlay.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
 
                 // Leaves roughly level with the panel's top, heading toward it.
@@ -1801,7 +1871,7 @@ describe('KbqDropdown', () => {
                 // Crossing the next sibling row on the way to the submenu no longer closes it.
                 dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
 
@@ -1809,13 +1879,15 @@ describe('KbqDropdown', () => {
                 // the panel's near-top/near-bottom corners at x=300).
                 dispatchMouseEvent(document, 'mousemove', 200, 125);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-            }));
+            });
 
-            it('should track the submenu after it has been repositioned mid-transit', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should track the submenu after it has been repositioned mid-transit', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
                 const panes = overlay.querySelectorAll('.cdk-overlay-pane');
                 const nestedPane = panes[panes.length - 1] as HTMLElement;
 
@@ -1838,18 +1910,20 @@ describe('KbqDropdown', () => {
                 // Lands inside the panel where it actually is now, which has to end the tracking.
                 dispatchMouseEvent(document, 'mousemove', 400, 500);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 // With tracking stopped, wandering off no longer closes the submenu.
                 dispatchMouseEvent(document, 'mousemove', 150, 900);
                 fixture.detectChanges();
-                tick(500);
+                await vi.advanceTimersByTimeAsync(500);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-            }));
+            });
 
-            it('should close once the pointer leaves the safe area', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should close once the pointer leaves the safe area', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
                 fixture.detectChanges();
@@ -1857,13 +1931,15 @@ describe('KbqDropdown', () => {
                 // Well outside the triangle — the user gave up on the submenu.
                 dispatchMouseEvent(document, 'mousemove', 150, 400);
                 fixture.detectChanges();
-                tick(500);
+                await vi.advanceTimersByTimeAsync(500);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-            }));
+            });
 
-            it('should keep the submenu open and stop tracking once the pointer reaches the panel', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should keep the submenu open and stop tracking once the pointer reaches the panel', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
                 const items = Array.from(overlay.querySelectorAll(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`));
 
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
@@ -1871,7 +1947,7 @@ describe('KbqDropdown', () => {
 
                 dispatchMouseEvent(document, 'mousemove', 400, 150);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
 
@@ -1879,13 +1955,15 @@ describe('KbqDropdown', () => {
                 // the submenu immediately again, same as when the triangle was never activated.
                 dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
                 fixture.detectChanges();
-                tick(500);
+                await vi.advanceTimersByTimeAsync(500);
 
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-            }));
+            });
 
-            it('should not switch to another nested trigger before the grace period elapses', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should not switch to another nested trigger before the grace period elapses', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1897,15 +1975,17 @@ describe('KbqDropdown', () => {
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
                 dispatchMouseEvent(lazyTrigger, 'mouseenter');
                 fixture.detectChanges();
-                tick(NESTED_HOVER_SWITCH_DELAY - 10);
+                await vi.advanceTimersByTimeAsync(NESTED_HOVER_SWITCH_DELAY - 10);
                 fixture.detectChanges();
 
                 expect(instance.levelOneTrigger().opened).toBe(true);
                 expect(instance.lazyTrigger().opened).toBe(false);
-            }));
+            });
 
-            it('should switch to another nested trigger once the grace period elapses without the pointer reaching the panel', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should switch to another nested trigger once the grace period elapses without the pointer reaching the panel', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1915,16 +1995,18 @@ describe('KbqDropdown', () => {
                 dispatchMouseEvent(levelOneTrigger, 'mouseleave', 100, 100);
                 dispatchMouseEvent(lazyTrigger, 'mouseenter');
                 fixture.detectChanges();
-                tick(NESTED_HOVER_SWITCH_DELAY);
+                await vi.advanceTimersByTimeAsync(NESTED_HOVER_SWITCH_DELAY);
                 fixture.detectChanges();
 
                 expect(instance.levelOneTrigger().opened).toBe(false);
                 expect(instance.lazyTrigger().opened).toBe(true);
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-            }));
+            });
 
-            it('should not switch to another nested trigger if the pointer reaches the panel within the grace period', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should not switch to another nested trigger if the pointer reaches the panel within the grace period', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1939,16 +2021,18 @@ describe('KbqDropdown', () => {
                 // the hover on the other trigger was just a graze, so the switch must not happen.
                 dispatchMouseEvent(document, 'mousemove', 400, 150);
                 fixture.detectChanges();
-                tick(500);
+                await vi.advanceTimersByTimeAsync(500);
                 fixture.detectChanges();
 
                 expect(instance.levelOneTrigger().opened).toBe(true);
                 expect(instance.lazyTrigger().opened).toBe(false);
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-            }));
+            });
 
-            it('should switch to another nested trigger immediately when it lies outside the safe area', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should switch to another nested trigger immediately when it lies outside the safe area', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1963,16 +2047,18 @@ describe('KbqDropdown', () => {
                 // change, not a graze — so the switch must not wait for the grace period.
                 dispatchMouseEvent(document, 'mousemove', 150, 400);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 expect(instance.levelOneTrigger().opened).toBe(false);
                 expect(instance.lazyTrigger().opened).toBe(true);
                 expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-            }));
+            });
 
-            it('should not switch to a disabled nested trigger hovered outside the safe area', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should not switch to a disabled nested trigger hovered outside the safe area', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -1991,15 +2077,17 @@ describe('KbqDropdown', () => {
 
                 dispatchMouseEvent(document, 'mousemove', 150, 400);
                 fixture.detectChanges();
-                tick(500);
+                await vi.advanceTimersByTimeAsync(500);
                 fixture.detectChanges();
 
                 expect(instance.levelOneTrigger().opened).toBe(false);
                 expect(instance.lazyTrigger().opened).toBe(false);
-            }));
+            });
 
-            it('should not switch to a disabled nested trigger grazed inside the safe area', fakeAsync(() => {
-                const levelOneTrigger = openLevelOneWithSafeArea();
+            it('should not switch to a disabled nested trigger grazed inside the safe area', async () => {
+                vi.useFakeTimers();
+
+                const levelOneTrigger = await openLevelOneWithSafeArea();
 
                 instance.showLazy = true;
                 fixture.detectChanges();
@@ -2015,15 +2103,17 @@ describe('KbqDropdown', () => {
                 // Invoke the handler directly since the fake events are flaky on disabled elements.
                 lazyTriggerItem.componentInstance.handleMouseEnter();
                 fixture.detectChanges();
-                tick(NESTED_HOVER_SWITCH_DELAY);
+                await vi.advanceTimersByTimeAsync(NESTED_HOVER_SWITCH_DELAY);
                 fixture.detectChanges();
 
                 expect(instance.levelOneTrigger().opened).toBe(true);
                 expect(instance.lazyTrigger().opened).toBe(false);
-            }));
+            });
         });
 
-        it('should open and close a nested dropdown with arrow keys in ltr', fakeAsync(() => {
+        it('should open and close a nested dropdown with arrow keys in ltr', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
@@ -2041,12 +2131,14 @@ describe('KbqDropdown', () => {
 
             dispatchKeyboardEvent(panels[1], 'keydown', LEFT_ARROW);
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-        }));
+        });
 
-        it('should open and close a nested dropdown with the arrow keys in rtl', fakeAsync(() => {
+        it('should open and close a nested dropdown with the arrow keys in rtl', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent('rtl');
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
@@ -2063,10 +2155,10 @@ describe('KbqDropdown', () => {
 
             dispatchKeyboardEvent(panels[1], 'keydown', RIGHT_ARROW);
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
-        }));
+        });
 
         it('should not do anything with the arrow keys for a top-level dropdown', () => {
             compileTestComponent();
@@ -2086,7 +2178,9 @@ describe('KbqDropdown', () => {
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
         });
 
-        it('should close all of the dropdowns when the backdrop is clicked', fakeAsync(() => {
+        it('should close all of the dropdowns when the backdrop is clicked', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
@@ -2107,12 +2201,14 @@ describe('KbqDropdown', () => {
 
             (overlay.querySelector('.cdk-overlay-backdrop')! as HTMLElement).click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(0);
-        }));
+        });
 
-        it('should shift focus between the nested dropdowns', fakeAsync(() => {
+        it('should shift focus between the nested dropdowns', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTrigger().open();
             fixture.detectChanges();
@@ -2131,18 +2227,20 @@ describe('KbqDropdown', () => {
 
             instance.levelTwoTrigger().close();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR)[1].contains(document.activeElement)).toBe(true);
 
             instance.levelOneTrigger().close();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlay.querySelector(PANEL_SELECTOR)!.contains(document.activeElement)).toBe(true);
-        }));
+        });
 
-        it('should close all of the dropdowns when an item is clicked', fakeAsync(() => {
+        it('should close all of the dropdowns when an item is clicked', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
@@ -2159,12 +2257,14 @@ describe('KbqDropdown', () => {
 
             (dropdowns[2].querySelector('[kbq-dropdown-item]')! as HTMLElement).click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(0);
-        }));
+        });
 
-        it('should close all of the dropdowns when the user tabs away', fakeAsync(() => {
+        it('should close all of the dropdowns when the user tabs away', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
@@ -2181,12 +2281,14 @@ describe('KbqDropdown', () => {
 
             dispatchKeyboardEvent(dropdowns[dropdowns.length - 1], 'keydown', TAB);
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(0);
-        }));
+        });
 
-        it('should close all of the dropdowns when the root is closed programmatically', fakeAsync(() => {
+        it('should close all of the dropdowns when the root is closed programmatically', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTrigger().open();
             fixture.detectChanges();
@@ -2203,16 +2305,18 @@ describe('KbqDropdown', () => {
 
             instance.rootTrigger().close();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(0);
-        }));
+        });
 
-        it('should toggle a nested dropdown when its trigger is added after init', fakeAsync(() => {
+        it('should toggle a nested dropdown when its trigger is added after init', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
             instance.rootTriggerEl().nativeElement.click();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
 
             instance.showLazy = true;
@@ -2222,13 +2326,13 @@ describe('KbqDropdown', () => {
 
             dispatchMouseEvent(lazyTrigger, 'mouseenter');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             fixture.detectChanges();
 
             expect(lazyTrigger.classList).toContain('kbq-dropdown-item_highlighted');
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-        }));
+        });
 
         it('should prevent the default mousedown action if the dropdown item opens a nested dropdown', () => {
             compileTestComponent();
@@ -2244,7 +2348,9 @@ describe('KbqDropdown', () => {
             expect(event.preventDefault).toHaveBeenCalled();
         });
 
-        it('should handle the items being rendered in a repeater', fakeAsync(() => {
+        it('should handle the items being rendered in a repeater', async () => {
+            vi.useFakeTimers();
+
             const repeaterFixture = createComponent(NestedDropdownRepeater);
 
             overlay = overlayContainerElement;
@@ -2253,16 +2359,18 @@ describe('KbqDropdown', () => {
 
             repeaterFixture.componentInstance.rootTriggerEl().nativeElement.click();
             repeaterFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
 
             dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
             repeaterFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-        }));
+        });
 
-        it('should be able to trigger the same nested dropdown from different triggers', fakeAsync(() => {
+        it('should be able to trigger the same nested dropdown from different triggers', async () => {
+            vi.useFakeTimers();
+
             const repeaterFixture = createComponent(NestedDropdownRepeater);
 
             overlay = overlayContainerElement;
@@ -2270,24 +2378,26 @@ describe('KbqDropdown', () => {
             repeaterFixture.detectChanges();
             repeaterFixture.componentInstance.rootTriggerEl().nativeElement.click();
             repeaterFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
 
             const triggers = overlay.querySelectorAll('.level-one-trigger');
 
             dispatchMouseEvent(triggers[0], 'mouseenter');
             repeaterFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
 
             dispatchMouseEvent(triggers[1], 'mouseenter');
             repeaterFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-        }));
+        });
 
-        it('should close the initial dropdown if the user moves away while animating', fakeAsync(() => {
+        it('should close the initial dropdown if the user moves away while animating', async () => {
+            vi.useFakeTimers();
+
             const repeaterFixture = createComponent(NestedDropdownRepeater);
 
             overlay = overlayContainerElement;
@@ -2295,22 +2405,24 @@ describe('KbqDropdown', () => {
             repeaterFixture.detectChanges();
             repeaterFixture.componentInstance.rootTriggerEl().nativeElement.click();
             repeaterFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
 
             const triggers = overlay.querySelectorAll('.level-one-trigger');
 
             dispatchMouseEvent(triggers[0], 'mouseenter');
             repeaterFixture.detectChanges();
-            tick(100);
+            await vi.advanceTimersByTimeAsync(100);
             dispatchMouseEvent(triggers[1], 'mouseenter');
             repeaterFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-        }));
+        });
 
-        it('should be able to open a nested dropdown through an item that is not a direct descendant of the panel', fakeAsync(() => {
+        it('should be able to open a nested dropdown through an item that is not a direct descendant of the panel', async () => {
+            vi.useFakeTimers();
+
             const nestedFixture = createComponent(NestedDropdownDeclaredInsideParentDropdown);
 
             overlay = overlayContainerElement;
@@ -2318,17 +2430,19 @@ describe('KbqDropdown', () => {
             nestedFixture.detectChanges();
             nestedFixture.componentInstance.rootTriggerEl().nativeElement.click();
             nestedFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
 
             dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
             nestedFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-        }));
+        });
 
-        it('should not close when hovering over a dropdown item inside a nested dropdown panel that is declared inside the root dropdown', fakeAsync(() => {
+        it('should not close when hovering over a dropdown item inside a nested dropdown panel that is declared inside the root dropdown', async () => {
+            vi.useFakeTimers();
+
             const nestedFixture = createComponent(NestedDropdownDeclaredInsideParentDropdown);
 
             overlay = overlayContainerElement;
@@ -2336,23 +2450,25 @@ describe('KbqDropdown', () => {
             nestedFixture.detectChanges();
             nestedFixture.componentInstance.rootTriggerEl().nativeElement.click();
             nestedFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(1);
 
             dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
             nestedFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
 
             dispatchMouseEvent(overlay.querySelector('.level-two-item')!, 'mouseenter');
             nestedFixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
-        }));
+        });
 
-        it('should not re-focus a child dropdown trigger when hovering another trigger', fakeAsync(() => {
+        it('should not re-focus a child dropdown trigger when hovering another trigger', async () => {
+            vi.useFakeTimers();
+
             compileTestComponent();
 
             const rootTriggerEl = instance.rootTriggerEl();
@@ -2366,15 +2482,15 @@ describe('KbqDropdown', () => {
 
             dispatchMouseEvent(levelOneTrigger, 'mouseenter');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
 
             dispatchMouseEvent(items[items.indexOf(levelOneTrigger) + 1], 'mouseenter');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(document.activeElement).not.toBe(levelOneTrigger);
-        }));
+        });
     });
 
     describe('with KbqTitle directive', () => {
@@ -2391,29 +2507,33 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
         });
 
-        it('should NOT display tooltip if text is NOT overflown', fakeAsync(() => {
+        it('should NOT display tooltip if text is NOT overflown', async () => {
+            vi.useFakeTimers();
+
             const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
 
             dispatchMouseEvent(dropdownItems[1], 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const tooltipInstance = overlayContainerElement.querySelector('.kbq-tooltip');
 
             expect(tooltipInstance).toBeNull();
-        }));
+        });
 
-        it('should NOT display tooltip if text is complex and is NOT overflown', fakeAsync(() => {
+        it('should NOT display tooltip if text is complex and is NOT overflown', async () => {
+            vi.useFakeTimers();
+
             const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
 
             dispatchMouseEvent(dropdownItems[3], 'mouseenter');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const tooltipInstance = overlayContainerElement.querySelector('.kbq-tooltip');
 
             expect(tooltipInstance).toBeNull();
-        }));
+        });
     });
 
     describe('with a tooltip on the trigger element', () => {
@@ -2424,12 +2544,12 @@ describe('KbqDropdown', () => {
         const tooltipEnterDelay = 410;
 
         /** Opens the tooltip by hover and settles its enter delay and the deferred reposition. */
-        const showTooltip = () => {
+        const showTooltip = async () => {
             dispatchMouseEvent(trigger, 'mouseenter');
             fixture.detectChanges();
-            tick(tooltipEnterDelay);
+            await vi.advanceTimersByTimeAsync(tooltipEnterDelay);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
         };
 
@@ -2440,53 +2560,59 @@ describe('KbqDropdown', () => {
             trigger = fixture.componentInstance.triggerEl().nativeElement;
         });
 
-        it('should hide the tooltip when the dropdown opens', fakeAsync(() => {
-            showTooltip();
+        it('should hide the tooltip when the dropdown opens', async () => {
+            vi.useFakeTimers();
+
+            await showTooltip();
 
             expect(overlayContainerElement.textContent).toContain('TOOLTIP');
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
-        }));
+        });
 
-        it('should not show the tooltip when the closing dropdown restores focus to the trigger', fakeAsync(() => {
-            showTooltip();
+        it('should not show the tooltip when the closing dropdown restores focus to the trigger', async () => {
+            vi.useFakeTimers();
+
+            await showTooltip();
 
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Closing by `keydown` is what makes `KbqDropdownTrigger.destroy` restore focus to the trigger.
             dispatchKeyboardEvent(overlayContainerElement.querySelector(PANEL_SELECTOR)!, 'keydown', ESCAPE);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeFalsy();
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
-        }));
+        });
 
-        it('should show the tooltip again after the pointer leaves and returns to the trigger', fakeAsync(() => {
+        it('should show the tooltip again after the pointer leaves and returns to the trigger', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchKeyboardEvent(overlayContainerElement.querySelector(PANEL_SELECTOR)!, 'keydown', ESCAPE);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             dispatchMouseEvent(trigger, 'mouseleave');
             fixture.detectChanges();
 
-            showTooltip();
+            await showTooltip();
 
             expect(overlayContainerElement.textContent).toContain('TOOLTIP');
-        }));
+        });
     });
 
     describe('origin', () => {
@@ -2635,7 +2761,9 @@ describe('KbqDropdown', () => {
             expect(overlayPane.style.minWidth).toBe('300px');
         });
 
-        it('should re-measure the trigger on every open', fakeAsync(() => {
+        it('should re-measure the trigger on every open', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleDropdown);
 
             fixture.detectChanges();
@@ -2647,7 +2775,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             trigger().close();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             spy.mockReturnValue({ width: 500 } as DOMRect);
 
@@ -2657,7 +2785,7 @@ describe('KbqDropdown', () => {
             const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
             expect(overlayPane.style.minWidth).toBe('500px');
-        }));
+        });
 
         it('should match the panel width to widthOrigin when it is set', () => {
             const fixture = createComponent(SimpleDropdown);
@@ -2849,12 +2977,12 @@ describe('KbqDropdown', () => {
             overlayContainerElement.querySelector<HTMLElement>('.kbq-dropdown-item_active')?.textContent?.trim();
 
         /** Opens the panel and settles the deferred initial focus. */
-        const open = () => {
+        const open = async () => {
             fixture = createComponent(SearchNavigationDropdown);
             fixture.detectChanges();
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
         };
 
@@ -2865,15 +2993,19 @@ describe('KbqDropdown', () => {
             scrollIntoView = vi.spyOn(Element.prototype, 'scrollIntoView');
         });
 
-        it('should focus the search field instead of the first item when opened', fakeAsync(() => {
-            open();
+        it('should focus the search field instead of the first item when opened', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             expect(document.activeElement).toBe(getInput());
             expect(getActiveItem()).toBeUndefined();
-        }));
+        });
 
-        it('should move the active item with the arrow keys while the search field keeps focus', fakeAsync(() => {
-            open();
+        it('should move the active item with the arrow keys while the search field keeps focus', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
             fixture.detectChanges();
@@ -2892,34 +3024,40 @@ describe('KbqDropdown', () => {
 
             expect(getActiveItem()).toBe('One');
             expect(document.activeElement).toBe(getInput());
-        }));
+        });
 
-        it('should not steal focus from the search field when an item is hovered', fakeAsync(() => {
-            open();
+        it('should not steal focus from the search field when an item is hovered', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchMouseEvent(getItems()[1], 'mouseenter');
             fixture.detectChanges();
 
             expect(getActiveItem()).toBe('Two');
             expect(document.activeElement).toBe(getInput());
-        }));
+        });
 
-        it('should activate the item with ENTER and close the dropdown', fakeAsync(() => {
-            open();
+        it('should activate the item with ENTER and close the dropdown', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
             fixture.detectChanges();
 
             dispatchKeyboardEvent(getInput(), 'keydown', ENTER);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.selected).toBe('One');
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeFalsy();
-        }));
+        });
 
-        it('should move the highlight to the first result when filtering drops the active item', fakeAsync(() => {
-            open();
+        it('should move the highlight to the first result when filtering drops the active item', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
             fixture.detectChanges();
@@ -2928,15 +3066,17 @@ describe('KbqDropdown', () => {
 
             fixture.componentInstance.filter('t');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getItems().map((item) => item.textContent!.trim())).toEqual(['Two', 'Three']);
             expect(getActiveItem()).toBe('Two');
-        }));
+        });
 
-        it('should keep the highlight when filtering leaves the active item in place', fakeAsync(() => {
-            open();
+        it('should keep the highlight when filtering leaves the active item in place', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
@@ -2946,14 +3086,16 @@ describe('KbqDropdown', () => {
 
             fixture.componentInstance.filter('t');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getActiveItem()).toBe('Two');
-        }));
+        });
 
-        it('should reveal the item the arrows move onto, and only then', fakeAsync(() => {
-            open();
+        it('should reveal the item the arrows move onto, and only then', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
             fixture.detectChanges();
@@ -2968,10 +3110,12 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             expect(scrollIntoView).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should keep the horizontal arrows in the field while the caret can still move', fakeAsync(() => {
-            open();
+        it('should keep the horizontal arrows in the field while the caret can still move', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             const panelSpy = vi.fn();
             const input = getInput();
@@ -2993,55 +3137,63 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             expect(panelSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should clear the query on the first ESCAPE and close on the second', fakeAsync(() => {
-            open();
+        it('should clear the query on the first ESCAPE and close on the second', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             fixture.componentInstance.filter('t');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchKeyboardEvent(getInput(), 'keydown', ESCAPE);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.control.value).toBeNull();
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
 
             dispatchKeyboardEvent(getInput(), 'keydown', ESCAPE);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeFalsy();
-        }));
+        });
 
-        it('should not close the dropdown when the search field is clicked', fakeAsync(() => {
-            open();
+        it('should not close the dropdown when the search field is clicked', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchMouseEvent(getInput(), 'click');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
-        }));
+        });
 
-        it('should render the search field borderless and in overlay mode', fakeAsync(() => {
-            open();
+        it('should render the search field borderless and in overlay mode', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             const formField = overlayContainerElement.querySelector('.kbq-form-field')!;
 
             expect(formField.classList).toContain('kbq-form-field_no-borders');
             expect(formField.classList).toContain('kbq-form-field_in-overlay');
-        }));
+        });
 
-        it('should keep the caret in a search field rendered by kbqDropdownContent', fakeAsync(() => {
+        it('should keep the caret in a search field rendered by kbqDropdownContent', async () => {
+            vi.useFakeTimers();
+
             const lazy = createComponent(LazySearchDropdown);
 
             lazy.detectChanges();
             lazy.componentInstance.trigger().open();
             lazy.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             lazy.detectChanges();
 
             const input = getInput();
@@ -3051,9 +3203,11 @@ describe('KbqDropdown', () => {
 
             expect(document.activeElement).toBe(input);
             expect(getActiveItem()).toBe('One');
-        }));
+        });
 
-        it('should keep the caret in a search field revealed after content init', fakeAsync(() => {
+        it('should keep the caret in a search field revealed after content init', async () => {
+            vi.useFakeTimers();
+
             const conditional = createComponent(ConditionalSearchDropdown);
 
             conditional.detectChanges();
@@ -3061,7 +3215,7 @@ describe('KbqDropdown', () => {
             conditional.detectChanges();
             conditional.componentInstance.trigger().open();
             conditional.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             conditional.detectChanges();
 
             const input = getInput();
@@ -3071,15 +3225,17 @@ describe('KbqDropdown', () => {
 
             expect(document.activeElement).toBe(input);
             expect(getActiveItem()).toBe('One');
-        }));
+        });
 
-        it('should not make a disabled item active on hover', fakeAsync(() => {
+        it('should not make a disabled item active on hover', async () => {
+            vi.useFakeTimers();
+
             const withDisabled = createComponent(SearchWithDisabledItemDropdown);
 
             withDisabled.detectChanges();
             withDisabled.componentInstance.trigger().open();
             withDisabled.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const items = getItems();
 
@@ -3093,20 +3249,22 @@ describe('KbqDropdown', () => {
 
             dispatchKeyboardEvent(getInput(), 'keydown', ENTER);
             withDisabled.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(withDisabled.componentInstance.clicked).toBe(false);
             // The enabled item was the one activated, and its click closes the panel.
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeFalsy();
-        }));
+        });
 
-        it('should hand the caret over when the search field is revealed while the panel is open', fakeAsync(() => {
+        it('should hand the caret over when the search field is revealed while the panel is open', async () => {
+            vi.useFakeTimers();
+
             const conditional = createComponent(ConditionalSearchDropdown);
 
             conditional.detectChanges();
             conditional.componentInstance.trigger().open();
             conditional.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const firstItem = getItems()[0];
 
@@ -3114,7 +3272,7 @@ describe('KbqDropdown', () => {
 
             conditional.componentInstance.showSearch = true;
             conditional.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             conditional.detectChanges();
 
             expect(document.activeElement).toBe(getInput());
@@ -3126,10 +3284,12 @@ describe('KbqDropdown', () => {
 
             expect(getActiveItem()).toBe('One');
             expect(document.activeElement).toBe(getInput());
-        }));
+        });
 
-        it('should keep the activating ENTER from reaching overlays opened earlier', fakeAsync(() => {
-            open();
+        it('should keep the activating ENTER from reaching overlays opened earlier', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
             fixture.detectChanges();
@@ -3140,10 +3300,10 @@ describe('KbqDropdown', () => {
 
             dispatchKeyboardEvent(getInput(), 'keydown', ENTER);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(containerSpy).not.toHaveBeenCalled();
-        }));
+        });
 
         it('should throw when the search input is not bound to a form control', () => {
             const fixture = createComponent(SearchWithoutControlDropdown);
@@ -3157,20 +3317,22 @@ describe('KbqDropdown', () => {
             expect(() => fixture.detectChanges()).toThrow(/containing an input\[kbqInput\]/);
         });
 
-        it('should ignore a search field that belongs to a nested panel', fakeAsync(() => {
+        it('should ignore a search field that belongs to a nested panel', async () => {
+            vi.useFakeTimers();
+
             const nested = createComponent(NestedSearchDropdown);
 
             nested.detectChanges();
             nested.componentInstance.trigger().open();
             nested.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             nested.detectChanges();
 
             // The nested panel's content is projected into the root's view, so its search field joins the
             // root's content query as soon as it is rendered.
             dispatchMouseEvent(getItems()[0], 'mouseenter');
             nested.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             nested.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
@@ -3182,13 +3344,15 @@ describe('KbqDropdown', () => {
 
             dispatchMouseEvent(rootItem, 'mouseenter');
             nested.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(document.activeElement).toBe(rootItem);
-        }));
+        });
 
-        it('should drop a highlighted item that filtering destroyed', fakeAsync(() => {
-            open();
+        it('should drop a highlighted item that filtering destroyed', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             dispatchKeyboardEvent(getInput(), 'keydown', DOWN_ARROW);
             fixture.detectChanges();
@@ -3198,10 +3362,10 @@ describe('KbqDropdown', () => {
             // A query with no matches, then a cleared query: every item is a new instance.
             fixture.componentInstance.filter('zzz');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.componentInstance.filter('');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getActiveItem()).toBeUndefined();
@@ -3209,7 +3373,7 @@ describe('KbqDropdown', () => {
             // ENTER must not replay a click on the destroyed instance, and the arrows must start over.
             dispatchKeyboardEvent(getInput(), 'keydown', ENTER);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.selected).toBeNull();
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
@@ -3218,15 +3382,17 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             expect(getActiveItem()).toBe('One');
-        }));
+        });
 
-        it('should hand the caret back to the field when a nested panel closes', fakeAsync(() => {
+        it('should hand the caret back to the field when a nested panel closes', async () => {
+            vi.useFakeTimers();
+
             const withNested = createComponent(SearchWithNestedDropdown);
 
             withNested.detectChanges();
             withNested.componentInstance.trigger().open();
             withNested.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             withNested.detectChanges();
 
             const input = getInput();
@@ -3236,7 +3402,7 @@ describe('KbqDropdown', () => {
 
             dispatchKeyboardEvent(input, 'keydown', ENTER);
             withNested.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             withNested.detectChanges();
 
             const panels = overlayContainerElement.querySelectorAll(PANEL_SELECTOR);
@@ -3245,13 +3411,15 @@ describe('KbqDropdown', () => {
 
             dispatchKeyboardEvent(panels[1], 'keydown', ESCAPE);
             withNested.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             withNested.detectChanges();
 
             expect(document.activeElement).toBe(input);
-        }));
+        });
 
-        it('should inherit the app-wide form field defaults it does not override', fakeAsync(() => {
+        it('should inherit the app-wide form field defaults it does not override', async () => {
+            vi.useFakeTimers();
+
             const inherited = createComponent(SearchNavigationDropdown, [
                 kbqFormFieldDefaultOptionsProvider({ labelClass: 'app-label' })
             ]);
@@ -3259,46 +3427,52 @@ describe('KbqDropdown', () => {
             inherited.detectChanges();
             inherited.componentInstance.trigger().open();
             inherited.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const formField = inherited.debugElement.query(By.directive(KbqDropdownSearch));
 
             expect(formField.injector.get(KbqFormField).labelClass()).toBe('app-label');
             expect(formField.injector.get(KbqFormField).noBorders()).toBe(true);
-        }));
+        });
 
-        it('should put a projected form field in overlay mode without the directive', fakeAsync(() => {
+        it('should put a projected form field in overlay mode without the directive', async () => {
+            vi.useFakeTimers();
+
             const plain = createComponent(SearchDropdown);
 
             plain.detectChanges();
             plain.componentInstance.trigger().open();
             plain.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const formField = overlayContainerElement.querySelector('.kbq-form-field')!;
 
             expect(formField.classList).toContain('kbq-form-field_in-overlay');
-        }));
+        });
 
         // The panel owns the two-stage ESCAPE, so it cannot depend on a cleaner being projected.
-        it('should clear the query on ESCAPE without a projected cleaner', fakeAsync(() => {
+        it('should clear the query on ESCAPE without a projected cleaner', async () => {
+            vi.useFakeTimers();
+
             const noCleaner = createComponent(SearchWithoutCleanerDropdown);
 
             noCleaner.detectChanges();
             noCleaner.componentInstance.trigger().open();
             noCleaner.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchKeyboardEvent(getInput(), 'keydown', ESCAPE);
             noCleaner.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(noCleaner.componentInstance.control.value).toBeNull();
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeTruthy();
-        }));
+        });
 
-        it('should report the query as a string', fakeAsync(() => {
-            open();
+        it('should report the query as a string', async () => {
+            vi.useFakeTimers();
+
+            await open();
 
             const search = fixture.debugElement.query(By.directive(KbqDropdownSearch)).injector.get(KbqDropdownSearch);
 
@@ -3313,7 +3487,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             expect(search.value()).toBe('');
-        }));
+        });
     });
 
     describe('keyboard activation', () => {
@@ -3371,16 +3545,18 @@ describe('KbqDropdown', () => {
             expect(fixture.componentInstance.closeCallback).not.toHaveBeenCalled();
         });
 
-        it('should open the submenu instead of activating the row for a nested trigger item', fakeAsync(() => {
+        it('should open the submenu instead of activating the row for a nested trigger item', async () => {
+            vi.useFakeTimers();
+
             const fixture = openActionDropdown();
 
             dispatchKeyboardEvent(getItems()[3], 'keydown', ENTER);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(overlayContainerElement.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
             expect(fixture.componentInstance.primaryClick).not.toHaveBeenCalled();
-        }));
+        });
 
         it('should not synthesise a second click on a natively actionable item host', () => {
             const fixture = createComponent(SimpleDropdown);
@@ -3476,7 +3652,9 @@ describe('KbqDropdown', () => {
     });
 
     describe('focus restoration', () => {
-        it('should not pull focus back to the trigger when it has already moved outside the overlay', fakeAsync(() => {
+        it('should not pull focus back to the trigger when it has already moved outside the overlay', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(FocusRestoreDropdown);
 
             fixture.detectChanges();
@@ -3494,13 +3672,15 @@ describe('KbqDropdown', () => {
 
             fixture.componentInstance.trigger().close();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlayContainerElement.querySelector(PANEL_SELECTOR)).toBeNull();
             expect(document.activeElement).toBe(outside);
-        }));
+        });
 
-        it('should restore focus to the trigger while focus is still inside the overlay', fakeAsync(() => {
+        it('should restore focus to the trigger while focus is still inside the overlay', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(FocusRestoreDropdown);
 
             fixture.detectChanges();
@@ -3519,12 +3699,14 @@ describe('KbqDropdown', () => {
 
             fixture.componentInstance.trigger().close();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(document.activeElement).toBe(triggerEl);
-        }));
+        });
 
-        it('should record a program origin when the dropdown was opened programmatically', fakeAsync(() => {
+        it('should record a program origin when the dropdown was opened programmatically', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(FocusRestoreDropdown);
 
             fixture.detectChanges();
@@ -3536,14 +3718,16 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             fixture.componentInstance.trigger().close();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(focusViaSpy).toHaveBeenCalledWith(triggerEl, 'program', undefined);
-        }));
+        });
     });
 
     describe('shared panel subscriptions', () => {
-        it('should not leave a subscriber behind when a trigger that has been opened is destroyed', fakeAsync(() => {
+        it('should not leave a subscriber behind when a trigger that has been opened is destroyed', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SharedPanelDropdown);
 
             fixture.detectChanges();
@@ -3555,7 +3739,7 @@ describe('KbqDropdown', () => {
                 fixture.detectChanges();
                 trigger.close();
                 fixture.detectChanges();
-                tick(500);
+                await vi.advanceTimersByTimeAsync(500);
             }
 
             fixture.componentInstance.triggers = [];
@@ -3563,16 +3747,20 @@ describe('KbqDropdown', () => {
 
             // `output()` exposes no subscriber count, so the leak is asserted through its consequence: a
             // stale subscriber would run `destroy()` against the overlay of a trigger that is already gone.
-            expect(() => {
-                dropdown.closed.emit('click');
-                fixture.detectChanges();
-                tick(500);
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    dropdown.closed.emit('click');
+                    fixture.detectChanges();
+                    await vi.advanceTimersByTimeAsync(500);
+                })()
+            ).resolves.not.toThrow();
 
             expect(overlayContainerElement.textContent).toBe('');
-        }));
+        });
 
-        it('should ignore a closed emission from a panel it is no longer assigned to', fakeAsync(() => {
+        it('should ignore a closed emission from a panel it is no longer assigned to', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(DynamicPanelDropdown);
 
             fixture.detectChanges();
@@ -3584,7 +3772,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
             trigger.close();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             instance.panel = instance.second();
             fixture.detectChanges();
@@ -3596,10 +3784,10 @@ describe('KbqDropdown', () => {
 
             instance.first().closed.emit();
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
 
             expect(overlayContainerElement.textContent).toContain('Two');
-        }));
+        });
     });
 
     describe('accessibility', () => {

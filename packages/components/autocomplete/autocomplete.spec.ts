@@ -17,16 +17,7 @@ import {
     viewChild,
     viewChildren
 } from '@angular/core';
-import {
-    ComponentFixture,
-    TestBed,
-    fakeAsync,
-    flush,
-    flushMicrotasks,
-    inject,
-    tick,
-    waitForAsync
-} from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
@@ -97,6 +88,8 @@ describe('KbqAutocomplete', () => {
         return TestBed.createComponent<T>(component);
     }
 
+    afterEach(() => vi.useRealTimers());
+
     afterEach(inject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
         // Since we're resetting the testing module in some of the tests,
         // we can potentially have multiple overlay containers.
@@ -137,7 +130,9 @@ describe('KbqAutocomplete', () => {
             expect(overlayContainerElement.textContent).toContain('California');
         });
 
-        it('should not open the panel on focus if the input is readonly', fakeAsync(() => {
+        it('should not open the panel on focus if the input is readonly', async () => {
+            vi.useFakeTimers();
+
             const trigger = fixture.componentInstance.trigger();
 
             input.readOnly = true;
@@ -146,14 +141,16 @@ describe('KbqAutocomplete', () => {
             expect(trigger.panelOpen).toBeFalsy();
 
             dispatchFakeEvent(input, 'focusin');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.detectChanges();
 
             expect(trigger.panelOpen).toBeFalsy();
-        }));
+        });
 
-        it('should not open using the arrow keys when the input is readonly', fakeAsync(() => {
+        it('should not open using the arrow keys when the input is readonly', async () => {
+            vi.useFakeTimers();
+
             const trigger = fixture.componentInstance.trigger();
 
             input.readOnly = true;
@@ -162,11 +159,11 @@ describe('KbqAutocomplete', () => {
             expect(trigger.panelOpen).toBeFalsy();
 
             dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.detectChanges();
             expect(trigger.panelOpen).toBeFalsy();
-        }));
+        });
 
         it('should open the panel programmatically', () => {
             expect(fixture.componentInstance.trigger().panelOpen).toBeFalsy();
@@ -181,20 +178,22 @@ describe('KbqAutocomplete', () => {
             expect(overlayContainerElement.textContent).toContain('California');
         });
 
-        it('should show the panel when the first open is after the initial zone stabilization', waitForAsync(() => {
+        it('should show the panel when the first open is after the initial zone stabilization', async () => {
             // Note that we're running outside the Angular zone, in order to be able
             // to test properly without the subscription from `_subscribeToClosingActions`
             // giving us a false positive.
-            fixture.ngZone!.runOutsideAngular(() => {
+            await fixture.ngZone!.runOutsideAngular(() => {
                 fixture.componentInstance.trigger().open();
 
-                Promise.resolve().then(() => {
+                return Promise.resolve().then(() => {
                     expect(fixture.componentInstance.panel().showPanel()).toBeTruthy();
                 });
             });
-        }));
+        });
 
-        it('should close the panel when the user clicks away', fakeAsync(() => {
+        it('should close the panel when the user clicks away', async () => {
+            vi.useFakeTimers();
+
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
             fixture.detectChanges();
@@ -202,35 +201,41 @@ describe('KbqAutocomplete', () => {
 
             expect(fixture.componentInstance.trigger().panelOpen).toBeFalsy();
             expect(overlayContainerElement.textContent).toEqual('');
-        }));
+        });
 
-        it('should close the panel when the user taps away on a touch device', fakeAsync(() => {
+        it('should close the panel when the user taps away on a touch device', async () => {
+            vi.useFakeTimers();
+
             dispatchFakeEvent(input, 'focus');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             dispatchFakeEvent(document, 'touchend');
 
             expect(fixture.componentInstance.trigger().panelOpen).toBeFalsy();
             expect(overlayContainerElement.textContent).toEqual('');
-        }));
+        });
 
-        it('should close the panel when an option is clicked', fakeAsync(() => {
+        it('should close the panel when an option is clicked', async () => {
+            vi.useFakeTimers();
+
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
 
             option.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.trigger().panelOpen).toBeFalsy();
             expect(overlayContainerElement.textContent).toEqual('');
-        }));
+        });
 
-        it('should close the panel when a newly created option is clicked', fakeAsync(() => {
+        it('should close the panel when a newly created option is clicked', async () => {
+            vi.useFakeTimers();
+
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
             fixture.detectChanges();
@@ -238,7 +243,7 @@ describe('KbqAutocomplete', () => {
             // Filter down the option list to a subset of original options ('Alabama', 'California')
             typeInElement('al', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             let options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
 
@@ -249,7 +254,7 @@ describe('KbqAutocomplete', () => {
             dispatchFakeEvent(input, 'focusin');
             typeInElement('al', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             // Picking an option closes the panel.
             fixture.componentInstance.trigger().open();
@@ -261,7 +266,7 @@ describe('KbqAutocomplete', () => {
 
             expect(fixture.componentInstance.trigger().panelOpen).toBeFalsy();
             expect(overlayContainerElement.textContent).toEqual('');
-        }));
+        });
 
         it('should close the panel programmatically', () => {
             fixture.componentInstance.trigger().open();
@@ -284,7 +289,9 @@ describe('KbqAutocomplete', () => {
             expect(() => trigger.closePanel()).not.toThrow();
         });
 
-        it('should hide the panel when the options list is empty', fakeAsync(() => {
+        it('should hide the panel when the options list is empty', async () => {
+            vi.useFakeTimers();
+
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
 
@@ -295,11 +302,11 @@ describe('KbqAutocomplete', () => {
             // Filter down the option list such that no options match the value
             typeInElement('af', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(panel.classList).toContain('kbq-autocomplete_hidden');
-        }));
+        });
 
         it('should not open the panel when the `input` event is invoked on a non-focused input', () => {
             expect(fixture.componentInstance.trigger().panelOpen).toBeFalsy();
@@ -311,9 +318,11 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.trigger().panelOpen).toBeFalsy();
         });
 
-        it('should toggle the visibility when typing and closing the panel', fakeAsync(() => {
+        it('should toggle the visibility when typing and closing the panel', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.trigger().open();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')!.classList).toContain(
@@ -322,7 +331,7 @@ describe('KbqAutocomplete', () => {
 
             typeInElement('x', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')!.classList).toContain(
@@ -337,23 +346,25 @@ describe('KbqAutocomplete', () => {
 
             typeInElement('al', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')!.classList).toContain(
                 'kbq-autocomplete_visible'
             );
-        }));
+        });
 
-        it('should provide the open state of the panel', fakeAsync(() => {
+        it('should provide the open state of the panel', async () => {
+            vi.useFakeTimers();
+
             expect(fixture.componentInstance.panel().isOpen()).toBeFalsy();
 
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.panel().isOpen()).toBeTruthy();
-        }));
+        });
 
         it('should emit an event when the panel is opened', () => {
             fixture.componentInstance.trigger().open();
@@ -372,7 +383,9 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.openedSpy).not.toHaveBeenCalled();
         });
 
-        it('should emit the `opened` event if the options come in after the panel is shown', fakeAsync(() => {
+        it('should emit the `opened` event if the options come in after the panel is shown', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.filteredStates = fixture.componentInstance.states = [];
             fixture.detectChanges();
 
@@ -385,13 +398,15 @@ describe('KbqAutocomplete', () => {
                 { name: 'California', code: 'CA' }
             ];
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.openedSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should not emit the opened event multiple times while typing', fakeAsync(() => {
+        it('should not emit the opened event multiple times while typing', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
 
@@ -399,11 +414,11 @@ describe('KbqAutocomplete', () => {
 
             typeInElement('Alabam', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.openedSpy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
         it('should emit an event when the panel is closed', () => {
             fixture.componentInstance.trigger().open();
@@ -549,7 +564,9 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.stateCtrl.value).toBe('Alabama');
         });
 
-        it('should update control value when option is selected with option value', fakeAsync(() => {
+        it('should update control value when option is selected with option value', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
             fixture.detectChanges();
@@ -560,7 +577,7 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.stateCtrl.value).toEqual({ code: 'CA', name: 'California' });
-        }));
+        });
 
         it('should select an option on shift + click', () => {
             fixture.componentInstance.trigger().open();
@@ -575,7 +592,9 @@ describe('KbqAutocomplete', () => {
             expect(fixture.componentInstance.stateCtrl.value).toEqual({ code: 'CA', name: 'California' });
         });
 
-        it('should update the control back to a string if user types after an option is selected', fakeAsync(() => {
+        it('should update the control back to a string if user types after an option is selected', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.trigger().open();
             fixture.detectChanges();
             fixture.detectChanges();
@@ -587,10 +606,10 @@ describe('KbqAutocomplete', () => {
 
             typeInElement('Californi', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(fixture.componentInstance.stateCtrl.value).toEqual('Californi');
-        }));
+        });
 
         it('should fill the text field with display value when an option is selected', () => {
             fixture.componentInstance.trigger().open();
@@ -624,28 +643,32 @@ describe('KbqAutocomplete', () => {
             expect(input.value).toContain('test value');
         });
 
-        it('should fill the text field correctly if value is set to obj programmatically', fakeAsync(() => {
+        it('should fill the text field correctly if value is set to obj programmatically', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.stateCtrl.setValue({ code: 'AL', name: 'Alabama' });
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(input.value).toContain('Alabama');
-        }));
+        });
 
-        it('should clear the text field if value is reset programmatically', fakeAsync(() => {
+        it('should clear the text field if value is reset programmatically', async () => {
+            vi.useFakeTimers();
+
             typeInElement('Alabama', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             fixture.componentInstance.stateCtrl.reset();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(input.value).toEqual('');
-        }));
+        });
 
         it('should disable input in view when disabled programmatically', () => {
             const formFieldElement = fixture.debugElement.query(By.css('.kbq-form-field')).nativeElement;
@@ -815,25 +838,29 @@ describe('KbqAutocomplete', () => {
             expect(optionEls[1].classList).not.toContain('kbq-active');
         });
 
-        it('should fill the text field when an option is selected with ENTER', fakeAsync(() => {
+        it('should fill the text field when an option is selected with ENTER', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.trigger().handleKeydown(DOWN_ARROW_EVENT);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             fixture.componentInstance.trigger().handleKeydown(ENTER_EVENT);
             fixture.detectChanges();
 
             expect(input.value).toContain('Alabama');
-        }));
+        });
 
-        it('should prevent the default enter key action', fakeAsync(() => {
+        it('should prevent the default enter key action', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.trigger().handleKeydown(DOWN_ARROW_EVENT);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             fixture.componentInstance.trigger().handleKeydown(ENTER_EVENT);
 
             expect(ENTER_EVENT.defaultPrevented).toBe(true);
-        }));
+        });
 
         it('should not prevent the default enter action for a closed panel after a user action', () => {
             fixture.componentInstance.trigger().handleKeydown(UP_ARROW_EVENT);
@@ -861,20 +888,24 @@ describe('KbqAutocomplete', () => {
             expect(input.value).not.toContain('New York');
         });
 
-        it('should mark the control dirty when selecting an option from the keyboard', fakeAsync(() => {
+        it('should mark the control dirty when selecting an option from the keyboard', async () => {
+            vi.useFakeTimers();
+
             expect(fixture.componentInstance.stateCtrl.dirty).toBe(false);
 
             fixture.componentInstance.trigger().handleKeydown(DOWN_ARROW_EVENT);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.componentInstance.trigger().handleKeydown(ENTER_EVENT);
             fixture.detectChanges();
 
             expect(fixture.componentInstance.stateCtrl.dirty).toBe(true);
-        }));
+        });
 
-        it('should open the panel again when typing after making a selection', fakeAsync(() => {
+        it('should open the panel again when typing after making a selection', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.trigger().handleKeydown(DOWN_ARROW_EVENT);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.componentInstance.trigger().handleKeydown(ENTER_EVENT);
             fixture.detectChanges();
 
@@ -885,20 +916,22 @@ describe('KbqAutocomplete', () => {
             dispatchFakeEvent(input, 'focusin');
             typeInElement('Alabama', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(fixture.componentInstance.trigger().panelOpen).toBe(true);
 
             expect(overlayContainerElement.textContent).toContain('Alabama');
-        }));
+        });
 
-        it('should not open the panel if the `input` event was dispatched with changing the value', fakeAsync(() => {
+        it('should not open the panel if the `input` event was dispatched with changing the value', async () => {
+            vi.useFakeTimers();
+
             const trigger = fixture.componentInstance.trigger();
 
             dispatchFakeEvent(input, 'focusin');
             typeInElement('A', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(trigger.panelOpen).toBe(true);
 
@@ -911,10 +944,10 @@ describe('KbqAutocomplete', () => {
             // to simulate what happen in some cases on IE.
             dispatchFakeEvent(input, 'input');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(trigger.panelOpen).toBe(false);
-        }));
+        });
 
         it('should not move active option past the first when pressing UP from the top', () => {
             const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
@@ -943,11 +976,13 @@ describe('KbqAutocomplete', () => {
             expect(panel.getScrollTop()).toEqual(0);
         });
 
-        it('should close the panel when pressing escape', fakeAsync(() => {
+        it('should close the panel when pressing escape', async () => {
+            vi.useFakeTimers();
+
             const trigger = fixture.componentInstance.trigger();
 
             input.focus();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(document.activeElement).toBe(input);
@@ -956,30 +991,34 @@ describe('KbqAutocomplete', () => {
 
             dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(input);
 
             expect(trigger.panelOpen).toBe(false);
-        }));
+        });
 
-        it('should prevent the default action when pressing escape', fakeAsync(() => {
+        it('should prevent the default action when pressing escape', async () => {
+            vi.useFakeTimers();
+
             const escapeEvent = dispatchKeyboardEvent(input, 'keydown', ESCAPE);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(escapeEvent.defaultPrevented).toBe(true);
-        }));
+        });
 
-        it('should close the panel when pressing ALT + UP_ARROW', fakeAsync(() => {
+        it('should close the panel when pressing ALT + UP_ARROW', async () => {
+            vi.useFakeTimers();
+
             const trigger = fixture.componentInstance.trigger();
             const upArrowEvent = createKeyboardEvent('keydown', UP_ARROW);
 
             Object.defineProperty(upArrowEvent, 'altKey', { get: () => true });
 
             input.focus();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(document.activeElement).toBe(input);
@@ -988,77 +1027,83 @@ describe('KbqAutocomplete', () => {
 
             dispatchEvent(document.body, upArrowEvent);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(document.activeElement).toBe(input);
             expect(trigger.panelOpen).toBe(false);
-        }));
+        });
 
-        it('should close the panel when tabbing away from a trigger without results', fakeAsync(() => {
+        it('should close the panel when tabbing away from a trigger without results', async () => {
+            vi.useFakeTimers();
+
             fixture.componentInstance.states = [];
             fixture.componentInstance.filteredStates = [];
             fixture.detectChanges();
             input.focus();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).toBeTruthy();
 
             dispatchKeyboardEvent(input, 'keydown', TAB);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).toBeFalsy();
-        }));
+        });
 
-        it('should reset the active option when closing with the escape key', fakeAsync(() => {
+        it('should reset the active option when closing with the escape key', async () => {
+            vi.useFakeTimers();
+
             const trigger = fixture.componentInstance.trigger();
 
             trigger.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(trigger.panelOpen).toBe(true);
             expect(trigger.activeOption).toBeFalsy();
 
             // Press the down arrow a few times.
-            [1, 2, 3].forEach(() => {
+            for (let i = 0; i < 3; i++) {
                 trigger.handleKeydown(DOWN_ARROW_EVENT);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
-            });
+            }
 
             expect(trigger.activeOption).toBe(fixture.componentInstance.options()[2]);
 
             dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(trigger.activeOption).toBeFalsy();
-        }));
+        });
 
-        it('should reset the active option when closing by selecting with enter', fakeAsync(() => {
+        it('should reset the active option when closing by selecting with enter', async () => {
+            vi.useFakeTimers();
+
             const trigger = fixture.componentInstance.trigger();
 
             trigger.open();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(trigger.panelOpen).toBe(true);
             expect(trigger.activeOption).toBeFalsy();
 
             // Press the down arrow a few times.
-            [1, 2, 3].forEach(() => {
+            for (let i = 0; i < 3; i++) {
                 trigger.handleKeydown(DOWN_ARROW_EVENT);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
-            });
+            }
 
             expect(trigger.activeOption).toBe(fixture.componentInstance.options()[2]);
 
             trigger.handleKeydown(ENTER_EVENT);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(trigger.activeOption).toBeFalsy();
-        }));
+        });
 
         it('should select the option immediately when Shift + DOWN moves focus', () => {
             const componentInstance = fixture.componentInstance;
@@ -1144,7 +1189,9 @@ describe('KbqAutocomplete', () => {
             scroll.mockRestore();
         });
 
-        it('should align panel properly when filtering in "above" position', fakeAsync(() => {
+        it('should align panel properly when filtering in "above" position', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleAutocomplete);
 
             fixture.detectChanges();
@@ -1162,18 +1209,20 @@ describe('KbqAutocomplete', () => {
 
             typeInElement('f', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const inputTop = inputReference.getBoundingClientRect().top;
             const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
             const panelBottom = panel.getBoundingClientRect().bottom;
 
             expect(Math.floor(inputTop)).toEqual(Math.floor(panelBottom));
-        }));
+        });
 
         it(
             'should fall back to above position when requested if options are added while ' + 'the panel is open',
-            fakeAsync(() => {
+            async () => {
+                vi.useFakeTimers();
+
                 const fixture = createComponent(SimpleAutocomplete);
 
                 fixture.componentInstance.states = fixture.componentInstance.states.slice(0, 1);
@@ -1209,8 +1258,8 @@ describe('KbqAutocomplete', () => {
                 panelRect = panel.getBoundingClientRect();
 
                 expect(Math.floor(panelRect.bottom)).toBe(Math.floor(inputRect.top));
-                tick();
-            })
+                await vi.advanceTimersByTimeAsync(0);
+            }
         );
 
         it('should not throw if a panel reposition is requested while the panel is closed', () => {
@@ -1358,7 +1407,9 @@ describe('KbqAutocomplete', () => {
             expect(spy).toHaveBeenCalledWith(expect.any(KbqOptionSelectionChange));
         });
 
-        it('should reposition the panel when the amount of options changes', fakeAsync(() => {
+        it('should reposition the panel when the amount of options changes', async () => {
+            vi.useFakeTimers();
+
             const formField = fixture.debugElement.query(By.css('.kbq-form-field')).nativeElement;
             const inputReference = formField.querySelector('.kbq-form-field__container');
             const input = inputReference.querySelector('input');
@@ -1368,7 +1419,7 @@ describe('KbqAutocomplete', () => {
 
             typeInElement('Cali', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const inputBottom = inputReference.getBoundingClientRect().bottom;
@@ -1379,14 +1430,14 @@ describe('KbqAutocomplete', () => {
 
             typeInElement('', input);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const inputTop = inputReference.getBoundingClientRect().top;
             const panelBottom = panel.getBoundingClientRect().bottom;
 
             expect(Math.floor(inputTop)).toBe(Math.floor(panelBottom));
-        }));
+        });
     });
 
     describe('panel closing', () => {
@@ -1396,7 +1447,9 @@ describe('KbqAutocomplete', () => {
         let closingActionFn: Mock;
         let closingActionsSub: Subscription;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
+            vi.useFakeTimers();
+
             fixture = createComponent(SimpleAutocomplete);
             fixture.detectChanges();
 
@@ -1410,8 +1463,8 @@ describe('KbqAutocomplete', () => {
 
             trigger.open();
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         afterEach(() => closingActionsSub.unsubscribe());
 
@@ -1519,13 +1572,15 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
         });
 
-        it('should not throw when clicking outside', fakeAsync(() => {
+        it('should not throw when clicking outside', async () => {
+            vi.useFakeTimers();
+
             dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focus');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(() => dispatchFakeEvent(document, 'click')).not.toThrow();
-        }));
+        });
     });
 
     describe('misc', () => {
@@ -1554,15 +1609,17 @@ describe('KbqAutocomplete', () => {
             expect(fixture.debugElement.query(By.css('input')).nativeElement.value).toBe('');
         });
 
-        it('should display the number when the selected option is the number zero', fakeAsync(() => {
+        it('should display the number when the selected option is the number zero', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AutocompleteWithNumbers);
 
             fixture.componentInstance.selectedNumber = 0;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(fixture.debugElement.query(By.css('input')).nativeElement.value).toBe('0');
-        }));
+        });
 
         it('should work when input is wrapped in ngIf', () => {
             const fixture = createComponent(NgIfAutocomplete);
@@ -1610,23 +1667,29 @@ describe('KbqAutocomplete', () => {
             }).toThrow(getKbqAutocompleteMissingPanelError());
         });
 
-        it('should not throw on init, even if the panel is not defined', fakeAsync(() => {
-            expect(() => {
-                const fixture = createComponent(AutocompleteWithoutPanel);
+        it('should not throw on init, even if the panel is not defined', async () => {
+            vi.useFakeTimers();
 
-                fixture.componentInstance.control.setValue('Something');
-                fixture.detectChanges();
-                tick();
-            }).not.toThrow();
-        }));
+            await expect(
+                (async () => {
+                    const fixture = createComponent(AutocompleteWithoutPanel);
 
-        it('should transfer the kbq-autocomplete classes to the panel element', fakeAsync(() => {
+                    fixture.componentInstance.control.setValue('Something');
+                    fixture.detectChanges();
+                    await vi.advanceTimersByTimeAsync(0);
+                })()
+            ).resolves.not.toThrow();
+        });
+
+        it('should transfer the kbq-autocomplete classes to the panel element', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleAutocomplete);
 
             fixture.detectChanges();
 
             fixture.componentInstance.trigger().open();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const autocomplete = fixture.debugElement.nativeElement.querySelector('kbq-autocomplete');
@@ -1637,15 +1700,17 @@ describe('KbqAutocomplete', () => {
 
             expect(panel.classList).toContain('class-one');
             expect(panel.classList).toContain('class-two');
-        }));
+        });
 
-        it('should replace the transferred classes instead of accumulating them', fakeAsync(() => {
+        it('should replace the transferred classes instead of accumulating them', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AutocompleteWithChangingClass);
 
             fixture.detectChanges();
 
             fixture.componentInstance.trigger().open();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
@@ -1657,15 +1722,17 @@ describe('KbqAutocomplete', () => {
 
             expect(panel.classList).toContain('class-two');
             expect(panel.classList).not.toContain('class-one');
-        }));
+        });
 
-        it('should survive a [class] binding that is not a string', fakeAsync(() => {
+        it('should survive a [class] binding that is not a string', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AutocompleteWithChangingClass);
 
             fixture.detectChanges();
 
             fixture.componentInstance.trigger().open();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel')!;
@@ -1690,24 +1757,26 @@ describe('KbqAutocomplete', () => {
 
             expect(panel.classList).toContain('class-a');
             expect(panel.classList).toContain('class-b');
-        }));
+        });
 
         // The "close" scroll strategy doesn't propagate in jsdom; it is covered by Playwright in
         // e2e.playwright-spec.ts → "Scroll strategy: close".
 
-        it('should handle autocomplete being attached to number inputs', fakeAsync(() => {
+        it('should handle autocomplete being attached to number inputs', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AutocompleteWithNumberInputAndNgModel);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             const input = fixture.debugElement.query(By.css('input')).nativeElement;
 
             typeInElement('1337', input);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.selectedValue).toBe(1337);
-        }));
+        });
     });
 
     it('should not reopen a closed autocomplete when returning to a blurred tab', async () => {
@@ -1797,27 +1866,31 @@ describe('KbqAutocomplete', () => {
     it(
         'should show the panel when the options are initialized later within a component with ' +
             'OnPush change detection',
-        fakeAsync(() => {
+        async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AutocompleteWithOnPushDelay);
 
             fixture.detectChanges();
             dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focusin');
-            tick(1000);
+            await vi.advanceTimersByTimeAsync(1000);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
-            Promise.resolve().then(() => {
+            await Promise.resolve().then(() => {
                 const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel') as HTMLElement;
                 const visibleClass = 'kbq-autocomplete_visible';
 
                 fixture.detectChanges();
                 expect(panel.classList).toContain(visibleClass);
             });
-        })
+        }
     );
 
-    it('should emit an event when an option is selected', fakeAsync(() => {
+    it('should emit an event when an option is selected', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(AutocompleteWithSelectEvent);
 
         fixture.detectChanges();
@@ -1828,7 +1901,7 @@ describe('KbqAutocomplete', () => {
         const spy = fixture.componentInstance.optionSelected;
 
         options[1].click();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         expect(spy).toHaveBeenCalledTimes(1);
@@ -1837,26 +1910,28 @@ describe('KbqAutocomplete', () => {
 
         expect(event.source).toBe(fixture.componentInstance.autocomplete());
         expect(event.option.value).toBe('Washington');
-    }));
+    });
 
-    it('should emit an event when a newly-added option is selected', fakeAsync(() => {
+    it('should emit an event when a newly-added option is selected', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(AutocompleteWithSelectEvent);
 
         fixture.detectChanges();
         fixture.componentInstance.trigger().open();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         fixture.componentInstance.states.push('Puerto Rico');
         fixture.detectChanges();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
         const spy = fixture.componentInstance.optionSelected;
 
         options[3].click();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         expect(spy).toHaveBeenCalledTimes(1);
@@ -1865,7 +1940,7 @@ describe('KbqAutocomplete', () => {
 
         expect(event.source).toBe(fixture.componentInstance.autocomplete());
         expect(event.option.value).toBe('Puerto Rico');
-    }));
+    });
 
     it('should be able to set a custom panel connection element', () => {
         const fixture = createComponent(AutocompleteWithDifferentOrigin);
@@ -1907,32 +1982,37 @@ describe('KbqAutocomplete', () => {
         expect(Math.floor(overlayRect.top)).toBe(Math.floor(originRect.bottom));
     });
 
-    it('should be able to re-type the same value when it is reset while open', fakeAsync(() => {
+    it('should be able to re-type the same value when it is reset while open', async () => {
+        vi.useFakeTimers();
+
         const fixture = createComponent(SimpleAutocomplete);
 
         fixture.detectChanges();
+        // The trigger writes a control value in a microtask: the initial one must not land on the typed text.
+        await vi.advanceTimersByTimeAsync(0);
         const input = fixture.debugElement.query(By.css('input')).nativeElement;
         const formControl = fixture.componentInstance.stateCtrl;
 
         typeInElement('Cal', input);
         fixture.detectChanges();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         expect(formControl.value).toBe('Cal');
 
         formControl.setValue('');
         fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(input.value).toBe('');
 
         typeInElement('Cal', input);
         fixture.detectChanges();
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         expect(formControl.value).toBe('Cal');
-    }));
+    });
 
     it('should not close when clicking inside alternate origin', () => {
         const fixture = createComponent(AutocompleteWithDifferentOrigin);
@@ -2037,7 +2117,9 @@ describe('KbqAutocomplete', () => {
         expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(500);
     });
 
-    it('should update the panel min-width if the window is resized', fakeAsync(() => {
+    it('should update the panel min-width if the window is resized', async () => {
+        vi.useFakeTimers();
+
         const widthFixture = createComponent(SimpleAutocomplete);
 
         widthFixture.componentInstance.width = 300;
@@ -2058,10 +2140,10 @@ describe('KbqAutocomplete', () => {
         rectSpy.mockReturnValue({ width: 400 } as DOMRect);
 
         dispatchFakeEvent(window, 'resize');
-        tick(20);
+        await vi.advanceTimersByTimeAsync(20);
 
         expect(Math.ceil(parseFloat(overlayPane.style.minWidth as string))).toBe(400);
-    }));
+    });
 
     it('should have panel min-width match host width by default', () => {
         const widthFixture = createComponent(SimpleAutocomplete);
@@ -2274,7 +2356,9 @@ describe('KbqAutocomplete', () => {
     });
 
     describe('with encapsulation: ViewEncapsulation.ShadowDom', () => {
-        it('should open the panel when the input is the shadow-DOM focused element', fakeAsync(() => {
+        it('should open the panel when the input is the shadow-DOM focused element', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(TestShadowDomAutocomplete);
 
             fixture.detectChanges();
@@ -2285,12 +2369,14 @@ describe('KbqAutocomplete', () => {
             input.value = 'Alabama';
             dispatchFakeEvent(input, 'input');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(fixture.componentInstance.trigger().panelOpen).toBeTruthy();
-        }));
+        });
 
-        it('should open the panel when the clicked input is the shadow-DOM focused element', fakeAsync(() => {
+        it('should open the panel when the clicked input is the shadow-DOM focused element', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(TestShadowDomAutocomplete);
 
             fixture.detectChanges();
@@ -2300,15 +2386,17 @@ describe('KbqAutocomplete', () => {
             // emulate native behavior
             input.focus();
             dispatchFakeEvent(input, 'click');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(fixture.componentInstance.trigger().panelOpen).toBeTruthy();
-        }));
+        });
     });
 
     describe('accessibility', () => {
-        it('keeps the injected scrollbar track outside the role="listbox" element', fakeAsync(() => {
+        it('keeps the injected scrollbar track outside the role="listbox" element', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(SimpleAutocomplete);
 
             fixture.detectChanges();
@@ -2316,7 +2404,7 @@ describe('KbqAutocomplete', () => {
 
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const panel = overlayContainerElement.querySelector('.kbq-autocomplete-panel') as HTMLElement;
@@ -2326,7 +2414,7 @@ describe('KbqAutocomplete', () => {
             expect(track).toBeTruthy();
             expect(listbox).toBeTruthy();
             expect(listbox.contains(track)).toBe(false);
-        }));
+        });
 
         /** Element an IDREF attribute of `element` points at, or `null` when it points nowhere. */
         const getReferencedElement = (element: Element, attribute: string) =>
@@ -2670,23 +2758,25 @@ describe('KbqAutocomplete', () => {
             expect(updatePosition).not.toHaveBeenCalled();
         });
 
-        it('should measure the caret again whenever the panel is positioned', fakeAsync(() => {
+        it('should measure the caret again whenever the panel is positioned', async () => {
+            vi.useFakeTimers();
+
             typeInElement('al', input);
             fixture.detectChanges();
 
             const origin = fixture.componentInstance.trigger()['positionStrategy']._origin as { x: number };
 
             input.getBoundingClientRect = () => ({ left: 10, top: 20, width: 200, height: 32 }) as DOMRect;
-            flushMicrotasks();
+            await vi.advanceTimersByTimeAsync(0);
 
             const before = origin.x;
 
             // The page scrolled, or the layout moved the field: nothing about the caret itself changed.
             input.getBoundingClientRect = () => ({ left: 70, top: 20, width: 200, height: 32 }) as DOMRect;
-            flushMicrotasks();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(origin.x - before).toBe(60);
-        }));
+        });
 
         it('should let a panel opened from the caret end at the caret when it does not fit after it', () => {
             typeInElement('al', input);
@@ -2729,121 +2819,141 @@ describe('KbqAutocomplete', () => {
             textarea = fixture.debugElement.query(By.css('textarea')).nativeElement;
         });
 
-        it('should open the panel for the word before the caret and report it as the query', fakeAsync(() => {
+        it('should open the panel for the word before the caret and report it as the query', async () => {
+            vi.useFakeTimers();
+
             typeAt('Длинный тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(component.trigger().panelOpen).toBe(true);
             expect(component.queries.at(-1)).toBe('тек');
             expect(overlayContainerElement.textContent).toContain('текст песни');
-        }));
+        });
 
-        it('should keep the whole text as the form value', fakeAsync(() => {
+        it('should keep the whole text as the form value', async () => {
+            vi.useFakeTimers();
+
             typeAt('Длинный тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(component.textCtrl.value).toBe('Длинный тек');
-        }));
+        });
 
-        it('should not open the panel after whitespace', fakeAsync(() => {
+        it('should not open the panel after whitespace', async () => {
+            vi.useFakeTimers();
+
             typeAt('текст ');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(component.trigger().panelOpen).toBe(false);
             expect(component.queries).toEqual([]);
-        }));
+        });
 
-        it('should close the panel once the caret leaves the word', fakeAsync(() => {
+        it('should close the panel once the caret leaves the word', async () => {
+            vi.useFakeTimers();
+
             typeAt('тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             typeAt('тек ');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(component.trigger().panelOpen).toBe(false);
             expect(component.queries.at(-1)).toBeNull();
-        }));
+        });
 
-        it('should replace only the word before the caret with the chosen option', fakeAsync(() => {
+        it('should replace only the word before the caret with the chosen option', async () => {
+            vi.useFakeTimers();
+
             typeAt('Длинный тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             getOptions()[0].click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(textarea.value).toBe('Длинный текст песни');
             expect(component.textCtrl.value).toBe('Длинный текст песни');
             expect(textarea.selectionStart).toBe('Длинный текст песни'.length);
             expect(component.trigger().panelOpen).toBe(false);
             expect(component.queries.at(-1)).toBeNull();
-        }));
+        });
 
-        it('should keep the text after the caret', fakeAsync(() => {
+        it('should keep the text after the caret', async () => {
+            vi.useFakeTimers();
+
             typeAt('тек и дальше', 3);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             getOptions()[0].click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(textarea.value).toBe('текст песни и дальше');
-        }));
+        });
 
-        it('should insert what displayWith gives the option, but write the form value as it is', fakeAsync(() => {
+        it('should insert what displayWith gives the option, but write the form value as it is', async () => {
+            vi.useFakeTimers();
+
             component.displayWith = (value: string) => value.toUpperCase();
             fixture.detectChanges();
 
             component.textCtrl.setValue('plain тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(textarea.value).toBe('plain тек');
 
             typeAt('plain тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             getOptions()[0].click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(textarea.value).toBe('plain ТЕКСТ ПЕСНИ');
-        }));
+        });
 
-        it('should not open the panel on ArrowDown', fakeAsync(() => {
+        it('should not open the panel on ArrowDown', async () => {
+            vi.useFakeTimers();
+
             typeAt('текст ');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             dispatchKeyboardEvent(textarea, 'keydown', DOWN_ARROW);
             fixture.detectChanges();
 
             expect(component.trigger().panelOpen).toBe(false);
-        }));
+        });
 
-        it('should choose the active option on Enter without inserting a line break', fakeAsync(() => {
+        it('should choose the active option on Enter without inserting a line break', async () => {
+            vi.useFakeTimers();
+
             typeAt('тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const event = dispatchKeyboardEvent(textarea, 'keydown', ENTER);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(event.defaultPrevented).toBe(true);
             expect(textarea.value).toBe('текст песни');
-        }));
+        });
 
-        it('should honour kbqAutocompleteMinLength', fakeAsync(() => {
+        it('should honour kbqAutocompleteMinLength', async () => {
+            vi.useFakeTimers();
+
             component.minLength = 3;
             fixture.detectChanges();
 
             typeAt('те');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(component.trigger().panelOpen).toBe(false);
 
             typeAt('тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(component.trigger().panelOpen).toBe(true);
-        }));
+        });
 
         describe('with triggers', () => {
             beforeEach(() => {
@@ -2851,85 +2961,99 @@ describe('KbqAutocomplete', () => {
                 fixture.detectChanges();
             });
 
-            it('should open right after the trigger', fakeAsync(() => {
+            it('should open right after the trigger', async () => {
+                vi.useFakeTimers();
+
                 typeAt('hello /');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(component.trigger().panelOpen).toBe(true);
                 expect(component.queries.at(-1)).toBe('');
                 expect(component.triggersSeen.at(-1)).toBe('/');
-            }));
+            });
 
-            it('should replace the query together with the trigger', fakeAsync(() => {
+            it('should replace the query together with the trigger', async () => {
+                vi.useFakeTimers();
+
                 typeAt('hello /bo');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 getOptions()[0].click();
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(textarea.value).toBe('hello /bold');
-            }));
+            });
 
-            it('should not treat a plain word as a query', fakeAsync(() => {
+            it('should not treat a plain word as a query', async () => {
+                vi.useFakeTimers();
+
                 typeAt('тек');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(component.trigger().panelOpen).toBe(false);
-            }));
+            });
         });
 
-        it('should leave Shift with an arrow to selecting text', fakeAsync(() => {
+        it('should leave Shift with an arrow to selecting text', async () => {
+            vi.useFakeTimers();
+
             typeAt('тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const event = createKeyboardEvent('keydown', DOWN_ARROW);
 
             Object.defineProperty(event, 'shiftKey', { value: true });
             dispatchEvent(textarea, event);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(event.defaultPrevented).toBe(false);
             expect(component.trigger().activeOption).toBe(component.trigger().autocomplete().options.first);
             expect(textarea.value).toBe('тек');
-        }));
+        });
 
-        it('should not select an option that becomes active once the options arrive', fakeAsync(() => {
+        it('should not select an option that becomes active once the options arrive', async () => {
+            vi.useFakeTimers();
+
             typeAt('тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             const { options } = component.trigger().autocomplete();
 
             expect(component.trigger().panelOpen).toBe(true);
             expect(component.trigger().activeOption).toBeTruthy();
             expect(options.some(({ selected }) => selected)).toBe(false);
-        }));
+        });
 
-        it('should insert an option at the caret when the panel was opened without a query', fakeAsync(() => {
+        it('should insert an option at the caret when the panel was opened without a query', async () => {
+            vi.useFakeTimers();
+
             component.showAllOptions.set(true);
             typeAt('Tags: ');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             component.trigger().open();
             fixture.detectChanges();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             getOptions()[0].click();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(textarea.value).toBe('Tags: текст песни');
             expect(component.textCtrl.value).toBe('Tags: текст песни');
-        }));
+        });
 
-        it('should drop the query and the hint of a text the form replaced', fakeAsync(() => {
+        it('should drop the query and the hint of a text the form replaced', async () => {
+            vi.useFakeTimers();
+
             typeAt('Длинный тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             component.textCtrl.setValue('');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(component.trigger().panelOpen).toBe(false);
@@ -2940,47 +3064,53 @@ describe('KbqAutocomplete', () => {
 
             expect(event.defaultPrevented).toBe(false);
             expect(textarea.value).toBe('');
-        }));
+        });
 
-        it('should not accept the hint of a text that changed without an input event', fakeAsync(() => {
+        it('should not accept the hint of a text that changed without an input event', async () => {
+            vi.useFakeTimers();
+
             typeAt('Длинный тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             textarea.value = 'Длинный';
 
             const event = dispatchKeyboardEvent(textarea, 'keydown', TAB);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(event.defaultPrevented).toBe(false);
             expect(textarea.value).toBe('Длинный');
             expect(component.trigger().panelOpen).toBe(false);
-        }));
+        });
 
-        it('should drop the hint once text mode is switched off', fakeAsync(() => {
+        it('should drop the hint once text mode is switched off', async () => {
+            vi.useFakeTimers();
+
             typeAt('Длинный тек');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             component.textMode = false;
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(getHint()!.hidden).toBe(true);
 
             const event = dispatchKeyboardEvent(textarea, 'keydown', TAB);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(event.defaultPrevented).toBe(false);
             expect(textarea.value).toBe('Длинный тек');
-        }));
+        });
 
         describe('inline hint', () => {
             afterEach(() => vi.restoreAllMocks());
 
-            it('should not offer a hint that the field lays out on another row', fakeAsync(() => {
+            it('should not offer a hint that the field lays out on another row', async () => {
+                vi.useFakeTimers();
+
                 vi.spyOn(Element.prototype, 'getClientRects').mockImplementation(function (this: Element) {
                     // The hint wraps to the row after the typed word, where accepting it would not continue the word.
                     const top = this.classList.contains('kbq-autocomplete-inline-hint__hint') ? 40 : 20;
@@ -2989,94 +3119,108 @@ describe('KbqAutocomplete', () => {
                 });
 
                 typeAt('Длинный тек');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(getHint()!.hidden).toBe(true);
 
                 const event = dispatchKeyboardEvent(textarea, 'keydown', TAB);
 
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(event.defaultPrevented).toBe(false);
                 expect(textarea.value).toBe('Длинный тек');
-            }));
+            });
 
-            it('should draw the rest of the active option after the caret', fakeAsync(() => {
+            it('should draw the rest of the active option after the caret', async () => {
+                vi.useFakeTimers();
+
                 typeAt('Длинный тек');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 const hint = getHint()!;
 
                 expect(hint.hidden).toBe(false);
                 expect(hint.querySelector('.kbq-autocomplete-inline-hint__hint')!.textContent).toBe('ст песни');
-            }));
+            });
 
-            it('should accept the hint with Tab', fakeAsync(() => {
+            it('should accept the hint with Tab', async () => {
+                vi.useFakeTimers();
+
                 typeAt('Длинный тек');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 const event = dispatchKeyboardEvent(textarea, 'keydown', TAB);
 
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(event.defaultPrevented).toBe(true);
                 expect(textarea.value).toBe('Длинный текст песни');
                 expect(getHint()!.hidden).toBe(true);
-            }));
+            });
 
-            it('should accept the hint with ArrowRight', fakeAsync(() => {
+            it('should accept the hint with ArrowRight', async () => {
+                vi.useFakeTimers();
+
                 typeAt('тек');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 dispatchKeyboardEvent(textarea, 'keydown', RIGHT_ARROW);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(textarea.value).toBe('текст песни');
-            }));
+            });
 
-            it('should leave Tab alone when there is no hint', fakeAsync(() => {
+            it('should leave Tab alone when there is no hint', async () => {
+                vi.useFakeTimers();
+
                 component.inlineHint = false;
                 fixture.detectChanges();
 
                 typeAt('тек');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 const event = dispatchKeyboardEvent(textarea, 'keydown', TAB);
 
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(event.defaultPrevented).toBe(false);
                 expect(textarea.value).toBe('тек');
-            }));
+            });
 
-            it('should not draw a hint when text follows the caret on its line', fakeAsync(() => {
+            it('should not draw a hint when text follows the caret on its line', async () => {
+                vi.useFakeTimers();
+
                 typeAt('тек дальше', 3);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(getHint()?.hidden ?? true).toBe(true);
-            }));
+            });
 
-            it('should not draw a hint for an option that does not continue the query', fakeAsync(() => {
+            it('should not draw a hint for an option that does not continue the query', async () => {
+                vi.useFakeTimers();
+
                 typeAt('стур');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(component.trigger().panelOpen).toBe(true);
                 expect(getHint()?.hidden ?? true).toBe(true);
-            }));
+            });
 
-            it('should not draw a hint when it is disabled', fakeAsync(() => {
+            it('should not draw a hint when it is disabled', async () => {
+                vi.useFakeTimers();
+
                 component.inlineHint = false;
                 fixture.detectChanges();
 
                 typeAt('тек');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(getHint()).toBeNull();
-            }));
+            });
         });
 
         describe('accessibility', () => {
@@ -3091,11 +3235,13 @@ describe('KbqAutocomplete', () => {
                 expect(textarea.getAttribute('aria-autocomplete')).toBe('list');
             });
 
-            it('should point at the option list and its active option while the panel is open', fakeAsync(() => {
+            it('should point at the option list and its active option while the panel is open', async () => {
+                vi.useFakeTimers();
+
                 expect(textarea.hasAttribute('aria-controls')).toBe(false);
 
                 typeAt('тек');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 const listbox = overlayContainerElement.querySelector('[role="listbox"]')!;
@@ -3108,7 +3254,7 @@ describe('KbqAutocomplete', () => {
 
                 expect(textarea.hasAttribute('aria-controls')).toBe(false);
                 expect(textarea.hasAttribute('aria-activedescendant')).toBe(false);
-            }));
+            });
 
             it('should have no accessibility violations', async () => {
                 typeAt('тек');
@@ -3122,14 +3268,14 @@ describe('KbqAutocomplete', () => {
         let fixture: ComponentFixture<TextFieldOnPushHost>;
         let textarea: HTMLTextAreaElement;
 
-        const typeText = (value: string) => {
+        const typeText = async (value: string) => {
             textarea.focus();
             textarea.value = value;
             textarea.setSelectionRange(value.length, value.length);
             dispatchFakeEvent(textarea, 'input');
             fixture.detectChanges();
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
         };
 
@@ -3139,15 +3285,17 @@ describe('KbqAutocomplete', () => {
             textarea = fixture.debugElement.query(By.css('textarea')).nativeElement;
         });
 
-        it('should announce the option that takes the place of the active one', fakeAsync(() => {
-            typeText('тек');
-            typeText('тект');
+        it('should announce the option that takes the place of the active one', async () => {
+            vi.useFakeTimers();
+
+            await typeText('тек');
+            await typeText('тект');
 
             const options = overlayContainerElement.querySelectorAll('kbq-option');
 
             expect(options).toHaveLength(1);
             expect(textarea.getAttribute('aria-activedescendant')).toBe(options[0].id);
-        }));
+        });
     });
 
     describe('overlay layer', () => {

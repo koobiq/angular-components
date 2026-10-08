@@ -1,4 +1,3 @@
-import { fakeAsync, tick } from '@angular/core/testing';
 import { DocsDocStates } from './doc-states';
 
 /**
@@ -18,7 +17,12 @@ describe(DocsDocStates.name, () => {
     let service: DocsDocStates;
 
     beforeEach(() => {
+        vi.useFakeTimers();
         service = new DocsDocStates();
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
     });
 
     it('should not throw when scrollUp is called before any container is registered', () => {
@@ -33,7 +37,7 @@ describe(DocsDocStates.name, () => {
         expect(() => service.checkNavbarOverflow()).not.toThrow();
     });
 
-    it('should stop reacting to scroll on the previous header container after re-registration', fakeAsync(() => {
+    it('should stop reacting to scroll on the previous header container after re-registration', async () => {
         service.registerHeader(createScrollable());
 
         const first = createScrollable();
@@ -44,7 +48,7 @@ describe(DocsDocStates.name, () => {
         service.registerHeaderScrollContainer(second);
 
         // Flush the `Promise.resolve().then(...)` initial checks queued by registration.
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         const spy = vi.fn();
 
@@ -54,17 +58,17 @@ describe(DocsDocStates.name, () => {
         // The detached previous container's subscription was torn down — its scroll is ignored.
         first.scrollTop = 500;
         first.dispatchEvent(new Event('scroll'));
-        tick(10);
+        await vi.advanceTimersByTimeAsync(10);
         expect(spy).not.toHaveBeenCalled();
 
         // The current container still drives updates.
         second.scrollTop = 500;
         second.dispatchEvent(new Event('scroll'));
-        tick(10);
+        await vi.advanceTimersByTimeAsync(10);
         expect(spy).toHaveBeenCalledWith(true);
-    }));
+    });
 
-    it('should stop reacting to scroll on the previous navbar container after re-registration', fakeAsync(() => {
+    it('should stop reacting to scroll on the previous navbar container after re-registration', async () => {
         const first = createScrollable();
         const second = createScrollable();
 
@@ -78,12 +82,12 @@ describe(DocsDocStates.name, () => {
 
         first.scrollTop = 500;
         first.dispatchEvent(new Event('scroll'));
-        tick(10);
+        await vi.advanceTimersByTimeAsync(10);
         expect(spy).not.toHaveBeenCalled();
 
         second.scrollTop = 500;
         second.dispatchEvent(new Event('scroll'));
-        tick(10);
+        await vi.advanceTimersByTimeAsync(10);
         expect(spy).toHaveBeenCalledWith(true);
-    }));
+    });
 });

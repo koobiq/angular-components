@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ChangeDetectorRef, Component, DebugElement, ElementRef, inject, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton } from '@koobiq/components/button';
 import { enUSLocaleData, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
@@ -108,6 +108,8 @@ describe('KbqFilters', () => {
             imports: [KbqFilterBarModule, TestComponent]
         }).compileComponents();
     });
+
+    afterEach(() => vi.useRealTimers());
 
     const getFiltersComponent = (): KbqFilters => {
         return filtersDebugElement.componentInstance;
@@ -334,7 +336,9 @@ describe('KbqFilters', () => {
     });
 
     describe('saveAsNew', () => {
-        it('should return early when filterName is invalid', fakeAsync(() => {
+        it('should return early when filterName is invalid', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Existing', saved: true });
 
             initFixture(filter);
@@ -343,17 +347,19 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Empty value fails the real Validators.required guard built in preparePopover.
             component.filterName.setValue('');
             component.saveAsNew();
 
             expect(fixture.componentInstance.onSaveSpy).not.toHaveBeenCalled();
-        }));
+        });
 
         describe('when saveNewFilter is true', () => {
-            it('should emit onSave with status NewFilter', fakeAsync(() => {
+            it('should emit onSave with status NewFilter', async () => {
+                vi.useFakeTimers();
+
                 const filter = createFilter([], { name: 'Existing', saved: true });
 
                 initFixture(filter);
@@ -362,7 +368,7 @@ describe('KbqFilters', () => {
 
                 component.openSaveAsNewFilterPopover();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.filterName.setValue('New Filter');
                 component.saveAsNew();
@@ -370,9 +376,11 @@ describe('KbqFilters', () => {
                 expect(fixture.componentInstance.onSaveSpy).toHaveBeenCalledWith(
                     expect.objectContaining({ status: KbqSaveFilterStatuses.NewFilter })
                 );
-            }));
+            });
 
-            it('should set isSaving to true', fakeAsync(() => {
+            it('should set isSaving to true', async () => {
+                vi.useFakeTimers();
+
                 const filter = createFilter([], { name: 'Existing' });
 
                 initFixture(filter);
@@ -381,15 +389,17 @@ describe('KbqFilters', () => {
 
                 component.openSaveAsNewFilterPopover();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.filterName.setValue('New');
                 component.saveAsNew();
 
                 expect(component.isSaving).toBe(true);
-            }));
+            });
 
-            it('should disable filterName control', fakeAsync(() => {
+            it('should disable filterName control', async () => {
+                vi.useFakeTimers();
+
                 const filter = createFilter([], { name: 'Existing' });
 
                 initFixture(filter);
@@ -398,15 +408,17 @@ describe('KbqFilters', () => {
 
                 component.openSaveAsNewFilterPopover();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.filterName.setValue('New');
                 component.saveAsNew();
 
                 expect(component.filterName.disabled).toBe(true);
-            }));
+            });
 
-            it('should set filter name, saved=true, changed=false on emitted filter', fakeAsync(() => {
+            it('should set filter name, saved=true, changed=false on emitted filter', async () => {
+                vi.useFakeTimers();
+
                 const filter = createFilter([], { name: 'Existing' });
 
                 initFixture(filter);
@@ -415,7 +427,7 @@ describe('KbqFilters', () => {
 
                 component.openSaveAsNewFilterPopover();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.filterName.setValue('Brand New');
                 component.saveAsNew();
@@ -425,9 +437,11 @@ describe('KbqFilters', () => {
                 expect(emittedEvent.filter.name).toBe('Brand New');
                 expect(emittedEvent.filter.saved).toBe(true);
                 expect(emittedEvent.filter.changed).toBe(false);
-            }));
+            });
 
-            it('should call event.preventDefault when event is provided', fakeAsync(() => {
+            it('should call event.preventDefault when event is provided', async () => {
+                vi.useFakeTimers();
+
                 const filter = createFilter([], { name: 'Existing' });
 
                 initFixture(filter);
@@ -436,7 +450,7 @@ describe('KbqFilters', () => {
 
                 component.openSaveAsNewFilterPopover();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.filterName.setValue('New');
                 const event = new Event('submit');
@@ -445,11 +459,13 @@ describe('KbqFilters', () => {
                 component.saveAsNew(event);
 
                 expect(preventSpy).toHaveBeenCalled();
-            }));
+            });
         });
 
         describe('when saveNewFilter is false (renaming)', () => {
-            it('should emit onSave with status NewName', fakeAsync(() => {
+            it('should emit onSave with status NewName', async () => {
+                vi.useFakeTimers();
+
                 const filter = createFilter([], { name: 'Existing', saved: true });
 
                 initFixture(filter);
@@ -458,7 +474,7 @@ describe('KbqFilters', () => {
 
                 component.openChangeFilterNamePopover();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.filterName.setValue('Renamed');
                 component.saveAsNew();
@@ -466,9 +482,11 @@ describe('KbqFilters', () => {
                 expect(fixture.componentInstance.onSaveSpy).toHaveBeenCalledWith(
                     expect.objectContaining({ status: KbqSaveFilterStatuses.NewName })
                 );
-            }));
+            });
 
-            it('should rename without clearing the pending changes of a dirty filter', fakeAsync(() => {
+            it('should rename without clearing the pending changes of a dirty filter', async () => {
+                vi.useFakeTimers();
+
                 const filter = createFilter([], { name: 'Existing', saved: true, changed: true });
 
                 initFixture(filter);
@@ -477,7 +495,7 @@ describe('KbqFilters', () => {
 
                 component.openChangeFilterNamePopover();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.filterName.setValue('Renamed');
                 component.saveAsNew();
@@ -487,9 +505,11 @@ describe('KbqFilters', () => {
                 expect(emittedEvent.filter.name).toBe('Renamed');
                 expect(emittedEvent.filter.changed).toBe(true);
                 expect(emittedEvent.filter.saved).toBe(true);
-            }));
+            });
 
-            it('should leave the "save changes" action available after a rename', fakeAsync(() => {
+            it('should leave the "save changes" action available after a rename', async () => {
+                vi.useFakeTimers();
+
                 const filter = createFilter([], { name: 'Existing', saved: true, changed: true });
 
                 initFixture(filter);
@@ -498,7 +518,7 @@ describe('KbqFilters', () => {
 
                 component.openChangeFilterNamePopover();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.filterName.setValue('Renamed');
                 component.saveAsNew();
@@ -509,7 +529,7 @@ describe('KbqFilters', () => {
                 fixture.detectChanges();
 
                 expect(getFilterBar().isSavedAndChanged()).toBe(true);
-            }));
+            });
         });
     });
 
@@ -523,7 +543,9 @@ describe('KbqFilters', () => {
             expect(component.showFilterSavingError).toBe(true);
         });
 
-        it('should set filterName error when nameAlreadyExists is true', fakeAsync(() => {
+        it('should set filterName error when nameAlreadyExists is true', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Existing' });
 
             initFixture(filter);
@@ -532,14 +554,14 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const setErrorsSpy = vi.spyOn(component.filterName, 'setErrors');
 
             component.showError({ nameAlreadyExists: true });
 
             expect(setErrorsSpy).toHaveBeenCalledWith({ filterNameAlreadyExist: true });
-        }));
+        });
 
         it('should use error text from argument when provided', () => {
             initFixture();
@@ -637,7 +659,9 @@ describe('KbqFilters', () => {
     });
 
     describe('filterSavedSuccessfully', () => {
-        it('should reset isSaving to false', fakeAsync(() => {
+        it('should reset isSaving to false', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -646,15 +670,17 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             component.isSaving = true;
             component.filterSavedSuccessfully();
 
             expect(component.isSaving).toBe(false);
-        }));
+        });
 
-        it('should set popover.preventClose to false', fakeAsync(() => {
+        it('should set popover.preventClose to false', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -663,7 +689,7 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const popoverTrigger = getPopoverTrigger();
 
@@ -671,9 +697,11 @@ describe('KbqFilters', () => {
             component.filterSavedSuccessfully();
 
             expect(popoverTrigger.preventClose).toBe(false);
-        }));
+        });
 
-        it('should restore focus after the deferred timeout', fakeAsync(() => {
+        it('should restore focus after the deferred timeout', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -682,7 +710,7 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // Capture a real trigger as the element that had focus before the popover opened.
             const mainButton = getMainButton();
@@ -697,16 +725,18 @@ describe('KbqFilters', () => {
             // restoreFocus is scheduled via setTimeout, so it must NOT run synchronously.
             expect(restoreSpy).not.toHaveBeenCalled();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // After the timer fires focus is restored and the captured reference is consumed (nulled).
             expect(restoreSpy).toHaveBeenCalled();
             expect(component.focusedElementBeforeIs(mainButton)).toBe(false);
-        }));
+        });
     });
 
     describe('filterSavedUnsuccessfully', () => {
-        it('should reset isSaving to false', fakeAsync(() => {
+        it('should reset isSaving to false', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -715,15 +745,17 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             component.isSaving = true;
             component.filterSavedUnsuccessfully();
 
             expect(component.isSaving).toBe(false);
-        }));
+        });
 
-        it('should set popover.preventClose to false', fakeAsync(() => {
+        it('should set popover.preventClose to false', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -732,7 +764,7 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const popoverTrigger = getPopoverTrigger();
 
@@ -740,9 +772,11 @@ describe('KbqFilters', () => {
             component.filterSavedUnsuccessfully();
 
             expect(popoverTrigger.preventClose).toBe(false);
-        }));
+        });
 
-        it('should show error with provided error', fakeAsync(() => {
+        it('should show error with provided error', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -751,34 +785,34 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const showErrorSpy = vi.spyOn(component, 'showError');
 
             component.filterSavedUnsuccessfully({ text: 'Failed' });
 
             expect(showErrorSpy).toHaveBeenCalledWith({ text: 'Failed' });
-        }));
+        });
 
         /**
          * The Save button gets focus back so the retry is reachable, but the ring (painted off
          * `.cdk-keyboard-focused`) must only appear when the failed save came from the keyboard.
          */
-        const shouldRefocusSaveButtonWith = (modality: 'mouse' | 'keyboard') => {
+        const shouldRefocusSaveButtonWith = async (modality: 'mouse' | 'keyboard') => {
             initFixture(createFilter([], { name: 'Test' }));
 
             const component = getFiltersComponent();
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
 
             setInputModality(modality);
 
             component.filterSavedUnsuccessfully();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).toHaveBeenCalledWith(
                 expect.objectContaining({ nativeElement: expect.any(HTMLButtonElement) }),
@@ -786,26 +820,32 @@ describe('KbqFilters', () => {
             );
         };
 
-        it('should refocus the Save button with the keyboard origin after a keyboard-driven save', fakeAsync(() => {
-            shouldRefocusSaveButtonWith('keyboard');
-        }));
+        it('should refocus the Save button with the keyboard origin after a keyboard-driven save', async () => {
+            vi.useFakeTimers();
 
-        it('should refocus the Save button with the mouse origin after a mouse-driven save', fakeAsync(() => {
-            shouldRefocusSaveButtonWith('mouse');
-        }));
+            await shouldRefocusSaveButtonWith('keyboard');
+        });
+
+        it('should refocus the Save button with the mouse origin after a mouse-driven save', async () => {
+            vi.useFakeTimers();
+
+            await shouldRefocusSaveButtonWith('mouse');
+        });
 
         /**
          * Mirrors `focusViaKeyboard()`'s own early return: if the button is re-disabled (a fast retry)
          * before the deferred focus-restore runs, it must not steal focus onto a disabled control.
          */
-        it('should not refocus the Save button if it is disabled again by the time the callback fires', fakeAsync(() => {
+        it('should not refocus the Save button if it is disabled again by the time the callback fires', async () => {
+            vi.useFakeTimers();
+
             initFixture(createFilter([], { name: 'Test' }));
 
             const component = getFiltersComponent();
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const popover = (component as any).savePopover();
             const focusViaSpy = vi.spyOn(TestBed.inject(FocusMonitor), 'focusVia');
@@ -816,12 +856,14 @@ describe('KbqFilters', () => {
             });
 
             component.filterSavedUnsuccessfully();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(focusViaSpy).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should re-enable filterName', fakeAsync(() => {
+        it('should re-enable filterName', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -830,15 +872,17 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             component.filterName.disable();
             component.filterSavedUnsuccessfully();
 
             expect(component.filterName.enabled).toBe(true);
-        }));
+        });
 
-        it('should keep the inline "name already exists" error after re-enabling the control', fakeAsync(() => {
+        it('should keep the inline "name already exists" error after re-enabling the control', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -847,7 +891,7 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             component.filterName.setValue('Existing');
             component.filterSavedUnsuccessfully({ nameAlreadyExists: true });
@@ -855,11 +899,13 @@ describe('KbqFilters', () => {
             // `enable()` re-runs the validators, so the custom error must be applied AFTER it — otherwise the
             // inline `<kbq-error>` never renders. Reverting the showError/enable order fails this.
             expect(component.filterName.hasError('filterNameAlreadyExist')).toBe(true);
-        }));
+        });
     });
 
     describe('saveAsNew round-trip after a failed save (P2-26)', () => {
-        it('should surface a save error, clear it on edit, then emit onSave twice across the retry', fakeAsync(() => {
+        it('should surface a save error, clear it on edit, then emit onSave twice across the retry', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Existing', saved: true });
 
             initFixture(filter);
@@ -870,7 +916,7 @@ describe('KbqFilters', () => {
             // Open the "save as new" popover and let the async popover setup settle.
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             // 1. User types a name and triggers the first save.
             component.filterName.setValue('First Attempt');
@@ -913,7 +959,7 @@ describe('KbqFilters', () => {
                 })
             );
             expect(component.showFilterSavingError).toBe(false);
-        }));
+        });
     });
 
     describe('getFilteredOptions (via searchControl)', () => {
@@ -923,7 +969,9 @@ describe('KbqFilters', () => {
             createFilter([], { name: 'Gamma' })
         ];
 
-        it('should return all filters when search is null', fakeAsync(() => {
+        it('should return all filters when search is null', async () => {
+            vi.useFakeTimers();
+
             initFixture(null, filtersList);
 
             const component = getFiltersComponent();
@@ -931,12 +979,14 @@ describe('KbqFilters', () => {
 
             component.filteredOptions.subscribe((v) => (result = v));
             component.searchControl.setValue(null);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(result.length).toBe(3);
-        }));
+        });
 
-        it('should filter by name case-insensitively', fakeAsync(() => {
+        it('should filter by name case-insensitively', async () => {
+            vi.useFakeTimers();
+
             initFixture(null, filtersList);
 
             const component = getFiltersComponent();
@@ -944,13 +994,15 @@ describe('KbqFilters', () => {
 
             component.filteredOptions.subscribe((v) => (result = v));
             component.searchControl.setValue('alp');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(result.length).toBe(1);
             expect(result[0].name).toBe('Alpha');
-        }));
+        });
 
-        it('should return empty array when no match', fakeAsync(() => {
+        it('should return empty array when no match', async () => {
+            vi.useFakeTimers();
+
             initFixture(null, filtersList);
 
             const component = getFiltersComponent();
@@ -958,21 +1010,23 @@ describe('KbqFilters', () => {
 
             component.filteredOptions.subscribe((v) => (result = v));
             component.searchControl.setValue('xyz');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(result.length).toBe(0);
-        }));
+        });
     });
 
     describe('searchKeydownHandler', () => {
-        it('should call closePopover when Escape is pressed', fakeAsync(() => {
+        it('should call closePopover when Escape is pressed', async () => {
+            vi.useFakeTimers();
+
             initFixture(createFilter([], { name: 'Test' }));
 
             const component = getFiltersComponent();
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const closePopoverSpy = vi.spyOn(component, 'closePopover');
             const event = new KeyboardEvent('keydown', { key: 'Escape' });
@@ -980,7 +1034,7 @@ describe('KbqFilters', () => {
             component.searchKeydownHandler(event);
 
             expect(closePopoverSpy).toHaveBeenCalled();
-        }));
+        });
 
         it('should stop propagation for non-Escape keys', () => {
             initFixture();
@@ -1050,7 +1104,9 @@ describe('KbqFilters', () => {
     });
 
     describe('closePopover', () => {
-        it('should hide the popover', fakeAsync(() => {
+        it('should hide the popover', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -1059,17 +1115,19 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const hideSpy = vi.spyOn(getPopoverTrigger(), 'hide');
 
             component.closePopover(false);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(hideSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should reset showFilterSavingError to false', fakeAsync(() => {
+        it('should reset showFilterSavingError to false', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -1078,17 +1136,19 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             component.showFilterSavingError = true;
 
             component.closePopover(false);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.showFilterSavingError).toBe(false);
-        }));
+        });
 
-        it('should restore focus when restoreFocus is true', fakeAsync(() => {
+        it('should restore focus when restoreFocus is true', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -1097,17 +1157,19 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const restoreSpy = vi.spyOn(component, 'restoreFocus');
 
             component.closePopover(true);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(restoreSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('should not restore focus when restoreFocus is false', fakeAsync(() => {
+        it('should not restore focus when restoreFocus is false', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -1116,19 +1178,21 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const restoreSpy = vi.spyOn(component, 'restoreFocus');
 
             component.closePopover(false);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(restoreSpy).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('preparePopover / openSaveAsNewFilterPopover / openChangeFilterNamePopover', () => {
-        it('openSaveAsNewFilterPopover should set saveNewFilter to true', fakeAsync(() => {
+        it('openSaveAsNewFilterPopover should set saveNewFilter to true', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -1137,12 +1201,14 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.saveNewFilter).toBe(true);
-        }));
+        });
 
-        it('openChangeFilterNamePopover should set saveNewFilter to false', fakeAsync(() => {
+        it('openChangeFilterNamePopover should set saveNewFilter to false', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -1151,12 +1217,14 @@ describe('KbqFilters', () => {
 
             component.openChangeFilterNamePopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.saveNewFilter).toBe(false);
-        }));
+        });
 
-        it('should create filterName FormControl with Validators.required', fakeAsync(() => {
+        it('should create filterName FormControl with Validators.required', async () => {
+            vi.useFakeTimers();
+
             initFixture(null);
 
             const component = getFiltersComponent();
@@ -1171,10 +1239,12 @@ describe('KbqFilters', () => {
             expect(component.filterName.valid).toBe(true);
 
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should initialize filterName with current filter name', fakeAsync(() => {
+        it('should initialize filterName with current filter name', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Existing Filter' });
 
             initFixture(filter);
@@ -1183,24 +1253,28 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.filterName.value).toBe('Existing Filter');
-        }));
+        });
 
-        it('should initialize filterName with empty string when filter has no name', fakeAsync(() => {
+        it('should initialize filterName with empty string when filter has no name', async () => {
+            vi.useFakeTimers();
+
             initFixture(null);
 
             const component = getFiltersComponent();
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.filterName.value).toBe('');
-        }));
+        });
 
-        it('should show the popover', fakeAsync(() => {
+        it('should show the popover', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -1210,12 +1284,14 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(showSpy).toHaveBeenCalled();
-        }));
+        });
 
-        it('changing filterName value should reset showFilterSavingError', fakeAsync(() => {
+        it('changing filterName value should reset showFilterSavingError', async () => {
+            vi.useFakeTimers();
+
             const filter = createFilter([], { name: 'Test' });
 
             initFixture(filter);
@@ -1224,19 +1300,21 @@ describe('KbqFilters', () => {
 
             component.openSaveAsNewFilterPopover();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             component.showFilterSavingError = true;
 
             component.filterName.setValue('Changed');
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(component.showFilterSavingError).toBe(false);
-        }));
+        });
     });
 
     describe('ngOnInit', () => {
-        it('should set up filteredOptions observable', fakeAsync(() => {
+        it('should set up filteredOptions observable', async () => {
+            vi.useFakeTimers();
+
             const filters = [createFilter([], { name: 'A' }), createFilter([], { name: 'B' })];
 
             initFixture(null, filters);
@@ -1245,10 +1323,10 @@ describe('KbqFilters', () => {
             let result: KbqFilter[] = [];
 
             component.filteredOptions.subscribe((v) => (result = v));
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(result.length).toBe(2);
-        }));
+        });
     });
 
     describe('UI integration', () => {
@@ -1258,35 +1336,41 @@ describe('KbqFilters', () => {
             expect(filtersDebugElement.nativeElement.classList).toContain('kbq-filters');
         });
 
-        it('should open dropdown when trigger is clicked', fakeAsync(() => {
+        it('should open dropdown when trigger is clicked', async () => {
+            vi.useFakeTimers();
+
             initFixture(null, [createFilter([], { name: 'Alpha' })]);
 
             expect(getFiltersComponent().opened).toBeFalsy();
 
             filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(getFiltersComponent().opened).toBeTruthy();
-        }));
+        });
 
-        it('should focus search input after opening dropdown', fakeAsync(() => {
+        it('should focus search input after opening dropdown', async () => {
+            vi.useFakeTimers();
+
             initFixture(null, [createFilter([], { name: 'Alpha' })]);
 
             filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             expect(document.activeElement?.classList.contains('kbq-input')).toBe(true);
-        }));
+        });
 
-        it('should list filters and the saveAsNewFilter action in the dropdown', fakeAsync(() => {
+        it('should list filters and the saveAsNewFilter action in the dropdown', async () => {
+            vi.useFakeTimers();
+
             const filtersList = Array.from({ length: 9 }, (_, i) => createFilter([], { name: `Filter ${i + 1}` }));
 
             initFixture(null, filtersList);
 
             filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const items = document.querySelectorAll('.kbq-dropdown-item');
@@ -1295,7 +1379,7 @@ describe('KbqFilters', () => {
             expect(items[items.length - 1].textContent).toContain(
                 KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNewFilter
             );
-        }));
+        });
     });
 
     describe('Template integration', () => {

@@ -1,6 +1,6 @@
 ﻿import { AsyncPipe } from '@angular/common';
 import { Component, DebugElement, OnInit, Type, viewChild, viewChildren } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     KBQ_STATE_STORE,
@@ -16,6 +16,10 @@ import { KbqTab } from './tab.component';
 import { KbqTabsModule } from './tabs.module';
 
 describe('KbqTabGroup', () => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -50,26 +54,26 @@ describe('KbqTabGroup', () => {
             expect(element.querySelectorAll('.kbq-tab-body')[1].querySelectorAll('span').length).toBe(3);
         });
 
-        it('should change selected index on click', fakeAsync(() => {
+        it('should change selected index on click', async () => {
             const component = fixture.debugElement.componentInstance;
 
             component.selectedIndex = 0;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             checkSelectedIndex(0, fixture);
 
             fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1].nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             checkSelectedIndex(1, fixture);
 
             fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[2].nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             checkSelectedIndex(2, fixture);
-        }));
+        });
 
-        it('should support two-way binding for selectedIndex', fakeAsync(() => {
+        it('should support two-way binding for selectedIndex', async () => {
             const component = fixture.componentInstance;
 
             component.selectedIndex = 0;
@@ -80,31 +84,32 @@ describe('KbqTabGroup', () => {
 
             tabLabel.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(component.selectedIndex).toBe(1);
-        }));
+        });
 
-        // Note: needs to be `async` in order to fail when we expect it to.
-        it('should set to correct tab on fast change', waitForAsync(() => {
+        it('should set to correct tab on fast change', async () => {
+            vi.useFakeTimers();
+
             const component = fixture.componentInstance;
 
             component.selectedIndex = 0;
             fixture.detectChanges();
 
-            setTimeout(() => {
-                component.selectedIndex = 1;
-                fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(1);
+            component.selectedIndex = 1;
+            fixture.detectChanges();
 
-                setTimeout(() => {
-                    component.selectedIndex = 0;
-                    fixture.detectChanges();
-                    fixture.whenStable().then(() => expect(component.selectedIndex).toBe(0));
-                }, 1);
-            }, 1);
-        }));
+            await vi.advanceTimersByTimeAsync(1);
+            component.selectedIndex = 0;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
 
-        it('should change tabs based on selectedIndex', fakeAsync(() => {
+            expect(component.selectedIndex).toBe(0);
+        });
+
+        it('should change tabs based on selectedIndex', async () => {
             const component = fixture.componentInstance;
             const tabComponent = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
@@ -115,11 +120,11 @@ describe('KbqTabGroup', () => {
             tabComponent.selectedIndex = 2;
 
             checkSelectedIndex(2, fixture);
-            tick();
+            await fixture.whenStable();
 
             expect(handleSelectionSpyFn).toHaveBeenCalledTimes(1);
             expect(component.selectEvent.index).toBe(2);
-        }));
+        });
 
         it('should update tab positions when selected index is changed', () => {
             fixture.detectChanges();
@@ -165,9 +170,9 @@ describe('KbqTabGroup', () => {
             }).not.toThrow();
         });
 
-        it('should set the isActive flag on each of the tabs', fakeAsync(() => {
+        it('should set the isActive flag on each of the tabs', async () => {
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             const tabs = fixture.componentInstance.tabs();
 
@@ -177,14 +182,14 @@ describe('KbqTabGroup', () => {
 
             fixture.componentInstance.selectedIndex = 2;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(tabs[0].isActive).toBe(false);
             expect(tabs[1].isActive).toBe(false);
             expect(tabs[2].isActive).toBe(true);
-        }));
+        });
 
-        it('should fire animation done event', fakeAsync(() => {
+        it('should fire animation done event', async () => {
             fixture.detectChanges();
 
             const animationDoneSpyFn = vi.spyOn(fixture.componentInstance, 'animationDone');
@@ -193,10 +198,10 @@ describe('KbqTabGroup', () => {
 
             tabLabel.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(animationDoneSpyFn).toHaveBeenCalled();
-        }));
+        });
 
         it('should emit focusChange event on click', () => {
             const handleFocusSpyFn = vi.spyOn(fixture.componentInstance, 'handleFocus');
@@ -276,14 +281,14 @@ describe('KbqTabGroup', () => {
     describe('dynamic binding tabs', () => {
         let fixture: ComponentFixture<SimpleDynamicTabsTestApp>;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(SimpleDynamicTabsTestApp);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
-        }));
+        });
 
-        it('should be able to add a new tab, select it, and have correct origin position', fakeAsync(() => {
+        it('should be able to add a new tab, select it, and have correct origin position', async () => {
             const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             let tabs: KbqTab[] = component.tabs.toArray();
@@ -295,38 +300,38 @@ describe('KbqTabGroup', () => {
             fixture.componentInstance.tabs.push({ label: 'New tab', content: 'to right of index' });
             fixture.componentInstance.selectedIndex = 4;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             tabs = component.tabs.toArray();
             expect(tabs[3].origin).toBeGreaterThanOrEqual(0);
 
             fixture.componentInstance.selectedIndex = 0;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             fixture.componentInstance.tabs.push({ label: 'New tab', content: 'to left of index' });
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             tabs = component.tabs.toArray();
             expect(tabs[0].origin).toBeLessThan(0);
-        }));
+        });
 
-        it('should update selected index if the last tab removed while selected', fakeAsync(() => {
+        it('should update selected index if the last tab removed while selected', async () => {
             const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             const numberOfTabs = component.tabs.length;
 
             fixture.componentInstance.selectedIndex = numberOfTabs - 1;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             fixture.componentInstance.tabs.pop();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(component.selectedIndex).toBe(numberOfTabs - 2);
-        }));
+        });
 
         it('should maintain the selected tab if a new tab is added', () => {
             fixture.detectChanges();
@@ -355,7 +360,7 @@ describe('KbqTabGroup', () => {
             expect(component.tabs.toArray()[0].isActive).toBe(true);
         });
 
-        it('should be able to select a new tab after creation', fakeAsync(() => {
+        it('should be able to select a new tab after creation', async () => {
             fixture.detectChanges();
             const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
@@ -363,13 +368,13 @@ describe('KbqTabGroup', () => {
             fixture.componentInstance.selectedIndex = 3;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(component.selectedIndex).toBe(3);
             expect(component.tabs.toArray()[3].isActive).toBe(true);
-        }));
+        });
 
-        it('should not fire `selectedTabChange` when the amount of tabs changes', fakeAsync(() => {
+        it('should not fire `selectedTabChange` when the amount of tabs changes', async () => {
             fixture.detectChanges();
             fixture.componentInstance.selectedIndex = 1;
             fixture.detectChanges();
@@ -378,49 +383,50 @@ describe('KbqTabGroup', () => {
 
             fixture.componentInstance.tabs.unshift({ label: 'New tab', content: 'at the start' });
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(handleSelectionSpyFn).not.toHaveBeenCalled();
-        }));
+        });
     });
 
     describe('async tabs', () => {
         let fixture: ComponentFixture<AsyncTabsTestApp>;
 
-        it('should show tabs when they are available', fakeAsync(() => {
+        it('should show tabs when they are available', async () => {
+            vi.useFakeTimers();
             fixture = TestBed.createComponent(AsyncTabsTestApp);
 
             expect(fixture.debugElement.queryAll(By.css('.kbq-tab-label')).length).toBe(0);
 
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             expect(fixture.debugElement.queryAll(By.css('.kbq-tab-label')).length).toBe(2);
-        }));
+        });
     });
 
     describe('with simple api', () => {
         let fixture: ComponentFixture<TabGroupWithSimpleApi>;
         let tabGroup: KbqTabGroup;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             fixture = TestBed.createComponent(TabGroupWithSimpleApi);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             tabGroup = fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance as KbqTabGroup;
-        }));
+        });
 
-        it('should support a tab-group with the simple api', fakeAsync(() => {
+        it('should support a tab-group with the simple api', async () => {
             expect(getSelectedLabel(fixture).textContent).toMatch('Junk food');
             expect(getSelectedContent(fixture).textContent).toMatch('Pizza, fries');
 
             tabGroup.selectedIndex = 2;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(getSelectedLabel(fixture).textContent).toMatch('Fruit');
             expect(getSelectedContent(fixture).textContent).toMatch('Apples, grapes');
@@ -431,23 +437,23 @@ describe('KbqTabGroup', () => {
 
             expect(getSelectedLabel(fixture).textContent).toMatch('Chips');
             expect(getSelectedContent(fixture).textContent).toMatch('Salt, vinegar');
-        }));
+        });
 
         it('should support @ViewChild in the tab content', () => {
             expect(fixture.componentInstance.legumes()).toBeTruthy();
         });
 
-        it('should only have the active tab in the DOM', fakeAsync(() => {
+        it('should only have the active tab in the DOM', async () => {
             expect(fixture.nativeElement.textContent).toContain('Pizza, fries');
             expect(fixture.nativeElement.textContent).not.toContain('Peanuts');
 
             tabGroup.selectedIndex = 3;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(fixture.nativeElement.textContent).not.toContain('Pizza, fries');
             expect(fixture.nativeElement.textContent).toContain('Peanuts');
-        }));
+        });
 
         it('should support setting the header position', () => {
             const tabGroupNode = fixture.debugElement.query(By.css('kbq-tab-group')).nativeElement;
@@ -462,37 +468,35 @@ describe('KbqTabGroup', () => {
     });
 
     describe('lazy loaded tabs', () => {
-        it('should lazy load the second tab', fakeAsync(() => {
+        it('should lazy load the second tab', async () => {
             const fixture = TestBed.createComponent(TemplateTabs);
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             const secondLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1];
 
             secondLabel.nativeElement.click();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             const child = fixture.debugElement.query(By.css('.child'));
 
             expect(child.nativeElement).toBeDefined();
-        }));
+        });
     });
 
     describe('special cases', () => {
-        it('should not throw an error when binding isActive to the view', fakeAsync(() => {
+        it('should not throw an error when binding isActive to the view', async () => {
             const fixture = TestBed.createComponent(TabGroupWithIsActiveBinding);
 
-            expect(() => {
-                fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
-            }).not.toThrow();
+            expect(() => fixture.detectChanges()).not.toThrow();
+            await fixture.whenStable();
+            expect(() => fixture.detectChanges()).not.toThrow();
 
             expect(fixture.nativeElement.textContent).toContain('pizza is active');
-        }));
+        });
     });
 
     describe('with selection by activeTab input', () => {
@@ -517,7 +521,9 @@ describe('KbqTabGroup', () => {
             expect(typeof instance.selectBy).toEqual('number');
         });
 
-        it('should select by string and assign string type to binded property', fakeAsync(() => {
+        it('should select by string and assign string type to binded property', async () => {
+            vi.useFakeTimers();
+
             const indexToSelect = 0;
 
             instance.selectBy = instance.tabs().at(indexToSelect)!.tabId();
@@ -529,13 +535,13 @@ describe('KbqTabGroup', () => {
 
             dispatchMouseEvent(tabLabels[tabLabels.length - 1].nativeElement, 'click');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
 
             checkSelectedIndex(tabLabels.length - 1, fixture);
             expect(typeof instance.selectBy).toEqual('string');
             expect(instance.selectBy).toEqual('last');
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     /**
@@ -578,14 +584,16 @@ describe('nested KbqTabGroup with enabled animations', () => {
         }).compileComponents();
     });
 
-    it('should not throw when creating a component with nested tab groups', fakeAsync(() => {
+    it('should not throw when creating a component with nested tab groups', async () => {
+        let fixture!: ComponentFixture<NestedTabs>;
+
         expect(() => {
-            const fixture = TestBed.createComponent(NestedTabs);
+            fixture = TestBed.createComponent(NestedTabs);
 
             fixture.detectChanges();
-            tick();
         }).not.toThrow();
-    }));
+        await fixture.whenStable();
+    });
 });
 
 @Component({

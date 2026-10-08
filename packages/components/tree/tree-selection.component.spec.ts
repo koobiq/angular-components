@@ -2,7 +2,7 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, DebugElement, Type, ViewChild, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
@@ -60,6 +60,10 @@ import { getKbqTreeSelectionOwnedMultipleError } from './tree-errors';
 
 describe('KbqTreeSelection', () => {
     let treeElement: HTMLElement;
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
 
     function configureKbqTreeTestingModule(providers: any[] = []) {
         TestBed.configureTestingModule({
@@ -134,7 +138,7 @@ describe('KbqTreeSelection', () => {
                 expect(treeOption.styles.paddingLeft).toBe(paddingDirective.paddingIndent());
             });
 
-            it('should copy selected option - default handler', fakeAsync(() => {
+            it('should copy selected option - default handler', async () => {
                 const nodes = getNodes(treeElement);
                 const event = createMouseEvent('click');
 
@@ -156,19 +160,21 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
 
                 expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
-            }));
+            });
 
             // DS-5079: copyActiveOption sets and clears option.preventBlur synchronously, but the blur it
             // provokes reaches the option through FocusMonitor after the handler has returned, so the guard
             // is already down. Deferring the clear by a microtask is not enough — the fix belongs in the
             // blur()/focus() coordination of KbqTreeOption. The clipboard write itself works.
-            it.skip('should not blur on focused option when copying', fakeAsync(() => {
+            it.skip('should not blur on focused option when copying', async () => {
+                vi.useFakeTimers();
+
                 const treeOptions = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
 
                 expect(treeOptions[2].componentInstance.hasFocus).toBeFalsy();
 
                 dispatchFakeEvent(treeOptions[2].nativeElement, 'focusin');
-                tick(10);
+                await vi.advanceTimersByTimeAsync(10);
                 fixture.detectChanges();
 
                 expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
@@ -183,7 +189,7 @@ describe('KbqTreeSelection', () => {
 
                 expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
                 expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
-            }));
+            });
         });
 
         describe('focus states', () => {
@@ -202,25 +208,29 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should add focus class on first element', fakeAsync(() => {
+            it('should add focus class on first element', async () => {
+                vi.useFakeTimers();
+
                 options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
                 const option = options[0].nativeElement;
 
                 expect(option.classList).not.toContain('kbq-focused');
 
                 dispatchFakeEvent(tree.nativeElement, 'focus');
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(option.classList).toContain('kbq-focused');
-            }));
+            });
 
-            it('should add focus class on first selected element', fakeAsync(() => {
+            it('should add focus class on first selected element', async () => {
+                vi.useFakeTimers();
+
                 options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
                 const selectedOption = options[1];
 
                 selectedOption.componentInstance.toggle();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 options.forEach(({ nativeElement }) => {
@@ -230,11 +240,11 @@ describe('KbqTreeSelection', () => {
                 expect(selectedOption.nativeElement.classList).toContain('kbq-selected');
 
                 dispatchFakeEvent(tree.nativeElement, 'focus');
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(selectedOption.nativeElement.className).toContain('kbq-focused');
-            }));
+            });
         });
 
         describe('with toggle', () => {
@@ -319,7 +329,9 @@ describe('KbqTreeSelection', () => {
                 );
             });
 
-            it('should restore expanded items after filter', fakeAsync(() => {
+            it('should restore expanded items after filter', async () => {
+                vi.useFakeTimers();
+
                 const initialNodesCount = 5;
                 let nodes = getNodes(treeElement);
 
@@ -327,7 +339,7 @@ describe('KbqTreeSelection', () => {
 
                 (nodes[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
 
                 const expandedNodesCountBeforeFilter = 8;
@@ -335,15 +347,15 @@ describe('KbqTreeSelection', () => {
                 expect(nodes.length).toBe(expandedNodesCountBeforeFilter);
 
                 component.treeControl.filterNodes('app');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(5);
 
                 component.treeControl.filterNodes('');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(expandedNodesCountBeforeFilter);
-            }));
+            });
         });
 
         describe('with multipleMode is CTRL', () => {
@@ -462,7 +474,7 @@ describe('KbqTreeSelection', () => {
             });
 
             describe('when shift is pressed', () => {
-                it('should select nodes', fakeAsync(() => {
+                it('should select nodes', async () => {
                     testScheduler.run(() => {
                         expect(component.modelValue.length).toBe(0);
 
@@ -493,9 +505,9 @@ describe('KbqTreeSelection', () => {
 
                         expect(component.modelValue.length).toBe(4);
                     });
-                }));
+                });
 
-                it('should deselect nodes', fakeAsync(() => {
+                it('should deselect nodes', async () => {
                     testScheduler.run(() => {
                         expect(component.modelValue.length).toBe(0);
 
@@ -529,7 +541,7 @@ describe('KbqTreeSelection', () => {
 
                         expect(component.modelValue.length).toBe(1);
                     });
-                }));
+                });
             });
         });
 
@@ -562,17 +574,21 @@ describe('KbqTreeSelection', () => {
                 expect(onSelectionChange).not.toHaveBeenCalled();
             });
 
-            it('should not select non-selectable option on SPACE', fakeAsync(() => {
+            it('should not select non-selectable option on SPACE', async () => {
+                vi.useFakeTimers();
+
                 component.tree.keyManager.setActiveItem(2);
 
                 component.tree.onKeyDown(createKeyboardEvent('keydown', SPACE));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(component.modelValue.length).toBe(0);
-            }));
+            });
 
-            it('should keep selection when arrowing onto non-selectable option', fakeAsync(() => {
+            it('should keep selection when arrowing onto non-selectable option', async () => {
+                vi.useFakeTimers();
+
                 const nodes = getNodes(treeElement);
 
                 dispatchEvent(nodes[1], createMouseEvent('click'));
@@ -582,13 +598,13 @@ describe('KbqTreeSelection', () => {
 
                 component.tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(component.tree.keyManager.activeItemIndex).toBe(2);
                 expect(component.modelValue).toEqual(['Pictures']);
-            }));
+            });
 
-            it('should skip non-selectable option in shift-click range selection', fakeAsync(() => {
+            it('should skip non-selectable option in shift-click range selection', async () => {
                 testScheduler.run(() => {
                     const nodes = getNodes(treeElement);
 
@@ -613,9 +629,9 @@ describe('KbqTreeSelection', () => {
                     expect(component.modelValue.length).toBe(3);
                     expect(component.modelValue).not.toContain('Documents');
                 });
-            }));
+            });
 
-            it('should not toggle non-selectable option on shift+arrow when active item can not move', fakeAsync(() => {
+            it('should not toggle non-selectable option on shift+arrow when active item can not move', async () => {
                 testScheduler.run(() => {
                     component.unselectableNodes = ['Documents', 'Applications'];
                     fixture.detectChanges();
@@ -634,9 +650,9 @@ describe('KbqTreeSelection', () => {
 
                     expect(component.modelValue.length).toBe(0);
                 });
-            }));
+            });
 
-            it('should exclude non-selectable options on CTRL + A', fakeAsync(() => {
+            it('should exclude non-selectable options on CTRL + A', async () => {
                 // selectAllToggle enables deselect on the second press asserted below
                 component.selectAllToggle = true;
                 fixture.detectChanges();
@@ -659,9 +675,9 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
 
                 expect(component.modelValue.length).toBe(0);
-            }));
+            });
 
-            it('should keep all options selected on a second CTRL + A by default (selectAllToggle off)', fakeAsync(() => {
+            it('should keep all options selected on a second CTRL + A by default (selectAllToggle off)', async () => {
                 const selectAllKeyEvent = createKeyboardEvent('keydown', A);
 
                 Object.defineProperty(selectAllKeyEvent, 'ctrlKey', { get: () => true });
@@ -677,9 +693,9 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
 
                 expect(component.modelValue.length).toBe(selectedAfterFirst);
-            }));
+            });
 
-            it('should invoke a custom selectAllHandler on CTRL + A instead of the default', fakeAsync(() => {
+            it('should invoke a custom selectAllHandler on CTRL + A instead of the default', async () => {
                 const customHandler = vi.fn();
 
                 component.selectAllHandler = customHandler;
@@ -695,7 +711,7 @@ describe('KbqTreeSelection', () => {
                 expect(customHandler).toHaveBeenCalledTimes(1);
                 // default behaviour is bypassed -> nothing gets selected
                 expect(component.modelValue.length).toBe(0);
-            }));
+            });
 
             it('should not select non-selectable option via setSelectedOptionsByClick', () => {
                 const option = component.tree.renderedOptions.toArray()[2];
@@ -721,7 +737,9 @@ describe('KbqTreeSelection', () => {
                 configureKbqTreeTestingModule();
             });
 
-            it('renders deeper nodes as selectable options without crashing the action button', fakeAsync(() => {
+            it('renders deeper nodes as selectable options without crashing the action button', async () => {
+                vi.useFakeTimers();
+
                 const fixture = TestBed.createComponent(TreeWithActionButtonApp);
 
                 fixture.detectChanges();
@@ -731,7 +749,7 @@ describe('KbqTreeSelection', () => {
 
                 component.treeControl.expand(parent);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 // Before the fix, KbqOptionActionComponent.ngAfterViewInit threw — `dropdownTrigger` was a
                 // signal query and `dropdownClosed` an `output()` without `.pipe` — aborting the tree render,
@@ -741,7 +759,7 @@ describe('KbqTreeSelection', () => {
                     .some((option) => option.getHostElement().textContent!.includes('Sun'));
 
                 expect(renderedHasSun).toBe(true);
-            }));
+            });
         });
 
         describe('action button visibility', () => {
@@ -760,25 +778,31 @@ describe('KbqTreeSelection', () => {
 
             // Styles are stripped in jsdom, so these assert the classes the reveal rules key off:
             // `.kbq-tree-selection.cdk-keyboard-focused .kbq-tree-option.kbq-focused` (see tree-option.scss).
-            it('should not mark the tree as keyboard-focused when an option is focused by mouse', fakeAsync(() => {
+            it('should not mark the tree as keyboard-focused when an option is focused by mouse', async () => {
+                vi.useFakeTimers();
+
                 TestBed.inject(FocusMonitor).focusVia(options[0].nativeElement, 'mouse');
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(options[0].nativeElement.classList).toContain('kbq-focused');
                 expect(treeElement.classList).not.toContain('cdk-keyboard-focused');
-            }));
+            });
 
-            it('should mark the tree as keyboard-focused when an option is focused via keyboard', fakeAsync(() => {
+            it('should mark the tree as keyboard-focused when an option is focused via keyboard', async () => {
+                vi.useFakeTimers();
+
                 TestBed.inject(FocusMonitor).focusVia(options[0].nativeElement, 'keyboard');
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(options[0].nativeElement.classList).toContain('kbq-focused');
                 expect(treeElement.classList).toContain('cdk-keyboard-focused');
-            }));
+            });
 
-            it('should not swallow Tab when the action button cannot take focus', fakeAsync(() => {
+            it('should not swallow Tab when the action button cannot take focus', async () => {
+                vi.useFakeTimers();
+
                 const option = options[0];
                 const actionButtonDebugElement = option.query(By.directive(KbqOptionActionComponent));
                 const actionButton = actionButtonDebugElement.componentInstance;
@@ -791,24 +815,26 @@ describe('KbqTreeSelection', () => {
 
                 const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
 
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(actionButton.hasFocus).toBe(false);
                 expect(event.defaultPrevented).toBe(false);
                 expect(option.nativeElement.classList).not.toContain('kbq-action-button-focused');
-            }));
+            });
 
-            it('should swallow Tab when the action button takes focus', fakeAsync(() => {
+            it('should swallow Tab when the action button takes focus', async () => {
+                vi.useFakeTimers();
+
                 const option = options[0];
                 const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
 
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
                 expect(event.defaultPrevented).toBe(true);
                 expect(option.nativeElement.classList).toContain('kbq-action-button-focused');
-            }));
+            });
         });
 
         describe('selectable with non-selectable parents', () => {
@@ -825,39 +851,45 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should not select non-selectable parent on click before expand', fakeAsync(() => {
+            it('should not select non-selectable parent on click before expand', async () => {
+                vi.useFakeTimers();
+
                 const nodes = getNodes(treeElement);
 
                 dispatchEvent(nodes[1], createMouseEvent('click'));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(component.modelValue).toBe('');
-            }));
+            });
 
-            it('should not select non-selectable parent on click after expand', fakeAsync(() => {
+            it('should not select non-selectable parent on click after expand', async () => {
+                vi.useFakeTimers();
+
                 let nodes = getNodes(treeElement);
 
                 (nodes[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(5);
 
                 dispatchEvent(nodes[1], createMouseEvent('click'));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(component.modelValue).toBe('');
-            }));
+            });
 
-            it('should not select newly rendered non-selectable parent on click after expand', fakeAsync(() => {
+            it('should not select newly rendered non-selectable parent on click after expand', async () => {
+                vi.useFakeTimers();
+
                 let nodes = getNodes(treeElement);
 
                 (nodes[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 nodes = getNodes(treeElement);
                 // docs, src, cdk, README, tests
@@ -865,56 +897,58 @@ describe('KbqTreeSelection', () => {
 
                 dispatchEvent(nodes[2], createMouseEvent('click'));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(component.modelValue).toBe('');
-            }));
+            });
 
-            it('should not select non-selectable options on arrow navigation after expand', fakeAsync(() => {
+            it('should not select non-selectable options on arrow navigation after expand', async () => {
+                vi.useFakeTimers();
+
                 let nodes = getNodes(treeElement);
 
                 (nodes[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 nodes = getNodes(treeElement);
 
                 dispatchEvent(nodes[0], createMouseEvent('click'));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(component.modelValue).toBe('docs');
 
                 component.tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(component.tree.keyManager.activeItemIndex).toBe(1);
                 expect(component.modelValue).toBe('docs');
 
                 component.tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(component.tree.keyManager.activeItemIndex).toBe(2);
                 expect(component.modelValue).toBe('docs');
-            }));
+            });
         });
 
         describe('keyboard navigation with LEFT_ARROW', () => {
             let fixture: ComponentFixture<KbqTreeAppDeepData>;
             let component: KbqTreeAppDeepData;
 
-            const pressKey = (keyCode: number) => {
+            const pressKey = async (keyCode: number) => {
                 component.tree.onKeyDown(createKeyboardEvent('keydown', keyCode));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
             };
 
-            const expandNode = (index: number) => {
+            const expandNode = async (index: number) => {
                 (getNodes(treeElement)[index].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
             };
 
             const getActiveValue = () => component.tree.keyManager.activeItem?.value;
@@ -929,226 +963,248 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should collapse an expanded option without moving the focus', fakeAsync(() => {
-                expandNode(1);
+            it('should collapse an expanded option without moving the focus', async () => {
+                vi.useFakeTimers();
+
+                await expandNode(1);
 
                 // docs, src, assets, cdk, README, tests
                 expect(getNodes(treeElement).length).toBe(6);
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('src');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getNodes(treeElement).length).toBe(3);
                 expect(component.treeControl.expansionModel.selected.length).toBe(0);
                 expect(getActiveValue()).toBe('src');
-            }));
+            });
 
-            it('should move the focus to the parent when the active option is a leaf', fakeAsync(() => {
-                expandNode(1);
+            it('should move the focus to the parent when the active option is a leaf', async () => {
+                vi.useFakeTimers();
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await expandNode(1);
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('assets');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getActiveValue()).toBe('src');
                 // the parent is only focused, not collapsed
                 expect(getNodes(treeElement).length).toBe(6);
-            }));
+            });
 
-            it('should move the focus to the parent when the active option is already collapsed', fakeAsync(() => {
-                expandNode(1);
+            it('should move the focus to the parent when the active option is already collapsed', async () => {
+                vi.useFakeTimers();
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await expandNode(1);
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('cdk');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getActiveValue()).toBe('src');
                 expect(getNodes(treeElement).length).toBe(6);
-            }));
+            });
 
-            it('should collapse the whole tree with repeated presses', fakeAsync(() => {
-                expandNode(1);
-                expandNode(3);
+            it('should collapse the whole tree with repeated presses', async () => {
+                vi.useFakeTimers();
+
+                await expandNode(1);
+                await expandNode(3);
 
                 // docs, src, assets, cdk, a11y, keycodes, README, tests
                 expect(getNodes(treeElement).length).toBe(8);
                 expect(component.treeControl.expansionModel.selected.length).toBe(2);
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('cdk');
 
                 // expanded -> collapse, the focus stays put
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getNodes(treeElement).length).toBe(6);
                 expect(getActiveValue()).toBe('cdk');
 
                 // collapsed -> step up over the `assets` sibling to `src`
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getActiveValue()).toBe('src');
 
                 // expanded -> collapse
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getNodes(treeElement).length).toBe(3);
                 expect(component.treeControl.expansionModel.selected.length).toBe(0);
 
                 // `src` is a root, so the tree stays fully collapsed
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getNodes(treeElement).length).toBe(3);
                 expect(getActiveValue()).toBe('src');
-            }));
+            });
 
-            it('should move the focus to the parent when the toggle of an expanded option is disabled', fakeAsync(() => {
-                expandNode(1);
-                expandNode(3);
+            it('should move the focus to the parent when the toggle of an expanded option is disabled', async () => {
+                vi.useFakeTimers();
+
+                await expandNode(1);
+                await expandNode(3);
 
                 // the toggle is disabled only after expanding — a disabled toggle cannot be clicked open
                 component.disabledToggles = ['cdk'];
                 fixture.detectChanges();
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 // the option itself stays enabled, so DOWN_ARROW does not skip it
                 expect(getActiveValue()).toBe('cdk');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 // a disabled toggle makes the option non-expandable, so `cdk` is not collapsed
                 expect(getNodes(treeElement).length).toBe(8);
                 expect(component.treeControl.expansionModel.selected.length).toBe(2);
                 expect(getActiveValue()).toBe('src');
-            }));
+            });
 
-            it('should do nothing on a root-level option', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
+            it('should do nothing on a root-level option', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('docs');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(component.tree.keyManager.activeItemIndex).toBe(0);
                 expect(getNodes(treeElement).length).toBe(3);
-            }));
+            });
 
-            it('should skip a disabled ancestor instead of landing on its sibling', fakeAsync(() => {
+            it('should skip a disabled ancestor instead of landing on its sibling', async () => {
+                vi.useFakeTimers();
+
                 component.disabledNodes = ['cdk'];
                 fixture.detectChanges();
 
-                expandNode(1);
-                expandNode(3);
+                await expandNode(1);
+                await expandNode(3);
 
                 expect(getNodes(treeElement).length).toBe(8);
 
                 // DOWN_ARROW skips the disabled `cdk`, so the fourth press lands on `a11y`
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('a11y');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 // `cdk` cannot take the focus, so the walk narrows to its level and reaches `src` —
                 // without narrowing it would stop on `assets`, a sibling of the parent
                 expect(getActiveValue()).toBe('src');
-            }));
+            });
 
-            it('should keep narrowing the level across a chain of disabled ancestors', fakeAsync(() => {
+            it('should keep narrowing the level across a chain of disabled ancestors', async () => {
+                vi.useFakeTimers();
+
                 component.disabledNodes = ['src', 'cdk'];
                 fixture.detectChanges();
 
-                expandNode(1);
-                expandNode(3);
+                await expandNode(1);
+                await expandNode(3);
 
                 expect(getNodes(treeElement).length).toBe(8);
 
                 // DOWN_ARROW skips both disabled ancestors, so the third press lands on `a11y`
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('a11y');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 // the walk narrows twice — over `cdk` to level 1, then over `src` to level 0 — so
                 // neither `assets` (a sibling of `cdk`) nor `docs` (a sibling of `src`) takes the focus
                 expect(getActiveValue()).toBe('a11y');
-            }));
+            });
 
-            it('should do nothing when every ancestor is disabled', fakeAsync(() => {
+            it('should do nothing when every ancestor is disabled', async () => {
+                vi.useFakeTimers();
+
                 component.disabledNodes = ['src'];
                 fixture.detectChanges();
 
-                expandNode(1);
+                await expandNode(1);
 
                 // DOWN_ARROW skips the disabled `src`, so the second press lands on `assets`
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('assets');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getActiveValue()).toBe('assets');
-            }));
+            });
 
-            it('should not change the selection when moving to the parent', fakeAsync(() => {
-                expandNode(1);
+            it('should not change the selection when moving to the parent', async () => {
+                vi.useFakeTimers();
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await expandNode(1);
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(component.modelValue).toBe('assets');
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(getActiveValue()).toBe('src');
                 expect(component.modelValue).toBe('assets');
-            }));
+            });
 
-            it('should emit navigationChange when moving to the parent', fakeAsync(() => {
-                expandNode(1);
+            it('should emit navigationChange when moving to the parent', async () => {
+                vi.useFakeTimers();
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+                await expandNode(1);
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 const spy = vi.fn();
                 const subscription = component.tree.navigationChange.subscribe(spy);
 
-                pressKey(LEFT_ARROW);
+                await pressKey(LEFT_ARROW);
 
                 expect(spy).toHaveBeenCalledTimes(1);
                 expect(spy.mock.calls[0][0].option.value).toBe('src');
 
                 subscription.unsubscribe();
-            }));
+            });
         });
 
         // todo need recover
@@ -1190,35 +1246,39 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should filter nodes by condition', fakeAsync(() => {
+            it('should filter nodes by condition', async () => {
+                vi.useFakeTimers();
+
                 let nodes = getNodes(treeElement);
 
                 expect(nodes.length).toBe(5);
 
                 component.treeControl.filterNodes('app');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(5);
 
                 component.treeControl.filterNodes('Documents');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(1);
 
                 component.treeControl.filterNodes('condition for filter all nodes');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(0);
-            }));
+            });
 
-            it('should filter nodes and but not their parents', fakeAsync(() => {
+            it('should filter nodes and but not their parents', async () => {
+                vi.useFakeTimers();
+
                 let nodes = getNodes(treeElement);
 
                 expect(nodes.length).toBe(5);
 
                 component.treeControl.filterNodes('Sun');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
 
                 const parentOfFoundedNode = nodes[0].textContent!.trim();
@@ -1230,9 +1290,11 @@ describe('KbqTreeSelection', () => {
                 expect(foundedNode).toBe('Sun');
 
                 expect(nodes.length).toBe(2);
-            }));
+            });
 
-            it('should delete filtration with empty condition', fakeAsync(() => {
+            it('should delete filtration with empty condition', async () => {
+                vi.useFakeTimers();
+
                 const initialNodesCount = 5;
                 let nodes = getNodes(treeElement);
 
@@ -1240,15 +1302,15 @@ describe('KbqTreeSelection', () => {
 
                 component.treeControl.filterNodes('app');
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(5);
 
                 component.treeControl.filterNodes('');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toBe(initialNodesCount);
-            }));
+            });
         });
 
         describe('should filter by selection', () => {
@@ -1265,29 +1327,33 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should filter selected nodes by 1 level by click', fakeAsync(() => {
+            it('should filter selected nodes by 1 level by click', async () => {
+                vi.useFakeTimers();
+
                 const initialNodesCount = 5;
                 let nodes = getNodes(treeElement);
 
                 expect(nodes.length).toBe(initialNodesCount);
                 component.modelValue = [];
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 const selectedNodes = nodes.slice(0, 2);
 
                 selectedNodes.forEach((node) => dispatchFakeEvent(node, 'click'));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 component.treeControl.filterNodes(null);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
                 expect(nodes.length).toEqual(selectedNodes.length);
-            }));
+            });
 
-            it('should filter NOT selected nodes by 1 level by click', fakeAsync(() => {
+            it('should filter NOT selected nodes by 1 level by click', async () => {
+                vi.useFakeTimers();
+
                 const initialNodesCount = 5;
                 let nodes = getNodes(treeElement);
 
@@ -1295,13 +1361,13 @@ describe('KbqTreeSelection', () => {
 
                 component.modelValue = [];
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 const selectedNodes = nodes.slice(0, 2);
 
                 selectedNodes.forEach((node) => dispatchFakeEvent(node, 'click'));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 const values = component.treeControl.dataNodes
                     .filter((node) => !component.modelValue.includes(component.treeControl.getValue(node)))
@@ -1310,44 +1376,48 @@ describe('KbqTreeSelection', () => {
                 component.filterByValues.setValues(values);
 
                 component.treeControl.filterNodes(null);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 nodes = getNodes(treeElement);
 
                 expect(nodes.length).toEqual(component.tree.treeControl.dataNodes.length - selectedNodes.length + 1);
-            }));
+            });
 
-            it('should output selected nodes including parents when filtered by modelValue', fakeAsync(() => {
+            it('should output selected nodes including parents when filtered by modelValue', async () => {
+                vi.useFakeTimers();
+
                 component.modelValue = ['rootNode_1', 'Sun', 'Woods', 'PhotoBoothLibrary'];
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 component.treeControl.filterNodes(null);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 const nodes = getNodes(treeElement);
 
                 expect(nodes.length).toEqual(component.modelValue.length + 1);
-            }));
+            });
 
-            it('should apply different filters together', fakeAsync(() => {
+            it('should apply different filters together', async () => {
+                vi.useFakeTimers();
+
                 component.treeControl.filterNodes('app');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 const filteredNodesLengthOnlyByText = component.tree.renderedOptions.map(
                     (option) => option.value
                 ).length;
 
                 component.treeControl.filterNodes(null);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 component.modelValue = ['Chrome', 'Calendar'];
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 component.treeControl.filterNodes(null);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(getNodes(treeElement).length).not.toEqual(filteredNodesLengthOnlyByText);
-            }));
+            });
         });
 
         describe('after dataSource.data replacement', () => {
@@ -1363,8 +1433,10 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should rebind selectionModel orphans so ngModel selection stays toggleable', fakeAsync(() => {
-                tick();
+            it('should rebind selectionModel orphans so ngModel selection stays toggleable', async () => {
+                vi.useFakeTimers();
+
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 const originalPicturesNode = component.treeControl.dataNodes.find(
@@ -1375,7 +1447,7 @@ describe('KbqTreeSelection', () => {
 
                 component.dataSource.data = buildFileTree(DATA_OBJECT, 0);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 const newPicturesNode = component.treeControl.dataNodes.find(
                     (node) => component.treeControl.getValue(node) === 'Pictures'
@@ -1389,11 +1461,11 @@ describe('KbqTreeSelection', () => {
                 expect(picturesOption).toBeDefined();
                 picturesOption!.selectViaInteraction();
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(component.tree.selectionModel.selected.length).toBe(0);
                 expect(component.modelValue).toEqual([]);
-            }));
+            });
         });
 
         describe('after a dataSource swap', () => {
@@ -1413,8 +1485,10 @@ describe('KbqTreeSelection', () => {
             /** The level cache is private, and keyed by the node objects it would otherwise pin. */
             const levelsOf = (tree: KbqTreeSelection) => (tree as unknown as { levels: Map<unknown, number> }).levels;
 
-            it('should drop the level cache of the previous data source', fakeAsync(() => {
-                tick();
+            it('should drop the level cache of the previous data source', async () => {
+                vi.useFakeTimers();
+
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(levelsOf(component.tree()).size).toBe(5);
 
@@ -1424,14 +1498,16 @@ describe('KbqTreeSelection', () => {
 
                 component.dataSource = nextDataSource;
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 expect(levelsOf(component.tree()).size).toBe(5);
-            }));
+            });
 
-            it('should render the new data source instead of appending it to the old one', fakeAsync(() => {
-                tick();
+            it('should render the new data source instead of appending it to the old one', async () => {
+                vi.useFakeTimers();
+
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(getNodes(treeElement).length).toBe(5);
 
@@ -1441,15 +1517,17 @@ describe('KbqTreeSelection', () => {
 
                 component.dataSource = nextDataSource;
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 expect(getNodes(treeElement).length).toBe(5);
                 expect(component.tree().nodesCount).toBe(5);
-            }));
+            });
 
-            it('should clear the outlet when the data source is set to null', fakeAsync(() => {
-                tick();
+            it('should clear the outlet when the data source is set to null', async () => {
+                vi.useFakeTimers();
+
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(getNodes(treeElement).length).toBe(5);
 
@@ -1460,7 +1538,7 @@ describe('KbqTreeSelection', () => {
 
                 expect(getNodes(treeElement).length).toBe(0);
                 expect(levelsOf(component.tree()).size).toBe(0);
-            }));
+            });
         });
 
         describe('with a trackBy function', () => {
@@ -1482,8 +1560,10 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should re-derive the value and the indentation of a reused row', fakeAsync(() => {
-                tick();
+            it('should re-derive the value and the indentation of a reused row', async () => {
+                vi.useFakeTimers();
+
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 const [root, child] = options();
@@ -1496,7 +1576,7 @@ describe('KbqTreeSelection', () => {
                     { id: 2, name: 'docs', level: 2, expandable: false }
                 ]);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 // Same instances: the point of the test is the row that was reused rather than rebuilt.
@@ -1505,7 +1585,7 @@ describe('KbqTreeSelection', () => {
 
                 expect(root.value).toBe('source');
                 expect(child.getHostElement().style.paddingLeft).toBe('60px');
-            }));
+            });
         });
 
         describe('selection with CTRL + A', () => {
@@ -1529,7 +1609,7 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should select all visible options and values', fakeAsync(() => {
+            it('should select all visible options and values', async () => {
                 expect(component.modelValue.length).toBe(0);
 
                 const onSelectionChange = vi.spyOn(component, 'onSelectionChange');
@@ -1544,9 +1624,9 @@ describe('KbqTreeSelection', () => {
                 expect(onSelectAll).toHaveBeenCalled();
                 expect(component.savedSelectAllEvent!.options.length).toBe(5);
                 expect(component.modelValue.length).toBe(17);
-            }));
+            });
 
-            it('should deselect all visible options and values', fakeAsync(() => {
+            it('should deselect all visible options and values', async () => {
                 component.selectAllToggle = true;
                 fixture.detectChanges();
 
@@ -1564,11 +1644,13 @@ describe('KbqTreeSelection', () => {
                 expect(component.savedSelectionChangeEvent!.options!.length).toBe(5);
                 expect(component.savedSelectAllEvent!.options.length).toBe(5);
                 expect(component.modelValue.length).toBe(0);
-            }));
+            });
 
-            it('should select only the matches while a filter is active', fakeAsync(() => {
+            it('should select only the matches while a filter is active', async () => {
+                vi.useFakeTimers();
+
                 component.treeControl.filterNodes('Sun');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 component.tree.onKeyDown(selectAllKeyEvent);
@@ -1576,9 +1658,9 @@ describe('KbqTreeSelection', () => {
 
                 // `FilterParentsForNodes` keeps the match's ancestors visible, so they take part too.
                 expect(component.modelValue).toEqual(['Pictures', 'Sun']);
-            }));
+            });
 
-            it('should not emit selectionChange with an undefined option on a no-op CTRL + A (default)', fakeAsync(() => {
+            it('should not emit selectionChange with an undefined option on a no-op CTRL + A (default)', async () => {
                 // first press selects everything (default: selectAllToggle off)
                 component.tree.onKeyDown(selectAllKeyEvent);
                 fixture.detectChanges();
@@ -1593,7 +1675,7 @@ describe('KbqTreeSelection', () => {
 
                 expect(onSelectionChange).not.toHaveBeenCalled();
                 expect(component.savedSelectionChangeEvent).toBeUndefined();
-            }));
+            });
         });
 
         describe('selectAll (standalone kbq-tree-selection, no kbq-tree-select wrapper)', () => {
@@ -1708,10 +1790,10 @@ describe('KbqTreeSelection', () => {
             let fixture: ComponentFixture<KbqTreeAppDeepData>;
             let component: KbqTreeAppDeepData;
 
-            const pressKey = (keyCode: number) => {
+            const pressKey = async (keyCode: number) => {
                 component.tree.onKeyDown(createKeyboardEvent('keydown', keyCode));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
             };
 
             const getActiveValue = () => component.tree.keyManager.activeItem?.value;
@@ -1726,66 +1808,76 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should expand a collapsed option without moving the focus', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+            it('should expand a collapsed option without moving the focus', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('src');
 
-                pressKey(RIGHT_ARROW);
+                await pressKey(RIGHT_ARROW);
 
                 // docs, src, assets, cdk, README, tests
                 expect(getNodes(treeElement).length).toBe(6);
                 expect(getActiveValue()).toBe('src');
-            }));
+            });
 
-            it('should move the focus to the first child of an already expanded option', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(RIGHT_ARROW);
+            it('should move the focus to the first child of an already expanded option', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(RIGHT_ARROW);
 
                 expect(getActiveValue()).toBe('src');
 
-                pressKey(RIGHT_ARROW);
+                await pressKey(RIGHT_ARROW);
 
                 expect(getActiveValue()).toBe('assets');
                 expect(getNodes(treeElement).length).toBe(6);
-            }));
+            });
 
-            it('should do nothing on a leaf', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
+            it('should do nothing on a leaf', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('docs');
 
-                pressKey(RIGHT_ARROW);
+                await pressKey(RIGHT_ARROW);
 
                 expect(getActiveValue()).toBe('docs');
                 expect(getNodes(treeElement).length).toBe(3);
-            }));
+            });
 
-            it('should skip a disabled first child', fakeAsync(() => {
+            it('should skip a disabled first child', async () => {
+                vi.useFakeTimers();
+
                 component.disabledNodes = ['assets'];
                 fixture.detectChanges();
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(RIGHT_ARROW);
-                pressKey(RIGHT_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(RIGHT_ARROW);
+                await pressKey(RIGHT_ARROW);
 
                 expect(getActiveValue()).toBe('cdk');
-            }));
+            });
 
-            it('should stay put when every child is disabled', fakeAsync(() => {
+            it('should stay put when every child is disabled', async () => {
+                vi.useFakeTimers();
+
                 component.disabledNodes = ['assets', 'cdk', 'README'];
                 fixture.detectChanges();
 
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(RIGHT_ARROW);
-                pressKey(RIGHT_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(RIGHT_ARROW);
+                await pressKey(RIGHT_ARROW);
 
                 expect(getActiveValue()).toBe('src');
-            }));
+            });
         });
 
         describe('keyboard navigation with the remaining keys', () => {
@@ -1795,10 +1887,10 @@ describe('KbqTreeSelection', () => {
             /** Matches the default debounce `FocusKeyManager.withTypeAhead` applies to the letter stream. */
             const typeAheadDebounce = 200;
 
-            const pressKey = (keyCode: number, key?: string) => {
+            const pressKey = async (keyCode: number, key?: string) => {
                 component.tree.onKeyDown(createKeyboardEvent('keydown', keyCode, undefined, key));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
             };
 
             const getActiveValue = () => component.tree.keyManager.activeItem?.value;
@@ -1813,83 +1905,99 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should step back with UP_ARROW', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+            it('should step back with UP_ARROW', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(getActiveValue()).toBe('src');
 
-                pressKey(UP_ARROW);
+                await pressKey(UP_ARROW);
 
                 expect(getActiveValue()).toBe('docs');
-            }));
+            });
 
-            it('should jump to the first option with HOME', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
-                pressKey(HOME);
+            it('should jump to the first option with HOME', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
+                await pressKey(HOME);
 
                 expect(getActiveValue()).toBe('docs');
-            }));
+            });
 
-            it('should jump to the last option with END', fakeAsync(() => {
-                pressKey(END);
+            it('should jump to the last option with END', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(END);
 
                 expect(getActiveValue()).toBe('tests');
-            }));
+            });
 
-            it('should select the active option with ENTER', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
-                pressKey(ENTER);
+            it('should select the active option with ENTER', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(ENTER);
 
                 expect(component.tree.keyManager.activeItem!.selected).toBe(true);
-            }));
+            });
 
-            it('should move to the option whose name starts with the typed character', fakeAsync(() => {
-                pressKey(T, 't');
+            it('should move to the option whose name starts with the typed character', async () => {
+                vi.useFakeTimers();
 
-                tick(typeAheadDebounce);
+                await pressKey(T, 't');
+
+                await vi.advanceTimersByTimeAsync(typeAheadDebounce);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(getActiveValue()).toBe('tests');
-            }));
+            });
 
-            it('should ignore typed characters once type-ahead is turned off', fakeAsync(() => {
+            it('should ignore typed characters once type-ahead is turned off', async () => {
+                vi.useFakeTimers();
+
                 component.tree.typeAhead = false;
                 fixture.detectChanges();
 
-                pressKey(T, 't');
+                await pressKey(T, 't');
 
-                tick(typeAheadDebounce);
+                await vi.advanceTimersByTimeAsync(typeAheadDebounce);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(getActiveValue()).toBeUndefined();
-            }));
+            });
 
-            it('should not answer a Ctrl/Cmd/Alt shortcut with type-ahead', fakeAsync(() => {
+            it('should not answer a Ctrl/Cmd/Alt shortcut with type-ahead', async () => {
+                vi.useFakeTimers();
+
                 const event = createKeyboardEvent('keydown', T, undefined, 't');
 
                 Object.defineProperty(event, 'ctrlKey', { get: () => true });
 
                 component.tree.onKeyDown(event);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
-                tick(typeAheadDebounce);
+                await vi.advanceTimersByTimeAsync(typeAheadDebounce);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(getActiveValue()).toBeUndefined();
-            }));
+            });
 
-            it('should not answer type-ahead with the select-all row', fakeAsync(() => {
+            it('should not answer type-ahead with the select-all row', async () => {
+                vi.useFakeTimers();
+
                 const multipleFixture = TestBed.createComponent(KbqTreeAppMultiple);
 
                 multipleFixture.componentInstance.selectAllEnabled = true;
                 multipleFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 // The row's label is "Выбрать все", so an English query cannot match it either way —
                 // `getLabel` reports an empty label for it, which is what keeps it out of every query.
@@ -1898,12 +2006,12 @@ describe('KbqTreeSelection', () => {
                 multipleFixture.componentInstance.tree.onKeyDown(createKeyboardEvent('keydown', D, undefined, 'd'));
                 multipleFixture.detectChanges();
 
-                tick(typeAheadDebounce);
+                await vi.advanceTimersByTimeAsync(typeAheadDebounce);
                 multipleFixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(multipleFixture.componentInstance.tree.keyManager.activeItem?.value).toBe('Documents');
-            }));
+            });
         });
 
         describe('tri-state checkbox', () => {
@@ -1915,23 +2023,20 @@ describe('KbqTreeSelection', () => {
 
             const nodeFor = (value: string): HTMLElement => getNodeByText(treeElement, value);
 
-            // `tick()`, not `flush()`: the option-sync pass is scheduled through rxjs `delay(0, scheduler)`,
-            // which schedules on `setInterval` and therefore counts as a periodic task, and `flush()` stops
-            // as soon as only periodic tasks are left in the queue.
-            const settle = () => {
+            const settle = async () => {
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
             };
 
-            const clickNode = (value: string) => {
+            const clickNode = async (value: string) => {
                 dispatchEvent(nodeFor(value), createMouseEvent('click'));
-                settle();
+                await settle();
             };
 
-            const toggleNode = (value: string) => {
+            const toggleNode = async (value: string) => {
                 (nodeFor(value).querySelector('kbq-tree-node-toggle') as HTMLElement).click();
-                settle();
+                await settle();
             };
 
             beforeEach(() => {
@@ -1944,86 +2049,104 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should start out unchecked', fakeAsync(() => {
-                flush();
+            it('should start out unchecked', async () => {
+                vi.useFakeTimers();
+
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(optionFor('Pictures').checkboxState).toBe('unchecked');
-            }));
+            });
 
-            it('should become indeterminate when only some descendants are selected', fakeAsync(() => {
-                toggleNode('Pictures');
-                clickNode('Sun');
+            it('should become indeterminate when only some descendants are selected', async () => {
+                vi.useFakeTimers();
+
+                await toggleNode('Pictures');
+                await clickNode('Sun');
 
                 expect(optionFor('Pictures').checkboxState).toBe('indeterminate');
-            }));
+            });
 
-            it('should become checked when every descendant is selected', fakeAsync(() => {
-                toggleNode('Pictures');
-                clickNode('Sun');
-                clickNode('Woods');
-                clickNode('PhotoBoothLibrary');
+            it('should become checked when every descendant is selected', async () => {
+                vi.useFakeTimers();
+
+                await toggleNode('Pictures');
+                await clickNode('Sun');
+                await clickNode('Woods');
+                await clickNode('PhotoBoothLibrary');
 
                 expect(optionFor('Pictures').checkboxState).toBe('checked');
-            }));
+            });
 
-            it('should fall back to indeterminate when a descendant is deselected again', fakeAsync(() => {
-                toggleNode('Pictures');
-                clickNode('Sun');
-                clickNode('Woods');
-                clickNode('PhotoBoothLibrary');
-                clickNode('Sun');
+            it('should fall back to indeterminate when a descendant is deselected again', async () => {
+                vi.useFakeTimers();
+
+                await toggleNode('Pictures');
+                await clickNode('Sun');
+                await clickNode('Woods');
+                await clickNode('PhotoBoothLibrary');
+                await clickNode('Sun');
 
                 expect(optionFor('Pictures').checkboxState).toBe('indeterminate');
-            }));
+            });
 
-            it('should go back to unchecked once nothing is selected', fakeAsync(() => {
-                toggleNode('Pictures');
-                clickNode('Sun');
-                clickNode('Sun');
+            it('should go back to unchecked once nothing is selected', async () => {
+                vi.useFakeTimers();
+
+                await toggleNode('Pictures');
+                await clickNode('Sun');
+                await clickNode('Sun');
 
                 expect(optionFor('Pictures').checkboxState).toBe('unchecked');
-            }));
+            });
 
-            it('should keep the rolled-up state while the branch is collapsed', fakeAsync(() => {
-                toggleNode('Pictures');
-                clickNode('Sun');
-                toggleNode('Pictures');
+            it('should keep the rolled-up state while the branch is collapsed', async () => {
+                vi.useFakeTimers();
+
+                await toggleNode('Pictures');
+                await clickNode('Sun');
+                await toggleNode('Pictures');
 
                 expect(getNodes(treeElement).length).toBe(5);
                 expect(optionFor('Pictures').checkboxState).toBe('indeterminate');
-            }));
+            });
 
-            it('should report the tri-state through aria-checked', fakeAsync(() => {
-                toggleNode('Pictures');
+            it('should report the tri-state through aria-checked', async () => {
+                vi.useFakeTimers();
+
+                await toggleNode('Pictures');
 
                 expect(nodeFor('Pictures').getAttribute('aria-checked')).toBe('false');
 
-                clickNode('Sun');
+                await clickNode('Sun');
 
                 expect(nodeFor('Pictures').getAttribute('aria-checked')).toBe('mixed');
 
-                clickNode('Woods');
-                clickNode('PhotoBoothLibrary');
+                await clickNode('Woods');
+                await clickNode('PhotoBoothLibrary');
 
                 expect(nodeFor('Pictures').getAttribute('aria-checked')).toBe('true');
-            }));
+            });
 
-            it('should check the whole branch through setStateChildren', fakeAsync(() => {
-                toggleNode('Pictures');
+            it('should check the whole branch through setStateChildren', async () => {
+                vi.useFakeTimers();
+
+                await toggleNode('Pictures');
 
                 component.tree.setStateChildren(optionFor('Pictures'), true);
-                settle();
+                await settle();
 
                 expect(optionFor('Pictures').checkboxState).toBe('checked');
                 expect(optionFor('Sun').selected).toBe(true);
                 expect(optionFor('Woods').selected).toBe(true);
-            }));
+            });
 
-            it('should clear the whole branch through setStateChildren', fakeAsync(() => {
-                toggleNode('Pictures');
+            it('should clear the whole branch through setStateChildren', async () => {
+                vi.useFakeTimers();
+
+                await toggleNode('Pictures');
 
                 component.tree.setStateChildren(optionFor('Pictures'), true);
-                settle();
+                await settle();
 
                 // The branch has to actually reach the checked state first: asserting only the cleared one
                 // would pass against the field initialisers, with or without `setStateChildren`.
@@ -2031,11 +2154,11 @@ describe('KbqTreeSelection', () => {
                 expect(optionFor('Sun').selected).toBe(true);
 
                 component.tree.setStateChildren(optionFor('Pictures'), false);
-                settle();
+                await settle();
 
                 expect(optionFor('Pictures').checkboxState).toBe('unchecked');
                 expect(optionFor('Sun').selected).toBe(false);
-            }));
+            });
         });
 
         describe('disabled options', () => {
@@ -2050,7 +2173,7 @@ describe('KbqTreeSelection', () => {
                     component.treeControl.getValue(node as unknown as FileFlatNode)
                 );
 
-            const pressKey = (keyCode: number, modifier?: 'ctrlKey' | 'shiftKey') => {
+            const pressKey = async (keyCode: number, modifier?: 'ctrlKey' | 'shiftKey') => {
                 const event = createKeyboardEvent('keydown', keyCode);
 
                 if (modifier) {
@@ -2059,7 +2182,7 @@ describe('KbqTreeSelection', () => {
 
                 component.tree.onKeyDown(event);
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
             };
 
             beforeEach(() => {
@@ -2073,52 +2196,55 @@ describe('KbqTreeSelection', () => {
                 fixture.detectChanges();
             });
 
-            it('should not select a disabled option on click', fakeAsync(() => {
+            it('should not select a disabled option on click', async () => {
+                vi.useFakeTimers();
+
                 dispatchEvent(getNodeByText(treeElement, 'Documents'), createMouseEvent('click'));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(selectedValues()).toEqual([]);
-            }));
+            });
 
             it('should report the disabled state through aria-disabled', () => {
                 expect(getNodeByText(treeElement, 'Documents').getAttribute('aria-disabled')).toBe('true');
                 expect(getNodeByText(treeElement, 'Pictures').hasAttribute('aria-disabled')).toBe(false);
             });
 
-            it('should leave a disabled option out of CTRL + A', fakeAsync(() => {
-                pressKey(A, 'ctrlKey');
+            it('should leave a disabled option out of CTRL + A', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(A, 'ctrlKey');
 
                 expect(selectedValues()).toContain('Pictures');
                 expect(selectedValues()).not.toContain('Documents');
-            }));
+            });
 
-            it('should skip a disabled option inside a shift range', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW, 'shiftKey');
-                pressKey(DOWN_ARROW, 'shiftKey');
-                pressKey(DOWN_ARROW, 'shiftKey');
+            it('should skip a disabled option inside a shift range', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW, 'shiftKey');
+                await pressKey(DOWN_ARROW, 'shiftKey');
+                await pressKey(DOWN_ARROW, 'shiftKey');
 
                 expect(selectedValues()).toContain('Downloads');
                 expect(selectedValues()).not.toContain('Documents');
-            }));
+            });
         });
 
         describe('noUnselectLast', () => {
             let fixture: ComponentFixture<KbqTreeAppMultiple>;
             let component: KbqTreeAppMultiple;
 
-            // `tick()`, not `flush()`: the option-sync pass is scheduled through rxjs `delay(0, scheduler)`,
-            // which schedules on `setInterval` and therefore counts as a periodic task, and `flush()` stops
-            // as soon as only periodic tasks are left in the queue.
-            const ctrlClick = (index: number) => {
+            const ctrlClick = async (index: number) => {
                 const event = createMouseEvent('click');
 
                 Object.defineProperty(event, 'ctrlKey', { get: () => true });
 
                 dispatchEvent(getNodes(treeElement)[index], event);
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
             };
 
@@ -2144,35 +2270,41 @@ describe('KbqTreeSelection', () => {
                 expect(checkboxFixture.componentInstance.tree.noUnselectLast).toBe(false);
             });
 
-            it('should keep the last selected option on a ctrl click', fakeAsync(() => {
-                ctrlClick(0);
+            it('should keep the last selected option on a ctrl click', async () => {
+                vi.useFakeTimers();
+
+                await ctrlClick(0);
 
                 expect(component.tree.selectionModel.selected.length).toBe(1);
 
-                ctrlClick(0);
+                await ctrlClick(0);
 
                 expect(component.tree.selectionModel.selected.length).toBe(1);
-            }));
+            });
 
-            it('should release the last selected option once it is off', fakeAsync(() => {
+            it('should release the last selected option once it is off', async () => {
+                vi.useFakeTimers();
+
                 component.tree.noUnselectLast = false;
                 fixture.detectChanges();
 
-                ctrlClick(0);
-                ctrlClick(0);
+                await ctrlClick(0);
+                await ctrlClick(0);
 
                 expect(component.tree.selectionModel.selected.length).toBe(0);
-            }));
+            });
 
-            it('should keep the last selected option on SPACE', fakeAsync(() => {
-                ctrlClick(0);
+            it('should keep the last selected option on SPACE', async () => {
+                vi.useFakeTimers();
+
+                await ctrlClick(0);
 
                 component.tree.onKeyDown(createKeyboardEvent('keydown', SPACE));
                 fixture.detectChanges();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(component.tree.selectionModel.selected.length).toBe(1);
-            }));
+            });
         });
 
         describe('value accessor', () => {
@@ -2267,12 +2399,14 @@ describe('KbqTreeSelection', () => {
                 expect(treeElement.querySelectorAll('.kbq-tree-option').length).toBe(0);
             });
 
-            it('should drop the per-option focus subscriptions', fakeAsync(() => {
+            it('should drop the per-option focus subscriptions', async () => {
+                vi.useFakeTimers();
+
                 const tree = component.tree;
 
                 tree.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(tree['optionFocusSubscription']).not.toBeNull();
                 expect(tree['optionBlurSubscription']).not.toBeNull();
@@ -2281,9 +2415,11 @@ describe('KbqTreeSelection', () => {
 
                 expect(tree['optionFocusSubscription']).toBeNull();
                 expect(tree['optionBlurSubscription']).toBeNull();
-            }));
+            });
 
-            it('should not restore the tab index after the tree is gone', fakeAsync(() => {
+            it('should not restore the tab index after the tree is gone', async () => {
+                vi.useFakeTimers();
+
                 const tree = component.tree;
 
                 tree.onKeyDown(createKeyboardEvent('keydown', TAB));
@@ -2292,10 +2428,10 @@ describe('KbqTreeSelection', () => {
                 expect(tree.tabIndex).toBe(-1);
 
                 fixture.destroy();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
 
                 expect(tree.tabIndex).toBe(-1);
-            }));
+            });
 
             it('should stop monitoring the host', () => {
                 const stopMonitoring = vi.spyOn(TestBed.inject(FocusMonitor), 'stopMonitoring');
@@ -2312,20 +2448,20 @@ describe('KbqTreeSelection', () => {
 
             const nodeFor = (value: string): HTMLElement => getNodeByText(treeElement, value);
 
-            const settle = () => {
+            const settle = async () => {
                 fixture.detectChanges();
-                flush();
+                await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
             };
 
-            const pressKey = (keyCode: number) => {
+            const pressKey = async (keyCode: number) => {
                 component.tree.onKeyDown(createKeyboardEvent('keydown', keyCode));
-                settle();
+                await settle();
             };
 
-            const expandSrc = () => {
+            const expandSrc = async () => {
                 (nodeFor('src').querySelector('kbq-tree-node-toggle') as HTMLElement).click();
-                settle();
+                await settle();
             };
 
             beforeEach(() => {
@@ -2346,62 +2482,74 @@ describe('KbqTreeSelection', () => {
                 expect(getNodes(treeElement).every((node) => node.getAttribute('role') === 'treeitem')).toBe(true);
             });
 
-            it('should report the nesting depth on aria-level', fakeAsync(() => {
-                expandSrc();
+            it('should report the nesting depth on aria-level', async () => {
+                vi.useFakeTimers();
+
+                await expandSrc();
 
                 expect(nodeFor('src').getAttribute('aria-level')).toBe('1');
                 expect(nodeFor('cdk').getAttribute('aria-level')).toBe('2');
-            }));
+            });
 
-            it('should report the expanded state of expandable rows only', fakeAsync(() => {
+            it('should report the expanded state of expandable rows only', async () => {
+                vi.useFakeTimers();
+
                 expect(nodeFor('src').getAttribute('aria-expanded')).toBe('false');
                 expect(nodeFor('docs').hasAttribute('aria-expanded')).toBe(false);
 
-                expandSrc();
+                await expandSrc();
 
                 expect(nodeFor('src').getAttribute('aria-expanded')).toBe('true');
-            }));
+            });
 
-            it('should keep reporting the expanded state while a filter disables the toggles', fakeAsync(() => {
+            it('should keep reporting the expanded state while a filter disables the toggles', async () => {
+                vi.useFakeTimers();
+
                 component.treeControl.filterNodes('a11y');
-                settle();
+                await settle();
 
                 // Filtering disables every toggle and expands the matched branches: the rows are still
                 // branches, and dropping `aria-expanded` would announce them as leaves.
                 expect(nodeFor('src').querySelector('kbq-tree-node-toggle')!.hasAttribute('disabled')).toBe(true);
                 expect(nodeFor('src').getAttribute('aria-expanded')).toBe('true');
                 expect(nodeFor('cdk').getAttribute('aria-expanded')).toBe('true');
-            }));
+            });
 
             it('should hide the toggle from assistive technology', () => {
                 expect(nodeFor('src').querySelector('kbq-tree-node-toggle')!.getAttribute('aria-hidden')).toBe('true');
             });
 
-            it('should report the selection through aria-selected when there is no checkbox', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
+            it('should report the selection through aria-selected when there is no checkbox', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
 
                 expect(nodeFor('docs').getAttribute('aria-selected')).toBe('true');
                 expect(nodeFor('src').getAttribute('aria-selected')).toBe('false');
-            }));
+            });
 
-            it('should advertise the active option through aria-activedescendant', fakeAsync(() => {
+            it('should advertise the active option through aria-activedescendant', async () => {
+                vi.useFakeTimers();
+
                 expect(treeElement.hasAttribute('aria-activedescendant')).toBe(false);
 
-                pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(treeElement.getAttribute('aria-activedescendant')).toBe(nodeFor('docs').id);
 
-                pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(treeElement.getAttribute('aria-activedescendant')).toBe(nodeFor('src').id);
-            }));
+            });
 
-            it('should move real focus onto the option the arrow keys land on', fakeAsync(() => {
-                pressKey(DOWN_ARROW);
-                pressKey(DOWN_ARROW);
+            it('should move real focus onto the option the arrow keys land on', async () => {
+                vi.useFakeTimers();
+
+                await pressKey(DOWN_ARROW);
+                await pressKey(DOWN_ARROW);
 
                 expect(document.activeElement).toBe(nodeFor('src'));
-            }));
+            });
 
             it('should not announce a single-selection tree as multiselectable', () => {
                 expect(treeElement.hasAttribute('aria-multiselectable')).toBe(false);
@@ -3408,6 +3556,10 @@ describe('KbqTreeSelection multiple mode', () => {
         fixture.detectChanges();
     });
 
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     const getOptions = (): KbqTreeOption[] =>
         fixture.debugElement.queryAll(By.directive(KbqTreeOption)).map(({ componentInstance }) => componentInstance);
 
@@ -3433,19 +3585,21 @@ describe('KbqTreeSelection multiple mode', () => {
         expect(component.tree.selectionModel.isMultipleSelection()).toBe(false);
     });
 
-    it('should keep the first selected node when narrowing to single selection', fakeAsync(() => {
+    it('should keep the first selected node when narrowing to single selection', async () => {
+        vi.useFakeTimers();
+
         const options = getOptions();
 
         options[0].setSelected(true);
         options[1].setSelected(true);
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(component.tree.selectionModel.selected.length).toBe(2);
 
         component.multiple = false;
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
         fixture.detectChanges();
 
         expect(component.tree.selectionModel.selected).toEqual([options[0].data]);
@@ -3453,12 +3607,14 @@ describe('KbqTreeSelection multiple mode', () => {
         // Single selection reports the bare value rather than an array, so narrowing changes the shape the
         // form control receives.
         expect(component.modelValue).toEqual(options[0].value);
-    }));
+    });
 
-    it('should let the swapped model keep driving the nodes', fakeAsync(() => {
+    it('should let the swapped model keep driving the nodes', async () => {
+        vi.useFakeTimers();
+
         component.multiple = false;
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const options = getOptions();
         const onChange = vi.fn();
@@ -3468,7 +3624,7 @@ describe('KbqTreeSelection multiple mode', () => {
         fixture.detectChanges();
 
         expect(onChange).toHaveBeenCalledWith(options[1].value);
-    }));
+    });
 
     it('should re-derive autoSelect and noUnselectLast the consumer left alone', () => {
         expect(component.tree.autoSelect).toBe(false);
@@ -3521,7 +3677,13 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
         fixture.detectChanges();
     });
 
-    it('should re-report the value as an array when widening back to multiple selection', fakeAsync(() => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('should re-report the value as an array when widening back to multiple selection', async () => {
+        vi.useFakeTimers();
+
         const options = fixture.debugElement
             .queryAll(By.directive(KbqTreeOption))
             .map(({ componentInstance }) => componentInstance as KbqTreeOption);
@@ -3529,11 +3691,11 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
         options[0].setSelected(true);
         options[1].setSelected(true);
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         component.multiple = false;
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
         fixture.detectChanges();
 
         // Single selection reports the bare value.
@@ -3541,7 +3703,7 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
 
         component.multiple = 'checkbox';
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
         fixture.detectChanges();
 
         // Widening changes the shape the control has to hold, so it must be reported again.
@@ -3550,9 +3712,11 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
 
         // The shape now matches the mode, so writing the control's own value back is accepted.
         expect(() => component.tree.writeValue(component.modelValue)).not.toThrow();
-    }));
+    });
 
-    it('should report once for several mode changes in one tick', fakeAsync(() => {
+    it('should report once for several mode changes in one tick', async () => {
+        vi.useFakeTimers();
+
         const reported: any[] = [];
 
         component.tree.registerOnChange((value: any) => reported.push(value));
@@ -3561,12 +3725,14 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
         component.tree.multipleMode = null;
         component.tree.multipleMode = MultipleMode.CHECKBOX;
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(reported.length).toBe(1);
-    }));
+    });
 
-    it('should pick the surviving node by render order even when the option mirrors are stale', fakeAsync(() => {
+    it('should pick the surviving node by render order even when the option mirrors are stale', async () => {
+        vi.useFakeTimers();
+
         const options = fixture.debugElement
             .queryAll(By.directive(KbqTreeOption))
             .map(({ componentInstance }) => componentInstance as KbqTreeOption);
@@ -3577,10 +3743,10 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
 
         component.multiple = false;
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(component.tree.selectionModel.selected).toEqual([options[0].data]);
-    }));
+    });
 
     it('should re-derive both defaults across a checkbox to keyboard change', () => {
         expect(component.tree.showCheckbox).toBe(true);
@@ -3611,7 +3777,9 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
         expect(component.tree.noUnselectLast).toBe(false);
     });
 
-    it('should emit selectionChange for the nodes a narrowing deselects', fakeAsync(() => {
+    it('should emit selectionChange for the nodes a narrowing deselects', async () => {
+        vi.useFakeTimers();
+
         const options = fixture.debugElement
             .queryAll(By.directive(KbqTreeOption))
             .map(({ componentInstance }) => componentInstance as KbqTreeOption);
@@ -3619,7 +3787,7 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
         options[0].setSelected(true);
         options[1].setSelected(true);
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         const changes: KbqTreeSelectionChange<KbqTreeOption>[] = [];
 
@@ -3627,11 +3795,11 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
 
         component.multiple = false;
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(changes.length).toBe(1);
         expect(changes[0].options?.map(({ value }) => value)).toEqual([options[1].value]);
-    }));
+    });
 });
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
@@ -3778,6 +3946,10 @@ describe('KbqTreeSelection state saving', () => {
         TestBed.configureTestingModule({ imports: [KbqTreeModule, FormsModule] }).compileComponents();
     });
 
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('restores the nodes that were expanded on the previous visit', () => {
         store.setState('tree-key', ['Pictures', 'Documents']);
 
@@ -3822,18 +3994,22 @@ describe('KbqTreeSelection state saving', () => {
         expect(store.getState('tree-key')).toEqual(['Pictures']);
     });
 
-    it('persists the expanded nodes when one is expanded with the keyboard', fakeAsync(() => {
+    it('persists the expanded nodes when one is expanded with the keyboard', async () => {
+        vi.useFakeTimers();
+
         const fixture = create(TreeStateSaving);
 
         fixture.componentInstance.tree.keyManager.setActiveItem(1);
         fixture.componentInstance.tree.onKeyDown(createKeyboardEvent('keydown', RIGHT_ARROW));
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(store.getState('tree-key')).toEqual(['Pictures']);
-    }));
+    });
 
-    it('persists the expanded nodes when one is collapsed with the keyboard', fakeAsync(() => {
+    it('persists the expanded nodes when one is collapsed with the keyboard', async () => {
+        vi.useFakeTimers();
+
         store.setState('tree-key', ['Pictures']);
 
         const fixture = create(TreeStateSaving);
@@ -3841,24 +4017,26 @@ describe('KbqTreeSelection state saving', () => {
         fixture.componentInstance.tree.keyManager.setActiveItem(1);
         fixture.componentInstance.tree.onKeyDown(createKeyboardEvent('keydown', LEFT_ARROW));
         fixture.detectChanges();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(store.getState('tree-key')).toEqual([]);
-    }));
+    });
 
-    it('does not persist while a filter is active', fakeAsync(() => {
+    it('does not persist while a filter is active', async () => {
+        vi.useFakeTimers();
+
         const fixture = create(TreeStateSaving);
         const { treeControl, tree } = fixture.componentInstance;
 
         treeControl.filterNodes('Sun');
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         // What is expanded during a search is the result set, not a state the user chose.
         tree.saveState();
 
         expect(store.getState('tree-key')).toBeNull();
-    }));
+    });
 
     it('persists nothing while useStateSaving is unset', () => {
         const fixture = create(TreeStateSaving);
@@ -3984,7 +4162,9 @@ describe('KbqTreeSelection state saving', () => {
     });
 
     describe('data that arrives late', () => {
-        it('expands the saved nodes once they are loaded', fakeAsync(() => {
+        it('expands the saved nodes once they are loaded', async () => {
+            vi.useFakeTimers();
+
             store.setState('lazy-key', ['Pictures', 'Documents']);
 
             const fixture = create(TreeLazyStateSaving);
@@ -3993,12 +4173,14 @@ describe('KbqTreeSelection state saving', () => {
 
             fixture.componentInstance.load();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(expandedNames(fixture.componentInstance)).toEqual(['Documents', 'Pictures']);
-        }));
+        });
 
-        it('keeps the values it has not seen yet when something else is persisted', fakeAsync(() => {
+        it('keeps the values it has not seen yet when something else is persisted', async () => {
+            vi.useFakeTimers();
+
             store.setState('lazy-key', ['Pictures', 'Documents']);
 
             const fixture = create(TreeLazyStateSaving);
@@ -4008,31 +4190,33 @@ describe('KbqTreeSelection state saving', () => {
             // Writing the snapshot alone would drop both — nothing is loaded, so nothing is expanded.
             expect(store.getState('lazy-key')).toEqual(['Pictures', 'Documents']);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('does not expand again a node the user collapsed after it loaded', fakeAsync(() => {
+        it('does not expand again a node the user collapsed after it loaded', async () => {
+            vi.useFakeTimers();
+
             store.setState('lazy-key', ['Pictures']);
 
             const fixture = create(TreeLazyStateSaving);
 
             fixture.componentInstance.load();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(expandedNames(fixture.componentInstance)).toEqual(['Pictures']);
 
             clickToggle(fixture, 1);
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(expandedNames(fixture.componentInstance)).toEqual([]);
 
             // A second batch of data, as a lazy tree delivers when a branch is opened.
             fixture.componentInstance.load();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(expandedNames(fixture.componentInstance)).toEqual([]);
-        }));
+        });
     });
 });

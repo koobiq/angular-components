@@ -2,7 +2,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
 import { Component, Provider, Type } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
     DOWN_ARROW,
@@ -64,6 +64,10 @@ const GROUP_SITE: KbqAppSwitcherSite = { id: 'grp', name: 'Group Site', apps: [.
 const AXE_TIMEOUT = 15000;
 
 describe('KbqAppSwitcher', () => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
             imports: [component],
@@ -356,16 +360,18 @@ describe('KbqAppSwitcher', () => {
         let popup: KbqAppSwitcherComponent;
         let overlayContainer: OverlayContainer;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
+            vi.useFakeTimers();
+
             fixture = createComponent(AppSwitcherMultiSite);
             trigger = getTrigger(fixture);
 
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             popup = trigger['instance'] as KbqAppSwitcherComponent;
-        }));
+        });
 
         beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
             overlayContainer = oc;
@@ -374,16 +380,16 @@ describe('KbqAppSwitcher', () => {
         afterEach(() => overlayContainer.ngOnDestroy());
 
         describe('escapeHandler', () => {
-            it('removes the popup from the overlay', fakeAsync(() => {
+            it('removes the popup from the overlay', async () => {
                 expect(overlayContainer.getContainerElement().querySelector('.kbq-app-switcher')).toBeTruthy();
 
                 popup.escapeHandler();
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 expect(trigger.isOpen).toBe(false);
                 expect(overlayContainer.getContainerElement().querySelector('.kbq-app-switcher')).toBeFalsy();
-            }));
+            });
         });
 
         // The fixture starts on SITE_A/APP_1, so every case below selects from SITE_B - otherwise the
@@ -426,57 +432,57 @@ describe('KbqAppSwitcher', () => {
         });
 
         describe('filterSites via searchControl', () => {
-            it('filteredSites contains all sites when query is empty', fakeAsync(() => {
+            it('filteredSites contains all sites when query is empty', async () => {
                 popup.searchControl.setValue('a');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 popup.searchControl.setValue('');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(popup.filteredSites).toBe(trigger.originalSites);
-            }));
+            });
 
-            it('keeps the original app objects instead of cloning them', fakeAsync(() => {
+            it('keeps the original app objects instead of cloning them', async () => {
                 popup.searchControl.setValue('App One');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(popup.filteredSites[0].apps[0]).toBe(trigger.originalSites[0].apps[0]);
-            }));
+            });
 
-            it('matches the caption as well as the name', fakeAsync(() => {
+            it('matches the caption as well as the name', async () => {
                 trigger.sites = [{ ...SITE_A, apps: [{ ...APP_1, caption: 'Sentinel deployment' }] }];
 
                 popup.searchControl.setValue('sentinel');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
 
                 expect(popup.filteredSites.flatMap((site) => site.apps).map((app) => app.id)).toEqual([APP_1.id]);
-            }));
+            });
 
-            it('filters apps by name case-insensitively', fakeAsync(() => {
+            it('filters apps by name case-insensitively', async () => {
                 popup.searchControl.setValue('app one');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 const matchingApps = popup.filteredSites.flatMap((s) => s.apps);
 
                 expect(matchingApps.every((a) => a.name.toLowerCase().includes('app one'))).toBe(true);
-            }));
+            });
 
-            it('removes sites with no matching apps', fakeAsync(() => {
+            it('removes sites with no matching apps', async () => {
                 popup.searchControl.setValue('App One');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 // Only SITE_A has 'App One', SITE_B should be filtered out
                 expect(popup.filteredSites.every((s) => s.apps.length > 0)).toBe(true);
                 const siteIds = popup.filteredSites.map((s) => s.id);
 
                 expect(siteIds).toContain(SITE_A.id);
                 expect(siteIds).not.toContain(SITE_B.id);
-            }));
+            });
 
-            it('does not mutate originalSites', fakeAsync(() => {
+            it('does not mutate originalSites', async () => {
                 const originalAppsCount = trigger.originalSites[0].apps.length;
 
                 popup.searchControl.setValue('App One');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 expect(trigger.originalSites[0].apps).toHaveLength(originalAppsCount);
-            }));
+            });
         });
     });
 
@@ -736,10 +742,12 @@ describe('KbqAppSwitcher', () => {
         let overlayContainer: OverlayContainer;
         let overlayContainerElement: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
+            vi.useFakeTimers();
+
             fixture = createComponent(AppSwitcherSingleSite);
             trigger = getTrigger(fixture);
-        }));
+        });
 
         beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
             overlayContainer = oc;
@@ -748,19 +756,19 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        it('popup opens and kbq-app-switcher element is present in overlay', fakeAsync(() => {
+        it('popup opens and kbq-app-switcher element is present in overlay', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const switcher = overlayContainerElement.querySelector('.kbq-app-switcher');
 
             expect(switcher).toBeTruthy();
-        }));
+        });
 
-        it('app names from the site are rendered in the popup', fakeAsync(() => {
+        it('app names from the site are rendered in the popup', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const text = overlayContainerElement.textContent || '';
@@ -768,27 +776,27 @@ describe('KbqAppSwitcher', () => {
             SITE_A.apps.forEach((app) => {
                 expect(text).toContain(app.name);
             });
-        }));
+        });
 
-        it('does not render sites container in single-site mode', fakeAsync(() => {
+        it('does not render sites container in single-site mode', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const sitesContainer = overlayContainerElement.querySelector('.kbq-app-switcher__sites-container');
 
             expect(sitesContainer).toBeFalsy();
-        }));
+        });
 
-        it('does not render search input when apps count <= 7', fakeAsync(() => {
+        it('does not render search input when apps count <= 7', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const searchContainer = overlayContainerElement.querySelector('.kbq-app-switcher__search-container');
 
             expect(searchContainer).toBeFalsy();
-        }));
+        });
     });
 
     describe('Integration — multi-site popup', () => {
@@ -797,10 +805,12 @@ describe('KbqAppSwitcher', () => {
         let overlayContainer: OverlayContainer;
         let overlayContainerElement: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
+            vi.useFakeTimers();
+
             fixture = createComponent(AppSwitcherMultiSite);
             trigger = getTrigger(fixture);
-        }));
+        });
 
         beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
             overlayContainer = oc;
@@ -809,19 +819,19 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        it('renders sites container when multiple sites are provided', fakeAsync(() => {
+        it('renders sites container when multiple sites are provided', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const sitesContainer = overlayContainerElement.querySelector('.kbq-app-switcher__sites-container');
 
             expect(sitesContainer).toBeTruthy();
-        }));
+        });
 
-        it('shows selected site name in the group header', fakeAsync(() => {
+        it('shows selected site name in the group header', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const headerText = overlayContainerElement.querySelector(
@@ -829,7 +839,7 @@ describe('KbqAppSwitcher', () => {
             )?.textContent;
 
             expect(headerText?.trim()).toBe(SITE_A.name);
-        }));
+        });
     });
 
     describe('Integration — search', () => {
@@ -838,10 +848,12 @@ describe('KbqAppSwitcher', () => {
         let overlayContainer: OverlayContainer;
         let overlayContainerElement: HTMLElement;
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
+            vi.useFakeTimers();
+
             fixture = createComponent(AppSwitcherWithSearch);
             trigger = getTrigger(fixture);
-        }));
+        });
 
         beforeEach(inject([OverlayContainer], (oc: OverlayContainer) => {
             overlayContainer = oc;
@@ -850,57 +862,57 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        it('renders search input when apps count > 7', fakeAsync(() => {
+        it('renders search input when apps count > 7', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const searchContainer = overlayContainerElement.querySelector('.kbq-app-switcher__search-container');
 
             expect(searchContainer).toBeTruthy();
-        }));
+        });
 
-        it('shows empty state message when no apps match the search query', fakeAsync(() => {
+        it('shows empty state message when no apps match the search query', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const popup = trigger['instance'] as KbqAppSwitcherComponent;
 
             popup.searchControl.setValue('xyznotfound');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const emptyResult = overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result');
 
             expect(emptyResult?.textContent?.trim()).toBe(popup.localeConfiguration().searchEmptyResult);
-        }));
+        });
 
-        it('shows search results container when query is not empty', fakeAsync(() => {
+        it('shows search results container when query is not empty', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const popup = trigger['instance'] as KbqAppSwitcherComponent;
 
             popup.searchControl.setValue('App 1');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const searchResult = overlayContainerElement.querySelector('.kbq-app-switcher__search-result');
 
             expect(searchResult).toBeTruthy();
-        }));
+        });
 
-        it('highlights only the matched fragment of the app name in search results', fakeAsync(() => {
+        it('highlights only the matched fragment of the app name in search results', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const popup = trigger['instance'] as KbqAppSwitcherComponent;
 
             popup.searchControl.setValue('pp 1');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const marks = overlayContainerElement.querySelectorAll<HTMLElement>(
@@ -910,15 +922,15 @@ describe('KbqAppSwitcher', () => {
             expect(marks).toHaveLength(1);
             expect(marks[0].textContent).toBe('pp 1');
             expect(marks[0].closest('.kbq-app-switcher-list-item__name')!.textContent).toBe('App 1');
-        }));
+        });
 
-        it('does not highlight anything while the search query is empty', fakeAsync(() => {
+        it('does not highlight anything while the search query is empty', async () => {
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('mark.kbq-highlight-background')).toHaveLength(0);
-        }));
+        });
     });
 
     describe('Keyboard navigation', () => {
@@ -927,10 +939,10 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer?.ngOnDestroy());
 
-        const open = <T>(
+        const open = async <T>(
             component: Type<T>,
             providers: Provider[] = []
-        ): { fixture: ComponentFixture<T>; popup: KbqAppSwitcherComponent } => {
+        ): Promise<{ fixture: ComponentFixture<T>; popup: KbqAppSwitcherComponent }> => {
             const fixture = createComponent(component, providers);
 
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -939,7 +951,7 @@ describe('KbqAppSwitcher', () => {
             const trigger = getTrigger(fixture);
 
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             return { fixture, popup: trigger['instance'] as KbqAppSwitcherComponent };
@@ -950,8 +962,10 @@ describe('KbqAppSwitcher', () => {
         const menuItemsOf = (popup: KbqAppSwitcherComponent) => popup['menuItems'];
 
         describe('close on focus-out', () => {
-            it('hides when focus leaves the popup entirely', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('hides when focus leaves the popup entirely', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
                 const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const outside = document.createElement('button');
 
@@ -960,10 +974,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(hideSpy).toHaveBeenCalledWith(0);
                 outside.remove();
-            }));
+            });
 
-            it('returns focus to the trigger when focus leaves', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('returns focus to the trigger when focus leaves', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
 
                 vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const focusSpy = vi.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
@@ -974,10 +990,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(focusSpy).toHaveBeenCalled();
                 outside.remove();
-            }));
+            });
 
-            it('closes and focuses the trigger on Tab, preventing the native focus move into browser chrome', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('closes and focuses the trigger on Tab, preventing the native focus move into browser chrome', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
 
                 vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const focusSpy = vi.spyOn(popup.trigger, 'focus').mockImplementation(() => {});
@@ -988,10 +1006,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(preventSpy).toHaveBeenCalled();
                 expect(focusSpy).toHaveBeenCalled();
-            }));
+            });
 
-            it('stops Escape from bubbling into overlays opened earlier', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('stops Escape from bubbling into overlays opened earlier', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
 
                 vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const event = createKeyboardEvent('keydown', ESCAPE, getHost());
@@ -1002,10 +1022,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(preventSpy).toHaveBeenCalled();
                 expect(stopSpy).toHaveBeenCalled();
-            }));
+            });
 
-            it('ignores keys safely before the key manager is initialized', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('ignores keys safely before the key manager is initialized', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
 
                 // The host `(keydown)` binding is live before `ngAfterViewInit` builds the key manager.
                 (popup as any).keyManager = undefined;
@@ -1013,29 +1035,35 @@ describe('KbqAppSwitcher', () => {
                 expect(() =>
                     popup['keydownHandler'](createKeyboardEvent('keydown', DOWN_ARROW, getHost()))
                 ).not.toThrow();
-            }));
+            });
 
-            it('hides when focus is lost with no related target', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('hides when focus is lost with no related target', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
                 const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
 
                 getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: null, bubbles: true }));
 
                 expect(hideSpy).toHaveBeenCalledWith(0);
-            }));
+            });
 
-            it('stays open while focus moves between menu items', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('stays open while focus moves between menu items', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
                 const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const item = getHost().querySelector('.kbq-app-switcher-list-item') as HTMLElement;
 
                 getHost().dispatchEvent(new FocusEvent('focusout', { relatedTarget: item, bubbles: true }));
 
                 expect(hideSpy).not.toHaveBeenCalled();
-            }));
+            });
 
-            it('stays open while focus moves into a site flyout overlay', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('stays open while focus moves into a site flyout overlay', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
                 const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
                 const flyoutPane = document.createElement('div');
                 const flyoutItem = document.createElement('a');
@@ -1048,18 +1076,22 @@ describe('KbqAppSwitcher', () => {
 
                 expect(hideSpy).not.toHaveBeenCalled();
                 flyoutPane.remove();
-            }));
+            });
         });
 
         describe('roving focus (flat list + other sites)', () => {
-            it('focuses the first menu item when the popup opens without a search field', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('focuses the first menu item when the popup opens without a search field', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
 
                 expect(keyManagerOf(popup).activeItemIndex).toBe(0);
-            }));
+            });
 
-            it('marks the keyboard-focused item with the cdk-keyboard-focused class (drives the focus ring)', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('marks the keyboard-focused item with the cdk-keyboard-focused class (drives the focus ring)', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
 
                 dispatchKeyboardEvent(getHost(), 'keydown', DOWN_ARROW);
                 fixture.detectChanges();
@@ -1067,10 +1099,12 @@ describe('KbqAppSwitcher', () => {
                 const active = keyManagerOf(popup).activeItem!.getHostElement();
 
                 expect(active.classList.contains('cdk-keyboard-focused')).toBe(true);
-            }));
+            });
 
-            it('moves to the next/previous item on ArrowDown/ArrowUp', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('moves to the next/previous item on ArrowDown/ArrowUp', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
                 const items = () => overlayContainerElement.querySelectorAll('.kbq-app-switcher-list-item');
 
@@ -1083,10 +1117,12 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
                 expect(manager.activeItemIndex).toBe(0);
                 expect(document.activeElement).toBe(items()[0]);
-            }));
+            });
 
-            it('steps from the last flat app onto the first other-site row', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('steps from the last flat app onto the first other-site row', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
 
                 // SITE_A contributes 3 flat items; the next item down is the SITE_B row.
@@ -1096,10 +1132,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(manager.activeItemIndex).toBe(3);
                 expect(manager.activeItem).toBeInstanceOf(KbqAppSwitcherDropdownSite);
-            }));
+            });
 
-            it('does not wrap past the last item', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('does not wrap past the last item', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
                 const last = menuItemsOf(popup).length - 1;
 
@@ -1108,10 +1146,12 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(manager.activeItemIndex).toBe(last);
-            }));
+            });
 
-            it('does not wrap before the first item', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('does not wrap before the first item', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
 
                 manager.setActiveItem(0);
@@ -1119,10 +1159,12 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(manager.activeItemIndex).toBe(0);
-            }));
+            });
 
-            it('jumps to the last/first item on End/Home', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('jumps to the last/first item on End/Home', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
                 const last = menuItemsOf(popup).length - 1;
 
@@ -1133,12 +1175,14 @@ describe('KbqAppSwitcher', () => {
                 dispatchKeyboardEvent(getHost(), 'keydown', HOME);
                 fixture.detectChanges();
                 expect(manager.activeItemIndex).toBe(0);
-            }));
+            });
         });
 
         describe('activation', () => {
-            it('activates the focused link on Enter', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('activates the focused link on Enter', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
 
                 manager.setActiveItem(0);
@@ -1151,10 +1195,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(clickSpy).toHaveBeenCalled();
                 expect(preventSpy).toHaveBeenCalled();
-            }));
+            });
 
-            it('treats Space as a typeahead character instead of activation while a search sequence is in progress', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('treats Space as a typeahead character instead of activation while a search sequence is in progress', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
 
                 manager.setActiveItem(0);
@@ -1166,10 +1212,12 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(clickSpy).not.toHaveBeenCalled();
-            }));
+            });
 
-            it('activates the focused link on Space', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('activates the focused link on Space', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
 
                 manager.setActiveItem(1);
@@ -1179,10 +1227,12 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(clickSpy).toHaveBeenCalled();
-            }));
+            });
 
-            it('closes the popup on Escape from a focused item', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('closes the popup on Escape from a focused item', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const hideSpy = vi.spyOn(popup, 'hide');
 
                 keyManagerOf(popup).setActiveItem(0);
@@ -1190,12 +1240,14 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(hideSpy).toHaveBeenCalledWith(0);
-            }));
+            });
         });
 
         describe('app groups', () => {
-            it('collapses an expanded group header on the collapse key (Left in LTR)', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherGrouped);
+            it('collapses an expanded group header on the collapse key (Left in LTR)', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherGrouped);
                 const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
 
                 expect(header.toggle()).toBe(true);
@@ -1207,10 +1259,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(header.collapsed()).toBe(true);
                 expect(menuItemsOf(popup).length).toBeLessThan(expandedLength);
-            }));
+            });
 
-            it('expands a collapsed group header on the expand key (Right in LTR)', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherGrouped);
+            it('expands a collapsed group header on the expand key (Right in LTR)', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherGrouped);
                 const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
 
                 // Collapse first via the keyboard so the OnPush overlay actually re-renders.
@@ -1224,10 +1278,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(header.collapsed()).toBe(false);
                 expect(menuItemsOf(popup).length).toBeGreaterThan(collapsedLength);
-            }));
+            });
 
-            it('toggles the group header on Enter', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherGrouped);
+            it('toggles the group header on Enter', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherGrouped);
                 const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
 
                 expect(header.collapsed()).toBe(false);
@@ -1236,10 +1292,12 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(header.collapsed()).toBe(true);
-            }));
+            });
 
-            it('moves focus from a nested alias back to its group header on the collapse key', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherGrouped);
+            it('moves focus from a nested alias back to its group header on the collapse key', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherGrouped);
                 const manager = keyManagerOf(popup);
 
                 // index 0 = group header, indices 1..N = its aliases.
@@ -1250,10 +1308,12 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(manager.activeItemIndex).toBe(0);
-            }));
+            });
 
-            it('inverts the expand/collapse keys in RTL', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherGrouped, [
+            it('inverts the expand/collapse keys in RTL', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherGrouped, [
                     { provide: Directionality, useValue: { value: 'rtl', change: of() } }
                 ]);
                 const header = keyManagerOf(popup).activeItem as KbqAppSwitcherListItem;
@@ -1268,23 +1328,27 @@ describe('KbqAppSwitcher', () => {
                 dispatchKeyboardEvent(getHost(), 'keydown', LEFT_ARROW);
                 fixture.detectChanges();
                 expect(header.collapsed()).toBe(false);
-            }));
+            });
         });
 
         describe('search field handoff', () => {
             const getSearchInput = () => overlayContainerElement.querySelector('input[kbqinput]') as HTMLInputElement;
 
-            it('moves focus from the search field into the list on ArrowDown', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherWithSearch);
+            it('moves focus from the search field into the list on ArrowDown', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherWithSearch);
 
                 dispatchKeyboardEvent(getSearchInput(), 'keydown', DOWN_ARROW);
                 fixture.detectChanges();
 
                 expect(keyManagerOf(popup).activeItemIndex).toBe(0);
-            }));
+            });
 
-            it('returns focus to the search field on ArrowUp from the first item', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherWithSearch);
+            it('returns focus to the search field on ArrowUp from the first item', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherWithSearch);
                 const input = getSearchInput();
 
                 keyManagerOf(popup).setActiveItem(0);
@@ -1293,10 +1357,12 @@ describe('KbqAppSwitcher', () => {
 
                 expect(keyManagerOf(popup).activeItemIndex).toBe(-1);
                 expect(document.activeElement).toBe(input);
-            }));
+            });
 
-            it('does nothing when a non-ArrowDown key is pressed in the search field', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherWithSearch);
+            it('does nothing when a non-ArrowDown key is pressed in the search field', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherWithSearch);
                 const input = getSearchInput();
 
                 dispatchKeyboardEvent(input, 'keydown', LEFT_ARROW);
@@ -1304,12 +1370,14 @@ describe('KbqAppSwitcher', () => {
 
                 expect(keyManagerOf(popup).activeItemIndex).toBe(-1);
                 expect(document.activeElement).toBe(input);
-            }));
+            });
         });
 
         describe('focus tracking for elements outside the roving menu', () => {
-            it('syncs the active item when focus moves to a tracked menu item via Tab or click', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('syncs the active item when focus moves to a tracked menu item via Tab or click', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const manager = keyManagerOf(popup);
                 const secondItem = overlayContainerElement.querySelectorAll(
                     '.kbq-app-switcher-list-item'
@@ -1321,16 +1389,18 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(manager.activeItemIndex).toBe(1);
-            }));
+            });
 
-            it('clears the active item when focus moves to a focusable element outside menuItems, so Space does not act on a stale item afterwards', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherWithSearch);
+            it('clears the active item when focus moves to a focusable element outside menuItems, so Space does not act on a stale item afterwards', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherWithSearch);
                 const manager = keyManagerOf(popup);
                 const input = overlayContainerElement.querySelector('input[kbqinput]') as HTMLInputElement;
 
                 // A typed query is required for the cleaner button to render.
                 popup.searchControl.setValue('App 0');
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 dispatchKeyboardEvent(input, 'keydown', DOWN_ARROW);
@@ -1350,48 +1420,58 @@ describe('KbqAppSwitcher', () => {
                 fixture.detectChanges();
 
                 expect(clickSpy).not.toHaveBeenCalled();
-            }));
+            });
         });
 
         describe('ARIA roles', () => {
-            it('exposes the item list as a vertical menu', fakeAsync(() => {
-                open(AppSwitcherMultiSite);
+            it('exposes the item list as a vertical menu', async () => {
+                vi.useFakeTimers();
+
+                await open(AppSwitcherMultiSite);
                 const menu = overlayContainerElement.querySelector('[role="menu"]') as HTMLElement;
 
                 expect(menu).toBeTruthy();
                 expect(menu.getAttribute('aria-orientation')).toBe('vertical');
-            }));
+            });
 
-            it('does not expose the search field as a descendant of the menu role (invalid for role="menu")', fakeAsync(() => {
-                open(AppSwitcherWithSearch);
+            it('does not expose the search field as a descendant of the menu role (invalid for role="menu")', async () => {
+                vi.useFakeTimers();
+
+                await open(AppSwitcherWithSearch);
                 const menu = overlayContainerElement.querySelector('[role="menu"]') as HTMLElement;
                 const input = overlayContainerElement.querySelector('input[kbqinput]') as HTMLElement;
 
                 expect(menu).toBeTruthy();
                 expect(input).toBeTruthy();
                 expect(menu.contains(input)).toBe(false);
-            }));
+            });
 
-            it('exposes list items as focusable menuitems', fakeAsync(() => {
-                open(AppSwitcherMultiSite);
+            it('exposes list items as focusable menuitems', async () => {
+                vi.useFakeTimers();
+
+                await open(AppSwitcherMultiSite);
                 const item = overlayContainerElement.querySelector('.kbq-app-switcher-list-item') as HTMLElement;
 
                 expect(item.getAttribute('role')).toBe('menuitem');
                 expect(item.getAttribute('tabindex')).toBe('0');
-            }));
+            });
 
-            it('exposes other-site rows as focusable menuitems with a collapsed popup', fakeAsync(() => {
-                open(AppSwitcherMultiSite);
+            it('exposes other-site rows as focusable menuitems with a collapsed popup', async () => {
+                vi.useFakeTimers();
+
+                await open(AppSwitcherMultiSite);
                 const row = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
 
                 expect(row.getAttribute('role')).toBe('menuitem');
                 expect(row.getAttribute('tabindex')).toBe('0');
                 expect(row.getAttribute('aria-haspopup')).toBe('menu');
                 expect(row.getAttribute('aria-expanded')).toBe('false');
-            }));
+            });
 
-            it('exposes flyout app rows as focusable menuitems', fakeAsync(() => {
-                const { fixture } = open(AppSwitcherMultiSite);
+            it('exposes flyout app rows as focusable menuitems', async () => {
+                vi.useFakeTimers();
+
+                const { fixture } = await open(AppSwitcherMultiSite);
                 const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
 
                 // Focusing the row first (as real keyboard use would) populates `activeSite`, which the
@@ -1399,7 +1479,7 @@ describe('KbqAppSwitcher', () => {
                 siteRow.focus();
                 fixture.detectChanges();
                 dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 const appRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-app') as HTMLElement;
@@ -1407,12 +1487,14 @@ describe('KbqAppSwitcher', () => {
                 expect(appRow).toBeTruthy();
                 expect(appRow.getAttribute('role')).toBe('menuitem');
                 expect(appRow.getAttribute('tabindex')).toBe('0');
-            }));
+            });
         });
 
         describe('roving menu composition', () => {
-            it('only contains flat list items and other-site rows', fakeAsync(() => {
-                const { popup } = open(AppSwitcherMultiSite);
+            it('only contains flat list items and other-site rows', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
                 const items = menuItemsOf(popup).toArray();
 
                 expect(items).toHaveLength(4);
@@ -1422,21 +1504,23 @@ describe('KbqAppSwitcher', () => {
                     )
                 ).toBe(true);
                 expect(items.some((item) => item instanceof KbqAppSwitcherDropdownApp)).toBe(false);
-            }));
+            });
 
-            it('opens the site flyout without growing the roving menu', fakeAsync(() => {
-                const { fixture, popup } = open(AppSwitcherMultiSite);
+            it('opens the site flyout without growing the roving menu', async () => {
+                vi.useFakeTimers();
+
+                const { fixture, popup } = await open(AppSwitcherMultiSite);
                 const before = menuItemsOf(popup).length;
                 const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
 
                 dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
-                tick();
+                await vi.advanceTimersByTimeAsync(0);
                 fixture.detectChanges();
 
                 // Confirms the flyout actually opened (not just that the roving-menu length is unaffected).
                 expect(siteRow.getAttribute('aria-expanded')).toBe('true');
                 expect(menuItemsOf(popup).length).toBe(before);
-            }));
+            });
         });
     });
 
@@ -1501,7 +1585,7 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer?.ngOnDestroy());
 
-        const open = <T>(component: Type<T>, before?: (instance: T) => void): ComponentFixture<T> => {
+        const open = async <T>(component: Type<T>, before?: (instance: T) => void): Promise<ComponentFixture<T>> => {
             const fixture = createComponent(component);
 
             if (before) {
@@ -1513,7 +1597,7 @@ describe('KbqAppSwitcher', () => {
             overlayContainerElement = overlayContainer.getContainerElement();
 
             getTrigger(fixture).show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             return fixture;
@@ -1523,17 +1607,21 @@ describe('KbqAppSwitcher', () => {
         const header = () =>
             overlayContainerElement.querySelector('.kbq-app-switcher-list-item[aria-expanded]') as HTMLElement;
 
-        it('renders one expanded group header plus its aliases', fakeAsync(() => {
-            open(AppSwitcherGrouped);
+        it('renders one expanded group header plus its aliases', async () => {
+            vi.useFakeTimers();
+
+            await open(AppSwitcherGrouped);
 
             // 1 group header + 4 aliases + 1 ungrouped app.
             expect(rows()).toHaveLength(GROUP_APPS.length + 2);
             expect(header()).toBeTruthy();
             expect(header().getAttribute('aria-expanded')).toBe('true');
-        }));
+        });
 
-        it('collapses and expands the group on click, updating aria-expanded', fakeAsync(() => {
-            const fixture = open(AppSwitcherGrouped);
+        it('collapses and expands the group on click, updating aria-expanded', async () => {
+            vi.useFakeTimers();
+
+            const fixture = await open(AppSwitcherGrouped);
 
             header().click();
             fixture.detectChanges();
@@ -1547,10 +1635,12 @@ describe('KbqAppSwitcher', () => {
 
             expect(header().getAttribute('aria-expanded')).toBe('true');
             expect(rows()).toHaveLength(GROUP_APPS.length + 2);
-        }));
+        });
 
-        it(`renders no group when a type has exactly ${KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING} apps`, fakeAsync(() => {
-            open(AppSwitcherDynamic, (instance) => {
+        it(`renders no group when a type has exactly ${KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING} apps`, async () => {
+            vi.useFakeTimers();
+
+            await open(AppSwitcherDynamic, (instance) => {
                 instance.sites = [
                     {
                         id: 'boundary',
@@ -1562,15 +1652,17 @@ describe('KbqAppSwitcher', () => {
 
             expect(header()).toBeFalsy();
             expect(rows()).toHaveLength(KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING);
-        }));
+        });
 
-        it('renders an empty list instead of throwing when no sites are provided', fakeAsync(() => {
-            open(AppSwitcherSimple);
+        it('renders an empty list instead of throwing when no sites are provided', async () => {
+            vi.useFakeTimers();
+
+            await open(AppSwitcherSimple);
 
             expect(overlayContainerElement.querySelector('.kbq-app-switcher')).toBeTruthy();
             expect(rows()).toHaveLength(0);
             expect(overlayContainerElement.querySelector('.kbq-app-switcher__search-container')).toBeFalsy();
-        }));
+        });
     });
 
     describe('Integration — nested site navigation', () => {
@@ -1579,7 +1671,9 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer?.ngOnDestroy());
 
-        it('selects an app from another site through its flyout', fakeAsync(() => {
+        it('selects an app from another site through its flyout', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AppSwitcherMultiSite);
 
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -1593,7 +1687,7 @@ describe('KbqAppSwitcher', () => {
             trigger.selectedSite.subscribe(siteSpy);
 
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
@@ -1602,7 +1696,7 @@ describe('KbqAppSwitcher', () => {
             siteRow.focus();
             fixture.detectChanges();
             dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const appRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-app') as HTMLElement;
@@ -1617,9 +1711,11 @@ describe('KbqAppSwitcher', () => {
             expect(trigger.selectedApp()!.id).toBe(SITE_B.apps[0].id);
             expect(siteSpy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.id }));
             expect(appSpy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.apps[0].id }));
-        }));
+        });
 
-        it('clears the flyout content once its dropdown closes', fakeAsync(() => {
+        it('clears the flyout content once its dropdown closes', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AppSwitcherMultiSite);
 
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -1628,7 +1724,7 @@ describe('KbqAppSwitcher', () => {
             const trigger = getTrigger(fixture);
 
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const popup = trigger['instance'] as KbqAppSwitcherComponent;
@@ -1639,15 +1735,15 @@ describe('KbqAppSwitcher', () => {
             expect(popup['activeSite']).toBeDefined();
 
             dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             dispatchKeyboardEvent(siteRow, 'keydown', ESCAPE);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(popup['activeSite']).toBeUndefined();
-        }));
+        });
     });
 
     describe('Integration — accessibility', () => {
@@ -1656,7 +1752,9 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer?.ngOnDestroy());
 
-        const open = <T>(component: Type<T>): { fixture: ComponentFixture<T>; popup: KbqAppSwitcherComponent } => {
+        const open = async <T>(
+            component: Type<T>
+        ): Promise<{ fixture: ComponentFixture<T>; popup: KbqAppSwitcherComponent }> => {
             const fixture = createComponent(component);
 
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -1665,33 +1763,37 @@ describe('KbqAppSwitcher', () => {
             const trigger = getTrigger(fixture);
 
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             return { fixture, popup: trigger['instance'] as KbqAppSwitcherComponent };
         };
 
-        it('names the search field and its clear button', fakeAsync(() => {
-            const { fixture, popup } = open(AppSwitcherWithSearch);
+        it('names the search field and its clear button', async () => {
+            vi.useFakeTimers();
+
+            const { fixture, popup } = await open(AppSwitcherWithSearch);
             const input = overlayContainerElement.querySelector('input[kbqinput]') as HTMLElement;
 
             expect(input.getAttribute('aria-label')).toBe(popup.localeConfiguration().searchPlaceholder);
 
             // The cleaner only renders once the field has a value.
             popup.searchControl.setValue('App 0');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const cleaner = overlayContainerElement.querySelector('.kbq-cleaner') as HTMLElement;
 
             expect(cleaner.getAttribute('aria-label')).toBe(popup.localeConfiguration().clearSearch);
-        }));
+        });
 
-        it('announces the empty search result from a live region that was already mounted', fakeAsync(() => {
-            const { fixture, popup } = open(AppSwitcherWithSearch);
+        it('announces the empty search result from a live region that was already mounted', async () => {
+            vi.useFakeTimers();
+
+            const { fixture, popup } = await open(AppSwitcherWithSearch);
 
             popup.searchControl.setValue('App 0');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             const empty = overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result');
@@ -1704,39 +1806,47 @@ describe('KbqAppSwitcher', () => {
             expect(empty!.matches(':empty')).toBe(true);
 
             popup.searchControl.setValue('nothing-matches-this');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-app-switcher__empty-search-result')).toBe(empty);
             expect(empty!.textContent!.trim()).toBe(popup.localeConfiguration().searchEmptyResult);
             expect(empty!.matches(':empty')).toBe(false);
-        }));
+        });
 
-        it('marks the selected app with aria-current', fakeAsync(() => {
-            open(AppSwitcherMultiSite);
+        it('marks the selected app with aria-current', async () => {
+            vi.useFakeTimers();
+
+            await open(AppSwitcherMultiSite);
             const current = overlayContainerElement.querySelectorAll('.kbq-app-switcher-list-item[aria-current]');
 
             expect(current).toHaveLength(1);
             expect(current[0].classList).toContain('kbq-selected');
-        }));
+        });
 
-        it('hides decorative icons from assistive technology', fakeAsync(() => {
-            open(AppSwitcherWithSearch);
+        it('hides decorative icons from assistive technology', async () => {
+            vi.useFakeTimers();
+
+            await open(AppSwitcherWithSearch);
             const searchIcon = overlayContainerElement.querySelector('[kbqPrefix]') as HTMLElement;
 
             expect(searchIcon.getAttribute('aria-hidden')).toBe('true');
-        }));
+        });
 
-        it('marks external links as noopener', fakeAsync(() => {
-            open(AppSwitcherMultiSite);
+        it('marks external links as noopener', async () => {
+            vi.useFakeTimers();
+
+            await open(AppSwitcherMultiSite);
             const links = Array.from(overlayContainerElement.querySelectorAll('a.kbq-app-switcher-list-item'));
 
             expect(links.length).toBeGreaterThan(0);
             expect(links.every((link) => link.getAttribute('rel') === 'noopener noreferrer')).toBe(true);
-        }));
+        });
 
-        it('does not throw when hovering the list of a single-site switcher that has a search field', fakeAsync(() => {
-            const { fixture } = open(AppSwitcherWithSearch);
+        it('does not throw when hovering the list of a single-site switcher that has a search field', async () => {
+            vi.useFakeTimers();
+
+            const { fixture } = await open(AppSwitcherWithSearch);
             const container = overlayContainerElement.querySelector('.kbq-app-switcher__app-container') as HTMLElement;
 
             // There is no other-sites flyout to close in single-site mode.
@@ -1744,16 +1854,18 @@ describe('KbqAppSwitcher', () => {
                 container.dispatchEvent(new MouseEvent('mouseenter'));
                 fixture.detectChanges();
             }).not.toThrow();
-        }));
+        });
 
-        it('omits the href attribute for an app without a link', fakeAsync(() => {
-            open(AppSwitcherDynamic);
+        it('omits the href attribute for an app without a link', async () => {
+            vi.useFakeTimers();
+
+            await open(AppSwitcherDynamic);
             const link = overlayContainerElement.querySelector('a.kbq-app-switcher-list-item') as HTMLElement;
 
             expect(link.hasAttribute('href')).toBe(false);
-        }));
+        });
 
-        // axe runs on real timers, so these cannot share the `fakeAsync` helper above.
+        // axe runs on real timers, so these cannot share the fake-timer helper above.
         const openAsync = async <T>(
             component: Type<T>
         ): Promise<{ fixture: ComponentFixture<T>; popup: KbqAppSwitcherComponent }> => {
@@ -1811,7 +1923,9 @@ describe('KbqAppSwitcher', () => {
 
         afterEach(() => overlayContainer?.ngOnDestroy());
 
-        it('excludes scrolls originating inside the popup from its closing actions', fakeAsync(() => {
+        it('excludes scrolls originating inside the popup from its closing actions', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AppSwitcherMultiSite);
 
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -1819,7 +1933,7 @@ describe('KbqAppSwitcher', () => {
             const trigger = getTrigger(fixture);
 
             trigger.show();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             // The popup wraps its menu in `<kbq-scrollbar>`, whose viewport is a registered `CdkScrollable`.
@@ -1835,21 +1949,23 @@ describe('KbqAppSwitcher', () => {
             // Scrolling the popup's own scrollbar viewport (as keyboard navigation does when it scrolls
             // the focused item into view) must not count as a closing action.
             innerViewport.dispatchEvent(new Event('scroll'));
-            tick(50);
+            await vi.advanceTimersByTimeAsync(50);
 
             expect(emissions).toHaveLength(0);
 
             // A window/ancestor scroll — one that could move the popup out of view — still is one.
             window.document.dispatchEvent(new Event('scroll'));
-            tick(50);
+            await vi.advanceTimersByTimeAsync(50);
 
             expect(emissions.length).toBeGreaterThan(0);
 
             subscription.unsubscribe();
             fixture.destroy();
-        }));
+        });
 
-        it('does not throw when the popup reports hidden before it was ever shown', fakeAsync(() => {
+        it('does not throw when the popup reports hidden before it was ever shown', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(AppSwitcherMultiSite);
 
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -1857,7 +1973,7 @@ describe('KbqAppSwitcher', () => {
             const trigger = getTrigger(fixture);
 
             expect(() => trigger.visibleChange.emit(false)).not.toThrow();
-        }));
+        });
     });
 });
 

@@ -15,7 +15,7 @@ import {
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
@@ -111,7 +111,11 @@ describe('KbqListSelection without forms', () => {
             clipboardContent = '';
         });
 
-        it('should copy selected option - default handler', fakeAsync(() => {
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should copy selected option - default handler', async () => {
             const manager = selectionList.componentInstance.keyManager;
             const copyKeyEvent = createKeyboardEvent('keydown', C);
 
@@ -124,9 +128,9 @@ describe('KbqListSelection without forms', () => {
             fixture.detectChanges();
 
             expect(clipboardContent).toBe(listOptions[2].componentInstance.value);
-        }));
+        });
 
-        it('should not blur on focused option when copying', fakeAsync(() => {
+        it('should not blur on focused option when copying', async () => {
             const copyKeyEvent = createKeyboardEvent('keydown', C);
 
             Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
@@ -134,7 +138,7 @@ describe('KbqListSelection without forms', () => {
             expect(listOptions[2].componentInstance.hasFocus).toBeFalsy();
 
             dispatchFakeEvent(listOptions[2].nativeElement, 'focusin');
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(listOptions[2].componentInstance.hasFocus).toBeTruthy();
@@ -144,7 +148,7 @@ describe('KbqListSelection without forms', () => {
 
             expect(clipboardContent).toBe(listOptions[2].componentInstance.value);
             expect(listOptions[2].componentInstance.hasFocus).toBeTruthy();
-        }));
+        });
 
         it('should be able to set a value on a list option', () => {
             const optionValues = ['inbox', 'starred', 'sent-mail', 'drafts'];
@@ -280,13 +284,13 @@ describe('KbqListSelection without forms', () => {
             expect(list.selectionModel.selected.length).toBe(0);
         });
 
-        it('should restore focus to the previous option if active option is destroyed', fakeAsync(() => {
+        it('should restore focus to the previous option if active option is destroyed', async () => {
             const manager = selectionList.componentInstance.keyManager;
             const activeOption = listOptions[3].componentInstance as KbqListOption;
             const previousOption = listOptions[2].componentInstance as KbqListOption;
 
             activeOption.focus();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(3);
@@ -294,15 +298,15 @@ describe('KbqListSelection without forms', () => {
 
             fixture.componentInstance.showLastOption = false;
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(2);
             expect(manager.activeItem).toBe(previousOption);
             expect(previousOption.hasFocus).toBe(true);
-        }));
+        });
 
-        it('should focus previous item when press UP ARROW', () => {
+        it('should focus previous item when press UP ARROW', async () => {
             const testListItem = listOptions[2].nativeElement as HTMLElement;
             const UP_EVENT: KeyboardEvent = createKeyboardEvent('keydown', UP_ARROW, testListItem);
             const manager = selectionList.componentInstance.keyManager;
@@ -312,6 +316,8 @@ describe('KbqListSelection without forms', () => {
 
             selectionList.componentInstance.onKeyDown(UP_EVENT);
 
+            // The newly focused option takes focus in a microtask, which a browser runs before rendering.
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toEqual(1);
@@ -322,7 +328,7 @@ describe('KbqListSelection without forms', () => {
             { direction: 'DOWN_ARROW', keyCode: DOWN_ARROW, anchorIndex: 1, firstIndex: 2, secondIndex: 3 }
         ])(
             'should focus and toggle the next item when pressing SHIFT + $direction',
-            fakeAsync(({ keyCode, anchorIndex, firstIndex, secondIndex }) => {
+            async ({ keyCode, anchorIndex, firstIndex, secondIndex }) => {
                 const manager = selectionList.componentInstance.keyManager;
                 const keyEvent = createKeyboardEvent('keydown', keyCode);
 
@@ -338,7 +344,7 @@ describe('KbqListSelection without forms', () => {
 
                 selectionList.componentInstance.onKeyDown(keyEvent);
                 // The newly focused option takes focus in a microtask, which a browser runs before rendering.
-                tick();
+                await fixture.whenStable();
                 fixture.detectChanges();
 
                 expect(listOptions[firstIndex].componentInstance.selected).toBe(true);
@@ -346,20 +352,21 @@ describe('KbqListSelection without forms', () => {
 
                 selectionList.componentInstance.onKeyDown(keyEvent);
                 fixture.detectChanges();
-                tick();
+                await fixture.whenStable();
 
                 expect(listOptions[firstIndex].componentInstance.selected).toBe(true);
                 expect(listOptions[secondIndex].componentInstance.selected).toBe(true);
-            })
+            }
         );
 
-        it('should focus next item when press DOWN ARROW', () => {
+        it('should focus next item when press DOWN ARROW', async () => {
             const manager = selectionList.componentInstance.keyManager;
 
             manager.setActiveItem(2);
             expect(manager.activeItemIndex).toEqual(2);
 
             selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', DOWN_ARROW));
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toEqual(3);
@@ -394,7 +401,9 @@ describe('KbqListSelection without forms', () => {
         // Dispatched on the host rather than driving `keyManager` directly, so the event travels the
         // same path a real keypress does — through the `(keydown)` binding and `onKeyDown`, which is
         // where type-ahead is wired into the key manager.
-        it('should be able to jump focus down to an item by typing', fakeAsync(() => {
+        it('should be able to jump focus down to an item by typing', async () => {
+            vi.useFakeTimers();
+
             const manager = selectionList.componentInstance.keyManager;
             const starredOption = listOptions[1].componentInstance as KbqListOption;
             const draftsOption = listOptions[3].componentInstance as KbqListOption;
@@ -403,7 +412,7 @@ describe('KbqListSelection without forms', () => {
 
             dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', S, undefined, 's');
             fixture.detectChanges();
-            tick(250);
+            await vi.advanceTimersByTimeAsync(250);
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(1);
@@ -411,12 +420,12 @@ describe('KbqListSelection without forms', () => {
 
             dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', D, undefined, 'd');
             fixture.detectChanges();
-            tick(250);
+            await vi.advanceTimersByTimeAsync(250);
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(3);
             expect(manager.activeItem).toBe(draftsOption);
-        }));
+        });
 
         it('should be able to select all options', () => {
             const list: KbqListSelection = selectionList.componentInstance;
@@ -590,7 +599,7 @@ describe('KbqListSelection without forms', () => {
             expect(() => fixture.detectChanges()).toThrow('`selectAllHandler` must be a function.');
         });
 
-        it('should navigate to next page when PAGE_DOWN is pressed', () => {
+        it('should navigate to next page when PAGE_DOWN is pressed', async () => {
             const manager = selectionList.componentInstance.keyManager;
 
             manager.withScrollSize(2);
@@ -599,6 +608,7 @@ describe('KbqListSelection without forms', () => {
             expect(manager.activeItemIndex).toBe(1);
 
             dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', PAGE_DOWN);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBeGreaterThan(1);
@@ -687,13 +697,13 @@ describe('KbqListSelection without forms', () => {
             fixture.detectChanges();
         });
 
-        it('should add and remove focus class on focus/blur', fakeAsync(() => {
+        it('should add and remove focus class on focus/blur', async () => {
             const option = options[0].nativeElement;
 
             expect(option.classList).not.toContain('kbq-focused');
 
             dispatchFakeEvent(list.nativeElement, 'focus');
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(option.className).toContain('kbq-focused');
 
@@ -701,9 +711,9 @@ describe('KbqListSelection without forms', () => {
             option.blur();
             fixture.detectChanges();
             expect(option.className).not.toContain('kbq-focused');
-        }));
+        });
 
-        it('should add focus class on first selected element', fakeAsync(() => {
+        it('should add focus class on first selected element', async () => {
             const selectedOption = options[1];
 
             selectedOption.componentInstance.toggle();
@@ -716,14 +726,14 @@ describe('KbqListSelection without forms', () => {
             expect(selectedOption.nativeElement.classList).toContain('kbq-selected');
 
             dispatchFakeEvent(list.nativeElement, 'focus');
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(selectedOption.nativeElement.className).toContain('kbq-focused');
-        }));
+        });
 
-        it('should be focused when focus on nativeElements', fakeAsync(() => {
+        it('should be focused when focus on nativeElements', async () => {
             dispatchFakeEvent(options[0].nativeElement, 'focusin');
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(options[0].nativeElement.className).toContain('kbq-focused');
@@ -732,7 +742,7 @@ describe('KbqListSelection without forms', () => {
             fixture.detectChanges();
 
             expect(options[0].nativeElement.className).not.toContain('kbq-focused');
-        }));
+        });
     });
 
     describe('action button visibility', () => {
@@ -752,39 +762,39 @@ describe('KbqListSelection without forms', () => {
 
         // Styles are stripped in jsdom, so these assert the classes the reveal rules key off:
         // `.kbq-list-selection.cdk-keyboard-focused .kbq-list-option.kbq-focused` (see list.scss).
-        it('should not mark the list as keyboard-focused when an option is focused by mouse', fakeAsync(() => {
+        it('should not mark the list as keyboard-focused when an option is focused by mouse', async () => {
             getFocusMonitor().focusVia(options[0].nativeElement, 'mouse');
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(options[0].nativeElement.classList).toContain('kbq-focused');
             expect(list.nativeElement.classList).not.toContain('cdk-keyboard-focused');
-        }));
+        });
 
-        it('should mark the list as keyboard-focused when an option is focused via keyboard', fakeAsync(() => {
+        it('should mark the list as keyboard-focused when an option is focused via keyboard', async () => {
             getFocusMonitor().focusVia(options[0].nativeElement, 'keyboard');
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(options[0].nativeElement.classList).toContain('kbq-focused');
             expect(list.nativeElement.classList).toContain('cdk-keyboard-focused');
-        }));
+        });
 
-        it('should mark the option with kbq-action-button-focused while the action holds focus', fakeAsync(() => {
+        it('should mark the option with kbq-action-button-focused while the action holds focus', async () => {
             const option = options[0];
             const actionButton = option.query(By.directive(KbqOptionActionComponent));
 
             expect(option.nativeElement.classList).not.toContain('kbq-action-button-focused');
 
             actionButton.componentInstance.focus();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(actionButton.componentInstance.hasFocus).toBe(true);
             expect(option.nativeElement.classList).toContain('kbq-action-button-focused');
-        }));
+        });
 
-        it('should not swallow Tab when the action button cannot take focus', fakeAsync(() => {
+        it('should not swallow Tab when the action button cannot take focus', async () => {
             const option = options[0];
             const actionButtonDebugElement = option.query(By.directive(KbqOptionActionComponent));
             const actionButton = actionButtonDebugElement.componentInstance;
@@ -797,23 +807,23 @@ describe('KbqListSelection without forms', () => {
 
             const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
 
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(actionButton.hasFocus).toBe(false);
             expect(event.defaultPrevented).toBe(false);
             expect(option.nativeElement.classList).not.toContain('kbq-action-button-focused');
-        }));
+        });
 
-        it('should swallow Tab when the action button takes focus', fakeAsync(() => {
+        it('should swallow Tab when the action button takes focus', async () => {
             const option = options[0];
             const event = dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
 
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(event.defaultPrevented).toBe(true);
-        }));
+        });
     });
 
     describe('with list disabled', () => {
@@ -888,53 +898,53 @@ describe('KbqListSelection with forms', () => {
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
         });
 
-        it('should not update the model if an option got selected programmatically', fakeAsync(() => {
+        it('should not update the model if an option got selected programmatically', async () => {
             expect(fixture.componentInstance.selectedOptions.length).toBe(0);
 
             listOptions[0].toggle();
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             expect(listOptions[0].selected).toBe(true);
             expect(selectionListDebug.componentInstance.selectionModel.isSelected(listOptions[0])).toBe(true);
             expect(fixture.componentInstance.selectedOptions).toEqual([]);
-        }));
+        });
 
-        it('should update the model if an option got clicked', fakeAsync(() => {
+        it('should update the model if an option got clicked', async () => {
             expect(fixture.componentInstance.selectedOptions.length).toBe(0);
 
             dispatchFakeEvent(listOptions[0].getHostElement(), 'click');
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             expect(fixture.componentInstance.selectedOptions.length).toBe(1);
-        }));
+        });
 
-        it('should update the options if a model value is set', fakeAsync(() => {
+        it('should update the options if a model value is set', async () => {
             expect(fixture.componentInstance.selectedOptions.length).toBe(0);
 
             fixture.componentInstance.selectedOptions = ['opt3'];
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             expect(fixture.componentInstance.selectedOptions.length).toBe(1);
-        }));
+        });
 
-        it('should set the selection-list to touched on blur', fakeAsync(() => {
+        it('should set the selection-list to touched on blur', async () => {
             expect(ngModel.touched).toBe(false);
 
             dispatchFakeEvent(selectionListDebug.nativeElement, 'blur');
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             expect(ngModel.touched).toBe(true);
-        }));
+        });
 
-        it('should stay pristine until the user changes the value', fakeAsync(() => {
+        it('should stay pristine until the user changes the value', async () => {
             fixture = TestBed.createComponent(SelectionListWithModel);
             fixture.componentInstance.selectedOptions = ['opt2'];
             fixture.detectChanges();
@@ -946,22 +956,22 @@ describe('KbqListSelection with forms', () => {
 
             // Flush the initial tick to ensure that every action from the ControlValueAccessor
             // happened before the actual test starts.
-            tick();
+            await fixture.whenStable();
 
             expect(ngModel.pristine).toBe(true);
 
             dispatchFakeEvent(listOptions[1].getHostElement(), 'click');
             fixture.detectChanges();
 
-            tick();
+            await fixture.whenStable();
 
             expect(ngModel.pristine).toBe(false);
-        }));
+        });
 
-        it('should keep the model value and clear visible selection when the selected option is destroyed', fakeAsync(() => {
+        it('should keep the model value and clear visible selection when the selected option is destroyed', async () => {
             fixture.componentInstance.selectedOptions = ['opt3'];
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt3']);
@@ -969,7 +979,7 @@ describe('KbqListSelection with forms', () => {
 
             fixture.componentInstance.renderLastOption = false;
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             listOptions = fixture.debugElement
@@ -979,20 +989,20 @@ describe('KbqListSelection with forms', () => {
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt3']);
             expect(listOptions).toHaveLength(2);
             expect(listOptions.every((option) => !option.selected)).toBe(true);
-        }));
+        });
 
-        it('should update the selected options when the model value changes', fakeAsync(() => {
+        it('should update the selected options when the model value changes', async () => {
             expect(fixture.componentInstance.selectedOptions).toEqual([]);
 
             fixture.componentInstance.selectedOptions = ['opt1'];
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
 
             expect(listOptions[0].selected).toBe(true);
             expect(listOptions[1].selected).toBe(false);
             expect(selectionListDebug.componentInstance.selectionModel.isSelected(listOptions[0])).toBe(true);
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt1']);
-        }));
+        });
     });
 
     describe('and formControl', () => {
@@ -1056,12 +1066,12 @@ describe('KbqListSelection with forms', () => {
             expect(options.map((option) => option.disabled)).toEqual([false, true]);
         });
 
-        it('should be able to set the value through the form control', fakeAsync(() => {
+        it('should be able to set the value through the form control', async () => {
             expect(listOptions.every((option) => !option.selected)).toBe(true);
 
             fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(listOptions[1].selected).toBe(true);
@@ -1070,19 +1080,19 @@ describe('KbqListSelection with forms', () => {
 
             fixture.componentInstance.formControl.setValue(null);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(listOptions.every((option) => !option.selected)).toBe(true);
-        }));
+        });
 
-        it('should mark options as selected when the value is set before they are initialized', fakeAsync(() => {
+        it('should mark options as selected when the value is set before they are initialized', async () => {
             fixture.destroy();
             fixture = TestBed.createComponent(SelectionListWithFormControl);
 
             fixture.componentInstance.formControl.setValue(['opt2', 'opt3']);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             listOptions = fixture.debugElement
@@ -1092,40 +1102,40 @@ describe('KbqListSelection with forms', () => {
             expect(listOptions[1].selected).toBe(true);
 
             expect(listOptions[2].selected).toBe(true);
-        }));
+        });
     });
 
     describe('preselected values', () => {
-        it('should add preselected options to the model value', fakeAsync(() => {
+        it('should add preselected options to the model value', async () => {
             const fixture = TestBed.createComponent(SelectionListWithPreselectedOption);
             const listOptions = fixture.debugElement
                 .queryAll(By.directive(KbqListOption))
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(listOptions[1].selected).toBe(true);
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt2']);
-        }));
+        });
 
-        it('should handle preselected option both through the model and the view', fakeAsync(() => {
+        it('should handle preselected option both through the model and the view', async () => {
             const fixture = TestBed.createComponent(SelectionListWithPreselectedOptionAndModel);
             const listOptions = fixture.debugElement
                 .queryAll(By.directive(KbqListOption))
                 .map((optionDebugEl) => optionDebugEl.componentInstance);
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(listOptions[0].selected).toBe(true);
             expect(listOptions[1].selected).toBe(true);
             expect(fixture.componentInstance.selectedOptions).toEqual(['opt1', 'opt2']);
-        }));
+        });
 
-        it('should show the item as selected when preselected inside OnPush parent', fakeAsync(() => {
+        it('should show the item as selected when preselected inside OnPush parent', async () => {
             const fixture = TestBed.createComponent(SelectionListWithPreselectedFormControlOnPush);
 
             fixture.detectChanges();
@@ -1133,33 +1143,33 @@ describe('KbqListSelection with forms', () => {
             const option = fixture.debugElement.queryAll(By.directive(KbqListOption))[1];
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(option.componentInstance.selected).toBe(true);
-        }));
+        });
     });
 
     describe('with custom compare function', () => {
-        it('should use a custom comparator to determine which options are selected', fakeAsync(() => {
+        it('should use a custom comparator to determine which options are selected', async () => {
             const fixture = TestBed.createComponent(SelectionListWithCustomComparator);
             const testComponent = fixture.componentInstance;
 
             // Initial value is set via formControl so writeValue fires synchronously
             // before options' ngOnInit, allowing compareWith to be called
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
             expect(testComponent.compareWith).toHaveBeenCalled();
             expect(testComponent.optionInstances()[1].selected).toBe(true);
-        }));
+        });
 
-        it('should keep the selection when an option value is replaced by an equal object', fakeAsync(() => {
+        it('should keep the selection when an option value is replaced by an equal object', async () => {
             const fixture = TestBed.createComponent(SelectionListWithReplaceableValues);
             const testComponent = fixture.componentInstance;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances()[1].selected).toBe(true);
@@ -1171,144 +1181,146 @@ describe('KbqListSelection with forms', () => {
 
             testComponent.reloadItems();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances()[1].selected).toBe(true);
             // Re-applying an equal value is a no-op: the delta must not deselect and re-select on the way.
             expect(changes).not.toHaveBeenCalled();
-        }));
+        });
 
-        it('should apply an object model value set after initialization', fakeAsync(() => {
+        it('should apply an object model value set after initialization', async () => {
             const fixture = TestBed.createComponent(SelectionListWithReplaceableValues);
             const testComponent = fixture.componentInstance;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             testComponent.formControl.setValue([{ id: 3, label: 'Three' }]);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, false, true]);
-        }));
+        });
 
-        it('should re-run matching when the comparator changes', fakeAsync(() => {
+        it('should re-run matching when the comparator changes', async () => {
             const fixture = TestBed.createComponent(SelectionListWithReplaceableValues);
             const testComponent = fixture.componentInstance;
 
             testComponent.useCompareByReference();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().every((option) => !option.selected)).toBe(true);
 
             testComponent.useCompareById();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances()[1].selected).toBe(true);
-        }));
+        });
 
-        it('should keep a single selection when the option values are replaced', fakeAsync(() => {
+        it('should keep a single selection when the option values are replaced', async () => {
             const fixture = TestBed.createComponent(SingleSelectionListWithComparator);
             const testComponent = fixture.componentInstance;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, true, false]);
 
             testComponent.reloadItems();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, true, false]);
-        }));
+        });
 
-        it('should use the custom comparator with ngModel', fakeAsync(() => {
+        it('should use the custom comparator with ngModel', async () => {
             const fixture = TestBed.createComponent(SelectionListWithComparatorAndModel);
             const testComponent = fixture.componentInstance;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, false, true]);
-        }));
+        });
 
-        it('should apply a later value to an option the single-selection model had dropped', fakeAsync(() => {
+        it('should apply a later value to an option the single-selection model had dropped', async () => {
             const fixture = TestBed.createComponent(SingleSelectionListWithMultipleValues);
             const testComponent = fixture.componentInstance;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, true, false]);
 
             testComponent.formControl.setValue(['a']);
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([true, false, false]);
-        }));
+        });
 
-        it('should keep an option whose value the model still matches by id, not by shape', fakeAsync(() => {
+        it('should keep an option whose value the model still matches by id, not by shape', async () => {
             // Options carry objects, the model carries ids — the comparator only works in the documented
             // `(optionValue, modelValue)` order, so this fails if the two are ever swapped.
             const fixture = TestBed.createComponent(SelectionListWithAsymmetricComparator);
             const testComponent = fixture.componentInstance;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, true, false]);
 
             testComponent.reloadItems();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([false, true, false]);
-        }));
+        });
 
-        it('should let the comparator decide about options without a value', fakeAsync(() => {
+        it('should let the comparator decide about options without a value', async () => {
             // A valueless option reports `undefined` back through the form control, so it has to be able
             // to find itself again when that value is re-applied.
             const fixture = TestBed.createComponent(SelectionListWithNullishValues);
             const testComponent = fixture.componentInstance;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().map((option) => option.selected)).toEqual([true, false]);
-        }));
+        });
 
-        it('should survive a comparator that throws and report it once per comparison', fakeAsync(() => {
+        it('should survive a comparator that throws and report it once per comparison', async () => {
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(SelectionListWithThrowingComparator);
 
-            expect(() => {
-                fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                })()
+            ).resolves.not.toThrow();
 
             expect(warn).toHaveBeenCalled();
             expect(fixture.componentInstance.optionInstances().every((option) => !option.selected)).toBe(true);
 
             warn.mockRestore();
-        }));
+        });
 
         it('should throw when compareWith is set to a non-function', () => {
             const fixture = TestBed.createComponent(SelectionListWithReplaceableValues);
@@ -1318,12 +1330,12 @@ describe('KbqListSelection with forms', () => {
             expect(() => fixture.detectChanges()).toThrow('`compareWith` must be a function.');
         });
 
-        it('should clear a selection the previous comparator matched', fakeAsync(() => {
+        it('should clear a selection the previous comparator matched', async () => {
             const fixture = TestBed.createComponent(SelectionListWithReplaceableValues);
             const testComponent = fixture.componentInstance;
 
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances()[1].selected).toBe(true);
@@ -1331,22 +1343,24 @@ describe('KbqListSelection with forms', () => {
             testComponent.formControl.setValue([]);
             testComponent.useCompareByReference();
             fixture.detectChanges();
-            tick();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(testComponent.optionInstances().every((option) => !option.selected)).toBe(true);
-        }));
+        });
 
-        it('should not let one option break the rest when the comparator cannot read its value', fakeAsync(() => {
+        it('should not let one option break the rest when the comparator cannot read its value', async () => {
             const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
             const fixture = TestBed.createComponent(SelectionListWithValuelessOption);
             const testComponent = fixture.componentInstance;
 
-            expect(() => {
-                fixture.detectChanges();
-                tick();
-                fixture.detectChanges();
-            }).not.toThrow();
+            await expect(
+                (async () => {
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+                    fixture.detectChanges();
+                })()
+            ).resolves.not.toThrow();
             // The comparator's error is reported in dev mode rather than swallowed.
             expect(warn).toHaveBeenCalledWith(expect.any(TypeError));
 
@@ -1356,7 +1370,7 @@ describe('KbqListSelection with forms', () => {
                 true,
                 false
             ]);
-        }));
+        });
     });
 
     describe('should update model after keyboard interaction with multiple mode = checkbox', () => {
@@ -1372,7 +1386,7 @@ describe('KbqListSelection with forms', () => {
             ngModel = selectionList.injector.get<NgModel>(NgModel);
         });
 
-        it('should update model when items selected with SPACE and ENTER', () => {
+        it('should update model when items selected with SPACE and ENTER', async () => {
             const manager = selectionList.componentInstance.keyManager;
 
             const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
@@ -1392,6 +1406,7 @@ describe('KbqListSelection with forms', () => {
             selectionList.componentInstance.onKeyDown(SPACE_EVENT);
             selectionList.componentInstance.onKeyDown(DOWN_EVENT);
 
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(ngModel.value.length).toBe(3);
@@ -1399,20 +1414,21 @@ describe('KbqListSelection with forms', () => {
             selectionList.componentInstance.onKeyDown(UP_EVENT);
             selectionList.componentInstance.onKeyDown(ENTER_EVENT);
 
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(ngModel.value.length).toBe(2);
         });
 
-        it('should update model when items selected by pressing SHIFT + arrows', fakeAsync(() => {
+        it('should update model when items selected by pressing SHIFT + arrows', async () => {
             const manager = selectionList.componentInstance.keyManager;
             const listEl = selectionList.nativeElement as HTMLElement;
 
-            const dispatchShift = (keyCode: number) => {
+            const dispatchShift = async (keyCode: number) => {
                 listEl.dispatchEvent(
                     new KeyboardEvent('keydown', { keyCode, shiftKey: true, bubbles: true, cancelable: true })
                 );
-                tick();
+                await fixture.whenStable();
                 fixture.detectChanges();
             };
 
@@ -1423,24 +1439,24 @@ describe('KbqListSelection with forms', () => {
 
             // Select first item with SPACE, then extend selection down with Shift
             selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', SPACE));
-            dispatchShift(DOWN_ARROW);
-            dispatchShift(DOWN_ARROW);
+            await dispatchShift(DOWN_ARROW);
+            await dispatchShift(DOWN_ARROW);
             fixture.detectChanges();
 
             expect(ngModel.value.length).toBe(3);
 
             // Deselect current item with SPACE, then contract selection up with Shift
             selectionList.componentInstance.onKeyDown(createKeyboardEvent('keydown', SPACE));
-            dispatchShift(UP_ARROW);
+            await dispatchShift(UP_ARROW);
             fixture.detectChanges();
 
             expect(ngModel.value.length).toBe(1);
-        }));
+        });
     });
 });
 
 describe('KbqListSelection keyboard interaction', () => {
-    it('should set focus on list-item removal properly', () => {
+    it('should set focus on list-item removal properly', async () => {
         const fixture = setup(TestListSelectionWithDynamicList);
         const initialOptions = fixture.componentInstance.opts.slice();
         const manager: FocusKeyManager<KbqListOption> = fixture.componentInstance.listSelection().keyManager;
@@ -1449,6 +1465,7 @@ describe('KbqListSelection keyboard interaction', () => {
             fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement,
             'keyboard'
         );
+        await fixture.whenStable();
         fixture.detectChanges();
         const activeIndex = manager.activeItemIndex;
         const activeItemValue = manager.activeItem?.value;
@@ -1468,7 +1485,7 @@ describe('KbqListSelection keyboard interaction', () => {
         );
     });
 
-    it('should set focus on list-item removal from the end properly', () => {
+    it('should set focus on list-item removal from the end properly', async () => {
         const fixture = setup(TestListSelectionWithDynamicList);
         const initialOptions = fixture.componentInstance.opts.slice();
         const manager: FocusKeyManager<KbqListOption> = fixture.componentInstance.listSelection().keyManager;
@@ -1477,8 +1494,10 @@ describe('KbqListSelection keyboard interaction', () => {
             fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement,
             'keyboard'
         );
+        await fixture.whenStable();
         fixture.detectChanges();
         manager.setLastItemActive();
+        await fixture.whenStable();
 
         const initialActiveIndex = manager.activeItemIndex;
 
@@ -1495,7 +1514,7 @@ describe('KbqListSelection keyboard interaction', () => {
 });
 
 describe('KbqListSelection onCopy event', () => {
-    it('should emit onCopy event instead of using clipboard when (onCopy) observer is attached', fakeAsync(() => {
+    it('should emit onCopy event instead of using clipboard when (onCopy) observer is attached', async () => {
         const fixture = setup(SelectionListWithOnCopyHandler);
         const selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
         const listOptions = fixture.debugElement.queryAll(By.directive(KbqListOption));
@@ -1509,14 +1528,14 @@ describe('KbqListSelection onCopy event', () => {
 
         selectionList.componentInstance.onKeyDown(copyEvent);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         expect(fixture.componentInstance.copyEvent).not.toBeNull();
         expect(fixture.componentInstance.copyEvent!.option).toBe(listOptions[0].componentInstance);
         expect(fixture.componentInstance.copyEvent!.event).toBe(copyEvent);
-    }));
+    });
 
-    it('should not call clipboard.copy when (onCopy) observer is attached', fakeAsync(() => {
+    it('should not call clipboard.copy when (onCopy) observer is attached', async () => {
         const clipboardSpy = vi.fn();
         const fixture = setup(SelectionListWithOnCopyHandler, [
             { provide: Clipboard, useValue: { copy: clipboardSpy } }
@@ -1532,10 +1551,10 @@ describe('KbqListSelection onCopy event', () => {
 
         selectionList.componentInstance.onKeyDown(copyEvent);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         expect(clipboardSpy).not.toHaveBeenCalled();
-    }));
+    });
 });
 
 describe('KbqListSelection range selection', () => {
@@ -1568,21 +1587,21 @@ describe('KbqListSelection range selection', () => {
         expect(list.selectionModel.selected.length).toBe(0);
     });
 
-    it('should extend the range from the anchor once the keyboard has moved', fakeAsync(() => {
+    it('should extend the range from the anchor once the keyboard has moved', async () => {
         list.keyManager.setActiveItem(1);
         listOptions[1].componentInstance.selected = true;
         list.keyManager.setActiveItem(3);
-        tick();
+        await fixture.whenStable();
         fixture.detectChanges();
 
         list.setSelectedOptionsByClick(listOptions[3].componentInstance, true, false);
         fixture.detectChanges();
-        tick();
+        await fixture.whenStable();
 
         expect(listOptions[1].componentInstance.selected).toBe(true);
         expect(listOptions[2].componentInstance.selected).toBe(true);
         expect(listOptions[3].componentInstance.selected).toBe(true);
-    }));
+    });
 });
 
 describe('KbqListSelection horizontal', () => {
@@ -1605,17 +1624,19 @@ describe('KbqListSelection horizontal', () => {
         expect(selectionList.nativeElement.classList).toContain('kbq-list-selection_horizontal');
     });
 
-    it('should move the active option with LEFT and RIGHT arrows', () => {
+    it('should move the active option with LEFT and RIGHT arrows', async () => {
         const manager = selectionList.componentInstance.keyManager;
 
         manager.setActiveItem(0);
 
         dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', RIGHT_ARROW);
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(manager.activeItemIndex).toBe(1);
 
         dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', LEFT_ARROW);
+        await fixture.whenStable();
         fixture.detectChanges();
 
         expect(manager.activeItemIndex).toBe(0);
@@ -1659,6 +1680,10 @@ describe('KbqListSelection layout measurement', () => {
         listElement = selectionList.nativeElement;
     });
 
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('should report zero height when the element is not laid out', () => {
         vi.spyOn(listElement, 'getClientRects').mockReturnValue(clientRects());
         expect(list.getHeight()).toBe(0);
@@ -1697,7 +1722,9 @@ describe('KbqListSelection layout measurement', () => {
     // implementation detail of the resize listener, not public API.
     const RESIZE_AUDIT_TIME = 100;
 
-    it('should recompute the scroll size on window resize, debounced', fakeAsync(() => {
+    it('should recompute the scroll size on window resize, debounced', async () => {
+        vi.useFakeTimers();
+
         const updateScrollSizeSpy = vi.spyOn(list, 'updateScrollSize');
 
         window.dispatchEvent(new Event('resize'));
@@ -1705,10 +1732,10 @@ describe('KbqListSelection layout measurement', () => {
 
         expect(updateScrollSizeSpy).not.toHaveBeenCalled();
 
-        tick(RESIZE_AUDIT_TIME);
+        await vi.advanceTimersByTimeAsync(RESIZE_AUDIT_TIME);
 
         expect(updateScrollSizeSpy).toHaveBeenCalledTimes(1);
-    }));
+    });
 });
 
 describe('KbqListSelection accessibility', () => {
@@ -2190,7 +2217,7 @@ describe('KbqListSelection drag and drop', () => {
             expect(list.selectionModel.selected).toEqual([]);
         });
 
-        it('should keep the shift-range anchor in sync', fakeAsync(() => {
+        it('should keep the shift-range anchor in sync', async () => {
             const fixture = setup(SelectionListWithDragAndDrop);
 
             // Anchor the range on the first option, then move it: the anchor must follow the option,
@@ -2199,10 +2226,10 @@ describe('KbqListSelection drag and drop', () => {
 
             list.keyManager.setActiveItem(0);
             dragToEnd(fixture);
-            flush();
+            await fixture.whenStable();
 
             expect(list.keyManager.previousActiveItemIndex).toBe(list.keyManager.activeItemIndex);
-        }));
+        });
     });
 
     describe('drag cursor', () => {
@@ -3331,11 +3358,11 @@ describe('KbqListSelection multiple mode', () => {
             expect(getList(fixture).selectionModel.isMultipleSelection()).toBe(false);
         });
 
-        it('should keep the first selected option when narrowing to single selection', fakeAsync(() => {
+        it('should keep the first selected option when narrowing to single selection', async () => {
             const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             const options = getOptions(fixture);
 
@@ -3346,19 +3373,19 @@ describe('KbqListSelection multiple mode', () => {
 
             fixture.componentInstance.multiple.set(false);
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(options.map((option) => option.selected)).toEqual([true, false, false]);
             expect(getList(fixture).selectionModel.selected).toEqual([options[0]]);
             expect(fixture.componentInstance.selected).toEqual(['opt1']);
-        }));
+        });
 
-        it('should keep every selected option when widening to multiple selection', fakeAsync(() => {
+        it('should keep every selected option when widening to multiple selection', async () => {
             const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
 
             fixture.componentInstance.multiple.set(false);
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             const options = getOptions(fixture);
 
@@ -3367,21 +3394,21 @@ describe('KbqListSelection multiple mode', () => {
 
             fixture.componentInstance.multiple.set('checkbox');
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(options.map((option) => option.selected)).toEqual([false, true, false]);
             expect(getList(fixture).selectionModel.isMultipleSelection()).toBe(true);
-        }));
+        });
 
-        it('should let the swapped model keep driving the options', fakeAsync(() => {
+        it('should let the swapped model keep driving the options', async () => {
             const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             fixture.componentInstance.multiple.set(false);
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             const options = getOptions(fixture);
 
@@ -3397,7 +3424,7 @@ describe('KbqListSelection multiple mode', () => {
 
             expect(options[2].selected).toBe(false);
             expect(getList(fixture).selectionModel.selected).toEqual([]);
-        }));
+        });
 
         it('should re-derive autoSelect and noUnselectLast the consumer left alone', () => {
             const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
@@ -3517,14 +3544,14 @@ describe('KbqListSelection multiple mode, derived defaults', () => {
         expect(list.noUnselectLast).toBe(true);
     });
 
-    it('should keep selections held by the model but not rendered as options', fakeAsync(() => {
+    it('should keep selections held by the model but not rendered as options', async () => {
         const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
 
         // Single selection first, so that switching to `checkbox` is a real multiplicity change and the
         // model is actually rebuilt.
         fixture.componentInstance.multiple.set(false);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         const list = getList(fixture);
         // Stands in for an option a virtual scroll has not instantiated: held by the model, absent from
@@ -3536,16 +3563,16 @@ describe('KbqListSelection multiple mode, derived defaults', () => {
 
         fixture.componentInstance.multiple.set('checkbox');
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         expect(list.selectionModel.selected).toContain(detached);
-    }));
+    });
 
-    it('should emit selectionChange for every option a narrowing deselects', fakeAsync(() => {
+    it('should emit selectionChange for every option a narrowing deselects', async () => {
         const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
 
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         const list = getList(fixture);
         const options = fixture.debugElement
@@ -3561,16 +3588,16 @@ describe('KbqListSelection multiple mode, derived defaults', () => {
 
         fixture.componentInstance.multiple.set(false);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         expect(changes.map(({ option }) => option.value)).toEqual(['opt2', 'opt3']);
-    }));
+    });
 
-    it('should report the shortened value exactly once for a narrowing', fakeAsync(() => {
+    it('should report the shortened value exactly once for a narrowing', async () => {
         const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
 
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         const list = getList(fixture);
         const options = fixture.debugElement
@@ -3579,7 +3606,7 @@ describe('KbqListSelection multiple mode, derived defaults', () => {
 
         options.forEach((option) => option.setSelected(true));
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         const reported: string[][] = [];
 
@@ -3587,10 +3614,10 @@ describe('KbqListSelection multiple mode, derived defaults', () => {
 
         fixture.componentInstance.multiple.set(false);
         fixture.detectChanges();
-        flush();
+        await fixture.whenStable();
 
         expect(reported).toEqual([['opt1']]);
-    }));
+    });
 });
 
 describe('KbqListSelection select all row', () => {
@@ -3953,13 +3980,14 @@ describe('KbqListSelection select all row', () => {
     });
 
     describe('index space', () => {
-        it('should point Down past the row at the first option, and toggle that one', () => {
+        it('should point Down past the row at the first option, and toggle that one', async () => {
             const fixture = setup(SelectionListWithSelectAll);
             const options = getOptions(fixture);
             const listElement = getListElement(fixture);
 
             dispatchKeyboardEvent(listElement, 'keydown', DOWN_ARROW);
             dispatchKeyboardEvent(listElement, 'keydown', DOWN_ARROW);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(getList(fixture).keyManager.activeItem).toBe(options[0]);
@@ -4018,7 +4046,7 @@ describe('KbqListSelection select all row', () => {
     });
 
     describe('regressions', () => {
-        it('should extend a shift range in the index space the key manager reports in', () => {
+        it('should extend a shift range in the index space the key manager reports in', async () => {
             const fixture = setup(SelectionListWithSelectAll);
             const options = getOptions(fixture);
             const listElement = getListElement(fixture);
@@ -4026,6 +4054,7 @@ describe('KbqListSelection select all row', () => {
             // Row, then opt1.
             dispatchKeyboardEvent(listElement, 'keydown', DOWN_ARROW);
             dispatchKeyboardEvent(listElement, 'keydown', DOWN_ARROW);
+            await fixture.whenStable();
             fixture.detectChanges();
 
             options[0].setSelected(true);
@@ -4063,17 +4092,19 @@ describe('KbqListSelection select all row', () => {
             expect(options[1].selected).toBe(true);
         });
 
-        it('should follow the row with the key manager when it is clicked', () => {
+        it('should follow the row with the key manager when it is clicked', async () => {
             const fixture = setup(SelectionListWithSelectAll);
             const list = getList(fixture);
 
             // opt3 is disabled and `focus()` refuses it, so anchor on opt2.
             getOptions(fixture)[1].focus();
+            await fixture.whenStable();
             fixture.detectChanges();
 
             expect(list.keyManager.activeItem).toBe(getOptions(fixture)[1]);
 
             getRow(fixture)!.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+            await fixture.whenStable();
             fixture.detectChanges();
 
             // Without this the manager would stay on opt2 and Space would toggle that option instead.

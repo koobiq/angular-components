@@ -1,6 +1,6 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { ChangeDetectionStrategy, Component, Directive, Provider, Type, viewChild } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Observable, Subject } from 'rxjs';
 import {
     KBQ_OVERFLOW_SHADOW_SOURCE,
@@ -228,12 +228,16 @@ describe(KbqOverflowShadowContainer.name, () => {
     });
 
     describe('debounce', () => {
-        it('should delay overflow updates by the [debounce] window', fakeAsync(() => {
+        beforeEach(() => vi.useFakeTimers());
+
+        afterEach(() => vi.useRealTimers());
+
+        it('should delay overflow updates by the [debounce] window', async () => {
             TestBed.configureTestingModule({ imports: [TestHostDebounceComponent] });
             const fixture = TestBed.createComponent(TestHostDebounceComponent);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const container = fixture.componentInstance.container();
             const body = fixture.debugElement.nativeElement.querySelector('[data-testid="body"]') as HTMLElement;
@@ -241,20 +245,18 @@ describe(KbqOverflowShadowContainer.name, () => {
             // Settle a known baseline (content overflows below, not scrolled yet).
             setScrollMetrics(body, { scrollTop: 0, clientHeight: 100, scrollHeight: 500 });
             body.dispatchEvent(new Event('scroll'));
-            tick(50);
+            await vi.advanceTimersByTimeAsync(50);
             expect(container.overflow()).toEqual({ top: false, bottom: true });
 
             // Scroll down: the change must not be visible before the debounce window elapses.
             setScrollMetrics(body, { scrollTop: 10, clientHeight: 100, scrollHeight: 500 });
             body.dispatchEvent(new Event('scroll'));
-            tick(20);
+            await vi.advanceTimersByTimeAsync(20);
             expect(container.overflow()).toEqual({ top: false, bottom: true });
 
-            tick(40);
+            await vi.advanceTimersByTimeAsync(40);
             expect(container.overflow()).toEqual({ top: true, bottom: true });
-
-            flush();
-        }));
+        });
     });
 
     describe('checkOverflow()', () => {

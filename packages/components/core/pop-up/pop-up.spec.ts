@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { dispatchMouseEvent } from '../testing';
 import { PopUpVisibility } from './constants';
 import { KbqPopUp } from './pop-up';
@@ -21,6 +21,7 @@ describe('KbqPopUp', () => {
     let popUp: TestPopUp;
 
     beforeEach(() => {
+        vi.useFakeTimers();
         TestBed.configureTestingModule({ imports: [TestPopUp] });
 
         fixture = TestBed.createComponent(TestPopUp);
@@ -32,38 +33,42 @@ describe('KbqPopUp', () => {
         popUp.trigger = { triggerName: 'mouseenter' } as unknown as KbqPopUpTrigger<unknown>;
     });
 
-    it('should replace a pending show instead of queueing a second one', fakeAsync(() => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('should replace a pending show instead of queueing a second one', async () => {
         popUp.show(100);
-        tick(50);
+        await vi.advanceTimersByTimeAsync(50);
         // What `KbqPopUpTrigger.show()` does on every re-hover while the pop-up stays attached.
         popUp.show(100);
 
         popUp.hide(0);
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         // A stacked show task outlives the `hide()` meant to cancel it and puts the pop-up back on screen.
         expect(popUp.isVisible()).toBe(false);
-    }));
+    });
 
-    it('should cancel a re-entered show when the pop-up is destroyed', fakeAsync(() => {
+    it('should cancel a re-entered show when the pop-up is destroyed', async () => {
         popUp.show(100);
-        tick(50);
+        await vi.advanceTimersByTimeAsync(50);
         popUp.show(100);
 
         fixture.destroy();
-        flush();
+        await vi.runOnlyPendingTimersAsync();
 
         expect(popUp.visibility).toBe(PopUpVisibility.Initial);
-    }));
+    });
 
-    it('should bind the mouseleave hide listener once and remove it on destroy', fakeAsync(() => {
+    it('should bind the mouseleave hide listener once and remove it on destroy', async () => {
         const element: HTMLElement = popUp['elementRef'].nativeElement;
         const addEventListener = vi.spyOn(element, 'addEventListener');
 
         popUp.show(0);
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         popUp.show(0);
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(addEventListener.mock.calls.filter(([type]) => type === 'mouseleave')).toHaveLength(1);
 
@@ -73,5 +78,5 @@ describe('KbqPopUp', () => {
         dispatchMouseEvent(element, 'mouseleave');
 
         expect(hide).not.toHaveBeenCalled();
-    }));
+    });
 });

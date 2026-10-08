@@ -1,5 +1,5 @@
 import { Component, DebugElement, Type, viewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
@@ -153,7 +153,7 @@ describe('KbqToggle', () => {
             expect(onToggleClickSpyFn).toHaveBeenCalledTimes(1);
         });
 
-        it('should trigger a change event when the native input does', fakeAsync(() => {
+        it('should trigger a change event when the native input does', async () => {
             const onToggleChangeSpyFn = vi.spyOn(testComponent, 'onToggleChange');
 
             expect(inputElement.checked).toBe(false);
@@ -164,12 +164,12 @@ describe('KbqToggle', () => {
             expect(inputElement.checked).toBe(true);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(onToggleChangeSpyFn).toHaveBeenCalledTimes(1);
-        }));
+        });
 
-        it('should not trigger the change event by changing the native value', fakeAsync(() => {
+        it('should not trigger the change event by changing the native value', async () => {
             const onToggleChangeSpyFn = vi.spyOn(testComponent, 'onToggleChange');
 
             expect(inputElement.checked).toBe(false);
@@ -180,12 +180,12 @@ describe('KbqToggle', () => {
             expect(inputElement.checked).toBe(true);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             // The change event shouldn't fire, because the value change was not caused
             // by any interaction.
             expect(onToggleChangeSpyFn).not.toHaveBeenCalled();
-        }));
+        });
 
         it('should focus on underlying input element when focus() is called', () => {
             expect(document.activeElement).not.toBe(inputElement);
@@ -389,8 +389,8 @@ describe('KbqToggle', () => {
             inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
         });
 
-        it('should be in pristine, untouched, and valid states initially', fakeAsync(() => {
-            flush();
+        it('should be in pristine, untouched, and valid states initially', async () => {
+            await fixture.whenStable();
 
             const toggleElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             const ngModel = toggleElement.injector.get<NgModel>(NgModel);
@@ -398,7 +398,7 @@ describe('KbqToggle', () => {
             expect(ngModel.valid).toBe(true);
             expect(ngModel.pristine).toBe(true);
             expect(ngModel.touched).toBe(false);
-        }));
+        });
 
         it('should toggle checked state on click', () => {
             expect(toggleInstance.checked).toBe(false);

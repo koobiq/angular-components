@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeFlatDataSource, KbqTreeFlattener } from './data-source/flat-data-source';
@@ -107,6 +107,10 @@ describe('KbqTreeNodeToggle', () => {
         fixture.detectChanges();
     });
 
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     it('should expand the node it belongs to', () => {
         expect(labels()).toEqual(['src', 'tests']);
 
@@ -154,32 +158,36 @@ describe('KbqTreeNodeToggle', () => {
         expect(labels()).toEqual(['src', 'tests']);
     });
 
-    it('should mark itself disabled once a filter is active', fakeAsync(() => {
+    it('should mark itself disabled once a filter is active', async () => {
+        vi.useFakeTimers();
+
         expect(toggleOf('src').disabled).toBe(false);
 
         component.treeControl.filterNodes('a11y');
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         expect(toggleOf('src').disabled).toBe(true);
 
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
-    it('should combine the disabled input with the filter state', fakeAsync(() => {
+    it('should combine the disabled input with the filter state', async () => {
+        vi.useFakeTimers();
+
         component.disabledToggles = ['src'];
         fixture.detectChanges();
 
         expect(toggleOf('src').disabled).toBe(true);
 
         component.treeControl.filterNodes('a11y');
-        tick();
+        await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
         expect(toggleOf('src').disabled).toBe(true);
 
-        flush();
-    }));
+        await vi.runOnlyPendingTimersAsync();
+    });
 
     it('should stop listening to the filter stream once the tree is gone', () => {
         const filterValue = component.treeControl.filterValue as unknown as { observers: unknown[] };
