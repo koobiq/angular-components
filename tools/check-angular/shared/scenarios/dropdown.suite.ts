@@ -226,13 +226,7 @@ export function defineDropdownSuite(config: CheckConfig): void {
             expect(trigger.classList).toContain('cdk-keyboard-focused');
         });
 
-        // Library bug: the nested trigger detaches its panel, then the root trigger's `overlayHoldsFocus()` reads
-        // `document.activeElement`. With `provideAnimations()` the animation renderer defers removing the detached
-        // view until the engine flushes, so focus is still on the clicked nested item, which lies outside the root
-        // overlay: the root skips restoring focus, and the deferred removal then drops it to `<body>`.
-        const nestedClickTest: typeof it.fails = config.name === 'zone-animations' ? it.fails : it;
-
-        nestedClickTest('closes both menus when an item of the nested menu is clicked', async () => {
+        it('closes both menus when an item of the nested menu is clicked', async () => {
             await openWithMouse();
             clickWithMouse(getItem('Export'));
             await fixture.whenStable();
@@ -248,10 +242,7 @@ export function defineDropdownSuite(config: CheckConfig): void {
             expect(document.activeElement).toBe(trigger);
         });
 
-        // Library bug: `KbqDropdown.close()` reports an item activation as `'keydown'` whenever the panel's focus
-        // origin is the keyboard, and `KbqDropdownTrigger` closes the parent chain only for `'click'` and `'tab'`.
-        // The nested menu closes and the root stays open with the focus on "Export".
-        it.fails('closes both menus when an item of the nested menu is activated with ENTER', async () => {
+        it('closes both menus when an item of the nested menu is activated with ENTER', async () => {
             await openWithKeyboard();
             press(END);
             await fixture.whenStable();
@@ -264,7 +255,9 @@ export function defineDropdownSuite(config: CheckConfig): void {
 
             expect(fixture.componentInstance.lastAction()).toBe('Export as CSV');
             expect(getPanels().length).toBe(0);
+            expect(fixture.componentInstance.closeReasons()).toEqual(['keydown']);
             expect(document.activeElement).toBe(trigger);
+            expect(trigger.classList).toContain('cdk-keyboard-focused');
         });
 
         it('closes on ESCAPE and returns the focus to the trigger', async () => {
