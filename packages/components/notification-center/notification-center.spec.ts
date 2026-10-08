@@ -1638,6 +1638,64 @@ describe('KbqNotificationCenter', () => {
             expect(onReadSpy).toHaveBeenCalledWith(item);
             expect(item.read).toBe(true);
         });
+
+        // The dot and the label a screen reader gets, as rendered.
+        const renderedReadState = (row: HTMLElement) => ({
+            dotRead: row
+                .querySelector('.kbq-notification-item-time')!
+                .classList.contains('kbq-notification-item-time_read'),
+            unreadLabel: row.textContent!.includes('Не прочитано')
+        });
+
+        const openWithUnreadItem = async (): Promise<{ item: KbqNotificationItem; row: HTMLElement }> => {
+            vi.useFakeTimers();
+
+            const item = createItem('a');
+
+            getService().items = [item];
+
+            openCenter();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const row = queryPanel('kbq-notification-item')!;
+
+            expect(renderedReadState(row)).toEqual({ dotRead: false, unreadLabel: true });
+
+            return { item, row };
+        };
+
+        // `read` is flipped in place on the consumer's object, so the row is handed no new input.
+        it('re-renders an open row when its toast is read', async () => {
+            const { item, row } = await openWithUnreadItem();
+
+            TestBed.inject(KbqToastService).read.next({ id: item.id });
+            fixture.detectChanges();
+
+            expect(renderedReadState(row)).toEqual({ dotRead: true, unreadLabel: false });
+        });
+
+        it('re-renders an open row when the list is handed back with the item read in place', async () => {
+            const { item, row } = await openWithUnreadItem();
+            const service = getService();
+
+            item.read = true;
+            service.items = [...service.items];
+            fixture.detectChanges();
+
+            expect(renderedReadState(row)).toEqual({ dotRead: true, unreadLabel: false });
+        });
+
+        it('re-renders an open row read by dwelling on it', async () => {
+            const { row } = await openWithUnreadItem();
+
+            dispatchFakeEvent(row, 'focusin', true);
+            await vi.advanceTimersByTimeAsync(600);
+            dispatchFakeEvent(row, 'focusout', true);
+            fixture.detectChanges();
+
+            expect(renderedReadState(row)).toEqual({ dotRead: true, unreadLabel: false });
+        });
     });
 
     describe('templates', () => {

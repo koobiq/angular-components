@@ -69,6 +69,10 @@ export class KbqNotificationItemComponent implements OnChanges {
         return this.data.icon ?? true;
     }
 
+    protected get read(): boolean {
+        return this.service.isRead(this.data);
+    }
+
     get data(): KbqNotificationItem {
         return this._data;
     }

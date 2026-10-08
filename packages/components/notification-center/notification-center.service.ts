@@ -233,6 +233,19 @@ export class KbqNotificationCenterService {
         });
     }
 
+    /**
+     * Whether a notification is read, for a view to follow: `read` is flipped in place on the consumer's object,
+     * so a view handed that object is not told.
+     * @internal
+     */
+    isRead(item: KbqNotificationItem): boolean {
+        this.readVersion();
+        // The list handed back with `read` flipped in place.
+        this.originalItems();
+
+        return !!item.read;
+    }
+
     /** Set silent mode */
     setSilentMode(value: boolean) {
         this._silentMode.set(value);
