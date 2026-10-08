@@ -4,7 +4,6 @@ import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     ElementRef,
@@ -67,7 +66,6 @@ export class KbqCheckboxChange {
     exportAs: 'kbqCheckbox'
 })
 export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterViewInit, OnDestroy {
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
 
@@ -243,10 +241,7 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterVi
      * @docs-private
      */
     protected onLabelTextChange(): void {
-        // This method is getting called whenever the label of the checkbox changes.
-        // Since the checkbox uses the OnPush strategy we need to notify it about the change
-        // that has been recognized by the cdkObserveContent directive.
-        this.changeDetectorRef.markForCheck();
+        // Nothing to do here: the template listener itself re-checks the view, which reads the label text.
     }
 
     /** @docs-private */

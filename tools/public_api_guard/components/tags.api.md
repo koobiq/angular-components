@@ -72,7 +72,8 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnCha
     handleClick(event: MouseEvent): void;
     protected handleDblClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
-    hasFocus: boolean;
+    get hasFocus(): boolean;
+    set hasFocus(value: boolean);
     readonly nativeElement: HTMLElement;
     // (undocumented)
     ngAfterViewInit(): void;

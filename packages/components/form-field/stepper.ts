@@ -1,11 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     computed,
     DestroyRef,
-    effect,
     inject,
     output,
     OutputEmitterRef,
@@ -14,7 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { concatMap, fromEvent, interval, Observable, Subject, timer } from 'rxjs';
+import { concatMap, fromEvent, interval, Subject, timer } from 'rxjs';
 import { take, takeUntil } from 'rxjs/operators';
 import { KBQ_FORM_FIELD } from './form-field';
 
@@ -25,8 +23,8 @@ import { KBQ_FORM_FIELD } from './form-field';
  */
 type KbqStepperControl = {
     readonly controlType: 'input-number';
+    /** Read by the template, so it has to be backed by a signal for the stepper to follow it. */
     readonly disabled: boolean;
-    readonly stateChanges: Observable<void>;
     /** A signal since the input review: `step` is an `input()` on `KbqNumberInput`. */
     readonly step: Signal<number>;
     stepUp: (step: number) => void;
@@ -104,7 +102,6 @@ export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true });
     private readonly document = inject(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /** Emitted when the stepper is incremented. */
     readonly stepUp = output<void>();
@@ -153,13 +150,6 @@ export class KbqStepper {
 
     constructor() {
         this.destroyRef.onDestroy(() => this.mouseUp.complete());
-
-        // The template reads plain properties of the control (`disabled`): re-check when it reports a change.
-        effect((onCleanup) => {
-            const subscription = this.control().stateChanges.subscribe(() => this.changeDetectorRef.markForCheck());
-
-            onCleanup(() => subscription.unsubscribe());
-        });
     }
 
     /**

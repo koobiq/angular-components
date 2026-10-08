@@ -10,14 +10,12 @@ import {
     input,
     numberAttribute,
     OnChanges,
-    Renderer2,
+    signal,
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqColorDirective } from '@koobiq/components/core';
-import { defer, of, ReplaySubject, Subscription } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { defer, Subscription } from 'rxjs';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
 
@@ -38,7 +36,7 @@ import { KbqIconRegistry } from './icon-registry';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq kbq-icon',
-        '[class]': 'svgIcon ? null : iconName',
+        '[class]': 'svgIcon() ? null : iconName',
         '[class.kbq-error]': 'color() === "error" || hasError || autoColorError'
     }
 })
@@ -141,10 +139,25 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * True when icon is being rendered as inline SVG.
      * @docs-private
      */
-    protected svgIcon = false;
+    protected readonly svgIcon = signal(false);
 
-    /** @docs-private */
-    protected readonly svgIconName = new ReplaySubject<string | undefined>(1);
+    /**
+     * Name the inline SVG is resolved for, set through `setIconName()`.
+     * @docs-private
+     */
+    protected readonly svgIconName = signal<string | undefined>(undefined);
+
+    /** Resolution of the inline SVG, replaced whenever the name changes. */
+    private svgIconSubscription = Subscription.EMPTY;
+
+    /** Whether the content is initialized, which is when the inline SVG is first resolved. */
+    private contentInitialized = false;
+
+    constructor() {
+        super();
+
+        this.destroyRef.onDestroy(() => this.svgIconSubscription.unsubscribe());
+    }
 
     getHostElement() {
         return this.elementRef.nativeElement;
@@ -158,7 +171,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      */
     protected setIconName(name: string): void {
         this.iconName = name;
-        this.svgIconName.next(name);
+        this.svgIconName.set(name);
+
+        if (this.contentInitialized) this.resolveSvgIcon();
     }
 
     /** @docs-private */
@@ -201,23 +216,52 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     ngAfterContentInit(): void {
         this.updateMaxHeight();
 
-        this.svgIconName
-            .pipe(
-                // `catchError` inside the `switchMap` keeps an unresolved name from completing the outer
-                // subscription: in the default font-icon setup every name is unresolved, so a terminal
-                // `error` callback would leave the icon unable to render any later name at all.
-                //
-                // `defer` puts the lookup itself inside the inner observable, so a consumer-supplied
-                // resolver that throws is caught here too rather than escaping the `switchMap` project
-                // function — where it would reach the outer subscription and kill it for good.
-                switchMap((name) =>
-                    this.registry && name
-                        ? defer(() => this.registry!.getNamedSvgIcon(name)).pipe(catchError(() => of(null)))
-                        : of(null)
-                ),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((svg) => this.renderSvgIcon(svg));
+        this.contentInitialized = true;
+        this.resolveSvgIcon();
+    }
+
+    /** Renders `svgIconName` as inline SVG when the registry knows it, dropping a resolution still pending. */
+    private resolveSvgIcon(): void {
+        const name = this.svgIconName();
+
+        this.svgIconSubscription.unsubscribe();
+
+        if (!this.registry || !name) {
+            this.svgIcon.set(false);
+
+            return;
+        }
+
+        const registry = this.registry;
+
+        // Deferred so that a literal the registry fails to parse falls back to the font class as well.
+        this.svgIconSubscription = defer(() => registry.getNamedSvgIcon(name)).subscribe({
+            next: (svg) => {
+                this.svgIcon.set(true);
+                const host = this.getHostElement();
+
+                // Remove any previously injected SVG.
+                const existing = host.querySelector('svg');
+
+                if (existing) {
+                    host.removeChild(existing);
+                }
+
+                const size = this.parseIconSize();
+
+                if (size) {
+                    svg.setAttribute('width', `${size}`);
+                    svg.setAttribute('height', `${size}`);
+                }
+
+                host.insertBefore(svg, host.firstChild);
+            },
+            error: () => {
+                // Icon not registered — fall through to font-class path.
+                this.svgIcon.set(false);
+                this.updateMaxHeight();
+            }
+        });
     }
 
     private parseIconSize(): number {

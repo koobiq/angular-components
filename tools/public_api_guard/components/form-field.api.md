@@ -19,7 +19,6 @@ import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { Provider } from '@angular/core';
