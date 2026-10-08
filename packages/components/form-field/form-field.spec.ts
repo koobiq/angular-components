@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type } from '@angular/core';
+import { Component, DebugElement, Directive, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -195,16 +195,15 @@ export class InputFormFieldWithLabel {
     providers: [{ provide: KbqFormFieldControl, useExisting: TestNonLabelableControl }]
 })
 export class TestNonLabelableControl extends KbqFormFieldControl<unknown> {
-    value = null;
-    readonly stateChanges = new Subject<void>();
-    readonly id = 'TEST_NON_LABELABLE_CONTROL_ID';
-    readonly placeholder = '';
+    readonly value = signal(null).asReadonly();
+    readonly id = signal('TEST_NON_LABELABLE_CONTROL_ID').asReadonly();
+    readonly placeholder = signal('').asReadonly();
     readonly ngControl = null;
-    focused = false;
-    empty = true;
-    required = false;
-    disabled = false;
-    errorState = false;
+    readonly focused = signal(false).asReadonly();
+    readonly empty = signal(true).asReadonly();
+    readonly required = signal(false).asReadonly();
+    readonly disabled = signal(false).asReadonly();
+    readonly errorState = signal(false).asReadonly();
     readonly isNativeLabelSupported = false;
     onContainerClick(): void {}
     focus(): void {}
