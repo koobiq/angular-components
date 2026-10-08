@@ -830,7 +830,6 @@ export class KbqNotificationCenterTrigger
         if (!this.instance) return;
 
         this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], this.customClass, PopUpSizes.Medium);
-        this.instance.markForCheck();
     }
 
     /** @docs-private */

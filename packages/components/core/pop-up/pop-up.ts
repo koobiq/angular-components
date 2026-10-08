@@ -9,17 +9,19 @@ import {
     Injector,
     OnDestroy,
     Renderer2,
+    Signal,
+    signal,
     TemplateRef
 } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { kbqAfterAnimations, kbqAnimationsDisabled } from '../animation/animations-state';
 import { PopUpPlacements, PopUpVisibility } from './constants';
 import { KbqPopUpTrigger } from './pop-up-trigger';
 
 @Directive({
     host: {
-        '(mouseenter)': 'hovered.next(true)',
-        '(mouseleave)': 'hovered.next(false)'
+        '(mouseenter)': 'setHovered(true)',
+        '(mouseleave)': 'setHovered(false)'
     }
 })
 export abstract class KbqPopUp implements OnDestroy {
@@ -41,15 +43,26 @@ export abstract class KbqPopUp implements OnDestroy {
 
     private readonly hostInjector = inject(Injector);
 
-    /** Stream that emits when the popup item is hovered. */
-    readonly hovered = new BehaviorSubject<boolean>(false);
+    private readonly hoveredState = signal(false);
+
+    /** Whether the pointer is over the pop-up. */
+    readonly hovered: Signal<boolean> = this.hoveredState.asReadonly();
 
     trigger: KbqPopUpTrigger<unknown>;
     header: string | TemplateRef<unknown>;
     content: string | TemplateRef<unknown>;
     context: { $implicit: unknown } | null;
 
-    classMap = {};
+    private readonly classMapState = signal({});
+
+    /** CSS classes of the pop-up element: the placement, the custom class and the modifiers of the subclass. */
+    get classMap() {
+        return this.classMapState();
+    }
+
+    set classMap(value) {
+        this.classMapState.set(value);
+    }
 
     warning: boolean;
     arrow: boolean;
@@ -57,7 +70,17 @@ export abstract class KbqPopUp implements OnDestroy {
 
     offset: number | null;
 
-    visibility = PopUpVisibility.Initial;
+    private readonly visibilityState = signal(PopUpVisibility.Initial);
+
+    /** Stage of the pop-up's life: not shown yet, visible, or hidden. */
+    get visibility(): PopUpVisibility {
+        return this.visibilityState();
+    }
+
+    set visibility(value: PopUpVisibility) {
+        this.visibilityState.set(value);
+    }
+
     visibleChange = new EventEmitter<boolean>();
 
     protected prefix: string;
@@ -82,7 +105,6 @@ export abstract class KbqPopUp implements OnDestroy {
         this.removeEventListenerForHide();
 
         this.onHideSubject.complete();
-        this.hovered.complete();
         // Completed here rather than left dangling: the trigger subscribes to it once per show and keeps that
         // subscription for its own lifetime, so a trigger that outlives many pop-ups would otherwise accumulate
         // one live subscriber per show.
@@ -114,9 +136,6 @@ export abstract class KbqPopUp implements OnDestroy {
 
             this.visibility = PopUpVisibility.Visible;
             this.visibleChange.emit(true);
-            // Mark for check so if any parent component has set the
-            // ChangeDetectionStrategy to OnPush it will be checked anyways
-            this.markForCheck();
             this.waitForShowAnimation();
 
             if (this.trigger.triggerName === 'mouseenter') {
@@ -129,7 +148,6 @@ export abstract class KbqPopUp implements OnDestroy {
      * Hides the popup after a specified delay.
      *
      * The hide timeout triggers the hiding of the popup by updating visibility and emitting relevant events.
-     * Also, it marks for check to ensure proper change detection, especially for parent components with OnPush strategy.
      * @param delay - The delay in milliseconds before hiding the popup.
      */
     hide(delay: number): void {
@@ -149,10 +167,6 @@ export abstract class KbqPopUp implements OnDestroy {
 
             this.visibleChange.emit(false);
             this.onHideSubject.next();
-
-            // Mark for check so if any parent component has set the
-            // ChangeDetectionStrategy to OnPush it will be checked anyways
-            this.markForCheck();
         }, delay);
     }
 
@@ -180,6 +194,13 @@ export abstract class KbqPopUp implements OnDestroy {
     /** Returns an observable that notifies when the tooltip has been hidden from view. */
     afterHidden(): Observable<void> {
         return this.onHideSubject.asObservable();
+    }
+
+    /** Records whether the pointer is over the pop-up, and lets the trigger re-evaluate its delayed hide. */
+    protected setHovered(value: boolean): void {
+        this.hoveredState.set(value);
+        // Optional: a panel rendered on its own, without a trigger, is hoverable too.
+        this.trigger?.handleHoverChange();
     }
 
     markForCheck(): void {

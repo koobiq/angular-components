@@ -8,7 +8,7 @@ import { KbqPopUpTrigger } from './pop-up-trigger';
 @Component({
     selector: 'test-pop-up',
     template: `
-        <div class="test-pop-up">Content</div>
+        <div class="test-pop-up" [class]="classMap" [class.test-pop-up_visible]="isVisible()">Content</div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -59,6 +59,36 @@ describe('KbqPopUp', () => {
         await vi.runOnlyPendingTimersAsync();
 
         expect(popUp.visibility).toBe(PopUpVisibility.Initial);
+    });
+
+    it('should render its visibility and classes without a manual check', async () => {
+        const element: HTMLElement = fixture.nativeElement.querySelector('.test-pop-up');
+
+        popUp.updateClassMap('top', 'custom');
+        popUp.show(0);
+        await vi.advanceTimersByTimeAsync(0);
+        // The exhaustive `checkNoChanges` fails here on a binding that changed without notifying.
+        fixture.detectChanges();
+
+        expect(element.classList).toContain('test-pop-up_visible');
+        expect(element.classList).toContain('test-pop-up_placement-top');
+        expect(element.classList).toContain('custom');
+    });
+
+    it('should report its hover state to the trigger', () => {
+        const handleHoverChange = vi.fn();
+
+        popUp.trigger = { triggerName: 'mouseenter', handleHoverChange } as unknown as KbqPopUpTrigger<unknown>;
+
+        dispatchMouseEvent(fixture.nativeElement, 'mouseenter');
+
+        expect(popUp.hovered()).toBe(true);
+        expect(handleHoverChange).toHaveBeenCalledTimes(1);
+
+        dispatchMouseEvent(fixture.nativeElement, 'mouseleave');
+
+        expect(popUp.hovered()).toBe(false);
+        expect(handleHoverChange).toHaveBeenCalledTimes(2);
     });
 
     it('should bind the mouseleave hide listener once and remove it on destroy', async () => {

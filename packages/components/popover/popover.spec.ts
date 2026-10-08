@@ -7,7 +7,7 @@ import {
     OverlayPositionBuilder
 } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
-import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, effect, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -34,8 +34,6 @@ import {
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Subject, filter } from 'rxjs';
-import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
-import { TestScheduler } from 'rxjs/testing';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
 import { KbqPopoverComponent, KbqPopoverTrigger, defaultHoverLeaveDelay } from './popover.component';
 import { KbqPopoverModule } from './popover.module';
@@ -77,17 +75,7 @@ describe('KbqPopover', () => {
     const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
         TestBed.configureTestingModule({
             imports: [component],
-            providers: [
-                // The shared pop-up base still polls with `interval(leaveDelay, scheduler)` while a
-                // hover-triggered pop-up is open, which spins the CPU when `leaveDelay` is 0. Substituting a
-                // scheduler that never runs keeps the suite off that path; the polling itself is replaced by
-                // an event-driven timer on the branch that owns `core/pop-up`, and this provider goes with it.
-                {
-                    provide: AsyncScheduler,
-                    useValue: new TestScheduler((actual, expected) => expect(expected).toEqual(actual))
-                },
-                ...providers
-            ]
+            providers
         });
         const fixture = TestBed.createComponent<T>(component);
 
@@ -150,18 +138,16 @@ describe('KbqPopover', () => {
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(expectedValue);
 
-            // Back onto the trigger and away again: the trigger's own `mouseleave` is what schedules the
-            // hide. Leaving straight from the panel is handled by the pop-up base's hover watchdog, which
-            // is polling-based here and stubbed out by the scheduler above — it becomes event-driven on the
-            // branch that owns `core/pop-up`, and this leg can move back to the panel then.
+            // Straight off the panel: the pop-up base hides it one leave delay later, then the panel's own
+            // zero-delay hide runs.
             dispatchMouseEvent(panel, 'mouseleave');
             fixture.detectChanges();
-            dispatchMouseEvent(triggerElement, 'mouseenter');
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay - 1);
             fixture.detectChanges();
-            dispatchMouseEvent(triggerElement, 'mouseleave');
-            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
-            fixture.detectChanges();
-            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
+            expect(overlayContainerElement.textContent).toContain(expectedValue);
+
+            await vi.advanceTimersByTimeAsync(1);
+            await runDueTimers();
             fixture.detectChanges();
 
             expect(overlayContainerElement.textContent).not.toEqual(expectedValue);
@@ -1491,6 +1477,32 @@ describe('KbqPopover', () => {
         });
     });
 
+    describe('shown from an effect', () => {
+        afterEach(() => {
+            overlayContainer.ngOnDestroy();
+        });
+
+        it('should not run the effect again when the popover opens and closes', async () => {
+            vi.useFakeTimers();
+
+            const effectFixture = createComponent(PopoverShownByEffect);
+            const popoverTrigger = effectFixture.componentInstance.popoverTrigger()!;
+
+            readOverlayContainer();
+            await runDueTimers();
+            effectFixture.detectChanges();
+
+            expect(popoverTrigger.isOpen).toBe(true);
+
+            popoverTrigger.hide(0);
+            await settleClose(effectFixture);
+
+            expect(popoverTrigger.isOpen).toBe(false);
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeNull();
+            expect(effectFixture.componentInstance.runs).toBe(1);
+        });
+    });
+
     describe('with a tooltip on the same element', () => {
         let tooltipFixture: ComponentFixture<PopoverWithTooltip>;
         let trigger: HTMLElement;
@@ -1786,6 +1798,31 @@ describe('KbqPopover', () => {
 class PopoverSimple {
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
     readonly triggerElementRef = viewChild.required(KbqPopoverTrigger, { read: ElementRef });
+}
+
+@Component({
+    selector: 'popover-shown-by-effect',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover kbqTrigger="manual" kbqPopoverContent="EFFECT">Trigger</button>
+    `
+})
+class PopoverShownByEffect {
+    readonly popoverTrigger = viewChild(KbqPopoverTrigger);
+
+    /** How many times the effect below opened the popover. */
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const trigger = this.popoverTrigger();
+
+            if (!trigger) return;
+
+            this.runs++;
+            trigger.show(0);
+        });
+    }
 }
 
 @Component({

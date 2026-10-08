@@ -964,7 +964,6 @@ export class KbqAppSwitcherTrigger
         if (!this.instance) return;
 
         this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], this.customClass, this.size);
-        this.instance.markForCheck();
     }
 
     /** @docs-private */
