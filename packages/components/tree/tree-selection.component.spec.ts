@@ -3,7 +3,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, DebugElement, Type, ViewChild, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
     A,
@@ -1385,7 +1385,8 @@ describe('KbqTreeSelection', () => {
             it('should output selected nodes including parents when filtered by modelValue', async () => {
                 vi.useFakeTimers();
 
-                component.modelValue = ['rootNode_1', 'Sun', 'Woods', 'PhotoBoothLibrary'];
+                // What the host does when it changes its model: the tree reports no value it was written.
+                component.onModelValueChange(['rootNode_1', 'Sun', 'Woods', 'PhotoBoothLibrary']);
                 fixture.detectChanges();
                 await vi.advanceTimersByTimeAsync(0);
 
@@ -2371,6 +2372,117 @@ describe('KbqTreeSelection', () => {
                 expect(component.tree.disabled).toBe(true);
                 expect(treeElement.getAttribute('aria-disabled')).toBe('true');
             });
+
+            it('should stay pristine when ngModel writes its value', async () => {
+                vi.useFakeTimers();
+
+                const modelFixture = TestBed.createComponent(KbqTreeAppDeepData);
+
+                modelFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                const ngModel = modelFixture.debugElement.query(By.directive(KbqTreeSelection)).injector.get(NgModel);
+
+                modelFixture.componentInstance.modelValue = 'docs';
+                modelFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(modelFixture.componentInstance.tree.getSelectedValues()).toBe('docs');
+                expect(ngModel.pristine).toBe(true);
+            });
+        });
+
+        describe('with a form control', () => {
+            let fixture: ComponentFixture<TreeSelectionWithFormControl>;
+            let component: TreeSelectionWithFormControl;
+
+            const settle = async () => {
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+            };
+
+            beforeEach(async () => {
+                vi.useFakeTimers();
+                configureKbqTreeTestingModule();
+                fixture = TestBed.createComponent(TreeSelectionWithFormControl);
+
+                component = fixture.componentInstance;
+                treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+
+                await settle();
+            });
+
+            it('should stay untouched when the focus enters the tree through its host', async () => {
+                treeElement.focus();
+                await settle();
+
+                expect(document.activeElement).toBe(getNodes(treeElement)[0]);
+                expect(component.control.touched).toBe(false);
+            });
+
+            it('should stay untouched while the focus moves between nodes', async () => {
+                treeElement.focus();
+                await settle();
+
+                dispatchKeyboardEvent(document.activeElement!, 'keydown', DOWN_ARROW);
+                await settle();
+
+                expect(document.activeElement).toBe(getNodes(treeElement)[1]);
+                expect(component.control.touched).toBe(false);
+            });
+
+            it('should be touched once the focus is tabbed out of the tree', async () => {
+                treeElement.focus();
+                await settle();
+
+                dispatchKeyboardEvent(document.activeElement!, 'keydown', TAB);
+                fixture.nativeElement.querySelector('button').focus();
+                await settle();
+
+                expect(component.control.touched).toBe(true);
+            });
+
+            it('should be touched once the focus is taken away from the tree', async () => {
+                treeElement.focus();
+                await settle();
+
+                (document.activeElement as HTMLElement).blur();
+                await settle();
+
+                expect(component.control.touched).toBe(true);
+            });
+
+            it('should stay pristine when the form writes a value', async () => {
+                component.control.setValue('Pictures');
+                await settle();
+
+                expect(component.tree.getSelectedValues()).toBe('Pictures');
+                expect(component.control.value).toBe('Pictures');
+                expect(component.control.pristine).toBe(true);
+                expect(component.onSelectionChange).not.toHaveBeenCalled();
+            });
+
+            it('should stay pristine when the form is reset', async () => {
+                component.control.setValue('Pictures');
+                await settle();
+
+                component.control.reset();
+                await settle();
+
+                expect(component.tree.getSelectedValues()).toBeUndefined();
+                expect(component.control.value).toBeNull();
+                expect(component.control.pristine).toBe(true);
+            });
+
+            it('should report a selection of the user to the form', async () => {
+                getNodeByText(treeElement, 'Pictures').click();
+                await settle();
+
+                expect(component.control.value).toBe('Pictures');
+                expect(component.control.dirty).toBe(true);
+                expect(component.onSelectionChange).toHaveBeenCalledTimes(1);
+            });
         });
 
         describe('teardown', () => {
@@ -3072,6 +3184,33 @@ class KbqTreeAppMultipleCheckbox extends TreeParams {
         this.modelValue = values;
         this.filterByValues.setValues(values);
     }
+}
+
+@Component({
+    imports: [
+        KbqTreeModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            [formControl]="control"
+            (selectionChange)="onSelectionChange($event)"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+        <button type="button">After</button>
+    `
+})
+class TreeSelectionWithFormControl extends TreeParams {
+    readonly control = new FormControl<string | null>(null);
+    readonly onSelectionChange = vi.fn();
+    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
 }
 
 @Component({
