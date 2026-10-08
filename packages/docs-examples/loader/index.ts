@@ -45,8 +45,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridAndActionsPanelExample);
         case 'ag-grid-and-content-panel':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridAndContentPanelExample);
-        case 'ag-grid-column-menu':
-            return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridColumnMenuExample);
         case 'ag-grid-column-state':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridColumnStateExample);
         case 'ag-grid-copy-selected':
@@ -69,6 +67,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridQuickFilterStateExample);
         case 'ag-grid-row-actions':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridRowActionsExample);
+        case 'ag-grid-row-detail':
+            return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridRowDetailExample);
         case 'ag-grid-row-dragging':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridRowDraggingExample);
         case 'ag-grid-row-focus-state':
@@ -77,6 +77,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridRowGroupExample);
         case 'ag-grid-row-selection-state':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridRowSelectionStateExample);
+        case 'ag-grid-settings-menu':
+            return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridSettingsMenuExample);
         case 'ag-grid-skeleton-cell-renderer':
             return import('@koobiq/docs-examples/components/ag-grid').then((m) => m.AgGridSkeletonCellRendererExample);
         case 'ag-grid-status-bar':
