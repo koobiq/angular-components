@@ -8,7 +8,6 @@ import {
     afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ComponentRef,
     ElementRef,
@@ -19,6 +18,7 @@ import {
     OnChanges,
     OnDestroy,
     output,
+    signal,
     SimpleChanges,
     viewChild,
     ViewContainerRef,
@@ -90,7 +90,6 @@ export const KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     exportAs: 'kbqDatepickerContent'
 })
 export class KbqDatepickerContent<D> implements OnDestroy {
-    private changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly injector = inject(Injector);
 
@@ -104,7 +103,15 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     datepicker: KbqDatepicker<D>;
 
     /** Current state of the animation. */
-    animationState: 'enter' | 'void';
+    get animationState(): 'enter' | 'void' {
+        return this.currentAnimationState();
+    }
+
+    set animationState(value: 'enter' | 'void') {
+        this.currentAnimationState.set(value);
+    }
+
+    private readonly currentAnimationState = signal<'enter' | 'void'>('enter');
 
     /** Reference to the internal calendar component. */
     readonly calendar = viewChild.required(KbqCalendar);
@@ -118,7 +125,6 @@ export class KbqDatepickerContent<D> implements OnDestroy {
 
     startExitAnimation() {
         this.animationState = 'void';
-        this.changeDetectorRef.markForCheck();
 
         kbqAfterAnimations(
             () => this.elementRef.nativeElement,
@@ -184,23 +190,25 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
 
     /** Whether the datepicker pop-up should be disabled. */
     get disabled(): boolean {
-        return this._disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled() : this._disabled;
+        const disabled = this.disabledState();
+
+        return disabled === undefined && this.datepickerInput ? this.datepickerInput.disabled() : !!disabled;
     }
 
     set disabled(value: boolean) {
         const newValue = coerceBooleanProperty(value);
 
-        if (newValue !== this._disabled) {
-            this._disabled = newValue;
+        if (newValue !== this.disabledState()) {
+            this.disabledState.set(newValue);
             this.disabledChange.next(newValue);
         }
     }
 
-    private _disabled: boolean;
+    private readonly disabledState = signal<boolean | undefined>(undefined);
 
     /** Whether the calendar is open. */
     get opened(): boolean {
-        return this._opened;
+        return this.openedState();
     }
 
     set opened(value: boolean) {
@@ -211,7 +219,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         }
     }
 
-    private _opened = false;
+    private readonly openedState = signal(false);
 
     /** @docs-private */
     readonly hasBackdropInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -398,7 +406,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
 
     /** Open the calendar. */
     open(): void {
-        if (this._opened || this.disabled) {
+        if (this.openedState() || this.disabled) {
             return;
         }
 
@@ -412,14 +420,14 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
 
         this.openAsPopup();
 
-        this._opened = true;
+        this.openedState.set(true);
         // TODO: The 'emit' function requires a mandatory void argument
         this.openedStream.emit();
     }
 
     /** Close the calendar. */
     close(restoreFocus: boolean = true): void {
-        if (!this._opened) {
+        if (!this.openedState()) {
             return;
         }
 
@@ -438,7 +446,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
             this.focusedElementBeforeOpen!.focus();
         }
 
-        this._opened = false;
+        this.openedState.set(false);
         // TODO: The 'emit' function requires a mandatory void argument
         this.closedStream.emit();
         this.focusedElementBeforeOpen = null;
@@ -449,7 +457,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
             return;
         }
 
-        if (this._opened) {
+        if (this.openedState()) {
             this.close();
         } else {
             this.open();
