@@ -181,7 +181,6 @@ interface SelectionModelOption {
         // The active option takes real DOM focus (`KbqTreeOption.focus`) and is advertised here on top
         // of that, so an AT that follows either model reports the same row.
         '[attr.aria-activedescendant]': 'keyManager?.activeItem?.id',
-        '(blur)': 'blur()',
         '(focus)': 'focus($event)',
         '(keydown)': 'onKeyDown($event)',
         '(window:resize)': 'updateScrollSize()'
@@ -586,6 +585,9 @@ export class KbqTreeSelection
     /** Whether a value report is already queued for the end of the current tick. */
     private pendingValueReport = false;
 
+    /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
+    private writingValue = false;
+
     private destroyed = false;
 
     /**
@@ -757,7 +759,9 @@ export class KbqTreeSelection
         this.selectionModelSubscription = this.selectionModel.changed
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.onChange(this.getSelectedValues());
+                if (!this.writingValue) {
+                    this.onChange(this.getSelectedValues());
+                }
 
                 this.renderedOptions.notifyOnChanges();
                 // The "select all" row renders the selection state.
@@ -846,7 +850,14 @@ export class KbqTreeSelection
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef, true);
+        // Reports the focus leaving only when it lands outside the tree (or nowhere): the host hands it to an option
+        // on entry, and options hand it on to each other or to their action buttons, none of which blurs the tree.
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((origin) => {
+                if (!origin) this.blur();
+            });
     }
 
     ngOnDestroy(): void {
@@ -1234,10 +1245,16 @@ export class KbqTreeSelection
             throw getKbqSelectNonArrayValueError();
         }
 
-        if (value) {
-            this.setOptionsFromValues(this.multiple ? value : [value]);
-        } else {
-            this.selectionModel.clear();
+        this.writingValue = true;
+
+        try {
+            if (value) {
+                this.setOptionsFromValues(this.multiple ? value : [value]);
+            } else {
+                this.selectionModel.clear();
+            }
+        } finally {
+            this.writingValue = false;
         }
     }
 
@@ -1507,13 +1524,13 @@ export class KbqTreeSelection
         });
 
         // Moving the active option blurs the one being left, so an option blur alone does not mean the
-        // tree lost the focus — and `blur()` would reset the active option the key manager has just set,
-        // because `KbqTreeOption.hasFocus` is cleared synchronously but only raised a microtask later, so
+        // options lost the focus — and resetting here would drop the active option the key manager has just
+        // set, because `KbqTreeOption.hasFocus` is cleared synchronously but only raised a microtask later, so
         // `hasFocusedOption()` reports nothing focused for the whole move. Only a blur of the option the
-        // key manager still points at is the focus actually leaving the tree.
+        // key manager still points at is the focus actually leaving the options.
         this.optionBlurSubscription = this.optionBlurChanges.subscribe(({ option }) => {
-            if (option === this.keyManager.activeItem) {
-                this.blur();
+            if (option === this.keyManager.activeItem && !this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
+                this.keyManager.setActiveItem(-1);
             }
         });
     }
