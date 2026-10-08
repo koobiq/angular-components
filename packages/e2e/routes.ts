@@ -121,6 +121,7 @@ import { E2eMarkdownStates } from '../components/markdown/e2e';
 import {
     E2eModalDynamicContent,
     E2eModalFullCustom,
+    E2eModalNoFooter,
     E2eModalScrollbar,
     E2eModalScrollbarFlash,
     E2eModalStates
@@ -373,6 +374,7 @@ const components: Record<string, Type<unknown>> = {
     E2eModalScrollbar,
     E2eModalScrollbarFlash,
     E2eModalDynamicContent,
+    E2eModalNoFooter,
     E2eListStates,
     E2eListSelectionState,
     E2eListSelectAllStates,

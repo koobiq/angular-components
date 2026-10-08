@@ -9,7 +9,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { KbqModalComponent } from './modal.component';
+import { KBQ_MODAL } from './modal.type';
 
 @Component({
     selector: `[kbq-modal-title], kbq-modal-title, [kbqModalTitle]`,
@@ -20,12 +20,16 @@ import { KbqModalComponent } from './modal.component';
     ],
     template: `
         <div class="kbq-modal-header-content">
-            <div class="kbq-modal-title" kbq-title>
+            <div class="kbq-modal-title" kbq-title [attr.id]="modal.titleId">
                 <ng-content />
             </div>
 
             <ng-content select="kbq-modal-caption, [kbq-modal-caption], [kbqModalCaption]" />
         </div>
+
+        <!-- Outside the two-line clamp of the title, so actions next to the heading do not need
+             to pierce encapsulation to escape it. -->
+        <ng-content select="[kbqModalTitleActions]" />
 
         @if (modal.kbqClosable) {
             <button
@@ -49,13 +53,18 @@ import { KbqModalComponent } from './modal.component';
     ]
 })
 export class KbqModalTitle {
-    protected readonly modal = inject(KbqModalComponent);
+    protected modal = inject(KBQ_MODAL);
 
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'a11y',
         KBQ_A11Y_LOCALE_CONFIGURATION
     );
+
+    constructor() {
+        // Lets the dialog point `aria-labelledby` at this heading instead of going unnamed.
+        this.modal.registerTitle();
+    }
 }
 
 /**
@@ -70,11 +79,20 @@ export class KbqModalTitle {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'kbq-modal-caption'
+        class: 'kbq-modal-caption',
+        '[attr.id]': 'modal.captionId'
     },
     hostDirectives: [KbqTitleDirective]
 })
-export class KbqModalCaption {}
+export class KbqModalCaption {
+    protected readonly modal = inject(KBQ_MODAL);
+
+    constructor() {
+        // Lets the dialog point `aria-describedby` at this caption; without it the composed path
+        // renders a description no screen reader is told about.
+        this.modal.registerCaption();
+    }
+}
 
 /**
  * Scrollable body of a manually composed modal (`kbqComponent`). Publishes its scroll-shadow
@@ -89,12 +107,12 @@ export class KbqModalCaption {}
     hostDirectives: [KbqOverflowShadowContainer, KbqScrollbarViewport]
 })
 export class KbqModalBody {
-    private readonly modal = inject(KbqModalComponent);
+    private readonly modal = inject(KBQ_MODAL);
     private readonly overflowContainer = inject(KbqOverflowShadowContainer);
     private readonly scrollbarViewport = inject(KbqScrollbarViewport);
 
     constructor() {
-        effect(() => this.modal.bodyOverflow.set(this.overflowContainer.overflow()));
+        effect(() => this.modal.setBodyOverflow(this.overflowContainer.overflow()));
 
         this.modal.afterOpen.pipe(takeUntilDestroyed()).subscribe(() => this.scrollbarViewport.flashScrollIndicators());
     }
@@ -108,7 +126,13 @@ export class KbqModalBody {
     }
 })
 export class KbqModalFooter {
-    protected modal = inject(KbqModalComponent);
+    protected modal = inject(KBQ_MODAL);
+
+    constructor() {
+        // Without this the dialog cannot tell a composed footer from no footer at all, and would
+        // add the no-footer bottom padding underneath one.
+        this.modal.registerFooter();
+    }
 }
 
 @Directive({

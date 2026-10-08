@@ -59,9 +59,13 @@
 <button kbq-button [color]="componentColors.Contrast" (click)="openAndCloseAll()">
     Open more modals then close all after 10s
 </button>
+
+<p class="kbq-headline">Non-service (declarative) modal</p>
+<button kbq-button [color]="componentColors.Contrast" (click)="htmlModalVisible = true">Open</button>
 <kbq-modal
     [kbqCancelText]="'Cancel'"
     [kbqMask]="true"
+    [kbqMaskClosable]="true"
     [kbqOkText]="'Accept'"
     [kbqTitle]="'Non-service html modal'"
     [(kbqVisible)]="htmlModalVisible"
