@@ -28,6 +28,7 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KBQ_WINDOW,
+    KbqOverlayLayerExclude,
     kbqQueryListFrom,
     LEFT_ARROW,
     RIGHT_ARROW,

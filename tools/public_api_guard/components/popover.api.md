@@ -174,6 +174,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get context(): unknown;
     set context(ctx: unknown);
     readonly contextInput: InputSignal<{} | null | undefined>;
+    createOverlay(): OverlayRef;
     get customClass(): string;
     set customClass(value: string);
     readonly customClassInput: InputSignal<string | undefined>;

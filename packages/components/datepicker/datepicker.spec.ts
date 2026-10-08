@@ -42,6 +42,7 @@ import {
     kbqErrorStateMatcherProvider,
     kbqLocaleIDProvider,
     kbqLocaleServiceProvider,
+    KbqOverlayLayer,
     ONE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
@@ -1984,7 +1985,9 @@ describe('KbqDatepicker', () => {
     });
 
     describe('overlay layer', () => {
-        it('should render the popup of an input inside the element into its overlay layer on every open', fakeAsync(() => {
+        it('should render the popup of an input inside the element into its overlay layer on every open', async () => {
+            vi.useFakeTimers();
+
             const fixture = createComponent(DatepickerInOverlayLayer, [KbqLuxonDateModule]);
 
             fixture.detectChanges();
@@ -2002,7 +2005,7 @@ describe('KbqDatepicker', () => {
 
             datepicker.close();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             datepicker.open();
             fixture.detectChanges();
 
@@ -2010,8 +2013,8 @@ describe('KbqDatepicker', () => {
 
             datepicker.close();
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 });
 
