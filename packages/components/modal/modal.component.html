@@ -6,17 +6,16 @@
 <!-- `aria-modal` only hides the page behind the topmost dialog, so a dialog covered by another one
      is taken out of the accessibility tree and the tab order explicitly. -->
 <div [attr.inert]="inert ? '' : null">
-    @if (kbqMask) {
+    @if (isMaskEnabled()) {
         <div
-            class="kbq-modal-mask"
+            class="kbq-modal-mask {{ maskAnimationClasses() }}"
             [class.kbq-modal-mask-hidden]="hidden"
-            [class]="maskAnimationClassMap"
-            [style]="kbqMaskStyle"
+            [style]="kbqMaskStyle()"
         ></div>
     }
 
     <div
-        class="kbq-modal-wrap {{ kbqWrapClassName }}"
+        class="kbq-modal-wrap {{ kbqWrapClassName() }}"
         kbqScrollbarViewport
         tabindex="-1"
         [style.display]="hidden ? 'none' : ''"
@@ -31,20 +30,20 @@
             [attr.aria-label]="ariaLabel"
             [attr.aria-labelledby]="ariaLabelledBy"
             [attr.aria-modal]="true"
-            [class]="containerClasses"
+            [class]="containerClasses()"
             [class.kbq-modal_no-footer]="!hasFooter"
-            [style]="kbqStyle"
-            [style.width]="kbqWidth | toCssUnit"
+            [style]="kbqStyle()"
+            [style.width]="kbqWidth() | toCssUnit"
         >
             <div class="kbq-modal-content">
-                @switch (true) {
-                    @case (isModalType('default')) {
+                @switch (kbqModalType()) {
+                    @case ('default') {
                         <ng-container [ngTemplateOutlet]="tplContentDefault" />
                     }
-                    @case (isModalType('confirm')) {
+                    @case ('confirm') {
                         <ng-container [ngTemplateOutlet]="tplContentConfirm" />
                     }
-                    @case (isModalType('custom')) {
+                    @case ('custom') {
                         <ng-container [ngTemplateOutlet]="tplContentCustom" />
                     }
                 }
@@ -57,37 +56,57 @@
     <ng-container #bodyContainer />
 </ng-template>
 
+<!-- The body of a predefined layout: the same three forms `kbqContent` can take, and `<ng-content>`
+     when it takes none. A component body is inserted into `#bodyContainer` from `ngAfterViewInit`. -->
+<ng-template #tplContentBody>
+    <ng-container #bodyContainer>
+        @if (contentKind() !== 'component') {
+            @switch (contentKind()) {
+                @case ('template') {
+                    <ng-container [ngTemplateOutlet]="$any(kbqContent())" />
+                }
+                @case ('string') {
+                    <div [innerHTML]="kbqContent()"></div>
+                }
+                @default {
+                    <ng-container [ngTemplateOutlet]="tplOriginContent" />
+                }
+            }
+        }
+    </ng-container>
+</ng-template>
+
 <!-- [Predefined] Default Modal Content -->
 <ng-template #tplContentDefault>
-    @if (kbqTitle || kbqCaption) {
+    @if (kbqTitle() || kbqCaption()) {
         <div class="kbq-modal-header" [kbqOverflowShadowTop]="modalBodyOverflow">
             <div class="kbq-modal-header-content">
-                @if (kbqTitle) {
+                @if (kbqTitle()) {
                     <div class="kbq-modal-title" kbq-title [attr.id]="titleId">
-                        @switch (true) {
-                            @case (isTemplateRef(kbqTitle)) {
-                                <ng-container [ngTemplateOutlet]="$any(kbqTitle)" />
+                        @switch (titleKind()) {
+                            @case ('template') {
+                                <ng-container [ngTemplateOutlet]="$any(kbqTitle())" />
                             }
-                            @case (isNonEmptyString(kbqTitle)) {
-                                <div [innerHTML]="kbqTitle"></div>
+                            @case ('string') {
+                                <div [innerHTML]="kbqTitle()"></div>
                             }
                         }
                     </div>
                 }
-                @if (kbqCaption) {
+                @if (kbqCaption()) {
                     <div class="kbq-modal-caption" kbq-title [attr.id]="captionId">
-                        @switch (true) {
-                            @case (isTemplateRef(kbqCaption)) {
-                                <ng-container [ngTemplateOutlet]="$any(kbqCaption)" />
+                        @switch (captionKind()) {
+                            @case ('template') {
+                                <ng-container [ngTemplateOutlet]="$any(kbqCaption())" />
                             }
-                            @case (isNonEmptyString(kbqCaption)) {
-                                <div [innerHTML]="kbqCaption"></div>
+                            @case ('string') {
+                                <div [innerHTML]="kbqCaption()"></div>
                             }
                         }
                     </div>
                 }
             </div>
-            @if (kbqClosable) {
+            @if (kbqClosable()) {
                 <button
                     kbq-button
                     type="button"
@@ -106,35 +125,21 @@
         kbqOverflowShadowContainer
         kbqScrollbarViewport
         class="kbq-modal-body"
-        [style]="kbqBodyStyle"
+        [style]="kbqBodyStyle()"
     >
-        <ng-container #bodyContainer>
-            @if (!isComponent(kbqContent)) {
-                @switch (true) {
-                    @case (isTemplateRef(kbqContent)) {
-                        <ng-container [ngTemplateOutlet]="$any(kbqContent)" />
-                    }
-                    @case (isNonEmptyString(kbqContent)) {
-                        <div [innerHTML]="kbqContent"></div>
-                    }
-                    @default {
-                        <ng-container [ngTemplateOutlet]="tplOriginContent" />
-                    }
-                }
-            }
-        </ng-container>
+        <ng-container [ngTemplateOutlet]="tplContentBody" />
     </div>
     @if (hasFooter) {
         <div class="kbq-modal-footer" [kbqOverflowShadowBottom]="modalBodyOverflow">
-            @switch (true) {
-                @case (isTemplateRef(kbqFooter)) {
-                    <ng-container [ngTemplateOutlet]="$any(kbqFooter)" />
+            @switch (footerKind()) {
+                @case ('template') {
+                    <ng-container [ngTemplateOutlet]="$any(footer())" />
                 }
-                @case (isNonEmptyString(kbqFooter)) {
-                    <div [innerHTML]="kbqFooter"></div>
+                @case ('string') {
+                    <div [innerHTML]="footer()"></div>
                 }
-                @case (isModalButtons(kbqFooter)) {
-                    @for (button of $any(kbqFooter); track button) {
+                @case ('buttons') {
+                    @for (button of $any(footer()); track button) {
                         @if (getButtonCallableProp(button, 'show')) {
                             <button
                                 kbq-button
@@ -151,19 +156,20 @@
                     }
                 }
                 @default {
-                    @if (kbqOkText) {
+                    @if (kbqOkText()) {
                         <button
                             kbq-button
                             [attr.autofocus]="true"
+                            [class.kbq-progress]="loading('ok')"
                             [color]="componentColors.Contrast"
                             (click)="onClickOkCancel('ok')"
                         >
-                            {{ okText }}
+                            {{ kbqOkText() }}
                         </button>
                     }
-                    @if (kbqCancelText) {
-                        <button kbq-button (click)="onClickOkCancel('cancel')">
-                            {{ cancelText }}
+                    @if (kbqCancelText()) {
+                        <button kbq-button [class.kbq-progress]="loading('cancel')" (click)="onClickOkCancel('cancel')">
+                            {{ kbqCancelText() }}
                         </button>
                     }
                 }
@@ -180,34 +186,26 @@
         kbqOverflowShadowContainer
         kbqScrollbarViewport
         class="kbq-modal-body"
-        [style]="kbqBodyStyle"
+        [style]="kbqBodyStyle()"
     >
-        <ng-container #bodyContainer>
-            @if (!isComponent(kbqContent)) {
-                @switch (true) {
-                    @case (isTemplateRef(kbqContent)) {
-                        <ng-container [ngTemplateOutlet]="$any(kbqContent)" />
-                    }
-                    @case (isNonEmptyString(kbqContent)) {
-                        <div [innerHTML]="kbqContent"></div>
-                    }
-                    @default {
-                        <ng-container [ngTemplateOutlet]="tplOriginContent" />
-                    }
-                }
-            }
-        </ng-container>
+        <ng-container [ngTemplateOutlet]="tplContentBody" />
     </div>
-    @if (kbqOkText || kbqCancelText) {
+    @if (kbqOkText() || kbqCancelText()) {
         <div class="kbq-confirm-footer" [kbqOverflowShadowBottom]="confirmBodyOverflow">
-            @if (kbqOkText) {
-                <button kbq-button [attr.autofocus]="true" [color]="kbqOkType" (click)="onClickOkCancel('ok')">
-                    {{ okText }}
+            @if (kbqOkText()) {
+                <button
+                    kbq-button
+                    [attr.autofocus]="true"
+                    [class.kbq-progress]="loading('ok')"
+                    [color]="kbqOkType()"
+                    (click)="onClickOkCancel('ok')"
+                >
+                    {{ kbqOkText() }}
                 </button>
             }
-            @if (kbqCancelText) {
-                <button kbq-button (click)="onClickOkCancel('cancel')">
-                    {{ cancelText }}
+            @if (kbqCancelText()) {
+                <button kbq-button [class.kbq-progress]="loading('cancel')" (click)="onClickOkCancel('cancel')">
+                    {{ kbqCancelText() }}
                 </button>
             }
         </div>

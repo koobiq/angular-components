@@ -85,7 +85,7 @@ export class ModalTemplateExample {
             kbqFooter,
             kbqMaskClosable: true,
             kbqSize: size,
-            kbqOnOk: () => console.log('OK')
+            kbqOkClick: () => console.log('OK')
         });
     }
 

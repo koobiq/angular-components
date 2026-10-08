@@ -184,7 +184,7 @@ export class DevApp implements OnDestroy {
             kbqContent: 'Сохранить сделанные изменения в запросе "Все активы с виндой"?',
             kbqOkText: 'Сохранить',
             kbqCancelText: 'Отмена',
-            kbqOnOk: () => console.log('OK')
+            kbqOkClick: () => console.log('OK')
         });
     }
 
