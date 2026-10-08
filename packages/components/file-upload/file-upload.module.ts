@@ -1,4 +1,4 @@
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -27,7 +27,6 @@ import { KbqSingleFileUploadComponent } from './single-file-upload.component';
         KbqEllipsisCenterModule,
         KbqDataSizePipe,
         KbqLinkModule,
-        AsyncPipe,
         NgTemplateOutlet,
         KbqFileDropDirective,
         KbqSingleFileUploadComponent,

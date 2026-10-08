@@ -1,6 +1,6 @@
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgTemplateOutlet } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Signal, viewChild, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -8,7 +8,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { merge, Observable } from 'rxjs';
+import { merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
@@ -28,8 +28,7 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
         NgTemplateOutlet,
         KbqIcon,
         KbqInputModule,
-        ReactiveFormsModule,
-        AsyncPipe
+        ReactiveFormsModule
     ],
     templateUrl: 'pipe-select.html',
     styleUrls: ['base-pipe.scss'],
@@ -42,11 +41,19 @@ import { kbqFilterSelectValuesBySearch } from './select-pipe-search';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
+export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit {
     /** control for search options */
     readonly searchControl = new FormControl<string | null>(null);
-    /** filtered by search options */
-    filteredOptions: Observable<KbqSelectValue[]>;
+    /**
+     * Options of the pipe template that match the search query. Follows the templates too, so options
+     * supplied after initialization render on first open.
+     */
+    readonly filteredOptions: Signal<KbqSelectValue[]> = toSignal(
+        merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
+            map(() => this.getFilteredOptions())
+        ),
+        { requireSync: true }
+    );
 
     /** @docs-private */
     readonly select = viewChild.required(KbqSelect);
@@ -59,17 +66,6 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
         return !this.data.value;
-    }
-
-    /** @docs-private */
-    ngOnInit(): void {
-        // Merge the live template stream (re-emits when `pipeTemplates` changes after init) with the
-        // search input, so options render on first open even when templates are supplied late
-        // (e.g. a parent assigning `pipeTemplates` in ngAfterViewInit for a viewChild valueTemplate).
-        this.filteredOptions = merge(this.filterBar!.internalTemplatesChanges, this.searchControl.valueChanges).pipe(
-            map(this.getFilteredOptions),
-            takeUntilDestroyed(this.destroyRef)
-        );
     }
 
     override ngAfterViewInit() {
@@ -101,6 +97,11 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         this.select().open();
     }
 
-    private getFilteredOptions = (): KbqSelectValue[] =>
-        kbqFilterSelectValuesBySearch(this.values, this.searchControl.value, !this.isTemplateRef(this.valueTemplate));
+    private getFilteredOptions(): KbqSelectValue[] {
+        return kbqFilterSelectValuesBySearch(
+            this.values,
+            this.searchControl.value,
+            !this.isTemplateRef(this.valueTemplate)
+        );
+    }
 }

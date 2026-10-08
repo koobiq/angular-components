@@ -17,12 +17,10 @@
         @if (file) {
             <div class="kbq-file-item">
                 <div class="kbq-file-item__text-wrapper">
-                    @if ({ loading: file.loading | async, progress: file.progress | async }; as asyncData) {
-                        @if (!asyncData.loading) {
-                            <ng-content select="[kbq-icon]" />
-                        } @else {
-                            <kbq-progress-spinner [mode]="progressMode()" [value]="asyncData.progress || 0" />
-                        }
+                    @if (!isLoading(file)) {
+                        <ng-content select="[kbq-icon]" />
+                    } @else {
+                        <kbq-progress-spinner [mode]="progressMode()" [value]="uploadProgress(file)" />
                     }
                     <div class="kbq-file-item__text" [kbqEllipsisCenter]="file.file.name" [minVisibleLength]="10"></div>
                 </div>
