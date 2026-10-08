@@ -480,6 +480,33 @@ ng g @koobiq/components:tabs-signals --project "<your project>"
 ng g @koobiq/components:query-list-signals --project "<your project>"
 ```
 
+#### Состояние как сигналы
+
+Состояние, которое компоненты и сервисы отдают для чтения, стало сигналом — раньше это был `BehaviorSubject`, `Observable` или обычное поле. Потоки, сообщающие о событиях, остались observable.
+
+| Член                                                                                                                     | Был                                   | Стал                                         |
+| ------------------------------------------------------------------------------------------------------------------------ | ------------------------------------- | -------------------------------------------- |
+| `silentMode`, `loadingMode`, `errorMode`, `loadingMore`, `loadMoreErrorMode`, `hasMore` у `KbqNotificationCenterService` | `BehaviorSubject<boolean>`            | `Signal<boolean>`, пишется методами `set…()` |
+| `unreadItemsCounter` у `KbqNotificationCenterService` и `KbqNotificationCenterTrigger`                                   | `Observable<string>`                  | `Signal<string>`                             |
+| `KbqNotificationCenterService.groupedItems`                                                                              | `Observable<KbqNotificationsGroup[]>` | `Signal<KbqNotificationsGroup[]>`            |
+| `hovered`, `focused` у `KbqToastService` и `KbqToastComponent`                                                           | `BehaviorSubject<boolean>`            | `Signal<boolean>`                            |
+| `filteredOptions` у `KbqFilters`, `KbqPipeSelectComponent` и `KbqPipeMultiSelectComponent`                               | `Observable`                          | `Signal` только для чтения                   |
+| `KbqSelect.hiddenItems`                                                                                                  | `number`                              | `Signal<number>`, как у `KbqTreeSelect`      |
+| `KbqSearchExpandable.value`                                                                                              | `BehaviorSubject<string>`             | `WritableSignal<string>`                     |
+
+- **Чтение** — вызовом: `service.silentMode()`, `trigger.unreadItemsCounter()` вместо `.value`, `.getValue()` или `| async`. Где поток все же нужен, оберните сигнал в `toObservable()` из `@angular/core/rxjs-interop`.
+- **Запись**: флаги центра уведомлений меняются их методами `set…()`, значение поиска — через `value.set()`; остальные сигналы только для чтения.
+- **`KbqNotificationCenterService.changes`** больше не срабатывает в момент подписки: обработчик, который на это рассчитывал, один раз вызывается сам перед подпиской.
+- **`KbqFilters.filteredOptions`** теперь следует и за изменением входа `filters`.
+- **Наследник** `KbqToastComponent` задает состояние наведения защищенным методом `setHovered()`; наследник `KbqPipeSelectComponent` убирает вызов `super.ngOnInit()`, а наследник `KbqDatepickerToggleIconComponent` — вызовы `super.ngAfterContentInit()` и `super.ngOnDestroy()`: классы их больше не реализуют. Защищенные `isListMode`, `showStartCalendar` и `showEndCalendar` пайпов дат стали сигналами.
+- **`KbqFileItem`** сохраняет subject-ы `loading` и `progress`, которые обновляет приложение.
+
+Схематик `v21-upgrade` сообщает об этих чтениях, записях и вызовах `super`:
+
+```bash
+ng g @koobiq/components:v21-upgrade --project "<your project>"
+```
+
 ### Удаление устаревших API (21.0.0)
 
 API, которые были помечены к удалению в следующем мажорном релизе, удалены в 21.0.0. Переименованный член или псевдоним переписывает схематик `v21-upgrade`; об остальном он сообщает с указанием файла и замены.
