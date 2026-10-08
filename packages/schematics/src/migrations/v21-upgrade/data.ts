@@ -1,5 +1,6 @@
 /**
- * Replacement data for the v21.0.0 deprecated API removal migration, one file per area under `data/`.
+ * Replacement data for the v21.0.0 migration — the removed deprecated APIs and the state that became signals — one
+ * file per area under `data/`.
  *
  * Each replacement uses a RegExp source string in `from` and a literal `to`; the driver compiles it with the `g`
  * flag. A warning reports what cannot be rewritten; its optional `anchor` limits it to files that also match it.
@@ -13,6 +14,7 @@ import { formField } from './data/form-field';
 import { formsControls } from './data/forms-controls';
 import { navbarAndLayout } from './data/navbar-and-layout';
 import { popover } from './data/popover';
+import { stateSignals } from './data/state-signals';
 import { tags } from './data/tags';
 
 export interface Replacement {
@@ -50,6 +52,7 @@ const AREAS: AreaData[] = [
     formsControls,
     navbarAndLayout,
     popover,
+    stateSignals,
     tags
 ];
 

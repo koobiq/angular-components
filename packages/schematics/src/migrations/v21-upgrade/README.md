@@ -2,7 +2,7 @@
 
 Migration invoked by `ng update @koobiq/components@21`. It removes the uses of the APIs that were deprecated
 before 21.0.0 and removed in it: renamed members and aliases are rewritten, everything else is reported with the
-replacement to use.
+replacement to use. It also reports the uses of the state that 21.0.0 turned into signals.
 
 The schematic walks every `.ts`, `.html`, `.scss` and `.css` file of the project (skipping `node_modules` and
 `dist`). The tables live in `data/`, one file per area, and `data.ts` gathers them:
@@ -109,6 +109,19 @@ Reports:
 - Reports `getKbqPopoverInvalidPositionError`, a read of `KbqPopoverTrigger.hideIfNotInViewPort` (use
   `popoverHideIfNotInViewPort()`) and a `hostDirectives` entry of `KbqPopoverTrigger` that exposes one of the
   unprefixed inputs.
+
+**State as signals** — rewrites nothing; reports, each in a file that uses the entry point (an import in code, the
+element in a template):
+
+- `.value`, `.getValue()`, `.next()`, `.subscribe()`, `.pipe()` and `| async` on the flags, `unreadItemsCounter` and
+  `groupedItems` of the notification center, and a subscription to its `changes`, which no longer emits on
+  subscription;
+- the same on `hovered` and `focused` of the toast service and component;
+- a subscription to, an assignment of or `| async` on `filteredOptions` of the filter bar, `super.ngOnInit()` in a
+  subclass of `KbqPipeSelectComponent`, and the date pipe flags read as fields in a subclass;
+- `hiddenItems` of `KbqSelect` read as a field;
+- `.value.next()`, `.value.getValue()`, `.value.subscribe()` and the like on `KbqSearchExpandable`;
+- `super.ngAfterContentInit()` and `super.ngOnDestroy()` in a subclass of `KbqDatepickerToggleIconComponent`.
 
 **Tags** — rewrites nothing; reports, in a file that names `KbqTagInput` or its `exportAs`:
 
