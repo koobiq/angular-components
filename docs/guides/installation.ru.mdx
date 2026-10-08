@@ -34,6 +34,22 @@ npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/des
 если используете [code-block](/ru/components/code-block), и `@angular/router`, если используете
 [breadcrumbs](/ru/components/breadcrumbs).
 
+### Обнаружение изменений
+
+Компонентам не нужен zone.js. Они работают в приложении без zone.js, как принято по умолчанию с
+Angular 21, и продолжают работать в приложении, которое загружает zone.js и предоставляет
+`provideZoneChangeDetection()`. Настраивать для них ничего не нужно. Чтобы перевести существующее
+приложение на работу без zone.js, предоставьте `provideZonelessChangeDetection()` и уберите `zone.js`
+из его `polyfills`:
+
+```typescript
+import { provideZonelessChangeDetection } from '@angular/core';
+
+bootstrapApplication(AppComponent, {
+    providers: [provideZonelessChangeDetection()]
+});
+```
+
 ### Анимации
 
 Анимации компонентов работают на CSS и не требуют настройки: не нужны ни `@angular/animations`, ни

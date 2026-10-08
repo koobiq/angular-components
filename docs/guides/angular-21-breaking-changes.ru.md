@@ -13,7 +13,7 @@
 | @angular/build            | 21.2.25   |
 | vitest                    | 4.1.11    |
 | @analogjs/vitest-angular  | 2.8.0     |
-| @angular-eslint/\*        | ^21.4.0   |
+| angular-eslint            | ^21.4.0   |
 | @schematics/angular       | 21.2.25   |
 | @angular-devkit/architect | 0.2102.25 |
 
@@ -36,3 +36,16 @@ CDK 21 по умолчанию показывает оверлеи как popove
 Компоненты больше не используют `@angular/animations`, который Angular объявил устаревшим: их движение задается в CSS: это анимации и переходы, окончания которых компоненты дожидаются сами, и `animate.enter` / `animate.leave` в шаблонах. `@angular/animations` больше не входит в peer-зависимости, `ng add` больше не устанавливает его и не добавляет `provideAnimations()`, и ни одно приложение репозитория от него не зависит. Движение отключается при `prefers-reduced-motion: reduce` и через `KBQ_ANIMATIONS_CONFIG` (`animationsDisabled: true`).
 
 Экспортируемые компонентами триггеры и члены, принимавшие или отдававшие `AnimationEvent`, удалены. Они перечислены вместе с заменами в [руководстве по миграции](/ru/main/migration), а схематик `angular-animations-removal` сообщает о каждом использовании.
+
+### Сигналы
+
+Компоненты перешли на сигнальные входы, выходы и запросы. Привязки в шаблонах не изменились; изменился код, который читает, записывает или наследует компоненты:
+
+- `KbqFormFieldControl` основан на сигналах: состояние контрола — набор сигналов, а `stateChanges` удален. Собственный контрол поля формы отдает свое состояние сигналами.
+- `color` у `KbqColorDirective` и у построенных на ней компонентов — записываемый сигнал.
+- Входы с декоратором `@Input()` стали сигнальными. В зависимости от компонента член остался прежним, читается через геттер и больше не присваивается, или стал сигналом, который читается вызовом. Наследник переопределяет сигнальный вход `<member>Input` вместо повторного объявления `@Input()` и вызывает `super.ngOnChanges(changes)`.
+- Публичные `QueryList` — геттеры над сигнальными запросами: до инициализации содержимого `QueryList` пуст, а не `undefined`.
+- Все компоненты — `OnPush`. С zone.js компонент, открытый в панели действий, который меняет свои поля из таймера или подписки, вызывает `markForCheck()` или хранит это состояние в сигнале.
+- `mixinDisabled`, `mixinTabIndex`, `mixinErrorState` и их типы удалены из `@koobiq/components/core`.
+
+Каждое изменение описано в [руководстве по миграции](/ru/main/migration), а схематики 21.0.0 сообщают о том, что нужно поправить вручную: `form-field-signals`, `color-signals`, `core-mixins-removal`, `option-signals`, `input-signals`, `list-signals`, `tree-signals`, `select-signal-inputs`, `tree-select-signals`, `signal-inputs-subclasses`, `datepicker-signals`, `modal-signals`, `tabs-signals` и `query-list-signals`.

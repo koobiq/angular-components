@@ -10,7 +10,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **20.0.0**: the move to Angular 20: removal of deprecated APIs and package renames.
 - **20.2.0**: the move of the filter-bar API to signals.
 - **20.2.0**: one shared mechanism for dropdown panel width.
-- **21.0.0**: the move to Angular 21.
+- **21.0.0**: the move to Angular 21: zoneless change detection, CSS animations instead of `@angular/animations`, and signal inputs, outputs and queries.
 - **21.0.0**: the actions panel overlay container.
 - **21.0.0**: legacy splitter deprecation.
 - **21.0.0**: removal of the overlay demotion mechanism.
@@ -343,7 +343,7 @@ Koobiq components no longer use `@angular/animations`, which Angular deprecated:
 
 - **The motion is off under `prefers-reduced-motion: reduce`.** To turn it off in the whole application, for example in an end-to-end suite, provide `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` from `@koobiq/components/core`. `provideNoopAnimations()` still turns it off, but it belongs to the deprecated package.
 - **The exported triggers are removed**: `fadeAnimation` and `kbqSelectAnimations` from `core`, `kbqDropdownAnimations`, `fadeInItems` and `transformDropdown` from `dropdown`, `kbqTabsAnimations` from `tabs`. `KbqSidepanelAnimationState` is no longer exported from `sidepanel`.
-- **The members that carried an `AnimationEvent` are removed.** `KbqPopUp.animationStart()` and `animationDone()`: a subclass overrides the protected `afterShowAnimation()`. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` and `onAnimationDone()`: a custom trigger calls `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` and `onAnimationDone()`: listen to `stateChanged`. `KbqTabBody.onTranslateTabStarted()` and `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` and `onAnimation()`, and the `animationStateChanged` of the sidepanel and actions panel containers: follow a panel through its ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`.
+- **The members that carried an `AnimationEvent` are removed.** `KbqPopUp.animationStart()` and `animationDone()`: a subclass overrides the protected `afterShowAnimation()`. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` and `onAnimationDone()`: a custom trigger calls `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` and `onAnimationDone()`: listen to `stateChanged`. `KbqTabBody.onTranslateTabStarted()` and `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` and `onAnimation()`, the `animationStateChanged` of the sidepanel and actions panel containers, and `animationState`, `animationTransform` and `setAnimationState()` of the sidepanel container: follow a panel through its ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`.
 - **The dropdown panel no longer fades out**: it is closed, and its lazy content detached, as soon as the trigger reports it.
 - **In a spec, what waited for an animation callback now waits for the next render**: `fixture.detectChanges()` or `await fixture.whenStable()`. jsdom has no Web Animations API, so nothing animates there.
 
@@ -2087,7 +2087,7 @@ Reported by `select-signal-inputs`.
 
 The container is a dialog to assistive technology at last: `role="dialog"`, `aria-modal` for a modal panel, and an `aria-labelledby` pointing at the `kbq-sidepanel-header` title, with `ariaLabel` / `ariaLabelledBy` on the config for a panel that has no header. While a modal sidepanel is open the rest of the page is `aria-hidden`, so a screen reader stops walking the page behind it. Any `role` or `aria-*` you were stamping on the container yourself is a duplicate now.
 
-Four smaller fixes with nothing to migrate: a component-provided `KbqSidepanelService` closes the panels it opened when it is destroyed, instead of leaving an orphaned overlay behind; `closeAll()` no longer reverses the live stack in place; the indent strip belongs to the top panel of a stack alone, where a stack three deep used to draw one strip per level and closing a lower panel left the one above exposing a panel that was no longer there; a second `close('B')` before the animation finishes no longer overwrites the `'A'` the first call promised; and a click inside a sidepanel at another edge no longer closes an unrelated panel. `KbqSidepanelService` is `providedIn: 'root'`, and `KbqSidepanelAnimationState` is exported from the entry point.
+Four smaller fixes with nothing to migrate: a component-provided `KbqSidepanelService` closes the panels it opened when it is destroyed, instead of leaving an orphaned overlay behind; `closeAll()` no longer reverses the live stack in place; the indent strip belongs to the top panel of a stack alone, where a stack three deep used to draw one strip per level and closing a lower panel left the one above exposing a panel that was no longer there; a second `close('B')` before the animation finishes no longer overwrites the `'A'` the first call promised; and a click inside a sidepanel at another edge no longer closes an unrelated panel. `KbqSidepanelService` is `providedIn: 'root'`.
 
 Reported by `sidepanel-non-modal-behavior`.
 
@@ -2170,13 +2170,13 @@ Handled by `tags-signals`: reads of the members that moved are rewritten, includ
 
 `canGrow` was the odd one: its getter returned `!maxRowLimitReached && bound`, so it reported `false` once the textarea hit `maxRows` even though the consumer had asked for growth. The folded value is an internal `growing` computed now, and `canGrow()` reports what was bound. At the row limit the element keeps its own scrollbar rather than gaining a native resize handle: `kbq-textarea_max-row-limit-reached` sets `resize: unset`, which follows `kbq-textarea-resizable` in the stylesheet and wins on source order.
 
-| Pattern                                                 | Manual migration                                                                                                                        |
-| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                                                                                       |
-| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported                                                                      |
-| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                                                                   |
-| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                                                                                     |
-| `.grow()` / a detached `.grow`                          | Protected now; the textarea re-measures on every value and input change, and `stateChanges.next()` covers a layout change it cannot see |
+| Pattern                                                 | Manual migration                                                                                                                       |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `.maxRows` / `.maxRowLimitReached`                      | Read as calls — rewritten for you                                                                                                      |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound — reported                                                                     |
+| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                                                                  |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them in the template; the inputs are read-only                                                                                    |
+| `.grow()` / a detached `.grow`                          | Protected now; the textarea re-measures on every value and input change, and a layout change it cannot see is measured at the next one |
 
 **`maxRows` and `freeRowsHeight` report `number | undefined`.** Both were declared non-nullable while an unbound `maxRows` held `undefined`, and `maxRowLimitReached` compared against it — `rowsCount > undefined` is false, which is why unlimited growth worked at all. `freeRowsHeight` differs: `ngOnInit` used to assign the measured line height into the input, so an unbound read came back with a number once the first microtask had run. The fallback is internal now and the input stays `undefined`, so a call site doing `gap + 'px'` starts producing `"undefined" + "px"` with no diagnostic — the migration reports those reads rather than rewriting them.
 
@@ -2251,8 +2251,8 @@ class MyToast extends KbqToastComponent {
 | `.elementRef`                                                            | `inject<ElementRef<HTMLElement>>(ElementRef)`                                                                                                            |
 | `.ttl` / `.delay`                                                        | The countdown moved into the service — pass the lifetime as `show()`'s `duration`                                                                        |
 | `.isTemplateRef()` / `.themePalette` / `.toastStyle`                     | Removed; they only existed for the old rendering path                                                                                                    |
-| `.style` / `.icon` / `.role` / `.closeButton`                            | Now `protected`. `data`, `id`, `hovered`, `focused`, `animationState`, `close()` and `onAnimation()` are still public                                    |
-| `service.animation.getValue()` / `.value`                                | A `Subject<AnimationEvent>` now, not a `BehaviorSubject` — nothing is replayed to a late subscriber                                                      |
+| `.style` / `.icon` / `.role` / `.closeButton`                            | Now `protected`. `data`, `id`, `hovered`, `focused` and `close()` are still public                                                                       |
+| `service.animation.getValue()` / `.value`                                | Removed with `@angular/animations`, see "Animations without @angular/animations" above                                                                   |
 | A `KBQ_TOAST_FACTORY` component that does not extend `KbqToastComponent` | Rejected: `show()` reads the numeric `id` the service keys its stack by, and throws when it is missing rather than stacking a toast it can never dismiss |
 
 **The data you pass in is no longer written to.** `show()` used to default `style` to `contrast` and `icon` to `true` by assigning them onto the caller's object; both defaults are resolved inside the toast now. Anything that read those keys back after `show()` — or rendered the same object somewhere else, which is what `kbq-notification-center` does — has to apply its own defaults.

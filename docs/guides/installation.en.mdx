@@ -34,6 +34,22 @@ base package on its own, Yarn and pnpm do not, so install it explicitly. Install
 [code-block](/en/components/code-block), and `@angular/router` if you use
 [breadcrumbs](/en/components/breadcrumbs).
 
+### Change detection
+
+The components do not need zone.js. They render in a zoneless application, the default since
+Angular 21, and keep working in an application that loads zone.js and provides
+`provideZoneChangeDetection()`. Nothing has to be configured for them. To make an existing
+application zoneless, provide `provideZonelessChangeDetection()` and remove `zone.js` from its
+`polyfills`:
+
+```typescript
+import { provideZonelessChangeDetection } from '@angular/core';
+
+bootstrapApplication(AppComponent, {
+    providers: [provideZonelessChangeDetection()]
+});
+```
+
 ### Animations
 
 The components animate with CSS and need no setup: neither `@angular/animations` nor
