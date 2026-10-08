@@ -15,6 +15,7 @@ import {
     inject,
     Injector,
     input,
+    Renderer2,
     signal,
     Signal
 } from '@angular/core';
@@ -85,6 +86,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     private readonly document = inject(DOCUMENT);
     private readonly injector = inject(Injector);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly renderer = inject(Renderer2);
 
     private readonly debounceInterval = 100;
 
@@ -184,6 +186,18 @@ export class KbqNavbarBrand implements AfterContentInit {
         });
 
         afterNextRender(() => this.observeLongTitle());
+
+        // A disabled navbar item takes `pointer-events: none`, which on a brand would also stop the tooltip a
+        // collapsed brand depends on. Capturing on the host runs ahead of every listener of the link, `RouterLink`
+        // included.
+        const unlisten = this.renderer.listen(
+            this.nativeElement,
+            'click',
+            (event: MouseEvent) => this.preventDisabledActivation(event),
+            { capture: true }
+        );
+
+        this.destroyRef.onDestroy(unlisten);
     }
 
     /** @docs-private */
@@ -192,11 +206,16 @@ export class KbqNavbarBrand implements AfterContentInit {
         // then is it kept out of the roving focus order. Deciding this here and not in the constructor is what
         // makes the projected content visible at all; deciding it from `isLink` alone used to disable every
         // `<div kbq-navbar-brand>`, however interactive its content was.
-        if (!this.navbarFocusableItem.disabled) {
-            this.navbarFocusableItem.disabled = !this.isLink && !this.navbarFocusableItem.nestedElement;
-        }
+        this.navbarFocusableItem.decorative = !this.isLink && !this.navbarFocusableItem.nestedElement;
 
         this.updateTooltip();
+    }
+
+    private preventDisabledActivation(event: MouseEvent): void {
+        if (!this.navbarFocusableItem.explicitlyDisabled) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
     }
 
     private updateTooltip(): void {

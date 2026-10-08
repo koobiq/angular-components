@@ -22,6 +22,10 @@
 
         @include kbq-squircle(var(--kbq-navbar-item-size-content-border-radius));
     }
+
+    &:not(.kbq-disabled) .kbq-navbar-title {
+        cursor: pointer;
+    }
 }
 
 a.kbq-navbar-brand {
@@ -125,7 +129,7 @@ a.kbq-navbar-brand {
                 @include navbar-theme.kbq-navbar-item(states-hover);
             }
 
-            &.cdk-focused.cdk-keyboard-focused {
+            &.cdk-focused.cdk-keyboard-focused:not(.kbq-disabled) {
                 outline: none;
 
                 &:after {
