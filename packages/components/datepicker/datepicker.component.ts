@@ -471,6 +471,11 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
             );
         }
 
+        // The popup of the last opening may still be playing its exit: disposed once that ends, it would close this one.
+        if (this.popupComponentRef?.instance.animationState === 'void') {
+            this.destroyOverlay();
+        }
+
         if (!this.popupRef) {
             this.createPopup();
         }
