@@ -2286,6 +2286,70 @@ describe('KbqDropdown', () => {
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(0);
         });
 
+        it('should close all of the dropdowns and refocus the root trigger when a nested item is activated by keyboard', () => {
+            compileTestComponent();
+
+            const rootTriggerEl = instance.rootTriggerEl().nativeElement;
+
+            rootTriggerEl.focus();
+            dispatchKeyboardEvent(rootTriggerEl, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            for (const keyCode of [RIGHT_ARROW, DOWN_ARROW, RIGHT_ARROW]) {
+                dispatchKeyboardEvent(document.activeElement!, 'keydown', keyCode);
+                fixture.detectChanges();
+            }
+
+            const item = document.activeElement as HTMLElement;
+            const focusViaSpy = vi.spyOn(focusMonitor, 'focusVia');
+
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(3);
+            expect(item.textContent!.trim()).toBe('Seven');
+
+            // ENTER on a `<button>`, which the browser turns into a click.
+            dispatchKeyboardEvent(item, 'keydown', ENTER);
+            item.click();
+            fixture.detectChanges();
+
+            expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(0);
+            expect(document.activeElement).toBe(rootTriggerEl);
+            expect(focusViaSpy).toHaveBeenCalledExactlyOnceWith(rootTriggerEl, 'keyboard', undefined);
+            expect(instance.rootCloseCallback).toHaveBeenCalledWith('keydown');
+        });
+
+        it('should refocus the root trigger when a clicked nested item outlives its closed panel', () => {
+            compileTestComponent();
+
+            const rootTriggerEl = instance.rootTriggerEl().nativeElement;
+
+            dispatchMouseEvent(rootTriggerEl, 'mousedown');
+            rootTriggerEl.click();
+            fixture.detectChanges();
+
+            const levelOneTriggerEl = overlay.querySelector<HTMLElement>('#level-one-trigger')!;
+
+            dispatchMouseEvent(levelOneTriggerEl, 'mousedown');
+            levelOneTriggerEl.click();
+            fixture.detectChanges();
+
+            const nestedPanel = overlay.querySelectorAll<HTMLElement>(PANEL_SELECTOR)[1];
+            const item = nestedPanel.querySelector<HTMLElement>(ITEM_SELECTOR)!;
+            // A renderer that removes a destroyed view later (`provideAnimations()` does, once its engine flushes)
+            // leaves the clicked item, and the focus on it, in the document while the panels close.
+            const remove = vi.spyOn(nestedPanel, 'remove').mockImplementation(() => undefined);
+
+            item.focus();
+            item.click();
+            fixture.detectChanges();
+
+            expect(remove).toHaveBeenCalled();
+            expect(instance.rootTrigger().opened).toBe(false);
+            expect(document.activeElement).toBe(rootTriggerEl);
+
+            remove.mockRestore();
+            nestedPanel.remove();
+        });
+
         it('should close all of the dropdowns when the root is closed programmatically', async () => {
             vi.useFakeTimers();
 

@@ -298,11 +298,16 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             if (!dropdown) return;
 
             const subscription = outputToObservable(dropdown.closed).subscribe((reason) => {
-                this.destroy(reason);
+                // A click, Tab or an activated item closes the entire chain of nested dropdowns.
+                const closesChain =
+                    reason === 'click' ||
+                    reason === 'tab' ||
+                    (dropdown instanceof KbqDropdown && dropdown.closingChain);
 
-                // If a click closed the dropdown, we should close the entire chain of nested dropdowns.
-                if (['click', 'tab'].includes(reason as string) && this.parent) {
-                    untracked(() => this.parent.closed.emit(reason));
+                this.destroy(reason, closesChain);
+
+                if (closesChain && this.parent) {
+                    untracked(() => this.parent.closeChain(reason));
                 }
             });
 
@@ -429,6 +434,20 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         );
     }
 
+    /**
+     * Takes the focus off the detached panel. A renderer can keep its view in the document for a while
+     * (`provideAnimations()` does, until its engine flushes), and the panel this one is nested in would not count
+     * the focus left there as its own to restore.
+     */
+    private releaseFocus(): void {
+        const activeElement = this.document.activeElement as HTMLElement | null;
+        const overlayElement = this.overlayRef?.overlayElement as HTMLElement | null | undefined;
+
+        if (activeElement && overlayElement?.contains(activeElement)) {
+            activeElement.blur();
+        }
+    }
+
     /** Handles mouse presses on the trigger. */
     handleMousedown(event: MouseEvent): void {
         // Since right or middle button clicks won't trigger the `click` event,
@@ -513,7 +532,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private handleTouchStart = () => (this.openedBy = 'touch');
 
     /** Closes the dropdown and does the necessary cleanup. */
-    private destroy(reason: DropdownCloseReason) {
+    private destroy(reason: DropdownCloseReason, closesChain = false) {
         if (!this.overlayRef || !this.opened) {
             return;
         }
@@ -534,9 +553,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
         this.overlayRef.detach();
 
-        if (this.restoreFocus() && focusIsOurs && (reason === 'keydown' || !this.openedBy || !this.isNested())) {
+        // A nested panel closing with the whole chain leaves the focus to the root trigger.
+        const ownsFocus = (reason === 'keydown' && !closesChain) || !this.openedBy || !this.isNested();
+
+        if (this.restoreFocus() && focusIsOurs && ownsFocus) {
             this.focus(this.openedBy);
         }
+
+        this.releaseFocus();
 
         this.openedBy = undefined;
 

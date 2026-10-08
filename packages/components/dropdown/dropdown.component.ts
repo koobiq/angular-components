@@ -62,6 +62,7 @@ import { throwKbqDropdownInvalidPositionX, throwKbqDropdownInvalidPositionY } fr
 import { KbqDropdownItem } from './dropdown-item.component';
 import { KbqDropdownSearch } from './dropdown-search';
 import {
+    DropdownCloseReason,
     KBQ_DROPDOWN_DEFAULT_OPTIONS,
     KBQ_DROPDOWN_PANEL,
     KbqDropdownDefaultOptions,
@@ -286,6 +287,12 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
     /** Event emitted when the dropdown is closed. */
     readonly closed = output<void | 'click' | 'keydown' | 'tab'>();
+
+    /**
+     * Whether the `closed` being emitted closes the panels this one is nested in too, see `closeChain`.
+     * @internal
+     */
+    closingChain = false;
 
     private keyManager: ListKeyManager<KbqDropdownItem>;
 
@@ -749,7 +756,18 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     }
 
     close() {
-        this.closed.emit(this.focusOrigin === 'keyboard' ? 'keydown' : 'click');
+        this.closeChain(this.focusOrigin === 'keyboard' ? 'keydown' : 'click');
+    }
+
+    /**
+     * Emits `closed` for an activated item, which closes every panel up to the root. Its reason follows the focus
+     * origin, so after keyboard navigation it is the `'keydown'` that Escape reports for closing one panel alone.
+     * @internal
+     */
+    closeChain(reason: DropdownCloseReason): void {
+        this.closingChain = true;
+        this.closed.emit(reason);
+        this.closingChain = false;
     }
 
     /**
