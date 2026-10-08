@@ -170,10 +170,7 @@ export function defineListSuite(config: CheckConfig): void {
                 expect(page.selectedLabels()).toEqual(['Banana']);
             });
 
-            // Library bug: `KbqListSelection.focus()` hands the focus from the host to an option, so the host's own
-            // `(blur)` runs `blur()` -> `onTouched()` the moment the list is entered; every option blur inside the
-            // list reaches `blur()` -> `onTouched()` as well. A `required` error shown on touched appears on entry.
-            it.fails('is touched once the focus leaves the list, not while it moves inside', async () => {
+            it('is touched once the focus leaves the list, not while it moves inside', async () => {
                 const page = await renderList(config);
                 const control = page.scenario.fruitsControl;
 

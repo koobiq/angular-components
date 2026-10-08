@@ -944,6 +944,38 @@ describe('KbqListSelection with forms', () => {
             expect(ngModel.touched).toBe(true);
         });
 
+        it('should stay untouched when the focus enters the list through its host', async () => {
+            selectionListDebug.nativeElement.focus();
+            await fixture.whenStable();
+
+            expect(document.activeElement).toBe(listOptions[0].getHostElement());
+            expect(ngModel.touched).toBe(false);
+        });
+
+        it('should stay untouched while the focus moves between options', async () => {
+            listOptions[0].getHostElement().focus();
+            await fixture.whenStable();
+
+            dispatchKeyboardEvent(listOptions[0].getHostElement(), 'keydown', DOWN_ARROW);
+            await fixture.whenStable();
+
+            expect(document.activeElement).toBe(listOptions[1].getHostElement());
+            expect(ngModel.touched).toBe(false);
+        });
+
+        it('should be touched once the focus leaves the list', async () => {
+            const outside: HTMLElement = fixture.nativeElement.querySelector('button');
+
+            selectionListDebug.nativeElement.focus();
+            await fixture.whenStable();
+
+            dispatchKeyboardEvent(listOptions[0].getHostElement(), 'keydown', TAB);
+            outside.focus();
+            await fixture.whenStable();
+
+            expect(ngModel.touched).toBe(true);
+        });
+
         it('should stay pristine until the user changes the value', async () => {
             fixture = TestBed.createComponent(SelectionListWithModel);
             fixture.componentInstance.selectedOptions = ['opt2'];
@@ -2567,6 +2599,7 @@ class SelectionListWithTabindexInDisabledState {
                 <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
             }
         </kbq-list-selection>
+        <button type="button">After</button>
     `
 })
 class SelectionListWithModel {

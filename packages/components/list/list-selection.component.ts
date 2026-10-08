@@ -229,8 +229,7 @@ export type KbqListSelectionDroppedEvent = Pick<CdkDragDrop<KbqListSelection>, '
         '[attr.aria-disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
         '(keydown)': 'onKeyDown($event)',
-        '(focus)': 'focus()',
-        '(blur)': 'blur()'
+        '(focus)': 'focus()'
     },
     // `id` is exposed so that a consumer-set id survives `CdkDropList`'s own `[attr.id]` host binding
     // and can be used as a `connectedTo` reference.
@@ -858,7 +857,14 @@ export class KbqListSelection<T = any>
     }
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef, true);
+        // Reports the focus leaving only when it lands outside the list (or nowhere): the host hands it to an option
+        // on entry, and options hand it on to each other or to their action buttons, none of which blurs the list.
+        this.focusMonitor
+            .monitor(this.elementRef, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((origin) => {
+                if (!origin) this.blur();
+            });
     }
 
     ngOnDestroy(): void {
@@ -1240,7 +1246,11 @@ export class KbqListSelection<T = any>
                 switchMap(() => this.optionBlurChanges),
                 takeUntilDestroyed(this.destroyRef)
             )
-            .subscribe(() => this.blur());
+            .subscribe(() => {
+                if (!this.hasFocusedOption()) {
+                    this.keyManager.setActiveItem(-1);
+                }
+            });
     }
 
     /** Checks whether any of the options is focused. */
