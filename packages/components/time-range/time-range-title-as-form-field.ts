@@ -1,7 +1,7 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, Directive, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, Directive, inject, signal } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { KbqFormFieldControl } from '@koobiq/components/form-field';
+import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTimeRange } from './time-range';
 
 /** Directive for easy using styles of time-range placeholder publicly. */
@@ -36,9 +36,9 @@ export class KbqTimeRangeTitlePlaceholder {}
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        '[attr.id]': 'id',
         '[attr.tabindex]': '0',
         '[attr.id]': 'id()',
+        '[attr.aria-labelledby]': 'ariaLabelledby()',
         class: 'kbq-time-range-title-as-form-field'
     }
 })
@@ -48,6 +48,16 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
 
     /** @docs-private */
     readonly controlType = 'select';
+    /** @docs-private */
+    readonly isNativeLabelSupported = false;
+    /**
+     * Id of the `kbq-form-field` caption naming this control, when it has one.
+     *
+     * A `<label for>` does not associate with a custom element, so the relationship is expressed the
+     * other way around — from the control to the label.
+     * @docs-private
+     */
+    protected readonly ariaLabelledby = computed(() => this.parentFormField?.labelId() ?? null);
     /** @docs-private */
     readonly ngControl: NgControl | null = this.timeRange.ngControl;
     /** @docs-private */

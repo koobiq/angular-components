@@ -274,6 +274,15 @@ export class KbqFormField
     readonly labelId = computed(() => (this.hasLabel() ? `${this.control().id()}-label` : null));
 
     /**
+     * Whether the control is a native labelable element, so that a `<label>` can associate with it.
+     *
+     * A custom control (`kbq-select`, for one) reports `isNativeLabelSupported: false`; the caption is then rendered
+     * as a `<span>` instead of a `<label>`, because a label that neither has a `for` matching a labelable
+     * element nor wraps one is invalid, and the control is named through `aria-labelledby` instead.
+     */
+    readonly isNativeLabelSupported = computed(() => this.control().isNativeLabelSupported !== false);
+
+    /**
      * Whether the form-field contains kbq-hint.
      *
      * @docs-private

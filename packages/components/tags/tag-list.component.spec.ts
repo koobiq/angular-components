@@ -809,13 +809,13 @@ describe(KbqTagList.name, () => {
 
             expect(formFieldElement.getBoundingClientRect().height).toBe(32);
         });
+    });
 
-        // The form field renders <label [attr.for]="control().id"> and no aria-owns, so the label points at
-        // the kbq-tag-list host rather than at the inner input. Wiring it to the input is a form-field change.
-        it.skip('should point the label id to the tag input', () => {
-            const label = fixture.nativeElement.querySelector('label');
-            const input = fixture.nativeElement.querySelector('input');
-
+    describe('accessible name', () => {
+        // The tag list reports the id of its input, so the form-field caption is a `<label for>` that
+        // names the native input.
+        it('should label the tag input with the form-field caption', () => {
+            fixture = createComponent(TagListWithFormFieldLabel);
             fixture.detectChanges();
 
             const input: HTMLInputElement = fixture.nativeElement.querySelector('input');

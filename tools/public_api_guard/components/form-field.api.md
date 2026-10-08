@@ -170,6 +170,7 @@ export abstract class KbqFormFieldControl<T> {
     abstract focus(options?: FocusOptions): void;
     readonly focused: Signal<boolean>;
     readonly id: Signal<string>;
+    readonly isNativeLabelSupported?: boolean;
     readonly ngControl: NgControl | null;
     abstract onContainerClick(event: MouseEvent): void;
     open?: () => void;

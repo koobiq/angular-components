@@ -426,34 +426,6 @@ class TreeSelectWithAriaName {
     }
 }
 
-/** Tree-select named by the caption of its wrapping `kbq-form-field`. */
-@Component({
-    selector: 'tree-select-with-form-field-label',
-    imports: [KbqTreeModule, KbqTreeSelectModule, KbqFormFieldModule],
-    template: `
-        <kbq-form-field>
-            <kbq-label>Food</kbq-label>
-            <kbq-tree-select>
-                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
-                        {{ treeControl.getViewValue(node) }}
-                    </kbq-tree-option>
-                </kbq-tree-selection>
-            </kbq-tree-select>
-        </kbq-form-field>
-    `
-})
-class TreeSelectWithFormFieldLabel {
-    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
-    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-
-    constructor() {
-        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-        this.dataSource.data = buildFileTree(TREE_DATA, 0);
-    }
-}
-
 /**
  * Tree-select rendered WITHOUT a wrapping `kbq-form-field` — mirrors how the filter-bar tree-select
  * pipes render the control bare. Used to guard option hover-to-focus in that setup (#DS-5302).
@@ -2317,6 +2289,10 @@ describe('KbqTreeSelect', () => {
                     const labelledSelect = getTreeSelectElement(labelledFixture);
                     const label = labelledFixture.debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
 
+                    // A tree-select is not a native labelable element, so the caption is a `<span>` that the
+                    // control points at, rather than a `<label for>`.
+                    expect(label.tagName).toBe('SPAN');
+                    expect(label.getAttribute('for')).toBeNull();
                     expect(label.id).toBeTruthy();
                     expect(label.textContent.trim()).toBe('Dish');
                     expect(labelledSelect.getAttribute('aria-labelledby')).toBe(label.id);
