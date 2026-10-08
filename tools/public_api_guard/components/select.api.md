@@ -163,8 +163,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     handleClick($event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     readonly hasBackdrop: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
-    // (undocumented)
-    hiddenItems: number;
+    readonly hiddenItems: _angular_core.Signal<number>;
     protected get hiddenItemsLabel(): string;
     readonly hiddenItemsText: _angular_core.InputSignal<string | undefined>;
     readonly hiddenItemsTextFormatter: _angular_core.InputSignal<(hiddenItemsText: string, hiddenItems: number) => string>;

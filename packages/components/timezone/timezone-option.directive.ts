@@ -1,7 +1,7 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { AfterViewInit, ChangeDetectorRef, Directive, inject, input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, inject, input, OnDestroy } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subscription, throttleTime } from 'rxjs';
@@ -19,7 +19,6 @@ export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
 })
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private readonly option = inject(KbqTimezoneOption);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
     private readonly platform = inject(Platform);
@@ -92,7 +91,5 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
         const count: number = this.option.tooltipContent().nativeElement.getClientRects().length;
 
         this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;
-
-        this.changeDetectorRef.detectChanges();
     };
 }

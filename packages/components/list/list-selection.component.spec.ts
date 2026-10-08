@@ -150,6 +150,21 @@ describe('KbqListSelection without forms', () => {
             expect(listOptions[2].componentInstance.hasFocus).toBeTruthy();
         });
 
+        it('should leave the tab order while Tab moves the focus out, and come back to it afterwards', async () => {
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
+            const listElement: HTMLElement = selectionList.nativeElement;
+
+            dispatchKeyboardEvent(listElement, 'keydown', TAB);
+
+            expect(listElement.getAttribute('tabindex')).toBe('-1');
+
+            await vi.runOnlyPendingTimersAsync();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(listElement.getAttribute('tabindex')).toBe('0');
+        });
+
         it('should be able to set a value on a list option', () => {
             const optionValues = ['inbox', 'starred', 'sent-mail', 'drafts'];
 

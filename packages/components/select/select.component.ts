@@ -338,7 +338,10 @@ export class KbqSelect
      */
     readonly isNativeLabelSupported = false;
 
-    hiddenItems: number = 0;
+    private readonly hiddenItemsCount = signal(0);
+
+    /** Number of the selected items that do not fit into the trigger. */
+    readonly hiddenItems = this.hiddenItemsCount.asReadonly();
 
     /**
      * How many of the rendered tags stay on the trigger's single line.
@@ -347,7 +350,7 @@ export class KbqSelect
      * no tag on the first line at all, which a laid-out trigger never does and so means there was no layout
      * to measure. Both cases leave every tag treated as visible.
      */
-    private visibleTriggerItems: number | null = null;
+    private readonly visibleTriggerItems = signal<number | null>(null);
 
     /** The last measured value for the trigger's client bounding rect. */
     protected triggerRect: DOMRect;
@@ -523,7 +526,7 @@ export class KbqSelect
     protected get hiddenItemsLabel(): string {
         const template = this.hiddenItemsText() ?? this.localeConfiguration().hiddenItemsText;
 
-        return this.hiddenItemsTextFormatter()(template, this.hiddenItems);
+        return this.hiddenItemsTextFormatter()(template, this.hiddenItems());
     }
 
     /** Label of the "select all" row. Follows the active locale. */
@@ -1062,7 +1065,9 @@ export class KbqSelect
      * @docs-private
      */
     protected isTriggerValueVisible(index: number): boolean {
-        return this.visibleTriggerItems === null || index < this.visibleTriggerItems;
+        const visibleTriggerItems = this.visibleTriggerItems();
+
+        return visibleTriggerItems === null || index < visibleTriggerItems;
     }
 
     private readonly emptyValue = signal(false);
@@ -1314,7 +1319,6 @@ export class KbqSelect
                     this.openedChange.emit(true);
                 } else {
                     this.openedChange.emit(false);
-                    this._changeDetectorRef.markForCheck();
                 }
             });
 
@@ -1361,8 +1365,6 @@ export class KbqSelect
             this.syncNavigableOptions();
             this.resetOptions();
             this.initializeSelection();
-            // The panel renders states derived from the option count (busy, empty search result).
-            this._changeDetectorRef.markForCheck();
         });
 
         this.search()
@@ -1698,7 +1700,6 @@ export class KbqSelect
 
         if (!this.disabled() && !this.panelOpen) {
             this.onTouched();
-            this._changeDetectorRef.markForCheck();
         }
     }
 
@@ -1808,10 +1809,7 @@ export class KbqSelect
         return `${this.a11yLocaleConfiguration().remove} ${option.viewValue}`.trim();
     }
 
-    /**
-     * Calculates the number of hidden items in multiple selection mode.
-     * Updates the hiddenItems property and triggers change detection.
-     */
+    /** Calculates the number of hidden items in multiple selection mode and updates `hiddenItems`. */
     calculateHiddenItems = () => {
         if (
             !this.isBrowser ||
@@ -1823,48 +1821,31 @@ export class KbqSelect
         )
             return;
 
-        const { totalItemsWidth, totalVisibleItemsWidth, visibleItems } = this.hiddenItemsMeasurer.measure(
-            this.trigger()!.nativeElement
-        );
+        const { totalItemsWidth, visibleItems } = this.hiddenItemsMeasurer.measure(this.trigger()!.nativeElement);
 
-        this.hiddenItems = (this.selected as ArrayLike<KbqOptionBase>).length - visibleItems;
-        this.visibleTriggerItems = visibleItems || null;
+        this.hiddenItemsCount.set((this.selected as ArrayLike<KbqOptionBase>).length - visibleItems);
+        this.visibleTriggerItems.set(visibleItems || null);
+
+        if (!this.hiddenItems()) return;
+
+        // The counter is measured below, so it has to be rendered with the new count first.
         this._changeDetectorRef.detectChanges();
 
-        if (this.hiddenItems) {
-            const itemsCounter = this.trigger()!.nativeElement.querySelector('.kbq-select__match-hidden-text');
-            const matcherList = this.trigger()!.nativeElement.querySelector('.kbq-select__match-list');
+        const itemsCounter = this.trigger()!.nativeElement.querySelector('.kbq-select__match-hidden-text');
+        const matcherList = this.trigger()!.nativeElement.querySelector('.kbq-select__match-list');
 
-            if (!itemsCounter || !matcherList) {
-                this._changeDetectorRef.markForCheck();
+        if (!itemsCounter || !matcherList) return;
 
-                return;
-            }
+        const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
+        const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
+        const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
+        const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
 
-            const itemsCounterShowed = itemsCounter.offsetTop < itemsCounter.offsetHeight;
-            const itemsCounterWidth: number = Math.floor(itemsCounter.getBoundingClientRect().width);
-
-            const matcherListWidth: number = Math.floor(matcherList.getBoundingClientRect().width);
-            const matcherWidth: number = matcherListWidth + (itemsCounterShowed ? itemsCounterWidth : 0);
-
-            if (itemsCounterShowed && totalItemsWidth < matcherWidth) {
-                // Everything fits once the counter goes away, so nothing is clipped after all.
-                this.hiddenItems = 0;
-                this.visibleTriggerItems = null;
-                this._changeDetectorRef.detectChanges();
-            }
-
-            if (
-                totalVisibleItemsWidth === matcherListWidth ||
-                totalVisibleItemsWidth + itemsCounterWidth < matcherListWidth
-            ) {
-                this._changeDetectorRef.markForCheck();
-
-                return;
-            }
+        if (itemsCounterShowed && totalItemsWidth < matcherWidth) {
+            // Everything fits once the counter goes away, so nothing is clipped after all.
+            this.hiddenItemsCount.set(0);
+            this.visibleTriggerItems.set(null);
         }
-
-        this._changeDetectorRef.markForCheck();
     };
 
     /**
@@ -2538,8 +2519,6 @@ export class KbqSelect
                     return indexA - indexB;
                 });
             }
-
-            this._changeDetectorRef.markForCheck();
         }
     }
 

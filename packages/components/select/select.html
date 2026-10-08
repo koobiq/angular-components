@@ -67,7 +67,7 @@
                             @if (!multiline()) {
                                 <div
                                     class="kbq-select__match-hidden-text"
-                                    [class.kbq-select__match-hidden-text_visible]="hiddenItems > 0"
+                                    [class.kbq-select__match-hidden-text_visible]="hiddenItems() > 0"
                                 >
                                     {{ hiddenItemsLabel }}
                                 </div>
