@@ -20,6 +20,7 @@ import {
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
+    LEFT_ARROW,
     ONE,
     SPACE,
     ShowOnControlDirtyErrorStateMatcher,
@@ -29,6 +30,7 @@ import {
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
+    dispatchKeyboardEvent,
     kbqErrorStateMatcherProvider,
     validationTooltipHideDelay
 } from '@koobiq/components/core';
@@ -604,6 +606,23 @@ describe(KbqTimepicker.name, () => {
             testComponent.timeFormat = TimeFormats.HHmmss;
             fixture.detectChanges();
             await fixture.whenStable();
+        });
+
+        it('should move one part per arrow key when the next key comes before the selection lands', async () => {
+            vi.useFakeTimers();
+
+            const input: HTMLInputElement = inputElementDebug.nativeElement;
+
+            input.focus();
+            input.setSelectionRange(6, 8);
+
+            // Both within one task, as a quick key repeat on a busy page delivers them: the selection the
+            // first one moves is set on a timer.
+            dispatchKeyboardEvent(input, 'keydown', LEFT_ARROW);
+            dispatchKeyboardEvent(input, 'keydown', LEFT_ARROW);
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect([input.selectionStart, input.selectionEnd]).toEqual([0, 2]);
         });
 
         it('Should ignore SPACE keyDown', async () => {

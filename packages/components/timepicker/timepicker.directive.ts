@@ -318,6 +318,9 @@ export class KbqTimepicker<D>
 
     private separator = ':';
 
+    /** Start of the part a caret key selects on a timer, until the selection lands there. */
+    private pendingCaret: { start: number } | null = null;
+
     private onChange: (value: any) => void;
     private onTouched: () => void;
 
@@ -752,7 +755,8 @@ export class KbqTimepicker<D>
             return;
         }
 
-        let cursorPos = this.selectionStart as number;
+        // A key pressed before the previous one's selection has landed moves on from where that one goes.
+        let cursorPos = this.pendingCaret?.start ?? (this.selectionStart as number);
 
         if (keyCode === LEFT_ARROW) {
             this.fixEmptyDigit();
@@ -770,7 +774,15 @@ export class KbqTimepicker<D>
     }
 
     private createSelectionOfTimeComponentInInput(cursorPos: number): void {
+        const pendingCaret = { start: this.getTimeEditMetrics(cursorPos).cursorStartPosition };
+
+        this.pendingCaret = pendingCaret;
+
         setTimeout(() => {
+            if (this.pendingCaret === pendingCaret) {
+                this.pendingCaret = null;
+            }
+
             const newEditParams = this.getTimeEditMetrics(cursorPos);
 
             this.setSelection(newEditParams.cursorStartPosition, newEditParams.cursorEndPosition);
