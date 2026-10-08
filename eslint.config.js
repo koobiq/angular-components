@@ -159,6 +159,8 @@ module.exports = tseslint.config(
             // files there belong to no tsconfig project, so the type-aware rules fail on them
             '.ai',
             '.claude',
+            // a separate npm project with its own Angular and its own runner, see its README
+            'tools/check-angular',
             // ignore build tokens
             'apps/docs/src/styles/koobiq/default-theme/',
             // ignore index.html
