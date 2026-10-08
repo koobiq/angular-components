@@ -3950,8 +3950,8 @@ export abstract class KbqPopUp implements OnDestroy {
     arrow: boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    classMap: {};
+    get classMap(): {};
+    set classMap(value: {});
     // (undocumented)
     protected closeOnInteraction: boolean;
     // (undocumented)
@@ -3972,7 +3972,7 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     header: string | TemplateRef<unknown>;
     hide(delay: number): void;
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly hovered: Signal<boolean>;
     // (undocumented)
     isTemplateRef(value: any): boolean;
     // (undocumented)
@@ -3988,6 +3988,7 @@ export abstract class KbqPopUp implements OnDestroy {
     protected prefix: string;
     // (undocumented)
     protected readonly renderer: Renderer2;
+    protected setHovered(value: boolean): void;
     // (undocumented)
     protected setStickPosition(): void;
     // (undocumented)
@@ -3996,8 +3997,8 @@ export abstract class KbqPopUp implements OnDestroy {
     trigger: KbqPopUpTrigger<unknown>;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
-    // (undocumented)
-    visibility: PopUpVisibility;
+    get visibility(): PopUpVisibility;
+    set visibility(value: PopUpVisibility);
     // (undocumented)
     visibleChange: EventEmitter<boolean>;
     // (undocumented)
@@ -4052,7 +4053,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     hide(delay?: number): void;
     protected hideWithTimeout: boolean;
     protected readonly hostView: ViewContainerRef;
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly hovered: Signal<boolean>;
     initListeners(): void;
     protected instance: any | null;
     get isAttached(): boolean;
@@ -4082,6 +4083,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected readonly scrollDispatcher: ScrollDispatcher;
     protected abstract scrollStrategy: () => ScrollStrategy;
     setExternalNativeElement(value: HTMLElement): void;
+    protected setHovered(value: boolean): void;
     show(delay?: number): void;
     stickToWindow: KbqStickToWindowPlacementValues;
     protected strategy: FlexibleConnectedPositionStrategy;
