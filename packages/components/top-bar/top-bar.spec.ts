@@ -1,7 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
@@ -85,8 +84,6 @@ describe(KbqTopBar.name, () => {
     });
 
     it('should keep the panels opened from it in the application-wide container inside an overlay layer', () => {
-        TestBed.configureTestingModule({ imports: [NoopAnimationsModule] });
-
         const fixture = createFixture(InOverlayLayerTestApp);
 
         fixture.componentInstance.trigger().open();

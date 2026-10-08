@@ -10350,65 +10350,65 @@ describe('KbqSelect', () => {
         const getLayer = (): HTMLElement =>
             fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer');
 
-        const openPanel = (select: KbqSelect): HTMLElement => {
+        const openPanel = async (select: KbqSelect): Promise<HTMLElement> => {
             select.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             return select.panel()!.nativeElement.closest('.cdk-overlay-pane').parentElement;
         };
 
-        const clickOutside = (): void => {
+        const clickOutside = async (): Promise<void> => {
             document.body.click();
-            // The rxjs `delay` of the closing actions runs on `setInterval`, which `flush` skips.
-            tick();
+            // The closing actions pass through an rxjs `delay(0)`.
+            await vi.advanceTimersByTimeAsync(1);
             fixture.detectChanges();
         };
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(async () => {
             configureKbqSelectTestingModule([SelectInOverlayLayer]);
             fixture = TestBed.createComponent(SelectInOverlayLayer);
             fixture.detectChanges();
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should render the panel of a select inside the element into its overlay layer', fakeAsync(() => {
-            const overlayHost = openPanel(fixture.componentInstance.inside());
+        it('should render the panel of a select inside the element into its overlay layer', async () => {
+            const overlayHost = await openPanel(fixture.componentInstance.inside());
 
             expect(overlayHost.parentElement).toBe(getLayer());
-        }));
+        });
 
-        it('should keep the panel of a select outside the element in the application-wide container', fakeAsync(() => {
-            const overlayHost = openPanel(fixture.componentInstance.outside());
+        it('should keep the panel of a select outside the element in the application-wide container', async () => {
+            const overlayHost = await openPanel(fixture.componentInstance.outside());
 
             expect(overlayHost.parentElement).toBe(overlayContainerElement);
-        }));
+        });
 
-        it('should close the layered panel on an outside click while other overlays are open', fakeAsync(() => {
+        it('should close the layered panel on an outside click while other overlays are open', async () => {
             const select = fixture.componentInstance.inside();
             const otherOverlays = [document.createElement('div'), document.createElement('div')];
 
-            openPanel(select);
+            await openPanel(select);
             overlayContainerElement.append(...otherOverlays);
-            clickOutside();
+            await clickOutside();
 
             expect(select.panelOpen).toBe(false);
 
             otherOverlays.forEach((overlay) => overlay.remove());
-        }));
+        });
 
-        it('should keep the layered panel open on an outside click while a modal is open', fakeAsync(() => {
+        it('should keep the layered panel open on an outside click while a modal is open', async () => {
             const select = fixture.componentInstance.inside();
             const modalOverlay = document.createElement('div');
 
             modalOverlay.classList.add('kbq-modal-overlay');
-            openPanel(select);
+            await openPanel(select);
             overlayContainerElement.appendChild(modalOverlay);
-            clickOutside();
+            await clickOutside();
 
             expect(select.panelOpen).toBe(true);
 
             modalOverlay.remove();
-        }));
+        });
     });
 });

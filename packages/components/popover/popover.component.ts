@@ -44,6 +44,7 @@ import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-int
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     EmptyFocusTrapStrategy,
+    KBQ_OVERLAY_LAYERS,
     KbqComponentColors,
     KbqOverflowShadowBottom,
     KbqOverflowShadowContainer,

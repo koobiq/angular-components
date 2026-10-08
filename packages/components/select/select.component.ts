@@ -2049,9 +2049,11 @@ export class KbqSelect
         this.destroyRef.onDestroy(() => observer.disconnect());
     }
 
-    /** Gets the current overlay position index in the container. */
-    private currentOverlayPosition(): number {
-        const element = this.overlayDir.overlayRef.hostElement;
+    /** Whether a modal paints over the panel, so that clicks inside the modal leave the panel open. */
+    private isCoveredByModal(): boolean {
+        const host = this.overlayDir.overlayRef.hostElement;
+        const overlays = Array.from(this.overlayContainer.getContainerElement().children);
+        const modalIndex = overlays.findIndex((overlay) => overlay.classList.contains('kbq-modal-overlay'));
 
         if (modalIndex === -1) {
             return false;

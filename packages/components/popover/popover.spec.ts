@@ -1741,6 +1741,7 @@ describe('KbqPopover', () => {
             layerFixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer');
 
         beforeEach(() => {
+            vi.useFakeTimers();
             layerFixture = createComponent(PopoverInOverlayLayer);
             layerInstance = layerFixture.componentInstance;
             readOverlayContainer();
@@ -1750,28 +1751,28 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should render the panel of a trigger inside the element into its overlay layer', fakeAsync(() => {
-            openAndAssertPopover(layerFixture, layerInstance.popover());
+        it('should render the panel of a trigger inside the element into its overlay layer', async () => {
+            await openAndAssertPopover(layerFixture, layerInstance.popover());
 
             expect(layerInstance.popoverTrigger().overlayRef!.hostElement.parentElement).toBe(getLayer());
-        }));
+        });
 
-        it('should keep a panel stuck to a window edge in the application-wide container', fakeAsync(() => {
+        it('should keep a panel stuck to a window edge in the application-wide container', async () => {
             layerInstance.stickToWindow = 'top';
             layerFixture.detectChanges();
-            openAndAssertPopover(layerFixture, layerInstance.popover());
+            await openAndAssertPopover(layerFixture, layerInstance.popover());
 
             expect(layerInstance.popoverTrigger().overlayRef!.hostElement.parentElement).toBe(overlayContainerElement);
-        }));
+        });
 
-        it('should keep a tooltip inside the element in the application-wide container', fakeAsync(() => {
+        it('should keep a tooltip inside the element in the application-wide container', async () => {
             dispatchMouseEvent(layerInstance.tooltip().nativeElement, 'mouseenter');
             layerFixture.detectChanges();
-            tick(tooltipEnterDelay);
+            await vi.advanceTimersByTimeAsync(tooltipEnterDelay);
             layerFixture.detectChanges();
 
             expect(layerInstance.tooltipTrigger().overlayRef!.hostElement.parentElement).toBe(overlayContainerElement);
-        }));
+        });
     });
 });
 
