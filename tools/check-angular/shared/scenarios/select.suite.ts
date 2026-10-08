@@ -8,7 +8,6 @@ import {
     failOnConsole,
     focus,
     focusedElement,
-    itFailsIn,
     Key,
     overlayContainer,
     press,
@@ -69,19 +68,11 @@ export function defineSelectSuite(config: CheckConfig): void {
                 expect(text(byTestId(fixture, 'city-summary'))).toBe('open: none');
             });
 
-            // Library bug: with zone.js, change detection runs between the click listener of the select, which opens
-            // it, and the one of the form field around it, so the panel renders and `afterNextRender` focuses the
-            // active option first; `KbqFormField.onContainerClick` then calls `KbqSelect.onContainerClick`, whose
-            // `focus()` takes focus back to the trigger. Zoneless renders after both listeners, and the tree-select
-            // focuses its node from a timer, so neither is affected.
-            itFailsIn(config, ['zone', 'zone-animations'])(
-                'moves focus to the active option when opened by a click',
-                async () => {
-                    await click(fixture, trigger(select));
+            it('moves focus to the active option when opened by a click', async () => {
+                await click(fixture, trigger(select));
 
-                    expect(focusedElement()).toBe(options()[0]);
-                }
-            );
+                expect(focusedElement()).toBe(options()[0]);
+            });
 
             it.each<[string, Key, { altKey?: boolean }]>([
                 ['Enter', 'Enter', {}],
