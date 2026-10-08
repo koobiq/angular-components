@@ -26,6 +26,7 @@ import {
     inject,
     input,
     numberAttribute,
+    untracked,
     viewChild
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -982,7 +983,7 @@ export class KbqTooltipTrigger
         // `KbqSiblingPopup` contract, so checking it here closes that gap regardless of the cause. Gated by
         // `hasInteractiveTrigger` for the same reason as the constructor subscription: a `manual`/`none`
         // tooltip is driven imperatively and must not be muted by a sibling at all.
-        if (this.hasInteractiveTrigger && this.siblingPopups.some(({ isAttached }) => isAttached)) {
+        if (this.hasInteractiveTrigger && this.siblingPopupAttached) {
             return;
         }
 
@@ -1009,7 +1010,7 @@ export class KbqTooltipTrigger
      * not be mistaken for the user leaving.
      */
     hide(delay: number = this.leaveDelay) {
-        if (RELEASE_TRIGGERS.includes(this.triggerName) && !this.siblingPopups.some(({ isAttached }) => isAttached)) {
+        if (RELEASE_TRIGGERS.includes(this.triggerName) && !this.siblingPopupAttached) {
             this.mutedBySiblingPopup = false;
         }
 
@@ -1017,16 +1018,11 @@ export class KbqTooltipTrigger
     }
 
     /**
-     * Records whether the pointer left the host while muted, see `pointerLeftWhileMuted`.
-     * @docs-private
+     * Whether a pop-up on the same element is attached. Untracked: the siblings keep it in signals, and a consumer
+     * `effect()` that shows or hides the tooltip must not run again whenever one of them opens or closes.
      */
-    protected trackPointerLeave(event: MouseEvent): void {
-        if (!this.mutedBySiblingPopup) return;
-
-        const { left, right, top, bottom } = this.elementRef.nativeElement.getBoundingClientRect();
-
-        this.pointerLeftWhileMuted =
-            event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom;
+    private get siblingPopupAttached(): boolean {
+        return untracked(() => this.siblingPopups.some(({ isAttached }) => isAttached));
     }
 
     /**
@@ -1069,7 +1065,7 @@ export class KbqTooltipTrigger
         // Re-anchoring an open tooltip has to move the description itself: the `visibleChange(true)` edge that
         // normally drives it is swallowed by `distinctUntilChanged` while the pop-up stays attached. A tooltip
         // that is not open yet is left to that edge, which describes the element anchored by then.
-        if (this.isOpen) {
+        if (untracked(() => this.isOpen)) {
             this.describeTrigger();
         }
 
@@ -1150,7 +1146,6 @@ export class KbqTooltipTrigger
         this.instance.updateClassMap(POSITION_TO_CSS_MAP[newPlacement], `${this.customClass} ${this.colorClass}`, {
             modifier: this.modifier
         });
-        this.instance.markForCheck();
     }
 
     /**

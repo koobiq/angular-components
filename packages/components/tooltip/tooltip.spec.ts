@@ -538,7 +538,8 @@ describe('KbqTooltip', () => {
 
             // Reproduce the exact state `hide()` silently no-ops on: the last recorded trigger event is
             // `mouseleave`, and the pop-up itself reports being hovered (mouse moved onto its own panel).
-            hoverDirective['instance'].hovered.next(true);
+            dispatchMouseEvent(overlayContainerElement.querySelector('kbq-tooltip-component')!, 'mouseenter');
+            expect(hoverDirective['instance'].hovered()).toBe(true);
             hoverDirective.triggerName = 'mouseleave';
             hoverDirective.hide(0);
             await vi.advanceTimersByTimeAsync(defaultLeaveDelay);
@@ -2000,18 +2001,21 @@ describe('KbqTooltip', () => {
             expect(completed).toBe(true);
         });
 
-        it('should complete the hover stream when the trigger is destroyed', async () => {
+        it('should report the hover state of the trigger', async () => {
             vi.useFakeTimers();
 
             const trigger = component.tooltipTrigger();
+            const triggerElement = component.triggerElementRef().nativeElement;
 
-            let completed = false;
+            dispatchMouseEvent(triggerElement, 'mouseenter');
 
-            trigger.hovered.subscribe({ complete: () => (completed = true) });
+            expect(trigger.hovered()).toBe(true);
 
-            fixture.destroy();
+            dispatchMouseEvent(triggerElement, 'mouseleave');
 
-            expect(completed).toBe(true);
+            expect(trigger.hovered()).toBe(false);
+
+            await vi.runOnlyPendingTimersAsync();
         });
 
         it('should subscribe to the closing actions once per open', async () => {
