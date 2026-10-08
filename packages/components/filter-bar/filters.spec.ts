@@ -969,50 +969,64 @@ describe('KbqFilters', () => {
             createFilter([], { name: 'Gamma' })
         ];
 
-        it('should return all filters when search is null', async () => {
-            vi.useFakeTimers();
-
+        it('should return all filters when search is null', () => {
             initFixture(null, filtersList);
 
             const component = getFiltersComponent();
-            let result: KbqFilter[] = [];
 
-            component.filteredOptions.subscribe((v) => (result = v));
             component.searchControl.setValue(null);
-            await vi.runOnlyPendingTimersAsync();
 
-            expect(result.length).toBe(3);
+            expect(component.filteredOptions().length).toBe(3);
         });
 
-        it('should filter by name case-insensitively', async () => {
-            vi.useFakeTimers();
-
+        it('should filter by name case-insensitively', () => {
             initFixture(null, filtersList);
 
             const component = getFiltersComponent();
-            let result: KbqFilter[] = [];
 
-            component.filteredOptions.subscribe((v) => (result = v));
             component.searchControl.setValue('alp');
-            await vi.runOnlyPendingTimersAsync();
 
-            expect(result.length).toBe(1);
-            expect(result[0].name).toBe('Alpha');
+            expect(component.filteredOptions().map(({ name }) => name)).toEqual(['Alpha']);
         });
 
-        it('should return empty array when no match', async () => {
-            vi.useFakeTimers();
-
+        it('should return empty array when no match', () => {
             initFixture(null, filtersList);
 
             const component = getFiltersComponent();
-            let result: KbqFilter[] = [];
 
-            component.filteredOptions.subscribe((v) => (result = v));
             component.searchControl.setValue('xyz');
-            await vi.runOnlyPendingTimersAsync();
 
-            expect(result.length).toBe(0);
+            expect(component.filteredOptions().length).toBe(0);
+        });
+
+        it('should follow a change of the filters list', () => {
+            initFixture(null, filtersList);
+
+            const component = getFiltersComponent();
+
+            component.searchControl.setValue('a');
+            fixture.componentInstance.filters = [...filtersList, createFilter([], { name: 'Delta' })];
+            fixture.detectChanges();
+
+            expect(component.filteredOptions().map(({ name }) => name)).toEqual(['Alpha', 'Beta', 'Gamma', 'Delta']);
+        });
+
+        it('should render the matching filters in the dropdown', async () => {
+            vi.useFakeTimers();
+
+            initFixture(null, filtersList);
+            filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            getFiltersComponent().searchControl.setValue('gam');
+            fixture.detectChanges();
+
+            const items = Array.from(document.querySelectorAll('.kbq-dropdown-item'), (item) =>
+                item.textContent?.trim()
+            );
+
+            expect(items).toEqual(['Gamma', KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNewFilter]);
         });
     });
 
@@ -1311,21 +1325,13 @@ describe('KbqFilters', () => {
         });
     });
 
-    describe('ngOnInit', () => {
-        it('should set up filteredOptions observable', async () => {
-            vi.useFakeTimers();
-
+    describe('filteredOptions', () => {
+        it('should list every filter before anything is searched', () => {
             const filters = [createFilter([], { name: 'A' }), createFilter([], { name: 'B' })];
 
             initFixture(null, filters);
 
-            const component = getFiltersComponent();
-            let result: KbqFilter[] = [];
-
-            component.filteredOptions.subscribe((v) => (result = v));
-            await vi.runOnlyPendingTimersAsync();
-
-            expect(result.length).toBe(2);
+            expect(getFiltersComponent().filteredOptions()).toEqual(filters);
         });
     });
 

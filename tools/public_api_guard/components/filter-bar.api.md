@@ -40,7 +40,6 @@ import { KbqTreeSelection } from '@koobiq/components/tree';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import * as _koobiq_components_filter_bar from '@koobiq/components/filter-bar';
 import { ModelSignal } from '@angular/core';
-import { Observable } from 'rxjs';
 import { OnInit } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -274,14 +273,14 @@ export class KbqFilterReset {
 export class KbqFilters implements OnInit {
     closePopover(restoreFocus?: boolean): void;
     protected readonly destroyRef: DestroyRef;
-    protected readonly dropdown: _angular_core.Signal<KbqDropdownTrigger>;
+    protected readonly dropdown: Signal<KbqDropdownTrigger>;
     protected readonly elementRef: ElementRef<any>;
     get filter(): KbqFilter | null;
-    protected readonly filterActionsButton: _angular_core.Signal<KbqButton>;
-    protected readonly filterActionsDropdown: _angular_core.Signal<KbqDropdownTrigger | undefined>;
+    protected readonly filterActionsButton: Signal<KbqButton>;
+    protected readonly filterActionsDropdown: Signal<KbqDropdownTrigger | undefined>;
     get filterActionsOpened(): boolean;
     protected readonly filterBar: KbqFilterBar;
-    filteredOptions: Observable<KbqFilter[]>;
+    readonly filteredOptions: Signal<KbqFilter[]>;
     get filterName(): FormControl<string | null>;
     // (undocumented)
     readonly filters: _angular_core.InputSignal<KbqFilter[]>;
@@ -294,7 +293,7 @@ export class KbqFilters implements OnInit {
     get isEmpty(): boolean;
     get isSaving(): boolean;
     set isSaving(value: boolean);
-    protected readonly mainButton: _angular_core.Signal<KbqButton>;
+    protected readonly mainButton: Signal<KbqButton>;
     // (undocumented)
     ngOnInit(): void;
     readonly onChangeFilter: _angular_core.OutputEmitterRef<KbqSaveFilterEvent>;
@@ -308,7 +307,7 @@ export class KbqFilters implements OnInit {
     get opened(): boolean;
     openSaveAsNewFilterPopover(): void;
     protected readonly placements: typeof PopUpPlacements;
-    protected readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
+    protected readonly popover: Signal<KbqPopoverTrigger>;
     get popoverHeader(): string;
     protected readonly popoverOffset: number;
     protected readonly popoverSize = PopUpSizes.Medium;
@@ -324,8 +323,8 @@ export class KbqFilters implements OnInit {
     saveFocusedElement(button?: KbqButton): void;
     get saveNewFilter(): boolean;
     set saveNewFilter(value: boolean);
-    protected readonly saveNewFilterButton: _angular_core.Signal<KbqButton>;
-    protected readonly savePopover: _angular_core.Signal<KbqFilterSavePopover>;
+    protected readonly saveNewFilterButton: Signal<KbqButton>;
+    protected readonly savePopover: Signal<KbqFilterSavePopover>;
     readonly searchControl: FormControl<string | null>;
     searchKeydownHandler(event: KeyboardEvent): void;
     // (undocumented)
@@ -468,7 +467,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     // (undocumented)
     hideCalendars(): void;
     get isEmpty(): boolean;
-    protected isListMode: boolean;
+    protected readonly isListMode: _angular_core.WritableSignal<boolean>;
     protected get isPeriodInverted(): boolean;
     readonly listSelection: _angular_core.Signal<KbqListSelection<any> | undefined>;
     protected max: any;
@@ -494,12 +493,12 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
     protected readonly placements: typeof PopUpPlacements;
     readonly popover: _angular_core.Signal<KbqPopoverTrigger>;
     readonly returnButton: _angular_core.Signal<KbqButton>;
-    protected showEndCalendar: boolean;
+    protected readonly showEndCalendar: _angular_core.WritableSignal<boolean>;
     // (undocumented)
     showList(): void;
     // (undocumented)
     showPeriod(): void;
-    protected showStartCalendar: boolean;
+    protected readonly showStartCalendar: _angular_core.WritableSignal<boolean>;
     get start(): D;
     get startMax(): any;
     protected readonly styles: typeof KbqButtonStyles;
@@ -578,7 +577,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     get allVisibleOptionsSelected(): boolean;
     get checkboxState(): KbqPseudoCheckboxState;
     compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
-    filteredOptions: Observable<KbqSelectValue[]>;
+    readonly filteredOptions: Signal<KbqSelectValue[]>;
     get isEmpty(): boolean;
     protected isLocked(item: KbqSelectValue): boolean;
     // (undocumented)
@@ -588,9 +587,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     onClose(): void;
     onSelect(item: KbqSelectValue[]): void;
     open(): void;
-    readonly options: _angular_core.Signal<readonly KbqOption[]>;
+    readonly options: Signal<readonly KbqOption[]>;
     readonly searchControl: FormControl<string | null>;
-    readonly select: _angular_core.Signal<KbqSelect>;
+    readonly select: Signal<KbqSelect>;
     selectAllHandler: (event: KeyboardEvent) => void;
     get selected(): KbqSelectValue[] | null;
     // (undocumented)
@@ -654,18 +653,17 @@ export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
 }
 
 // @public (undocumented)
-export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
+export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit {
     compareByValue: (o1: Pick<KbqSelectValue, "id"> | null, o2: Pick<KbqSelectValue, "id"> | null) => boolean;
-    filteredOptions: Observable<KbqSelectValue[]>;
+    readonly filteredOptions: Signal<KbqSelectValue[]>;
     get isEmpty(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
-    ngOnInit(): void;
     // (undocumented)
     onSelect(item: KbqSelectValue): void;
     open(): void;
     readonly searchControl: FormControl<string | null>;
-    readonly select: _angular_core.Signal<KbqSelect>;
+    readonly select: Signal<KbqSelect>;
     get selected(): KbqSelectValue | null;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeSelectComponent, "kbq-pipe-select", never, {}, {}, never, never, true, never>;

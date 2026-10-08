@@ -38,8 +38,9 @@ import {
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqProgressSpinner } from '@koobiq/components/progress-spinner';
 import { axe } from 'jest-axe';
-import { Observable, timer } from 'rxjs';
+import { BehaviorSubject, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqDropzoneData, KbqFileUploadEmptyState, KbqFullScreenDropzoneService, KbqLocalDropzone } from './dropzone';
 import { KbqFile, KbqFileItem, KbqFileUploadAddStrategy, KbqFileUploadAddStrategyValues } from './file-upload';
@@ -95,6 +96,12 @@ const FILE_NAME = 'test.file';
 
 const createMockFile = (fileName: string = FILE_NAME, options?: FilePropertyBag) =>
     new File(['test'] satisfies BlobPart[], fileName, options);
+
+const createLoadingItem = (fileName: string = FILE_NAME): KbqFileItem => ({
+    file: createMockFile(fileName),
+    loading: new BehaviorSubject<boolean>(false),
+    progress: new BehaviorSubject<number>(0)
+});
 
 /** A real `File` with the `fullPath` the drop path adds, so `size` and `name` survive. */
 const createDroppedFile = (fileName: string): KbqFile =>
@@ -778,6 +785,55 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             subscription.unsubscribe();
 
             expect(filesChangeSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('with upload progress', () => {
+        let fixture: ComponentFixture<ControlValueAccessorMultipleFileUpload>;
+
+        const getSpinners = () =>
+            fixture.debugElement
+                .queryAll(By.directive(KbqProgressSpinner))
+                .map(({ componentInstance }) => componentInstance);
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(ControlValueAccessorMultipleFileUpload);
+            fixture.detectChanges();
+        });
+
+        it('should show the progress of each item while it is loading', () => {
+            const [first, second] = [createLoadingItem('first.txt'), createLoadingItem('second.txt')];
+
+            fixture.componentInstance.control.setValue([first, second]);
+            fixture.detectChanges();
+
+            expect(getSpinners()).toHaveLength(0);
+
+            second.loading!.next(true);
+            second.progress!.next(40);
+            fixture.detectChanges();
+
+            expect(getSpinners().map((spinner) => spinner.value())).toEqual([40]);
+
+            second.loading!.next(false);
+            fixture.detectChanges();
+
+            expect(getSpinners()).toHaveLength(0);
+        });
+
+        it('should stop following the subjects of a removed item', () => {
+            const item = createLoadingItem();
+
+            fixture.componentInstance.control.setValue([item]);
+            fixture.detectChanges();
+
+            expect(item.loading!.observed).toBe(true);
+
+            fixture.componentInstance.control.setValue([]);
+            fixture.detectChanges();
+
+            expect(item.loading!.observed).toBe(false);
+            expect(item.progress!.observed).toBe(false);
         });
     });
 
@@ -1546,6 +1602,45 @@ describe(KbqSingleFileUploadComponent.name, () => {
             subscription.unsubscribe();
 
             expect(fileChangeSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('with upload progress', () => {
+        let fixture: ComponentFixture<ControlValueAccessorSingleFileUpload>;
+
+        const getSpinner = () => fixture.debugElement.query(By.directive(KbqProgressSpinner));
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(ControlValueAccessorSingleFileUpload);
+            fixture.detectChanges();
+        });
+
+        it('should show the progress the item reports while it is loading', () => {
+            const item = createLoadingItem();
+
+            fixture.componentInstance.control.setValue(item);
+            fixture.detectChanges();
+
+            expect(getSpinner()).toBeNull();
+
+            item.loading!.next(true);
+            item.progress!.next(40);
+            fixture.detectChanges();
+
+            expect(getSpinner().componentInstance.value()).toBe(40);
+
+            item.loading!.next(false);
+            fixture.detectChanges();
+
+            expect(getSpinner()).toBeNull();
+        });
+
+        it('should follow an item without subjects as not loading', () => {
+            fixture.componentInstance.control.setValue({ file: createMockFile() });
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('.kbq-file-item'))).not.toBeNull();
+            expect(getSpinner()).toBeNull();
         });
     });
 
