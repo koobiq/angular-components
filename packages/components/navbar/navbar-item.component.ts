@@ -306,18 +306,20 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
             return;
         }
 
-        if (origin === 'keyboard') {
-            this.focusMonitor.focusVia(this.elementRef, origin);
+        // A pointer focuses what it lands on by itself; moving the focus for it would surface a focus ring and a
+        // tooltip. Focus set by code still has to reach the item, or the host keeps it while this item is active.
+        const movesFocus = origin !== 'mouse' && origin !== 'touch';
+
+        if (movesFocus) {
+            this.focusMonitor.focusVia(this.elementRef, origin ?? 'program');
         }
 
         if (this.nestedElement) {
-            if (origin === 'keyboard') {
-                // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
-                if ('focusViaKeyboard' in this.nestedElement) {
-                    this.nestedElement.focusViaKeyboard();
-                } else {
-                    this.nestedElement.focus();
-                }
+            // KbqButton tracks focus via FocusMonitor; KbqFormField just delegates to control.focus.
+            if (origin === 'keyboard' && 'focusViaKeyboard' in this.nestedElement) {
+                this.nestedElement.focusViaKeyboard();
+            } else if (movesFocus) {
+                this.nestedElement.focus();
             }
 
             this.changeDetector.markForCheck();
@@ -325,8 +327,9 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
             return;
         }
 
-        if (origin === 'keyboard') {
-            this.tooltip?.show();
+        if (movesFocus) {
+            if (origin === 'keyboard') this.tooltip?.show();
+
             this.onFocusHandler();
         }
     }

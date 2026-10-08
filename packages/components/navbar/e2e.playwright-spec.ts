@@ -179,9 +179,9 @@ test.describe('KbqNavbarModule', () => {
         test('arrow keys should move the roving focus between items', async ({ page }) => {
             await page.goto('/E2eNavbarInteractions');
 
-            // A scripted `.focus()` carries no keyboard origin, and the navbar only moves real DOM focus onto
-            // an item — and shows its `cdk-keyboard-focused` class — for a focus event CDK attributes to the
-            // keyboard. A real Tab press is what the roving-tabindex container actually reacts to.
+            // A scripted `.focus()` carries no keyboard origin, and an item shows its `cdk-keyboard-focused`
+            // class only for a focus event CDK attributes to the keyboard. A real Tab press is what the
+            // roving-tabindex container actually reacts to.
             await page.keyboard.press('Tab');
 
             await expect(page.getByTestId('horizontal-dropdown-trigger')).toHaveClass(/cdk-keyboard-focused/);

@@ -1338,6 +1338,27 @@ describe('KbqNavbar', () => {
 
             expect(fakeButton.focusViaKeyboard).toHaveBeenCalled();
         });
+
+        it('focus(program) should focus the nested element without a keyboard ring', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const focusableItem = fixture.debugElement
+                .query(By.directive(KbqNavbarFocusableItem))
+                .injector.get(KbqNavbarFocusableItem);
+
+            const fakeButton = { focus: vi.fn(), focusViaKeyboard: vi.fn(), hasFocus: false } as any;
+
+            vi.spyOn(focusableItem, 'nestedElement', 'get').mockReturnValue(fakeButton);
+
+            focusableItem.focus('program');
+
+            expect(fakeButton.focus).toHaveBeenCalled();
+            expect(fakeButton.focusViaKeyboard).not.toHaveBeenCalled();
+        });
     });
 
     describe('KbqFocusableComponent focus origin gating', () => {
@@ -1451,9 +1472,7 @@ describe('KbqNavbar', () => {
 
         /**
          * The host owns the tab stop and hands focus straight to an item, which reads as the host being
-         * blurred unless the focus monitor watches its children too. Losing the keyboard origin there left
-         * every later arrow key moving the key manager's active item while nothing moved in the DOM — the
-         * item only takes focus for a keyboard origin.
+         * blurred unless the focus monitor watches its children too.
          */
         it('arrow keys should keep moving real focus after the hand-off to the first item', async () => {
             const fixture = TestBed.createComponent(TestApp);
@@ -1525,6 +1544,48 @@ describe('KbqNavbar', () => {
 
             expect(document.activeElement).toBe(second);
             expect(second.classList).toContain('cdk-keyboard-focused');
+        });
+
+        it('focusing the host by code should hand real focus to the first item, without a keyboard ring', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const [first, second] = focusableItemElements(fixture);
+
+            fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement.focus();
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(first);
+            expect(first.classList).toContain('cdk-program-focused');
+
+            dispatchKeyboardEvent(first, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(second);
+        });
+
+        it('focusing the vertical navbar host by code should hand real focus to the first item', async () => {
+            const fixture = TestBed.createComponent(TestVerticalApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const [first, second] = focusableItemElements(fixture);
+
+            fixture.debugElement.query(By.directive(KbqVerticalNavbar)).nativeElement.focus();
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(first);
+            expect(first.classList).toContain('cdk-program-focused');
+
+            dispatchKeyboardEvent(first, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(second);
         });
     });
 
