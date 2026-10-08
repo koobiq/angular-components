@@ -180,7 +180,7 @@ describe('KbqOverlayLayer', () => {
 
         it('subscribes once when the same overlay is adopted repeatedly', () => {
             const overlayRef = createOverlay();
-            const getOrigin = jest.fn(() => element('#inside'));
+            const getOrigin = vi.fn(() => element('#inside'));
 
             layers.adopt(overlayRef, getOrigin);
             layers.adopt(overlayRef, getOrigin);

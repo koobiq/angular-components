@@ -27,6 +27,7 @@ import {
 import {
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
+    KBQ_OVERLAY_LAYERS,
     kbqAfterAnimations,
     kbqAnimationsDisabled,
     KbqLocaleOverridesDirective
@@ -145,6 +146,7 @@ export class KbqDatepickerContent<D> implements OnDestroy {
 })
 export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     private overlay = inject(Overlay);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private readonly injector = inject(Injector);
     private viewContainerRef = inject(ViewContainerRef);
     private readonly dateAdapter = injectRequiredDateAdapter<D>();

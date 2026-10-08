@@ -2163,7 +2163,7 @@ describe('overlay layer', () => {
     };
 
     beforeEach(() => {
-        TestBed.configureTestingModule({ imports: [NoopAnimationsModule, TestInOverlayLayerApp] });
+        TestBed.configureTestingModule({ imports: [TestInOverlayLayerApp] });
         fixture = TestBed.createComponent(TestInOverlayLayerApp);
         fixture.detectChanges();
     });

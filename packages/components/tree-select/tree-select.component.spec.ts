@@ -6350,7 +6350,7 @@ describe('KbqTreeSelect', () => {
             configureKbqTreeSelectTestingModule([TreeSelectInOverlayLayer]);
         });
 
-        it('should render the panel of a tree-select inside the element into its overlay layer', fakeAsync(() => {
+        it('should render the panel of a tree-select inside the element into its overlay layer', async () => {
             const fixture = TestBed.createComponent(TreeSelectInOverlayLayer);
 
             fixture.detectChanges();
@@ -6359,14 +6359,14 @@ describe('KbqTreeSelect', () => {
 
             select.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const overlayHost = select.panel()!.nativeElement.closest('.cdk-overlay-pane').parentElement;
 
             expect(overlayHost.parentElement).toBe(
                 fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer')
             );
-        }));
+        });
     });
 });
 
