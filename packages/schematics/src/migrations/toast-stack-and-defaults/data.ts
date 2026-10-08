@@ -4,8 +4,8 @@
  * `KbqToastComponent` stopped depending on the concrete `KbqToastService` and resolves its stack through
  * the new `KBQ_TOAST_STACK` token instead, which removed `service` together with the members a subclass
  * used to reach through it. Everything the template renders became `protected`, `KbqToastService.animation`
- * was narrowed from a `BehaviorSubject` to a plain `Subject`, and `showTemplate` / `templates` now carry the
- * template context type instead of the toast component type.
+ * was removed with `@angular/animations`, and `showTemplate` / `templates` now carry the template context type
+ * instead of the toast component type.
  *
  * None of it can be rewritten mechanically — a subclass has to be rewired by hand — so every pattern below
  * reports and nothing is auto-fixed.
@@ -39,9 +39,8 @@ export const tsWarnPatterns: WarnPattern[] = [
     {
         pattern: '\\banimation\\s*\\.\\s*(?:getValue\\s*\\(|value\\b)',
         message:
-            'KbqToastService.animation is a plain Subject<AnimationEvent> now, not a ' +
-            'BehaviorSubject<AnimationEvent | null>, so `.getValue()` and `.value` are gone and nothing is ' +
-            'replayed to a late subscriber. Subscribe to the stream instead.'
+            'KbqToastService.animation was removed with @angular/animations: a toast plays its exit animation ' +
+            'before it is taken out, and the overlay detaches once the last exit has ended. Drop the read.'
     },
     {
         pattern: '\\.instance\\s*\\.\\s*(?:ttl|delay|toastStyle|themePalette|isTemplateRef|elementRef|service)\\b',
@@ -66,7 +65,7 @@ export const templateWarnPatterns: WarnPattern[] = [
         message:
             'Everything KbqToastComponent renders — `style`, `icon`, `role`, `closeButton` and the resolved slot ' +
             'templates — became protected, so a template reference variable on <kbq-toast> can no longer read ' +
-            'them. `data`, `id`, `hovered`, `focused`, `animationState` and `close()` are still public.'
+            'them. `data`, `id`, `hovered`, `focused` and `close()` are still public.'
     }
 ];
 
