@@ -65,7 +65,15 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Whether the panel exposes the clickable indent strip of the sidepanel stacked underneath it. */
-    withIndent = inject(KBQ_SIDEPANEL_WITH_INDENT);
+    get withIndent(): boolean {
+        return this._withIndent();
+    }
+
+    set withIndent(value: boolean) {
+        this._withIndent.set(value);
+    }
+
+    private readonly _withIndent = signal(inject(KBQ_SIDEPANEL_WITH_INDENT));
 
     /** ID for the container DOM element. */
     id: string;
@@ -94,7 +102,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
      * The state of the sidepanel: on screen, closing, or stacked under another one.
      * @internal
      */
-    animationState: KbqSidepanelAnimationState = KbqSidepanelAnimationState.Void;
+    readonly animationState = signal<KbqSidepanelAnimationState>(KbqSidepanelAnimationState.Void);
 
     /**
      * Reports each state transition starting and ending.
@@ -171,7 +179,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     enter(): void {
         if (this.destroyed) return;
 
-        this.animationState = KbqSidepanelAnimationState.Visible;
+        this.animationState.set(KbqSidepanelAnimationState.Visible);
         this.changeDetectorRef.detectChanges();
         this.startTransition(KbqSidepanelAnimationState.Visible);
     }
@@ -187,8 +195,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     setAnimationState(state: KbqSidepanelAnimationState): void {
         if (this.destroyed) return;
 
-        this.animationState = state;
-        this.changeDetectorRef.markForCheck();
+        this.animationState.set(state);
         this.startTransition(state);
     }
 
@@ -196,7 +203,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     protected get stateTransform(): string | null {
         const transforms = kbqSidepanelTransformAnimation[this.position];
 
-        switch (this.animationState) {
+        switch (this.animationState()) {
             case KbqSidepanelAnimationState.Hidden:
                 return transforms.in;
             case KbqSidepanelAnimationState.Visible:
@@ -214,7 +221,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** @docs-private */
     protected get stateOpacity(): number | null {
-        switch (this.animationState) {
+        switch (this.animationState()) {
             case KbqSidepanelAnimationState.Void:
             case KbqSidepanelAnimationState.BottomPanel:
                 return 0;
@@ -231,10 +238,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
      * @docs-private
      */
     setWithIndent(withIndent: boolean): void {
-        if (this.withIndent === withIndent) return;
-
         this.withIndent = withIndent;
-        this.changeDetectorRef.markForCheck();
     }
 
     /**

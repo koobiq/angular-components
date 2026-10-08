@@ -17,6 +17,7 @@ import * as _koobiq_components_core from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
@@ -48,7 +49,7 @@ export class KbqToastComponent implements OnDestroy {
     readonly $implicit: this;
     constructor();
     // (undocumented)
-    protected readonly a11yLocaleConfiguration: i0.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
+    protected readonly a11yLocaleConfiguration: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     // (undocumented)
     protected readonly actionsTemplate: TemplateRef<{
         $implicit: KbqToastComponent;
@@ -74,10 +75,8 @@ export class KbqToastComponent implements OnDestroy {
     readonly data: KbqToastData;
     // (undocumented)
     protected readonly defaultIcon: string | null;
-    // (undocumented)
-    readonly focused: BehaviorSubject<boolean>;
-    // (undocumented)
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly focused: Signal<boolean>;
+    readonly hovered: Signal<boolean>;
     // (undocumented)
     protected readonly icon: boolean | TemplateRef<any>;
     // (undocumented)
@@ -96,6 +95,7 @@ export class KbqToastComponent implements OnDestroy {
     protected readonly readStateDirective: KbqReadStateDirective;
     // (undocumented)
     protected readonly role: string;
+    protected setHovered(hovered: boolean): void;
     // (undocumented)
     protected readonly style: KbqToastStyle | (string & {});
     // (undocumented)
@@ -206,12 +206,12 @@ export enum KbqToastPosition {
 // @public
 export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> implements OnDestroy, KbqToastStack {
     constructor();
-    readonly focused: BehaviorSubject<boolean>;
+    readonly focused: Signal<boolean>;
     // (undocumented)
     hide(id: number): void;
     // (undocumented)
     hideTemplate(id: number): void;
-    readonly hovered: BehaviorSubject<boolean>;
+    readonly hovered: Signal<boolean>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

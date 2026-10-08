@@ -10,12 +10,11 @@ import {
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
-import { AsyncPipe, DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     Directive,
     EventEmitter,
@@ -24,6 +23,7 @@ import {
     NgZone,
     OnChanges,
     RendererStyleFlags2,
+    Signal,
     SimpleChanges,
     TemplateRef,
     Type,
@@ -65,8 +65,8 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { BehaviorSubject, Subject, merge } from 'rxjs';
-import { auditTime, distinctUntilChanged, filter, map, pairwise } from 'rxjs/operators';
+import { Observable, Subject, merge } from 'rxjs';
+import { auditTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { KbqNotificationCenterService, KbqNotificationsGroup } from './notification-center.service';
 import {
     KBQ_NOTIFICATION_CENTER_LOCALE_CONFIGURATION,
@@ -132,7 +132,6 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
         KbqDividerModule,
         KbqDropdownModule,
         KbqToolTipModule,
-        AsyncPipe,
         CdkTrapFocus,
         KbqNotificationItemComponent,
         KbqLoaderOverlayModule,
@@ -166,8 +165,6 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
     preserveWhitespaces: false
 })
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
-    /** @docs-private */
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     /** @docs-private */
     protected readonly dateAdapter = inject(DateAdapter);
     /** @docs-private */
@@ -229,15 +226,15 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         // Branch in the template's own order, or the region announces a state that is not on screen:
         // the full-screen error wins over everything, then the full-screen loader, then the bottom
         // spinner, then the bottom error row, and only an otherwise idle empty list reads as empty.
-        if (this.service.errorMode.value) {
+        if (this.service.errorMode()) {
             return this.localeConfiguration().failedToLoadNotifications;
         }
 
-        if (this.service.loadingMode.value || this.service.loadingMore.value) {
+        if (this.service.loadingMode() || this.service.loadingMore()) {
             return this.localeConfiguration().loadingMore;
         }
 
-        if (this.service.loadMoreErrorMode.value) {
+        if (this.service.loadMoreErrorMode()) {
             return this.localeConfiguration().failedToLoadNotifications;
         }
 
@@ -314,11 +311,9 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             )
             .subscribe(() => this.setStickPosition());
 
-        this.service.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.changeDetectorRef.markForCheck();
-
-            this.scheduleScrolledToBottomCheck();
-        });
+        this.service.changes
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.scheduleScrolledToBottomCheck());
 
         // Focused with the modality the user actually opened the panel with, so a keyboard-driven open
         // keeps its focus ring while a click does not. Not `KbqButton.focusViaKeyboard()`, which hardcodes
@@ -478,7 +473,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
     /** Emits `onNextPage` unless a load is already in flight, errored, or there is nothing more to load. */
     private requestNextPage(): void {
-        if (this.service.hasMore.value && !this.service.loadingMore.value && !this.service.loadMoreErrorMode.value) {
+        if (this.service.hasMore() && !this.service.loadingMore() && !this.service.loadMoreErrorMode()) {
             this.service.onNextPage.next();
         }
     }
@@ -487,20 +482,30 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
      * Reveals the bottom "load more" spinner / error row when it first appears. Both rows are appended
      * below the last item and can land outside the viewport (the next page is requested while the user
      * is up to `scrolledToBottomOffset` px above the true bottom). Only a genuine false->true transition
-     * reveals the row: the BehaviorSubject's replayed current value is ignored (`pairwise` needs two
-     * emissions), so the panel always opens scrolled to the top — reopening it while a load-more error
-     * is still set never jumps to the bottom.
+     * after the panel opened reveals the row, so the panel always opens scrolled to the top — reopening
+     * it while a load-more error is still set never jumps to the bottom.
      */
     private subscribeToRevealLoadMoreRow(): void {
-        const reveal = (source: BehaviorSubject<boolean>) =>
-            source.pipe(
-                distinctUntilChanged(),
-                pairwise(),
-                filter(([wasShown, isShown]) => !wasShown && isShown),
+        const reveal = (isShown: () => boolean): Observable<void> => {
+            let wasShown = isShown();
+
+            return this.service.changes.pipe(
+                filter(() => {
+                    const shown = isShown();
+                    const appeared = shown && !wasShown;
+
+                    wasShown = shown;
+
+                    return appeared;
+                }),
                 auditTime(SCROLLED_TO_BOTTOM_AUDIT_TIME)
             );
+        };
 
-        merge(reveal(this.service.loadingMore), reveal(this.service.loadMoreErrorMode))
+        merge(
+            reveal(() => this.service.loadingMore()),
+            reveal(() => this.service.loadMoreErrorMode())
+        )
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.scrollToBottom());
     }
@@ -567,8 +572,8 @@ export class KbqNotificationCenterTrigger
     /** @docs-private */
     content: string | TemplateRef<unknown>;
 
-    /** Number of unread notifications */
-    get unreadItemsCounter() {
+    /** Number of unread notifications, formatted for the trigger badge. */
+    get unreadItemsCounter(): Signal<string> {
         return this.service.unreadItemsCounter;
     }
 

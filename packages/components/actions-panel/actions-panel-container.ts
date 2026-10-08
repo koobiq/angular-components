@@ -9,6 +9,7 @@ import {
     OnDestroy,
     Provider,
     Renderer2,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -86,7 +87,7 @@ export const kbqActionsPanelLocaleConfigurationProvider = (
     host: {
         class: 'kbq-actions-panel-container',
         '[class.kbq-actions-panel-container_rtl]': 'config.direction === "rtl"',
-        '[class.kbq-actions-panel-container_visible]': "animationState === 'visible'",
+        '[class.kbq-actions-panel-container_visible]': "animationState() === 'visible'",
         '[class.kbq-animations-disabled]': 'animationsDisabled',
         '(keydown.escape)': 'handleEscape($any($event))'
     },
@@ -103,7 +104,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      *
      * @docs-private
      */
-    protected animationState: 'void' | 'visible' | 'hidden' = 'void';
+    protected readonly animationState = signal<'void' | 'visible' | 'hidden'>('void');
 
     /**
      * Emits the state the actions panel has finished moving to.
@@ -165,10 +166,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      */
     startOpenAnimation(): void {
         if (!this.destroyed) {
-            this.animationState = 'visible';
-            // animationState lives in host bindings and `detectChanges` does not refresh host bindings  so we have to
-            // call `markForCheck` to ensure the host view is refreshed eventually.
-            this._changeDetectorRef.markForCheck();
+            this.animationState.set('visible');
             this._changeDetectorRef.detectChanges();
             this.waitForAnimation('visible');
         }
@@ -181,8 +179,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      */
     startCloseAnimation(): void {
         if (!this.destroyed) {
-            this.animationState = 'hidden';
-            this._changeDetectorRef.markForCheck();
+            this.animationState.set('hidden');
             this.waitForAnimation('hidden');
         }
     }

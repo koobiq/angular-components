@@ -9,7 +9,6 @@ import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { ChangeDetectorRef } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -28,7 +27,6 @@ import { OnChanges } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
-import * as rxjs from 'rxjs';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
@@ -57,12 +55,11 @@ export const KBQ_NOTIFICATION_CENTER_SCROLL_STRATEGY: InjectionToken<() => Scrol
 // @public
 export class KbqNotificationCenterComponent extends KbqPopUp implements AfterViewInit, KbqNotificationCenterPanel {
     constructor();
-    protected readonly a11yLocaleConfiguration: _angular_core.Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
-    protected readonly changeDetectorRef: ChangeDetectorRef;
+    protected readonly a11yLocaleConfiguration: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly dateAdapter: DateAdapter<any>;
     escapeHandler(): void;
     isTrapFocus: boolean;
-    readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqNotificationCenterLocaleConfiguration>;
+    readonly localeConfiguration: Signal<_koobiq_components_core.KbqNotificationCenterLocaleConfiguration>;
     // (undocumented)
     ngAfterViewInit(): void;
     protected panelId: string;
@@ -79,7 +76,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     protected readonly service: KbqNotificationCenterService;
     protected get statusMessage(): string;
     // (undocumented)
-    readonly switcher: _angular_core.Signal<KbqButton>;
+    readonly switcher: Signal<KbqButton>;
     protected readonly titleId: string;
     trigger: KbqNotificationCenterTrigger;
     updateClassMap(placement: string, customClass: string, size: KbqPopUpSizeValues): void;
@@ -116,16 +113,16 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
 export class KbqNotificationCenterService {
     constructor();
     readonly changes: Observable<void>;
-    readonly errorMode: BehaviorSubject<boolean>;
-    readonly groupedItems: Observable<KbqNotificationsGroup[]>;
-    readonly hasMore: BehaviorSubject<boolean>;
+    readonly errorMode: Signal<boolean>;
+    readonly groupedItems: Signal<KbqNotificationsGroup[]>;
+    readonly hasMore: Signal<boolean>;
     hideToast(item: KbqNotificationItem): void;
     get isEmpty(): boolean;
     get items(): KbqNotificationItem[];
     set items(values: KbqNotificationItem[]);
-    readonly loadingMode: BehaviorSubject<boolean>;
-    readonly loadingMore: BehaviorSubject<boolean>;
-    readonly loadMoreErrorMode: BehaviorSubject<boolean>;
+    readonly loadingMode: Signal<boolean>;
+    readonly loadingMore: Signal<boolean>;
+    readonly loadMoreErrorMode: Signal<boolean>;
     readonly onDelete: Subject<KbqNotificationDeleteEvent>;
     readonly onNextPage: Subject<void>;
     readonly onRead: BehaviorSubject<KbqNotificationItem | null>;
@@ -140,8 +137,8 @@ export class KbqNotificationCenterService {
     setLoadingMore(value: boolean): void;
     setLoadMoreErrorMode(value: boolean): void;
     setSilentMode(value: boolean): void;
-    readonly silentMode: BehaviorSubject<boolean>;
-    readonly unreadItemsCounter: Observable<string>;
+    readonly silentMode: Signal<boolean>;
+    readonly unreadItemsCounter: Signal<string>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqNotificationCenterService, never>;
     // (undocumented)
@@ -153,7 +150,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     constructor();
     arrow: boolean;
     readonly backdropClass: _angular_core.InputSignal<string>;
-    closingActions(): rxjs.Observable<void | CdkScrollable | MouseEvent>;
+    closingActions(): Observable<void | CdkScrollable | MouseEvent>;
     container: HTMLElement;
     readonly containerInput: _angular_core.InputSignal<HTMLElement | undefined>;
     content: string | TemplateRef<unknown>;
@@ -188,7 +185,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     stickToWindow: KbqStickToWindowPlacementValues;
     readonly stickToWindowInput: _angular_core.InputSignal<"top" | "right" | "left" | "bottom" | undefined>;
     trigger: string;
-    get unreadItemsCounter(): rxjs.Observable<string>;
+    get unreadItemsCounter(): Signal<string>;
     updateClassMap(newPlacement?: string): void;
     updateData(): void;
     updatePosition(reapplyPosition?: boolean): void;

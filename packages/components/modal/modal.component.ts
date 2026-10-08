@@ -152,7 +152,17 @@ export class KbqModalComponent<T = any, R = any>
 
     private readonly _kbqClosable = signal(true);
 
-    kbqMask = true;
+    // A signal, so that moving the mask between stacked modals needs no `markForCheck()` of either one.
+    get kbqMask(): boolean {
+        return this._kbqMask();
+    }
+
+    set kbqMask(value: boolean) {
+        this._kbqMask.set(value);
+    }
+
+    private readonly _kbqMask = signal(true);
+
     kbqMaskClosable = false;
     kbqMaskStyle: object;
     kbqBodyStyle: object;
@@ -218,7 +228,16 @@ export class KbqModalComponent<T = any, R = any>
     // A signal: the control service moves the mask between modals while another modal's view is being checked.
     private readonly _maskAnimationClassMap = signal<object | null>(null);
 
-    modalAnimationClassMap: object | null;
+    get modalAnimationClassMap(): object | null {
+        return this._modalAnimationClassMap();
+    }
+
+    set modalAnimationClassMap(value: object | null) {
+        this._modalAnimationClassMap.set(value);
+    }
+
+    private readonly _modalAnimationClassMap = signal<object | null>(null);
+
     // The origin point that animation based on
     transformOrigin = '0px 0px 0px';
 
@@ -255,7 +274,7 @@ export class KbqModalComponent<T = any, R = any>
 
     // Indicate whether this dialog should hidden
     get hidden(): boolean {
-        return !this.kbqVisible && !this.animationState;
+        return !this.kbqVisible && !this.animationState();
     }
 
     private focusedElementBeforeOpen: HTMLElement | null;
@@ -265,7 +284,7 @@ export class KbqModalComponent<T = any, R = any>
     // Handle the reference when using kbqContent as Component
     private contentComponentRef: ComponentRef<T>;
     // Current animation state
-    private animationState: AnimationState;
+    private readonly animationState = signal<AnimationState>(null);
     private container: HTMLElement | OverlayRef;
 
     kbqGetContainer: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) = () => this.overlay.create();
@@ -714,7 +733,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     private changeAnimationState(state: AnimationState) {
-        this.animationState = state;
+        this.animationState.set(state);
 
         this.animateMaskTo(state);
 
@@ -727,11 +746,8 @@ export class KbqModalComponent<T = any, R = any>
             this.modalAnimationClassMap = null;
         }
 
-        if (this.contentComponentRef) {
-            this.contentComponentRef.changeDetectorRef.markForCheck();
-        } else {
-            this.changeDetector.markForCheck();
-        }
+        // The content component is the consumer's view, which may rely on an animation step to be refreshed.
+        this.contentComponentRef?.changeDetectorRef.markForCheck();
     }
 
     private animateTo(isVisible: boolean): Promise<any> {

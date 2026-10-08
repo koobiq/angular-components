@@ -97,11 +97,9 @@ export class KbqModalControlService {
                 setTimeout(() => {
                     modal.getInstance().animateMaskTo(null);
                     modal.getInstance().kbqMask = false;
-                    modal.markForCheck();
                 }, MODAL_ANIMATE_DURATION);
 
                 modal.getInstance().animateMaskTo('leave');
-                modal.markForCheck();
             });
 
             // On close, restore other masks with enter animation, then reset animation state after it completes
@@ -111,14 +109,11 @@ export class KbqModalControlService {
                         modalRef.getInstance().animateMaskTo(null);
                         modalRef.getInstance().kbqMask = false;
                         modal.getInstance().animateMaskTo(null);
-                        modal.markForCheck();
                     }, MODAL_ANIMATE_DURATION);
 
                     modalRef.getInstance().animateMaskTo('leave');
                     modal.getInstance().kbqMask = true;
                     modal.getInstance().animateMaskTo('enter');
-
-                    modal.markForCheck();
                 });
             });
         }

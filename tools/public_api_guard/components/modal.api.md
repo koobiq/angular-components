@@ -189,7 +189,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     kbqGetContainer: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef);
     readonly kbqGetContainerInput: _angular_core.InputSignal<NonNullable<HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null | undefined> | undefined>;
     // (undocumented)
-    kbqMask: boolean;
+    get kbqMask(): boolean;
+    set kbqMask(value: boolean);
     // (undocumented)
     kbqMaskClosable: boolean;
     readonly kbqMaskClosableInput: _angular_core.InputSignal<boolean | undefined>;
@@ -245,7 +246,8 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     get maskAnimationClassMap(): object | null;
     set maskAnimationClassMap(value: object | null);
     // (undocumented)
-    modalAnimationClassMap: object | null;
+    get modalAnimationClassMap(): object | null;
+    set modalAnimationClassMap(value: object | null);
     // (undocumented)
     readonly modalContainer: _angular_core.Signal<ElementRef<any>>;
     // (undocumented)

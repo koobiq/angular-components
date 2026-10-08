@@ -90,13 +90,13 @@
                 [kbqNotificationCenterPanelClass]="'example-notification-center-panel'"
             >
                 <i
-                    kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
+                    kbq-icon="{{ notificationService.silentMode() ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
                     color="contrast"
                 ></i>
                 <div kbq-navbar-title>Notifications</div>
-                @if (trigger.unreadItemsCounter | async; as unreadItems) {
+                @if (trigger.unreadItemsCounter(); as unreadItems) {
                     <kbq-badge
-                        [badgeColor]="notificationService.silentMode.value ? 'fade-contrast' : 'error'"
+                        [badgeColor]="notificationService.silentMode() ? 'fade-contrast' : 'error'"
                         [compact]="true"
                     >
                         {{ unreadItems }}

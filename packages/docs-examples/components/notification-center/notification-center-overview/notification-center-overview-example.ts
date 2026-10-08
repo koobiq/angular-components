@@ -1,5 +1,4 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -55,7 +54,6 @@ enum NavbarIcItems {
         KbqTopBarModule,
         KbqButtonModule,
         KbqDropdownModule,
-        AsyncPipe,
         KbqLinkModule,
         LuxonDateModule,
         KbqFormattersModule

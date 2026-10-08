@@ -79,7 +79,9 @@ class ToastButtonWrapper {
     selector: 'toast-template-wrapper',
     imports: [KbqToastModule],
     template: `
-        <ng-template #tpl><div>tpl</div></ng-template>
+        <ng-template #tpl let-data>
+            <div>{{ data.title }}</div>
+        </ng-template>
     `
 })
 class ToastTemplateWrapper {
@@ -222,6 +224,16 @@ describe('KbqToastService', () => {
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelectorAll('kbq-toast').length).toBe(1);
+        });
+
+        it('renders a toast shown outside change detection on the next scheduled render', async () => {
+            showRendered();
+
+            const toast = service.show(createToastData({ title: 'Later' }));
+
+            await appRef.whenStable();
+
+            expect(hostOf(toast).querySelector('.kbq-toast__title')!.textContent).toContain('Later');
         });
     });
 
@@ -391,6 +403,29 @@ describe('KbqToastService', () => {
             expect(service.toasts.length).toBe(1);
             await settle();
         });
+
+        it('reports the hovered toast, and the stack as hovered', () => {
+            const toast = showRendered();
+
+            dispatchMouseEvent(hostOf(toast), 'mouseenter');
+
+            expect(toast.ref.instance.hovered()).toBe(true);
+            expect(service.hovered()).toBe(true);
+
+            dispatchMouseEvent(hostOf(toast), 'mouseleave');
+
+            expect(toast.ref.instance.hovered()).toBe(false);
+            expect(service.hovered()).toBe(false);
+        });
+
+        it('reports the focused toast, and the stack as focused', () => {
+            const toast = showRendered();
+
+            focusMonitor.focusVia(closeButtonOf(toast), 'keyboard');
+
+            expect(toast.ref.instance.focused()).toBe(true);
+            expect(service.focused()).toBe(true);
+        });
     });
 
     describe('read state', () => {
@@ -526,6 +561,14 @@ describe('KbqToastService', () => {
 
             fixture.detectChanges();
             template = fixture.componentInstance.template();
+        });
+
+        it('renders a template shown outside change detection on the next scheduled render', async () => {
+            const { ref } = service.showTemplate(createToastData({ title: 'Later' }), template, 0);
+
+            await appRef.whenStable();
+
+            expect(ref.rootNodes[0].textContent).toBe('Later');
         });
 
         it('passes the toast data as the template context', () => {

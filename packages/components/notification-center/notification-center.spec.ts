@@ -639,15 +639,7 @@ describe('KbqNotificationCenter', () => {
     describe('unparsable dates', () => {
         beforeEach(() => setUpDefaultFixture());
 
-        const readGroups = (): KbqNotificationsGroup[] => {
-            let result: KbqNotificationsGroup[] = [];
-
-            getService()
-                .groupedItems.subscribe((groups) => (result = groups))
-                .unsubscribe();
-
-            return result;
-        };
+        const readGroups = (): KbqNotificationsGroup[] => getService().groupedItems();
 
         it('groups a value the adapter cannot parse instead of throwing', () => {
             getService().items = [createItem('a', '04.07.2026')];
@@ -698,12 +690,13 @@ describe('KbqNotificationCenter', () => {
 
             service.items = [createItem('a', '2025-10-01T12:00:00.000Z'), createItem('b', '2025-10-02T12:00:00.000Z')];
 
-            let first: KbqNotificationsGroup[] = [];
-            let second: KbqNotificationsGroup[] = [];
+            const first = service.groupedItems();
 
-            service.groupedItems.subscribe((groups) => (first = groups)).unsubscribe();
-            service.groupedItems.subscribe((groups) => (second = groups)).unsubscribe();
+            service.items = [...service.items];
 
+            const second = service.groupedItems();
+
+            expect(second).not.toBe(first);
             expect(first.map((group) => group.id)).toEqual(second.map((group) => group.id));
             expect(new Set(first.map((group) => group.id)).size).toBe(2);
         });
@@ -821,7 +814,7 @@ describe('KbqNotificationCenter', () => {
 
             expect(emitSpy).toHaveBeenCalled();
             // retry must reset the error state itself so the spinner and the error row can never coexist
-            expect(service.loadMoreErrorMode.value).toBe(false);
+            expect(service.loadMoreErrorMode()).toBe(false);
         });
 
         it('keeps paging when a completed load leaves the list still at the bottom', async () => {
@@ -906,15 +899,14 @@ describe('KbqNotificationCenter', () => {
             let emissions = 0;
             const subscription = service.changes.subscribe(() => emissions++);
 
-            const afterSubscribe = emissions;
+            // A ping reports changes, so subscribing replays nothing.
+            expect(emissions).toBe(0);
 
             service.setLoadingMore(true);
-            expect(emissions).toBe(afterSubscribe + 1);
-
-            const afterLoadingMore = emissions;
+            expect(emissions).toBe(1);
 
             service.setLoadMoreErrorMode(true);
-            expect(emissions).toBe(afterLoadingMore + 1);
+            expect(emissions).toBe(2);
 
             subscription.unsubscribe();
         });
@@ -1456,22 +1448,14 @@ describe('KbqNotificationCenter', () => {
             fixture.detectChanges();
             await vi.runOnlyPendingTimersAsync();
 
-            expect(service.silentMode.value).toBe(true);
+            expect(service.silentMode()).toBe(true);
         });
     });
 
     describe('unreadItemsCounter', () => {
         beforeEach(() => setUpDefaultFixture());
 
-        const readCounter = (): string => {
-            let value = '';
-
-            getService()
-                .unreadItemsCounter.subscribe((counter) => (value = counter))
-                .unsubscribe();
-
-            return value;
-        };
+        const readCounter = (): string => getService().unreadItemsCounter();
 
         const createItems = (count: number) => Array.from({ length: count }, (_, index) => createItem(`item-${index}`));
 
@@ -1499,10 +1483,29 @@ describe('KbqNotificationCenter', () => {
             expect(readCounter()).toBe('99+');
         });
 
-        it('is shared between subscribers instead of re-created on every read', () => {
+        it('is shared between readers instead of re-created on every read', () => {
             const service = getService();
 
             expect(service.unreadItemsCounter).toBe(service.unreadItemsCounter);
+        });
+
+        it('follows a notification being read, although the list itself does not change', () => {
+            const service = getService();
+            const item = createItem('a');
+
+            service.items = [item, createItem('b')];
+
+            expect(readCounter()).toBe('2');
+
+            TestBed.inject(KbqToastService).read.next({ id: item.id });
+
+            expect(readCounter()).toBe('1');
+        });
+
+        it('is read by the trigger', () => {
+            getService().items = [createItem('a')];
+
+            expect(componentInstance.trigger().unreadItemsCounter()).toBe('1');
         });
     });
 
@@ -1581,16 +1584,8 @@ describe('KbqNotificationCenter', () => {
     describe('ordering', () => {
         beforeEach(() => setUpDefaultFixture());
 
-        // groupedItems is built from a BehaviorSubject, so it emits synchronously on subscribe.
-        const readTitles = (service: KbqNotificationCenterService): string[][] => {
-            let titles: string[][] = [];
-
-            service.groupedItems
-                .subscribe((groups) => (titles = groups.map((group) => group.items.map((item) => String(item.title)))))
-                .unsubscribe();
-
-            return titles;
-        };
+        const readTitles = (service: KbqNotificationCenterService): string[][] =>
+            service.groupedItems().map((group) => group.items.map((item) => String(item.title)));
 
         it('always orders groups and items from newest to oldest, regardless of input order', () => {
             const service = getService();
@@ -1945,13 +1940,8 @@ describe('KbqNotificationCenter', () => {
             // Every heading is produced by DateFormatter, which re-localizes at runtime.
             const cyrillic = /[а-яё]/i;
 
-            const readTitles = (service: KbqNotificationCenterService): string[] => {
-                let titles: string[] = [];
-
-                service.groupedItems.subscribe((groups) => (titles = groups.map((group) => group.title))).unsubscribe();
-
-                return titles;
-            };
+            const readTitles = (service: KbqNotificationCenterService): string[] =>
+                service.groupedItems().map((group) => group.title);
 
             it('renders every heading in the active locale, groups built before the change included', () => {
                 const service = TestBed.inject(KbqNotificationCenterService);
@@ -1977,23 +1967,18 @@ describe('KbqNotificationCenter', () => {
                 expect(titles.some((title) => cyrillic.test(title))).toBe(false);
             });
 
-            it('re-emits the grouped items when the locale changes', () => {
+            it('regroups the items when the locale changes', () => {
                 const service = TestBed.inject(KbqNotificationCenterService);
-                const emissions: string[][] = [];
 
                 service.items = [createItem('a', '2026-07-04T12:00:00.000Z')];
 
-                const subscription = service.groupedItems.subscribe((groups) =>
-                    emissions.push(groups.map((group) => group.title))
-                );
+                const before = readTitles(service);
 
                 localeService.setLocale('en-US');
-                subscription.unsubscribe();
 
-                // A rendered panel holds one `| async` subscription: without a re-emission the
-                // headings would only catch up on the next change to the list.
-                expect(emissions).toHaveLength(2);
-                expect(emissions[1]).not.toEqual(emissions[0]);
+                // A rendered panel reads the signal: without a recomputation the headings would only
+                // catch up on the next change to the list.
+                expect(readTitles(service)).not.toEqual(before);
             });
         });
     });
@@ -2014,11 +1999,7 @@ describe('KbqNotificationCenter with the Moment adapter', () => {
             { title: 'b', date: '2026-07-11T12:00:00.000Z' }
         ];
 
-        let groups: KbqNotificationsGroup[] = [];
-
-        service.groupedItems.subscribe((value) => (groups = value)).unsubscribe();
-
-        expect(groups).toHaveLength(2);
+        expect(service.groupedItems()).toHaveLength(2);
     });
 });
 

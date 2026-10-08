@@ -8,6 +8,7 @@ import {
     ElementRef,
     Injector,
     OnDestroy,
+    Signal,
     TemplateRef,
     ViewEncapsulation,
     inject,
@@ -22,7 +23,6 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { BehaviorSubject } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { KBQ_TOAST_STACK, KbqToastData, KbqToastStyle } from './toast.type';
 
@@ -71,8 +71,8 @@ const assertiveStyles: string[] = [KbqToastStyle.Warning, KbqToastStyle.Error];
         '[class.kbq-toast_leaving]': 'leavingHeight() !== null',
         '[style.--kbq-toast-leaving-height.px]': 'leavingHeight()',
         '[class.kbq-animations-disabled]': 'animationsDisabled',
-        '(mouseenter)': 'hovered.next(true)',
-        '(mouseleave)': 'hovered.next(false)',
+        '(mouseenter)': 'setHovered(true)',
+        '(mouseleave)': 'setHovered(false)',
         '(keydown.esc)': 'close()'
     },
     hostDirectives: [KbqReadStateDirective]
@@ -94,8 +94,14 @@ export class KbqToastComponent implements OnDestroy {
     /** Height the exit animation collapses from, set once the toast leaves. */
     protected readonly leavingHeight = signal<number | null>(null);
 
-    readonly hovered = new BehaviorSubject<boolean>(false);
-    readonly focused = new BehaviorSubject<boolean>(false);
+    private readonly _hovered = signal(false);
+    private readonly _focused = signal(false);
+
+    /** Whether the pointer is over the toast. */
+    readonly hovered: Signal<boolean> = this._hovered.asReadonly();
+
+    /** Whether the toast or an element inside it holds the focus. */
+    readonly focused: Signal<boolean> = this._focused.asReadonly();
 
     id = id++;
 
@@ -122,13 +128,11 @@ export class KbqToastComponent implements OnDestroy {
     private alreadyRead = false;
 
     get isFocusedOrHovered(): boolean {
-        return this.hovered.getValue() || this.focused.getValue();
+        return this.hovered() || this.focused();
     }
 
     constructor() {
         this.runFocusMonitor(inject(DestroyRef));
-
-        this.hovered.pipe(takeUntilDestroyed()).subscribe((hovered) => this.stack.setHovered(this.id, hovered));
 
         // `read` is a `BehaviorSubject` re-emitted by every hover long enough to count as read, while a toast
         // is read exactly once.
@@ -160,6 +164,12 @@ export class KbqToastComponent implements OnDestroy {
         kbqAfterAnimations(() => this.elementRef.nativeElement, done, this.injector);
     }
 
+    /** @docs-private */
+    protected setHovered(hovered: boolean): void {
+        this._hovered.set(hovered);
+        this.stack.setHovered(this.id, hovered);
+    }
+
     private markAsRead(): void {
         if (this.alreadyRead) {
             return;
@@ -178,7 +188,7 @@ export class KbqToastComponent implements OnDestroy {
             .monitor(this.elementRef.nativeElement, true)
             .pipe(takeUntilDestroyed(destroyRef))
             .subscribe((origin: FocusOrigin) => {
-                this.focused.next(!!origin);
+                this._focused.set(!!origin);
                 this.stack.setFocused(this.id, origin);
             });
     }
