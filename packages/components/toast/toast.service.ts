@@ -10,9 +10,11 @@ import {
     Injector,
     NgZone,
     OnDestroy,
+    Signal,
     TemplateRef,
     Type,
-    inject
+    inject,
+    signal
 } from '@angular/core';
 import {
     BehaviorSubject,
@@ -85,11 +87,14 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
     readonly read = new BehaviorSubject<KbqToastData | null>(null);
 
-    /** Whether at least one toast is hovered. Derived from the stack — pushing into it changes nothing. */
-    readonly hovered = new BehaviorSubject<boolean>(false);
+    private readonly _hovered = signal(false);
+    private readonly _focused = signal(false);
 
-    /** Whether at least one toast holds the focus. Derived from the stack — pushing into it changes nothing. */
-    readonly focused = new BehaviorSubject<boolean>(false);
+    /** Whether at least one toast is hovered. */
+    readonly hovered: Signal<boolean> = this._hovered.asReadonly();
+
+    /** Whether at least one toast holds the focus. */
+    readonly focused: Signal<boolean> = this._focused.asReadonly();
 
     private readonly stackSize = new BehaviorSubject<number>(0);
 
@@ -281,8 +286,8 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
         this.wasPaused = paused;
 
-        this.hovered.next(this.hoveredToasts.size > 0);
-        this.focused.next(this.focusedToasts.size > 0);
+        this._hovered.set(this.hoveredToasts.size > 0);
+        this._focused.set(this.focusedToasts.size > 0);
     }
 
     /** Focus must not fall back to the document body when the toast holding it goes away. */

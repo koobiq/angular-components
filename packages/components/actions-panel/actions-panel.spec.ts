@@ -187,6 +187,23 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getActionsPanelContainerElement()).toBeNull();
     });
 
+    it('should put the container into the visible state on open and take it out on close', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const { componentInstance } = fixture;
+
+        componentInstance.openFromTemplate();
+        await fixture.whenStable();
+
+        const container = getActionsPanelContainerElement();
+
+        expect(container.classList).toContain('kbq-actions-panel-container_visible');
+
+        componentInstance.close();
+        await fixture.whenStable();
+
+        expect(container.classList).not.toContain('kbq-actions-panel-container_visible');
+    });
+
     it('should apply width', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
 

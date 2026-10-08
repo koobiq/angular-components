@@ -190,7 +190,17 @@ export class KbqModalComponent<T = any, R = any>
 
     private readonly _kbqClosable = signal(true);
 
-    kbqMask = true;
+    // A signal, so that moving the mask between stacked modals needs no `markForCheck()` of either one.
+    get kbqMask(): boolean {
+        return this._kbqMask();
+    }
+
+    set kbqMask(value: boolean) {
+        this._kbqMask.set(value);
+    }
+
+    private readonly _kbqMask = signal(true);
+
     kbqMaskClosable = false;
     kbqMaskStyle: object;
     kbqBodyStyle: object;
@@ -273,7 +283,16 @@ export class KbqModalComponent<T = any, R = any>
     // A signal: the control service moves the mask between modals while another modal's view is being checked.
     private readonly _maskAnimationClassMap = signal<object | null>(null);
 
-    modalAnimationClassMap: object | null;
+    get modalAnimationClassMap(): object | null {
+        return this._modalAnimationClassMap();
+    }
+
+    set modalAnimationClassMap(value: object | null) {
+        this._modalAnimationClassMap.set(value);
+    }
+
+    private readonly _modalAnimationClassMap = signal<object | null>(null);
+
     // The origin point that animation based on
     transformOrigin = '0px 0px 0px';
 
@@ -302,105 +321,7 @@ export class KbqModalComponent<T = any, R = any>
 
     // Indicate whether this dialog should hidden
     get hidden(): boolean {
-        return !this.kbqVisible() && !this.animationState;
-    }
-
-    /**
-     * Footer buttons with their defaults filled in. `kbqFooter` reports what was bound; this is what
-     * the template renders, so the input is never written back over.
-     */
-    protected readonly footer = computed(() => {
-        const footer = this.kbqFooter();
-
-        return Array.isArray(footer) ? this.formatModalButtons(footer) : footer;
-    });
-
-    /** @docs-private */
-    protected readonly titleKind = computed(() => slotKind(this.kbqTitle()));
-    /** @docs-private */
-    protected readonly captionKind = computed(() => slotKind(this.kbqCaption()));
-    /** @docs-private */
-    protected readonly contentKind = computed(() => slotKind(this.kbqContent()));
-    /** @docs-private */
-    protected readonly footerKind = computed(() => slotKind(this.footer()));
-
-    /** Whether the dialog renders a footer — a predefined button is enough, `kbqFooter` is not required. */
-    protected get hasFooter(): boolean {
-        return this.composedFooter || !!(this.kbqFooter() || this.kbqOkText() || this.kbqCancelText());
-    }
-
-    /** Id of the element naming the dialog, or `null` when there is no title to point at. */
-    protected get ariaLabelledBy(): string | null {
-        return this.hasTitle() ? this.titleId : null;
-    }
-
-    /** Accessible name for a dialog with no title. Never rendered next to `aria-labelledby`. */
-    protected get ariaLabel(): string | null {
-        return this.hasTitle() ? null : this.kbqAriaLabel() || null;
-    }
-
-    /** Id of the caption describing the dialog, or `null` when no caption is rendered. */
-    protected get ariaDescribedBy(): string | null {
-        return this.hasCaption() ? this.captionId : null;
-    }
-
-    /**
-     * Whether this dialog is covered by another one. `aria-modal` only hides the page behind the
-     * topmost dialog, so every dialog below it is taken out of the accessibility tree and the tab
-     * order explicitly.
-     */
-    protected get inert(): boolean {
-        const top = this.modalControl.topVisibleModal();
-
-        return !!top && top !== this;
-    }
-
-    /** Phase of the open/close animation, which the class list and the hidden state follow. */
-    private readonly animationPhase = signal<AnimationState>(null);
-
-    /** Full set of classes for the dialog element. */
-    protected readonly containerClasses = computed(() => {
-        const phase = this.animationPhase();
-        const classes = ['kbq-modal-container', this.kbqClassName(), `kbq-modal_${this.kbqSize()}`];
-
-        if (phase) classes.push(`zoom-${phase}`, `zoom-${phase}-active`);
-
-        return classes.filter(Boolean).join(' ');
-    });
-
-    /**
-     * Phase of the dim layer's animation. Follows the dialog's own phase, except while
-     * `KbqModalControlService` fades the layer of a covered dialog out on its own.
-     */
-    private readonly maskPhase = signal<AnimationState>(null);
-
-    /**
-     * Whether the dim layer is actually painted: the input, overridden while another dialog covers
-     * this one. Seeded from the input so re-binding `[kbqMask]` still takes effect.
-     *
-     * The override exists because `KbqModalControlService` turns the layer of the dialogs underneath
-     * a newly opened one off and back on. That orchestration belongs in the dialog, keyed on
-     * `KbqModalControlService.topVisibleModal()` the way `inert` already is.
-     */
-    private readonly maskEnabled = linkedSignal(() => this.kbqMask());
-
-    /** Classes for the dim layer. */
-    protected readonly maskAnimationClasses = computed(() => {
-        const phase = this.maskPhase();
-
-        return phase ? `fade-${phase} fade-${phase}-active` : '';
-    });
-
-    /**
-     * Progress state the predefined buttons actually render: the input, overridden while a handler's
-     * returned promise is pending. Seeded from the input so re-binding it still takes effect.
-     */
-    private readonly okLoading = linkedSignal(() => this.kbqOkLoading());
-    private readonly cancelLoading = linkedSignal(() => this.kbqCancelLoading());
-
-    /** @docs-private */
-    protected loading(triggerType: 'ok' | 'cancel'): boolean {
-        return triggerType === 'ok' ? this.okLoading() : this.cancelLoading();
+        return !this.kbqVisible && !this.animationState();
     }
 
     private focusedElementBeforeOpen: HTMLElement | null;
@@ -427,7 +348,7 @@ export class KbqModalComponent<T = any, R = any>
     // Handle the reference when using kbqContent as Component
     private contentComponentRef: ComponentRef<T>;
     // Current animation state
-    private animationState: AnimationState;
+    private readonly animationState = signal<AnimationState>(null);
     private container: HTMLElement | OverlayRef;
 
     kbqGetContainer: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) = () => this.overlay.create();
@@ -1036,15 +957,21 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     private changeAnimationState(state: AnimationState) {
-        this.animationState = state;
-        this.animationPhase.set(state);
+        this.animationState.set(state);
+
         this.animateMaskTo(state);
 
-        if (this.contentComponentRef) {
-            this.contentComponentRef.changeDetectorRef.markForCheck();
+        if (state) {
+            this.modalAnimationClassMap = {
+                [`zoom-${state}`]: true,
+                [`zoom-${state}-active`]: true
+            };
         } else {
-            this.changeDetector.markForCheck();
+            this.modalAnimationClassMap = null;
         }
+
+        // The content component is the consumer's view, which may rely on an animation step to be refreshed.
+        this.contentComponentRef?.changeDetectorRef.markForCheck();
     }
 
     /**

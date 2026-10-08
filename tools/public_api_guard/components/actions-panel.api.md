@@ -66,7 +66,7 @@ export class KbqActionsPanelConfig<D = unknown> {
 export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
     readonly animationDone: Subject<"visible" | "hidden">;
     protected readonly animationsDisabled: boolean;
-    protected animationState: 'void' | 'visible' | 'hidden';
+    protected readonly animationState: i0.WritableSignal<"void" | "visible" | "hidden">;
     protected close(): void;
     protected readonly config: KbqActionsPanelConfig<any>;
     protected _contentAttached(): void;

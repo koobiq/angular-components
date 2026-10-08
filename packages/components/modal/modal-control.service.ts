@@ -195,12 +195,10 @@ export class KbqModalControlService {
             visibleModalsWithMask.forEach((modal) => {
                 setTimeout(() => {
                     modal.getInstance().animateMaskTo(null);
-                    modal.getInstance().setMaskEnabled(false);
-                    modal.markForCheck();
+                    modal.getInstance().kbqMask = false;
                 }, MODAL_ANIMATE_DURATION);
 
                 modal.getInstance().animateMaskTo('leave');
-                modal.markForCheck();
             });
 
             // On close, restore other masks with enter animation, then reset animation state after it completes
@@ -217,13 +215,10 @@ export class KbqModalControlService {
                 visibleModalsWithMask.forEach((modal) => {
                     setTimeout(() => {
                         modal.getInstance().animateMaskTo(null);
-                        modal.markForCheck();
                     }, MODAL_ANIMATE_DURATION);
 
                     modal.getInstance().setMaskEnabled(true);
                     modal.getInstance().animateMaskTo('enter');
-
-                    modal.markForCheck();
                 });
             });
 

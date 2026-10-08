@@ -1,6 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -66,7 +65,6 @@ enum NavbarIcItems {
         KbqButtonModule,
         KbqIconModule,
         KbqBadgeModule,
-        AsyncPipe,
         LuxonDateModule,
         KbqFormattersModule,
         KbqDropdownModule,
@@ -129,7 +127,7 @@ export class NotificationCenterInfiniteScrollExample {
     }
 
     private appendPage(page: number): void {
-        if (this.notificationService.loadingMore.value || !this.notificationService.hasMore.value) {
+        if (this.notificationService.loadingMore() || !this.notificationService.hasMore()) {
             return;
         }
 

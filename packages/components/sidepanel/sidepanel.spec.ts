@@ -199,11 +199,11 @@ describe('KbqSidepanelService', () => {
     it('should set the proper animation states', () => {
         const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
 
-        expect(sidepanelRef.containerInstance.animationState).toBe('visible');
+        expect(sidepanelRef.containerInstance.animationState()).toBe('visible');
 
         sidepanelRef.close();
 
-        expect(sidepanelRef.containerInstance.animationState).toBe('hidden');
+        expect(sidepanelRef.containerInstance.animationState()).toBe('hidden');
     });
 
     it('should assign a unique id to each sidepanel', () => {
