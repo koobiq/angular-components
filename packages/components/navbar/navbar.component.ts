@@ -378,6 +378,9 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     protected onKeyDown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
 
+        // The origin of the last focus event may be a click, and an item takes the DOM focus only from the keyboard.
+        this.keyManager.setFocusOrigin('keyboard');
+
         if (!this.eventFromInput(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) {
             event.preventDefault();
         }

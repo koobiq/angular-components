@@ -8,6 +8,7 @@ import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     dispatchKeyboardEvent,
+    DOWN_ARROW,
     ENTER,
     enUSLocaleData,
     KBQ_LOCALE_SERVICE,
@@ -59,6 +60,17 @@ const dispatchGlobalShortcut = (keyCode: number): void => {
 
     window.dispatchEvent(event);
 };
+
+/** A primary-button click. CDK reads a `mousedown` with `buttons` or `detail` of 0 as a screen reader's. */
+const clickWithMouse = (element: HTMLElement): void => {
+    element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, buttons: 1, detail: 1 }));
+    element.focus();
+    element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, detail: 1 }));
+    element.click();
+};
+
+const focusableItemElements = (fixture: ComponentFixture<unknown>): HTMLElement[] =>
+    fixture.debugElement.queryAll(By.directive(KbqNavbarFocusableItem)).map(({ nativeElement }) => nativeElement);
 
 /**
  * jsdom performs no layout, so every geometry property reads as 0. These stubs stand in for the browser's
@@ -1453,6 +1465,50 @@ describe('KbqNavbar', () => {
 
             expect(next).not.toBe(first);
             expect(next?.hasFocus).toBe(true);
+        });
+
+        it('arrow keys should move real focus, with its keyboard ring, from an item focused by a click', async () => {
+            const fixture = TestBed.createComponent(TestItemApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const [first, second] = focusableItemElements(fixture);
+
+            clickWithMouse(first);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(first);
+            expect(first.classList).toContain('cdk-mouse-focused');
+
+            dispatchKeyboardEvent(first, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(second);
+            expect(second.classList).toContain('cdk-keyboard-focused');
+        });
+
+        it('arrow keys should move real focus from an item of the vertical navbar focused by a click', async () => {
+            const fixture = TestBed.createComponent(TestVerticalApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const [first, second] = focusableItemElements(fixture);
+
+            clickWithMouse(first);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(first);
+            expect(first.classList).toContain('cdk-mouse-focused');
+
+            dispatchKeyboardEvent(first, 'keydown', DOWN_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(second);
+            expect(second.classList).toContain('cdk-keyboard-focused');
         });
     });
 
