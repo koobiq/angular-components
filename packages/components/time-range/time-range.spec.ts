@@ -1024,6 +1024,19 @@ describe('KbqTimeRange', () => {
             expect(configuration().editor.cancel).toBe(enUSLocaleData.timeRange.editor.cancel);
         });
     });
+
+    describe('Title as form field control', () => {
+        it('should be named by the caption of its own form field', () => {
+            const { nativeElement } = setup(TestComponentWithLabeledTitles);
+            const controls = Array.from<HTMLElement>(nativeElement.querySelectorAll('kbq-time-range-title-as-control'));
+            const captions = Array.from<HTMLElement>(nativeElement.querySelectorAll('.kbq-form-field__label'));
+
+            expect(new Set(captions.map(({ id }) => id)).size).toBe(2);
+            expect(controls.map((control) => control.getAttribute('aria-labelledby'))).toEqual(
+                captions.map(({ id }) => id)
+            );
+        });
+    });
 });
 
 @Component({
@@ -1211,3 +1224,20 @@ export class TestComponentWithValueCorrection {
     }
 })
 export class TestTimeRangeCustomOption {}
+
+@Component({
+    imports: [KbqTimeRangeModule, KbqFormFieldModule],
+    template: `
+        <ng-template #title>
+            <kbq-form-field>
+                <kbq-label>Period</kbq-label>
+                <kbq-time-range-title-as-control>Title</kbq-time-range-title-as-control>
+            </kbq-form-field>
+        </ng-template>
+
+        <kbq-time-range [titleTemplate]="title" />
+        <kbq-time-range [titleTemplate]="title" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWithLabeledTitles {}

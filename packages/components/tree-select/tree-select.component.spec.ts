@@ -419,6 +419,34 @@ class TreeSelectWithAriaName {
     }
 }
 
+/** Tree-select named by the caption of its wrapping `kbq-form-field`. */
+@Component({
+    selector: 'tree-select-with-form-field-label',
+    imports: [KbqTreeModule, KbqTreeSelectModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Food</kbq-label>
+            <kbq-tree-select>
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class TreeSelectWithFormFieldLabel {
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(TREE_DATA, 0);
+    }
+}
+
 /**
  * Tree-select rendered WITHOUT a wrapping `kbq-form-field` — mirrors how the filter-bar tree-select
  * pipes render the control bare. Used to guard option hover-to-focus in that setup (#DS-5302).
@@ -2273,6 +2301,26 @@ describe('KbqTreeSelect', () => {
 
                     expect(namedSelect.getAttribute('aria-labelledby')).toBe('external-label');
                     expect(namedSelect.hasAttribute('aria-label')).toBe(false);
+                }));
+
+                // A tree-select is not a native labelable element, so the form-field renders a `<span>`
+                // caption it `for` cannot point at; the control is named from the label side instead.
+                it('should be named by the form-field caption', fakeAsync(() => {
+                    fixture.destroy();
+
+                    const labeledFixture = TestBed.createComponent(TreeSelectWithFormFieldLabel);
+
+                    labeledFixture.detectChanges();
+                    flush();
+
+                    const labeledSelect = getTreeSelectElement(labeledFixture);
+                    const caption: HTMLElement = labeledFixture.debugElement.query(
+                        By.css('.kbq-form-field__label')
+                    ).nativeElement;
+
+                    expect(caption.tagName).toBe('SPAN');
+                    expect(caption.getAttribute('for')).toBeNull();
+                    expect(labeledSelect.getAttribute('aria-labelledby')).toBe(caption.id);
                 }));
 
                 it('should have no axe violations when named only by the placeholder', async () => {

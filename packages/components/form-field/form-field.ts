@@ -1,5 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentChecked,
     AfterContentInit,
@@ -91,7 +92,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
 /** Container for form controls that applies styling and behavior. */
 @Component({
     selector: 'kbq-form-field',
-    imports: [],
+    imports: [NgTemplateOutlet],
     templateUrl: 'form-field.html',
     styleUrls: [
         'form-field.scss',
@@ -291,6 +292,15 @@ export class KbqFormField
      * (`kbq-select`, for one) has to point back at the label through `aria-labelledby` instead.
      */
     readonly labelId = computed(() => (this.hasLabel() ? `${this.control().id}-label` : null));
+
+    /**
+     * Whether the control is a native labelable element, so that a `<label>` can associate with it.
+     *
+     * A custom control (`kbq-select`, for one) reports `isNativeLabelSupported: false`; the caption is then rendered
+     * as a `<span>` instead of a `<label>`, because a label that neither has a `for` matching a labelable
+     * element nor wraps one is invalid, and the control is named through `aria-labelledby` instead.
+     */
+    readonly isNativeLabelSupported = computed(() => this.control().isNativeLabelSupported !== false);
 
     /**
      * Whether the form-field contains kbq-password-hint.
