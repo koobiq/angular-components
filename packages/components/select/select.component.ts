@@ -1783,7 +1783,11 @@ export class KbqSelect
      * @docs-private
      */
     onContainerClick() {
-        this.focus();
+        // The click that opened the panel reaches the form field after the select. With zone.js the panel has
+        // rendered and focused its active option by then, and the focus stays in the panel while it is open.
+        if (!this.panelOpen) {
+            this.focus();
+        }
     }
 
     /**

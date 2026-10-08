@@ -3489,6 +3489,31 @@ describe('KbqSelect', () => {
                 }
             );
 
+            // With zone.js, change detection runs after every listener of the click: between the select's, which
+            // opens the panel, and the form field's around it. The listener below stands in for that render.
+            it('should keep the focus on the active option when the opening click reaches the form field', async () => {
+                getSelectElement(fixture).addEventListener('click', () => fixture.detectChanges());
+
+                trigger.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(true);
+                expect(document.activeElement).toBe(overlayContainerElement.querySelector('kbq-option'));
+            });
+
+            it('should focus the closed select on a click on the form field container', () => {
+                const container: HTMLElement = getFormFieldDebugElement(fixture).query(
+                    By.css('.kbq-form-field__container')
+                ).nativeElement;
+
+                container.click();
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(document.activeElement).toBe(getSelectElement(fixture));
+            });
+
             it('should set the width of the overlay based on the trigger', async () => {
                 const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
 
@@ -3887,8 +3912,7 @@ describe('KbqSelect', () => {
                     await vi.runOnlyPendingTimersAsync();
                 }
 
-                // Double it, since open and close events are involved
-                expect(focusSpyFn).toHaveBeenCalledTimes(closeAndFocusKeys.length * 2);
+                expect(focusSpyFn).toHaveBeenCalledTimes(closeAndFocusKeys.length);
             });
         });
 
