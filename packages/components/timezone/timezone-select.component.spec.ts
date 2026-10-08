@@ -11,6 +11,7 @@ import {
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KbqOptionModule,
     KbqOptionSelectionChange,
+    KbqOverlayLayer,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
     KbqPanelMinWidth,
@@ -1028,5 +1029,47 @@ describe('KbqTimezoneSelect', () => {
 
             expect(fixture.componentInstance.select().timezoneLocaleConfiguration().searchPlaceholder).toBe('Where?');
         });
+    });
+
+    describe('overlay layer', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqTimezoneModule, KbqOverlayLayer],
+            template: `
+                <div kbqOverlayLayer>
+                    <kbq-form-field>
+                        <kbq-timezone-select placeholder="Timezones">
+                            @for (zone of zones; track zone) {
+                                <kbq-timezone-option [value]="zone.id" [timezone]="zone" />
+                            }
+                        </kbq-timezone-select>
+                    </kbq-form-field>
+                </div>
+            `
+        })
+        class TimezoneSelectInOverlayLayer {
+            zones = groupedZones[0].zones;
+
+            readonly select = viewChild.required(KbqTimezoneSelect);
+        }
+
+        beforeEach(() => configureTestingModule([TimezoneSelectInOverlayLayer]));
+
+        it('should render the panel of a timezone select inside the element into its overlay layer', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TimezoneSelectInOverlayLayer);
+
+            fixture.detectChanges();
+
+            const select = fixture.componentInstance.select();
+
+            select.open();
+            fixture.detectChanges();
+            flush();
+
+            const overlayHost = select.panel()!.nativeElement.closest('.cdk-overlay-pane').parentElement;
+
+            expect(overlayHost.parentElement).toBe(
+                fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer')
+            );
+        }));
     });
 });

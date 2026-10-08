@@ -17,6 +17,7 @@ import {
     dispatchKeyboardEvent,
     ESCAPE,
     KbqOptionModule,
+    KbqOverlayLayer,
     ruRULocaleData,
     TAB
 } from '@koobiq/components/core';
@@ -2256,6 +2257,21 @@ describe('KbqInlineEdit', () => {
             expect(offsetAtAttach).toBe(-48);
         });
     });
+
+    describe('overlay layer', () => {
+        it('should render the edit panel of an inline edit inside the element into its overlay layer', () => {
+            const fixture = setup(TestInOverlayLayer);
+
+            getInlineEditDebugElement(fixture.debugElement).nativeElement.click();
+            fixture.detectChanges();
+
+            const overlayHost = getOverlayElement()!.parentElement!;
+
+            expect(overlayHost.parentElement).toBe(
+                fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer')
+            );
+        });
+    });
 });
 
 /** Field bag shared by the hosts below. Not a directive: nothing here needs Angular to see it. */
@@ -3033,4 +3049,22 @@ export class TestWithInteractiveAncestor {
 export class TestWithProgrammaticMode {
     readonly mode = signal<KbqInlineEditMode>('view');
     readonly value = model('value');
+}
+
+@Component({
+    selector: 'name',
+    imports: [FormsModule, KbqInputModule, KbqInlineEditModule, KbqOverlayLayer],
+    template: `
+        <div kbqOverlayLayer>
+            <kbq-inline-edit>
+                <div kbqInlineEditViewMode>{{ value }}</div>
+                <kbq-form-field kbqInlineEditEditMode>
+                    <input kbqInput [(ngModel)]="value" />
+                </kbq-form-field>
+            </kbq-inline-edit>
+        </div>
+    `
+})
+export class TestInOverlayLayer {
+    value = 'value';
 }

@@ -222,9 +222,7 @@ Collapsing the panel around an empty result uses the CSS `:has()` selector, supp
 
 ### Layering
 
-By default, the dropdown menu appears above the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/top-bar), and above adjacent elements in other cases.
-
-To prevent the menu from overlapping a required element during scrolling and instead have it hidden beneath it, adjust its position using a custom z-index or offset parameters.
+By default, the dropdown menu appears above the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/top-bar). To have it slide under them while the page scrolls, as in the example below, mark the content area with `kbqOverlayLayer` — see [Panels under a sticky header](/en/components/core/overview#panels-under-a-sticky-header).
 
 <Example id="select-scrolling-and-layering" />
 

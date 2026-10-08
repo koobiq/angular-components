@@ -3,7 +3,7 @@ import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, TemplateRef, ViewEncapsulation, inject, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOptionModule, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
+import { KbqOptionModule, KbqOverlayLayer, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -58,6 +58,7 @@ export class DevToastComponent extends KbqToastComponent {
         KbqPopoverModule,
         KbqToolTipModule,
         KbqOptionModule,
+        KbqOverlayLayer,
         KbqSelectModule,
         NgTemplateOutlet
     ],

@@ -37,6 +37,7 @@ import {
     defaultOffsetY,
     DOWN_ARROW,
     ENTER,
+    KBQ_OVERLAY_LAYERS,
     kbqGetPanelWidthOrigin,
     kbqIsElementOrigin,
     KbqOverlayOrigin,
@@ -142,6 +143,7 @@ const positionMap = {
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSiblingPopup {
     private overlay = inject(Overlay);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private viewContainerRef = inject(ViewContainerRef);
     private scrollStrategy = inject(KBQ_DROPDOWN_SCROLL_STRATEGY);
@@ -634,6 +636,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
             this.subscribeToPositions(config.positionStrategy as FlexibleConnectedPositionStrategy);
             this.overlayRef = this.overlay.create(config);
+            // The trigger, not `origin`: a point origin has no place in the DOM.
+            this.overlayLayers.adopt(this.overlayRef, this.elementRef.nativeElement);
 
             // Consume the `keydownEvents` in order to prevent them from going to another overlay.
             // Ideally we'd also have our keyboard event logic in here, however doing so will

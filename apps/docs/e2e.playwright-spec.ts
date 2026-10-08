@@ -240,7 +240,7 @@ test.describe('docs app', () => {
     });
 
     // Pop-ups are layered against the page they are on, so these examples frame the page of another example.
-    for (const component of ['popover', 'select']) {
+    for (const component of ['dropdown', 'popover', 'select']) {
         test(`frames the layering demo into the ${component} overview`, async ({ page }) => {
             const errors = collectErrors(page);
 
@@ -257,6 +257,7 @@ test.describe('docs app', () => {
             const demo = examplePage.locator(`${component}-scrolling-and-layering-page-example`);
 
             await expect(demo.locator('kbq-top-bar')).toBeVisible();
+            await expect(demo.locator('[kbqOverlayLayer]')).toHaveCount(1);
             await expect(frame.locator('docs-navbar')).toHaveCount(0);
 
             // The demo is sized to the frame, which has no room for the padding of the other examples.
@@ -268,6 +269,51 @@ test.describe('docs app', () => {
             expect(errors).toEqual([]);
         });
     }
+
+    test('slides the panels of live examples under the site header', async ({ page }) => {
+        const errors = collectErrors(page);
+
+        await page.goto('/en/components/dropdown/overview');
+        await waitForHydration(page);
+
+        const viewer = page.locator('docs-component-viewer');
+        const pane = viewer.locator('.kbq-overlay-layer .cdk-overlay-pane');
+
+        await viewer.locator('dropdown-overview-example button').first().click();
+        await expect(pane).toHaveCount(1);
+
+        const header = (await page.locator('docs-navbar').boundingBox())!;
+        const headerBottom = header.y + header.height;
+        const overlap = header.height / 2;
+
+        // Scrolls the article until the top of the panel is half the header's height under it.
+        await viewer.evaluate(
+            (element, top) => element.scrollBy({ top, behavior: 'instant' }),
+            Math.round((await pane.boundingBox())!.y - headerBottom + overlap)
+        );
+        await expect
+            .poll(async () => Math.round((await pane.boundingBox())!.y))
+            .toBe(Math.round(headerBottom - overlap));
+
+        const paneBox = (await pane.boundingBox())!;
+        const paintedAt = (y: number) =>
+            page.evaluate(
+                ({ x, y }) => {
+                    const element = document.elementFromPoint(x, y);
+
+                    return element?.closest('docs-navbar')
+                        ? 'header'
+                        : element?.closest('.cdk-overlay-pane')
+                          ? 'pane'
+                          : null;
+                },
+                { x: paneBox.x + paneBox.width / 2, y }
+            );
+
+        expect(await paintedAt(headerBottom - overlap / 2)).toBe('header');
+        expect(await paintedAt(headerBottom + overlap / 2)).toBe('pane');
+        expect(errors).toEqual([]);
+    });
 
     test('switches the interface locale and rewrites the URL', async ({ page }) => {
         await page.goto('/en/components/alert/overview');

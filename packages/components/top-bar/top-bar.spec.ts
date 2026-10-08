@@ -1,5 +1,9 @@
-import { Component, Type } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { Component, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqOverlayLayer } from '@koobiq/components/core';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
 import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
 
@@ -78,6 +82,19 @@ describe(KbqTopBar.name, () => {
 
             expect(getTopBar(fixture).hasAttribute('aria-label')).toBeFalsy();
         });
+    });
+
+    it('should keep the panels opened from it in the application-wide container inside an overlay layer', () => {
+        TestBed.configureTestingModule({ imports: [NoopAnimationsModule] });
+
+        const fixture = createFixture(InOverlayLayerTestApp);
+
+        fixture.componentInstance.trigger().open();
+        fixture.detectChanges();
+
+        expect(document.querySelector('.cdk-overlay-pane')!.closest('.cdk-overlay-container')).toBe(
+            TestBed.inject(OverlayContainer).getContainerElement()
+        );
     });
 
     it('should have no axe violations for a populated bar', async () => {
@@ -177,3 +194,21 @@ class DynamicPlacementTestApp {
     `
 })
 class PopulatedTestApp {}
+
+@Component({
+    imports: [KbqTopBar, KbqOverlayLayer, KbqDropdownModule],
+    template: `
+        <div kbqOverlayLayer>
+            <kbq-top-bar>
+                <button [kbqDropdownTriggerFor]="dropdown">Actions</button>
+            </kbq-top-bar>
+
+            <kbq-dropdown #dropdown="kbqDropdown">
+                <button kbq-dropdown-item>Rename</button>
+            </kbq-dropdown>
+        </div>
+    `
+})
+class InOverlayLayerTestApp {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+}
