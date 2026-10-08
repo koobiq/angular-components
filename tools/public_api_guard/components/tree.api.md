@@ -380,7 +380,6 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
 
 // @public
 export class KbqTreeNodeToggleBaseDirective<T> {
-    constructor();
     // (undocumented)
     get disabled(): boolean;
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean, unknown>;
