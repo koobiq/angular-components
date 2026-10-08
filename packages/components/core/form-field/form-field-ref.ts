@@ -44,7 +44,6 @@ export interface KbqFormFieldControlRef<T = unknown> {
 export interface KbqFormFieldRef {
     /** @see KbqFormField.control */
     readonly control: Signal<KbqFormFieldControlRef>;
-    canCleanerClearByEsc: boolean;
     /** Use when KbqFormField is in an overlay container. */
     inOverlay: ModelSignal<boolean>;
     focus(): void;

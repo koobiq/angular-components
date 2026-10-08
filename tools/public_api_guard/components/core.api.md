@@ -1058,9 +1058,6 @@ export function getKbqSelectNonFunctionValueError(): Error;
 // @public (undocumented)
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
-// @public @deprecated
-export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
-
 // @public
 export function getSafeTriangleVertices(origin: KbqPoint, targetRect: DOMRect): KbqTriangle;
 
@@ -3049,9 +3046,6 @@ export type KbqDeepPartial<T> = T extends (...args: never[]) => unknown ? T : T 
 // @public
 export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 
-// @public @deprecated (undocumented)
-export const KbqDefaultThemes: KbqThemeConfig[];
-
 // @public
 export function kbqDelayLoadingIndicator(options?: KbqDelayLoadingIndicatorOptions): MonoTypeOperatorFunction<boolean>;
 
@@ -3287,8 +3281,6 @@ export interface KbqFormFieldControlRef<T = unknown> {
 
 // @public @deprecated
 export interface KbqFormFieldRef {
-    // (undocumented)
-    canCleanerClearByEsc: boolean;
     // (undocumented)
     readonly control: Signal<KbqFormFieldControlRef>;
     // (undocumented)
@@ -4619,17 +4611,6 @@ export interface KbqTextQueryOptions {
     triggers?: readonly string[];
 }
 
-// @public @deprecated (undocumented)
-export interface KbqTheme {
-    className: string;
-    // (undocumented)
-    colorScheme?: KbqThemeColorScheme;
-    // (undocumented)
-    name: string;
-    // @deprecated (undocumented)
-    selected?: boolean;
-}
-
 // @public
 export type KbqThemeColorScheme = 'light' | 'dark';
 
@@ -4681,8 +4662,6 @@ export type KbqThemeMode = 'auto' | KbqThemeColorScheme;
 // @public
 export enum KbqThemeNames {
     Dark = "dark",
-    // @deprecated (undocumented)
-    Default = "light",
     Light = "light"
 }
 
@@ -4692,8 +4671,6 @@ export const kbqThemeProvider: <T extends KbqThemeConfig = KbqThemeConfig>(confi
 // @public
 export enum KbqThemeSelector {
     Dark = "kbq-dark",
-    // @deprecated (undocumented)
-    Default = "kbq-light",
     Light = "kbq-light"
 }
 
@@ -5993,26 +5970,6 @@ export enum ThemePalette {
     Success = "success",
     // (undocumented)
     Warning = "warning"
-}
-
-// @public @deprecated (undocumented)
-export class ThemeService<T extends KbqTheme = KbqTheme> implements OnDestroy {
-    constructor();
-    // @deprecated (undocumented)
-    readonly current: BehaviorSubject<T | null>;
-    // @deprecated (undocumented)
-    getTheme(): T | null;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // @deprecated (undocumented)
-    setTheme(value: T | number): void;
-    // @deprecated (undocumented)
-    get themes(): T[];
-    set themes(items: T[]);
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<ThemeService<any>, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ThemeService<any>>;
 }
 
 // @public (undocumented)

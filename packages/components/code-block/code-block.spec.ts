@@ -120,18 +120,6 @@ class ValuelessAttributesCodeBlock {
 @Component({
     imports: [KbqCodeBlockModule],
     template: `
-        <kbq-code-block [codeFiles]="codeFiles" [canLoad]="true" [files]="files" />
-    `,
-    changeDetection: ChangeDetectionStrategy.Default
-})
-class DeprecatedAliasesCodeBlock {
-    codeFiles: KbqCodeBlockFile[] = [{ content: 'from codeFiles', filename: 'deprecated.html' }];
-    files: KbqCodeBlockFile[] = [];
-}
-
-@Component({
-    imports: [KbqCodeBlockModule],
-    template: `
         <kbq-code-block [files]="files" (hideTabsChange)="emissions.push($event)" />
     `,
     changeDetection: ChangeDetectionStrategy.Default
@@ -1269,34 +1257,6 @@ describe(KbqCodeBlock.name, () => {
         // attribute passes into `true`, which a `model()` could not do.
         expect(codeBlock.softWrap()).toBe(true);
         expect(codeBlock.canDownload()).toBe(true);
-    });
-
-    it('should turn the download button on through the deprecated canLoad attribute', () => {
-        const fixture = createComponent(DeprecatedAliasesCodeBlock);
-        const { debugElement } = fixture;
-        const codeBlock = geCodeBlockDebugElement(debugElement).componentInstance as KbqCodeBlock;
-
-        fixture.detectChanges();
-
-        expect(codeBlock.canDownload()).toBe(true);
-        expect(getDownloadButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
-    });
-
-    it('should fall back to the deprecated codeFiles input while files is empty', () => {
-        const fixture = createComponent(DeprecatedAliasesCodeBlock);
-        const { componentInstance, debugElement } = fixture;
-        const codeBlock = geCodeBlockDebugElement(debugElement).componentInstance as KbqCodeBlock;
-
-        fixture.detectChanges();
-
-        expect(codeBlock.files()).toEqual(componentInstance.codeFiles);
-        expect(getCodeElement(debugElement).textContent).toContain(componentInstance.codeFiles[0].content);
-
-        // `files` used to be written by the `codeFiles` setter, so whichever came last in the template won.
-        componentInstance.files = [{ content: 'from files', filename: 'files.html' }];
-        fixture.detectChanges();
-
-        expect(codeBlock.files()).toEqual(componentInstance.files);
     });
 
     it('should render nothing rather than crash on an empty file list', () => {

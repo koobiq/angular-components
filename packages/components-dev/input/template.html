@@ -2,7 +2,7 @@
 <hr />
 
 <div>
-    <kbq-toggle [(ngModel)]="disabled" (ngModelChange)="$event ? control.disable() : control.enable()">
+    <kbq-toggle [(ngModel)]="disabled" (ngModelChange)="setControlsDisabled($event)">
         make all controls disabled
     </kbq-toggle>
 </div>
@@ -16,38 +16,44 @@
     <br />
     <br />
 
-    <div class="kbq-subheading">With password hints INSIDE kbqFormField</div>
+    <div class="kbq-subheading">With password hints</div>
     <kbq-form-field>
-        <input
-            kbqInputPassword
-            placeholder="Number MaxMin Step"
-            [ngModel]="password"
-            [required]="true"
-            [disabled]="disabled()"
-        />
+        <input kbqInputPassword placeholder="Пароль" [formControl]="passwordControl" />
         <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
 
-        <kbq-password-hint [max]="15" [min]="8" [rule]="passwordRules.Length">От 8 до 15 символов</kbq-password-hint>
+        <kbq-reactive-password-hint
+            [hasError]="passwordControl.hasError('minLength') || passwordControl.hasError('maxLength')"
+        >
+            От 8 до 15 символов
+        </kbq-reactive-password-hint>
 
         @if (true) {
-            <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
+            <kbq-reactive-password-hint [hasError]="passwordControl.hasError('minUppercase')">
+                Заглавная латинская буква
+            </kbq-reactive-password-hint>
         }
 
-        <kbq-password-hint [rule]="passwordRules.LowerLatin">Строчная латинская буква</kbq-password-hint>
+        <kbq-reactive-password-hint [hasError]="passwordControl.hasError('minLowercase')">
+            Строчная латинская буква
+        </kbq-reactive-password-hint>
 
-        <kbq-password-hint [rule]="passwordRules.Digit">Цифра</kbq-password-hint>
+        <kbq-reactive-password-hint [hasError]="passwordControl.hasError('minNumber')">
+            Цифра
+        </kbq-reactive-password-hint>
 
-        <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols">
-            Только латинские буквы, цифры, пробелы и спецсимволы
-        </kbq-password-hint>
+        <kbq-reactive-password-hint [hasError]="passwordControl.hasError('minSpecial')">
+            Спецсимвол
+        </kbq-reactive-password-hint>
 
-        <kbq-password-hint [regex]="customRegex" [rule]="passwordRules.Custom">User Rule</kbq-password-hint>
+        @if (passwordControl.hasError('required')) {
+            <kbq-error>Введите пароль</kbq-error>
+        }
     </kbq-form-field>
 
     <br />
     <br />
 
-    <div class="kbq-subheading">With password hints OUTSIDE kbqFormField</div>
+    <div class="kbq-subheading">Without password hints</div>
     <div>
         <kbq-form-field>
             <input
@@ -61,7 +67,7 @@
         </kbq-form-field>
     </div>
 
-    <kbq-form-field #formField>
+    <kbq-form-field>
         <input
             kbqInputPassword
             placeholder="Подтвердите пароль"
@@ -71,36 +77,6 @@
         />
         <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
     </kbq-form-field>
-
-    <kbq-password-hint [max]="15" [min]="8" [rule]="passwordRules.Length" [viewFormField]="formField">
-        От 8 до 15 символов
-    </kbq-password-hint>
-
-    <kbq-password-hint [rule]="passwordRules.UpperLatin" [viewFormField]="formField">
-        Заглавная латинская буква
-    </kbq-password-hint>
-
-    <kbq-password-hint [rule]="passwordRules.LowerLatin" [viewFormField]="formField">
-        Строчная латинская буква
-    </kbq-password-hint>
-
-    <kbq-password-hint [rule]="passwordRules.Digit" [viewFormField]="formField">Цифра</kbq-password-hint>
-
-    <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols" [viewFormField]="formField">
-        Только латинские буквы, цифры, пробелы и спецсимволы
-    </kbq-password-hint>
-
-    <kbq-password-hint [regex]="customRegex" [rule]="passwordRules.Custom" [viewFormField]="formField">
-        User Rule
-    </kbq-password-hint>
-
-    <kbq-password-hint
-        [checkRule]="atLeastNCapitalLetters(5)"
-        [rule]="passwordRules.Custom"
-        [viewFormField]="formField"
-    >
-        не менее 5 заглавных букв
-    </kbq-password-hint>
 
     <header>With clear-button:</header>
 

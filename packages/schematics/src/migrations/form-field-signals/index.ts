@@ -8,7 +8,6 @@ import { forEachClass, parseTemplate } from '../../utils/typescript';
 import {
     attributeRewrites,
     NULLABILITY_CHANGED_MEMBERS,
-    PROTECTED_MEMBERS,
     QUERY_LIST_MEMBERS,
     QUERY_LIST_ONLY_API,
     READ_ONLY_INPUT_MEMBERS,
@@ -148,11 +147,11 @@ function classifyAccess(
 ): void {
     const parent = node.parent;
 
-    // Already migrated: `x.hint()` (call) or `x.regex.set(...)` — leave alone (idempotent).
+    // Already migrated: `x.hint()` (call) or `x.disabled.set(...)` — leave alone (idempotent).
     if (ts.isCallExpression(parent) && parent.expression === node) return;
     if (ts.isPropertyAccessExpression(parent) && parent.expression === node && parent.name.text === 'set') return;
 
-    // Write target: `x.regex = RHS`.
+    // Write target: `x.disabled = RHS`.
     if (
         ts.isBinaryExpression(parent) &&
         parent.left === node &&
@@ -200,7 +199,6 @@ function collectAccessEdits(sourceFile: ts.SourceFile, target: Target, receivers
 interface ReceiverWarnings {
     queryListApi: Set<string>;
     nullability: Set<string>;
-    protectedAccess: Set<string>;
     readOnlyInputWrites: Set<string>;
     readOnlyQueryWrites: Set<string>;
 }
@@ -208,7 +206,6 @@ interface ReceiverWarnings {
 const emptyWarnings = (): ReceiverWarnings => ({
     queryListApi: new Set<string>(),
     nullability: new Set<string>(),
-    protectedAccess: new Set<string>(),
     readOnlyInputWrites: new Set<string>(),
     readOnlyQueryWrites: new Set<string>()
 });
@@ -230,10 +227,6 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, rece
         if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
             const name = node.name.text;
             const onReceiver = inReceiverScope(node, sourceFile, receivers);
-
-            if (onReceiver && PROTECTED_MEMBERS.includes(name)) {
-                warnings.protectedAccess.add(name);
-            }
 
             if (onReceiver && NULLABILITY_CHANGED_MEMBERS.includes(name)) {
                 warnings.nullability.add(name);
@@ -284,7 +277,6 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
 
         warnings.queryListApi.forEach((value) => merged.queryListApi.add(value));
         warnings.nullability.forEach((value) => merged.nullability.add(value));
-        warnings.protectedAccess.forEach((value) => merged.protectedAccess.add(value));
         warnings.readOnlyInputWrites.forEach((value) => merged.readOnlyInputWrites.add(value));
         warnings.readOnlyQueryWrites.forEach((value) => merged.readOnlyQueryWrites.add(value));
     }
@@ -304,14 +296,6 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
             `[${MIGRATION}] ${filePath}`,
             `  \`${[...merged.nullability].join('`, `')}\` now returns \`undefined\` instead of \`null\` when absent.`,
             `  Strict comparisons against \`null\` no longer match — use a truthiness check or \`== null\`.`
-        ]);
-    }
-
-    if (merged.protectedAccess.size > 0) {
-        logMessage(context.logger, [
-            `[${MIGRATION}] ${filePath}`,
-            `  These members are now \`protected\` and can't be read from outside the component: ` +
-                `${[...merged.protectedAccess].join(', ')}. Refactor to avoid reading them.`
         ]);
     }
 
@@ -524,12 +508,10 @@ function logWarnings(context: SchematicContext, filePath: string, content: strin
 /** A file is a form-field consumer if it names one of the migrated symbols, imports the package or renders a control. */
 function referencesFormField(content: string): boolean {
     return (
-        /\bKbq(FormField|Hint|Error|PasswordHint|ReactivePasswordHint|Cleaner|PasswordToggle|Stepper|Trim|A11yLocaleConfiguration)\b/.test(
+        /\bKbq(FormField|Hint|Error|ReactivePasswordHint|Cleaner|PasswordToggle|Stepper|Trim|A11yLocaleConfiguration)\b/.test(
             content
         ) ||
-        /\b(mixinColor|CanColorCtor|PasswordRules|KBQ_FORM_FIELD_REF|regExpPasswordValidator|hasPasswordStrengthError|kbqA11yLocaleConfigurationProvider)\b/.test(
-            content
-        ) ||
+        /\b(mixinColor|CanColorCtor|KBQ_FORM_FIELD_REF|kbqA11yLocaleConfigurationProvider)\b/.test(content) ||
         /\bKbq(Select|TreeSelect|TimezoneSelect|TagList|Input|InputPassword|Textarea|Timepicker|DatepickerInput|FormFieldControl|ErrorStateTracker|TagTextControl|IconErrorStateContext)\b/.test(
             content
         ) ||

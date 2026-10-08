@@ -110,9 +110,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     get croppedText(): string;
     get hasCroppedText(): boolean;
     get isLink(): boolean;
-    // @deprecated
-    readonly longTitle: i0.InputSignal<boolean | undefined>;
-    protected readonly longTitleEnabled: Signal<boolean>;
+    protected readonly longTitleEnabled: i0.WritableSignal<boolean>;
     protected readonly nativeElement: HTMLElement;
     protected readonly navbarFocusableItem: KbqNavbarFocusableItem;
     ngAfterContentInit(): void;
@@ -123,7 +121,7 @@ export class KbqNavbarBrand implements AfterContentInit {
     readonly tooltip: KbqTooltipTrigger;
     readonly tooltipDisabled: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "longTitle": { "alias": "longTitle"; "required": false; "isSignal": true; }; "collapsedText": { "alias": "collapsedText"; "required": false; "isSignal": true; }; "tooltipDisabled": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["title"], ["*"], true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "tooltipText"; "kbqTooltipClass": "kbqTooltipClass"; "kbqTooltipColor": "kbqTooltipColor"; "kbqTooltipOffset": "kbqTooltipOffset"; "kbqTrigger": "kbqTrigger"; "kbqPlacement": "kbqPlacement"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; "kbqVisible": "kbqVisible"; }; outputs: { "kbqVisibleChange": "kbqVisibleChange"; "kbqPlacementChange": "kbqPlacementChange"; }; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarBrand, "kbq-navbar-brand, [kbq-navbar-brand]", ["kbqNavbarBrand"], { "collapsedText": { "alias": "collapsedText"; "required": false; "isSignal": true; }; "tooltipDisabled": { "alias": "kbqTooltipDisabled"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["title"], ["*"], true, [{ directive: typeof i1.KbqTooltipTrigger; inputs: { "kbqTooltip": "tooltipText"; "kbqTooltipClass": "kbqTooltipClass"; "kbqTooltipColor": "kbqTooltipColor"; "kbqTooltipOffset": "kbqTooltipOffset"; "kbqTrigger": "kbqTrigger"; "kbqPlacement": "kbqPlacement"; "kbqEnterDelay": "kbqEnterDelay"; "kbqLeaveDelay": "kbqLeaveDelay"; "kbqVisible": "kbqVisible"; }; outputs: { "kbqVisibleChange": "kbqVisibleChange"; "kbqPlacementChange": "kbqPlacementChange"; }; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarBrand, never>;
 }
@@ -192,8 +190,6 @@ export class KbqNavbarItem implements AfterContentInit {
     readonly collapsedText: i0.InputSignal<string>;
     get croppedText(): string;
     getCollapsibleWidth(): number;
-    // @deprecated
-    getTitleWidth(): number;
     get hasCroppedText(): boolean;
     get hasDropDownTrigger(): boolean;
     readonly icon: Signal<KbqIcon | undefined>;
@@ -274,14 +270,12 @@ export class KbqNavbarRectangleElement {
 }
 
 // @public (undocumented)
-export class KbqNavbarTitle implements AfterViewInit {
+export class KbqNavbarTitle {
     getOuterElementWidth(): number;
     protected readonly isBrowser: boolean;
     get isClamped(): boolean;
     get isOverflown(): boolean;
     protected readonly nativeElement: HTMLElement;
-    ngAfterViewInit(): void;
-    outerElementWidth: number;
     get text(): string;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNavbarTitle, "kbq-navbar-title, [kbq-navbar-title]", never, {}, {}, never, never, true, never>;

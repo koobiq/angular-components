@@ -2,7 +2,6 @@ import { A11yModule, FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import {
     AfterViewInit,
@@ -146,14 +145,6 @@ export class KbqCodeBlockTabLinkContent {}
 export class KbqCodeBlock implements AfterViewInit {
     private readonly copyButtonTooltip = viewChild<KbqTooltipTrigger>('copyButtonTooltip');
     private readonly defaultOptions = inject(KBQ_CODE_BLOCK_DEFAULT_OPTIONS, { optional: true });
-    /**
-     * Reference to the scrollable code content.
-     *
-     * @deprecated Use `scrollTo` method instead, will be removed from public API (mark as private) in the next major release.
-     *
-     * @docs-private
-     */
-    readonly scrollableCodeContent = viewChild.required(CdkScrollable);
 
     /** @docs-private */
     private readonly highlight = viewChild(KbqCodeBlockHighlight);
@@ -239,25 +230,14 @@ export class KbqCodeBlock implements AfterViewInit {
     });
 
     /**
-     * Backing input of the deprecated `canLoad` attribute.
-     *
-     * @deprecated Will be removed in next major release, use `canDownload` instead.
-     * @docs-private
-     */
-    readonly canLoadInput = input(false, { alias: 'canLoad', transform: booleanAttribute });
-
-    /**
      * Backing input of `canDownload`.
      *
      * @docs-private
      */
     readonly canDownloadInput = input(false, { alias: 'canDownload', transform: booleanAttribute });
 
-    /**
-     * Added download code button. Either attribute turns it on: `canLoad` used to write into
-     * `canDownload`, and which of the two won depended on the order they sat in the template.
-     */
-    readonly canDownload = linkedSignal(() => this.canDownloadInput() || this.canLoadInput());
+    /** Added download code button. */
+    readonly canDownload = linkedSignal(() => this.canDownloadInput());
 
     /** Added copy code button. */
     readonly canCopy = input<boolean, unknown>(true, { transform: booleanAttribute });
@@ -268,30 +248,15 @@ export class KbqCodeBlock implements AfterViewInit {
     });
 
     /**
-     * Backing input of the deprecated `codeFiles` attribute.
-     *
-     * @deprecated Will be removed in next major release, use `files` instead.
-     * @docs-private
-     */
-    readonly codeFilesInput = input<KbqCodeBlockFile[]>([], { alias: 'codeFiles' });
-
-    /**
      * Backing input of `files`.
      *
      * @docs-private
      */
     readonly filesInput = input<KbqCodeBlockFile[]>([], { alias: 'files' });
 
-    // TODO: mark as `required` once `codeFiles` is removed.
-    /**
-     * Files to display. `codeFiles` fills in while `files` is empty: the deprecated attribute used to
-     * write into the same field, and which of the two won depended on the order in the template.
-     */
-    readonly files = linkedSignal(() => {
-        const files = this.filesInput();
-
-        return files.length > 0 ? files : this.codeFilesInput();
-    });
+    // TODO: mark as `required`.
+    /** Files to display. */
+    readonly files = linkedSignal(() => this.filesInput());
 
     /**
      * Backing input of `activeFileIndex`. `numberAttribute` yields NaN for anything not cleanly numeric,

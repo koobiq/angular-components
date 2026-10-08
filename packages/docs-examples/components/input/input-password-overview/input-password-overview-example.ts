@@ -1,7 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { PasswordRules } from '@koobiq/components/form-field';
+import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
+
+/** Allows printable ASCII only: latin letters, digits, spaces and special characters. */
+const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | null =>
+    typeof value === 'string' && /[^\x20-\x7E]/.test(value) ? { latinAndSpecialSymbols: true } : null;
 
 /**
  * @title Input password
@@ -10,45 +14,42 @@ import { KbqInputModule } from '@koobiq/components/input';
     selector: 'input-password-overview-example',
     imports: [
         KbqInputModule,
-        FormsModule
+        ReactiveFormsModule
     ],
     template: `
         <kbq-form-field style="width: 250px">
-            <input kbqInputPassword [(ngModel)]="value" />
+            <input kbqInputPassword [formControl]="control" />
 
             <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
 
-            <kbq-password-hint [max]="15" [min]="8" [rule]="passwordRules.Length">
+            <kbq-reactive-password-hint [hasError]="control.hasError('minLength') || control.hasError('maxLength')">
                 От 8 до 15 символов
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
+            <kbq-reactive-password-hint [hasError]="control.hasError('minUppercase')">
+                Заглавная латинская буква
+            </kbq-reactive-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.LowerLatin">Строчная латинская буква</kbq-password-hint>
+            <kbq-reactive-password-hint [hasError]="control.hasError('minLowercase')">
+                Строчная латинская буква
+            </kbq-reactive-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.Digit">Цифра</kbq-password-hint>
+            <kbq-reactive-password-hint [hasError]="control.hasError('minNumber')">Цифра</kbq-reactive-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols">
+            <kbq-reactive-password-hint [hasError]="control.hasError('latinAndSpecialSymbols')">
                 Только латинские буквы, цифры, пробелы и спецсимволы
-            </kbq-password-hint>
-
-            <kbq-password-hint [checkRule]="atLeastNCapitalLetters(5)" [rule]="passwordRules.Custom">
-                Не менее 5 заглавных букв
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InputPasswordOverviewExample {
-    passwordRules = PasswordRules;
-
-    value = '';
-
-    atLeastNCapitalLetters = (n: number): ((value: string) => boolean) => {
-        return (value: string) => {
-            const found = value.match(/[A-Z]/g);
-
-            return !!found && found!.length >= n;
-        };
-    };
+    readonly control = new FormControl('', [
+        PasswordValidators.minLength(8),
+        PasswordValidators.maxLength(15),
+        PasswordValidators.minUppercase(1),
+        PasswordValidators.minLowercase(1),
+        PasswordValidators.minNumber(1),
+        latinAndSpecialSymbols
+    ]);
 }

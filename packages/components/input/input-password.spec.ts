@@ -1,10 +1,10 @@
 ﻿import { F8 } from '@angular/cdk/keycodes';
-import { Component, Provider, Type, viewChild } from '@angular/core';
+import { Component, Provider, Type } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent } from '@koobiq/components/core';
-import { KbqFormFieldModule, KbqPasswordHint, KbqPasswordToggle, PasswordRules } from '@koobiq/components/form-field';
+import { dispatchFakeEvent, PasswordValidators } from '@koobiq/components/core';
+import { KbqFormFieldModule, KbqPasswordToggle, KbqReactivePasswordHint } from '@koobiq/components/form-field';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { KbqInputModule, KbqInputPassword } from './index';
@@ -51,84 +51,24 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
                 [kbqTooltipHidden]="'Показать пароль'"
             />
 
-            <kbq-password-hint [rule]="passwordRules.Length" [min]="8" [max]="64">
-                От 8 до 64 символов
-            </kbq-password-hint>
+            <kbq-reactive-password-hint>От 8 до 64 символов</kbq-reactive-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
+            <kbq-reactive-password-hint>Заглавная латинская буква</kbq-reactive-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.LowerLatin">Строчная латинская буква</kbq-password-hint>
+            <kbq-reactive-password-hint>Строчная латинская буква</kbq-reactive-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.Digit">Цифра</kbq-password-hint>
+            <kbq-reactive-password-hint>Цифра</kbq-reactive-password-hint>
 
-            <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols">
+            <kbq-reactive-password-hint>
                 Только латинские буквы, цифры, пробелы и спецсимволы
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
         </kbq-form-field>
     `
 })
 class PasswordInputDefault {
     disabled = false;
-    passwordRules = PasswordRules;
 
     value: any = '1';
-}
-
-@Component({
-    imports: [
-        KbqInputModule,
-        FormsModule
-    ],
-    template: `
-        <kbq-form-field>
-            <input kbqInputPassword [(ngModel)]="value" />
-            <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'" [kbqTooltipHidden]="'Показать пароль'" />
-
-            <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
-                Не менее 5 букв
-            </kbq-password-hint>
-        </kbq-form-field>
-    `
-})
-class PasswordInputCustomPasswordRulesUndefined {
-    value = '1';
-    passwordRules = PasswordRules;
-    regex;
-    checkFunc;
-}
-
-@Component({
-    imports: [
-        KbqInputModule,
-        FormsModule
-    ],
-    template: `
-        <kbq-form-field>
-            <input kbqInputPassword [disabled]="disabled" [(ngModel)]="value" />
-            <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'" [kbqTooltipHidden]="'Показать пароль'" />
-
-            <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
-                Не менее 5 букв
-            </kbq-password-hint>
-        </kbq-form-field>
-    `
-})
-class PasswordInputCustomPasswordRule {
-    readonly passwordHint = viewChild.required(KbqPasswordHint);
-
-    disabled = false;
-
-    passwordRules = PasswordRules;
-
-    value: any = '1';
-
-    regex;
-
-    checkFunc = (value: string): boolean => {
-        const found = value.match(/[A-Z]/g);
-
-        return !!found && found!.length >= 5;
-    };
 }
 
 @Component({
@@ -178,17 +118,16 @@ class PasswordInputWithDynamicToggle {
             <input kbqInputPassword [formControl]="control" />
             <kbq-password-toggle />
 
-            <kbq-password-hint [rule]="passwordRules.Length" [min]="8" [max]="64">
+            <kbq-reactive-password-hint [hasError]="control.hasError('minLength')">
                 От 8 до 64 символов
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
 
             <kbq-error>Required</kbq-error>
         </kbq-form-field>
     `
 })
 class PasswordInputWithLabel {
-    readonly control = new FormControl('', Validators.required);
-    passwordRules = PasswordRules;
+    readonly control = new FormControl('', [Validators.required, PasswordValidators.minLength(8)]);
 }
 
 describe('KbqPasswordInput', () => {
@@ -270,57 +209,9 @@ describe('KbqPasswordInput', () => {
 
         fixture.detectChanges();
 
-        const kbqPasswordHints = fixture.debugElement.queryAll(By.css('.kbq-password-hint'));
+        const kbqPasswordHints = fixture.debugElement.queryAll(By.directive(KbqReactivePasswordHint));
 
         expect(kbqPasswordHints.length).toBe(5);
-    });
-
-    it('should throw Error if custom password rule selected and verification method not provided', () => {
-        // Same Angular-20 pattern as input-number's stepper test: turn off
-        // ComponentFixtureAutoDetect so the lifecycle throw originates from our
-        // explicit detectChanges() call inside the expect-to-throw wrapper.
-        vi.spyOn(console, 'error').mockImplementation(() => {});
-
-        TestBed.resetTestingModule();
-        TestBed.configureTestingModule({
-            imports: [
-                FormsModule,
-                ReactiveFormsModule,
-                KbqFormFieldModule,
-                KbqInputModule,
-                KbqToolTipModule,
-                PasswordInputCustomPasswordRulesUndefined
-            ],
-            providers: [{ provide: ComponentFixtureAutoDetect, useValue: false }]
-        }).compileComponents();
-
-        const fixture = TestBed.createComponent(PasswordInputCustomPasswordRulesUndefined);
-
-        expect(() => fixture.detectChanges()).toThrow('You should set [regex] or [checkRule] for PasswordRules.Custom');
-    });
-
-    it('should provide custom password rule via callback', async () => {
-        const fixture = createComponent(PasswordInputCustomPasswordRule);
-
-        fixture.detectChanges();
-        await fixture.whenStable();
-
-        const input = fixture.debugElement.query(By.directive(KbqInputPassword)).nativeElement;
-        const hint = () => fixture.componentInstance.passwordHint();
-        const type = (value: string) => {
-            input.value = value;
-            dispatchFakeEvent(input, 'input');
-            fixture.detectChanges();
-        };
-
-        expect(hint().customCheckRule()).toBeTruthy();
-
-        // The rule asks for at least five uppercase letters.
-        type('TestValue');
-        expect(hint().hasError).toBe(true);
-
-        type('TESTValue');
-        expect(hint().hasError).toBe(false);
     });
 
     it('should apply validation rules on blur', async () => {
@@ -393,7 +284,9 @@ describe('KbqPasswordInput', () => {
             ).nativeElement;
             const describedByIds = passwordInput.getAttribute('aria-describedby')!.split(' ');
 
-            expect(describedByIds).toHaveLength(fixture.debugElement.queryAll(By.css('kbq-password-hint')).length);
+            expect(describedByIds).toHaveLength(
+                fixture.debugElement.queryAll(By.directive(KbqReactivePasswordHint)).length
+            );
             expect(describedByIds.every((id) => !!document.getElementById(id))).toBe(true);
         });
 
