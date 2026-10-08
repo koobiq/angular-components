@@ -85,15 +85,10 @@ describe('KbqIconButton', () => {
             expect(buttonEl.classList.contains('kbq-icon-button_compact')).toBe(true);
         });
 
-        it('should add compact class when deprecated small input is true', () => {
-            fixture.componentInstance.small = true;
+        it('should remove compact class when size returns to normal', () => {
+            fixture.componentInstance.size = 'compact';
             fixture.detectChanges();
-            expect(buttonEl.classList.contains('kbq-icon-button_compact')).toBe(true);
-        });
-
-        it('should not add compact class when size is normal and small is false', () => {
             fixture.componentInstance.size = 'normal';
-            fixture.componentInstance.small = false;
             fixture.detectChanges();
             expect(buttonEl.classList.contains('kbq-icon-button_compact')).toBe(false);
         });
@@ -125,10 +120,9 @@ class TestApp {
     selector: 'size-test-app',
     imports: [KbqIconModule],
     template: `
-        <i kbq-icon-button="kbq-chevron-down-s_16" [size]="size" [small]="small"></i>
+        <i kbq-icon-button="kbq-chevron-down-s_16" [size]="size"></i>
     `
 })
 class SizeTestApp {
     size: KbqIconButtonSize = 'normal';
-    small = false;
 }

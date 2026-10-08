@@ -17,7 +17,6 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 /**
@@ -98,13 +97,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      * @default 50
      */
     readonly debounceInterval = input<number, unknown>(50, { transform: numberAttribute });
-
-    /**
-     * @deprecated No longer read. Resizes now come from the shared `ResizeObserver`, which also catches the
-     * container-only ones a `window:resize` listener cannot see; the host listener that used to feed this
-     * subject is gone, and nothing subscribes to it. Kept as a no-op and removed in the next major version.
-     * @docs-private */
-    readonly resizeStream = new Subject<Event>();
 
     private _kbqEllipsisCenter: string;
 

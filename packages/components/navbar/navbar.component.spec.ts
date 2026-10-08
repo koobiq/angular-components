@@ -853,14 +853,8 @@ describe('KbqNavbar', () => {
         });
 
         /** Stubs the title's geometry before the first render, so the initial measurement already sees it. */
-        const render = async (
-            metrics: Parameters<typeof setTextMetrics>[1],
-            setup?: (instance: TestBrandLongTitleApp) => void
-        ) => {
+        const render = async (metrics: Parameters<typeof setTextMetrics>[1]) => {
             const fixture = TestBed.createComponent(TestBrandLongTitleApp);
-
-            setup?.(fixture.componentInstance);
-
             const titleEl = fixture.nativeElement.querySelector('.kbq-navbar-title') as HTMLElement;
 
             setTextMetrics(titleEl, metrics);
@@ -882,24 +876,6 @@ describe('KbqNavbar', () => {
 
         it('should not apply the long title class when the title fits into one line', async () => {
             const { brandEl } = await render({ scrollWidth: 120, clientWidth: 176 });
-
-            expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
-        });
-
-        it('longTitle=true should force the mode on for a title that fits', async () => {
-            const { brandEl } = await render(
-                { scrollWidth: 120, clientWidth: 176 },
-                (instance) => (instance.longTitle = true)
-            );
-
-            expect(brandEl.classList).toContain(LONG_TITLE_CLASS);
-        });
-
-        it('longTitle=false should force the mode off for a title that does not fit', async () => {
-            const { brandEl } = await render(
-                { scrollWidth: 300, clientWidth: 176 },
-                (instance) => (instance.longTitle = false)
-            );
 
             expect(brandEl.classList).not.toContain(LONG_TITLE_CLASS);
         });
@@ -2365,7 +2341,7 @@ class TestNonAnchorBrandApp {
     template: `
         <kbq-vertical-navbar [expanded]="expanded">
             <kbq-navbar-container>
-                <a href="#" kbq-navbar-brand [longTitle]="longTitle">
+                <a href="#" kbq-navbar-brand>
                     <div kbq-navbar-title>{{ titleText }}</div>
                 </a>
             </kbq-navbar-container>
@@ -2374,7 +2350,6 @@ class TestNonAnchorBrandApp {
 })
 class TestBrandLongTitleApp {
     titleText: string = 'App Name';
-    longTitle: boolean | undefined = undefined;
     expanded: boolean = true;
 }
 

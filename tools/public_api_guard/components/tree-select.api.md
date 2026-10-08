@@ -143,8 +143,6 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    // @deprecated
-    offsetY: number;
     onAttached(): void;
     onBlur(): void;
     onChange: (value: any) => void;

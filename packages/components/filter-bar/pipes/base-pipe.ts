@@ -7,7 +7,6 @@ import {
     computed,
     DestroyRef,
     Directive,
-    effect,
     ElementRef,
     inject,
     InjectionToken,
@@ -324,58 +323,4 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /** @docs-private */
     abstract open(): void;
-}
-
-/**
- * Keeps a pipe part at its natural width while its text is shorter than `maxSymbolsForFitContent`.
- *
- * @deprecated A pipe lays its name and value out as two shrinkable grid tracks, which already keeps a
- * short part intact; on a grid item this `min-width` only pushes the part past its track, where it is
- * clipped without an ellipsis. Will be removed in the next major.
- */
-@Directive({
-    selector: '[kbqPipeMinWidth]',
-    host: {
-        '[style.min-width]': 'minWidth'
-    }
-})
-export class KbqPipeMinWidth {
-    /** KbqFilterBar instance */
-    protected readonly filterBar = inject(KBQ_FILTER_BAR_HOST, { optional: true });
-
-    /** @docs-private */
-    protected readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    /** @docs-private */
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-
-    /** @docs-private */
-    protected minWidth: string;
-    /** maximal symbols for apply fit-content to min-width */
-    maxSymbolsForFitContent: number = 20;
-
-    /** current length of text */
-    get textLength(): number {
-        return this.elementRef.nativeElement.innerText?.length || 0;
-    }
-
-    constructor() {
-        // Recompute the min-width whenever the filter changes. The pipe's text content updates during CD,
-        // so defer the read to the next macrotask (mirrors the old `changes.pipe(delay(0))`). Passing the
-        // `filterBar.filter` read into the scheduler subscribes the effect, replacing the `changes` bus.
-        effect((onCleanup) => onCleanup(this.scheduleMinWidthUpdate(this.filterBar?.filter())));
-
-        afterNextRender({ read: this.update });
-    }
-
-    update = () => {
-        this.minWidth = this.textLength < this.maxSymbolsForFitContent ? 'fit-content' : 'unset';
-        this.changeDetectorRef.markForCheck();
-    };
-
-    /** Schedules a deferred min-width recompute and returns the effect-cleanup that cancels it. */
-    private scheduleMinWidthUpdate(_filter: unknown): () => void {
-        const timerId = setTimeout(this.update);
-
-        return () => clearTimeout(timerId);
-    }
 }

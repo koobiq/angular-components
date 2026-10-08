@@ -861,9 +861,9 @@ describe(KbqTagInput.name, () => {
             expect(componentInstance.control.dirty).toBe(false);
         });
 
-        describe('with a deprecated form control bound to the input', () => {
+        describe('with a form control bound to the input', () => {
             it('should not block (tagEnd) on ENTER when the input control is invalid', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
                 const inputElement = getInputElement(fixture);
 
@@ -881,7 +881,7 @@ describe(KbqTagInput.name, () => {
             });
 
             it('should not block (tagEnd) on paste when the input control is invalid', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
 
                 componentInstance.inputControl.setValue('NOT-LATIN-LOWERCASE');
@@ -895,7 +895,7 @@ describe(KbqTagInput.name, () => {
             });
 
             it('should not overwrite tag list errors with the input control status', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
                 const inputElement = getInputElement(fixture);
 
@@ -916,7 +916,7 @@ describe(KbqTagInput.name, () => {
             });
 
             it('should not block (tagEnd) on blur when the input control is invalid', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
                 const inputElement = getInputElement(fixture);
 
@@ -933,7 +933,7 @@ describe(KbqTagInput.name, () => {
             });
 
             it('should not emit (tagEnd) on a blur caused by disabling the input', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
+                const fixture = createComponent(TestTagInputWithInputControl);
                 const { componentInstance } = fixture;
                 const inputElement = getInputElement(fixture);
 
@@ -945,17 +945,6 @@ describe(KbqTagInput.name, () => {
                 componentInstance.tagInput().blur({} as FocusEvent);
 
                 expect(componentInstance.add).not.toHaveBeenCalled();
-            });
-
-            it('should keep triggerValidation() as a no-op', () => {
-                const fixture = createComponent(TestTagInputWithDeprecatedInputControl);
-                const { componentInstance } = fixture;
-                const statusChangesSpy = vi.fn();
-
-                componentInstance.inputControl.statusChanges.subscribe(statusChangesSpy);
-                componentInstance.tagInput().triggerValidation();
-
-                expect(statusChangesSpy).not.toHaveBeenCalled();
             });
         });
     });
@@ -1423,7 +1412,7 @@ class TestTagListRejectingValidation {
         </kbq-form-field>
     `
 })
-class TestTagInputWithDeprecatedInputControl {
+class TestTagInputWithInputControl {
     readonly tagList = viewChild.required(KbqTagList);
     readonly tagInput = viewChild.required(KbqTagInput);
     readonly listControl = new FormControl<string[]>(['a', 'b'], [maxTagCount(2)]);

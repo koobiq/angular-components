@@ -157,11 +157,9 @@ export class KbqInputMono {
 }
 
 // @public (undocumented)
-export class KbqInputPassword implements KbqFormFieldControl<any>, OnDestroy, DoCheck, CanUpdateErrorState {
+export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanUpdateErrorState {
     constructor();
     readonly autofilled: _angular_core.Signal<boolean>;
-    readonly checkRule: Subject<void>;
-    checkRules(): void;
     controlType: string;
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
@@ -184,8 +182,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnDestroy, Do
     ngControl: NgControl | null;
     // (undocumented)
     ngDoCheck(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     // (undocumented)
     onBlur(): void;
     onContainerClick(): void;

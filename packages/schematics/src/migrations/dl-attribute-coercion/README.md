@@ -7,11 +7,11 @@ the tree.
 ## Background
 
 `KbqDlComponent` was already fully signal-based, so the review had nothing to migrate. What it found
-were the five inputs that never got a coercion transform, next to siblings that had one:
+were the four inputs that never got a coercion transform, next to siblings that had one:
 
 ```ts
 readonly verticalBreakpoint = input(400, { transform: numberAttribute });
-readonly minWidth = input<number | undefined>();          // no transform
+readonly dtMinWidth = input<number | undefined>();        // no transform
 readonly wide = input(false);                              // no transform
 ```
 
@@ -48,7 +48,7 @@ A numeric literal is not reported: `Math.max` applies `ToNumber` to its argument
 - `dtWidth` is an aliased input plus a `linkedSignal` and an explicit `dtWidthChange` output rather
   than a `model()`, because `model()` takes no `transform`. `[(dtWidth)]` is unchanged; only code that
   typed the member as `ModelSignal<number | null>` has to say `WritableSignal<number | null>`.
-- `minWidth`, `dtMinWidth` and `ddMinWidth` report `number | undefined`, which is what an unbound
+- `dtMinWidth` and `ddMinWidth` report `number | undefined`, which is what an unbound
   description list always held. A value that is not a finite number reads as `undefined` rather than
   as `NaN`, so `?? fallback` at a call site fires.
 

@@ -42,11 +42,6 @@ export interface KbqDropdownPanel {
     templateRef: Signal<TemplateRef<any>>;
     closed: OutputEmitterRef<DropdownCloseReason>;
     parent?: KbqDropdownPanel | undefined;
-    /**
-     * @deprecated Has no effect. Use `KbqDropdownTrigger.widthOrigin` to make the panel match
-     * an element other than the trigger. Will be removed in v21.
-     */
-    triggerWidth?: string;
     panelWidth?: Signal<KbqPanelWidth>;
     panelMinWidth?: Signal<KbqPanelMinWidth>;
     panelMaxWidth?: Signal<KbqPanelMaxWidth>;

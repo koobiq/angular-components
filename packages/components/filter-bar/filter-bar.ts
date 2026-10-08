@@ -169,13 +169,6 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     /** Whether the persisted state has been read; reading twice would resurrect a dismissed filter. */
     private hasRead = false;
 
-    /**
-     * All changes.
-     * @deprecated noop. Reactivity is driven by the `filter` signal now; this never emits and will be
-     * removed in the next major.
-     */
-    readonly changes = new BehaviorSubject<void>(undefined);
-
     /** Event that emits whenever the filter is reset. */
     readonly onResetFilter = new BehaviorSubject<boolean>(false);
     /** internal filter changes */

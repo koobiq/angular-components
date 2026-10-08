@@ -5,7 +5,6 @@ import { Subject } from 'rxjs';
 import type { Mocked } from 'vitest';
 import { KBQ_WINDOW } from '../tokens/window';
 import {
-    KBQ_DEFAULT_THEMES,
     KBQ_THEME_CONFIG,
     KBQ_THEME_STORE,
     KbqThemeCookieStore,
@@ -13,8 +12,7 @@ import {
     KbqThemeMode,
     kbqThemeProvider,
     KbqThemeService,
-    KbqThemeStore,
-    ThemeService
+    KbqThemeStore
 } from './theme.service';
 
 /** Minimal fake `MediaQueryList` that lets tests flip `matches` and trigger the `change` listener. */
@@ -850,70 +848,6 @@ describe('KbqThemeService', () => {
 
         expect(service.staticTheme()).toBe('dark');
         expect(service.currentTheme()?.name).toBe('dark');
-    });
-});
-
-describe('ThemeService', () => {
-    function setup(matches = false) {
-        const media = fakeMediaQueryList(matches);
-
-        TestBed.configureTestingModule({
-            providers: [{ provide: KBQ_WINDOW, useValue: fakeWindow({ matchMedia: () => media.mql }) }]
-        });
-
-        const service = TestBed.inject(ThemeService);
-
-        TestBed.tick();
-
-        return { service, media };
-    }
-
-    afterEach(() => {
-        document.body.className = '';
-        localStorage.clear();
-    });
-
-    it('shares state with the injected KbqThemeService (single source of truth)', () => {
-        const { service } = setup(false);
-        const kbqThemeService = TestBed.inject(KbqThemeService);
-
-        kbqThemeService.setMode('dark');
-        TestBed.tick();
-
-        expect(service.current.value?.name).toBe('dark');
-    });
-
-    it('keeps the deprecated `selected` field in sync for backward compatibility', () => {
-        const { service } = setup(true);
-
-        const themes = service.themes;
-
-        expect(themes.find((theme) => theme.name === 'dark')?.selected).toBe(true);
-        expect(themes.find((theme) => theme.name === 'light')?.selected).toBe(false);
-    });
-
-    it('exposes the deprecated `setTheme`/`getTheme` shims', () => {
-        const { service } = setup(false);
-
-        service.setTheme(1);
-        TestBed.tick();
-        expect(service.getTheme()?.name).toBe('dark');
-
-        service.setTheme(KBQ_DEFAULT_THEMES[0]);
-        TestBed.tick();
-        expect(service.getTheme()?.name).toBe('light');
-    });
-
-    it('keeps the deprecated `current` BehaviorSubject in sync with `getTheme()`', () => {
-        const { service } = setup(false);
-
-        expect(service.current.value?.name).toBe('light');
-
-        service.setTheme(KBQ_DEFAULT_THEMES[1]);
-        TestBed.tick();
-
-        expect(service.current.value?.name).toBe('dark');
-        expect(service.current.value).toBe(service.getTheme());
     });
 });
 

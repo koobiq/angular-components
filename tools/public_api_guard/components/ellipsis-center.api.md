@@ -10,7 +10,6 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
-import { Subject } from 'rxjs';
 
 // @public
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
@@ -32,8 +31,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     // (undocumented)
     ngOnInit(): void;
     refresh(): void;
-    // @deprecated (undocumented)
-    readonly resizeStream: Subject<Event>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqEllipsisCenterDirective, "[kbqEllipsisCenter]", never, { "ignoreTooltipPointerEvents": { "alias": "ignoreTooltipPointerEvents"; "required": false; "isSignal": true; }; "minVisibleLength": { "alias": "minVisibleLength"; "required": false; "isSignal": true; }; "charWidth": { "alias": "charWidth"; "required": false; "isSignal": true; }; "debounceInterval": { "alias": "debounceInterval"; "required": false; "isSignal": true; }; "kbqEllipsisCenterInput": { "alias": "kbqEllipsisCenter"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)

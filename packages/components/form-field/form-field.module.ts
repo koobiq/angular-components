@@ -5,7 +5,6 @@ import { KbqFieldset, KbqFieldsetItem, KbqLegend } from './fieldset';
 import { KbqFormField, KbqTrim } from './form-field';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
-import { KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqReactivePasswordHint } from './reactive-password-hint';
@@ -28,7 +27,6 @@ const COMPONENTS = [
     KbqFieldsetItem,
 
     // Legacy components
-    KbqPasswordHint,
     KbqTrim
 ];
 

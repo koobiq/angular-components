@@ -38,12 +38,10 @@ export const FORM_FIELD_TARGET: Target = {
         'cleaner',
         'passwordToggle',
         'hint',
-        'passwordHints',
         'prefix',
         'suffix',
         'hasCleaner',
         'hasHint',
-        'hasPasswordHint',
         'hasPasswordToggle',
         'hasPrefix',
         'hasStepper',
@@ -55,19 +53,10 @@ export const FORM_FIELD_TARGET: Target = {
 /** `fillTextOff` and `compact` became signal inputs on the whole hint family. */
 export const HINT_TARGET: Target = {
     id: 'KbqHint',
-    types: ['KbqHint', 'KbqError', 'KbqPasswordHint', 'KbqReactivePasswordHint'],
-    elements: ['kbq-hint', 'kbq-error', 'kbq-password-hint', 'kbq-reactive-password-hint'],
+    types: ['KbqHint', 'KbqError', 'KbqReactivePasswordHint'],
+    elements: ['kbq-hint', 'kbq-error', 'kbq-reactive-password-hint'],
     signalMembers: ['fillTextOff', 'compact'],
     writableMembers: new Set<string>()
-};
-
-/** `KbqPasswordHint.regex` became a `model()`, so it is both readable as a call and writable via `.set()`. */
-export const PASSWORD_HINT_TARGET: Target = {
-    id: 'KbqPasswordHint',
-    types: ['KbqPasswordHint'],
-    elements: ['kbq-password-hint'],
-    signalMembers: ['regex'],
-    writableMembers: new Set<string>(['regex'])
 };
 
 /** The `KbqFormFieldControl` state: a signal on every control, read-only unless a target says otherwise. */
@@ -121,7 +110,6 @@ export const FORM_FIELD_CONTROL_TARGET: Target = {
 export const TARGETS: readonly Target[] = [
     FORM_FIELD_TARGET,
     HINT_TARGET,
-    PASSWORD_HINT_TARGET,
     SELECT_CONTROL_TARGET,
     TAG_LIST_CONTROL_TARGET,
     INPUT_CONTROL_TARGET,
@@ -132,7 +120,7 @@ export const TARGETS: readonly Target[] = [
  * `KbqFormField` members that were a `QueryList` and are now a `readonly` array. The call syntax is
  * auto-fixed, but the `QueryList` API is gone.
  */
-export const QUERY_LIST_MEMBERS: readonly string[] = ['hint', 'passwordHints', 'prefix', 'suffix'];
+export const QUERY_LIST_MEMBERS: readonly string[] = ['hint', 'prefix', 'suffix'];
 
 /** `QueryList` members that a plain array does not have. Detected right after a migrated query member. */
 export const QUERY_LIST_ONLY_API: readonly string[] = [
@@ -150,9 +138,6 @@ export const QUERY_LIST_ONLY_API: readonly string[] = [
 /** `KbqFormField` members whose empty value changed from `null` to `undefined`. */
 export const NULLABILITY_CHANGED_MEMBERS: readonly string[] = ['cleaner', 'passwordToggle'];
 
-/** Members that moved from `public` to `protected` and can no longer be read from outside the component. */
-export const PROTECTED_MEMBERS: readonly string[] = ['icon'];
-
 /**
  * Members that were writable properties and are now read-only signals: inputs, or state the control derives.
  * Scoped by each target's `writableMembers`, so a member writable on one control is not reported on it.
@@ -168,7 +153,6 @@ export const READ_ONLY_QUERY_MEMBERS: readonly string[] = [
     'cleaner',
     'passwordToggle',
     'hint',
-    'passwordHints',
     'prefix',
     'suffix'
 ];
@@ -247,19 +231,6 @@ export const warnPatterns: WarnPattern[] = [
             '`KbqA11yLocaleConfiguration` gained three required keys — `clear`, `showPassword` and ' +
             '`hidePassword` — for the accessible names of the form-field cleaner and password toggle. A custom ' +
             'locale object literal has to provide them.'
-    },
-    {
-        pattern: '\\bregExpPasswordValidator\\b',
-        message:
-            '`regExpPasswordValidator` is deprecated and is now typed `Partial<Record<PasswordRules, RegExp>>`, ' +
-            'so indexing it yields `RegExp | undefined`. It never had entries for `Length`/`Custom`.'
-    },
-    {
-        pattern: '\\bKbqPasswordHint\\b|\\bPasswordRules\\b|\\bhasPasswordStrengthError\\b',
-        message:
-            'The `KbqPasswordHint` rules engine (`PasswordRules`, `regExpPasswordValidator`, ' +
-            '`hasPasswordStrengthError`) is deprecated and will be removed in the next major release. Migrate to ' +
-            '`KbqReactivePasswordHint`, which derives its state from the form control validators.'
     },
     {
         pattern: '\\bKbqTrim\\b',

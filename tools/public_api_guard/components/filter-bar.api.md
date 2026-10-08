@@ -154,8 +154,6 @@ export interface KbqFilter {
 // @public (undocumented)
 export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
     constructor();
-    // @deprecated
-    readonly changes: BehaviorSubject<void>;
     clearSavedState(): void;
     readonly filter: _angular_core.ModelSignal<KbqFilter | null>;
     readonly filterReset: _angular_core.Signal<KbqFilterReset | undefined>;
@@ -252,15 +250,13 @@ export interface KbqFilterBarState {
 }
 
 // @public (undocumented)
-class KbqFilterRefresher {
+export class KbqFilterRefresher {
     protected readonly localeConfiguration: _angular_core.Signal<_koobiq_components_core.KbqFilterBarLocaleConfiguration>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqFilterRefresher, "kbq-filter-refresher, [kbq-filter-refresher]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqFilterRefresher, never>;
 }
-export { KbqFilterRefresher as KbqFilterBarRefresher }
-export { KbqFilterRefresher }
 
 // @public (undocumented)
 export class KbqFilterReset {
@@ -573,23 +569,6 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPipeInputComponent, "kbq-pipe-input", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeInputComponent, never>;
-}
-
-// @public @deprecated
-export class KbqPipeMinWidth {
-    constructor();
-    protected readonly changeDetectorRef: ChangeDetectorRef;
-    protected readonly elementRef: ElementRef<HTMLElement>;
-    protected readonly filterBar: _koobiq_components_filter_bar.KbqFilterBarHost | null;
-    maxSymbolsForFitContent: number;
-    protected minWidth: string;
-    get textLength(): number;
-    // (undocumented)
-    update: () => void;
-    // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPipeMinWidth, "[kbqPipeMinWidth]", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPipeMinWidth, never>;
 }
 
 // @public (undocumented)

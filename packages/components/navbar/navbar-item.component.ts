@@ -94,15 +94,12 @@ export class KbqNavbarItemSuffix {}
         class: 'kbq-navbar-title'
     }
 })
-export class KbqNavbarTitle implements AfterViewInit {
+export class KbqNavbarTitle {
     /** @docs-private */
     protected readonly isBrowser = inject(Platform).isBrowser;
     /** @docs-private */
     protected readonly nativeElement = kbqInjectNativeElement();
     private readonly window = inject(KBQ_WINDOW);
-
-    /** @docs-private */
-    outerElementWidth: number;
 
     /** Text content of the title element. */
     get text(): string {
@@ -133,11 +130,6 @@ export class KbqNavbarTitle implements AfterViewInit {
     /** Outer width of the title: its border box plus horizontal margins. */
     getOuterElementWidth(): number {
         return this.isBrowser ? getOuterWidth(this.nativeElement, this.window) : 0;
-    }
-
-    /** @docs-private */
-    ngAfterViewInit(): void {
-        this.outerElementWidth = this.getOuterElementWidth();
     }
 }
 
@@ -749,17 +741,6 @@ export class KbqNavbarItem implements AfterContentInit {
      */
     getCollapsibleWidth(): number {
         return Math.max(this.expandedWidth - this.collapsedWidth, 0);
-    }
-
-    /**
-     * Outer width of the projected title, measured once when it initialized.
-     *
-     * @deprecated Unused by the navbar, which collapses items by `getCollapsibleWidth()`: the title alone leaves out
-     * a suffix, the dropdown chevron and the padding an item gives up. Will be removed in the next major release.
-     * @docs-private
-     */
-    getTitleWidth(): number {
-        return this.title()?.outerElementWidth ?? 0;
     }
 
     /** @docs-private */

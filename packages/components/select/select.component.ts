@@ -383,15 +383,6 @@ export class KbqSelect
     scrollStrategy: ScrollStrategy = this.scrollStrategyFactory();
 
     /**
-     * The y-offset of the overlay panel in relation to the trigger.
-     *
-     * @deprecated noop. The trigger↔panel gap is now controlled by the `--kbq-connected-overlay-gap` CSS
-     * variable (transparent padding inside the pane via the `kbq-connected-overlay_below/_above` panel
-     * classes), not by a physical overlay offset — so setting this has no effect. Will be removed in 21.0.0.
-     */
-    offsetY = 0;
-
-    /**
      * Minimum space to keep between the overlay and the viewport edge.
      * At least `defaultOffsetY` so CDK's fit check — which runs before the `kbq-connected-overlay_below/_above`
      * gap padding is applied to the pane — stays conservative enough to absorb that padding instead of

@@ -1,21 +1,13 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    model,
-    viewChild,
-    viewChildren,
-    ViewEncapsulation
-} from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, inject, model, ViewEncapsulation } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqLocaleServiceModule,
-    KbqNormalizeWhitespace
+    KbqNormalizeWhitespace,
+    PasswordValidators
 } from '@koobiq/components/core';
-import { KbqFormField, KbqPasswordHint, PasswordRules } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToggleComponent } from '@koobiq/components/toggle';
@@ -75,32 +67,39 @@ export class DevDocsExamples {}
 export class DevApp {
     localeService = inject<KbqLocaleService>(KBQ_LOCALE_SERVICE);
 
-    passwordRules = PasswordRules;
     password = '456';
 
     control = new FormControl('');
 
+    readonly passwordControl = new FormControl('', [
+        Validators.required,
+        PasswordValidators.minLength(8),
+        PasswordValidators.maxLength(15),
+        PasswordValidators.minUppercase(1),
+        PasswordValidators.minLowercase(1),
+        PasswordValidators.minNumber(1),
+        PasswordValidators.minSpecial(1)
+    ]);
+
     value: string = '';
     numberValue: number | null = null;
     min = -5;
-    customRegex = /\D/;
 
     disabled = model(false);
 
     locales: string[];
 
-    readonly passwordHints = viewChildren(KbqPasswordHint);
-    readonly formField = viewChild.required<KbqFormField>('formField');
-
     constructor() {
         this.locales = Object.keys(this.localeService.locales).filter((key) => key !== 'items');
     }
 
-    atLeastNCapitalLetters = (n: number): ((value: string) => boolean) => {
-        return (value: string) => {
-            const found = value.match(/[A-Z]/g);
-
-            return !!found && found!.length >= n;
-        };
-    };
+    setControlsDisabled(disabled: boolean): void {
+        for (const control of [this.control, this.passwordControl]) {
+            if (disabled) {
+                control.disable();
+            } else {
+                control.enable();
+            }
+        }
+    }
 }

@@ -4,7 +4,6 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    computed,
     effect,
     inject,
     input,
@@ -36,22 +35,13 @@ export type KbqIconButtonSize = 'compact' | 'normal';
         '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-icon-button_compact]': 'isCompact()',
-        // @deprcated Will be removed in the next major release (#DS-5338)
-        '[class.kbq-icon-button_small]': 'isCompact()'
+        '[class.kbq-icon-button_compact]': "size() === 'compact'"
     }
 })
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     protected readonly focusMonitor = inject(FocusMonitor);
     /** Size of the icon button. */
     readonly size = input<KbqIconButtonSize>('normal');
-    /**
-     * @deprecated Use `size` input instead. Will be removed in the next major release (#DS-5338).
-     */
-    readonly small = input(false);
-
-    /** @docs-private */
-    protected readonly isCompact = computed(() => this.size() === 'compact' || this.small());
 
     /** @docs-private */
     override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-button' });

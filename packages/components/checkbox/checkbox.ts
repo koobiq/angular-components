@@ -8,7 +8,6 @@ import {
     Component,
     computed,
     ElementRef,
-    forwardRef,
     inject,
     input,
     numberAttribute,
@@ -19,7 +18,6 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KbqCheckable, KbqCheckedState, KbqColorDirective, TransitionCheckState } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
@@ -30,18 +28,6 @@ import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-co
  * @deprecated Use `TransitionCheckState` from `@koobiq/components/core` instead.
  */
 export { TransitionCheckState };
-
-/**
- * Provider Expression that allows kbq-checkbox to register as a ControlValueAccessor.
- * This allows it to support [(ngModel)].
- * @docs-private
- * @deprecated Unused - the `ControlValueAccessor` is now registered by the `KbqCheckable` host directive.
- */
-export const KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => KbqCheckbox),
-    multi: true
-};
 
 /** Change event object emitted by KbqCheckbox. */
 export class KbqCheckboxChange {
@@ -80,10 +66,7 @@ export class KbqCheckboxChange {
     hostDirectives: [KbqCheckable],
     exportAs: 'kbqCheckbox'
 })
-export class KbqCheckbox
-    extends KbqColorDirective
-    implements OnChanges, ControlValueAccessor, AfterViewInit, OnDestroy
-{
+export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterViewInit, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
@@ -244,14 +227,6 @@ export class KbqCheckbox
         }
     }
 
-    /**
-     * Called when the checkbox is blurred. Needed to properly implement ControlValueAccessor.
-     * @docs-private
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    onTouched: () => any = () => {};
-
     ngAfterViewInit() {
         this.focusMonitor
             .monitor(this.inputElement().nativeElement)
@@ -272,42 +247,6 @@ export class KbqCheckbox
         // Since the checkbox uses the OnPush strategy we need to notify it about the change
         // that has been recognized by the cdkObserveContent directive.
         this.changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Implemented as part of ControlValueAccessor.
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    writeValue(value: any) {
-        this.checkable.checked.set(!!value);
-    }
-
-    /**
-     * Implemented as part of ControlValueAccessor.
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    registerOnChange(fn: (value: any) => void) {
-        this.checkable.registerOnChange(fn);
-    }
-
-    /**
-     * Implemented as part of ControlValueAccessor.
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    registerOnTouched(fn: any) {
-        this.checkable.registerOnTouched(fn);
-    }
-
-    /**
-     * Implemented as part of ControlValueAccessor.
-     * @deprecated Unused - `ControlValueAccessor` is now implemented by the `KbqCheckable` host directive,
-     * so this is never called by Angular forms. Will be removed in the next major version.
-     */
-    setDisabledState(isDisabled: boolean) {
-        this.checkable.disabled.set(isDisabled);
     }
 
     /** @docs-private */

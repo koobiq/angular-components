@@ -97,7 +97,6 @@ export class KbqSelectSearch implements AfterContentInit {
     }
 
     constructor() {
-        this.formField.canCleanerClearByEsc = false;
         this.formField.inOverlay.set(true);
     }
 

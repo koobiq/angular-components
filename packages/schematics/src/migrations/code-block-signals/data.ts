@@ -6,8 +6,6 @@
  * - `softWrap`, `viewAll`, `canDownload`, `files`, `activeFileIndex`, `hideTabs` → `WritableSignal`s over
  *   a backing `input()`, so a read becomes a call and a plain write becomes `.set(…)` (auto-fixed)
  * - `maxHeight` was already a signal input; only its type changed (warn)
- * - `canLoad` and `codeFiles`, the deprecated write-only aliases, are backing inputs now: bind them, a
- *   programmatic write no longer compiles (warn)
  *
  * A `model()` would have been the obvious shape for the six, but `ModelOptions` carries no `transform`,
  * and every one of them needs `booleanAttribute` or `numberAttribute` to keep a valueless attribute
@@ -50,17 +48,15 @@ export const CODE_BLOCK_ELEMENT = 'kbq-code-block';
 export const CODE_BLOCK_PACKAGE = '@koobiq/components/code-block';
 
 /**
- * The backing inputs behind the six signals, plus the two deprecated aliases that used to be write-only
- * setters. Public, because a `protected` input cannot be bound from a consumer's template, but they are
- * `@docs-private` plumbing: read the signal that carries the attribute's own name instead.
+ * The backing inputs behind the six signals. Public, because a `protected` input cannot be bound from a
+ * consumer's template, but they are `@docs-private` plumbing: read the signal that carries the attribute's
+ * own name instead. The removed `canLoadInput` and `codeFilesInput` are reported by `v21-upgrade`.
  */
 export const PLUMBING_MEMBERS: readonly string[] = [
     'softWrapInput',
     'viewAllInput',
     'canDownloadInput',
-    'canLoadInput',
     'filesInput',
-    'codeFilesInput',
     'activeFileIndexInput',
     'hideTabsInput'
 ];
@@ -69,8 +65,7 @@ export const PLUMBING_MEMBERS: readonly string[] = [
 export const writeMessage = (members: Iterable<string>): string =>
     `These writes were left untouched: ${[...members].join(', ')}. A plain \`x.softWrap = value\` is ` +
     'rewritten to `x.softWrap.set(value)`, but a compound assignment (`||=`, `+=`) or an increment would ' +
-    'need the receiver spelled twice, and `canLoad` / `codeFiles` are backing inputs now, so writing them ' +
-    'no longer compiles at all - bind the attribute instead.';
+    'need the receiver spelled twice.';
 
 export const reportedMessage = (members: Iterable<string>): string =>
     `These KbqCodeBlock members changed shape without changing name: ${[...members].join(', ')}. ` +
@@ -82,8 +77,7 @@ export const plumbingMessage = (members: Iterable<string>): string =>
     `These KbqCodeBlock members are backing inputs: ${[...members].join(', ')}. They exist to carry the ` +
     'attribute and its transform, they are read-only, and they report what was bound rather than what the ' +
     'component currently holds. Bind the attribute they alias - `softWrap`, `viewAll`, `canDownload`, ' +
-    '`canLoad`, `files`, `codeFiles`, `activeFileIndex`, `hideTabs` - and read the signal that carries ' +
-    "the attribute's own name.";
+    "`files`, `activeFileIndex`, `hideTabs` - and read the signal that carries the attribute's own name.";
 
 /**
  * Reported for a read through a signal query, which is a signal holding the component: the read needs two
@@ -123,9 +117,6 @@ export const SUMMARY = [
     '  Reading `hideTabs` reports what was bound. What the header actually does is `tabsHidden()`, which ' +
         'adds the rule that a single file with no filename hides the bar; the component used to write that ' +
         'rule into `hideTabs` itself, which latched the bar off for good.',
-    '  `canLoad` and `codeFiles` fill in for `canDownload` and `files` rather than writing into them: ' +
-        'either attribute turns the download button on, and `codeFiles` applies while `files` is empty. ' +
-        'Which of each pair won used to depend on the order they sat in the template.',
     '  An `activeFileIndex` outside `files` renders the first file instead of the indexed one, and an ' +
         'empty `files` renders no code at all. Both used to reach `files[activeFileIndex]` and throw on ' +
         'the undefined result. The index itself is left alone: resetting it wrote back into ' +

@@ -115,8 +115,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     setOpened(opened: boolean): void;
     setPositionClasses(posX?: KbqDropdownPositionX, posY?: KbqDropdownPositionY): void;
     readonly templateRef: Signal<TemplateRef<any>>;
-    // @deprecated (undocumented)
-    triggerWidth: string;
     readonly xPosition: _angular_core.ModelSignal<KbqDropdownPositionX>;
     readonly yPosition: _angular_core.ModelSignal<KbqDropdownPositionY>;
     // (undocumented)
@@ -266,8 +264,6 @@ export interface KbqDropdownPanel {
     setPositionClasses?(x: KbqDropdownPositionX, y: KbqDropdownPositionY): void;
     // (undocumented)
     templateRef: Signal<TemplateRef<any>>;
-    // @deprecated (undocumented)
-    triggerWidth?: string;
     // (undocumented)
     xPosition: WritableSignal<KbqDropdownPositionX>;
     // (undocumented)

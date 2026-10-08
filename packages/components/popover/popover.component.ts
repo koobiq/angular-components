@@ -35,7 +35,6 @@ import {
     Type,
     ViewEncapsulation,
     booleanAttribute,
-    computed,
     inject,
     input,
     numberAttribute,
@@ -264,16 +263,6 @@ export const KBQ_POPOVER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
     useFactory: kbqPopoverScrollStrategyFactory
 };
 
-/**
- * Creates an error to be thrown if the user supplied an invalid popover position.
- *
- * @deprecated An invalid placement is not fatal: it is reported with a warning and falls back to `top`.
- * Will be removed in the next major release.
- */
-export function getKbqPopoverInvalidPositionError(position: string) {
-    return Error(`KbqPopover position "${position}" is invalid.`);
-}
-
 @Directive({
     selector: '[kbqPopover]',
     providers: [kbqSiblingPopupProvider(KbqPopoverTrigger)],
@@ -302,34 +291,21 @@ export class KbqPopoverTrigger
     readonly panelId: string = `kbq-popover-${nextUniqueId++}`;
 
     /**
-     * Controls whether the component should be hidden when it is not visible in the viewport.
-     *
-     * @deprecated Use `kbqPopoverHideIfNotInViewPort`. The unprefixed alias will be removed in the next
-     * major release.
+     * Input (`kbqPopoverHideIfNotInViewPort`) — whether the popover closes once its trigger scrolls out of the
+     * nearest scrollable ancestor.
      */
-    readonly hideIfNotInViewPort = input(true, { transform: booleanAttribute });
-
-    /**
-     * Input (`kbqPopoverHideIfNotInViewPort`) — prefixed alias of {@link hideIfNotInViewPort}. Left
-     * `undefined` when it is not bound, so the deprecated alias keeps winning until it is removed.
-     */
-    readonly popoverHideIfNotInViewPort = input<boolean | undefined, unknown>(undefined, {
+    readonly popoverHideIfNotInViewPort = input(true, {
         alias: 'kbqPopoverHideIfNotInViewPort',
-        transform: (value: unknown) => (value == null ? undefined : booleanAttribute(value))
+        transform: booleanAttribute
     });
 
     /** prevents closure by any event */
     override preventClose: boolean = false;
 
-    /**
-     * disables default padding for all popover elements (header, content and footer)
-     *
-     * @deprecated Use `kbqPopoverDefaultPaddings`. The unprefixed alias will be removed in the next major
-     * release.
-     */
+    /** Whether the header, content and footer keep their default paddings. Bound with `kbqPopoverDefaultPaddings`. */
     defaultPaddings = true;
 
-    /** Input (`kbqPopoverDefaultPaddings`) — prefixed alias of {@link defaultPaddings}. */
+    /** Input (`kbqPopoverDefaultPaddings`) — sets {@link defaultPaddings}. */
     set popoverDefaultPaddings(value: boolean) {
         this.defaultPaddings = value;
     }
@@ -367,23 +343,17 @@ export class KbqPopoverTrigger
      * */
     stickToWindow: KbqStickToWindowPlacementValues;
 
-    /**
-     * Container for additional positioning, used with kbqPopoverStickToWindow
-     *
-     * @deprecated Use `kbqPopoverContainer`. The unprefixed alias will be removed in the next major release.
-     */
+    /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
     container: HTMLElement;
 
-    /** Input (`kbqPopoverContainer`) — prefixed alias of {@link container}. */
+    /** Input (`kbqPopoverContainer`) — sets {@link container}. */
     set popoverContainer(value: HTMLElement) {
         this.container = value;
     }
 
     /**
-     * Input (`hasBackdrop`) — whether a backdrop is rendered behind the panel. With a backdrop the popover
-     * closes on a backdrop click instead of on any outside pointer event.
-     *
-     * @deprecated Use `kbqPopoverHasBackdrop`. The unprefixed alias will be removed in the next major release.
+     * Whether a backdrop is rendered behind the panel. With a backdrop the popover closes on a backdrop click
+     * instead of on any outside pointer event. Bound with `kbqPopoverHasBackdrop`.
      */
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -397,7 +367,7 @@ export class KbqPopoverTrigger
 
     private _hasBackdrop: boolean = false;
 
-    /** Input (`kbqPopoverHasBackdrop`) — prefixed alias of {@link hasBackdrop}. */
+    /** Input (`kbqPopoverHasBackdrop`) — sets {@link hasBackdrop}. */
     set popoverHasBackdrop(value: boolean) {
         this.hasBackdrop = value;
     }
@@ -543,12 +513,7 @@ export class KbqPopoverTrigger
 
     private _ariaLabel: string | undefined;
 
-    /**
-     * Input (`hasCloseButton`) — renders the icon-only close button in the top corner of the panel.
-     *
-     * @deprecated Use `kbqPopoverHasCloseButton`. The unprefixed alias will be removed in the next major
-     * release.
-     */
+    /** Renders the icon-only close button in the top corner of the panel. Bound with `kbqPopoverHasCloseButton`. */
     get hasCloseButton(): boolean {
         return this._hasCloseButton;
     }
@@ -560,22 +525,20 @@ export class KbqPopoverTrigger
 
     private _hasCloseButton = false;
 
-    /** Input (`kbqPopoverHasCloseButton`) — prefixed alias of {@link hasCloseButton}. */
+    /** Input (`kbqPopoverHasCloseButton`) — sets {@link hasCloseButton}. */
     set popoverHasCloseButton(value: boolean) {
         this.hasCloseButton = value;
     }
 
     /**
-     * Controls the behavior of closing the component on scroll. Three states:
+     * Controls the behavior of closing the component on scroll. Bound with `kbqPopoverCloseOnScroll`. Three
+     * states:
      * - `null` (default) — the popover survives a scroll, except when it scrolls out of a
      *   `.kbq-hide-nested-popup` container, which closes it;
      * - `true` — any scroll closes the popover;
      * - `false` — no scroll closes the popover, not even a `.kbq-hide-nested-popup` one.
      *
      * Use CloseScrollStrategy as alternative
-     *
-     * @deprecated Use `kbqPopoverCloseOnScroll`. The unprefixed alias will be removed in the next major
-     * release.
      */
     get closeOnScroll(): boolean | null {
         return this._closeOnScroll;
@@ -587,7 +550,7 @@ export class KbqPopoverTrigger
 
     private _closeOnScroll: boolean | null = null;
 
-    /** Input (`kbqPopoverCloseOnScroll`) — prefixed alias of {@link closeOnScroll}. */
+    /** Input (`kbqPopoverCloseOnScroll`) — sets {@link closeOnScroll}. */
     set popoverCloseOnScroll(value: boolean) {
         this.closeOnScroll = value;
     }
@@ -610,12 +573,7 @@ export class KbqPopoverTrigger
         return this.instance.destroyRef;
     }
 
-    /**
-     * Input (`backdropClass`) — CSS class applied to the backdrop, when there is one.
-     *
-     * @deprecated Use `kbqPopoverBackdropClass`. The unprefixed alias will be removed in the next major
-     * release.
-     */
+    /** CSS class applied to the backdrop, when there is one. Bound with `kbqPopoverBackdropClass`. */
     get backdropClass(): string {
         return this._backdropClass;
     }
@@ -628,7 +586,7 @@ export class KbqPopoverTrigger
 
     private _backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
-    /** Input (`kbqPopoverBackdropClass`) — prefixed alias of {@link backdropClass}. */
+    /** Input (`kbqPopoverBackdropClass`) — sets {@link backdropClass}. */
     set popoverBackdropClass(value: string) {
         this.backdropClass = value;
     }
@@ -698,11 +656,6 @@ export class KbqPopoverTrigger
 
     protected originSelector = '.kbq-popover';
 
-    /** Resolved value of the two `hideIfNotInViewPort` aliases. */
-    private readonly shouldHideIfNotInViewPort = computed(
-        () => this.popoverHideIfNotInViewPort() ?? this.hideIfNotInViewPort()
-    );
-
     /** Whether a position re-apply is already queued for this turn. */
     private repositionScheduled = false;
 
@@ -753,16 +706,7 @@ export class KbqPopoverTrigger
     });
 
     /** @docs-private */
-    readonly containerInput = input<HTMLElement | undefined>(undefined, { alias: 'container' });
-
-    /** @docs-private */
     readonly popoverContainerInput = input<HTMLElement | undefined>(undefined, { alias: 'kbqPopoverContainer' });
-
-    /** @docs-private */
-    readonly hasBackdropInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'hasBackdrop',
-        transform: booleanAttribute
-    });
 
     /** @docs-private */
     readonly popoverHasBackdropInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -771,16 +715,7 @@ export class KbqPopoverTrigger
     });
 
     /** @docs-private */
-    readonly backdropClassInput = input<string | undefined>(undefined, { alias: 'backdropClass' });
-
-    /** @docs-private */
     readonly popoverBackdropClassInput = input<string | undefined>(undefined, { alias: 'kbqPopoverBackdropClass' });
-
-    /** @docs-private */
-    readonly defaultPaddingsInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'defaultPaddings',
-        transform: booleanAttribute
-    });
 
     /** @docs-private */
     readonly popoverDefaultPaddingsInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -822,20 +757,8 @@ export class KbqPopoverTrigger
     readonly ariaLabelInput = input<string | undefined>(undefined, { alias: 'kbqPopoverAriaLabel' });
 
     /** @docs-private */
-    readonly hasCloseButtonInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'hasCloseButton',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
     readonly popoverHasCloseButtonInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'kbqPopoverHasCloseButton',
-        transform: booleanAttribute
-    });
-
-    /** @docs-private */
-    readonly closeOnScrollInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'closeOnScroll',
         transform: booleanAttribute
     });
 
@@ -917,22 +840,10 @@ export class KbqPopoverTrigger
             if (stickToWindow !== undefined) this.stickToWindow = stickToWindow;
         }
 
-        if (changes['containerInput']) {
-            const container = this.containerInput();
-
-            if (container !== undefined) this.container = container;
-        }
-
         if (changes['popoverContainerInput']) {
             const popoverContainer = this.popoverContainerInput();
 
             if (popoverContainer !== undefined) this.popoverContainer = popoverContainer;
-        }
-
-        if (changes['hasBackdropInput']) {
-            const hasBackdrop = this.hasBackdropInput();
-
-            if (hasBackdrop !== undefined) this.hasBackdrop = hasBackdrop;
         }
 
         if (changes['popoverHasBackdropInput']) {
@@ -941,22 +852,10 @@ export class KbqPopoverTrigger
             if (popoverHasBackdrop !== undefined) this.popoverHasBackdrop = popoverHasBackdrop;
         }
 
-        if (changes['backdropClassInput']) {
-            const backdropClass = this.backdropClassInput();
-
-            if (backdropClass !== undefined) this.backdropClass = backdropClass;
-        }
-
         if (changes['popoverBackdropClassInput']) {
             const popoverBackdropClass = this.popoverBackdropClassInput();
 
             if (popoverBackdropClass !== undefined) this.popoverBackdropClass = popoverBackdropClass;
-        }
-
-        if (changes['defaultPaddingsInput']) {
-            const defaultPaddings = this.defaultPaddingsInput();
-
-            if (defaultPaddings !== undefined) this.defaultPaddings = defaultPaddings;
         }
 
         if (changes['popoverDefaultPaddingsInput']) {
@@ -1007,22 +906,10 @@ export class KbqPopoverTrigger
             if (ariaLabel !== undefined) this.ariaLabel = ariaLabel;
         }
 
-        if (changes['hasCloseButtonInput']) {
-            const hasCloseButton = this.hasCloseButtonInput();
-
-            if (hasCloseButton !== undefined) this.hasCloseButton = hasCloseButton;
-        }
-
         if (changes['popoverHasCloseButtonInput']) {
             const popoverHasCloseButton = this.popoverHasCloseButtonInput();
 
             if (popoverHasCloseButton !== undefined) this.popoverHasCloseButton = popoverHasCloseButton;
-        }
-
-        if (changes['closeOnScrollInput']) {
-            const closeOnScroll = this.closeOnScrollInput();
-
-            if (closeOnScroll !== undefined) this.closeOnScroll = closeOnScroll;
         }
 
         if (changes['popoverCloseOnScrollInput']) {
@@ -1261,7 +1148,7 @@ export class KbqPopoverTrigger
 
     /** Closes the popover once it has scrolled out of its nearest scrollable ancestor. */
     private hideIfScrolledOutOfView = () => {
-        if (!this.instance || !this.scrollable || !this.shouldHideIfNotInViewPort()) return;
+        if (!this.instance || !this.scrollable || !this.popoverHideIfNotInViewPort()) return;
 
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
         const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();

@@ -42,9 +42,6 @@ export const defaultHoverLeaveDelay = 500;
 // @public (undocumented)
 export const defaultOffsetYWithArrow = 8;
 
-// @public @deprecated
-export function getKbqPopoverInvalidPositionError(position: string): Error;
-
 // @public
 export const KBQ_POPOVER_CONFIRM_BUTTON_TEXT: InjectionToken<string>;
 
@@ -162,21 +159,15 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     readonly arrowInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     autoFocus: boolean;
     readonly autoFocusInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
-    // @deprecated
     get backdropClass(): string;
     set backdropClass(value: string);
-    readonly backdropClassInput: InputSignal<string | undefined>;
     get capturesFocusOnOpen(): boolean;
     close(): void;
-    // @deprecated
     get closeOnScroll(): boolean | null;
     set closeOnScroll(value: boolean);
-    readonly closeOnScrollInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     closingActions(): rxjs.Observable<void | CdkScrollable | MouseEvent>;
     closingActionsForClick(): rxjs.Observable<MouseEvent>[];
-    // @deprecated
     container: HTMLElement;
-    readonly containerInput: InputSignal<HTMLElement | undefined>;
     get content(): string | TemplateRef<any>;
     set content(value: string | TemplateRef<any>);
     readonly contentInput: InputSignal<KbqPopoverTrigger['content'] | undefined>;
@@ -187,9 +178,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set customClass(value: string);
     readonly customClassInput: InputSignal<string | undefined>;
     defaultClosingActions(): rxjs.Observable<MouseEvent>[];
-    // @deprecated
     defaultPaddings: boolean;
-    readonly defaultPaddingsInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
@@ -199,20 +188,14 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set footer(value: string | TemplateRef<any>);
     readonly footerInput: InputSignal<KbqPopoverTrigger['footer'] | undefined>;
     getOverlayHandleComponentType(): Type<KbqPopoverComponent>;
-    // @deprecated
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
-    readonly hasBackdropInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     get hasClickTrigger(): boolean;
-    // @deprecated
     get hasCloseButton(): boolean;
     set hasCloseButton(value: boolean);
-    readonly hasCloseButtonInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     get header(): string | TemplateRef<any>;
     set header(value: string | TemplateRef<any>);
     readonly headerInput: InputSignal<KbqPopoverTrigger['header'] | undefined>;
-    // @deprecated
-    readonly hideIfNotInViewPort: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get instanceDestroyRef(): DestroyRef;
     set kbqLeaveDelay(value: number);
     readonly kbqLeaveDelayInput: InputSignal<number | undefined>;
@@ -243,7 +226,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     readonly popoverHasBackdropInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     set popoverHasCloseButton(value: boolean);
     readonly popoverHasCloseButtonInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
-    readonly popoverHideIfNotInViewPort: _angular_core.InputSignalWithTransform<boolean | undefined, unknown>;
+    readonly popoverHideIfNotInViewPort: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get popoverOrigin(): KbqOverlayOrigin | null;
     set popoverOrigin(value: KbqOverlayOrigin | null);
     readonly popoverOriginInput: InputSignal<KbqOverlayOrigin | null | undefined>;
@@ -276,7 +259,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     readonly visibleChange: EventEmitter<boolean>;
     readonly visibleChangeOutput: _angular_core.OutputRef<boolean>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "hideIfNotInViewPort": { "alias": "hideIfNotInViewPort"; "required": false; "isSignal": true; }; "popoverHideIfNotInViewPort": { "alias": "kbqPopoverHideIfNotInViewPort"; "required": false; "isSignal": true; }; "triggerInput": { "alias": "kbqTrigger"; "required": false; "isSignal": true; }; "kbqLeaveDelayInput": { "alias": "kbqLeaveDelay"; "required": false; "isSignal": true; }; "enterDelayInput": { "alias": "kbqEnterDelay"; "required": false; "isSignal": true; }; "preventCloseInput": { "alias": "kbqPopoverPreventClose"; "required": false; "isSignal": true; }; "stickToWindowInput": { "alias": "kbqPopoverStickToWindow"; "required": false; "isSignal": true; }; "containerInput": { "alias": "container"; "required": false; "isSignal": true; }; "popoverContainerInput": { "alias": "kbqPopoverContainer"; "required": false; "isSignal": true; }; "hasBackdropInput": { "alias": "hasBackdrop"; "required": false; "isSignal": true; }; "popoverHasBackdropInput": { "alias": "kbqPopoverHasBackdrop"; "required": false; "isSignal": true; }; "backdropClassInput": { "alias": "backdropClass"; "required": false; "isSignal": true; }; "popoverBackdropClassInput": { "alias": "kbqPopoverBackdropClass"; "required": false; "isSignal": true; }; "defaultPaddingsInput": { "alias": "defaultPaddings"; "required": false; "isSignal": true; }; "popoverDefaultPaddingsInput": { "alias": "kbqPopoverDefaultPaddings"; "required": false; "isSignal": true; }; "sizeInput": { "alias": "kbqPopoverSize"; "required": false; "isSignal": true; }; "customClassInput": { "alias": "kbqPopoverClass"; "required": false; "isSignal": true; }; "headerInput": { "alias": "kbqPopoverHeader"; "required": false; "isSignal": true; }; "contentInput": { "alias": "kbqPopoverContent"; "required": false; "isSignal": true; }; "footerInput": { "alias": "kbqPopoverFooter"; "required": false; "isSignal": true; }; "contextInput": { "alias": "kbqPopoverContext"; "required": false; "isSignal": true; }; "ariaLabelInput": { "alias": "kbqPopoverAriaLabel"; "required": false; "isSignal": true; }; "hasCloseButtonInput": { "alias": "hasCloseButton"; "required": false; "isSignal": true; }; "popoverHasCloseButtonInput": { "alias": "kbqPopoverHasCloseButton"; "required": false; "isSignal": true; }; "closeOnScrollInput": { "alias": "closeOnScroll"; "required": false; "isSignal": true; }; "popoverCloseOnScrollInput": { "alias": "kbqPopoverCloseOnScroll"; "required": false; "isSignal": true; }; "arrowInput": { "alias": "kbqPopoverArrow"; "required": false; "isSignal": true; }; "offsetInput": { "alias": "kbqPopoverOffset"; "required": false; "isSignal": true; }; "autoFocusInput": { "alias": "kbqPopoverAutoFocus"; "required": false; "isSignal": true; }; "popoverOriginInput": { "alias": "kbqPopoverOrigin"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "kbqPopoverDisabled"; "required": false; "isSignal": true; }; "popoverPlacementPriorityInput": { "alias": "kbqPopoverPlacementPriority"; "required": false; "isSignal": true; }; "popoverPlacementInput": { "alias": "kbqPopoverPlacement"; "required": false; "isSignal": true; }; "popoverVisibleInput": { "alias": "kbqPopoverVisible"; "required": false; "isSignal": true; }; }, { "placementChangeOutput": "kbqPopoverPlacementChange"; "visibleChangeOutput": "kbqPopoverVisibleChange"; }, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqPopoverTrigger, "[kbqPopover]", ["kbqPopover"], { "popoverHideIfNotInViewPort": { "alias": "kbqPopoverHideIfNotInViewPort"; "required": false; "isSignal": true; }; "triggerInput": { "alias": "kbqTrigger"; "required": false; "isSignal": true; }; "kbqLeaveDelayInput": { "alias": "kbqLeaveDelay"; "required": false; "isSignal": true; }; "enterDelayInput": { "alias": "kbqEnterDelay"; "required": false; "isSignal": true; }; "preventCloseInput": { "alias": "kbqPopoverPreventClose"; "required": false; "isSignal": true; }; "stickToWindowInput": { "alias": "kbqPopoverStickToWindow"; "required": false; "isSignal": true; }; "popoverContainerInput": { "alias": "kbqPopoverContainer"; "required": false; "isSignal": true; }; "popoverHasBackdropInput": { "alias": "kbqPopoverHasBackdrop"; "required": false; "isSignal": true; }; "popoverBackdropClassInput": { "alias": "kbqPopoverBackdropClass"; "required": false; "isSignal": true; }; "popoverDefaultPaddingsInput": { "alias": "kbqPopoverDefaultPaddings"; "required": false; "isSignal": true; }; "sizeInput": { "alias": "kbqPopoverSize"; "required": false; "isSignal": true; }; "customClassInput": { "alias": "kbqPopoverClass"; "required": false; "isSignal": true; }; "headerInput": { "alias": "kbqPopoverHeader"; "required": false; "isSignal": true; }; "contentInput": { "alias": "kbqPopoverContent"; "required": false; "isSignal": true; }; "footerInput": { "alias": "kbqPopoverFooter"; "required": false; "isSignal": true; }; "contextInput": { "alias": "kbqPopoverContext"; "required": false; "isSignal": true; }; "ariaLabelInput": { "alias": "kbqPopoverAriaLabel"; "required": false; "isSignal": true; }; "popoverHasCloseButtonInput": { "alias": "kbqPopoverHasCloseButton"; "required": false; "isSignal": true; }; "popoverCloseOnScrollInput": { "alias": "kbqPopoverCloseOnScroll"; "required": false; "isSignal": true; }; "arrowInput": { "alias": "kbqPopoverArrow"; "required": false; "isSignal": true; }; "offsetInput": { "alias": "kbqPopoverOffset"; "required": false; "isSignal": true; }; "autoFocusInput": { "alias": "kbqPopoverAutoFocus"; "required": false; "isSignal": true; }; "popoverOriginInput": { "alias": "kbqPopoverOrigin"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "kbqPopoverDisabled"; "required": false; "isSignal": true; }; "popoverPlacementPriorityInput": { "alias": "kbqPopoverPlacementPriority"; "required": false; "isSignal": true; }; "popoverPlacementInput": { "alias": "kbqPopoverPlacement"; "required": false; "isSignal": true; }; "popoverVisibleInput": { "alias": "kbqPopoverVisible"; "required": false; "isSignal": true; }; }, { "placementChangeOutput": "kbqPopoverPlacementChange"; "visibleChangeOutput": "kbqPopoverVisibleChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqPopoverTrigger, never>;
 }

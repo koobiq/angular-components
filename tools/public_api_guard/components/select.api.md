@@ -198,8 +198,6 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     ngOnDestroy(): void;
     ngOnInit(): void;
     get noOptions(): boolean;
-    // @deprecated
-    offsetY: number;
     onAttached(): void;
     onBlur(): void;
     onChange: (value: any) => void;

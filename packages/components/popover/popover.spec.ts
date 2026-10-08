@@ -1251,29 +1251,15 @@ describe('KbqPopover', () => {
         });
     });
 
-    describe('input aliases', () => {
+    describe('boolean attribute inputs', () => {
         afterEach(() => {
             overlayContainer.ngOnDestroy();
         });
 
-        it('should treat a bare hasCloseButton attribute as true', async () => {
+        it('should treat kbqPopoverHasCloseButton="false" as false', async () => {
             vi.useFakeTimers();
 
-            const fixture = createComponent(PopoverInputAliases);
-
-            readOverlayContainer();
-
-            dispatchMouseEvent(fixture.componentInstance.bare().nativeElement, 'click');
-            await runDueTimers();
-            fixture.detectChanges();
-
-            expect(overlayContainerElement.querySelector('.kbq-popover__close')).toBeTruthy();
-        });
-
-        it('should treat hasCloseButton="false" as false', async () => {
-            vi.useFakeTimers();
-
-            const fixture = createComponent(PopoverInputAliases);
+            const fixture = createComponent(PopoverBooleanInputs);
 
             readOverlayContainer();
 
@@ -1284,10 +1270,10 @@ describe('KbqPopover', () => {
             expect(overlayContainerElement.querySelector('.kbq-popover__close')).toBeFalsy();
         });
 
-        it('should accept the prefixed aliases of the legacy inputs', async () => {
+        it('should apply the bare close button and backdrop attributes and the paddings binding', async () => {
             vi.useFakeTimers();
 
-            const fixture = createComponent(PopoverInputAliases);
+            const fixture = createComponent(PopoverBooleanInputs);
 
             readOverlayContainer();
 
@@ -1805,7 +1791,7 @@ class PopoverSimple {
     selector: 'popover-close-on-scroll',
     imports: [KbqPopoverModule],
     template: `
-        <button kbqPopover [closeOnScroll]="true" [kbqTrigger]="'manual'" [kbqPopoverContent]="'CONTENT'">
+        <button kbqPopover [kbqPopoverCloseOnScroll]="true" [kbqTrigger]="'manual'" [kbqPopoverContent]="'CONTENT'">
             trigger
         </button>
     `
@@ -2020,11 +2006,10 @@ class PopoverRebuiltContext {
 }
 
 @Component({
-    selector: 'popover-input-aliases',
+    selector: 'popover-boolean-inputs',
     imports: [KbqPopoverModule],
     template: `
-        <button #bare kbqPopover hasCloseButton kbqPopoverContent="BARE" kbqPopoverHeader="HEADER">Bare</button>
-        <button #stringFalse kbqPopover hasCloseButton="false" kbqPopoverContent="FALSE">False</button>
+        <button #stringFalse kbqPopover kbqPopoverHasCloseButton="false" kbqPopoverContent="FALSE">False</button>
         <button
             #prefixed
             kbqPopover
@@ -2038,8 +2023,7 @@ class PopoverRebuiltContext {
         </button>
     `
 })
-class PopoverInputAliases {
-    readonly bare = viewChild.required<ElementRef>('bare');
+class PopoverBooleanInputs {
     readonly stringFalse = viewChild.required<ElementRef>('stringFalse');
     readonly prefixed = viewChild.required<ElementRef>('prefixed');
 }

@@ -171,12 +171,6 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
     /** Classes set on the host `kbq-dropdown` element, transferred onto the panel in the overlay container. */
     readonly panelClass = input<string>('', { alias: 'class' });
 
-    /**
-     * @deprecated Has no effect. Use `KbqDropdownTrigger.widthOrigin` to make the panel match
-     * an element other than the trigger. Will be removed in v21.
-     */
-    triggerWidth: string;
-
     /** The position the trigger resolved; supersedes the inputs until one of them changes. */
     private readonly positionOverride = signal<{ posX: KbqDropdownPositionX; posY: KbqDropdownPositionY } | null>(null);
 

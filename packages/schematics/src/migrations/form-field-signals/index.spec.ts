@@ -128,24 +128,6 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('hint.fillTextOff() || error.compact()');
     });
 
-    it('rewrites a KbqPasswordHint.regex write to .set()', async () => {
-        const ts = firstTsPath();
-
-        appTree.overwrite(
-            ts,
-            "import { KbqPasswordHint } from '@koobiq/components/form-field';\n" +
-                'class Demo {\n' +
-                '    apply(hint: KbqPasswordHint) {\n' +
-                '        hint.regex = /koobiq/;\n' +
-                '    }\n' +
-                '}\n'
-        );
-
-        const updated = (await run()).readText(ts);
-
-        expect(updated).toContain('hint.regex.set(/koobiq/);');
-    });
-
     it('warns about the QueryList API lost by the content queries', async () => {
         const ts = firstTsPath();
 
@@ -205,7 +187,7 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('signal inputs now');
     });
 
-    it.each(['cleaner', 'passwordToggle', 'hint', 'passwordHints', 'prefix', 'suffix'])(
+    it.each(['cleaner', 'passwordToggle', 'hint', 'prefix', 'suffix'])(
         'warns about an assignment to the now read-only %s content query',
         async (member) => {
             const ts = firstTsPath();
