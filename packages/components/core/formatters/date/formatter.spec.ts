@@ -1291,3 +1291,55 @@ describe('Date pipes with a component-scoped KBQ_DATE_TIMEZONE', () => {
         expect(fixture.nativeElement.querySelector('scoped-timezone-host').textContent).toContain('10:00');
     });
 });
+
+describe('Date pipes in an OnPush view nested under an OnPush parent', () => {
+    const instant = '2026-03-05T10:00:00Z';
+    const label = signal('first');
+
+    @Component({
+        selector: 'nested-timezone-child',
+        imports: [KbqAbsoluteShortDateTimePipe],
+        template: '{{ label() }} {{ value | kbqAbsoluteShortDateTime }}',
+        changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class ChildComponent {
+        readonly label = label;
+        readonly value = instant;
+    }
+
+    @Component({
+        selector: 'nested-timezone-host',
+        imports: [ChildComponent],
+        template: '<nested-timezone-child />',
+        changeDetection: ChangeDetectionStrategy.OnPush
+    })
+    class HostComponent {}
+
+    it('re-renders on a time zone change after a re-render that hit the cache', async () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            imports: [HostComponent, KbqFormattersModule, KbqLuxonDateModule],
+            providers: [
+                { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' },
+                { provide: KBQ_LOCALE_DATA, useValue: KBQ_DEFAULT_LOCALE_DATA_FACTORY() },
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService },
+                kbqDateTimezoneProvider('Asia/Kolkata')
+            ]
+        });
+
+        const fixture = TestBed.createComponent(HostComponent);
+
+        fixture.detectChanges();
+
+        label.set('second');
+        await fixture.whenStable();
+
+        expect(fixture.nativeElement.textContent).toContain('second');
+        expect(fixture.nativeElement.textContent).toContain('15:30');
+
+        TestBed.inject(KbqDateTimezoneService).setTimezone('utc');
+        await fixture.whenStable();
+
+        expect(fixture.nativeElement.textContent).toContain('10:00');
+    });
+});

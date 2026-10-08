@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, DestroyRef, effect, inject, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, inject, Pipe, PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DurationUnit } from '@koobiq/date-adapter';
 import { DateTimeOptions } from '@koobiq/date-formatter';
@@ -88,8 +88,10 @@ export class BaseFormatterPipe<D> {
  * changes via `KbqLocaleService`, or the active time zone via `KbqDateTimezoneService`.
  *
  * The base class owns:
- * - a subscription to `KbqLocaleService.changes` and an `effect` on the active time zone, each of which
- *   invalidates the cache and marks the host for check (the same approach the built-in `AsyncPipe` uses);
+ * - a subscription to `KbqLocaleService.changes`, which invalidates the cache and marks the host for check
+ *   (the same approach the built-in `AsyncPipe` uses);
+ * - a read of the active time zone signal in `transform()`, which registers it on the rendering view, so a
+ *   time zone change refreshes that view — OnPush included — without a call of its own;
  * - caching by `(value, args, localeId, timezone)`, so the impure `transform()` only does
  *   real work when an input, the active locale or the active time zone actually changed — see
  *   `shallowEqual` for how the comparison works and its limits.
@@ -124,18 +126,11 @@ export abstract class BaseLocaleAwareFormatterPipe<
             this.hasCache = false;
             this.changeDetectorRef.markForCheck();
         });
-
-        // Only wakes an OnPush host up; the cache is invalidated by comparing the zone in `transform()`,
-        // so the run this effect makes on creation costs nothing.
-        effect(() => {
-            this.timezoneService.timezone();
-
-            this.changeDetectorRef.markForCheck();
-        });
     }
 
     transform(value: Value, ...args: Args): string {
         const currentLocaleId = this.localeService?.id ?? null;
+        // Read ahead of the cache check on every call: the read is what refreshes the view on a zone change.
         const currentTimezone = this.timezoneService.timezone();
 
         if (
