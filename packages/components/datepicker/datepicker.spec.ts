@@ -50,6 +50,7 @@ import {
     kbqLocaleIDProvider,
     kbqLocaleServiceProvider,
     KbqOverlayLayer,
+    LEFT_ARROW,
     ONE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
@@ -528,6 +529,30 @@ describe('KbqDatepicker', () => {
 
                 expect(testComponent.datepicker().opened).toBe(false);
                 expect(event.defaultPrevented).toBe(false);
+            });
+        });
+
+        describe('arrow keys', () => {
+            it('should move one part per key when the next key comes before the selection lands', async () => {
+                vi.useFakeTimers();
+
+                const fixture = createComponent(StandardDatepicker, [KbqLuxonDateModule]);
+
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                const input = getDatepickerInputElement(fixture);
+
+                input.focus();
+                input.setSelectionRange(input.value.search(/\d+$/), input.value.length);
+
+                // Both within one task, as a quick key repeat on a busy page delivers them: the selection the
+                // first one moves is set on a timer.
+                dispatchKeyboardEvent(input, 'keydown', LEFT_ARROW);
+                dispatchKeyboardEvent(input, 'keydown', LEFT_ARROW);
+                await vi.advanceTimersByTimeAsync(0);
+
+                expect([input.selectionStart, input.selectionEnd]).toEqual([0, input.value.search(/\D/)]);
             });
         });
 
