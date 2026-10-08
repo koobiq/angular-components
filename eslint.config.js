@@ -495,6 +495,24 @@ module.exports = tseslint.config(
         }
     },
 
+    // The API of packages/components is signal-based: no decorator inputs, outputs or queries, and no component on
+    // the default change detection. The deprecated sub-entry points stay as they are until their removal in 22.0.0.
+    {
+        files: ['packages/components/**/*.ts'],
+        ignores: [
+            '**/*.spec.ts',
+            '**/*.spec-helper.ts',
+            '**/*.playwright-spec.ts',
+            '**/e2e.ts',
+            'packages/components/**/deprecated/**'
+        ],
+        rules: {
+            '@angular-eslint/prefer-signals': 2,
+            '@angular-eslint/prefer-output-emitter-ref': 2,
+            '@angular-eslint/prefer-on-push-component-change-detection': 2
+        }
+    },
+
     // JSDoc of packages/components, which the docs site and llms-full.txt are generated from. TypeScript takes
     // any `@word` that starts a line for a tag and hides the text after it in that tag, so a tag the docs do not
     // show loses that text without an error anywhere.
