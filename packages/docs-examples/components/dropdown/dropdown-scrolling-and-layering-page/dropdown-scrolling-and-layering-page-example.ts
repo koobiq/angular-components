@@ -1,7 +1,7 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOverlayLayer } from '@koobiq/components/core';
+import { KbqOverflowShadowContainer, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
@@ -11,10 +11,18 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
  */
 @Component({
     selector: 'dropdown-scrolling-and-layering-page-example',
-    imports: [CdkScrollable, KbqButtonModule, KbqDropdownModule, KbqIconModule, KbqOverlayLayer, KbqTopBarModule],
+    imports: [
+        CdkScrollable,
+        KbqButtonModule,
+        KbqDropdownModule,
+        KbqIconModule,
+        KbqOverflowShadowContainer,
+        KbqOverlayLayer,
+        KbqTopBarModule
+    ],
     template: `
-        <div class="example-scroller" cdkScrollable>
-            <kbq-top-bar>
+        <div #scroller="kbqOverflowShadowContainer" class="example-scroller" cdkScrollable kbqOverflowShadowContainer>
+            <kbq-top-bar [withShadow]="scroller.overflow().top">
                 <div
                     class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
                     kbqTopBarContainer

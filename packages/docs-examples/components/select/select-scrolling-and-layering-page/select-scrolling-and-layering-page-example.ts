@@ -1,6 +1,6 @@
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqOverlayLayer } from '@koobiq/components/core';
+import { KbqOverflowShadowContainer, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 
@@ -9,9 +9,9 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
  */
 @Component({
     selector: 'select-scrolling-and-layering-page-example',
-    imports: [KbqTopBarModule, CdkScrollable, KbqOverlayLayer, KbqSelectModule],
+    imports: [KbqTopBarModule, CdkScrollable, KbqOverflowShadowContainer, KbqOverlayLayer, KbqSelectModule],
     template: `
-        <kbq-top-bar>
+        <kbq-top-bar [withShadow]="scroller.overflow().top">
             <div
                 class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
                 kbqTopBarContainer
@@ -23,7 +23,13 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
             <div kbqTopBarSpacer></div>
         </kbq-top-bar>
 
-        <div class="example-text-container layout-padding-left-xxl" cdk-scrollable kbqOverlayLayer>
+        <div
+            #scroller="kbqOverflowShadowContainer"
+            class="example-text-container layout-padding-left-xxl"
+            cdk-scrollable
+            kbqOverflowShadowContainer
+            kbqOverlayLayer
+        >
             <kbq-form-field>
                 <kbq-select [value]="'Network Watcher'">
                     <kbq-option [value]="'Network Watcher'">Network Watcher</kbq-option>
