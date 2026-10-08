@@ -162,13 +162,8 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     private inputSubscription = Subscription.EMPTY;
 
     constructor() {
-        const intl = inject(KbqDatepickerIntl);
-        const changeDetectorRef = this.changeDetectorRef;
-
-        this.intlChanges = intl.changes.subscribe(() => {
-            changeDetectorRef.markForCheck();
-            this.stateChanges.next();
-        });
+        // No view of the calendar renders the labels of the intl.
+        this.intlChanges = inject(KbqDatepickerIntl).changes.subscribe(() => this.stateChanges.next());
     }
 
     ngOnChanges(changes: SimpleChanges) {

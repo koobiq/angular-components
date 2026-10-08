@@ -275,7 +275,8 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
 export class KbqDatepickerContent<D> implements OnDestroy {
     readonly animationDone: Subject<void>;
     protected readonly animationsDisabled: boolean;
-    animationState: 'enter' | 'void';
+    get animationState(): 'enter' | 'void';
+    set animationState(value: 'enter' | 'void');
     readonly calendar: _angular_core.Signal<KbqCalendar<any>>;
     datepicker: KbqDatepicker<D>;
     // (undocumented)
@@ -445,18 +446,14 @@ export class KbqDatepickerToggleIcon {
 }
 
 // @public (undocumented)
-export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy, KbqSiblingPopup {
+export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblingPopup {
     readonly datepicker: _angular_core.InputSignal<KbqDatepicker<D>>;
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     get isAttached(): boolean;
     // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
-    // (undocumented)
-    ngOnDestroy(): void;
     open($event: MouseEvent): void;
     readonly openedChange: Observable<boolean>;
     // (undocumented)

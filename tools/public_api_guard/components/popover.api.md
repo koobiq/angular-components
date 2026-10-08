@@ -107,8 +107,10 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
 // @public (undocumented)
 export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
-    confirmButtonText: string;
-    confirmText: string;
+    get confirmButtonText(): string;
+    set confirmButtonText(value: string);
+    get confirmText(): string;
+    set confirmText(value: string);
     readonly onConfirm: Subject<void>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqPopoverConfirmComponent, "kbq-popover-confirm-component", never, {}, {}, never, never, true, never>;

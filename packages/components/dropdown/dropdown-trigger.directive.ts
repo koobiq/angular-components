@@ -19,7 +19,6 @@ import {
     afterNextRender,
     AfterRenderRef,
     booleanAttribute,
-    ChangeDetectorRef,
     Directive,
     effect,
     ElementRef,
@@ -31,6 +30,7 @@ import {
     numberAttribute,
     OnDestroy,
     output,
+    signal,
     untracked,
     ViewContainerRef
 } from '@angular/core';
@@ -152,7 +152,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private parent = inject(KbqDropdown, { optional: true })!;
     private dropdownItemInstance = inject(KbqDropdownItem, { optional: true, self: true })!;
     private _dir = inject(Directionality, { optional: true });
-    private changeDetectorRef = inject(ChangeDetectorRef);
     private focusMonitor = inject(FocusMonitor);
     private readonly document = inject(DOCUMENT);
 
@@ -236,7 +235,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Whether the dropdown is open. */
     get opened(): boolean {
-        return this._opened;
+        return this.openedState();
     }
 
     /**
@@ -266,10 +265,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * including the moment `destroy()` restores focus to the trigger.
      */
     get isAttached(): boolean {
-        return this._opened;
+        return this.openedState();
     }
 
-    private _opened: boolean = false;
+    private readonly openedState = signal(false);
 
     private portal: TemplatePortal;
 
@@ -342,12 +341,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Toggles the dropdown between the open and closed states. */
     toggle(): void {
-        return this._opened ? this.close() : this.open();
+        return this.openedState() ? this.close() : this.open();
     }
 
     /** Moves an open panel to the current origin and re-applies its position. */
     updatePosition(): void {
-        if (!this._opened || !this.overlayRef) return;
+        if (!this.openedState() || !this.overlayRef) return;
 
         this.setPosition(this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
         this.overlayRef.updatePosition();
@@ -355,7 +354,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Opens the dropdown. */
     open(): void {
-        if (this._opened) {
+        if (this.openedState()) {
             return;
         }
 
@@ -467,7 +466,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
      * sibling item crossed on the way to the submenu doesn't prematurely close it.
      */
     handleMouseLeave(event: MouseEvent): void {
-        if (!this.isNested() || !this._opened || !this.isBrowser || !this.parent.safeArea() || !this.overlayRef) {
+        if (!this.isNested() || !this.openedState() || !this.isBrowser || !this.parent.safeArea() || !this.overlayRef) {
             return;
         }
 
@@ -601,13 +600,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     // set state rather than toggle to support triggers sharing a dropdown
     private setIsOpened(isOpen: boolean): void {
-        if (isOpen !== this._opened) {
-            this.changeDetectorRef.markForCheck();
-        }
+        this.openedState.set(isOpen);
 
-        this._opened = isOpen;
-
-        if (this._opened) {
+        if (isOpen) {
             // TODO: The 'emit' function requires a mandatory void argument
             this.dropdownOpened.emit();
         } else {
@@ -803,7 +798,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         const hover = this.parent
             ? this.parent.hovered().pipe(
                   filter((active) => active !== this.dropdownItemInstance),
-                  filter(() => this._opened),
+                  filter(() => this.openedState()),
                   // While a safe area protects this dropdown, closing is driven by the safe area
                   // itself instead: either it resolves on its own (see `handleMouseLeave()`), or a
                   // forced switch to a different nested trigger closes this one via `onExit` — always
@@ -896,7 +891,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Freezes the overlay pane at its rendered width. */
     private pinOverlayWidth(): void {
-        if (!this._opened || !this.overlayRef) return;
+        if (!this.openedState() || !this.overlayRef) return;
 
         // An explicit or `'auto'` panelWidth already fixes the pane; only pin content-sized panels.
         if (this.getOverlaySize().width !== '') return;
