@@ -1,10 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { CdkObserveContent } from '@angular/cdk/observers';
 import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     effect,
     ElementRef,
@@ -45,9 +43,6 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
 
 @Component({
     selector: 'kbq-toggle',
-    imports: [
-        CdkObserveContent
-    ],
     templateUrl: './toggle.component.html',
     styleUrls: ['./toggle.scss', './toggle-tokens.scss'],
     providers: [
@@ -70,7 +65,6 @@ export type KbqToggleClickAction = KbqCheckableClickAction;
     exportAs: 'kbqToggle'
 })
 export class KbqToggleComponent extends KbqColorDirective implements OnChanges, AfterViewInit, OnDestroy {
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly checkable = inject(KbqCheckable, { self: true });
 
@@ -261,8 +255,13 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
         event.stopPropagation();
     }
 
-    onLabelTextChange() {
-        this.changeDetectorRef.markForCheck();
+    /**
+     * Does nothing: the view reads nothing from the label, so a change of it needs no re-check.
+     *
+     * @deprecated Kept for back-compatibility and will be removed in the next major version.
+     */
+    onLabelTextChange(): void {
+        // Intentionally empty.
     }
 
     onInputClick(event: MouseEvent) {

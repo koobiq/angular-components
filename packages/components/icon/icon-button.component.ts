@@ -12,7 +12,6 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { KbqIcon } from './icon.component';
 
 /**
@@ -59,15 +58,12 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
     get disabled(): boolean {
-        return this._disabled;
+        return this.disabledSignal();
     }
 
     set disabled(value: boolean) {
         this.disabledSignal.set(value);
     }
-
-    // @todo 20 In the next major release this line will be deleted.
-    private _disabled: boolean;
 
     /** @docs-private */
     readonly disabledSignal = signal(false);
@@ -102,9 +98,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     constructor() {
         super();
-
-        // @todo 20 In the next major release this line will be deleted.
-        toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
 
         effect(() => (this.disabledSignal() ? this.stopFocusMonitor() : this.runFocusMonitor()));
     }

@@ -244,11 +244,9 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
 
     constructor() {
         // The state lives under the new key now, so restore from it — in `ngAfterContentChecked`: the change is
-        // reported while the view updates, before sections created in the same pass have bound their `value`.
-        this.stateSaving.keyChanges.subscribe(() => {
-            this.keyChanged = true;
-            this.changeDetectorRef.markForCheck();
-        });
+        // reported while the view updates, before sections created in the same pass have bound their `value`,
+        // and that same pass runs the hook.
+        this.stateSaving.keyChanges.subscribe(() => (this.keyChanged = true));
 
         // Re-emit `valueChange` whenever any (current or future) item toggles its expanded state.
         // Reading `items()` inside the effect keeps the subscriptions in sync with dynamically

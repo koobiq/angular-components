@@ -100,8 +100,6 @@ export class KbqButtonToggleChange {
     exportAs: 'kbqButtonToggleGroup'
 })
 export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, OnInit, OnDestroy {
-    private _changeDetector = inject(ChangeDetectorRef);
-
     /** Whether the toggle group is vertical. */
     readonly vertical = input(false, { transform: booleanAttribute });
 
@@ -302,7 +300,6 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
      */
     writeValue(value: any) {
         this.value = value;
-        this._changeDetector.markForCheck();
     }
 
     /**

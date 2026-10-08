@@ -291,10 +291,6 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
         }
 
         this.accordion.saveState();
-
-        // Ensures that the animation will run when the value is set outside of an `@Input`.
-        // This includes cases like the open, close and toggle methods.
-        this.changeDetectorRef.markForCheck();
     }
 
     private subscribeToOpenCloseAllActions(): Subscription {

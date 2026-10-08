@@ -217,8 +217,10 @@ export class KbqTagList
     }
 
     /**
-     * Marks the list for a change-detection check. The tags are the consumer's content, so a change to one
-     * of them — its `disabled`, its `removable` — does not dirty this view, which decides the cleaner.
+     * Marks the list for a change-detection check.
+     *
+     * Kept for back-compatibility. The cleaner's visibility is derived from signals of the list and its
+     * tags, so the list re-renders on its own and nothing in the library calls this any more.
      *
      * @docs-private
      */
@@ -389,16 +391,15 @@ export class KbqTagList
      * @docs-private
      */
     get tabIndex(): number | null {
-        return this.disabled() || this.tagInput ? null : this._tabIndex;
+        return this.disabled() || this.registeredInput() ? null : this._tabIndex();
     }
 
     set tabIndex(value: number) {
         this.userTabIndex = value;
-        this._tabIndex = value;
-        this.changeDetectorRef.markForCheck();
+        this._tabIndex.set(value);
     }
 
-    private _tabIndex = 0;
+    private readonly _tabIndex = signal(0);
 
     /**
      * Event that emits whenever the raw value of the tag-list changes. This is here primarily
@@ -514,14 +515,11 @@ export class KbqTagList
 
         this.setupDropListInitialProperties();
 
-        // A disabled list cannot be reordered, and the tags fold its state into their own.
+        // A disabled list cannot be reordered.
         effect(() => {
             this.disabled();
 
-            untracked(() => {
-                this.syncDropListDisabledState();
-                this.markTagsForCheck();
-            });
+            untracked(() => this.syncDropListDisabledState());
         });
     }
 
@@ -549,14 +547,11 @@ export class KbqTagList
         // Prevents the tag list from capturing focus and redirecting
         // it back to the first tag when the user tabs out.
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this._tabIndex = -1;
+            this._tabIndex.set(-1);
             // Direct DOM write since the binding update is deferred with eventCoalescing.
             this.elementRef.nativeElement.tabIndex = -1;
 
-            setTimeout(() => {
-                this._tabIndex = this.userTabIndex || 0;
-                this.changeDetectorRef.markForCheck();
-            });
+            setTimeout(() => this._tabIndex.set(this.userTabIndex || 0));
         });
 
         // When the list changes, re-subscribe
@@ -580,10 +575,6 @@ export class KbqTagList
                 // Check to see if we have a destroyed tag and need to refocus
                 this.updateFocusForDestroyedTags();
 
-                // The tags are projected content owned by the consumer, so adding or removing one marks
-                // that view dirty and not this one. Without this the cleaner keeps whatever visibility it
-                // had when the list was last checked — it used to survive a clear that emptied the list.
-                this.changeDetectorRef.markForCheck();
                 this.tagsCount.set(this.tags.length);
 
                 // Defer setting the value in order to avoid the "Expression
@@ -849,7 +840,7 @@ export class KbqTagList
      */
     protected updateTabIndex(): void {
         // If we have 0 tags, we should not allow keyboard focus
-        this._tabIndex = this.userTabIndex || (this.tags.length === 0 ? -1 : 0);
+        this._tabIndex.set(this.userTabIndex || (this.tags.length === 0 ? -1 : 0));
     }
 
     /**
@@ -1028,14 +1019,6 @@ export class KbqTagList
     /** Checks whether any of the tags is focused. */
     private hasFocusedTag() {
         return this.tags.some((tag) => tag.hasFocus);
-    }
-
-    /**
-     * The tags render in the consumer's view, so a change to `disabled` — which they read back off this
-     * list rather than hold themselves — leaves their own views untouched until they are re-checked.
-     */
-    private markTagsForCheck(): void {
-        this.tags?.forEach((tag) => tag.changeDetectorRef.markForCheck());
     }
 
     private setupDropListInitialProperties(): void {

@@ -91,8 +91,6 @@ export class KbqRadioGroup
     extends KbqColorDirective
     implements AfterContentChecked, OnChanges, AfterContentInit, ControlValueAccessor
 {
-    private readonly changeDetector = inject(ChangeDetectorRef);
-
     readonly big = input<boolean>(false);
 
     /**
@@ -139,7 +137,6 @@ export class KbqRadioGroup
 
     set disabled(value: boolean) {
         this._disabled.set(value);
-        this.markRadiosForCheck();
     }
 
     private readonly _disabled = signal(false);
@@ -275,6 +272,12 @@ export class KbqRadioGroup
         }
     }
 
+    /**
+     * Marks every radio button of the group for a change-detection check.
+     *
+     * Kept for back-compatibility. A button derives `checked` and `disabled` from signals, its own and its
+     * group's, so it re-renders on its own and nothing in the library calls this any more.
+     */
     markRadiosForCheck() {
         if (this.radios) {
             this.radios.forEach((radio) => radio.markForCheck());
@@ -286,7 +289,6 @@ export class KbqRadioGroup
      */
     writeValue(value: any) {
         this.value = value;
-        this.changeDetector.markForCheck();
     }
 
     /**
@@ -313,7 +315,6 @@ export class KbqRadioGroup
      */
     setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
-        this.changeDetector.markForCheck();
     }
 
     /** Updates the `selected` radio button from the internal _value state. */
@@ -378,8 +379,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
                 // Notify all radio buttons with the same name to un-check.
                 this.radioDispatcher.notify(this.id(), this.name);
             }
-
-            this.changeDetector.markForCheck();
         }
     }
 
@@ -411,10 +410,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
     }
 
     set disabled(value: boolean) {
-        if (this._disabled() !== value) {
-            this._disabled.set(value);
-            this.changeDetector.markForCheck();
-        }
+        this._disabled.set(value);
     }
 
     private readonly _disabled = signal(false);
@@ -644,12 +640,11 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
 
     /**
      * Marks the radio button as needing checking for change detection.
-     * This method is exposed because the parent radio group will directly
-     * update bound properties of the radio button.
+     *
+     * Kept for back-compatibility. A button derives its state from signals, its own and its group's, so it
+     * re-renders on its own and nothing in the library calls this any more.
      */
     markForCheck() {
-        // When group value changes, the button will not be notified. Use `markForCheck` to explicit
-        // update radio button's status
         this.changeDetector.markForCheck();
     }
 

@@ -285,7 +285,16 @@ export class KbqTag
      *
      * @docs-private
      */
-    hasFocus: boolean = false;
+    get hasFocus(): boolean {
+        return this._hasFocus();
+    }
+
+    /** @docs-private */
+    set hasFocus(value: boolean) {
+        this._hasFocus.set(value);
+    }
+
+    private readonly _hasFocus = signal(false);
 
     /**
      * Backing input of `editable`. Bind through the `editable` attribute; read `editable`, which falls
@@ -433,8 +442,6 @@ export class KbqTag
 
     set disabled(value: boolean) {
         this._disabled.set(value);
-        // The cleaner's visibility is decided by the list, whose view this write does not touch.
-        this.tagList?.markForCheck();
     }
 
     private readonly _disabled = signal(false);
@@ -755,8 +762,6 @@ export class KbqTag
                     selected: this.selected()
                 });
             }
-
-            this.changeDetectorRef.markForCheck();
         }
     }
 
@@ -790,8 +795,6 @@ export class KbqTag
                     this.cancelEditing('blur');
                     if (!this.tagList) this.deselect();
                 }
-
-                this.changeDetectorRef.markForCheck();
             }
         });
     }

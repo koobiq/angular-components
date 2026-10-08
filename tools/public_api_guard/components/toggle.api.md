@@ -83,7 +83,7 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     onChangeEvent(event: Event): void;
     // (undocumented)
     onInputClick(event: MouseEvent): void;
-    // (undocumented)
+    // @deprecated
     onLabelTextChange(): void;
     // (undocumented)
     get tabIndex(): number;
