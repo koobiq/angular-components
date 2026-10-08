@@ -83,7 +83,7 @@ export class KbqSelectLoading {}
 })
 export class KbqSelectError {
     /** Indicates whether styles for pagination controls should be used. */
-    paging = input(false, { transform: booleanAttribute });
+    readonly paging = input(false, { transform: booleanAttribute });
 }
 
 /**

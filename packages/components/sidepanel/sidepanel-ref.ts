@@ -17,7 +17,7 @@ export class KbqSidepanelRef<T = any, R = any> {
      * Vertical scroll overflow state of the sidepanel body.
      * Updated on scroll and used for visual adjustments.
      */
-    bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
+    readonly bodyOverflow = signal<KbqOverflowShadowState>({ top: false, bottom: false });
 
     /** Instance of the component making up the content of the sidepanel. */
     instance: T;

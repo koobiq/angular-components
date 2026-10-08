@@ -173,7 +173,7 @@ export class KbqSidepanelRef<T = any, R = any> {
     afterClosed(): Observable<R | undefined>;
     afterOpened(): Observable<void>;
     beforeClosed(): Observable<void>;
-    bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
+    readonly bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
     // (undocumented)
     close(result?: R): void;
     // (undocumented)
