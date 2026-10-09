@@ -59,10 +59,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             margin-block-end: var(--kbq-size-m);
         }
 
-        .example-caption {
-            margin-block-end: 0;
-        }
-
         .example-secondary {
             color: var(--kbq-foreground-contrast-secondary);
         }
