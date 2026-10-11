@@ -2520,7 +2520,7 @@ export const KBQ_DEFAULT_PRECISION_SEPARATOR = ".";
 // @public
 export const KBQ_DEFAULT_THEMES: KbqThemeConfig[];
 
-// @public @deprecated
+// @public
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
 // @public
@@ -3269,7 +3269,7 @@ export interface KbqFormFieldControlRef<T = unknown> {
     readonly value: Signal<T | null>;
 }
 
-// @public @deprecated
+// @public
 export interface KbqFormFieldRef {
     // (undocumented)
     readonly control: Signal<KbqFormFieldControlRef>;
