@@ -11,7 +11,7 @@ CSS grid and adds per-panel size constraints, collapsing and hiding, snap points
 support and the WAI-ARIA `separator` pattern. The previous implementation — `KbqSplitterComponent`
 with `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`,
 `KbqSplitterModule` and the `Direction` enum — moved to `@koobiq/components/splitter/deprecated`
-and will be removed in a future major version.
+and will be removed in 22.0.0.
 
 Nothing about that implementation changed: `direction`, `disabled`, `useGhost`, `hideGutters`,
 `gutterSize`, `gutterPositionChange`, the `[kbq-splitter-area]` attribute selector and the

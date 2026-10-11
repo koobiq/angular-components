@@ -68,12 +68,12 @@
         },
         "scrollbar-deprecated-path": {
             "version": "21.0.0-0",
-            "description": "Rewrites `@koobiq/components/scrollbar` imports to `@koobiq/components/scrollbar/deprecated`. `@koobiq/components/scrollbar` now resolves to a new, dependency-free scrollbar directive; the previous `overlayscrollbars`-based component/directive (`options`/`events`/`defer`/`scrollbarInstance`, the `kbq-scrollbar` element selector) moved to `@koobiq/components/scrollbar/deprecated` unchanged and will be removed in a future major version.",
+            "description": "Rewrites `@koobiq/components/scrollbar` imports to `@koobiq/components/scrollbar/deprecated`. `@koobiq/components/scrollbar` now resolves to a new, dependency-free scrollbar directive; the previous `overlayscrollbars`-based component/directive (`options`/`events`/`defer`/`scrollbarInstance`, the `kbq-scrollbar` element selector) moved to `@koobiq/components/scrollbar/deprecated` unchanged and will be removed in 22.0.0.",
             "factory": "./migrations/scrollbar-deprecated-path/index"
         },
         "splitter-deprecated-path": {
             "version": "21.0.0-0",
-            "description": "Rewrites `@koobiq/components/splitter` imports to `@koobiq/components/splitter/deprecated`. `@koobiq/components/splitter` now resolves to the rewritten splitter, which lays panels out with CSS grid and adds panel constraints, collapsing, snapping, keyboard support and the `separator` accessibility pattern; the previous `flex-basis` based implementation (`KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule`, `Direction`) moved to `@koobiq/components/splitter/deprecated` unchanged and will be removed in a future major version.",
+            "description": "Rewrites `@koobiq/components/splitter` imports to `@koobiq/components/splitter/deprecated`. `@koobiq/components/splitter` now resolves to the rewritten splitter, which lays panels out with CSS grid and adds panel constraints, collapsing, snapping, keyboard support and the `separator` accessibility pattern; the previous `flex-basis` based implementation (`KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule`, `Direction`) moved to `@koobiq/components/splitter/deprecated` unchanged and will be removed in 22.0.0.",
             "factory": "./migrations/splitter-deprecated-path/index"
         },
         "filter-bar-rename-action": {
