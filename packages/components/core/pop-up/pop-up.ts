@@ -64,7 +64,6 @@ export abstract class KbqPopUp implements OnDestroy {
         this.classMapState.set(value);
     }
 
-    warning: boolean;
     arrow: boolean;
     defaultPaddings: boolean;
 
@@ -87,8 +86,6 @@ export abstract class KbqPopUp implements OnDestroy {
 
     /** Subject for notifying that the tooltip has been hidden from the view */
     protected readonly onHideSubject = new Subject<void>();
-
-    protected closeOnInteraction: boolean = false;
 
     private showTimeoutId: any;
     private hideTimeoutId: any;
@@ -128,8 +125,6 @@ export abstract class KbqPopUp implements OnDestroy {
         if (this.hideTimeoutId) {
             clearTimeout(this.hideTimeoutId);
         }
-
-        this.closeOnInteraction = true;
 
         this.showTimeoutId = setTimeout(() => {
             this.showTimeoutId = undefined;
@@ -203,10 +198,6 @@ export abstract class KbqPopUp implements OnDestroy {
         this.trigger?.handleHoverChange();
     }
 
-    markForCheck(): void {
-        this.changeDetectorRef.markForCheck();
-    }
-
     detectChanges(): void {
         this.changeDetectorRef.detectChanges();
     }
@@ -217,23 +208,13 @@ export abstract class KbqPopUp implements OnDestroy {
      */
     protected afterShowAnimation(): void {}
 
-    handleBodyInteraction(): void {
-        if (this.closeOnInteraction) {
-            this.hide(0);
-        }
-    }
-
-    /** Holds closing on an outside interaction off until the pop-up has animated in. */
+    /** Calls `afterShowAnimation()` once the pop-up has animated in. */
     private waitForShowAnimation(): void {
-        this.closeOnInteraction = false;
         this.showAnimation?.destroy();
         this.showAnimation = kbqAfterAnimations(
             // Read once rendered: a subclass queries the animated element from its view.
             () => this.elementRef?.nativeElement,
-            () => {
-                this.closeOnInteraction = true;
-                this.afterShowAnimation();
-            },
+            () => this.afterShowAnimation(),
             this.hostInjector
         );
     }

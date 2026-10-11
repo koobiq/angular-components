@@ -80,7 +80,7 @@ export class KbqListItem implements AfterContentChecked, AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["linesQuery"], ["[kbq-list-icon], [mcListIcon]", "[kbq-line], [mcLine]", "*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["linesQuery"], ["[kbq-list-icon], [mcListIcon]", "[kbq-line]", "*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListItem, never>;
 }

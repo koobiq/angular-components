@@ -7,7 +7,7 @@ import { KbqCheckedState } from './checkbox';
  * applying it via `hostDirectives` gets `[(ngModel)]`/`formControl` support without wiring up its own.
  * @docs-private
  */
-export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider = {
+const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqCheckable),
     multi: true

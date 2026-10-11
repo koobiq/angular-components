@@ -1,9 +1,5 @@
 import { Directive, ElementRef, inject, input, linkedSignal, Signal, signal, WritableSignal } from '@angular/core';
 
-export interface CanColor {
-    readonly color: Signal<KbqComponentColors | string>;
-}
-
 export enum KbqComponentColors {
     Theme = 'theme',
     ThemeFade = 'theme-fade',

@@ -38,7 +38,8 @@ move the actions out of the trigger into a `kbq-accordion-header__actions` eleme
 - `KbqDefaultThemes` → `KBQ_DEFAULT_THEMES` and `KbqTheme` → `KbqThemeConfig` (an import clause that held both
   names keeps one);
 - `ThemePalette.Error`, `.Warning` and `.Success` → the `KbqComponentColors` members of the same value, dropping
-  the `ThemePalette` import once nothing else names it.
+  the `ThemePalette` import once nothing else names it;
+- the `mcLine` alias → `kbq-line`, in templates and in selectors written in code.
 
 Reports:
 
@@ -47,7 +48,14 @@ Reports:
   old one;
 - `getOptionScrollPosition` imported from `@koobiq/components/core`: `KbqOption.focus()` or `kbqFocusAndReveal()`;
 - any other use of `ThemePalette`: `Primary`, `Secondary`, `Info` and `Default` styled nothing, `Empty` becomes an
-  unset `color`, a type or a template field becomes `KbqComponentColors`.
+  unset `color`, a type or a template field becomes `KbqComponentColors`;
+- the undocumented exports nothing in the library used, imported from `@koobiq/components/core`: the pop-up
+  position lists, `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`,
+  `isWithin`, `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`, `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`, `KbqHover`, `CanColor`,
+  `KbqAnimationCurves`, `KbqAnimationDurations`, `KbqRectangleItem` and `countGroupLabelsBeforeOption`, each with
+  what to do instead;
+- a call of `.handleBodyInteraction()`, and a read of `.isSpecialFormatForRULocale()` or `.roundingOptions`,
+  private members of the number pipes now.
 
 **Dropdown and select** — rewrites:
 
@@ -169,6 +177,11 @@ Reports:
 - `kbq-light-theme()` and `kbq-dark-theme()`, deprecated for removal in 22.0.0;
 - a `@use`, `@import` or `@forward` of `@koobiq/components/core/styles/tokens`: load the design tokens modules
   directly;
+- a load of the removed modules `core/styles/functions` (its index, `number`, `string`),
+  `typography/typography-utils`, `common/clearfix` and `common/popup`, a call of the removed
+  `kbq-markdown-typography-config()`, the `typography-utils` getters, `popup-params`, `input-placeholder`,
+  `rtl-value()` and `kbq-typography-css-variables`, and, in a file that loads `core/styles/functions`, a timing
+  variable other than `$ease-out-circ`, `$ease-in-out-quad` and `$ease-in-out-circ`;
 - an unprefixed markdown class in any other string, such as `classList.add('md-h1')` or `[ngClass]`.
 
 **Tags** — rewrites nothing; reports, in a file that names `KbqTagInput` or its `exportAs`:

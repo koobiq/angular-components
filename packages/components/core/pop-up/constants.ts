@@ -130,6 +130,6 @@ export const KBQ_CONNECTED_OVERLAY_OVERLAP_CLASS = 'kbq-connected-overlay_overla
 /**
  * Variable used for offsetY(X) calculations when applying Angular Overlay
  *
- * @docs-private
+ * @internal
  */
 export const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT = Math.round(parseInt(TooltipSizeArrowSize) * Math.sqrt(2));

@@ -11,6 +11,7 @@ export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 /**
  * The select panel will only "fit" inside the viewport if it is positioned at
  * this value or more away from the viewport boundary.
+ * @internal
  */
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 
@@ -31,10 +32,3 @@ export const KBQ_SELECT_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrateg
 export function kbqSelectScrollStrategyProviderFactory(scrollDispatcher: ScrollDispatcher): () => ScrollStrategy {
     return kbqRepositionScrollStrategyFactory(scrollDispatcher);
 }
-
-/** @docs-private */
-export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER = {
-    provide: KBQ_SELECT_SCROLL_STRATEGY,
-    deps: [ScrollDispatcher],
-    useFactory: kbqSelectScrollStrategyProviderFactory
-};

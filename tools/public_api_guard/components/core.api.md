@@ -167,9 +167,6 @@ export const APOSTROPHE = 192;
 // @public (undocumented)
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
-// @public
-export const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT: number;
-
 // @public (undocumented)
 export const AT_SIGN = 64;
 
@@ -200,22 +197,7 @@ export abstract class BaseLocaleAwareFormatterPipe<D, Value = D | string | null 
 }
 
 // @public (undocumented)
-export const BOTTOM_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const BOTTOM_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const BOTTOM_RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
 export const C = 67;
-
-// @public (undocumented)
-export interface CanColor {
-    // (undocumented)
-    readonly color: Signal<KbqComponentColors | string>;
-}
 
 // @public
 export interface CanUpdateErrorState {
@@ -240,9 +222,6 @@ export const CONTEXT_MENU = 93;
 
 // @public (undocumented)
 export const CONTROL = 17;
-
-// @public
-export function countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<KbqOption>, optionGroups: QueryList<KbqOptgroup>): number;
 
 // @public
 export function createFakeEvent(type: string, canBubble?: boolean, cancelable?: boolean): Event;
@@ -938,9 +917,6 @@ export const esLALocaleData: {
 };
 
 // @public (undocumented)
-export const EXTENDED_OVERLAY_POSITIONS: ConnectionPositionPair[];
-
-// @public (undocumented)
 export const F = 70;
 
 // @public (undocumented)
@@ -1163,9 +1139,6 @@ export const isUndefined: (value: unknown) => value is undefined;
 export function isVerticalMovement(input: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isWithin(startRange: number, endRange: number, valueToCheck: number): boolean;
-
-// @public (undocumented)
 export const J = 74;
 
 // @public (undocumented)
@@ -1179,9 +1152,6 @@ export const KBQ_ANIMATIONS_CONFIG: InjectionToken<KbqAnimationsConfig>;
 
 // @public
 export const KBQ_CHECKABLE_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
-
-// @public
-export const KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR: Provider;
 
 // @public
 export const KBQ_CONNECTED_OVERLAY_ABOVE_CLASS = "kbq-connected-overlay_above";
@@ -2590,13 +2560,6 @@ export const KBQ_SELECT_LOCALE_CONFIGURATION: InjectionToken<KbqSelectLocaleConf
 export const KBQ_SELECT_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
-export const KBQ_SELECT_SCROLL_STRATEGY_PROVIDER: {
-    provide: InjectionToken<() => ScrollStrategy>;
-    deps: (typeof ScrollDispatcher)[];
-    useFactory: typeof kbqSelectScrollStrategyProviderFactory;
-};
-
-// @public
 export const KBQ_SELECT_SEARCH_MIN_OPTIONS_THRESHOLD = 10;
 
 // @public
@@ -2776,38 +2739,6 @@ export type KbqActionsPanelLocaleConfiguration = {
 export function kbqAfterAnimations(element: () => Element | null | undefined, callback: () => void, injector: Injector): {
     destroy(): void;
 };
-
-// @public
-export enum KbqAnimationCurves {
-    // (undocumented)
-    AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
-    // (undocumented)
-    DecelerationCurve = "cubic-bezier(0.0,0.0,0.2,1)",
-    // (undocumented)
-    EaseInOut = "ease-in-out",
-    // (undocumented)
-    EaseInOutQuad = "cubic-bezier(0.455,0.03,0.515,0.955)",
-    // (undocumented)
-    SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
-    // (undocumented)
-    StandardCurve = "cubic-bezier(0.4,0.0,0.2,1)"
-}
-
-// @public
-export enum KbqAnimationDurations {
-    // (undocumented)
-    Complex = "250ms",
-    // (undocumented)
-    Entering = "150ms",
-    // (undocumented)
-    Exiting = "125ms",
-    // (undocumented)
-    Instant = "50ms",
-    // (undocumented)
-    Long = "300ms",
-    // (undocumented)
-    Rapid = "100ms"
-}
 
 // @public
 export interface KbqAnimationsConfig {
@@ -3023,8 +2954,6 @@ export class KbqDateTimezoneService {
 // @public (undocumented)
 export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor();
-    // (undocumented)
-    isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean;
     // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;
     // (undocumented)
@@ -3254,8 +3183,6 @@ export class KbqFormElement implements AfterContentInit {
     // (undocumented)
     isHorizontal: boolean;
     // (undocumented)
-    isRow: boolean;
-    // (undocumented)
     margin: boolean;
     // (undocumented)
     ngAfterContentInit(): void;
@@ -3353,15 +3280,6 @@ export class KbqHighlightPipe implements PipeTransform {
 }
 
 // @public
-export class KbqHover {
-    readonly hovered: i0.Signal<boolean>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqHover, "[kbqHover]", ["kbqHover"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqHover, never>;
-}
-
-// @public
 export function kbqInjectA11yLocaleConfiguration(): Signal<KbqA11yLocaleConfiguration>;
 
 // @public
@@ -3405,7 +3323,7 @@ export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => 
 // @public
 export class KbqLine {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line], [mcLine]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLine, never>;
 }
@@ -3953,8 +3871,6 @@ export abstract class KbqPopUp implements OnDestroy {
     get classMap(): {};
     set classMap(value: {});
     // (undocumented)
-    protected closeOnInteraction: boolean;
-    // (undocumented)
     content: string | TemplateRef<unknown>;
     // (undocumented)
     context: {
@@ -3968,8 +3884,6 @@ export abstract class KbqPopUp implements OnDestroy {
     detectChanges(): void;
     protected get elementRef(): ElementRef<HTMLElement>;
     // (undocumented)
-    handleBodyInteraction(): void;
-    // (undocumented)
     header: string | TemplateRef<unknown>;
     hide(delay: number): void;
     readonly hovered: Signal<boolean>;
@@ -3977,8 +3891,6 @@ export abstract class KbqPopUp implements OnDestroy {
     isTemplateRef(value: any): boolean;
     // (undocumented)
     isVisible(): boolean;
-    // (undocumented)
-    markForCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -4001,8 +3913,6 @@ export abstract class KbqPopUp implements OnDestroy {
     set visibility(value: PopUpVisibility);
     // (undocumented)
     visibleChange: EventEmitter<boolean>;
-    // (undocumented)
-    warning: boolean;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPopUp, never, never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -4211,24 +4121,6 @@ export class KbqReadStateDirective {
 }
 
 // @public (undocumented)
-export class KbqRectangleItem {
-    // (undocumented)
-    get collapsed(): boolean;
-    set collapsed(value: boolean);
-    getOuterElementWidth(): number;
-    // (undocumented)
-    protected readonly isBrowser: boolean;
-    // (undocumented)
-    protected readonly nativeElement: HTMLElement;
-    // (undocumented)
-    readonly state: Subject<void>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqRectangleItem, never, never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRectangleItem, never>;
-}
-
-// @public (undocumented)
 export class KbqRelativeLongDatePipe<D> extends BaseLocaleAwareFormatterPipe<D, D | string | null | undefined, []> implements PipeTransform {
     // (undocumented)
     protected format(value: D | string | null | undefined): string;
@@ -4325,10 +4217,6 @@ export const kbqRevealSelection: (element: HTMLInputElement) => void;
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor();
-    // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point koobiq-components-core.d.ts
-    //
-    // (undocumented)
-    roundingOptions: RoundDecimalOptions;
     // (undocumented)
     transform(value: any, locale?: string): any;
     // (undocumented)
@@ -4845,15 +4733,6 @@ export const LAST_MEDIA = 183;
 export const LEFT_ARROW = 37;
 
 // @public (undocumented)
-export const LEFT_BOTTOM_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const LEFT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
 export const leftIconClassName = "kbq-icon_left";
 
 // @public
@@ -4951,9 +4830,6 @@ export const NUM_CENTER = 12;
 
 // @public (undocumented)
 export const NUM_LOCK = 144;
-
-// @public (undocumented)
-export const NUMBER_FORMAT_REGEXP: RegExp;
 
 // @public (undocumented)
 export const NUMPAD_DIVIDE = 111;
@@ -5103,27 +4979,6 @@ export enum PopUpVisibility {
     // (undocumented)
     Visible = "visible"
 }
-
-// @public (undocumented)
-export const POSITION_MAP: {
-    [key: string]: ConnectionPositionPair;
-};
-
-// @public (undocumented)
-export const POSITION_PRIORITY_STRATEGY: {
-    top: ConnectionPositionPair[];
-    topLeft: ConnectionPositionPair[];
-    topRight: ConnectionPositionPair[];
-    bottom: ConnectionPositionPair[];
-    bottomLeft: ConnectionPositionPair[];
-    bottomRight: ConnectionPositionPair[];
-    left: ConnectionPositionPair[];
-    leftTop: ConnectionPositionPair[];
-    leftBottom: ConnectionPositionPair[];
-    right: ConnectionPositionPair[];
-    rightTop: ConnectionPositionPair[];
-    rightBottom: ConnectionPositionPair[];
-};
 
 // @public (undocumented)
 export const POSITION_TO_CSS_MAP: {
@@ -5590,15 +5445,6 @@ export function resolveMultipleMode(value: KbqMultipleInput): MultipleMode | nul
 export const RIGHT_ARROW = 39;
 
 // @public (undocumented)
-export const RIGHT_BOTTOM_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const RIGHT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
 export const rightIconClassName = "kbq-icon_right";
 
 // @public
@@ -5879,9 +5725,6 @@ export const S = 83;
 
 // @public (undocumented)
 export const SCROLL_LOCK = 145;
-
-// @public
-export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 
 // @public (undocumented)
 export const SEMICOLON = 186;
@@ -6228,15 +6071,6 @@ export function toggleSelectAll<T>(adapter: KbqSelectAllAdapter<T>, options?: Kb
 
 // @public
 export function tokenizeSearchQuery(query: string): string[];
-
-// @public (undocumented)
-export const TOP_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const TOP_POSITION_PRIORITY: ConnectionPositionPair[];
-
-// @public (undocumented)
-export const TOP_RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public
 export enum TransitionCheckState {

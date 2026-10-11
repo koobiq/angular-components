@@ -25,8 +25,9 @@ const MARKDOWN_CLASS_SELECTOR: Replacement = {
 /**
  * Removed in 21.0.0: the arguments of `koobiq-theme()`, `koobiq-typography()` and `kbq-core-theme()`,
  * `kbq-contrast()`, `kbq-palette()`, `kbq-color()`, `kbq-typography-config()`, `core/styles/tokens`, the prebuilt
- * `light-theme.css` and `dark-theme.css`, and the unprefixed markdown typography classes (`md-h1`, …). Also reports
- * `kbq-light-theme()` and `kbq-dark-theme()`, deprecated for removal in 22.0.0.
+ * `light-theme.css` and `dark-theme.css`, the unprefixed markdown typography classes (`md-h1`, …), and the Sass
+ * modules, mixins, functions and timing variables nothing in the library used. Also reports `kbq-light-theme()` and
+ * `kbq-dark-theme()`, deprecated for removal in 22.0.0.
  */
 export const styles: AreaData = {
     templateReplacements: [
@@ -79,6 +80,39 @@ export const styles: AreaData = {
                 '`@koobiq/components/core/styles/tokens` was removed: load what it forwarded from the design tokens ' +
                 'package directly — `@koobiq/design-tokens/web/variables`, `/palette`, `/typography` or ' +
                 '`/md-typography` — or use the CSS variables (`var(--kbq-…)`).'
+        },
+        {
+            pattern:
+                '@(?:use|import|forward)\\s+[\'"](?:~|[^\'"]*node_modules/)?@koobiq/components/core/styles/' +
+                '(?:functions(?:/_?(?:index|number|string))?|typography/_?typography-utils|common/_?(?:clearfix|popup))' +
+                '(?:\\.scss)?[\'"]',
+            message:
+                'The Sass modules `core/styles/functions` (its index, `number` and `string`), ' +
+                '`core/styles/typography/typography-utils`, `core/styles/common/clearfix` and ' +
+                '`core/styles/common/popup` were removed: nothing in the library used them. Copy what you need ' +
+                'into your own styles; for typography, use the `--kbq-typography-*` CSS variables.'
+        },
+        {
+            pattern:
+                '(?<![\\w-])(?:kbq-markdown-typography-config|kbq-typography-level|kbq-typography-level-to-styles|' +
+                'kbq-font-(?:size|family|weight|style|feature-settings)|kbq-line-height|kbq-letter-spacing|' +
+                'kbq-text-transform|rtl-value)\\(|(?<![\\w-])(?:popup-params|input-placeholder|' +
+                'kbq-typography-css-variables)(?![\\w-])',
+            message:
+                '`kbq-markdown-typography-config()`, the getters of `typography-utils` (`kbq-typography-level()`, ' +
+                '`kbq-typography-level-to-styles()`, `kbq-font-size()`…), `popup-params`, `input-placeholder`, ' +
+                '`rtl-value()` and `kbq-typography-css-variables` were removed: nothing in the library used them. ' +
+                'Use the `--kbq-typography-*` CSS variables, `kbq-typography-level-to-styles-css-variables()` of ' +
+                '`core/styles/common/tokens`, `::placeholder`, or copy the mixin into your own styles.'
+        },
+        {
+            anchor: '@koobiq/components/core/styles/functions',
+            pattern:
+                '(?<![\\w-])\\$ease-(?!out-circ(?![\\w-])|in-out-quad(?![\\w-])|in-out-circ(?![\\w-]))' +
+                '(?:in|out|in-out)-(?:quad|cubic|quart|quint|sine|expo|circ|back)(?![\\w-])',
+            message:
+                'Of the timing variables of `core/styles/functions/timing`, only `$ease-out-circ`, ' +
+                '`$ease-in-out-quad` and `$ease-in-out-circ` remain: copy the `cubic-bezier()` of the others.'
         },
         {
             pattern:

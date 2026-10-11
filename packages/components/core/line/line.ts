@@ -6,7 +6,7 @@ import { Directive, ElementRef, QueryList } from '@angular/core';
  * counted by checking the number of results.
  */
 @Directive({
-    selector: '[kbq-line], [mcLine]',
+    selector: '[kbq-line]',
     host: { class: 'kbq-line' }
 })
 export class KbqLine {}

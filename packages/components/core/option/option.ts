@@ -10,7 +10,6 @@ import {
     InjectionToken,
     input,
     OnDestroy,
-    QueryList,
     signal,
     viewChild,
     ViewEncapsulation
@@ -419,34 +418,4 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     protected onMouseleave() {
         this.hoveredByPointer = false;
     }
-}
-
-/**
- * Counts the amount of option group labels that precede the specified option.
- * @param optionIndex Index of the option at which to start counting.
- * @param options Flat list of all of the options.
- * @param optionGroups Flat list of all of the option groups.
- * @docs-private
- */
-export function countGroupLabelsBeforeOption(
-    optionIndex: number,
-    options: QueryList<KbqOption>,
-    optionGroups: QueryList<KbqOptgroup>
-): number {
-    if (optionGroups.length) {
-        const optionsArray = options.toArray();
-        const groups = optionGroups.toArray();
-
-        let groupCounter = 0;
-
-        for (let i = 0; i < optionIndex + 1; i++) {
-            if (optionsArray[i].group && optionsArray[i].group === groups[groupCounter]) {
-                groupCounter++;
-            }
-        }
-
-        return groupCounter;
-    }
-
-    return 0;
 }

@@ -13,6 +13,7 @@
 - **21.0.0**: переход на Angular 21: обнаружение изменений без zone.js, CSS-анимации вместо `@angular/animations`, сигнальные входы, выходы и запросы.
 - **21.0.0**: удаление API, устаревших до 21.0.0.
 - **21.0.0**: удаление `ThemePalette`.
+- **21.0.0**: удаление API core, которым не пользовалась библиотека.
 - **21.0.0**: контейнер оверлея панели действий.
 - **21.0.0**: устаревание прежнего splitter.
 - **21.0.0**: удаление механизма понижения оверлея.
@@ -710,6 +711,33 @@ ng g @koobiq/components:v21-upgrade --project "<your project>"
 У `Error`, `Warning` и `Success` в обоих перечислениях одни и те же значения, поэтому замена ничего не меняет на экране. `Primary`, `Secondary` (`Default` — его псевдоним) и `Info` ставят класс `kbq-primary`, `kbq-secondary` или `kbq-info`, который не стилизует ни один компонент, поэтому такой компонент рисовался без своих цветовых правил; без цвета он берет цвет по умолчанию. `Empty` — это `''`, при нем компонент тоже берет цвет по умолчанию, а `KbqComponentColors.Empty` — это `'empty'`, отдельный цвет: не заменяйте одно другим.
 
 `v21-upgrade` переписывает три члена и удаляет импорт `ThemePalette`, когда он больше нигде не упоминается. Об остальных использованиях в файле, который импортирует `ThemePalette` из `@koobiq/components/core`, схематик сообщает — в том числе о поле, через которое шаблон получает перечисление.
+
+### Удаление неиспользуемого API core (21.0.0)
+
+Из `@koobiq/components/core` удалены недокументированные экспорты, члены и Sass, которыми библиотека не пользовалась. Устаревшими они не помечались: в основном это остатки удаленных возможностей или детали реализации, попавшие в публичный API.
+
+| Удалено                                                                                                              | Что использовать                                                                                                     | Миграция                               |
+| -------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| `POSITION_MAP`, `EXTENDED_OVERLAY_POSITIONS`, `POSITION_PRIORITY_STRATEGY`, двенадцать списков `*_POSITION_PRIORITY` | `kbqPlacement` у триггера; нужное значение скопируйте                                                                | сообщается                             |
+| `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`, `isWithin()`         | собственное значение или функция                                                                                     | сообщается                             |
+| `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`                                                                                | ничего: у `KBQ_SELECT_SCROLL_STRATEGY` есть значение по умолчанию в root; чтобы его изменить, предоставьте сам токен | сообщается                             |
+| `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`                                                                               | ничего: `KbqCheckable` регистрирует себя сам                                                                         | сообщается                             |
+| `KbqHover`                                                                                                           | `(mouseenter)` и `(mouseleave)` или `:hover`                                                                         | сообщается                             |
+| `CanColor`                                                                                                           | `Signal<KbqComponentColors \| string>` или `KbqColorDirective`                                                       | сообщается                             |
+| `KbqAnimationCurves`, `KbqAnimationDurations`                                                                        | собственные константы: анимации библиотеки теперь на CSS                                                             | сообщается                             |
+| `KbqRectangleItem`, `countGroupLabelsBeforeOption()`                                                                 | без замены                                                                                                           | сообщается                             |
+| `KbqPopUp.warning`, `.markForCheck()`, `.handleBodyInteraction()`                                                    | без замены: их никто не вызывал                                                                                      | о `handleBodyInteraction()` сообщается |
+| `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                                 | теперь закрыты: аргументы пайпа и конфигурация локали для форматирования                                             | сообщается                             |
+| `KbqFormElement.isRow`                                                                                               | класс `kbq-form__row` у элемента                                                                                     | —                                      |
+| атрибут `mcLine`                                                                                                     | `kbq-line`                                                                                                           | переписывается                         |
+
+Удаленный Sass доступен только по глубокому импорту: `@koobiq/components` ничего из него не пробрасывает.
+
+- модули `core/styles/functions` (его индекс, `number` и `string`), `typography/typography-utils`, `common/clearfix` и `common/popup`;
+- `kbq-markdown-typography-config()`, геттеры `typography-utils` (`kbq-typography-level()`, `kbq-font-size()`…), `popup-params`, `input-placeholder`, `rtl-value()` и `kbq-typography-css-variables`;
+- переменные функций плавности из `core/styles/functions/timing`, кроме `$ease-out-circ`, `$ease-in-out-quad` и `$ease-in-out-circ`.
+
+Для типографики используйте CSS-переменные `--kbq-typography-*` или `kbq-typography-level-to-styles-css-variables()` из `core/styles/common/tokens`, остальное скопируйте в свои стили. `v21-upgrade` сообщает о каждой загрузке и каждом использовании. Из скомпилированного CSS также ушли префиксы для браузеров, которые библиотека не поддерживает: `-ms-text-size-adjust`, `-ms-overflow-style`, `-moz-` и `-ms-user-select`, старые значения `display` для flexbox и копия `.layout-fill` в `@-moz-document`.
 
 ### Контейнер оверлея панели действий (21.0.0)
 
