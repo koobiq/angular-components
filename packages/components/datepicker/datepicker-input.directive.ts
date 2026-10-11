@@ -786,7 +786,6 @@ export class KbqDatepickerInput<D>
         if (this.isLetterKey(event)) {
             event.preventDefault();
 
-            // TODO: The 'emit' function requires a mandatory void argument
             this.incorrectInput.emit();
         } else if (this.isKeyForOpen(event)) {
             event.preventDefault();
@@ -821,7 +820,6 @@ export class KbqDatepickerInput<D>
 
                 setTimeout(this.onInput);
             } else {
-                // TODO: The 'emit' function requires a mandatory void argument
                 this.incorrectInput.emit();
             }
         } else {
@@ -944,7 +942,6 @@ export class KbqDatepickerInput<D>
         rawValue.replace(/[^A-Za-z0-9]+/g, this.separator);
 
         if (/[a-z]/gi.test(rawValue)) {
-            // TODO: The 'emit' function requires a mandatory void argument
             this.incorrectInput.emit();
         }
 

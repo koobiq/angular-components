@@ -313,7 +313,7 @@ export class KbqOverflowItems {
         while (this.hasOverflown(container, items, result, orientation)) {
             const itemToHide = reverseOverflowOrder
                 ? items.find(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible())
-                : this.findLast(items, ({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
+                : items.findLast(({ hidden, alwaysVisible }) => !hidden() && !alwaysVisible());
 
             if (!itemToHide) break;
 
@@ -362,16 +362,5 @@ export class KbqOverflowItems {
         const resultSize = !result || result.hidden() ? 0 : itemSize(result.element);
 
         return itemsSize + resultSize > containerSizeWithoutPaddings;
-    }
-
-    // TODO: Should be removed when `Array.prototype.findLast` is supported.
-    private findLast<T>(array: ReadonlyArray<T>, predicate: (item: T) => boolean): T | undefined {
-        for (let i = array.length - 1; i >= 0; i--) {
-            if (predicate(array[i])) {
-                return array[i];
-            }
-        }
-
-        return undefined;
     }
 }

@@ -278,7 +278,6 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
         this.expandedChange.emit(this.expanded);
 
         if (this.expanded) {
-            // TODO: The 'emit' function requires a mandatory void argument
             this.opened.emit();
             /**
              * In the unique selection dispatcher, the id parameter is the id of the KbqAccordionItem,
@@ -286,7 +285,6 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
              */
             this.expansionDispatcher.notify(this.value(), this.accordion.id);
         } else {
-            // TODO: The 'emit' function requires a mandatory void argument
             this.closed.emit();
         }
 

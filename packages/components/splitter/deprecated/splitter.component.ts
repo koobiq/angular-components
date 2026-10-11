@@ -584,7 +584,6 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         this.updateGutter();
 
-        // TODO: The 'emit' function requires a mandatory void argument
         this.gutterPositionChange.emit();
 
         this.changeDetectorRef.markForCheck();

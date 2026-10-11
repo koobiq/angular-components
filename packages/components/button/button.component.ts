@@ -385,7 +385,6 @@ export class KbqButton
         () => this.colorInput() || this.groupColor() || this.defaultColor()
     );
 
-    // @todo 20 In the next major release this feature will be replaced on the input signal.
     /**
      * Whether the button is disabled. A surrounding `KbqButtonGroupRoot` can disable the button in
      * addition to this input, but never re-enables a button disabled through it.
