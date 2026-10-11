@@ -60,8 +60,8 @@
     [treeControl]="treeControl"
     [(ngModel)]="modelValue"
     (ngModelChange)="onModelValueChange($event)"
-    (onSelectAll)="onSelectAll($event)"
-    (onCopy)="onCopy($event)"
+    (selectAllChange)="onSelectAll($event)"
+    (copyChange)="onCopy($event)"
 >
     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
         <i kbq-icon="kbq-circle-info_16"></i>
@@ -98,7 +98,7 @@
         [disabled]="disableState"
         [treeControl]="treeControl"
         [(ngModel)]="modelValue"
-        (onSelectAll)="onSelectAll($event)"
+        (selectAllChange)="onSelectAll($event)"
     >
         <kbq-tree-option *kbqTreeNodeDef="let node" kbq-title kbqTreeNodePadding>
             <i kbq-icon="kbq-circle-info_16"></i>
