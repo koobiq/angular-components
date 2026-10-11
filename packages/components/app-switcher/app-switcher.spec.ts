@@ -21,6 +21,7 @@ import {
     dispatchMouseEvent
 } from '@koobiq/components/core';
 import { NESTED_HOVER_SWITCH_DELAY } from '@koobiq/components/dropdown';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { of } from 'rxjs';
 import {
@@ -72,6 +73,9 @@ const OTHER_GROUP_APPS: KbqAppSwitcherApp[] = Array.from({ length: 4 }, (_, i) =
 
 /** Shown in its flyout as two groups, `Group` and `Other`. */
 const SITE_C: KbqAppSwitcherSite = { id: 'siteC', name: 'Site C', apps: [...GROUP_APPS, ...OTHER_GROUP_APPS] };
+
+/** `KbqTooltipTrigger` default enter delay (400 ms) plus a buffer for the deferred show. */
+const TOOLTIP_ENTER_DELAY = 410;
 
 /** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
 const AXE_TIMEOUT = 15000;
@@ -1922,6 +1926,90 @@ describe('KbqAppSwitcher', () => {
         );
     });
 
+    describe('with a tooltip on the same element', () => {
+        let fixture: ComponentFixture<AppSwitcherWithTooltip>;
+        let triggerElement: HTMLElement;
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
+
+        /** Opens the tooltip by hover and settles its enter delay and the deferred reposition. */
+        const showTooltip = () => {
+            dispatchMouseEvent(triggerElement, 'mouseenter');
+            fixture.detectChanges();
+            tick(TOOLTIP_ENTER_DELAY);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+        };
+
+        const openSwitcher = () => {
+            dispatchMouseEvent(triggerElement, 'click');
+            tick();
+            fixture.detectChanges();
+        };
+
+        beforeEach(fakeAsync(() => {
+            fixture = createComponent(AppSwitcherWithTooltip);
+            triggerElement = fixture.debugElement.query(By.directive(KbqAppSwitcherTrigger)).nativeElement;
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+        }));
+
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        it('hides the tooltip when the switcher opens', fakeAsync(() => {
+            showTooltip();
+
+            expect(overlayContainerElement.textContent).toContain('TOOLTIP');
+
+            openSwitcher();
+
+            expect(overlayContainerElement.querySelector('.kbq-app-switcher')).toBeTruthy();
+            expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+
+        it('does not show the tooltip while the pointer returns to the trigger of an open switcher', fakeAsync(() => {
+            openSwitcher();
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            fixture.detectChanges();
+
+            showTooltip();
+
+            expect(overlayContainerElement.querySelector('.kbq-app-switcher')).toBeTruthy();
+            expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+
+        it('does not show the tooltip when the switcher closes with Escape and focus returns to the trigger', fakeAsync(() => {
+            openSwitcher();
+
+            dispatchKeyboardEvent(overlayContainerElement.querySelector('.kbq-app-switcher')!, 'keydown', ESCAPE);
+            tick(TOOLTIP_ENTER_DELAY);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-app-switcher')).toBeFalsy();
+            expect(document.activeElement).toBe(triggerElement);
+            expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
+        }));
+
+        it('shows the tooltip again once the pointer leaves and returns to the trigger after the switcher closes', fakeAsync(() => {
+            openSwitcher();
+
+            dispatchKeyboardEvent(overlayContainerElement.querySelector('.kbq-app-switcher')!, 'keydown', ESCAPE);
+            tick();
+            fixture.detectChanges();
+
+            dispatchMouseEvent(triggerElement, 'mouseleave');
+            tick();
+            fixture.detectChanges();
+
+            showTooltip();
+
+            expect(overlayContainerElement.textContent).toContain('TOOLTIP');
+        }));
+    });
+
     describe('teardown', () => {
         let overlayContainer: OverlayContainer;
 
@@ -2024,6 +2112,18 @@ class AppSwitcherMultiSite {
         { ...SITE_A, apps: [...SITE_A.apps] },
         { ...SITE_B, apps: [...SITE_B.apps] }
     ];
+}
+
+// The tooltip keeps its default `hover, focus` triggers; the switcher opens on `click, keydown`.
+@Component({
+    selector: 'app-switcher-with-tooltip',
+    imports: [KbqAppSwitcherModule, KbqToolTipModule],
+    template: `
+        <button kbqAppSwitcher [kbqTooltip]="'TOOLTIP'" [sites]="sites" [selectedSite]="sites[0]">Trigger</button>
+    `
+})
+class AppSwitcherWithTooltip {
+    sites: KbqAppSwitcherSite[] = [{ ...SITE_A, apps: [...SITE_A.apps] }];
 }
 
 @Component({

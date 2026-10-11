@@ -55,6 +55,7 @@ import {
     UP_ARROW,
     applyPopupMargins,
     kbqLocaleConfigurationOverrideProvider,
+    kbqSiblingPopupProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -600,6 +601,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
 
 @Directive({
     selector: '[kbqAppSwitcher]',
+    providers: [kbqSiblingPopupProvider(KbqAppSwitcherTrigger)],
     host: {
         '[class.kbq-app-switcher_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
