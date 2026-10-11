@@ -81,6 +81,7 @@ import { E2eMarkdownStates } from '../components/markdown/e2e';
 import { E2eModalFullCustom, E2eModalStates } from '../components/modal/e2e';
 import {
     E2eHorizontalNavbarStates,
+    E2eNavbarDisabledBrand,
     E2eVerticalNavbarBrandAutoLongTitle,
     E2eVerticalNavbarBrandFirstExpand,
     E2eVerticalNavbarStates
@@ -266,6 +267,7 @@ const components = [
     E2eVerticalNavbarStates,
     E2eVerticalNavbarBrandAutoLongTitle,
     E2eVerticalNavbarBrandFirstExpand,
+    E2eNavbarDisabledBrand,
     E2eUsernameStateAndStyle,
     E2eToastStates,
     E2eEllipsisCenterOverflow,

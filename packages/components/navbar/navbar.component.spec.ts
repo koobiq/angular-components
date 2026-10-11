@@ -74,7 +74,9 @@ describe('KbqNavbar', () => {
                 TestVerticalApp,
                 TestBrandApp,
                 TestBrandLongTitleApp,
-                TestBrandHorizontalApp
+                TestBrandHorizontalApp,
+                TestDecorativeBrandApp,
+                TestDisabledBrandApp
             ]
         }).compileComponents();
     });
@@ -371,6 +373,36 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(brand.content).toBe('Updated');
+        }));
+
+        it('a purely decorative brand is neither announced nor styled as disabled', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestDecorativeBrandApp);
+
+            fixture.detectChanges();
+            flush();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+            const focusableItem = fixture.debugElement
+                .query(By.directive(KbqNavbarBrand))
+                .injector.get(KbqNavbarFocusableItem);
+
+            expect(brandEl.classList).not.toContain('kbq-disabled');
+            expect(brandEl.hasAttribute('disabled')).toBe(false);
+            expect(focusableItem.disabled).toBe(true);
+        }));
+
+        it('a disabled brand swallows clicks, so its link is not followed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestDisabledBrandApp);
+
+            fixture.detectChanges();
+            flush();
+
+            const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+            fixture.nativeElement.querySelector('.kbq-navbar-title').dispatchEvent(click);
+
+            expect(click.defaultPrevented).toBe(true);
+            expect(fixture.componentInstance.clicked).toBe(false);
         }));
     });
 
@@ -1017,6 +1049,38 @@ class TestTitleApp {
 })
 class TestBrandApp {
     collapsedText: string = '';
+}
+
+@Component({
+    selector: 'test-decorative-brand-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <div kbq-navbar-brand>
+                    <div kbq-navbar-title>App Name</div>
+                </div>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestDecorativeBrandApp {}
+
+@Component({
+    selector: 'test-disabled-brand-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <a href="#" kbq-navbar-brand disabled (click)="clicked = true">
+                    <div kbq-navbar-title>App Name</div>
+                </a>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestDisabledBrandApp {
+    clicked = false;
 }
 
 @Component({
