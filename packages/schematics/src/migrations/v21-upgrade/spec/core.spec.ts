@@ -15,6 +15,8 @@ const PRIVATE_MEMBERS = '`KbqPopUp.handleBodyInteraction()` was removed';
 const LEGACY_DATE_PIPES = 'The unprefixed date pipes';
 const MC_HIGHLIGHT = 'The `mcHighlight` pipe (`KbqHighlightPipe`) is deprecated';
 const DEPRECATED_HELPERS = '`isDigit()`, `isBoolean()` and `KbqMeasureScrollbarService`';
+const LINE_SETTER = '`KbqLineSetter` was removed';
+const LINE_CLASSES = 'A list item no longer gets the `kbq-2-line`';
 const FOCUS_ORIGIN = '`FocusKeyManager.getFocusOrigin()` is deprecated';
 
 describe('v21-upgrade: core', () => {
@@ -256,18 +258,31 @@ describe('v21-upgrade: core', () => {
         expect(run.log).toContain(`members.ts\n  ${PRIVATE_MEMBERS}`);
     });
 
-    it('rewrites the mcLine alias to kbq-line in templates and selectors', async () => {
+    it('rewrites the mcLine and mcListIcon aliases in templates and selectors', async () => {
         const run = await runV21Upgrade({
-            'item.html': '<kbq-list-item><span mcLine>Title</span><span kbq-line>Subtitle</span></kbq-list-item>\n',
+            'item.html':
+                '<kbq-list-item><i kbq-icon="kbq-bell_16" mcListIcon></i><span mcLine>Title</span>' +
+                '<span kbq-line>Subtitle</span></kbq-list-item>\n',
             'query.ts': "export const lines = (host: Element) => host.querySelectorAll('[mcLine]');\n"
         });
 
         expect(run.read('item.html')).toBe(
-            '<kbq-list-item><span kbq-line>Title</span><span kbq-line>Subtitle</span></kbq-list-item>\n'
+            '<kbq-list-item><i kbq-icon="kbq-bell_16" kbq-list-icon></i><span kbq-line>Title</span>' +
+                '<span kbq-line>Subtitle</span></kbq-list-item>\n'
         );
         expect(run.read('query.ts')).toBe(
             "export const lines = (host: Element) => host.querySelectorAll('[kbq-line]');\n"
         );
+    });
+
+    it('reports KbqLineSetter and the line count classes of a list item', async () => {
+        const run = await runV21Upgrade({
+            'setter.ts': "import { KbqLine, KbqLineSetter } from '@koobiq/components/core';\n",
+            'lines.scss': '.kbq-list-item.kbq-2-line { height: 56px; }\n'
+        });
+
+        expect(run.log).toContain(`setter.ts\n  ${LINE_SETTER}`);
+        expect(run.log).toContain(`lines.scss\n  ${LINE_CLASSES}`);
     });
 
     it('reports the core API deprecated for removal in 22.0.0', async () => {

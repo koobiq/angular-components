@@ -729,6 +729,8 @@ With `--fix false` it only reports what it would change.
 | `KbqPopUp.warning`, `.markForCheck()`, `.handleBodyInteraction()`                                                  | no replacement: nothing called them                                                             | `handleBodyInteraction()` reported |
 | `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                               | private now: the pipe arguments and the formatters locale configuration                         | reported                           |
 | `KbqFormElement.isRow`                                                                                             | the `kbq-form__row` class of the element                                                        | —                                  |
+| `KbqLineSetter` and the `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` classes of a list item                        | nothing: no style read them; `KbqListItem.lines` counts the lines                               | reported                           |
+| the `mcListIcon` attribute of a list item                                                                          | `kbq-list-icon`                                                                                 | rewritten                          |
 | the `mcLine` attribute                                                                                             | `kbq-line`                                                                                      | rewritten                          |
 
 The Sass that goes is reachable only through a deep import, since `@koobiq/components` forwards none of it:

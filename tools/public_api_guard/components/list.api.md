@@ -66,7 +66,7 @@ export type KbqListDragCursor = 'auto' | 'grab';
 export type KbqListDragPreview = 'text' | 'full';
 
 // @public
-export class KbqListItem implements AfterContentChecked, AfterContentInit {
+export class KbqListItem implements AfterContentChecked {
     // (undocumented)
     getHostElement(): HTMLElement;
     // (undocumented)
@@ -78,9 +78,7 @@ export class KbqListItem implements AfterContentChecked, AfterContentInit {
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
-    ngAfterContentInit(): void;
-    // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["linesQuery"], ["[kbq-list-icon], [mcListIcon]", "[kbq-line]", "*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqListItem, "kbq-list-item, a[kbq-list-item]", never, {}, {}, ["linesQuery"], ["[kbq-list-icon]", "[kbq-line]", "*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqListItem, never>;
 }
