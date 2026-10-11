@@ -30,7 +30,9 @@ const boundingBoxAtRest = async (locator: Locator) => {
 
 test.describe('KbqActionsPanel', () => {
     test.describe('E2eActionsPanelWithOverlayContainer', () => {
-        test.use({ viewport: { width: 650, height: 200 } });
+        // Tall enough for the whole page: a target taller than the viewport is captured by growing the viewport,
+        // which moves the page down under the resting pointer and hovers a dropdown item.
+        test.use({ viewport: { width: 650, height: 240 } });
 
         const getComponent = (page: Page) => page.getByTestId('e2eActionsPanelWithOverlayContainer');
         const getOpenButton = (locator: Locator) => locator.getByTestId('e2eActionsPanelOpenButton');
