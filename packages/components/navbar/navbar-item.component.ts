@@ -135,11 +135,11 @@ export class KbqNavbarDivider {}
     selector: 'kbq-navbar-item, [kbq-navbar-item], kbq-navbar-brand, [kbq-navbar-brand], kbq-navbar-toggle',
     host: {
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null',
+        '[attr.disabled]': 'explicitlyDisabled || null',
 
         class: 'kbq-navbar-focusable-item',
         '[class.kbq-navbar-item_has-nested]': '!!nestedElement',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'explicitlyDisabled',
 
         '(focus)': 'onFocusHandler()',
         '(blur)': 'blur()'
@@ -181,12 +181,12 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 
     private _hasFocus: boolean = false;
 
-    /** Whether the item is disabled. */
+    /** Whether the item is disabled. Also reads `true` for a decorative element, which is skipped just the same. */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     get disabled() {
-        return this._disabled;
+        return this._disabled || this.decorative;
     }
 
     set disabled(value: boolean) {
@@ -197,6 +197,23 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     }
 
     private _disabled = false;
+
+    /**
+     * Keeps an element with nothing to interact with out of the roving focus order, without announcing or
+     * styling it as disabled.
+     *
+     * @internal
+     */
+    decorative = false;
+
+    /**
+     * Whether the item was disabled through `disabled`, as opposed to being decorative.
+     *
+     * @internal
+     */
+    get explicitlyDisabled(): boolean {
+        return this._disabled;
+    }
 
     get tabIndex(): number {
         return -1;

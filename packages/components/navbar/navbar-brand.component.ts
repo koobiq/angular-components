@@ -160,7 +160,7 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
         this.arrow = false;
         this.offset = 0;
 
-        this.navbarFocusableItem.disabled = !this.isLink;
+        this.navbarFocusableItem.decorative = !this.isLink;
 
         afterNextRender(() => {
             // Deferred a microtask: the ambient `KbqNavbar` flips this item's rectangle element to
@@ -169,10 +169,29 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
             // the rectangle element still reports its default vertical/expanded state.
             Promise.resolve().then(() => this.observeLongTitle());
         });
+
+        // A disabled navbar item takes `pointer-events: none`, which on a brand would also stop the tooltip a
+        // collapsed brand depends on. Capturing on the host runs ahead of every listener of the link, `RouterLink`
+        // included.
+        const unlisten = this.renderer.listen(
+            this.nativeElement,
+            'click',
+            (event: MouseEvent) => this.preventDisabledActivation(event),
+            { capture: true }
+        );
+
+        this.destroyRef.onDestroy(unlisten);
     }
 
     ngAfterContentInit(): void {
         this.updateTooltip();
+    }
+
+    private preventDisabledActivation(event: MouseEvent): void {
+        if (!this.navbarFocusableItem.explicitlyDisabled) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
     }
 
     private updateTooltip(): void {

@@ -173,8 +173,12 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     blur(): void;
     // (undocumented)
     readonly button: i0.Signal<KbqButton | undefined>;
+    // @internal
+    decorative: boolean;
     get disabled(): boolean;
     set disabled(value: boolean);
+    // @internal
+    get explicitlyDisabled(): boolean;
     // (undocumented)
     focus(origin?: FocusOrigin): void;
     // (undocumented)
