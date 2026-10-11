@@ -11,8 +11,9 @@ const FORM_FIELD_OWNER = '\\bKbqFormField\\b|\\bkbqFormField\\b';
 
 /**
  * Removed in 21.0.0: the `KbqPasswordHint` rules engine (`PasswordRules`, `regExpPasswordValidator`,
- * `hasPasswordStrengthError`), what only served it on `KbqFormField` and `KbqInputPassword`, and the unused
- * `KbqFormField.canCleanerClearByEsc` and `onKeyDown`. None has a 1:1 replacement, so all are reported.
+ * `hasPasswordStrengthError`), what only served it on `KbqFormField` and `KbqInputPassword`, the unused
+ * `KbqFormField.canCleanerClearByEsc` and `onKeyDown`, and the no-op `KbqStepper.connectTo()`. None has a 1:1
+ * replacement, so all are reported.
  */
 export const formField: AreaData = {
     tsReplacements: [],
@@ -81,6 +82,13 @@ export const formField: AreaData = {
             message:
                 '`KbqFormField.onKeyDown()` was removed: it did nothing. Delete the call; listen to `(keydown)` on ' +
                 'the control if you need the event.'
+        },
+        {
+            anchor: '\\bKbqStepper\\b|\\bkbqStepper\\b|<kbq-stepper\\b',
+            pattern: '(?<!\\bthis)\\??\\.connectTo\\s*\\(',
+            message:
+                '`KbqStepper.connectTo()` was removed: it did nothing, the stepper finds the number input of its ' +
+                'form field by itself. Delete the call.'
         },
         {
             anchor: '\\bKbqInputPassword\\b|\\bkbqInputPassword\\b',

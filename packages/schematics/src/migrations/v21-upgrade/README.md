@@ -5,14 +5,20 @@ before 21.0.0 and removed in it: renamed members and aliases are rewritten, ever
 replacement to use. It also reports the uses of the state that 21.0.0 turned into signals.
 
 The schematic walks every `.ts`, `.html`, `.scss` and `.css` file of the project (skipping `node_modules` and
-`dist`). The tables live in `data/`, one file per area, and `data.ts` gathers them:
+`dist`), and the `styles` of the project's targets in `angular.json`. The tables live in `data/`, one file per
+area, and `data.ts` gathers them:
 
 - **`tsReplacements`** — TypeScript imports, identifiers and member accesses;
 - **`templateReplacements`** — attributes and bindings in templates, external or inline;
 - **`scssReplacements`** — selectors in style sheets;
+- **`styleEntryReplacements`** — the `styles` entries in `angular.json`; an entry they turn into a duplicate is
+  dropped;
 - **`warnPatterns`** — what cannot be rewritten, reported with what to do instead.
 
 ## What it changes
+
+**Accordion** — rewrites nothing; reports the `kbq-accordion-trigger__action` class in templates, styles and code:
+move the actions out of the trigger into a `kbq-accordion-header__actions` element next to it.
 
 **Code block and icon button**
 
@@ -39,7 +45,13 @@ Reports:
   old one;
 - `getOptionScrollPosition` imported from `@koobiq/components/core`: `KbqOption.focus()` or `kbqFocusAndReveal()`.
 
-**Dropdown and select** — rewrites nothing: the removed members were never inputs, so no template binds them.
+**Dropdown and select** — rewrites:
+
+- `DropdownPositionX` / `DropdownPositionY` → `KbqDropdownPositionX` / `KbqDropdownPositionY` in a file that names
+  `@koobiq/components/dropdown` (an import clause that held both names keeps one);
+- `KbqSelectPanelWidth` and `KbqTreeSelectPanelWidth` → `KbqPanelWidth`, moving the import from the select or
+  tree-select entry point to `@koobiq/components/core`.
+
 Reports:
 
 - `.triggerWidth` in a file that imports `@koobiq/components/dropdown` or uses `<kbq-dropdown>`, and `triggerWidth`
@@ -48,7 +60,12 @@ Reports:
 - `.offsetY` (not a call — that is the `KbqDropdownTrigger` input) in a file that uses `kbq-select`,
   `kbq-tree-select` or `kbq-timezone-select`, and an `offsetY` field of their subclasses: delete it, the gap is the
   `--kbq-connected-overlay-gap` CSS variable;
-- `AUTOCOMPLETE_PANEL_HEIGHT` imported from `@koobiq/components/autocomplete`: keep a constant of your own.
+- `AUTOCOMPLETE_PANEL_HEIGHT` imported from `@koobiq/components/autocomplete`: keep a constant of your own;
+- `DropdownPositionX` / `DropdownPositionY` in a file that does not name the dropdown entry point, and an aliased
+  import or a re-export of `KbqSelectPanelWidth` / `KbqTreeSelectPanelWidth`: rename them by hand;
+- `.clearValue` (except on `this` and on a form field, whose `clearValue()` stays) in a file that uses one of the
+  selects, and `clearValue` in their subclasses: project `<kbq-cleaner />`, or reset the form control from code;
+- the `kbq-dropdown__group-header_small` class in templates, styles and code: use `<kbq-optgroup label="…" />`.
 
 **Filter bar** — rewrites:
 
@@ -59,7 +76,11 @@ Reports:
 Reports:
 
 - `.changes` in a file that names `KbqFilterBar`: read `filter()` in an `effect()` or listen to `(filterChange)`;
-- any other `KbqPipeMinWidth` reference (an aliased import, a subclass, a query): remove it.
+- any other `KbqPipeMinWidth` reference (an aliased import, a subclass, a query): remove it;
+- a `required:` key next to `cleanable:`, `removable:` or `type: KbqPipeTypes.…` in the same object literal, in a
+  file that imports `@koobiq/components/filter-bar`: delete it, set `cleanable: false` and `removable: false`;
+- `.required` read on `data` or on a receiver named like a pipe, in a file that imports the filter bar or uses
+  `kbq-pipe` classes: read `cleanable` and `removable` instead.
 
 **Form field** — rewrites nothing: none of the removed APIs has a 1:1 replacement. Reports:
 
@@ -73,10 +94,13 @@ Reports:
   names `KbqFormField` or `kbqFormField`;
 - every `canCleanerClearByEsc`: it had no effect, delete it;
 - `.checkRules()` and `.checkRule.next()` / `.subscribe()` / `.pipe()` / `.complete()` in a file that names
-  `KbqInputPassword` or `kbqInputPassword`: call `control.updateValueAndValidity()` instead.
+  `KbqInputPassword` or `kbqInputPassword`: call `control.updateValueAndValidity()` instead;
+- `.connectTo()` (except on `this`) in a file that names `KbqStepper`, `kbqStepper` or `<kbq-stepper>`: it was a
+  no-op, delete it.
 
-**Forms controls** — rewrites nothing; reports, in a file that names `KbqCheckbox`, `KbqToggleComponent` or their
-tags:
+**Forms controls** — rewrites the `TransitionCheckState` import from `@koobiq/components/checkbox` into the
+`@koobiq/components/core` one, and reports an aliased import, a re-export or a namespace read of it. Reports, in a
+file that names `KbqCheckbox`, `KbqToggleComponent` or their tags:
 
 - a use of `.writeValue`, `.registerOnChange`, `.registerOnTouched` or `.setDisabledState` (except on `this`): set
   `checked` / `disabled`, listen to `(change)`, or call it on the host `KbqCheckable`;
@@ -125,6 +149,23 @@ element in a template):
 - `.value.next()`, `.value.getValue()`, `.value.subscribe()` and the like on `KbqSearchExpandable`;
 - `super.ngAfterContentInit()` and `super.ngOnDestroy()` in a subclass of `KbqDatepickerToggleIconComponent`.
 
+**Styles** — rewrites:
+
+- the arguments of `koobiq-theme()`, `koobiq-typography()` and `kbq-core-theme()`, dropped unless they hold
+  parentheses (a map, a function call);
+- `prebuilt-themes/light-theme.css` and `dark-theme.css` → `theme.css` in style sheets, code, templates and the
+  `styles` of `angular.json`, keeping one load where both themes were loaded;
+- the unprefixed markdown typography classes (`md-h1`…`md-h6`, `md-body`, `md-body-mono`, `md-caption`,
+  `md-table-cell`, `md-table-header`) → `kbq-md-*` in `class` attributes, `[class.…]` bindings and selectors.
+
+Reports:
+
+- arguments of those mixins that hold parentheses;
+- `kbq-contrast()`, `kbq-palette()`, `kbq-color()` and `kbq-typography-config()`;
+- a `@use`, `@import` or `@forward` of `@koobiq/components/core/styles/tokens`: load the design tokens modules
+  directly;
+- an unprefixed markdown class in any other string, such as `classList.add('md-h1')` or `[ngClass]`.
+
 **Tags** — rewrites nothing; reports, in a file that names `KbqTagInput` or its `exportAs`:
 
 - a read of `.ngControl` (except `this.ngControl` and a `…List.ngControl`): read the control bound to the input;
@@ -132,6 +173,21 @@ element in a template):
 - a subclass of `KbqTagInput` that mentions either member.
 
 `KbqTagTextControl.ngControl` is not reported: the interface is not exported.
+
+**Toast**
+
+- Rewrites `--kbq-toast-stack-size-margin-top` → `--kbq-toast-stack-size-margin-vertical` and
+  `--kbq-toast-stack-size-margin-right` → `--kbq-toast-stack-size-margin-horizontal` in styles, templates and code.
+- Reports a file that declares both a removed and a new name, and `dispatchScrollEvent` in a file that names
+  `KbqToastContainerComponent` or uses `<kbq-toast-container>`: delete the call.
+
+**Tree** — rewrites nothing; reports:
+
+- `.isUserInput` in a file that names `KbqTreeOptionChange`, and `$event.isUserInput` bound to an output of
+  `<kbq-tree-option>`: it was always `false`, delete the check;
+- `new KbqTreeOptionChange(…)` with a second argument, and a `super(…)` call with one in a subclass: drop it.
+
+The `isUserInput` of `KbqOptionSelectionChange` and `KbqTreeSelectChange` stays and is not reported.
 
 ## Running it manually
 

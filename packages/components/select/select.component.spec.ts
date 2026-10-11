@@ -50,6 +50,7 @@ import {
     KbqOptionSelectionChange,
     KbqOverlayLayer,
     KbqPanelMaxHeight,
+    KbqPanelWidth,
     KbqPartialLocaleData,
     KbqRepositionScrollStrategy,
     KbqVirtualOption,
@@ -83,12 +84,7 @@ import { map, take } from 'rxjs/operators';
 import type { MockInstance } from 'vitest';
 import { KbqSelectHiddenItemsMeasurer } from './hidden-items-measurer';
 import { KbqOptionTooltip } from './select-option.directive';
-import {
-    KbqSelect,
-    KbqSelectPanelWidth,
-    delayBeforeDisplayingResultWithoutOptions,
-    kbqSelectOptionsProvider
-} from './select.component';
+import { KbqSelect, delayBeforeDisplayingResultWithoutOptions, kbqSelectOptionsProvider } from './select.component';
 import { KbqSelectModule } from './select.module';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
@@ -2087,7 +2083,7 @@ class BasicSelectNoPlaceholder {}
     changeDetection: ChangeDetectionStrategy.Default
 })
 class SelectWithPanelWidth {
-    panelWidth: KbqSelectPanelWidth;
+    panelWidth: KbqPanelWidth;
 }
 
 @Component({
@@ -2126,7 +2122,7 @@ class SelectWithPanelMaxHeight {
     changeDetection: ChangeDetectionStrategy.Default
 })
 class SelectWithSearchAndPanelWidth {
-    panelWidth: KbqSelectPanelWidth | null = null;
+    panelWidth: KbqPanelWidth | null = null;
     searchCtrl = new UntypedFormControl();
 }
 

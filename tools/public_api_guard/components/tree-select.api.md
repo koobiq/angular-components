@@ -82,8 +82,6 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked
     readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
     clear(): void;
     readonly clearPredicate: _angular_core.InputSignalWithTransform<(node: any) => boolean, (node: any) => boolean>;
-    // @deprecated
-    clearValue(event: Event): void;
     close(): void;
     readonly closedOutput: _angular_core.OutputRef<void>;
     readonly closedStream: Observable<void>;
@@ -271,9 +269,6 @@ export type KbqTreeSelectOptions = Partial<{
 
 // @public
 export const kbqTreeSelectOptionsProvider: (options: KbqTreeSelectOptions) => Provider;
-
-// @public @deprecated
-export type KbqTreeSelectPanelWidth = KbqPanelWidth;
 
 // @public
 export type KbqTreeSelectTriggerValue = {

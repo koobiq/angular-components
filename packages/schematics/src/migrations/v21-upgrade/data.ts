@@ -6,6 +6,7 @@
  * flag. A warning reports what cannot be rewritten; its optional `anchor` limits it to files that also match it.
  */
 
+import { accordion } from './data/accordion';
 import { codeBlockAndIcon } from './data/code-block-and-icon';
 import { core } from './data/core';
 import { dropdownAndSelect } from './data/dropdown-and-select';
@@ -15,7 +16,10 @@ import { formsControls } from './data/forms-controls';
 import { navbarAndLayout } from './data/navbar-and-layout';
 import { popover } from './data/popover';
 import { stateSignals } from './data/state-signals';
+import { styles } from './data/styles';
 import { tags } from './data/tags';
+import { toast } from './data/toast';
+import { tree } from './data/tree';
 
 export interface Replacement {
     from: string;
@@ -40,10 +44,12 @@ export interface AreaData {
     tsReplacements?: Replacement[];
     templateReplacements?: Replacement[];
     scssReplacements?: Replacement[];
+    styleEntryReplacements?: Replacement[];
     warnPatterns?: WarnPattern[];
 }
 
 const AREAS: AreaData[] = [
+    accordion,
     codeBlockAndIcon,
     core,
     dropdownAndSelect,
@@ -53,7 +59,10 @@ const AREAS: AreaData[] = [
     navbarAndLayout,
     popover,
     stateSignals,
-    tags
+    styles,
+    tags,
+    toast,
+    tree
 ];
 
 /** TypeScript-source replacements (imports, identifiers, member accesses). */
@@ -64,6 +73,9 @@ export const templateReplacements: Replacement[] = AREAS.flatMap((area) => area.
 
 /** Replacements in `.scss` and `.css` files. */
 export const scssReplacements: Replacement[] = AREAS.flatMap((area) => area.scssReplacements ?? []);
+
+/** Replacements in the `styles` entries of `angular.json`; an entry they turn into a duplicate is dropped. */
+export const styleEntryReplacements: Replacement[] = AREAS.flatMap((area) => area.styleEntryReplacements ?? []);
 
 /** What the migration reports instead of rewriting. */
 export const warnPatterns: WarnPattern[] = AREAS.flatMap((area) => area.warnPatterns ?? []);

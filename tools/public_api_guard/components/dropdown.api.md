@@ -39,12 +39,6 @@ import { WritableSignal } from '@angular/core';
 // @public
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';
 
-// @public @deprecated (undocumented)
-export type DropdownPositionX = KbqDropdownPositionX;
-
-// @public @deprecated (undocumented)
-export type DropdownPositionY = KbqDropdownPositionY;
-
 // @public
 export const KBQ_DROPDOWN_DEFAULT_OPTIONS: InjectionToken<KbqDropdownDefaultOptions>;
 

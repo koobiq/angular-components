@@ -1,11 +1,6 @@
 :where(.kbq-toast-container) {
-    // @deprecated use --kbq-toast-stack-size-margin-vertical
-    --kbq-toast-stack-size-margin-top: var(--kbq-size-m);
-    // @deprecated use --kbq-toast-stack-size-margin-horizontal
-    --kbq-toast-stack-size-margin-right: var(--kbq-size-m);
-    // The deprecated pair is chained in, so that overriding it keeps having the documented effect.
-    --kbq-toast-stack-size-margin-vertical: var(--kbq-toast-stack-size-margin-top);
-    --kbq-toast-stack-size-margin-horizontal: var(--kbq-toast-stack-size-margin-right);
+    --kbq-toast-stack-size-margin-vertical: var(--kbq-size-m);
+    --kbq-toast-stack-size-margin-horizontal: var(--kbq-size-m);
     --kbq-toast-stack-size-gap: var(--kbq-size-s);
     --kbq-toast-size-container-width: 360px;
     --kbq-toast-size-container-border-radius: var(--kbq-size-s);

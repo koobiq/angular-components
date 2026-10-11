@@ -1,10 +1,27 @@
 import type { AreaData } from '../data';
 
+const CHECKBOX = '@koobiq/components/checkbox';
+
 // A call on `this` is the consumer's own `ControlValueAccessor`, not a checkbox or toggle.
 const NOT_ON_THIS = '(?<!\\bthis)\\??';
 
-/** Removed in 21.0.0: the unused ControlValueAccessor members of KbqCheckbox and KbqToggleComponent. */
+/** The rest of a named import or re-export clause of the checkbox entry point. */
+const CHECKBOX_CLAUSE_END = `(?=[^}]*\\}\\s*from\\s*['"]${CHECKBOX}['"])`;
+
+/**
+ * Removed in 21.0.0: the unused ControlValueAccessor members of KbqCheckbox and KbqToggleComponent, and the
+ * re-export of `TransitionCheckState` from the checkbox entry point.
+ */
 export const formsControls: AreaData = {
+    tsReplacements: [
+        {
+            // The specifier, with one of its commas; an emptied clause is dropped by `removeImport`.
+            from: `(import\\s*(?:type\\s+)?\\{[^}]*?)(?:,\\s*TransitionCheckState\\b(?!\\s+as\\b)|\\bTransitionCheckState\\s*,\\s*|\\bTransitionCheckState\\b(?!\\s+as\\b))${CHECKBOX_CLAUSE_END}`,
+            to: '$1',
+            removeImport: { symbol: 'TransitionCheckState', from: CHECKBOX },
+            ensureImport: { symbol: 'TransitionCheckState', from: '@koobiq/components/core' }
+        }
+    ],
     warnPatterns: [
         {
             pattern: '\\bKBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR\\b',
@@ -31,6 +48,16 @@ export const formsControls: AreaData = {
                 'KbqCheckbox.onTouched was removed: forms never called it, the KbqCheckable host directive ' +
                 'tracks touched. Drop the call or assignment and read touched from the bound [formControl] / ' +
                 '[(ngModel)]. Manual migration required.'
+        },
+        {
+            // A plain named import is moved by the rewrite above.
+            pattern:
+                `\\bTransitionCheckState\\s+as\\s+\\w+${CHECKBOX_CLAUSE_END}` +
+                `|\\bexport\\s*(?:type\\s*)?\\{[^}]*\\bTransitionCheckState\\b${CHECKBOX_CLAUSE_END}` +
+                `|import\\s*\\*\\s*as\\s+(\\w+)\\s+from\\s*['"]${CHECKBOX}['"][\\s\\S]*\\b\\1\\.TransitionCheckState\\b`,
+            message:
+                'TransitionCheckState is no longer exported from @koobiq/components/checkbox: import or re-export ' +
+                'it from @koobiq/components/core.'
         }
     ]
 };

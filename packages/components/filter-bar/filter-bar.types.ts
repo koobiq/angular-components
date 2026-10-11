@@ -190,8 +190,6 @@ export interface KbqPipe {
      * */
     selectedAllEqualsSelectedNothing?: boolean;
 
-    /** @deprecated use cleanable = false and removable = false instead */
-    required?: boolean;
     cleanable: boolean;
     removable: boolean;
     disabled: boolean;

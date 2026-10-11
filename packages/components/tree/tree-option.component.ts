@@ -78,23 +78,12 @@ export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<KbqTreeOption
     'KBQ_TREE_OPTION_PARENT_COMPONENT'
 );
 
-/**
- * Represents a change event for a tree option.
- *
- * @param source - The tree option that has been modified or selected.
- * @param isUserInput - DEPRECATED Will be removed in version 20.
- */
+/** Represents a change event for a tree option. */
 export class KbqTreeOptionChange {
-    /** @deprecated Will be removed in version 20. */
-    isUserInput: boolean;
-
     constructor(
-        public source: KbqTreeOption,
-        /** @deprecated Will be removed in version 20. */
-        isUserInput = false
-    ) {
-        this.isUserInput = isUserInput;
-    }
+        /** The tree option that has been modified or selected. */
+        public source: KbqTreeOption
+    ) {}
 }
 
 let uniqueIdCounter: number = 0;

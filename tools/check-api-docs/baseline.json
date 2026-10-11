@@ -17,7 +17,7 @@
     "components-dropdown": 11,
     "components-ellipsis-center": 1,
     "components-file-upload": 20,
-    "components-filter-bar": 169,
+    "components-filter-bar": 166,
     "components-form-field": 9,
     "components-icon": 32,
     "components-inline-edit": 4,
@@ -46,7 +46,7 @@
     "components-toast": 50,
     "components-toggle": 20,
     "components-tooltip": 25,
-    "components-tree": 160,
+    "components-tree": 158,
     "components-tree-select": 28,
     "components-username": 1
 }

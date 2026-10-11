@@ -2,6 +2,7 @@ import { runV21Upgrade } from '../testing';
 
 const CVA_MEMBERS = 'KbqCheckbox and KbqToggleComponent no longer implement ControlValueAccessor';
 const ON_TOUCHED = 'KbqCheckbox.onTouched was removed';
+const TRANSITION_STATE = 'TransitionCheckState is no longer exported from @koobiq/components/checkbox';
 
 describe('v21-upgrade: forms-controls', () => {
     it('reports writeValue() called on a KbqCheckbox query', async () => {
@@ -85,6 +86,113 @@ describe('v21-upgrade: forms-controls', () => {
 
         expect(run.read('checkbox-accessor.ts')).toBe(source);
         expect(run.log).toContain('checkbox-accessor.ts\n  KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR was removed');
+    });
+
+    it('moves the TransitionCheckState import from the checkbox entry point to core', async () => {
+        const run = await runV21Upgrade({
+            'only.ts': [
+                "import { Component } from '@angular/core';",
+                "import { TransitionCheckState } from '@koobiq/components/checkbox';",
+                'export const state = TransitionCheckState.Checked;',
+                ''
+            ].join('\n'),
+            'with-core.ts': [
+                "import { KbqCheckbox, TransitionCheckState } from '@koobiq/components/checkbox';",
+                "import { KbqCheckedState } from '@koobiq/components/core';",
+                'export const used = [KbqCheckbox, TransitionCheckState.Init];',
+                ''
+            ].join('\n'),
+            'multiline.ts': [
+                'import {',
+                '    TransitionCheckState,',
+                '    KbqCheckboxModule',
+                "} from '@koobiq/components/checkbox';",
+                'export const used = [KbqCheckboxModule, TransitionCheckState.Indeterminate];',
+                ''
+            ].join('\n'),
+            'type-only.ts': [
+                "import type { TransitionCheckState } from '@koobiq/components/checkbox';",
+                'export let state: TransitionCheckState;',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('only.ts')).toBe(
+            [
+                "import { TransitionCheckState } from '@koobiq/components/core';",
+                "import { Component } from '@angular/core';",
+                'export const state = TransitionCheckState.Checked;',
+                ''
+            ].join('\n')
+        );
+        expect(run.read('with-core.ts')).toBe(
+            [
+                "import { KbqCheckbox } from '@koobiq/components/checkbox';",
+                "import { KbqCheckedState, TransitionCheckState } from '@koobiq/components/core';",
+                'export const used = [KbqCheckbox, TransitionCheckState.Init];',
+                ''
+            ].join('\n')
+        );
+        expect(run.read('multiline.ts')).toBe(
+            [
+                "import { TransitionCheckState } from '@koobiq/components/core';",
+                'import {',
+                '    KbqCheckboxModule',
+                "} from '@koobiq/components/checkbox';",
+                'export const used = [KbqCheckboxModule, TransitionCheckState.Indeterminate];',
+                ''
+            ].join('\n')
+        );
+        expect(run.read('type-only.ts')).toBe(
+            [
+                "import { TransitionCheckState } from '@koobiq/components/core';",
+                'export let state: TransitionCheckState;',
+                ''
+            ].join('\n')
+        );
+        expect(run.log).not.toContain(TRANSITION_STATE);
+    });
+
+    it('reports an aliased import, a re-export and a namespace read of TransitionCheckState', async () => {
+        const aliased = [
+            "import { TransitionCheckState as CheckState } from '@koobiq/components/checkbox';",
+            'export const state = CheckState.Checked;',
+            ''
+        ].join('\n');
+        const reExport = "export { KbqCheckbox, TransitionCheckState } from '@koobiq/components/checkbox';\n";
+        const namespace = [
+            "import * as checkbox from '@koobiq/components/checkbox';",
+            'export const state = checkbox.TransitionCheckState.Checked;',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'aliased.ts': aliased, 're-export.ts': reExport, 'namespace.ts': namespace });
+
+        expect(run.read('aliased.ts')).toBe(aliased);
+        expect(run.read('re-export.ts')).toBe(reExport);
+        expect(run.read('namespace.ts')).toBe(namespace);
+        expect(run.log).toContain(`aliased.ts\n  ${TRANSITION_STATE}`);
+        expect(run.log).toContain(`re-export.ts\n  ${TRANSITION_STATE}`);
+        expect(run.log).toContain(`namespace.ts\n  ${TRANSITION_STATE}`);
+    });
+
+    it('leaves TransitionCheckState imported from core or from the app alone', async () => {
+        const fromCore = [
+            "import { KbqCheckbox } from '@koobiq/components/checkbox';",
+            "import { TransitionCheckState as State } from '@koobiq/components/core';",
+            'export const used = [KbqCheckbox, State.Checked];',
+            ''
+        ].join('\n');
+        const own = [
+            "import * as checkbox from '@koobiq/components/checkbox';",
+            "import { TransitionCheckState } from './transition-check-state';",
+            'export const used = [checkbox.KbqCheckbox, TransitionCheckState.Checked];',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'from-core.ts': fromCore, 'own.ts': own });
+
+        expect(run.read('from-core.ts')).toBe(fromCore);
+        expect(run.read('own.ts')).toBe(own);
+        expect(run.log).not.toContain(TRANSITION_STATE);
     });
 
     it('leaves a custom ControlValueAccessor wrapping a checkbox and the members of other classes alone', async () => {

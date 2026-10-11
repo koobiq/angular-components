@@ -1,4 +1,4 @@
-import { workspaces } from '@angular-devkit/core';
+import { JsonValue, workspaces } from '@angular-devkit/core';
 import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
@@ -14,15 +14,18 @@ export interface V21UpgradeRun {
     read(name: string): string;
     /** Everything the migration logged. */
     log: string;
+    /** The `styles` of the application's `build` target in `angular.json` after the run. */
+    buildStyles(): JsonValue[];
 }
 
 /**
  * Writes `files` (name → content, e.g. `{ 'app.ts': '…', 'app.html': '…' }`) into `src/app` of a fresh
- * application and runs v21-upgrade over it.
+ * application, and `buildStyles` into the `styles` of its `build` target, and runs v21-upgrade over it.
  */
 export async function runV21Upgrade(
     files: Record<string, string>,
-    options: Partial<Schema> = {}
+    options: Partial<Schema> = {},
+    buildStyles?: JsonValue[]
 ): Promise<V21UpgradeRun> {
     const runner = new SchematicTestRunner('schematics', collectionPath);
     const appTree: Tree = await createTestApp(runner, { style: 'scss' });
@@ -38,6 +41,13 @@ export async function runV21Upgrade(
         else appTree.create(filePath, content);
     }
 
+    if (buildStyles) {
+        const workspace = JSON.parse(appTree.readText('/angular.json'));
+
+        workspace.projects[project].architect.build.options.styles = buildStyles;
+        appTree.overwrite('/angular.json', JSON.stringify(workspace, null, 2));
+    }
+
     runner.logger.subscribe((entry) => messages.push(entry.message));
 
     const result = await runner.runSchematic(
@@ -46,5 +56,9 @@ export async function runV21Upgrade(
         appTree
     );
 
-    return { read: (name) => result.readText(`${root}/${name}`), log: messages.join('\n') };
+    return {
+        read: (name) => result.readText(`${root}/${name}`),
+        log: messages.join('\n'),
+        buildStyles: () => JSON.parse(result.readText('/angular.json')).projects[project].architect.build.options.styles
+    };
 }

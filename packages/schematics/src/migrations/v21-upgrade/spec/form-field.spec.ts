@@ -10,6 +10,7 @@ const PASSWORD_HINTS_QUERY = '`KbqFormField.passwordHints` and `hasPasswordHint`
 const CLEAR_BY_ESC = '`KbqFormField.canCleanerClearByEsc` was removed';
 const ON_KEY_DOWN = '`KbqFormField.onKeyDown()` was removed';
 const CHECK_RULES = '`KbqInputPassword.checkRules()` and `checkRule` were removed';
+const CONNECT_TO = '`KbqStepper.connectTo()` was removed';
 
 const ALL = [
     PASSWORD_HINT,
@@ -21,7 +22,8 @@ const ALL = [
     PASSWORD_HINTS_QUERY,
     CLEAR_BY_ESC,
     ON_KEY_DOWN,
-    CHECK_RULES
+    CHECK_RULES,
+    CONNECT_TO
 ];
 
 describe('v21-upgrade: form-field', () => {
@@ -116,6 +118,52 @@ describe('v21-upgrade: form-field', () => {
 
         expect(run.read('check.ts')).toBe(source);
         expect(run.log).toContain(CHECK_RULES);
+    });
+
+    it('reports KbqStepper.connectTo() in code and through a template reference', async () => {
+        const source = [
+            "import { KbqStepper } from '@koobiq/components/form-field';",
+            'export class App {',
+            '    readonly stepper = viewChild.required(KbqStepper);',
+            '    ngAfterViewInit() { this.stepper()?.connectTo(this.input); }',
+            '}',
+            ''
+        ].join('\n');
+        const template = [
+            '<kbq-form-field>',
+            '    <input kbqNumberInput #input />',
+            '    <kbq-stepper #stepper (stepUp)="stepper.connectTo(input)" />',
+            '</kbq-form-field>',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'stepper.ts': source, 'stepper.html': template });
+
+        expect(run.read('stepper.ts')).toBe(source);
+        expect(run.read('stepper.html')).toBe(template);
+        expect(run.log).toContain(`stepper.ts\n  ${CONNECT_TO}`);
+        expect(run.log).toContain(`stepper.html\n  ${CONNECT_TO}`);
+    });
+
+    it('leaves connectTo() of other owners alone', async () => {
+        const stepperHost = [
+            "import { KbqStepper } from '@koobiq/components/form-field';",
+            '@Component({ imports: [KbqStepper], template: `<kbq-stepper />` })',
+            'export class Counter {',
+            '    connectTo(url: string) {}',
+            "    ngOnInit() { this.connectTo('/counter'); }",
+            '}',
+            ''
+        ].join('\n');
+        const socket = [
+            "import { Socket } from './socket';",
+            "export const connect = (socket: Socket) => socket.connectTo('/events');",
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'counter.ts': stepperHost, 'socket.ts': socket });
+
+        expect(run.read('counter.ts')).toBe(stepperHost);
+        expect(run.read('socket.ts')).toBe(socket);
+        expect(run.log).not.toContain(CONNECT_TO);
     });
 
     it('leaves the reactive hint, look-alikes and other owners alone', async () => {

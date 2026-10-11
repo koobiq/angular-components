@@ -109,19 +109,6 @@ export class KbqToastContainerComponent extends CdkScrollable {
     }
 
     /**
-     * Fakes a scroll on the container so that overlays anchored inside a toast are repositioned by their
-     * `RepositionScrollStrategy` when the stack shifts.
-     *
-     * @deprecated The container reports its own reflow through `elementScrolled()`, so nothing calls this. Driving
-     * it from the animation events of the stack notified the application-wide `ScrollDispatcher` on every toast
-     * that merely appeared, which closed unrelated overlays using a close-on-scroll strategy. Kept only for callers
-     * that already hold a container reference — the instance `KbqToastService` creates is not exposed.
-     */
-    dispatchScrollEvent = () => {
-        this.elementRef.nativeElement.dispatchEvent(new Event('scroll'));
-    };
-
-    /**
      * A template toast has no component host of its own, so its first element becomes the live region — screen
      * readers announce a node inserted with `role="status"`. A template declaring its own role is left alone,
      * and one whose root is a bare text node cannot carry the attribute at all — it needs an element around it.

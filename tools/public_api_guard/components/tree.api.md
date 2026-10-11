@@ -521,11 +521,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
 // @public
 export class KbqTreeOptionChange {
-    constructor(source: KbqTreeOption,
-    isUserInput?: boolean);
-    // @deprecated (undocumented)
-    isUserInput: boolean;
-    // (undocumented)
+    constructor(
+    source: KbqTreeOption);
     source: KbqTreeOption;
 }
 

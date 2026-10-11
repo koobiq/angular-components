@@ -1170,21 +1170,6 @@ describe('KbqToastService: global scroll notifications', () => {
 
         expect(scrolled).toHaveBeenCalled();
     });
-
-    it('still dispatches on the container when the deprecated `dispatchScrollEvent` is called explicitly', () => {
-        const fixture = TestBed.createComponent(KbqToastContainerComponent);
-        const onScroll = vi.fn();
-
-        fixture.detectChanges();
-        fixture.nativeElement.addEventListener('scroll', onScroll);
-
-        // Called detached, because the deprecated API is documented as a callback and must stay bound.
-        const { dispatchScrollEvent } = fixture.componentInstance;
-
-        dispatchScrollEvent();
-
-        expect(onScroll).toHaveBeenCalled();
-    });
 });
 
 describe('KbqToastService: stack reflow', () => {
