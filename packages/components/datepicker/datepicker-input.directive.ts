@@ -262,9 +262,9 @@ export const kbqDatepickerLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqDatepickerLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('datepicker', configuration);
 
-/** @deprecated Use {@link KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = KBQ_DATEPICKER_DEFAULT_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link KBQ_DATEPICKER_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_DATEPICKER_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_DATEPICKER_CONFIGURATION = KBQ_DATEPICKER_LOCALE_CONFIGURATION;
 
 /**

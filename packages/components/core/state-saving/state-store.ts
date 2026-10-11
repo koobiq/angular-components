@@ -203,7 +203,7 @@ export abstract class KbqWebStorageStateStore implements KbqStateStore {
      * Read-through only: the entry is neither rewritten nor removed, because an unprefixed key is not
      * necessarily ours — an application storing its own `settings` would lose it to a component keyed
      * `stateSavingKey="settings"`. The first write moves the state under the prefix and takes over from
-     * there. A one-release bridge; remove it in the next major.
+     * there. A one-major bridge; removed in 22.0.0.
      */
     private readLegacyState(storage: Storage, key: string): unknown {
         const raw = storage.getItem(key);

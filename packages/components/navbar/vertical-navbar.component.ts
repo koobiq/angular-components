@@ -53,9 +53,9 @@ export const kbqNavbarLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqNavbarLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('navbar', configuration);
 
-/** @deprecated Use {@link KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_VERTICAL_NAVBAR_DEFAULT_CONFIGURATION = KBQ_NAVBAR_DEFAULT_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link KBQ_NAVBAR_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_NAVBAR_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = KBQ_NAVBAR_LOCALE_CONFIGURATION;
 
 @Component({

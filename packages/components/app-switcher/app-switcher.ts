@@ -227,9 +227,9 @@ export const kbqAppSwitcherLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqAppSwitcherLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('appSwitcher', configuration);
 
-/** @deprecated Use {@link KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_APP_SWITCHER_DEFAULT_CONFIGURATION = KBQ_APP_SWITCHER_DEFAULT_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link KBQ_APP_SWITCHER_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_APP_SWITCHER_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_APP_SWITCHER_CONFIGURATION = KBQ_APP_SWITCHER_LOCALE_CONFIGURATION;
 
 /**

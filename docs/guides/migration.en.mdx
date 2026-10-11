@@ -1344,7 +1344,7 @@ Source order is not used to infer a suffix: under the old projection rule all su
 
 {/* cspell:ignore addClassModificatorForIcons */}
 
-**Deprecated imperative placement and styles.** Replace calls to `addClassModificatorForIcons()` with explicit slot directives, and migrate custom selectors from `.kbq-icon_left` to `.kbq-tag-prefix`. The method and the old selector are deprecated and will be removed in the next major version.
+**Deprecated imperative placement and styles.** Replace calls to `addClassModificatorForIcons()` with explicit slot directives, and migrate custom selectors from `.kbq-icon_left` to `.kbq-tag-prefix`. The method and the old selector are deprecated and will be removed in 22.0.0.
 
 ### Scrollbar overlayscrollbars implementation deprecation (21.0.0)
 
@@ -2953,7 +2953,7 @@ Storage format:
 - An entry written by 20.2.0 under the bare, unprefixed key is still read, so an upgrade does not reset
   what users had. It is never rewritten or removed — an unprefixed key is not necessarily ours, and an
   application storing its own `settings` must not lose it to a component keyed `stateSavingKey="settings"`.
-  The first save moves the state under the prefix. This bridge is removed in the next major.
+  The first save moves the state under the prefix. This bridge is removed in 22.0.0.
 
 The `accordion-state-saving-default` schematic reports every consumer the default reaches. It is
 warn-only: the markup whose behavior changed is exactly the markup that says nothing about the input, and

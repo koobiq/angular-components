@@ -617,8 +617,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
      * The most recently created `KbqTreeNode`, across every tree on the page.
      *
      * @deprecated Kept for backwards compatibility only — the tree hands a node its data through
-     * `KbqTreeBase.registerNode`, which is scoped to the tree that owns the node. Will be removed in
-     * version 20.
+     * `KbqTreeBase.registerNode`, which is scoped to the tree that owns the node. Will be removed in 22.0.0.
      */
     static mostRecentTreeNode: KbqTreeNode<any> | null = null;
 

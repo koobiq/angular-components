@@ -59,7 +59,7 @@ import { Subject } from 'rxjs';
 
 /**
  * @deprecated Use {@link KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION}, which carries the whole `input`
- * locale section rather than just its `number` slice.
+ * locale section rather than just its `number` slice. Will be removed in 22.0.0.
  */
 export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION = ruRUFormattersData.input.number;
 

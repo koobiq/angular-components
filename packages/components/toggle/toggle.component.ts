@@ -263,7 +263,7 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     /**
      * Does nothing: the view reads nothing from the label, so a change of it needs no re-check.
      *
-     * @deprecated Kept for back-compatibility and will be removed in the next major version.
+     * @deprecated Kept for back-compatibility. Will be removed in 22.0.0.
      */
     onLabelTextChange(): void {
         // Intentionally empty.

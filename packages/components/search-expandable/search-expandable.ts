@@ -68,9 +68,9 @@ export const kbqSearchExpandableLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqSearchExpandableLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('searchExpandable', configuration);
 
-/** @deprecated Use {@link KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_SEARCH_EXPANDABLE_DEFAULT_CONFIGURATION = KBQ_SEARCH_EXPANDABLE_DEFAULT_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_SEARCH_EXPANDABLE_CONFIGURATION = KBQ_SEARCH_EXPANDABLE_LOCALE_CONFIGURATION;
 
 export const defaultValue = '';

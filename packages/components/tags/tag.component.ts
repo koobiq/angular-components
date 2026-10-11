@@ -517,6 +517,7 @@ export class KbqTag
      * Adds the legacy positional classes inferred from projected icons.
      *
      * @deprecated Use `KbqTagPrefix` and `KbqTagSuffix` to declare the position explicitly.
+     * Will be removed in 22.0.0.
      * @docs-private
      */
     addClassModificatorForIcons(): void {
