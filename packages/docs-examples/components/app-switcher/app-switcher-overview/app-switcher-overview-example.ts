@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
 import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { kbqInjectLocaleService } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../localized-data';
 
 /**
  * @title app-switcher
@@ -17,15 +17,15 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        App: {{ selectedApp.name }}
+        {{ text().app }} {{ selectedApp()?.name }}
         <br />
         <br />
         <button
             kbq-button
-            aria-label="Apps"
             kbqAppSwitcher
-            [kbqTooltip]="tooltip()"
-            [sites]="sites"
+            [attr.aria-label]="text().allApps"
+            [kbqTooltip]="text().allApps"
+            [sites]="sites()"
             [(selectedApp)]="selectedApp"
         >
             <i kbq-icon="kbq-bento-menu_16"></i>
@@ -34,11 +34,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppSwitcherOverviewExample {
-    private readonly localeService = kbqInjectLocaleService({ optional: true });
-
-    protected readonly tooltip = computed(() =>
-        this.localeService?.localeId() === 'ru-RU' ? 'Все приложения' : 'All apps'
-    );
+    protected readonly text = injectExampleText();
 
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
@@ -51,52 +47,61 @@ export class AppSwitcherOverviewExample {
         </svg>
     `;
 
-    sites: KbqAppSwitcherSite[] = [
-        {
-            name: 'СЗФО',
-            id: '02',
-            apps: [
-                {
-                    name: 'Byte Sentinel',
-                    caption: 'Byte 001',
-                    id: 'SZFO_01',
-                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
-                },
-                {
-                    name: 'CryptoWall',
-                    id: 'SZFO_02',
-                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
-                },
-                {
-                    name: 'App Instance 1',
-                    caption: 'Instance Alias One',
-                    id: 'SZFO_03',
-                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
-                },
-                {
-                    name: 'App Instance 2',
-                    id: 'SZFO_04',
-                    icon: this.SVGIcon
-                },
-                {
-                    name: 'App Instance 3',
-                    caption: 'Instance Alias Three',
-                    id: 'SZFO_05',
-                    icon: this.SVGIcon
-                },
-                {
-                    name: 'App Instance 4',
-                    caption: 'Instance Alias Four',
-                    id: 'SZFO_06',
-                    icon: this.SVGIcon
-                },
-                {
-                    name: 'Phantom Gate',
-                    id: 'SZFO_07',
-                    icon: this.SVGIcon
-                }
-            ]
-        }
-    ];
-    selectedApp: KbqAppSwitcherApp = this.sites[0].apps[1];
+    protected readonly sites = computed<KbqAppSwitcherSite[]>(() => {
+        const text = this.text();
+
+        return [
+            {
+                name: text.sites.northwest,
+                id: '02',
+                apps: [
+                    {
+                        name: 'Byte Sentinel',
+                        caption: 'Byte 001',
+                        id: 'SZFO_01',
+                        iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
+                    },
+                    {
+                        name: 'CryptoWall',
+                        id: 'SZFO_02',
+                        iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
+                    },
+                    {
+                        name: text.appInstance(1),
+                        caption: text.instanceAliasOne,
+                        id: 'SZFO_03',
+                        iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
+                    },
+                    {
+                        name: text.appInstance(2),
+                        id: 'SZFO_04',
+                        icon: this.SVGIcon
+                    },
+                    {
+                        name: text.appInstance(3),
+                        caption: text.instanceAliasThree,
+                        id: 'SZFO_05',
+                        icon: this.SVGIcon
+                    },
+                    {
+                        name: text.appInstance(4),
+                        caption: text.instanceAliasFour,
+                        id: 'SZFO_06',
+                        icon: this.SVGIcon
+                    },
+                    {
+                        name: 'Phantom Gate',
+                        id: 'SZFO_07',
+                        icon: this.SVGIcon
+                    }
+                ]
+            }
+        ];
+    });
+
+    // A locale switch rebuilds `sites`: the selection is carried over to the new objects by id.
+    protected readonly selectedApp = linkedSignal<KbqAppSwitcherSite[], KbqAppSwitcherApp | undefined>({
+        source: this.sites,
+        computation: ([site], previous) => site.apps.find(({ id }) => id === previous?.value?.id) ?? site.apps[1]
+    });
 }

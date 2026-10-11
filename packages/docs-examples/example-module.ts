@@ -567,7 +567,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "app-switcher-overview-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "app-switcher-overview-example",
     "primaryFile": "app-switcher-overview-example.ts",
     "importPath": "components/app-switcher"
@@ -579,7 +581,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "app-switcher-sites-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "app-switcher-sites-example",
     "primaryFile": "app-switcher-sites-example.ts",
     "importPath": "components/app-switcher"
