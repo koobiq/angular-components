@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -15,9 +15,9 @@ import { injectExampleText } from '../localized-data';
         KbqToolTipModule
     ],
     template: `
-        {{ text().app }} {{ selectedApp()?.name }}
+        {{ text().app }} {{ selectedApp.name }}
         <br />
-        {{ text().site }} {{ selectedSite()?.name }}
+        {{ text().site }} {{ selectedSite.name }}
         <br />
         <br />
         <button
@@ -25,7 +25,7 @@ import { injectExampleText } from '../localized-data';
             kbqAppSwitcher
             [attr.aria-label]="text().allApps"
             [kbqTooltip]="text().allApps"
-            [sites]="sites()"
+            [sites]="sites"
             [(selectedSite)]="selectedSite"
             [(selectedApp)]="selectedApp"
         >
@@ -48,397 +48,384 @@ export class AppSwitcherSitesExample {
         </svg>
     `;
 
-    protected readonly sites = computed<KbqAppSwitcherSite[]>(() => {
-        const text = this.text();
+    sites: KbqAppSwitcherSite[] = [
+        {
+            name: 'СЗФО',
+            id: '02',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'SZFO_01',
+                    type: 'NAD',
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'SZFO_02',
+                    type: 'NAD',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 1',
+                    caption: 'Instance Alias One',
+                    id: 'SZFO_03',
+                    type: 'NAD',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 2',
+                    id: 'SZFO_04',
+                    type: 'NAD',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 3',
+                    caption: 'Instance Alias Three',
+                    id: 'SZFO_05',
+                    type: 'NE-NAD',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 4',
+                    caption: 'Instance Alias Four',
+                    id: 'SZFO_06',
+                    type: 'NE-NAD',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'SZFO_07',
+                    type: 'NE-NAD',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'SentraLock',
+                    id: 'SZFO_08',
+                    caption: 'Lock-sentral-urals',
+                    type: 'NE-NAD',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Zero Trace',
+                    id: 'SZFO_09',
+                    type: '',
+                    icon: this.SVGIcon
+                }
+            ]
+        },
+        {
+            name: 'ЮФО',
+            id: '03',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'UFO_01',
+                    type: 'SIEM',
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'UFO_02',
+                    type: 'SIEM',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'UFO_03',
+                    type: 'SIEM',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals',
+                    id: 'UFO_04',
+                    type: 'SIEM',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Zero Trace',
+                    id: 'UFO_05',
+                    type: '',
+                    icon: this.SVGIcon
+                }
+            ]
+        },
+        {
+            name: 'Южный Суверенный Федеральный Округ ФО',
+            status: 'Главная',
+            id: '04',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'USFO_01',
+                    type: 'APP',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'USFO_02',
+                    type: 'APP',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 1',
+                    caption: 'Instance Alias One',
+                    id: 'USFO_03',
+                    type: 'APP',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 2',
+                    id: 'USFO_04',
+                    type: 'APP',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 3',
+                    caption: 'Instance Alias Three',
+                    id: 'USFO_05',
+                    type: 'APP',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 4',
+                    caption: 'Instance Alias Four',
+                    id: 'USFO_06',
+                    type: 'APP',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'USFO_07',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals',
+                    id: 'USFO_08',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Zero Trace',
+                    id: 'USFO_09',
+                    type: '',
+                    icon: this.SVGIcon
+                }
+            ]
+        },
+        {
+            name: 'ПФО',
+            id: '05',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'PFO_01',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'PFO_02',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'PFO_03',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals',
+                    id: 'PFO_04',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Zero Trace',
+                    id: 'PFO_05',
+                    type: '',
+                    icon: this.SVGIcon
+                }
+            ]
+        },
+        {
+            name: 'УФО',
+            id: '06',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'UFO_01',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'UFO_02',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 1',
+                    caption: 'Instance Alias One',
+                    id: 'UFO_03',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 2',
+                    id: 'UFO_04',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 3',
+                    caption: 'Instance Alias Three',
+                    id: 'UFO_05',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 4',
+                    caption: 'Instance Alias Four',
+                    id: 'UFO_06',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'UFO_07',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals',
+                    id: 'UFO_08',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Zero Trace',
+                    id: 'UFO_09',
+                    type: '',
+                    icon: this.SVGIcon
+                }
+            ]
+        },
+        {
+            name: 'СФО',
+            id: '07',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'SFO_01',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'SFO_02',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'SFO_03',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals',
+                    id: 'SFO_04',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Zero Trace',
+                    id: 'SFO_05',
+                    type: '',
+                    icon: this.SVGIcon
+                }
+            ]
+        },
+        {
+            name: 'ДФО',
+            id: '08',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'DFO_01',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'DFO_02',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 1',
+                    caption: 'Instance Alias One',
+                    id: 'DFO_03',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 2',
+                    id: 'DFO_04',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 3',
+                    caption: 'Instance Alias Three',
+                    id: 'DFO_05',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 4',
+                    caption: 'Instance Alias Four',
+                    id: 'DFO_06',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'DFO_07',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'SentraLock',
+                    caption: 'Lock-sentral-urals',
+                    id: 'DFO_08',
+                    type: '',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Zero Trace',
+                    id: 'DFO_09',
+                    type: '',
+                    icon: this.SVGIcon
+                }
+            ]
+        }
+    ];
 
-        return [
-            {
-                name: text.sites.northwest,
-                id: '02',
-                apps: [
-                    {
-                        name: 'Byte Sentinel',
-                        caption: 'Byte 001',
-                        id: 'SZFO_01',
-                        type: 'NAD',
-                        iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
-                    },
-                    {
-                        name: 'CryptoWall',
-                        id: 'SZFO_02',
-                        type: 'NAD',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(1),
-                        caption: text.instanceAliasOne,
-                        id: 'SZFO_03',
-                        type: 'NAD',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(2),
-                        id: 'SZFO_04',
-                        type: 'NAD',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(3),
-                        caption: text.instanceAliasThree,
-                        id: 'SZFO_05',
-                        type: 'NE-NAD',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(4),
-                        caption: text.instanceAliasFour,
-                        id: 'SZFO_06',
-                        type: 'NE-NAD',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Phantom Gate',
-                        id: 'SZFO_07',
-                        type: 'NE-NAD',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'SentraLock',
-                        id: 'SZFO_08',
-                        caption: 'Lock-sentral-urals',
-                        type: 'NE-NAD',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Zero Trace',
-                        id: 'SZFO_09',
-                        type: '',
-                        icon: this.SVGIcon
-                    }
-                ]
-            },
-            {
-                name: text.sites.south,
-                id: '03',
-                apps: [
-                    {
-                        name: 'Byte Sentinel',
-                        caption: 'Byte 001',
-                        id: 'UFO_01',
-                        type: 'SIEM',
-                        iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
-                    },
-                    {
-                        name: 'CryptoWall',
-                        id: 'UFO_02',
-                        type: 'SIEM',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Phantom Gate',
-                        id: 'UFO_03',
-                        type: 'SIEM',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'SentraLock',
-                        caption: 'Lock-sentral-urals',
-                        id: 'UFO_04',
-                        type: 'SIEM',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Zero Trace',
-                        id: 'UFO_05',
-                        type: '',
-                        icon: this.SVGIcon
-                    }
-                ]
-            },
-            {
-                name: text.sites.southernSovereign,
-                status: text.mainSite,
-                id: '04',
-                apps: [
-                    {
-                        name: 'Byte Sentinel',
-                        caption: 'Byte 001',
-                        id: 'USFO_01',
-                        type: 'APP',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'CryptoWall',
-                        id: 'USFO_02',
-                        type: 'APP',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(1),
-                        caption: text.instanceAliasOne,
-                        id: 'USFO_03',
-                        type: 'APP',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(2),
-                        id: 'USFO_04',
-                        type: 'APP',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(3),
-                        caption: text.instanceAliasThree,
-                        id: 'USFO_05',
-                        type: 'APP',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(4),
-                        caption: text.instanceAliasFour,
-                        id: 'USFO_06',
-                        type: 'APP',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Phantom Gate',
-                        id: 'USFO_07',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'SentraLock',
-                        caption: 'Lock-sentral-urals',
-                        id: 'USFO_08',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Zero Trace',
-                        id: 'USFO_09',
-                        type: '',
-                        icon: this.SVGIcon
-                    }
-                ]
-            },
-            {
-                name: text.sites.volga,
-                id: '05',
-                apps: [
-                    {
-                        name: 'Byte Sentinel',
-                        caption: 'Byte 001',
-                        id: 'PFO_01',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'CryptoWall',
-                        id: 'PFO_02',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Phantom Gate',
-                        id: 'PFO_03',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'SentraLock',
-                        caption: 'Lock-sentral-urals',
-                        id: 'PFO_04',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Zero Trace',
-                        id: 'PFO_05',
-                        type: '',
-                        icon: this.SVGIcon
-                    }
-                ]
-            },
-            {
-                name: text.sites.urals,
-                id: '06',
-                apps: [
-                    {
-                        name: 'Byte Sentinel',
-                        caption: 'Byte 001',
-                        id: 'UFO_01',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'CryptoWall',
-                        id: 'UFO_02',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(1),
-                        caption: text.instanceAliasOne,
-                        id: 'UFO_03',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(2),
-                        id: 'UFO_04',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(3),
-                        caption: text.instanceAliasThree,
-                        id: 'UFO_05',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(4),
-                        caption: text.instanceAliasFour,
-                        id: 'UFO_06',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Phantom Gate',
-                        id: 'UFO_07',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'SentraLock',
-                        caption: 'Lock-sentral-urals',
-                        id: 'UFO_08',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Zero Trace',
-                        id: 'UFO_09',
-                        type: '',
-                        icon: this.SVGIcon
-                    }
-                ]
-            },
-            {
-                name: text.sites.siberia,
-                id: '07',
-                apps: [
-                    {
-                        name: 'Byte Sentinel',
-                        caption: 'Byte 001',
-                        id: 'SFO_01',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'CryptoWall',
-                        id: 'SFO_02',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Phantom Gate',
-                        id: 'SFO_03',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'SentraLock',
-                        caption: 'Lock-sentral-urals',
-                        id: 'SFO_04',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Zero Trace',
-                        id: 'SFO_05',
-                        type: '',
-                        icon: this.SVGIcon
-                    }
-                ]
-            },
-            {
-                name: text.sites.farEast,
-                id: '08',
-                apps: [
-                    {
-                        name: 'Byte Sentinel',
-                        caption: 'Byte 001',
-                        id: 'DFO_01',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'CryptoWall',
-                        id: 'DFO_02',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(1),
-                        caption: text.instanceAliasOne,
-                        id: 'DFO_03',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(2),
-                        id: 'DFO_04',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(3),
-                        caption: text.instanceAliasThree,
-                        id: 'DFO_05',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(4),
-                        caption: text.instanceAliasFour,
-                        id: 'DFO_06',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Phantom Gate',
-                        id: 'DFO_07',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'SentraLock',
-                        caption: 'Lock-sentral-urals',
-                        id: 'DFO_08',
-                        type: '',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Zero Trace',
-                        id: 'DFO_09',
-                        type: '',
-                        icon: this.SVGIcon
-                    }
-                ]
-            }
-        ];
-    });
-
-    // A locale switch rebuilds `sites`: the selection is carried over to the new objects by id. Apps are
-    // looked up in their own site, since two sites may reuse an app id.
-    protected readonly selectedSite = linkedSignal<KbqAppSwitcherSite[], KbqAppSwitcherSite | undefined>({
-        source: this.sites,
-        computation: (sites, previous) => sites.find(({ id }) => id === previous?.value?.id) ?? sites[0]
-    });
-
-    protected readonly selectedApp = linkedSignal<KbqAppSwitcherSite | undefined, KbqAppSwitcherApp | undefined>({
-        source: this.selectedSite,
-        computation: (site, previous) => site?.apps.find(({ id }) => id === previous?.value?.id) ?? site?.apps[0]
-    });
+    selectedSite: KbqAppSwitcherSite = this.sites[0];
+    selectedApp: KbqAppSwitcherApp = this.sites[0].apps[0];
 }

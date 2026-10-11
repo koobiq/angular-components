@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, linkedSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -17,7 +17,7 @@ import { injectExampleText } from '../localized-data';
         KbqToolTipModule
     ],
     template: `
-        {{ text().app }} {{ selectedApp()?.name }}
+        {{ text().app }} {{ selectedApp.name }}
         <br />
         <br />
         <button
@@ -25,7 +25,7 @@ import { injectExampleText } from '../localized-data';
             kbqAppSwitcher
             [attr.aria-label]="text().allApps"
             [kbqTooltip]="text().allApps"
-            [sites]="sites()"
+            [sites]="sites"
             [(selectedApp)]="selectedApp"
         >
             <i kbq-icon="kbq-bento-menu_16"></i>
@@ -47,61 +47,52 @@ export class AppSwitcherOverviewExample {
         </svg>
     `;
 
-    protected readonly sites = computed<KbqAppSwitcherSite[]>(() => {
-        const text = this.text();
-
-        return [
-            {
-                name: text.sites.northwest,
-                id: '02',
-                apps: [
-                    {
-                        name: 'Byte Sentinel',
-                        caption: 'Byte 001',
-                        id: 'SZFO_01',
-                        iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
-                    },
-                    {
-                        name: 'CryptoWall',
-                        id: 'SZFO_02',
-                        iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
-                    },
-                    {
-                        name: text.appInstance(1),
-                        caption: text.instanceAliasOne,
-                        id: 'SZFO_03',
-                        iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
-                    },
-                    {
-                        name: text.appInstance(2),
-                        id: 'SZFO_04',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(3),
-                        caption: text.instanceAliasThree,
-                        id: 'SZFO_05',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: text.appInstance(4),
-                        caption: text.instanceAliasFour,
-                        id: 'SZFO_06',
-                        icon: this.SVGIcon
-                    },
-                    {
-                        name: 'Phantom Gate',
-                        id: 'SZFO_07',
-                        icon: this.SVGIcon
-                    }
-                ]
-            }
-        ];
-    });
-
-    // A locale switch rebuilds `sites`: the selection is carried over to the new objects by id.
-    protected readonly selectedApp = linkedSignal<KbqAppSwitcherSite[], KbqAppSwitcherApp | undefined>({
-        source: this.sites,
-        computation: ([site], previous) => site.apps.find(({ id }) => id === previous?.value?.id) ?? site.apps[1]
-    });
+    sites: KbqAppSwitcherSite[] = [
+        {
+            name: 'СЗФО',
+            id: '02',
+            apps: [
+                {
+                    name: 'Byte Sentinel',
+                    caption: 'Byte 001',
+                    id: 'SZFO_01',
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
+                },
+                {
+                    name: 'CryptoWall',
+                    id: 'SZFO_02',
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
+                },
+                {
+                    name: 'App Instance 1',
+                    caption: 'Instance Alias One',
+                    id: 'SZFO_03',
+                    iconSrc: 'https://koobiq.io/assets/images/favicons/icon.svg'
+                },
+                {
+                    name: 'App Instance 2',
+                    id: 'SZFO_04',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 3',
+                    caption: 'Instance Alias Three',
+                    id: 'SZFO_05',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'App Instance 4',
+                    caption: 'Instance Alias Four',
+                    id: 'SZFO_06',
+                    icon: this.SVGIcon
+                },
+                {
+                    name: 'Phantom Gate',
+                    id: 'SZFO_07',
+                    icon: this.SVGIcon
+                }
+            ]
+        }
+    ];
+    selectedApp: KbqAppSwitcherApp = this.sites[0].apps[1];
 }
