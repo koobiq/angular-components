@@ -25,7 +25,8 @@ const MARKDOWN_CLASS_SELECTOR: Replacement = {
 /**
  * Removed in 21.0.0: the arguments of `koobiq-theme()`, `koobiq-typography()` and `kbq-core-theme()`,
  * `kbq-contrast()`, `kbq-palette()`, `kbq-color()`, `kbq-typography-config()`, `core/styles/tokens`, the prebuilt
- * `light-theme.css` and `dark-theme.css`, and the unprefixed markdown typography classes (`md-h1`, …).
+ * `light-theme.css` and `dark-theme.css`, and the unprefixed markdown typography classes (`md-h1`, …). Also reports
+ * `kbq-light-theme()` and `kbq-dark-theme()`, deprecated for removal in 22.0.0.
  */
 export const styles: AreaData = {
     templateReplacements: [
@@ -56,6 +57,13 @@ export const styles: AreaData = {
             message:
                 '`kbq-contrast()`, `kbq-palette()` and `kbq-color()` were removed from the theming module: use the ' +
                 'CSS variables of the theme instead, for example `var(--kbq-foreground-contrast)`.'
+        },
+        {
+            pattern: '(?<![\\w-])kbq-(?:light|dark)-theme\\(',
+            message:
+                '`kbq-light-theme()` and `kbq-dark-theme()` are deprecated and will be removed in 22.0.0: nothing in the ' +
+                'library reads the theme map they build. Use the CSS variables of the theme instead, for example ' +
+                '`var(--kbq-foreground-contrast)`.'
         },
         {
             pattern: '(?<![\\w-])kbq-typography-config\\(',
