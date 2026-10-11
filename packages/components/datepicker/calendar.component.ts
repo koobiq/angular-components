@@ -236,7 +236,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
 
     userSelected(): void {
-        // TODO: The 'emit' function requires a mandatory void argument
         this.userSelection.emit();
     }
 

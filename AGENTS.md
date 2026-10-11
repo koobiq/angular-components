@@ -28,7 +28,7 @@ The hooks run `lint-staged` before each commit (prettier, stylelint and eslint w
 packages/
 ├── components/                # @koobiq/components — every subdirectory is a secondary entry point (@koobiq/components/<name>)
 ├── components/core/           # @koobiq/components/core — shared code: a11y, behaviors, locales, overlay, test helpers, KBQ_WINDOW
-├── components-experimental/   # @koobiq/components-experimental — empty barrel in v20, kept so sub-packages can land later
+├── components-experimental/   # @koobiq/components-experimental — empty barrel, kept so sub-packages can land later
 ├── docs-examples/             # Live examples rendered by the docs site and reused by the dev apps
 ├── components-dev/            # Dev app per component (yarn run dev:<component-name>)
 ├── e2e/                       # App that mounts every component's e2e.ts scenarios for Playwright

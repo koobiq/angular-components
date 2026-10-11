@@ -77,7 +77,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     private _tabindex: number | null = 0;
 
-    // @todo 20 In the next major release this feature will be replaced on the input signal.
     /** Whether the button is disabled. */
     get disabled(): boolean {
         return this.disabledSignal();

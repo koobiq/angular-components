@@ -603,10 +603,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         this.openedState.set(isOpen);
 
         if (isOpen) {
-            // TODO: The 'emit' function requires a mandatory void argument
             this.dropdownOpened.emit();
         } else {
-            // TODO: The 'emit' function requires a mandatory void argument
             this.dropdownClosed.emit();
         }
 

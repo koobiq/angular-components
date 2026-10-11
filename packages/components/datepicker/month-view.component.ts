@@ -166,7 +166,6 @@ export class KbqMonthView<D> implements AfterContentInit, OnChanges {
             this.selectedChange.emit(selectedDate);
         }
 
-        // TODO: The 'emit' function requires a mandatory void argument
         this.userSelection.emit();
     }
 

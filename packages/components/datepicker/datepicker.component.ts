@@ -422,7 +422,6 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         this.openAsPopup();
 
         this.openedState.set(true);
-        // TODO: The 'emit' function requires a mandatory void argument
         this.openedStream.emit();
     }
 
@@ -448,7 +447,6 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         }
 
         this.openedState.set(false);
-        // TODO: The 'emit' function requires a mandatory void argument
         this.closedStream.emit();
         this.focusedElementBeforeOpen = null;
     }

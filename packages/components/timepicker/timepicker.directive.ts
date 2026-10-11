@@ -538,7 +538,6 @@ export class KbqTimepicker<D>
         if (isLetterKey(event) && !event.ctrlKey && !event.metaKey) {
             event.preventDefault();
 
-            // TODO: The 'emit' function requires a mandatory void argument
             this.incorrectInput.emit();
         } else if (
             (hasModifierKey(event) && (isVerticalMovement(event) || isHorizontalMovement(event))) ||
@@ -570,7 +569,6 @@ export class KbqTimepicker<D>
 
                 setTimeout(this.onInput);
             } else {
-                // TODO: The 'emit' function requires a mandatory void argument
                 this.incorrectInput.emit();
             }
         } else {

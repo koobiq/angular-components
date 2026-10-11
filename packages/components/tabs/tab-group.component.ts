@@ -510,7 +510,6 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     removeTabBodyWrapperHeight(): void {
         this.tabBodyWrapperHeight = this.tabBodyWrapper().nativeElement.clientHeight;
         this.tabBodyWrapper().nativeElement.style.height = '';
-        // TODO: The 'emit' function requires a mandatory void argument
         this.animationDone.emit();
     }
 

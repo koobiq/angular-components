@@ -203,7 +203,6 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
      */
     setupButtonEvents() {
         this.instance.onConfirm.pipe(takeUntilDestroyed(this.instanceDestroyRef)).subscribe(() => {
-            // TODO: The 'emit' function requires a mandatory void argument
             this.confirm.emit();
             this.hide();
         });
