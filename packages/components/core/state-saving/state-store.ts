@@ -8,7 +8,7 @@ import { KBQ_WINDOW } from '../tokens';
  *
  * Payloads are opaque: a store moves them, it never interprets them. A read is typed `unknown` on
  * purpose — web storage is origin-wide and user-writable, so the consumer has to normalize whatever
- * comes back (see `KbqStateSavingConfig.normalize`).
+ * comes back (see the `normalize` callback of `KbqStateSaving.read()`).
  *
  * Provide a custom implementation through the `KBQ_STATE_STORE` token to change where the state is
  * stored. To keep it for the tab session only, provide the bundled `KbqSessionStorageStateStore`

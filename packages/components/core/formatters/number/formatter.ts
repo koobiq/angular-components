@@ -119,7 +119,6 @@ type RoundDecimalOptions = KbqNumberRoundingLocaleConfiguration & {
     tenThousand?: string;
     /** Label for the one-hundred-millions unit. */
     oneHundredMillions?: string;
-    rtl?: boolean;
 };
 
 const ROUNDING_UNITS = {

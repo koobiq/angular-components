@@ -351,7 +351,7 @@ this.keyManager = new FocusKeyManager(this.items)
     .skipPredicate((item) => item.disabled);
 ```
 
-Koobiq implementations extend the CDK classes with the same names:
+The Koobiq classes are separate implementations of the CDK classes with the same names, with additions:
 
 - `withScrollSize()`, `setNextPageItemActive()`, and `setPreviousPageItemActive()` add page-wise movement;
 - `previousActiveItemIndex` stores the previous active index for range selection with `Shift`.

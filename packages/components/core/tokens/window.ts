@@ -8,8 +8,7 @@ export const KBQ_WINDOW = new InjectionToken<Window>('[KBQ_WINDOW]', {
     factory: (): Window => {
         const _window =
             inject(DOCUMENT).defaultView ||
-            // Backward compatibility for older Angular versions
-            // https://github.com/angular/universal/blob/main/docs/gotchas.md#strategy-3-shims
+            // A detached document (built by `DOMImplementation` or parsed by `DOMParser`) has no view of its own.
             // eslint-disable-next-line no-restricted-globals
             window;
 

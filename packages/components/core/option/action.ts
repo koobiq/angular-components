@@ -46,7 +46,6 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
     host: {
         class: 'kbq-option-action',
         role: 'button',
-        '[class.kbq-expanded]': 'false',
         '[class.kbq-disabled]': 'disabled()',
         '[attr.disabled]': 'disabled() || null',
         '[attr.aria-disabled]': 'disabled() || null',

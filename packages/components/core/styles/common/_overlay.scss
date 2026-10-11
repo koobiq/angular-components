@@ -33,7 +33,7 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         position: fixed;
         z-index: $overlay-container-z-index;
 
-        // todo перепроверить
+        // Keeps the global element styles of a page off the overlay structure.
         box-sizing: border-box;
         margin: 0;
         padding: 0;
@@ -74,7 +74,7 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         max-width: 100%;
         max-height: 100%;
 
-        // todo перепроверить
+        // Keeps the global element styles of a page off the overlay structure.
         margin: 0;
         padding: 0;
 
@@ -84,7 +84,6 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
     }
 
     .cdk-overlay-backdrop {
-        // TODO(jelbourn): reuse sidenav fullscreen mixin.
         position: absolute;
         top: 0;
         bottom: 0;
@@ -97,7 +96,7 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         transition: opacity $backdrop-animation-duration $backdrop-animation-timing-function;
         opacity: 0;
 
-        // todo перепроверить
+        // Keeps the global element styles of a page off the overlay structure.
         box-sizing: border-box;
         margin: 0;
         padding: 0;
@@ -105,9 +104,6 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         &.cdk-overlay-backdrop-showing {
             opacity: 1;
 
-            // Note that we can't import and use the `high-contrast` mixin from `_a11y.scss`, because
-            // this file will be copied to the top-level `cdk` package when putting together the files
-            // for npm. Any relative import paths we use here will become invalid once the file is copied.
             .cdk-high-contrast-active & {
                 // In high contrast mode the rgba background will become solid
                 // so we need to fall back to making it opaque using `opacity`.
@@ -161,7 +157,7 @@ $backdrop-animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
         min-width: 1px;
         min-height: 1px;
 
-        // todo перепроверить
+        // Keeps the global element styles of a page off the overlay structure.
         box-sizing: border-box;
         margin: 0;
         padding: 0;
