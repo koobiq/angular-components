@@ -22,7 +22,7 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' |
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-pseudo-checkbox',
-        '[class.kbq-checkbox_big]': 'big()',
+        '[class.kbq-pseudo-checkbox_big]': 'big()',
         '[class.kbq-indeterminate]': 'state() === "indeterminate"',
         '[class.kbq-checked]': 'state() === true || state() === "checked"',
         '[class.kbq-disabled]': 'disabled()'
