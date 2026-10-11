@@ -12,6 +12,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **20.2.0**: one shared mechanism for dropdown panel width.
 - **21.0.0**: the move to Angular 21: zoneless change detection, CSS animations instead of `@angular/animations`, and signal inputs, outputs and queries.
 - **21.0.0**: removal of the APIs deprecated before 21.0.0.
+- **21.0.0**: removal of `ThemePalette`.
 - **21.0.0**: the actions panel overlay container.
 - **21.0.0**: legacy splitter deprecation.
 - **21.0.0**: removal of the overlay demotion mechanism.
@@ -694,6 +695,21 @@ ng g @koobiq/components:v21-upgrade --project "<your project>"
 ```
 
 With `--fix false` it only reports what it would change.
+
+### ThemePalette removal (21.0.0)
+
+`ThemePalette` is removed from `@koobiq/components/core`: `KbqComponentColors` describes the colors the components support.
+
+| Removed                                                   | Use instead                                                          | Migration |
+| --------------------------------------------------------- | -------------------------------------------------------------------- | --------- |
+| `ThemePalette.Error`, `.Warning`, `.Success`              | `KbqComponentColors.Error`, `.Warning`, `.Success`                   | rewritten |
+| `ThemePalette.Primary`, `.Secondary`, `.Info`, `.Default` | no color, or a member of `KbqComponentColors` the component supports | reported  |
+| `ThemePalette.Empty`                                      | an unset `color`                                                     | reported  |
+| the `ThemePalette` type                                   | `KbqComponentColors`                                                 | reported  |
+
+`Error`, `Warning` and `Success` have the same values in both enums, so the rewrite changes nothing on screen. `Primary`, `Secondary` (`Default` is its alias) and `Info` set a `kbq-primary`, `kbq-secondary` or `kbq-info` class that no component styles, so such a component was drawn without its color rules; without a color it takes its default one. `Empty` is `''`, which also falls back to the default color, while `KbqComponentColors.Empty` is `'empty'`, a color of its own: do not swap one for the other.
+
+`v21-upgrade` rewrites the three members and drops the `ThemePalette` import once nothing else names it. It reports every other use in a file that imports `ThemePalette` from `@koobiq/components/core`, including a field that hands the enum to a template.
 
 ### Actions panel overlay container (21.0.0)
 

@@ -3,6 +3,7 @@ import { runV21Upgrade } from '../testing';
 const KBQ_THEME = '`KbqTheme` was renamed to `KbqThemeConfig`';
 const THEME_SERVICE = '`ThemeService` was removed';
 const OPTION_SCROLL_POSITION = '`getOptionScrollPosition()` was removed';
+const THEME_PALETTE = '`ThemePalette` was removed';
 
 describe('v21-upgrade: core', () => {
     it('rewrites KbqThemeSelector.Default to Light', async () => {
@@ -129,6 +130,85 @@ describe('v21-upgrade: core', () => {
 
         expect(run.read('scroll.ts')).toBe(source);
         expect(run.log).toContain(`scroll.ts\n  ${OPTION_SCROLL_POSITION}`);
+    });
+
+    it('rewrites the ThemePalette members KbqComponentColors holds and swaps the specifier', async () => {
+        const run = await runV21Upgrade({
+            'colors.ts': [
+                "import { KbqDefaultSizes, ThemePalette } from '@koobiq/components/core';",
+                'export const error = ThemePalette.Error;',
+                'export const states = [ThemePalette.Warning, ThemePalette.Success];',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('colors.ts')).toBe(
+            [
+                "import { KbqDefaultSizes, KbqComponentColors } from '@koobiq/components/core';",
+                'export const error = KbqComponentColors.Error;',
+                'export const states = [KbqComponentColors.Warning, KbqComponentColors.Success];',
+                ''
+            ].join('\n')
+        );
+        expect(run.log).not.toContain(THEME_PALETTE);
+    });
+
+    it('replaces an import of ThemePalette alone', async () => {
+        const run = await runV21Upgrade({
+            'error.ts': [
+                "import { ThemePalette } from '@koobiq/components/core';",
+                'export const color = ThemePalette.Error;',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('error.ts')).toBe(
+            [
+                "import { KbqComponentColors } from '@koobiq/components/core';",
+                'export const color = KbqComponentColors.Error;',
+                ''
+            ].join('\n')
+        );
+    });
+
+    it('keeps ThemePalette and reports the uses it cannot rewrite', async () => {
+        const run = await runV21Upgrade({
+            'palette.ts': [
+                "import { ThemePalette } from '@koobiq/components/core';",
+                'export class App {',
+                '    readonly palette = ThemePalette;',
+                '    color: ThemePalette = ThemePalette.Primary;',
+                '    error = ThemePalette.Error;',
+                '}',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('palette.ts')).toBe(
+            [
+                "import { ThemePalette, KbqComponentColors } from '@koobiq/components/core';",
+                'export class App {',
+                '    readonly palette = ThemePalette;',
+                '    color: ThemePalette = ThemePalette.Primary;',
+                '    error = KbqComponentColors.Error;',
+                '}',
+                ''
+            ].join('\n')
+        );
+        expect(run.log).toContain(`palette.ts\n  ${THEME_PALETTE}`);
+    });
+
+    it("leaves an app's own ThemePalette alone", async () => {
+        const source = [
+            "import { KbqComponentColors } from '@koobiq/components/core';",
+            "import { ThemePalette } from './palette';",
+            'export const colors = [KbqComponentColors.Error, ThemePalette.Error, ThemePalette.Primary];',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'own.ts': source });
+
+        expect(run.read('own.ts')).toBe(source);
+        expect(run.log).not.toContain('own.ts');
     });
 
     it("leaves the replacements, an app's own ThemeService and similar names alone", async () => {

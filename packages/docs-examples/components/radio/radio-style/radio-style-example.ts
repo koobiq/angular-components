@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
 
 /**
@@ -29,7 +29,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
                 </div>
                 <div class="example-radio-group">
                     <div id="radio-style-error-label" class="layout-margin-bottom-m kbq-form__label">Error</div>
-                    <kbq-radio-group aria-labelledby="radio-style-error-label" [color]="themePalette.Error">
+                    <kbq-radio-group aria-labelledby="radio-style-error-label" [color]="colors.Error">
                         <kbq-radio-button [checked]="true" [value]="'option_1'">William Anderson</kbq-radio-button>
 
                         <kbq-radio-button [value]="'option_2'">James Peterson</kbq-radio-button>
@@ -47,5 +47,5 @@ import { KbqRadioModule } from '@koobiq/components/radio';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RadioStyleExample {
-    protected readonly themePalette = ThemePalette;
+    protected readonly colors = KbqComponentColors;
 }

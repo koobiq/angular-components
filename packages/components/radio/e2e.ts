@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqComponentColors, KbqDefaultSizes, ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqRadioButton, KbqRadioGroup } from './radio.component';
 
@@ -9,7 +9,7 @@ type RadioStates = {
     labelPosition: 'before' | 'after';
     hint?: boolean;
     disabled?: boolean;
-    color?: ThemePalette;
+    color?: KbqComponentColors;
     hovered?: boolean;
     focused?: boolean;
 };
@@ -72,49 +72,49 @@ export class E2eRadioStateAndStyle {
         [
             { size: 'normal', labelPosition: 'after' },
             { size: 'big', labelPosition: 'after' },
-            { size: 'normal', labelPosition: 'after', color: ThemePalette.Error }
+            { size: 'normal', labelPosition: 'after', color: KbqComponentColors.Error }
         ],
         [
             { size: 'normal', labelPosition: 'after', hovered: true },
             { size: 'big', labelPosition: 'after', hovered: true },
-            { size: 'normal', labelPosition: 'after', color: ThemePalette.Error, hovered: true }
+            { size: 'normal', labelPosition: 'after', color: KbqComponentColors.Error, hovered: true }
         ],
         // The focus ring is keyed off `.cdk-keyboard-focused` and spends 8 tokens on it, so both the
         // checked and the unchecked variant need a cell.
         [
             { size: 'normal', labelPosition: 'after', focused: true },
             { size: 'big', labelPosition: 'after', focused: true },
-            { size: 'normal', labelPosition: 'after', color: ThemePalette.Error, focused: true }
+            { size: 'normal', labelPosition: 'after', color: KbqComponentColors.Error, focused: true }
         ],
         [
             { size: 'normal', labelPosition: 'before' },
             { size: 'big', labelPosition: 'before' },
-            { size: 'normal', labelPosition: 'before', color: ThemePalette.Error }
+            { size: 'normal', labelPosition: 'before', color: KbqComponentColors.Error }
         ],
         [
             { size: 'normal', labelPosition: 'before', hovered: true },
             { size: 'big', labelPosition: 'before', hovered: true },
-            { size: 'normal', labelPosition: 'before', color: ThemePalette.Error, hovered: true }
+            { size: 'normal', labelPosition: 'before', color: KbqComponentColors.Error, hovered: true }
         ],
         [
             { size: 'normal', hint: true, labelPosition: 'after' },
             { size: 'big', hint: true, labelPosition: 'after' },
-            { size: 'normal', hint: true, labelPosition: 'after', color: ThemePalette.Error }
+            { size: 'normal', hint: true, labelPosition: 'after', color: KbqComponentColors.Error }
         ],
         [
             { size: 'normal', hint: true, labelPosition: 'before' },
             { size: 'big', hint: true, labelPosition: 'before' },
-            { size: 'normal', hint: true, labelPosition: 'before', color: ThemePalette.Error }
+            { size: 'normal', hint: true, labelPosition: 'before', color: KbqComponentColors.Error }
         ],
         [
             { size: 'normal', hint: true, labelPosition: 'after', disabled: true },
             { size: 'big', hint: true, labelPosition: 'after', disabled: true },
-            { size: 'normal', hint: true, labelPosition: 'after', color: ThemePalette.Error, disabled: true }
+            { size: 'normal', hint: true, labelPosition: 'after', color: KbqComponentColors.Error, disabled: true }
         ],
         [
             { size: 'normal', hint: true, labelPosition: 'before', disabled: true },
             { size: 'big', hint: true, labelPosition: 'before', disabled: true },
-            { size: 'normal', hint: true, labelPosition: 'before', color: ThemePalette.Error, disabled: true }
+            { size: 'normal', hint: true, labelPosition: 'before', color: KbqComponentColors.Error, disabled: true }
         ]
     ];
     protected readonly kbqComponentColors = KbqComponentColors;

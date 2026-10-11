@@ -52,7 +52,6 @@ import {
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
     TAB,
-    ThemePalette,
     UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
@@ -1188,7 +1187,7 @@ class SelectEarlyAccessSibling {}
 })
 class BasicSelectWithTheming {
     readonly select = viewChild.required(KbqTreeSelect);
-    theme: ThemePalette;
+    theme: KbqComponentColors;
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -4141,7 +4140,7 @@ describe('KbqTreeSelect', () => {
         });
 
         it('should transfer the theme to the select panel', () => {
-            fixture.componentInstance.theme = ThemePalette.Error;
+            fixture.componentInstance.theme = KbqComponentColors.Error;
             fixture.detectChanges();
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 

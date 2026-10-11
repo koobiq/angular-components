@@ -213,7 +213,7 @@ export const C = 67;
 // @public (undocumented)
 export interface CanColor {
     // (undocumented)
-    readonly color: Signal<KbqComponentColors | ThemePalette | string>;
+    readonly color: Signal<KbqComponentColors | string>;
 }
 
 // @public
@@ -2939,7 +2939,7 @@ export type KbqCodeBlockLocaleConfiguration = {
 };
 
 // @public
-export class KbqColorDirective<T extends string = KbqComponentColors | ThemePalette | string> {
+export class KbqColorDirective<T extends string = KbqComponentColors | string> {
     readonly color: WritableSignal<T>;
     get colorClassName(): string;
     readonly colorInput: i0.InputSignal<T | null | undefined>;
@@ -5943,26 +5943,6 @@ export const T = 84;
 
 // @public (undocumented)
 export const TAB = 9;
-
-// @public (undocumented)
-export enum ThemePalette {
-    // (undocumented)
-    Default = "secondary",
-    // (undocumented)
-    Empty = "",
-    // (undocumented)
-    Error = "error",
-    // (undocumented)
-    Info = "info",
-    // (undocumented)
-    Primary = "primary",
-    // (undocumented)
-    Secondary = "secondary",
-    // (undocumented)
-    Success = "success",
-    // (undocumented)
-    Warning = "warning"
-}
 
 // @public (undocumented)
 export const THREE = 51;
