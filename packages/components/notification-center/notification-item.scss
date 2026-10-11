@@ -85,15 +85,15 @@
     height: var(--kbq-size-xl);
 
     align-items: center;
+    gap: var(--kbq-size-3xs);
 
     padding-left: 22px;
 
-    & .kbq-notification-item-time__value {
-        margin-right: var(--kbq-size-3xs);
-    }
-
+    // The dot keeps its width once read, or the title gains that width and rewraps under the pointer.
+    // Moved before the time, which stays flush with the right edge.
     &.kbq-notification-item-time_read .kbq-notification-item-time__state {
-        display: none;
+        visibility: hidden;
+        order: -1;
     }
 }
 
