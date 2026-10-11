@@ -39,7 +39,8 @@ move the actions out of the trigger into a `kbq-accordion-header__actions` eleme
   names keeps one);
 - `ThemePalette.Error`, `.Warning` and `.Success` → the `KbqComponentColors` members of the same value, dropping
   the `ThemePalette` import once nothing else names it;
-- the `mcLine` alias → `kbq-line`, in templates and in selectors written in code.
+- the `mcLine` and `mcListIcon` aliases → `kbq-line` and `kbq-list-icon`, in templates and in selectors written in
+  code.
 
 Reports:
 
@@ -52,7 +53,7 @@ Reports:
 - the undocumented exports nothing in the library used, imported from `@koobiq/components/core`: the pop-up
   position lists, `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`,
   `isWithin`, `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`, `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`, `KbqHover`, `CanColor`,
-  `KbqAnimationCurves`, `KbqAnimationDurations`, `KbqRectangleItem` and `countGroupLabelsBeforeOption`, each with
+  `KbqAnimationCurves`, `KbqAnimationDurations`, `KbqRectangleItem`, `countGroupLabelsBeforeOption` and `KbqLineSetter`, each with
   what to do instead;
 - a call of `.handleBodyInteraction()`, and a read of `.isSpecialFormatForRULocale()` or `.roundingOptions`,
   private members of the number pipes now;

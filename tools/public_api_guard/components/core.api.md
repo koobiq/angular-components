@@ -3342,11 +3342,6 @@ export class KbqLine {
 }
 
 // @public
-export class KbqLineSetter {
-    constructor(_lines: QueryList<KbqLine>, _element: ElementRef);
-}
-
-// @public
 export const kbqListenForCaretMoves: (renderer: Renderer2, element: HTMLElement, callback: () => void) => (() => void);
 
 // @public

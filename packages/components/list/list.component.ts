@@ -1,6 +1,5 @@
 import {
     AfterContentChecked,
-    AfterContentInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -9,7 +8,7 @@ import {
     contentChildren,
     inject
 } from '@angular/core';
-import { KbqLine, KbqLineSetter, kbqQueryListFrom } from '@koobiq/components/core';
+import { KbqLine, kbqQueryListFrom } from '@koobiq/components/core';
 
 /**
  * A plain, non-selectable list container.
@@ -41,7 +40,7 @@ export class KbqList {}
     },
     preserveWhitespaces: false
 })
-export class KbqListItem implements AfterContentChecked, AfterContentInit {
+export class KbqListItem implements AfterContentChecked {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     private readonly linesQuery = contentChildren(KbqLine);
@@ -49,10 +48,6 @@ export class KbqListItem implements AfterContentChecked, AfterContentInit {
 
     get lines(): QueryList<KbqLine> {
         return this.linesList();
-    }
-
-    ngAfterContentInit(): void {
-        new KbqLineSetter(this.lines, this.elementRef);
     }
 
     ngAfterContentChecked(): void {

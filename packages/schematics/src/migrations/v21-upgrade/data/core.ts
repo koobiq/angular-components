@@ -37,8 +37,9 @@ const THEME_PALETTE: Replacement[] = [
     }
 ];
 
-// The `mcLine` alias of the `kbq-line` attribute, in templates and in selectors written in code.
+// The `mc` aliases of the list item slots, in templates and in selectors written in code.
 const MC_LINE: Replacement = { from: '(?<![\\w-])mcLine(?![\\w-])', to: 'kbq-line' };
+const MC_LIST_ICON: Replacement = { from: '(?<![\\w-])mcListIcon(?![\\w-])', to: 'kbq-list-icon' };
 
 /** Undocumented core exports nothing in the library needed, removed in 21.0.0, with what to do instead. */
 const UNUSED_EXPORTS: { symbols: string[]; message: string }[] = [
@@ -95,6 +96,12 @@ const UNUSED_EXPORTS: { symbols: string[]; message: string }[] = [
         message:
             '`KbqRectangleItem` (left over from the removed navbar-ic) and `countGroupLabelsBeforeOption()` were ' +
             'removed without a replacement: nothing in the library used them.'
+    },
+    {
+        symbols: ['KbqLineSetter'],
+        message:
+            '`KbqLineSetter` was removed, and a list item no longer gets the `kbq-2-line`, `kbq-3-line` and ' +
+            '`kbq-multi-line` classes: no style read them. Count the lines with `KbqListItem.lines`.'
     }
 ];
 
@@ -137,7 +144,8 @@ const DEPRECATED: { pattern: string; message: string }[] = [
 /**
  * Removed in 21.0.0: the `Default` members of `KbqThemeSelector` and `KbqThemeNames`, `KbqDefaultThemes`,
  * `KbqTheme`, the legacy `ThemeService`, `getOptionScrollPosition`, `ThemePalette`, the unused undocumented
- * exports and members, and the `mcLine` alias. Also reports the core API deprecated for removal in 22.0.0.
+ * exports and members with `KbqLineSetter`, and the `mcLine` and `mcListIcon` aliases. Also reports the core API
+ * deprecated for removal in 22.0.0.
  */
 export const core: AreaData = {
     tsReplacements: [
@@ -146,13 +154,19 @@ export const core: AreaData = {
         ...rename('KbqTheme', 'KbqThemeConfig'),
         ...THEME_PALETTE
     ],
-    templateReplacements: [...DEFAULT_ENUM_MEMBERS, MC_LINE],
+    templateReplacements: [...DEFAULT_ENUM_MEMBERS, MC_LINE, MC_LIST_ICON],
     warnPatterns: [
         ...UNUSED_EXPORTS.map(({ symbols, message }) => ({
             pattern: importedFromCore(`(?:${symbols.join('|')})`),
             message
         })),
         ...DEPRECATED,
+        {
+            pattern: '(?<![\\w-])kbq-(?:2|3|multi)-line(?![\\w-])',
+            message:
+                'A list item no longer gets the `kbq-2-line`, `kbq-3-line` and `kbq-multi-line` classes: style the ' +
+                'item by its content instead, for example `.kbq-list-item:has(.kbq-line + .kbq-line)`.'
+        },
         {
             pattern: '\\.(?:handleBodyInteraction\\(|isSpecialFormatForRULocale\\(|roundingOptions\\b)',
             message:
