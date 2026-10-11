@@ -55,7 +55,10 @@ Reports:
   `KbqAnimationCurves`, `KbqAnimationDurations`, `KbqRectangleItem` and `countGroupLabelsBeforeOption`, each with
   what to do instead;
 - a call of `.handleBodyInteraction()`, and a read of `.isSpecialFormatForRULocale()` or `.roundingOptions`,
-  private members of the number pipes now.
+  private members of the number pipes now;
+- deprecated for removal in 22.0.0: the unprefixed date pipes and their `ImpurePipe` twins (in templates and as
+  imported classes), the `mcHighlight` pipe, `isDigit`, `isBoolean`, `KbqMeasureScrollbarService` and
+  `FocusKeyManager.getFocusOrigin()`, each with its replacement.
 
 **Dropdown and select** — rewrites:
 

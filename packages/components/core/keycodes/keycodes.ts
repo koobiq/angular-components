@@ -188,6 +188,7 @@ export function isRightBracket(event: KeyboardEvent): boolean {
     return event.code === 'BracketRight';
 }
 
+/** @deprecated Use {@link isNumberKey}, which checks the same keys. Will be removed in 22.0.0. */
 export function isDigit({ keyCode }: KeyboardEvent): boolean {
     return [ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE].includes(keyCode);
 }

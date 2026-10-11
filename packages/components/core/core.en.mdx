@@ -18,7 +18,7 @@ Some areas are described in detail on dedicated pages:
 | [Design tokens](/en/main/design-tokens/colors)     | Global color and appearance variables                                                                                                                                |
 | [Filesize formatter](/en/other/filesize-formatter) | `KbqDataSizePipe` and data-size units                                                                                                                                |
 | [Forms](/en/other/forms)                           | `KbqForm` and `KbqFormElement` classes, `.kbq-form-vertical`, `.kbq-form-horizontal`, and `.kbq-form__row` selectors, and the `kbqForm` and `kbqFormElement` aliases |
-| [Highlight](/en/components/highlight)              | `kbqHighlightBackground` and `mcHighlight` pipes for highlighting text matches                                                                                       |
+| [Highlight](/en/components/highlight)              | `kbqHighlightBackground` and `kbqHighlightBold` pipes for highlighting text matches                                                                                  |
 | [Layout flex](/en/components/layout-flex)          | Classes and mixins for building flex layouts                                                                                                                         |
 | [Localization](/en/main/localization)              | Locale registry, active locale, interface strings, and overrides                                                                                                     |
 | [Number formatter](/en/other/number-formatter)     | Pipes for precision, rounding, and displaying numbers in tables                                                                                                      |
@@ -328,7 +328,7 @@ Details:
 | -------------------------------------------- | -------------------------------------------------------------------------------- |
 | `hasModifierKey(event, ...modifiers)`        | At least one of the listed modifiers is pressed; with no arguments, any modifier |
 | `isControl(event)`                           | Whether a modifier key is pressed: `Shift`, `Ctrl`, `Alt`, or `Cmd`              |
-| `isLetterKey`, `isNumberKey`, `isDigit`      | A letter or a digit from the main keyboard row                                   |
+| `isLetterKey`, `isNumberKey`                 | A letter or a digit from the main keyboard row                                   |
 | `isNumpadKey`, `isFunctionKey`               | A numpad digit or a function key from `F1` to `F12`                              |
 | `isVerticalMovement`, `isHorizontalMovement` | Vertical or horizontal movement                                                  |
 | `isSelectAll(event)`, `isCopy(event)`        | The "select all" and "copy" shortcuts, including macOS behavior                  |
@@ -418,20 +418,20 @@ The `KbqPanelWidth`, `KbqPanelMinWidth`, and `KbqPanelMaxWidth` types describe p
 
 ### Utilities
 
-| Utility                                                            | Purpose                                                                   |
-| ------------------------------------------------------------------ | ------------------------------------------------------------------------- |
-| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Recursively merges configurations                                         |
-| `kbqInjectNativeElement<T>()`                                      | Gets `nativeElement` from an injected `ElementRef`                        |
-| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Checks and narrows types                                                  |
-| `getNodesWithoutComments(nodes)`                                   | Gets a list of nodes without comments                                     |
-| `getContentNodes(element)`                                         | Child nodes that carry content: comments and whitespace-only text ignored |
-| `supportsNativeDisabled(element)`                                  | Whether the host tag accepts the native `disabled` attribute              |
-| `escapeRegExp(value)`                                              | Escapes a string for use in a regular expression                          |
-| `isMac()`                                                          | Detects the platform for keyboard shortcut labels                         |
-| `KbqMeasureScrollbarService`                                       | Measures the system scrollbar width                                       |
-| `kbqInjectAutofilled()`                                            | A signal that the browser autofilled a field                              |
-| `KbqNormalizeWhitespace`                                           | Replaces a thin space with a regular space when copying                   |
-| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Selects text and scrolls a field to the selected fragment                 |
+| Utility                                               | Purpose                                                                   |
+| ----------------------------------------------------- | ------------------------------------------------------------------------- |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`      | Recursively merges configurations                                         |
+| `kbqInjectNativeElement<T>()`                         | Gets `nativeElement` from an injected `ElementRef`                        |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined` | Checks and narrows types                                                  |
+| `getNodesWithoutComments(nodes)`                      | Gets a list of nodes without comments                                     |
+| `getContentNodes(element)`                            | Child nodes that carry content: comments and whitespace-only text ignored |
+| `supportsNativeDisabled(element)`                     | Whether the host tag accepts the native `disabled` attribute              |
+| `escapeRegExp(value)`                                 | Escapes a string for use in a regular expression                          |
+| `isMac()`                                             | Detects the platform for keyboard shortcut labels                         |
+| `KbqMeasureScrollbarService`                          | Measures the system scrollbar width. Deprecated, removed in 22.0.0        |
+| `kbqInjectAutofilled()`                               | A signal that the browser autofilled a field                              |
+| `KbqNormalizeWhitespace`                              | Replaces a thin space with a regular space when copying                   |
+| `kbqRevealSelection`, `kbqSetSelectionRange`          | Selects text and scrolls a field to the selected fragment                 |
 
 `KbqMeasureScrollbarService` returns `0` during server-side rendering.
 

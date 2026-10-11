@@ -1,5 +1,6 @@
 import { numberAttribute } from '@angular/core';
 
+/** @deprecated Use `typeof value === 'boolean'`. Will be removed in 22.0.0. */
 export function isBoolean(value: unknown): value is boolean {
     return typeof value === 'boolean';
 }
