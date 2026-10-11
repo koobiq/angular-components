@@ -56,7 +56,8 @@ import {
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    kbqSiblingPopupProvider
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -538,6 +539,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
 @Directive({
     selector: '[kbqNotificationCenterTrigger]',
+    providers: [kbqSiblingPopupProvider(KbqNotificationCenterTrigger)],
     host: {
         '[class.kbq-notification-center_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
