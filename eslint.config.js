@@ -497,8 +497,27 @@ module.exports = tseslint.config(
         }
     },
 
-    // The API of packages/components is signal-based: no decorator inputs, outputs or queries, and no component on
-    // the default change detection. The deprecated sub-entry points stay as they are until their removal in 22.0.0.
+    // Angular code is signal-based: no decorator inputs, outputs or queries, readonly signal fields, and inject()
+    // rather than constructor injection — in the library and its specs and e2e fixtures as in the examples, the dev
+    // apps, the docs app and the e2e app. The deprecated sub-entry points stay as they are until their removal in
+    // 22.0.0.
+    {
+        files: [
+            'packages/components/**/*.ts',
+            'packages/docs-examples/**/*.ts',
+            'packages/components-dev/**/*.ts',
+            'packages/e2e/**/*.ts',
+            'apps/docs/**/*.ts'
+        ],
+        ignores: ['**/*.playwright-spec.ts', 'packages/components/**/deprecated/**'],
+        rules: {
+            '@angular-eslint/prefer-signals': 2,
+            '@angular-eslint/prefer-output-emitter-ref': 2,
+            '@angular-eslint/prefer-inject': 2
+        }
+    },
+
+    // No component of packages/components runs on the default change detection.
     {
         files: ['packages/components/**/*.ts'],
         ignores: [
@@ -509,8 +528,6 @@ module.exports = tseslint.config(
             'packages/components/**/deprecated/**'
         ],
         rules: {
-            '@angular-eslint/prefer-signals': 2,
-            '@angular-eslint/prefer-output-emitter-ref': 2,
             '@angular-eslint/prefer-on-push-component-change-detection': 2
         }
     },
