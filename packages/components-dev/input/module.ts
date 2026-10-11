@@ -85,7 +85,7 @@ export class DevApp {
     numberValue: number | null = null;
     min = -5;
 
-    disabled = model(false);
+    readonly disabled = model(false);
 
     locales: string[];
 
