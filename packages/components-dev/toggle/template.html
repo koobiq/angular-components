@@ -27,7 +27,7 @@
                     <kbq-toggle [disabled]="disabled" [(ngModel)]="valueSmallOn" />
                 </div>
                 <div class="flex-33">
-                    <kbq-toggle [color]="themePalette.Error" [disabled]="disabled" [(ngModel)]="valueSmallOn" />
+                    <kbq-toggle [color]="colors.Error" [disabled]="disabled" [(ngModel)]="valueSmallOn" />
                 </div>
             </div>
             <div class="dev-toggle-container">
@@ -80,12 +80,7 @@
                     <kbq-toggle [big]="true" [disabled]="disabled" [(ngModel)]="valueBigOn" />
                 </div>
                 <div class="flex-33">
-                    <kbq-toggle
-                        [big]="true"
-                        [color]="themePalette.Error"
-                        [disabled]="disabled"
-                        [(ngModel)]="valueBigOn"
-                    />
+                    <kbq-toggle [big]="true" [color]="colors.Error" [disabled]="disabled" [(ngModel)]="valueBigOn" />
                 </div>
             </div>
             <div class="dev-toggle-container">

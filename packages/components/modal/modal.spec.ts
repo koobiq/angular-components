@@ -25,8 +25,7 @@ import {
     ESCAPE,
     KbqComponentColors,
     ruRULocaleData,
-    TAB,
-    ThemePalette
+    TAB
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
@@ -379,7 +378,7 @@ describe('KbqModal', () => {
                 kbqFooter: [
                     {
                         label: 'button 1',
-                        type: ThemePalette.Primary,
+                        type: KbqComponentColors.Theme,
                         show: () => isShown
                     }
                 ]
@@ -388,7 +387,7 @@ describe('KbqModal', () => {
             fixture.detectChanges();
             await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
 
-            expect(modalRef.getElement().querySelectorAll('.kbq-primary').length).toBe(0);
+            expect(modalRef.getElement().querySelectorAll('.kbq-modal-footer .kbq-button').length).toBe(0);
         });
 
         it('should process disable flag', async () => {
@@ -397,7 +396,7 @@ describe('KbqModal', () => {
                 kbqFooter: [
                     {
                         label: 'button 1',
-                        type: ThemePalette.Primary,
+                        type: KbqComponentColors.Theme,
                         disabled: () => isDisabled
                     }
                 ]

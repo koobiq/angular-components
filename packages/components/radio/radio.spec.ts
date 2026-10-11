@@ -3,7 +3,7 @@ import { ApplicationRef, ChangeDetectionStrategy, Component, DebugElement } from
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { axe } from 'jest-axe';
 import { KbqRadioButton, KbqRadioGroup, KbqRadioModule } from './index';
@@ -482,7 +482,7 @@ describe('KbqRadio', () => {
 
             expect(group.getAttribute('aria-invalid')).toBeNull();
 
-            fixture.componentInstance.groupColor = ThemePalette.Error;
+            fixture.componentInstance.groupColor = KbqComponentColors.Error;
             fixture.detectChanges();
 
             expect(group.getAttribute('aria-invalid')).toBe('true');
@@ -750,8 +750,8 @@ class RadiosInsideRadioGroup {
     isGroupRequired: boolean = false;
     groupName: string = 'test-name';
     groupValue: string | null = null;
-    groupColor: ThemePalette = ThemePalette.Empty;
-    color: ThemePalette;
+    groupColor: string = '';
+    color: KbqComponentColors;
 }
 
 @Component({

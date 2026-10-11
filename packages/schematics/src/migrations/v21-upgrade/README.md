@@ -36,14 +36,18 @@ move the actions out of the trigger into a `kbq-accordion-header__actions` eleme
 - `KbqThemeSelector.Default` → `KbqThemeSelector.Light` and `KbqThemeNames.Default` → `KbqThemeNames.Light`, in
   code and templates;
 - `KbqDefaultThemes` → `KBQ_DEFAULT_THEMES` and `KbqTheme` → `KbqThemeConfig` (an import clause that held both
-  names keeps one).
+  names keeps one);
+- `ThemePalette.Error`, `.Warning` and `.Success` → the `KbqComponentColors` members of the same value, dropping
+  the `ThemePalette` import once nothing else names it.
 
 Reports:
 
 - `KbqTheme`: `KbqThemeConfig` requires `colorScheme` and has no `selected`;
 - `ThemeService` imported from `@koobiq/components/core`: inject `KbqThemeService` and the member to use for each
   old one;
-- `getOptionScrollPosition` imported from `@koobiq/components/core`: `KbqOption.focus()` or `kbqFocusAndReveal()`.
+- `getOptionScrollPosition` imported from `@koobiq/components/core`: `KbqOption.focus()` or `kbqFocusAndReveal()`;
+- any other use of `ThemePalette`: `Primary`, `Secondary`, `Info` and `Default` styled nothing, `Empty` becomes an
+  unset `color`, a type or a template field becomes `KbqComponentColors`.
 
 **Dropdown and select** — rewrites:
 

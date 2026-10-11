@@ -2,9 +2,8 @@ import { Component, contentChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
-import { KbqIcon, KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
-import { axe } from 'jest-axe';
+import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
 
 describe('KbqIconButton', () => {
     beforeEach(() => {
@@ -237,7 +236,7 @@ describe('KbqIconButton', () => {
 })
 class TestApp {
     isDisabled: boolean = false;
-    color: ThemePalette;
+    color: KbqComponentColors;
 
     onClick() {}
 }

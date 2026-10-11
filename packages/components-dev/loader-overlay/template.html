@@ -72,7 +72,7 @@ custom
     text text text text text
     @if (loading) {
         <kbq-loader-overlay fixed-top [caption]="caption" [text]="text">
-            <kbq-progress-spinner kbq-loader-overlay-indicator [color]="themePalette.Error" [mode]="'indeterminate'" />
+            <kbq-progress-spinner kbq-loader-overlay-indicator [color]="colors.Error" [mode]="'indeterminate'" />
             <div kbq-loader-overlay-text>Создание отчета</div>
             <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
         </kbq-loader-overlay>

@@ -60,7 +60,6 @@ import {
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
     TAB,
-    ThemePalette,
     UP_ARROW,
     createKeyboardEvent,
     dispatchEvent,
@@ -1017,7 +1016,7 @@ class SelectEarlyAccessSibling {}
 })
 class BasicSelectWithTheming {
     readonly select = viewChild.required(KbqSelect);
-    theme: ThemePalette;
+    theme: KbqComponentColors;
 }
 
 @Component({
@@ -5147,7 +5146,7 @@ describe('KbqSelect', () => {
         });
 
         it('should transfer the theme to the select panel', async () => {
-            fixture.componentInstance.theme = ThemePalette.Error;
+            fixture.componentInstance.theme = KbqComponentColors.Error;
             fixture.componentInstance.select().open();
             fixture.detectChanges();
             await vi.runOnlyPendingTimersAsync();

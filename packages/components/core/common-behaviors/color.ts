@@ -1,19 +1,7 @@
 import { Directive, ElementRef, inject, input, linkedSignal, Signal, signal, WritableSignal } from '@angular/core';
 
 export interface CanColor {
-    readonly color: Signal<KbqComponentColors | ThemePalette | string>;
-}
-
-export enum ThemePalette {
-    Primary = 'primary',
-    Secondary = 'secondary',
-    Error = 'error',
-    Info = 'info',
-    Warning = 'warning',
-    Success = 'success',
-
-    Default = 'secondary',
-    Empty = ''
+    readonly color: Signal<KbqComponentColors | string>;
 }
 
 export enum KbqComponentColors {
@@ -36,7 +24,7 @@ export enum KbqComponentColors {
         '[class]': 'colorClassName'
     }
 })
-export class KbqColorDirective<T extends string = KbqComponentColors | ThemePalette | string> {
+export class KbqColorDirective<T extends string = KbqComponentColors | string> {
     /** @docs-private */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
