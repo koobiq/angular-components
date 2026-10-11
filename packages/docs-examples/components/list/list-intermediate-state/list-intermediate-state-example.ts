@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqPseudoCheckbox, KbqPseudoCheckboxState, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
@@ -228,7 +228,7 @@ export class ListIntermediateStateExample {
     searchControl: UntypedFormControl = new UntypedFormControl();
     filteredUsers: Observable<ExampleUser[]>;
 
-    @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
+    readonly popover = viewChild.required(KbqPopoverTrigger);
 
     constructor() {
         this.filteredUsers = merge(
@@ -253,14 +253,14 @@ export class ListIntermediateStateExample {
                 this.restoreSelectionState();
             }
 
-            this.popover.focus();
+            this.popover().focus();
         }
     }
 
     onApply() {
         this.needRestore = false;
-        this.popover.hide(0);
-        this.popover.focus();
+        this.popover().hide(0);
+        this.popover().focus();
     }
 
     onSelectionChange(event: KbqListSelectionChange) {

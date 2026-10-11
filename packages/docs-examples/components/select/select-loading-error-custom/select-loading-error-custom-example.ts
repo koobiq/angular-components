@@ -63,8 +63,8 @@ const delayBeforeShowError = 3000;
     }
 })
 export class SelectLoadingErrorCustomExample {
-    error = signal(false);
-    loading = signal(true);
+    readonly error = signal(false);
+    readonly loading = signal(true);
 
     protected loadOptions() {
         setTimeout(() => {

@@ -1,17 +1,11 @@
 ﻿import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { ENTER, KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import {
-    KbqTagInput,
-    KbqTagInputEvent,
-    KbqTagList,
-    KbqTagsModule,
-    kbqTagsDefaultOptionsProvider
-} from '@koobiq/components/tags';
+import { KbqTagInput, KbqTagInputEvent, KbqTagsModule, kbqTagsDefaultOptionsProvider } from '@koobiq/components/tags';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -46,10 +40,8 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
-    @ViewChild('tagList', { static: false }) tagList: KbqTagList;
-    @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
-    @ViewChild('tagInput', { read: KbqTagInput, static: false }) tagInputDirective: KbqTagInput;
-    @ViewChild('autocomplete', { static: false }) autocomplete: KbqAutocomplete;
+    readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
+    readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 
     control = new FormControl();
 
@@ -77,8 +69,8 @@ export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
 
         if (!target || target.tagName !== 'KBQ-OPTION') {
             const mcTagEvent: KbqTagInputEvent = {
-                input: this.tagInput.nativeElement,
-                value: this.tagInput.nativeElement.value
+                input: this.tagInput().nativeElement,
+                value: this.tagInput().nativeElement.value
             };
 
             this.onCreate(mcTagEvent);
@@ -109,7 +101,7 @@ export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
         option.deselect();
 
         this.selectedTags.push(autocompleteValueCoercion(option.value));
-        this.tagInput.nativeElement.value = '';
+        this.tagInput().nativeElement.value = '';
         this.control.setValue(null);
     }
 
@@ -138,13 +130,13 @@ export class TagAutocompleteOnpasteOffExample implements AfterViewInit {
         const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
 
         // check for scenario where duplicate exists but also can create/select other tags
-        this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective.hasDuplicates;
+        this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective().hasDuplicates;
 
         // Return the difference between filtered tags and selected tags
         return inputAndSelectionTagsDiff;
     };
 
     protected afterRemove(): void {
-        this.tagInput.nativeElement.focus();
+        this.tagInput().nativeElement.focus();
     }
 }

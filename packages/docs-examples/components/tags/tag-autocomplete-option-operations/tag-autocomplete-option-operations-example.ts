@@ -1,11 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, viewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqHighlightBackgroundPipe } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -95,10 +95,8 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     protected readonly selectedTags = [...this.allTags.slice(0, 2)];
     protected readonly separatorKeysCodes = [];
 
-    @ViewChild('tagList', { static: false }) tagList: KbqTagList;
-    @ViewChild('tagInput', { static: false }) tagInput: ElementRef<HTMLInputElement>;
-    @ViewChild('tagInput', { read: KbqTagInput, static: false }) tagInputDirective: KbqTagInput;
-    @ViewChild('autocomplete', { static: false }) autocomplete: KbqAutocomplete;
+    readonly tagInput = viewChild.required<ElementRef<HTMLInputElement>>('tagInput');
+    readonly tagInputDirective = viewChild.required('tagInput', { read: KbqTagInput });
 
     control = new FormControl();
 
@@ -146,7 +144,7 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
 
         this.selectedTags.push(autocompleteValueCoercion(option.value));
         this.control.setValue(null);
-        this.tagInput.nativeElement.value = '';
+        this.tagInput().nativeElement.value = '';
     }
 
     onRemove(tag: any): void {
@@ -162,8 +160,8 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
 
         if (!target || target.tagName !== this.kbqOptionTagName) {
             const kbqTagEvent: KbqTagInputEvent = {
-                input: this.tagInput.nativeElement,
-                value: this.tagInput.nativeElement.value
+                input: this.tagInput().nativeElement,
+                value: this.tagInput().nativeElement.value
             };
 
             this.onCreate(kbqTagEvent);
@@ -187,12 +185,12 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
         const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
 
         // check for scenario where duplicate exists but also can create/select other tags
-        this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective.hasDuplicates;
+        this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective().hasDuplicates;
 
         return inputAndSelectionTagsDiff;
     };
 
     protected afterRemove(): void {
-        this.tagInputDirective.focus();
+        this.tagInputDirective().focus();
     }
 }
