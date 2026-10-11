@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, inject, viewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -17,13 +17,13 @@ export class SidepanelOverviewExample {
 
     position = KbqSidepanelPosition.Right;
 
-    @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;
+    readonly template = viewChild.required(TemplateRef);
 
     arrayLength = 40;
     array = new Array(this.arrayLength);
 
     openSidepanel() {
-        this.sidepanelService.open(this.template, {
+        this.sidepanelService.open(this.template(), {
             position: this.position,
             hasBackdrop: true
         });

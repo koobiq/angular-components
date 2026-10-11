@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import {
     KbqCodeBlock,
     KbqCodeBlockFile,
@@ -35,7 +35,7 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeBlockWithTabsAndShadowExample implements AfterViewInit {
-    @ViewChild(KbqCodeBlock) readonly codeBlock: KbqCodeBlock;
+    readonly codeBlock = viewChild.required(KbqCodeBlock);
 
     readonly files: KbqCodeBlockFile[] = [
         {
@@ -46,7 +46,7 @@ export class CodeBlockWithTabsAndShadowExample implements AfterViewInit {
         {
             language: 'typescript',
             filename: 'main.ts',
-            content: `import { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KbqLinkModule } from '@koobiq/components/link';\n\n@Component({\n\tstandalone: true,\n\timports: [KbqLinkModule],\n\tselector: 'app-root',\n\ttemplate: \`<a kbq-link target="_blank" href="https://koobiq.io/">Koobiq</a>\`,\n\tchangeDetection: ChangeDetectionStrategy.OnPush\n})\nexport class App {}\n\nbootstrapApplication(App).catch((error) => console.error(error));`
+            content: `import { ChangeDetectionStrategy, Component } from '@angular/core';\nimport { bootstrapApplication } from '@angular/platform-browser';\nimport { KbqLinkModule } from '@koobiq/components/link';\n\n@Component({\n\timports: [KbqLinkModule],\n\tselector: 'app-root',\n\ttemplate: \`<a kbq-link target="_blank" href="https://koobiq.io/">Koobiq</a>\`,\n\tchangeDetection: ChangeDetectionStrategy.OnPush\n})\nexport class App {}\n\nbootstrapApplication(App).catch((error) => console.error(error));`
         },
         {
             language: 'css',
@@ -56,6 +56,6 @@ export class CodeBlockWithTabsAndShadowExample implements AfterViewInit {
     ];
 
     ngAfterViewInit(): void {
-        this.codeBlock.scrollTo({ bottom: 0, behavior: 'instant' });
+        this.codeBlock().scrollTo({ bottom: 0, behavior: 'instant' });
     }
 }

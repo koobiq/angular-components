@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -142,6 +142,9 @@ export const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TreeSelectDeletedNodesExample {
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
+
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
@@ -169,10 +172,7 @@ export class TreeSelectDeletedNodesExample {
     // The explicit list of deleted ids as it would arrive from the backend.
     private readonly backendDeletedIds = ['Downloads/November', 'Downloads/October'];
 
-    constructor(
-        private readonly changeDetectorRef: ChangeDetectorRef,
-        private readonly defaultErrorStateMatcher: ErrorStateMatcher
-    ) {
+    constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         // The tree resolves nodes by their stable id (not the display name).

@@ -96,5 +96,5 @@ export class BlockCheckboxComponent {
     }
 })
 export class BlockCheckboxExample {
-    checked = model(true);
+    readonly checked = model(true);
 }

@@ -6,7 +6,7 @@ import {
     Component,
     inject,
     signal,
-    ViewChild,
+    viewChild,
     WritableSignal
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -189,7 +189,7 @@ export class TopBarOverflowExample implements AfterViewInit {
         { initialValue: true }
     );
 
-    @ViewChild(CdkScrollable) protected readonly scrollable: CdkScrollable;
+    protected readonly scrollable = viewChild.required(CdkScrollable);
 
     readonly hasOverflow: WritableSignal<boolean | undefined> = signal(false);
 
@@ -211,10 +211,10 @@ export class TopBarOverflowExample implements AfterViewInit {
     protected readonly KbqButtonStyles = KbqButtonStyles;
 
     ngAfterViewInit() {
-        this.scrollable
+        this.scrollable()
             .elementScrolled()
             .pipe(auditTime(300))
-            .subscribe(() => this.hasOverflow.set(this.scrollable.measureScrollOffset('top') > 0));
+            .subscribe(() => this.hasOverflow.set(this.scrollable().measureScrollOffset('top') > 0));
     }
 
     // only show tooltip on button icon
