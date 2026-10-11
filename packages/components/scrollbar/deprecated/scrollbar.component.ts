@@ -43,7 +43,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
 
 /**
  * @deprecated Wraps `overlayscrollbars`. Superseded by the dependency-free
- * `@koobiq/components/scrollbar`. Will be removed in a future major version — see
+ * `@koobiq/components/scrollbar`. Will be removed in 22.0.0 — see
  * `@koobiq/components/scrollbar/deprecated`'s migration path via `ng update`.
  * @docs-private
  *

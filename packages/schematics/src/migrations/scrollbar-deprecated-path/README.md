@@ -9,7 +9,7 @@ Migration schematic invoked automatically by `ng update @koobiq/components@21`
 `@koobiq/components/scrollbar` now resolves to a new, dependency-free scrollbar built on
 `CdkScrollable`. The previous implementation — the `overlayscrollbars`-based `KbqScrollbar`
 component together with `KbqScrollbarDirective` — moved to
-`@koobiq/components/scrollbar/deprecated` and will be removed in a future major version.
+`@koobiq/components/scrollbar/deprecated` and will be removed in 22.0.0.
 
 Nothing about that implementation changed: `initializationTarget`, `options`, `events`, `defer`,
 `scrollbarInstance`, the `onInitialize` / `onUpdate` / `onDestroy` / `onScroll` outputs and the

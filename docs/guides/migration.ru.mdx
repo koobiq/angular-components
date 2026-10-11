@@ -722,7 +722,7 @@ ng g @koobiq/components:actions-panel-overlay-container --project "<your project
 
 {/* migration-step-components(splitter) */}
 
-`@koobiq/components/splitter` теперь отдаёт переписанный splitter: он раскладывает панели через CSS grid и добавляет ограничения размеров, сворачивание, точки прилипания, работу с клавиатуры и ARIA-шаблон `separator`. Прежняя реализация — `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule` и перечисление `Direction` — переехала в `@koobiq/components/splitter/deprecated` без единого изменения и будет удалена в одной из следующих мажорных версий.
+`@koobiq/components/splitter` теперь отдаёт переписанный splitter: он раскладывает панели через CSS grid и добавляет ограничения размеров, сворачивание, точки прилипания, работу с клавиатуры и ARIA-шаблон `separator`. Прежняя реализация — `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective`, `KbqSplitterModule` и перечисление `Direction` — переехала в `@koobiq/components/splitter/deprecated` без единого изменения и будет удалена в 22.0.0.
 
 **Большинство старых импортов ломается громко.** `KbqSplitterComponent`, `KbqSplitterAreaDirective`, `KbqGutterDirective`, `KbqGutterGhostDirective` и `Direction` живут только по пути `/deprecated`, поэтому сборка останавливается на `TS2305: … has no exported member`.
 
@@ -1352,7 +1352,7 @@ ng g @koobiq/components:tag-slots --project "<your project>" --fix=false
 
 До 21.0.0 `@koobiq/components/scrollbar` оборачивал стороннюю библиотеку `overlayscrollbars`: компонент `KbqScrollbar` (`kbq-scrollbar` / `[kbq-scrollbar]`) и низкоуровневая директива `KbqScrollbarDirective` (`[kbqScrollbar]`) со входами `options`, `events`, `defer` и сырым доступом к `scrollbarInstance`.
 
-В 21.0.0 `@koobiq/components/scrollbar` — это новый, не зависящий от сторонних библиотек компонент `KbqScrollbar` с селектором `<kbq-scrollbar>` и другим публичным API. Прежняя реализация никуда не делась — она переехала без изменений в `@koobiq/components/scrollbar/deprecated` и будет удалена в одном из будущих мажорных релизов.
+В 21.0.0 `@koobiq/components/scrollbar` — это новый, не зависящий от сторонних библиотек компонент `KbqScrollbar` с селектором `<kbq-scrollbar>` и другим публичным API. Прежняя реализация никуда не делась — она переехала без изменений в `@koobiq/components/scrollbar/deprecated` и будет удалена в 22.0.0.
 
 #### Запуск миграции
 

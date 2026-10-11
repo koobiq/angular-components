@@ -57,7 +57,7 @@ const enum StyleProperty {
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -69,7 +69,7 @@ export enum Direction {
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -159,7 +159,7 @@ export class KbqGutterDirective implements OnInit {
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -252,7 +252,7 @@ export class KbqGutterGhostDirective {
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */
@@ -598,7 +598,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 /**
  * @deprecated The mouse-only, `flex-basis` based splitter. Superseded by the rewritten
  * `@koobiq/components/splitter`, which adds panel constraints, collapsing, snapping, keyboard
- * support and the `separator` accessibility pattern. Will be removed in a future major version — an
+ * support and the `separator` accessibility pattern. Will be removed in 22.0.0 — an
  * `ng update` migration rewrites `@koobiq/components/splitter` imports of this API to
  * `@koobiq/components/splitter/deprecated` automatically.
  */

@@ -4,7 +4,7 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar/deprecated';
 
 /**
  * @title Scrollbar scroll to top
- * @deprecated Should be removed in a future major version.
+ * @deprecated Will be removed in 22.0.0.
  */
 @Component({
     selector: 'dev-scrollbar-scroll-to-example',

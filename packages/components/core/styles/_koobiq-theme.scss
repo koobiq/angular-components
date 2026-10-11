@@ -20,7 +20,7 @@
     // link is a directive, so styles for it should be applied globally
     @include link-theme.kbq-link-theme();
     @include kbq-markdown-theme();
-    // @deprecated Will be removed in next major release.
+    // @deprecated Will be removed in 22.0.0, with `scrollbar/deprecated`.
     @include kbq-scrollbar-theme();
     @include kbq-tabs-theme();
     @include kbq-tag-theme();
