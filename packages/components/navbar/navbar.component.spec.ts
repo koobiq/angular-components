@@ -848,6 +848,32 @@ describe('KbqNavbar', () => {
 
             expect(focusableItem.disabled).toBe(true);
         });
+
+        it('a purely decorative brand is neither announced nor styled as disabled', async () => {
+            const fixture = TestBed.createComponent(TestNonAnchorBrandApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+
+            expect(brandEl.classList).not.toContain('kbq-disabled');
+            expect(brandEl.hasAttribute('aria-disabled')).toBe(false);
+        });
+
+        it('a disabled brand swallows clicks, so its link is not followed', async () => {
+            const fixture = TestBed.createComponent(TestDisabledBrandApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+            fixture.nativeElement.querySelector('.kbq-navbar-title').dispatchEvent(click);
+
+            expect(click.defaultPrevented).toBe(true);
+            expect(fixture.componentInstance.clicked).toBe(false);
+        });
     });
 
     describe('KbqNavbarBrand automatic long title', () => {

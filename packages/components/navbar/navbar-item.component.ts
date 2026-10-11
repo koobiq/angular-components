@@ -225,7 +225,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
      * element, which the key manager has to skip just the same.
      */
     get disabled(): boolean {
-        return this.disabledState();
+        return this.disabledState() || this.decorative();
     }
 
     set disabled(value: boolean) {
@@ -240,7 +240,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
      *
      * @internal
      */
-    decorative = false;
+    readonly decorative = signal(false);
 
     /**
      * Whether the item was disabled through `disabled`, as opposed to being decorative.
@@ -248,7 +248,7 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
      * @internal
      */
     get explicitlyDisabled(): boolean {
-        return this._disabled;
+        return this.disabledState();
     }
 
     /**
