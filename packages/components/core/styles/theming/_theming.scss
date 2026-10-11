@@ -27,6 +27,7 @@
     }
 }
 
+// The helpers below build the maps of `kbq-light-theme()` and `kbq-dark-theme()` and go with them.
 @function _theme_foreground($tokens, $scheme) {
     @return (
         white: map.get($tokens, '#{$scheme}-foreground-white'),
@@ -187,7 +188,11 @@
     );
 }
 
+// @deprecated Nothing in the library reads the theme map since `koobiq-theme()` takes no argument. Will be
+// removed in 22.0.0: use the CSS variables of the theme.
 @function kbq-light-theme($tokens) {
+    @warn '`kbq-light-theme()` is deprecated and will be removed in 22.0.0: nothing in the library reads the theme map. Use the CSS variables of the theme instead, for example `var(--kbq-foreground-contrast)`.';
+
     $scheme: 'light';
 
     @return (
@@ -210,7 +215,11 @@
     );
 }
 
+// @deprecated Nothing in the library reads the theme map since `koobiq-theme()` takes no argument. Will be
+// removed in 22.0.0: use the CSS variables of the theme.
 @function kbq-dark-theme($tokens) {
+    @warn '`kbq-dark-theme()` is deprecated and will be removed in 22.0.0: nothing in the library reads the theme map. Use the CSS variables of the theme instead, for example `var(--kbq-foreground-contrast)`.';
+
     $scheme: 'dark';
 
     @return (

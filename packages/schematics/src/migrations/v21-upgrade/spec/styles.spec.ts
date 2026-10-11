@@ -2,6 +2,7 @@ import { runV21Upgrade } from '../testing';
 
 const MIXIN_ARGUMENTS = '`koobiq-theme()`, `koobiq-typography()` and `kbq-core-theme()` take no arguments';
 const THEME_FUNCTIONS = '`kbq-contrast()`, `kbq-palette()` and `kbq-color()` were removed';
+const THEME_MAPS = '`kbq-light-theme()` and `kbq-dark-theme()` are deprecated';
 const TYPOGRAPHY_CONFIG = '`kbq-typography-config()` was removed';
 const TOKENS_MODULE = '`@koobiq/components/core/styles/tokens` was removed';
 const MARKDOWN_CLASSES = 'The unprefixed markdown typography classes';
@@ -60,6 +61,14 @@ describe('v21-upgrade: styles', () => {
         expect(run.log).toContain(`contrast.scss\n  ${THEME_FUNCTIONS}`);
         expect(run.log).toContain(`palette.scss\n  ${THEME_FUNCTIONS}`);
         expect(run.log).toContain(`color.scss\n  ${THEME_FUNCTIONS}`);
+    });
+
+    it('reports the deprecated kbq-light-theme() and kbq-dark-theme()', async () => {
+        const styles = '$light: kbq.kbq-light-theme($tokens);\n$dark: kbq-dark-theme($tokens);\n';
+        const run = await runV21Upgrade({ 'maps.scss': styles });
+
+        expect(run.read('maps.scss')).toBe(styles);
+        expect(run.log).toContain(`maps.scss\n  ${THEME_MAPS}`);
     });
 
     it('reports kbq-typography-config()', async () => {
@@ -179,6 +188,7 @@ describe('v21-upgrade: styles', () => {
             '@include brand-koobiq-theme($theme);',
             '$m: kbq-markdown-typography-config($tokens);',
             '$c: kbq-color-scheme(dark);',
+            '$b: brand-kbq-dark-theme($tokens);',
             '.kbq-md-h1, .md-body-x, .cmd-body {',
             '    color: var(--kbq-color-contrast);',
             '    @include kbq-typography-level-to-styles-css-variables(md-typography, md-body);',

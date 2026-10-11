@@ -162,6 +162,7 @@ Reports:
 
 - arguments of those mixins that hold parentheses;
 - `kbq-contrast()`, `kbq-palette()`, `kbq-color()` and `kbq-typography-config()`;
+- `kbq-light-theme()` and `kbq-dark-theme()`, deprecated for removal in 22.0.0;
 - a `@use`, `@import` or `@forward` of `@koobiq/components/core/styles/tokens`: load the design tokens modules
   directly;
 - an unprefixed markdown class in any other string, such as `classList.add('md-h1')` or `[ngClass]`.
