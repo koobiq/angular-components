@@ -63,11 +63,11 @@ export const kbqSizeUnitsLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqSizeUnitsLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('sizeUnits', configuration);
 
-/** @deprecated Use {@link KbqSizeUnitsLocaleConfiguration}. */
+/** @deprecated Use {@link KbqSizeUnitsLocaleConfiguration}. Will be removed in 22.0.0. */
 export type KbqSizeUnitsConfig = KbqSizeUnitsLocaleConfiguration;
-/** @deprecated Use {@link KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_SIZE_UNITS_DEFAULT_CONFIG = KBQ_SIZE_UNITS_DEFAULT_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link KBQ_SIZE_UNITS_LOCALE_CONFIGURATION}. */
+/** @deprecated Use {@link KBQ_SIZE_UNITS_LOCALE_CONFIGURATION}. Will be removed in 22.0.0. */
 export const KBQ_SIZE_UNITS_CONFIG = KBQ_SIZE_UNITS_LOCALE_CONFIGURATION;
-/** @deprecated Use {@link kbqSizeUnitsLocaleConfigurationProvider}. */
+/** @deprecated Use {@link kbqSizeUnitsLocaleConfigurationProvider}. Will be removed in 22.0.0. */
 export const kbqFilesizeFormatterConfigurationProvider = kbqSizeUnitsLocaleConfigurationProvider;

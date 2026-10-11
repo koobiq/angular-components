@@ -248,7 +248,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     /** Emits whenever the selected state of the option changes. */
     readonly selectionChange = output<KbqTreeOptionChange>();
 
-    /** @deprecated Use `selectionChange` instead. Will be removed in version 20. */
+    /** @deprecated Use `selectionChange` instead. Will be removed in 22.0.0. */
     readonly onSelectionChange = output<KbqTreeOptionChange>({ alias: 'onSelectionChange' });
 
     // Not an `output()`: `KbqTreeSelect` merges this stream with rxjs, which an `OutputEmitterRef`

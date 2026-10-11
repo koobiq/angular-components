@@ -291,7 +291,7 @@ export class KbqTreeSelection
     /** Emits after "select all" ran, with the options it could act on. */
     readonly selectAllChange = output<KbqTreeSelectAllEvent<KbqTreeOption>>();
 
-    /** @deprecated Use `selectAllChange` instead. Will be removed in version 20. */
+    /** @deprecated Use `selectAllChange` instead. Will be removed in 22.0.0. */
     readonly onSelectAll = output<KbqTreeSelectAllEvent<KbqTreeOption>>({ alias: 'onSelectAll' });
 
     /**
@@ -305,7 +305,7 @@ export class KbqTreeSelection
     /** @docs-private */
     readonly copyChangeOutput = outputFromObservable(this.copyChange, { alias: 'copyChange' });
 
-    /** @deprecated Use `copyChange` instead. Will be removed in version 20. */
+    /** @deprecated Use `copyChange` instead. Will be removed in 22.0.0. */
     readonly onCopy = new EventEmitter<KbqTreeCopyEvent<KbqTreeOption>>();
 
     /** @docs-private */

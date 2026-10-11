@@ -72,12 +72,13 @@ export enum TooltipModifier {
 
 /**
  * @deprecated Replaced by {@link KbqTooltipDelayTracker}, which owns the shared timestamp behind a service
- * instead of a mutable `useValue` object. The tooltip no longer reads this token; providing it has no effect.
+ * instead of a mutable `useValue` object. The tooltip no longer reads this token; providing it has no effect. Will be
+ * removed in 22.0.0.
  */
 export const KBQ_TOOLTIP_OPEN_TIME = new InjectionToken<{ value: number }>('kbq-tooltip-open-time');
 
 /**
- * @deprecated Replaced by {@link KbqTooltipDelayTracker}. Providing it has no effect.
+ * @deprecated Replaced by {@link KbqTooltipDelayTracker}. Providing it has no effect. Will be removed in 22.0.0.
  * @docs-private
  */
 export const KBQ_TOOLTIP_OPEN_TIME_PROVIDER = {
