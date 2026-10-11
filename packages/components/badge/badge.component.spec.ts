@@ -220,7 +220,7 @@ class StaticAttributesTestApp {}
     `
 })
 class AsyncIconTestApp {
-    showIcon = signal(false);
+    readonly showIcon = signal(false);
 }
 
 @Component({

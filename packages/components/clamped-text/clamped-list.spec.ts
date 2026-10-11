@@ -50,9 +50,9 @@ function getHost(debugElement: DebugElement): HTMLElement {
     `
 })
 class TestHostComponent {
-    items = signal(Array.from({ length: 17 }, (_, i) => `Item ${i + 1}`));
-    collapsedVisibleCount = signal(10);
-    hiddenThreshold = signal(6);
+    readonly items = signal(Array.from({ length: 17 }, (_, i) => `Item ${i + 1}`));
+    readonly collapsedVisibleCount = signal(10);
+    readonly hiddenThreshold = signal(6);
 }
 
 describe('KbqClampedList', () => {

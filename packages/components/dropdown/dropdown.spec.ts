@@ -12,9 +12,9 @@ import {
     Component,
     ElementRef,
     Provider,
+    Signal,
     TemplateRef,
     Type,
-    ViewChild,
     input,
     output,
     signal,
@@ -1169,11 +1169,11 @@ describe('KbqDropdown', () => {
                 this.fixture = createComponent(ctor);
                 Object.keys(inputs).forEach((key) => this.fixture.componentRef.setInput(key, inputs[key]));
                 this.fixture.detectChanges();
-                this.trigger = this.fixture.componentInstance.triggerEl.nativeElement;
+                this.trigger = this.fixture.componentInstance.triggerEl().nativeElement;
             }
 
             open() {
-                this.fixture.componentInstance.trigger.open();
+                this.fixture.componentInstance.trigger().open();
                 this.fixture.detectChanges();
             }
 
@@ -2587,7 +2587,7 @@ describe('KbqDropdown', () => {
                 [KbqTitleDirective]
             );
             fixture.detectChanges();
-            fixture.componentInstance.trigger.open();
+            fixture.componentInstance.trigger().open();
             fixture.detectChanges();
         });
 
@@ -4442,8 +4442,8 @@ class PositionedDropdown {
 }
 
 interface TestableDropdown {
-    trigger: KbqDropdownTrigger;
-    triggerEl: ElementRef<HTMLElement>;
+    trigger: Signal<KbqDropdownTrigger>;
+    triggerEl: Signal<ElementRef<HTMLElement>>;
 }
 
 @Component({
@@ -4459,8 +4459,8 @@ interface TestableDropdown {
 })
 class OverlapDropdown implements TestableDropdown {
     readonly overlapTriggerY = input<boolean>(undefined!);
-    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
-    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
 }
 
 @Component({
@@ -4804,8 +4804,8 @@ class OpenStateReader {
     `
 })
 class DropdownWithTooltip implements TestableDropdown {
-    @ViewChild(KbqDropdownTrigger, { static: false }) trigger: KbqDropdownTrigger;
-    @ViewChild('triggerEl', { static: false }) triggerEl: ElementRef<HTMLElement>;
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
 
     defaultValue = 'Just a text';
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;

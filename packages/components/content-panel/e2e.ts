@@ -47,7 +47,6 @@ export class E2eContentPanelScrollOverflow {
 @Component({
     selector: 'e2e-content-panel-state',
     imports: [KbqButtonModule, KbqContentPanelModule, KbqIconModule],
-    standalone: true,
     template: `
         <kbq-content-panel-container
             #panel="kbqContentPanelContainer"

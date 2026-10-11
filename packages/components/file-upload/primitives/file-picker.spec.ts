@@ -77,7 +77,6 @@ class TestFileLoader {
 
 @Component({
     imports: [KbqFileLoader, KbqFileUploadContext],
-    standalone: true,
     template: `
         <div
             kbqFileUploadContext

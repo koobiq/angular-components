@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { FlatTreeControl } from './control/flat-tree-control';
@@ -66,7 +66,7 @@ class TreeWithToggle {
     recursive = false;
     disabledToggles: string[] = [];
 
-    @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         this.dataSource.data = DATA;
@@ -129,7 +129,7 @@ describe('KbqTreeNodeToggle', () => {
     it('should not select the row it sits in', () => {
         clickToggleOf('src');
 
-        expect(component.tree.selectionModel.selected.length).toBe(0);
+        expect(component.tree().selectionModel.selected.length).toBe(0);
     });
 
     it('should expand the whole subtree when recursive', () => {

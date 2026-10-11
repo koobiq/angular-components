@@ -2736,7 +2736,7 @@ class SelectionListWithPreselectedFormControlOnPush {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestListSelectionWithDynamicList {
-    listSelection = viewChild.required(KbqListSelection);
+    readonly listSelection = viewChild.required(KbqListSelection);
     opts = Array.from({ length: 3 }, (_, i) => `opt${i}`);
     changeDetectorRef = inject(ChangeDetectorRef);
 

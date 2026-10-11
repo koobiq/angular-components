@@ -395,7 +395,7 @@ export class E2eIconStateAndStyle {
     }
 })
 export class E2eIconSvg {
-    inputMonoValue = signal('P@a$$w0rd');
+    readonly inputMonoValue = signal('P@a$$w0rd');
 
     readonly tabs = [
         { tabId: 'files', icon: 'kbq-folder-open_16' },

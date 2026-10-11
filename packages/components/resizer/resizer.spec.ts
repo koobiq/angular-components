@@ -61,7 +61,6 @@ const windowStub = (boxSizing: 'content-box' | 'border-box'): Provider => ({
 @Component({
     selector: 'test-resizer',
     imports: [KbqResizable, KbqResizer],
-    standalone: true,
     template: `
         <div kbqResizable>
             <div

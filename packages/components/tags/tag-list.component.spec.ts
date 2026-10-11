@@ -11,9 +11,8 @@ import {
     QueryList,
     signal,
     Type,
-    ViewChild,
     viewChild,
-    ViewChildren
+    viewChildren
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -364,7 +363,7 @@ describe(KbqTagList.name, () => {
             });
 
             it('should not override tags selected', () => {
-                const instanceTags = fixture.componentInstance.tags.toArray();
+                const instanceTags = fixture.componentInstance.tags();
 
                 expect(instanceTags[0].selected()).toBe(true);
 
@@ -842,14 +841,13 @@ describe(KbqTagList.name, () => {
                 fixture.detectChanges();
 
                 nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
-                tags = fixture.componentInstance.tags;
             });
 
             // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
             it.skip('should set the view value from the form', () => {
-                const tagList = fixture.componentInstance.tagList;
-                const array = tags.toArray();
+                const tagList = fixture.componentInstance.tagList();
+                const array = fixture.componentInstance.tags();
 
                 expect(tagList.value).toBeFalsy();
 
@@ -871,7 +869,7 @@ describe(KbqTagList.name, () => {
             });
 
             it('should clear the selection when the control is reset', () => {
-                const array = tags.toArray();
+                const array = fixture.componentInstance.tags();
 
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
@@ -931,7 +929,7 @@ describe(KbqTagList.name, () => {
             });
 
             it('should not focus the active tag when the value is set programmatically', () => {
-                const chipArray = fixture.componentInstance.tags.toArray();
+                const chipArray = fixture.componentInstance.tags();
 
                 const focusSpyFn = vi.spyOn(chipArray[4], 'focus');
 
@@ -944,7 +942,7 @@ describe(KbqTagList.name, () => {
             it('should blur the form field when the active tag is blurred', () => {
                 const formField: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field');
 
-                fixture.componentInstance.formField.runFocusMonitor();
+                fixture.componentInstance.formField().runFocusMonitor();
 
                 nativeTags[0].focus();
                 fixture.detectChanges();
@@ -967,7 +965,7 @@ describe(KbqTagList.name, () => {
         });
 
         it('should clear the selection when the control is reset', () => {
-            const array = fixture.componentInstance.tags.toArray();
+            const array = fixture.componentInstance.tags();
 
             fixture.componentInstance.control.setValue(['pizza-1']);
             fixture.detectChanges();
@@ -1086,7 +1084,7 @@ describe(KbqTagList.name, () => {
                 tagListDebugElement = fixture.debugElement.query(By.directive(KbqTagList));
                 tagListInstance = tagListDebugElement.componentInstance;
                 tags = tagListInstance.tags;
-                manager = fixture.componentInstance.tagList.keyManager;
+                manager = fixture.componentInstance.tagList().keyManager;
             });
 
             describe('when the input has focus', () => {
@@ -2958,9 +2956,9 @@ class BasicTagList {
     tabIndexOverride: number;
     selectable: boolean = true;
 
-    @ViewChild(KbqFormField) formField: KbqFormField;
-    @ViewChild(KbqTagList) tagList: KbqTagList;
-    @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
+    readonly formField = viewChild.required(KbqFormField);
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly tags = viewChildren(KbqTag);
 }
 
 @Component({
@@ -3006,8 +3004,8 @@ class InputTagList {
     addOnBlur: boolean = true;
     isRequired: boolean;
 
-    @ViewChild(KbqTagList) tagList: KbqTagList;
-    @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly tags = viewChildren(KbqTag);
 
     add(event: KbqTagInputEvent): void {
         const input = event.input;
@@ -3056,7 +3054,7 @@ class SelectedTagList {
         { value: 1, viewValue: 'Pizza', selected: false },
         { value: 2, viewValue: 'Pasta', selected: true }
     ];
-    @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
+    readonly tags = viewChildren(KbqTag);
 }
 
 @Component({
@@ -3090,7 +3088,7 @@ class TagListWithFormErrorMessages {
 
     formControl = new UntypedFormControl('', Validators.required);
 
-    @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
+    readonly tags = viewChildren(KbqTag);
 
     readonly form = viewChild.required<NgForm>('form');
 }

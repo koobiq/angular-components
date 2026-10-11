@@ -1434,7 +1434,7 @@ export class TestComponentWithMillisecondBounds {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestComponentWithInputs {
-    availableTimeRangeTypes = signal<KbqTimeRangeType[]>([
+    readonly availableTimeRangeTypes = signal<KbqTimeRangeType[]>([
         'lastMinute',
         'last5Minutes',
         'last15Minutes',
@@ -1468,20 +1468,13 @@ export class TestComponentWithInputs {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestComponentWithValueCorrection {
-    availableTimeRangeTypes = signal<KbqTimeRangeType[]>(['lastHour', 'last24Hours', 'range']);
-    nonNullable = signal(true);
+    readonly availableTimeRangeTypes = signal<KbqTimeRangeType[]>(['lastHour', 'last24Hours', 'range']);
+    readonly nonNullable = signal(true);
     control = new FormControl<KbqTimeRangeRange | null>({
         type: 'last24Hours',
         startDateTime: '2024-01-01T00:00:00.000Z'
     });
-    valueCorrected = signal<KbqTimeRangeRange | undefined>(undefined);
-    /** Every emission is counted: "did it fire at all" and "did it fire twice" are different bugs. */
-    corrections = signal(0);
-
-    onValueCorrected(value: KbqTimeRangeRange): void {
-        this.valueCorrected.set(value);
-        this.corrections.update((count) => count + 1);
-    }
+    readonly valueCorrected = signal<KbqTimeRangeRange | undefined>(undefined);
 }
 
 @Component({
