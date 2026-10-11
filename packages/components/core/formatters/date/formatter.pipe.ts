@@ -129,7 +129,7 @@ export abstract class BaseLocaleAwareFormatterPipe<
     }
 
     transform(value: Value, ...args: Args): string {
-        const currentLocaleId = this.localeService?.id ?? null;
+        const currentLocaleId = this.localeService?.localeId() ?? null;
         // Read ahead of the cache check on every call: the read is what refreshes the view on a zone change.
         const currentTimezone = this.timezoneService.timezone();
 

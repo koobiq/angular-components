@@ -24,14 +24,14 @@ export class KbqDataSizePipe implements PipeTransform {
         source: number,
         precision: number = this.config().defaultPrecision,
         unitSystemName: KbqMeasurementSystemType = this.config().defaultUnitSystem,
-        locale: string = this.localeService?.id || KBQ_DEFAULT_LOCALE_ID
+        locale: string = this.localeService?.localeId() || KBQ_DEFAULT_LOCALE_ID
     ): string {
         const config = this.config();
         // `config` already carries the active locale with the overrides merged in. A caller that asks for
         // another locale explicitly is asking for that locale's units — a locale id that was never
         // registered has no entry at all, so guard the lookup, not just the service.
         const resolvedUnitSystems: Record<KbqMeasurementSystem, KbqUnitSystem> =
-            locale === (this.localeService?.id || KBQ_DEFAULT_LOCALE_ID)
+            locale === (this.localeService?.localeId() || KBQ_DEFAULT_LOCALE_ID)
                 ? config.unitSystems
                 : (this.localeService?.locales[locale]?.sizeUnits.unitSystems ?? config.unitSystems);
 

@@ -167,7 +167,7 @@ export class LocalizationStaticLocale {}
     template: `
         <div class="layout-column layout-gap-s">
             <kbq-form-field style="max-width: 200px">
-                <kbq-select [ngModel]="localeService.id" (ngModelChange)="localeService.setLocale($event)">
+                <kbq-select [ngModel]="localeService.localeId()" (ngModelChange)="localeService.setLocale($event)">
                     @for (item of localeService.locales.items; track item.id) {
                         <kbq-option [value]="item.id">{{ item.name }}</kbq-option>
                     }

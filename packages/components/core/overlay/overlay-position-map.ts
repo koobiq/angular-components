@@ -88,7 +88,7 @@ export const POSITION_MAP: { [key: string]: ConnectionPositionPair } = {
     }
 };
 
-export const EXTENDED_OVERLAY_POSITIONS = objectValues([
+export const EXTENDED_OVERLAY_POSITIONS = [
     POSITION_MAP.top,
     POSITION_MAP.topLeft,
     POSITION_MAP.topRight,
@@ -101,9 +101,9 @@ export const EXTENDED_OVERLAY_POSITIONS = objectValues([
     POSITION_MAP.left,
     POSITION_MAP.leftTop,
     POSITION_MAP.leftBottom
-]);
+];
 
-export const TOP_POSITION_PRIORITY = objectValues([
+export const TOP_POSITION_PRIORITY = [
     POSITION_MAP.top,
     POSITION_MAP.bottom,
     POSITION_MAP.right,
@@ -111,72 +111,72 @@ export const TOP_POSITION_PRIORITY = objectValues([
     POSITION_MAP.leftBottom,
     POSITION_MAP.bottomLeft,
     POSITION_MAP.bottomRight
-]);
+];
 
-export const BOTTOM_POSITION_PRIORITY = objectValues([
+export const BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.bottom,
     POSITION_MAP.top,
     POSITION_MAP.topLeft,
     POSITION_MAP.topRight,
     POSITION_MAP.rightBottom,
     POSITION_MAP.leftBottom
-]);
+];
 
-export const RIGHT_POSITION_PRIORITY = objectValues([
+export const RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.right,
     POSITION_MAP.left,
     POSITION_MAP.leftTop,
     POSITION_MAP.leftBottom,
     POSITION_MAP.top,
     POSITION_MAP.bottom
-]);
+];
 
-export const LEFT_POSITION_PRIORITY = objectValues([
+export const LEFT_POSITION_PRIORITY = [
     POSITION_MAP.left,
     POSITION_MAP.right,
     POSITION_MAP.rightTop,
     POSITION_MAP.rightBottom,
     POSITION_MAP.top,
     POSITION_MAP.bottom
-]);
+];
 
-export const RIGHT_TOP_POSITION_PRIORITY = objectValues([
+export const RIGHT_TOP_POSITION_PRIORITY = [
     POSITION_MAP.rightTop,
     POSITION_MAP.leftTop,
     POSITION_MAP.left,
     POSITION_MAP.leftBottom,
     POSITION_MAP.topLeft,
     POSITION_MAP.bottomLeft
-]);
+];
 
-export const RIGHT_BOTTOM_POSITION_PRIORITY = objectValues([
+export const RIGHT_BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.rightBottom,
     POSITION_MAP.leftBottom,
     POSITION_MAP.left,
     POSITION_MAP.leftTop,
     POSITION_MAP.topLeft,
     POSITION_MAP.bottomLeft
-]);
+];
 
-export const LEFT_TOP_POSITION_PRIORITY = objectValues([
+export const LEFT_TOP_POSITION_PRIORITY = [
     POSITION_MAP.leftTop,
     POSITION_MAP.rightTop,
     POSITION_MAP.right,
     POSITION_MAP.rightBottom,
     POSITION_MAP.topRight,
     POSITION_MAP.bottomRight
-]);
+];
 
-export const LEFT_BOTTOM_POSITION_PRIORITY = objectValues([
+export const LEFT_BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.leftBottom,
     POSITION_MAP.rightBottom,
     POSITION_MAP.right,
     POSITION_MAP.rightTop,
     POSITION_MAP.topRight,
     POSITION_MAP.bottomRight
-]);
+];
 
-export const TOP_LEFT_POSITION_PRIORITY = objectValues([
+export const TOP_LEFT_POSITION_PRIORITY = [
     POSITION_MAP.topLeft,
     POSITION_MAP.topRight,
     POSITION_MAP.bottomLeft,
@@ -184,9 +184,9 @@ export const TOP_LEFT_POSITION_PRIORITY = objectValues([
     POSITION_MAP.bottomRight,
     POSITION_MAP.leftBottom,
     POSITION_MAP.rightBottom
-]);
+];
 
-export const TOP_RIGHT_POSITION_PRIORITY = objectValues([
+export const TOP_RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.topRight,
     POSITION_MAP.topLeft,
     POSITION_MAP.bottomRight,
@@ -194,9 +194,9 @@ export const TOP_RIGHT_POSITION_PRIORITY = objectValues([
     POSITION_MAP.bottomLeft,
     POSITION_MAP.leftBottom,
     POSITION_MAP.rightBottom
-]);
+];
 
-export const BOTTOM_RIGHT_POSITION_PRIORITY = objectValues([
+export const BOTTOM_RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.bottomRight,
     POSITION_MAP.bottomLeft,
     POSITION_MAP.topRight,
@@ -204,9 +204,9 @@ export const BOTTOM_RIGHT_POSITION_PRIORITY = objectValues([
     POSITION_MAP.topLeft,
     POSITION_MAP.leftTop,
     POSITION_MAP.rightTop
-]);
+];
 
-export const BOTTOM_LEFT_POSITION_PRIORITY = objectValues([
+export const BOTTOM_LEFT_POSITION_PRIORITY = [
     POSITION_MAP.bottomLeft,
     POSITION_MAP.bottomRight,
     POSITION_MAP.topLeft,
@@ -214,7 +214,7 @@ export const BOTTOM_LEFT_POSITION_PRIORITY = objectValues([
     POSITION_MAP.topRight,
     POSITION_MAP.rightTop,
     POSITION_MAP.leftTop
-]);
+];
 
 export const POSITION_PRIORITY_STRATEGY = {
     top: TOP_POSITION_PRIORITY,
@@ -254,23 +254,3 @@ export const KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER = <T>(
     deps: [Overlay],
     useFactory: factory
 });
-
-function arrayMap<T, S>(array: T[], iteratee: (item: T, index: number, arr: T[]) => S): S[] {
-    let index = -1;
-    const length = array === null ? 0 : array.length;
-    const result = Array(length);
-
-    while (++index < length) {
-        result[index] = iteratee(array[index], index, array);
-    }
-
-    return result;
-}
-
-function baseValues<T>(object: T[], props: string[]): T[] {
-    return arrayMap(props, (key) => object[key]);
-}
-
-function objectValues<T>(object: T[]): T[] {
-    return object === null ? [] : baseValues(object, Object.keys(object));
-}

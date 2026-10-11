@@ -123,8 +123,8 @@ export class KbqStateSavingService {
     /**
      * The raw payload stored under the key, or `null`.
      *
-     * Raw: normalizing a payload into state belongs to the component that wrote it (see
-     * `KbqStateSavingConfig.normalize`), and the service does not know which component that is.
+     * Raw: normalizing a payload into state belongs to the component that wrote it (see the
+     * `normalize` callback of `KbqStateSaving.read()`), and the service does not know which component that is.
      */
     read(key: string): unknown {
         return this.store.getState(key);

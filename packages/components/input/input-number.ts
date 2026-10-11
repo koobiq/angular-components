@@ -496,7 +496,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
     onPaste(event: ClipboardEvent) {
         this.valueFromPaste = checkAndNormalizeLocalizedNumber(
             event.clipboardData?.getData('text'),
-            this.localeService?.id
+            this.localeService?.localeId()
         );
 
         if (this.valueFromPaste === null || isNaN(this.valueFromPaste)) {
@@ -671,7 +671,7 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
             formatOptions.useGrouping = intPart >= Math.pow(10, startFormattingFrom);
         }
 
-        const formatter = new Intl.NumberFormat(resolveIntlLocale(this.localeService?.id), formatOptions);
+        const formatter = new Intl.NumberFormat(resolveIntlLocale(this.localeService?.localeId()), formatOptions);
 
         const formattedIntPart = formatNumberWithLocale(intPart, formatter, this.config);
 

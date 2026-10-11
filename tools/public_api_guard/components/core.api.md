@@ -271,8 +271,6 @@ export const DASH = 189;
 // @public (undocumented)
 export abstract class DateAdapter<D> extends DateAdapter_2<D> {
     abstract get localeChanges(): Observable<any>;
-    // (undocumented)
-    protected abstract _localeChanges: BehaviorSubject<string>;
 }
 
 // @public (undocumented)
@@ -2571,8 +2569,10 @@ export const KBQ_OVERLAY_LAYERS: InjectionToken<KbqOverlayLayers>;
 // @public
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
 
-// @public (undocumented)
-export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
+// @public
+export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<{
+    readonly animationDone: OutputRef<void>;
+}>;
 
 // @public
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
