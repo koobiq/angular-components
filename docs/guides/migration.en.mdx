@@ -13,7 +13,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: the move to Angular 21: zoneless change detection, CSS animations instead of `@angular/animations`, and signal inputs, outputs and queries.
 - **21.0.0**: removal of the APIs deprecated before 21.0.0.
 - **21.0.0**: removal of `ThemePalette`.
-- **21.0.0**: removal of the core API nothing in the library used.
+- **21.0.0**: removal of the core API nothing in the library used, and deprecation of its legacy API.
 - **21.0.0**: the actions panel overlay container.
 - **21.0.0**: legacy splitter deprecation.
 - **21.0.0**: removal of the overlay demotion mechanism.
@@ -738,6 +738,20 @@ The Sass that goes is reachable only through a deep import, since `@koobiq/compo
 - the timing variables of `core/styles/functions/timing` but `$ease-out-circ`, `$ease-in-out-quad` and `$ease-in-out-circ`.
 
 For typography, use the `--kbq-typography-*` CSS variables or `kbq-typography-level-to-styles-css-variables()` of `core/styles/common/tokens`; copy anything else into your own styles. `v21-upgrade` reports each load and use. The compiled CSS also loses a few prefixes for browsers the library does not support: `-ms-text-size-adjust`, `-ms-overflow-style`, `-moz-` and `-ms-user-select`, the old flexbox `display` values and an `@-moz-document` copy of `.layout-fill`.
+
+#### Deprecated for removal in 22.0.0
+
+The documented core API that has a replacement is deprecated instead; `v21-upgrade` reports each use:
+
+| Deprecated                                                                                                       | Use instead                                                                                                               |
+| ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| the unprefixed date pipes (`absoluteLongDate`…`durationShort`), their `ImpurePipe` twins and `BaseFormatterPipe` | the `kbq*` pipe of the same format with the same arguments, for example `kbqAbsoluteLongDate`: it follows a locale change |
+| the `mcHighlight` pipe (`KbqHighlightPipe`)                                                                      | `kbqHighlightBold` (`KbqHighlightBoldPipe`)                                                                               |
+| `isDigit()`                                                                                                      | `isNumberKey()`                                                                                                           |
+| `isBoolean()`                                                                                                    | `typeof value === 'boolean'`                                                                                              |
+| `KbqMeasureScrollbarService`                                                                                     | `element.offsetWidth - element.clientWidth` of the element that scrolls                                                   |
+| `FocusKeyManager.getFocusOrigin()`                                                                               | the origin passed to `setFocusOrigin()`                                                                                   |
+| `dateInput` of the datepicker locale configuration                                                               | `KBQ_DATE_FORMATS`: nothing reads `dateInput`                                                                             |
 
 ### Actions panel overlay container (21.0.0)
 

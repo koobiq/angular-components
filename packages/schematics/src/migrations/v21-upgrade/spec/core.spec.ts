@@ -12,6 +12,10 @@ const CAN_COLOR = '`CanColor` was removed';
 const ANIMATION_ENUMS = '`KbqAnimationCurves` and `KbqAnimationDurations` were removed';
 const NO_REPLACEMENT = '`KbqRectangleItem` (left over from the removed navbar-ic)';
 const PRIVATE_MEMBERS = '`KbqPopUp.handleBodyInteraction()` was removed';
+const LEGACY_DATE_PIPES = 'The unprefixed date pipes';
+const MC_HIGHLIGHT = 'The `mcHighlight` pipe (`KbqHighlightPipe`) is deprecated';
+const DEPRECATED_HELPERS = '`isDigit()`, `isBoolean()` and `KbqMeasureScrollbarService`';
+const FOCUS_ORIGIN = '`FocusKeyManager.getFocusOrigin()` is deprecated';
 
 describe('v21-upgrade: core', () => {
     it('rewrites KbqThemeSelector.Default to Light', async () => {
@@ -264,6 +268,34 @@ describe('v21-upgrade: core', () => {
         expect(run.read('query.ts')).toBe(
             "export const lines = (host: Element) => host.querySelectorAll('[kbq-line]');\n"
         );
+    });
+
+    it('reports the core API deprecated for removal in 22.0.0', async () => {
+        const run = await runV21Upgrade({
+            'date.html': '<span>{{ created | absoluteLongDate }} {{ range | rangeShortDateImpurePipe }}</span>\n',
+            'date.ts': "import { DurationLongFormatterPipe } from '@koobiq/components/core';\n",
+            'highlight.html': '<span [innerHTML]="item | mcHighlight: query"></span>\n',
+            'helpers.ts': "import { isBoolean, KbqMeasureScrollbarService } from '@koobiq/components/core';\n",
+            'keys.ts': 'export const origin = (manager: any) => manager.getFocusOrigin();\n'
+        });
+
+        expect(run.log).toContain(`date.html\n  ${LEGACY_DATE_PIPES}`);
+        expect(run.log).toContain(`date.ts\n  ${LEGACY_DATE_PIPES}`);
+        expect(run.log).toContain(`highlight.html\n  ${MC_HIGHLIGHT}`);
+        expect(run.log).toContain(`helpers.ts\n  ${DEPRECATED_HELPERS}`);
+        expect(run.log).toContain(`keys.ts\n  ${FOCUS_ORIGIN}`);
+    });
+
+    it('leaves the kbq date and highlight pipes and a logical or alone', async () => {
+        const template =
+            '<span>{{ created | kbqAbsoluteLongDate }} {{ item | kbqHighlightBold: query }} {{ a || durationLong }}</span>\n';
+        const source =
+            "import { BaseLocaleAwareFormatterPipe, KbqHighlightBoldPipe } from '@koobiq/components/core';\n";
+        const run = await runV21Upgrade({ 'kbq.html': template, 'kbq.ts': source });
+
+        expect(run.read('kbq.html')).toBe(template);
+        expect(run.log).not.toContain('kbq.html');
+        expect(run.log).not.toContain('kbq.ts');
     });
 
     it("leaves an app's own exports of the removed names alone", async () => {

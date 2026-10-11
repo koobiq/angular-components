@@ -13,7 +13,7 @@
 - **21.0.0**: переход на Angular 21: обнаружение изменений без zone.js, CSS-анимации вместо `@angular/animations`, сигнальные входы, выходы и запросы.
 - **21.0.0**: удаление API, устаревших до 21.0.0.
 - **21.0.0**: удаление `ThemePalette`.
-- **21.0.0**: удаление API core, которым не пользовалась библиотека.
+- **21.0.0**: удаление API core, которым не пользовалась библиотека, и устаревание его прежнего API.
 - **21.0.0**: контейнер оверлея панели действий.
 - **21.0.0**: устаревание прежнего splitter.
 - **21.0.0**: удаление механизма понижения оверлея.
@@ -738,6 +738,20 @@ ng g @koobiq/components:v21-upgrade --project "<your project>"
 - переменные функций плавности из `core/styles/functions/timing`, кроме `$ease-out-circ`, `$ease-in-out-quad` и `$ease-in-out-circ`.
 
 Для типографики используйте CSS-переменные `--kbq-typography-*` или `kbq-typography-level-to-styles-css-variables()` из `core/styles/common/tokens`, остальное скопируйте в свои стили. `v21-upgrade` сообщает о каждой загрузке и каждом использовании. Из скомпилированного CSS также ушли префиксы для браузеров, которые библиотека не поддерживает: `-ms-text-size-adjust`, `-ms-overflow-style`, `-moz-` и `-ms-user-select`, старые значения `display` для flexbox и копия `.layout-fill` в `@-moz-document`.
+
+#### Устаревшее, удаление в 22.0.0
+
+Задокументированный API core, у которого есть замена, вместо удаления помечен устаревшим; `v21-upgrade` сообщает о каждом использовании:
+
+| Устарело                                                                                                     | Что использовать                                                                                             |
+| ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| беспрефиксные пайпы дат (`absoluteLongDate`…`durationShort`), их варианты `ImpurePipe` и `BaseFormatterPipe` | пайп `kbq*` того же формата с теми же аргументами, например `kbqAbsoluteLongDate`: он учитывает смену локали |
+| пайп `mcHighlight` (`KbqHighlightPipe`)                                                                      | `kbqHighlightBold` (`KbqHighlightBoldPipe`)                                                                  |
+| `isDigit()`                                                                                                  | `isNumberKey()`                                                                                              |
+| `isBoolean()`                                                                                                | `typeof value === 'boolean'`                                                                                 |
+| `KbqMeasureScrollbarService`                                                                                 | `element.offsetWidth - element.clientWidth` у прокручиваемого элемента                                       |
+| `FocusKeyManager.getFocusOrigin()`                                                                           | источник, переданный в `setFocusOrigin()`                                                                    |
+| `dateInput` в конфигурации локали datepicker                                                                 | `KBQ_DATE_FORMATS`: `dateInput` никто не читает                                                              |
 
 ### Контейнер оверлея панели действий (21.0.0)
 

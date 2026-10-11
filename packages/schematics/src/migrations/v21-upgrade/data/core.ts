@@ -98,10 +98,46 @@ const UNUSED_EXPORTS: { symbols: string[]; message: string }[] = [
     }
 ];
 
+// The unprefixed date pipes and their `ImpurePipe` twins, by pipe name and by class name.
+const LEGACY_DATE_PIPE =
+    '(?:absolute(?:Long|Short)Date(?:Time)?|relative(?:Long|Short)Date(?:Time)?|range(?:Long|Short)Date(?:Time)?|' +
+    'rangeMiddleDateTime|duration(?:Shortest|Long|Short))(?:ImpurePipe)?';
+const LEGACY_DATE_PIPE_CLASS = '(?:(?:Absolute|Relative|Range|Duration)\\w*Formatter(?:Impure)?Pipe|BaseFormatterPipe)';
+
+/** Deprecated in 21.0.0 for removal in 22.0.0, with what to use instead. */
+const DEPRECATED: { pattern: string; message: string }[] = [
+    {
+        pattern: `(?<!\\|)\\|\\s*${LEGACY_DATE_PIPE}(?![\\w-])|${importedFromCore(LEGACY_DATE_PIPE_CLASS)}`,
+        message:
+            'The unprefixed date pipes (`absoluteLongDate`…`durationShort`) and their `ImpurePipe` twins are ' +
+            'deprecated and will be removed in 22.0.0: use the `kbq*` pipe of the same format with the same ' +
+            'arguments, for example `kbqAbsoluteLongDate` (`KbqAbsoluteLongDatePipe`), which follows a locale change.'
+    },
+    {
+        pattern: `(?<!\\|)\\|\\s*mcHighlight(?![\\w-])|${importedFromCore('KbqHighlightPipe')}`,
+        message:
+            'The `mcHighlight` pipe (`KbqHighlightPipe`) is deprecated and will be removed in 22.0.0: use ' +
+            '`kbqHighlightBold` (`KbqHighlightBoldPipe`), which marks the matches the same way.'
+    },
+    {
+        pattern: importedFromCore('(?:isDigit|isBoolean|KbqMeasureScrollbarService)'),
+        message:
+            '`isDigit()`, `isBoolean()` and `KbqMeasureScrollbarService` from `@koobiq/components/core` are ' +
+            "deprecated and will be removed in 22.0.0: use `isNumberKey()`, `typeof value === 'boolean'`, and " +
+            '`element.offsetWidth - element.clientWidth` of the element that scrolls.'
+    },
+    {
+        pattern: '\\.getFocusOrigin\\(\\)',
+        message:
+            '`FocusKeyManager.getFocusOrigin()` is deprecated and will be removed in 22.0.0: keep the origin you ' +
+            'pass to `setFocusOrigin()`.'
+    }
+];
+
 /**
  * Removed in 21.0.0: the `Default` members of `KbqThemeSelector` and `KbqThemeNames`, `KbqDefaultThemes`,
  * `KbqTheme`, the legacy `ThemeService`, `getOptionScrollPosition`, `ThemePalette`, the unused undocumented
- * exports and members, and the `mcLine` alias.
+ * exports and members, and the `mcLine` alias. Also reports the core API deprecated for removal in 22.0.0.
  */
 export const core: AreaData = {
     tsReplacements: [
@@ -116,6 +152,7 @@ export const core: AreaData = {
             pattern: importedFromCore(`(?:${symbols.join('|')})`),
             message
         })),
+        ...DEPRECATED,
         {
             pattern: '\\.(?:handleBodyInteraction\\(|isSpecialFormatForRULocale\\(|roundingOptions\\b)',
             message:
