@@ -13,6 +13,7 @@ import {
 import { By } from '@angular/platform-browser';
 import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqTabGroup, KbqTabsModule } from '@koobiq/components/tabs';
 import { Observable, map, timer } from 'rxjs';
 import {
     ErrorStateMatcher,
@@ -98,6 +99,18 @@ const getAsyncValidator =
     (valid: boolean = true): AsyncValidatorFn =>
     (): Observable<ValidationErrors | null> =>
         timer(ASYNC_VALIDATOR_TIMER_DUE).pipe(map(() => (!valid ? { test: { actual: valid } } : null)));
+
+@Component({
+    imports: [KbqTextareaModule, KbqTabsModule],
+    template: `
+        <kbq-tab-group>
+            <kbq-tab label="Tab">
+                <textarea kbqTextarea></textarea>
+            </kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class TextareaInTabGroup {}
 
 @Component({
     imports: [
@@ -473,6 +486,24 @@ describe('KbqTextarea', () => {
             await fixture.whenStable();
 
             expect(growSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should re-measure once the tab group around it finishes its animation', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(TextareaInTabGroup, [KbqTabsModule]);
+            const textarea = fixture.debugElement.query(By.directive(KbqTextarea)).injector.get(KbqTextarea);
+            const ngOnInitSpy = vi.spyOn(textarea, 'ngOnInit');
+
+            fixture.debugElement
+                .query(By.directive(KbqTabGroup))
+                .injector.get(KbqTabGroup)
+                .removeTabBodyWrapperHeight();
+
+            expect(ngOnInitSpy).toHaveBeenCalledTimes(1);
+
+            // The re-measuring grows the textarea on a timer, which has to run while it is attached.
+            await vi.advanceTimersByTimeAsync(0);
         });
 
         it('should defer grow to microtask so lineHeight is initialized before first grow call', async () => {

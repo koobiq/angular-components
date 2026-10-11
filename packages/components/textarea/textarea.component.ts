@@ -19,7 +19,7 @@ import {
     untracked,
     WritableSignal
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     CanUpdateErrorState,
@@ -209,8 +209,12 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
         this.value = signal(this.valueAccessor.value);
         this.syncedValue = this.valueAccessor.value;
 
-        // eslint-disable-next-line @angular-eslint/no-lifecycle-call
-        this.parent?.animationDone.pipe(takeUntilDestroyed()).subscribe(() => this.ngOnInit());
+        if (this.parent) {
+            outputToObservable(this.parent.animationDone)
+                .pipe(takeUntilDestroyed())
+                // eslint-disable-next-line @angular-eslint/no-lifecycle-call
+                .subscribe(() => this.ngOnInit());
+        }
 
         // A bound value replaces the current one whenever the binding changes.
         effect(() => {
