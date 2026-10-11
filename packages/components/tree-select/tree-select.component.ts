@@ -530,7 +530,7 @@ export class KbqTreeSelect
         if (this.options) {
             return this.options.changes.pipe(
                 startWith(this.options),
-                switchMap(() => merge(...this.options.map((option) => outputToObservable(option.onSelectionChange))))
+                switchMap(() => merge(...this.options.map((option) => outputToObservable(option.selectionChange))))
             );
         }
 
@@ -1056,7 +1056,7 @@ export class KbqTreeSelect
 
         // Single place the event is raised, so a click on the master checkbox and Ctrl/Cmd + A — which
         // both go through `selectAllOptions` — emit exactly once and with the same payload.
-        outputToObservable(tree.onSelectAll)
+        outputToObservable(tree.selectAllChange)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(({ options }) =>
                 this.onSelectAll.emit(new KbqSelectAllEvent(this, options, tree.allOptionsSelected))
