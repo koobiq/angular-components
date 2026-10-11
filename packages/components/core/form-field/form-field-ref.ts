@@ -34,10 +34,9 @@ export interface KbqFormFieldControlRef<T = unknown> {
 }
 
 /**
- * Internal contract for `KbqFormField` used by code that cannot import the form-field
- * class directly because of a circular dependency (e.g. `core/select/common.ts`).
- *
- * @deprecated Use KbqFormField from `@koobiq/components/form-field`.
+ * Internal contract between `core` and `KbqFormField`, for code that cannot import the form field because of a
+ * circular dependency (e.g. `core/select/common.ts`). Application code injects `KBQ_FORM_FIELD` from
+ * `@koobiq/components/form-field` instead.
  *
  * @docs-private
  */
@@ -50,11 +49,9 @@ export interface KbqFormFieldRef {
 }
 
 /**
- * Injection token that can be used to inject an instances of `KbqFormField`. It serves
- * as alternative token to the actual `KbqFormField` class which would cause unnecessary
- * retention of the `KbqFormField` class and its component metadata.
- *
- * @deprecated Use `KBQ_FORM_FIELD` from `@koobiq/components/form-field`.
+ * Injects the `KbqFormField` as a `KbqFormFieldRef` where `@koobiq/components/form-field` cannot be imported: an
+ * internal contract between `core` and the form field. Application code injects `KBQ_FORM_FIELD` from
+ * `@koobiq/components/form-field` instead.
  *
  * @docs-private
  */
