@@ -195,7 +195,7 @@ export class KbqNavbarBrand implements AfterContentInit {
         // then is it kept out of the roving focus order. Deciding this here and not in the constructor is what
         // makes the projected content visible at all; deciding it from `isLink` alone used to disable every
         // `<div kbq-navbar-brand>`, however interactive its content was.
-        this.navbarFocusableItem.decorative = !this.isLink && !this.navbarFocusableItem.nestedElement;
+        this.navbarFocusableItem.decorative.set(!this.isLink && !this.navbarFocusableItem.nestedElement);
 
         this.updateTooltip();
     }
