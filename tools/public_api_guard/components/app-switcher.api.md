@@ -87,8 +87,6 @@ export interface KbqAppSwitcherApp {
 // @public
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, OnDestroy {
     constructor();
-    protected activeApp: KbqAppSwitcherApp | undefined;
-    protected activeSite: KbqAppSwitcherSite | undefined;
     protected allItems: QueryList<KbqDropdownItem>;
     escapeHandler(): void;
     filteredSites: KbqAppSwitcherSite[];
@@ -104,8 +102,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     ngOnDestroy(): void;
     readonly otherSites: i0.Signal<KbqDropdown | undefined>;
     prefix: string;
-    protected resetActiveApp(): void;
-    protected resetActiveSite(): void;
     readonly searchControl: FormControl<string | null>;
     selectAppInSite(site: KbqAppSwitcherSite | undefined, app: KbqAppSwitcherApp): void;
     trigger: KbqAppSwitcherTrigger;

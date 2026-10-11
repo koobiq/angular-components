@@ -305,11 +305,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     @Input() trigger: KbqAppSwitcherTrigger;
 
     /** @docs-private */
-    protected activeSite: KbqAppSwitcherSite | undefined;
-    /** @docs-private */
-    protected activeApp: KbqAppSwitcherApp | undefined;
-
-    /** @docs-private */
     readonly input = viewChild(KbqInput);
 
     /**
@@ -584,18 +579,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
 
         this.trigger.selectedSite.set(site);
         this.trigger.selectedApp.set(app);
-    }
-
-    /** Drops the flyout content once its dropdown closes, so a reopened panel never shows the previous site.
-     * @docs-private */
-    protected resetActiveSite(): void {
-        this.activeSite = undefined;
-    }
-
-    /** The same for the nested group of a flyout app.
-     * @docs-private */
-    protected resetActiveApp(): void {
-        this.activeApp = undefined;
     }
 
     private filterSites(query: string | null): KbqAppSwitcherSite[] {

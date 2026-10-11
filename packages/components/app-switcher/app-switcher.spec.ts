@@ -17,8 +17,10 @@ import {
     TAB,
     UP_ARROW,
     createKeyboardEvent,
-    dispatchKeyboardEvent
+    dispatchKeyboardEvent,
+    dispatchMouseEvent
 } from '@koobiq/components/core';
+import { NESTED_HOVER_SWITCH_DELAY } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
 import { of } from 'rxjs';
 import {
@@ -60,6 +62,16 @@ const GROUP_APPS: KbqAppSwitcherApp[] = Array.from({ length: 4 }, (_, i) => ({
 }));
 
 const GROUP_SITE: KbqAppSwitcherSite = { id: 'grp', name: 'Group Site', apps: [...GROUP_APPS, APP_UNTYPED] };
+
+const OTHER_GROUP_APPS: KbqAppSwitcherApp[] = Array.from({ length: 4 }, (_, i) => ({
+    id: `o${i}`,
+    name: `Other ${i}`,
+    type: 'Other',
+    link: `/o/${i}`
+}));
+
+/** Shown in its flyout as two groups, `Group` and `Other`. */
+const SITE_C: KbqAppSwitcherSite = { id: 'siteC', name: 'Site C', apps: [...GROUP_APPS, ...OTHER_GROUP_APPS] };
 
 /** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
 const AXE_TIMEOUT = 15000;
@@ -1395,8 +1407,6 @@ describe('KbqAppSwitcher', () => {
                 const { fixture } = open(AppSwitcherMultiSite);
                 const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
 
-                // Focusing the row first (as real keyboard use would) populates `activeSite`, which the
-                // flyout's content is bound to - without it the panel would open with no apps to show.
                 siteRow.focus();
                 fixture.detectChanges();
                 dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
@@ -1599,7 +1609,6 @@ describe('KbqAppSwitcher', () => {
 
             const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
 
-            // Focus populates `activeSite`, which the flyout content is bound to.
             siteRow.focus();
             fixture.detectChanges();
             dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
@@ -1619,35 +1628,141 @@ describe('KbqAppSwitcher', () => {
             expect(siteSpy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.id }));
             expect(appSpy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.apps[0].id }));
         }));
+    });
 
-        it('clears the flyout content once its dropdown closes', fakeAsync(() => {
-            const fixture = createComponent(AppSwitcherMultiSite);
+    // The flyouts of the other sites share one dropdown, and so do the flyouts of the groups inside them.
+    describe('Integration — switching between flyouts', () => {
+        let fixture: ComponentFixture<AppSwitcherOtherSites>;
+        let trigger: KbqAppSwitcherTrigger;
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
 
+        beforeEach(fakeAsync(() => {
+            fixture = createComponent(AppSwitcherOtherSites);
+            trigger = getTrigger(fixture);
             overlayContainer = TestBed.inject(OverlayContainer);
             overlayContainerElement = overlayContainer.getContainerElement();
-
-            const trigger = getTrigger(fixture);
 
             trigger.show();
             tick();
             fixture.detectChanges();
+        }));
 
-            const popup = trigger['instance'] as KbqAppSwitcherComponent;
-            const siteRow = overlayContainerElement.querySelector('.kbq-app-switcher-dropdown-site') as HTMLElement;
+        afterEach(() => overlayContainer.ngOnDestroy());
 
-            siteRow.focus();
+        /** Row names of every open flyout, in the order they were opened. */
+        const flyouts = (): string[][] =>
+            Array.from(overlayContainerElement.querySelectorAll('.kbq-dropdown__panel'), (panel) =>
+                Array.from(panel.querySelectorAll('.kbq-app-switcher-dropdown-app__name'), (name) =>
+                    name.textContent!.trim()
+                )
+            );
+
+        const row = (selector: string, name: string): HTMLElement =>
+            Array.from(overlayContainerElement.querySelectorAll<HTMLElement>(selector)).find((element) =>
+                element.textContent!.includes(name)
+            )!;
+
+        const siteRow = (name: string) => row('.kbq-app-switcher-dropdown-site', name);
+        const appRow = (name: string) => row('.kbq-app-switcher-dropdown-app', name);
+
+        const hover = (element: HTMLElement) => {
+            dispatchMouseEvent(element, 'mouseenter');
             fixture.detectChanges();
-            expect(popup['activeSite']).toBeDefined();
+            tick();
+            fixture.detectChanges();
+        };
 
-            dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
+        /** Leaves `from` with its flyout open and lands on `to` without passing through that flyout. */
+        const moveStraight = (from: HTMLElement, to: HTMLElement) => {
+            dispatchMouseEvent(from, 'mouseleave', 100, 100);
+            dispatchMouseEvent(to, 'mouseenter');
+            fixture.detectChanges();
+        };
+
+        const waitForSwitch = () => {
+            tick(NESTED_HOVER_SWITCH_DELAY);
+            fixture.detectChanges();
+            tick();
+            fixture.detectChanges();
+        };
+
+        it('shows the apps of a site reached straight from another site row', fakeAsync(() => {
+            hover(siteRow(SITE_C.name));
+
+            expect(flyouts()).toEqual([['Group', 'Other']]);
+
+            moveStraight(siteRow(SITE_C.name), siteRow(SITE_B.name));
+            waitForSwitch();
+
+            expect(flyouts()).toEqual([[APP_3.name, APP_4.name]]);
+        }));
+
+        it('selects the site of a flyout reached straight from another site row', fakeAsync(() => {
+            hover(siteRow(SITE_C.name));
+            moveStraight(siteRow(SITE_C.name), siteRow(SITE_B.name));
+            waitForSwitch();
+
+            const app = appRow(APP_3.name);
+
+            // The rows are real links; stop jsdom from trying to navigate away.
+            app.addEventListener('click', (event) => event.preventDefault());
+            app.click();
+
+            expect(trigger.selectedSite()!.id).toBe(SITE_B.id);
+            expect(trigger.selectedApp()!.id).toBe(APP_3.id);
+        }));
+
+        it('keeps the apps of a flyout while the pointer crosses another site row on its way there', fakeAsync(() => {
+            hover(siteRow(SITE_B.name));
+            moveStraight(siteRow(SITE_B.name), siteRow(SITE_C.name));
+            tick(NESTED_HOVER_SWITCH_DELAY - 10);
+            fixture.detectChanges();
+
+            expect(flyouts()).toEqual([[APP_3.name, APP_4.name]]);
+
+            tick(10);
+        }));
+
+        it('shows only the apps of the site that reopens a closed flyout', fakeAsync(() => {
+            const openByKeyboard = (element: HTMLElement) => {
+                element.focus();
+                dispatchKeyboardEvent(element, 'keydown', ENTER);
+                tick();
+                fixture.detectChanges();
+            };
+
+            openByKeyboard(siteRow(SITE_B.name));
+
+            expect(flyouts()).toEqual([[APP_3.name, APP_4.name]]);
+
+            dispatchKeyboardEvent(overlayContainerElement.querySelector('.kbq-dropdown__panel')!, 'keydown', ESCAPE);
             tick();
             fixture.detectChanges();
 
-            dispatchKeyboardEvent(siteRow, 'keydown', ESCAPE);
-            tick();
-            fixture.detectChanges();
+            expect(flyouts()).toEqual([]);
 
-            expect(popup['activeSite']).toBeUndefined();
+            openByKeyboard(siteRow(SITE_C.name));
+
+            expect(flyouts()).toEqual([['Group', 'Other']]);
+        }));
+
+        it('shows the apps of a group reached straight from another group', fakeAsync(() => {
+            hover(siteRow(SITE_C.name));
+            hover(appRow('Group'));
+
+            expect(flyouts()).toEqual([
+                ['Group', 'Other'],
+                GROUP_APPS.map(({ name }) => name)
+            ]);
+
+            moveStraight(appRow('Group'), appRow('Other'));
+            waitForSwitch();
+
+            expect(flyouts()).toEqual([
+                ['Group', 'Other'],
+                OTHER_GROUP_APPS.map(({ name }) => name)
+            ]);
         }));
     });
 
@@ -1909,6 +2024,19 @@ class AppSwitcherMultiSite {
         { ...SITE_A, apps: [...SITE_A.apps] },
         { ...SITE_B, apps: [...SITE_B.apps] }
     ];
+}
+
+@Component({
+    selector: 'app-switcher-other-sites',
+    imports: [KbqAppSwitcherModule],
+    template: `
+        <button kbqAppSwitcher [sites]="sites" [selectedSite]="sites[0]" [selectedApp]="sites[0].apps[0]">
+            Trigger
+        </button>
+    `
+})
+class AppSwitcherOtherSites {
+    sites: KbqAppSwitcherSite[] = [SITE_A, SITE_B, SITE_C].map((site) => ({ ...site, apps: [...site.apps] }));
 }
 
 @Component({
