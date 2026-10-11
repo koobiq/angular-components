@@ -285,8 +285,6 @@ export class KbqReactivePasswordHint extends KbqHint {
 // @public
 export class KbqStepper {
     constructor();
-    // @deprecated (undocumented)
-    connectTo(_: any): void;
     // Warning: (ae-forgotten-export) The symbol "KbqStepperControl" needs to be exported by the entry point koobiq-components-form-field.d.ts
     protected readonly control: Signal<KbqStepperControl>;
     protected readonly mouseUp: Subject<void>;

@@ -398,8 +398,6 @@ export interface KbqPipe {
     openOnReset?: boolean;
     // (undocumented)
     removable: boolean;
-    // @deprecated (undocumented)
-    required?: boolean;
     // (undocumented)
     search?: boolean;
     // (undocumented)

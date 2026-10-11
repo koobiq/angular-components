@@ -156,12 +156,6 @@ export class KbqSelectChange {
     ) {}
 }
 
-/**
- * Select panel width type.
- * @deprecated Use `KbqPanelWidth` from `@koobiq/components/core` instead.
- */
-export type KbqSelectPanelWidth = KbqPanelWidth;
-
 /** Options for the `kbq-select` that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
 export type KbqSelectOptions = Partial<{
     /**
@@ -1458,24 +1452,6 @@ export class KbqSelect
         this.keyManager.setActiveItem(-1);
 
         this.propagateChanges();
-    }
-
-    /**
-     * Clears the current selection.
-     * @deprecated Activate the projected `KbqCleaner` instead.
-     * @docs-private
-     */
-    clearValue(event: Event): void {
-        const cleaner = this.cleaner();
-
-        if (cleaner) {
-            cleaner.clear(event);
-        } else {
-            event.stopPropagation();
-            event.preventDefault();
-            this.clear();
-            this.focus();
-        }
     }
 
     /**

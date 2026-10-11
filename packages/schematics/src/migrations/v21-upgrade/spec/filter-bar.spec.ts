@@ -2,6 +2,8 @@ import { runV21Upgrade } from '../testing';
 
 const CHANGES = 'KbqFilterBar.changes was removed';
 const MIN_WIDTH = 'KbqPipeMinWidth (kbqPipeMinWidth) was removed';
+const REQUIRED_KEY = 'KbqPipe.required was removed in 21.0.0; the filter bar never read it';
+const REQUIRED_READ = "KbqPipe.required was removed in 21.0.0. If this `.required` is a pipe's";
 
 describe('v21-upgrade: filter-bar', () => {
     it('renames KbqFilterBarRefresher to KbqFilterRefresher', async () => {
@@ -182,6 +184,96 @@ describe('v21-upgrade: filter-bar', () => {
 
         expect(run.read('subclass.ts')).toBe(source);
         expect(run.log).toContain(MIN_WIDTH);
+    });
+
+    it('reports the required key of a pipe and of a pipe template', async () => {
+        const pipes = [
+            "import { KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';",
+            'export const pipe: KbqPipe = {',
+            "    name: 'Status',",
+            '    type: KbqPipeTypes.Select,',
+            "    value: { name: 'Open', value: 'open' },",
+            '    required: true,',
+            '    cleanable: false,',
+            '    removable: false,',
+            '    disabled: false',
+            '};',
+            ''
+        ].join('\n');
+        const templates = [
+            "import { KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';",
+            'export const templates: KbqPipeTemplate[] = [',
+            '    {',
+            "        name: 'Owner',",
+            '        type: KbqPipeTypes.Text,',
+            "        values: [{ name: 'Me', value: { id: 1 } }],",
+            '        required: false',
+            '    }',
+            '];',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'pipes.ts': pipes, 'templates.ts': templates });
+
+        expect(run.read('pipes.ts')).toBe(pipes);
+        expect(run.read('templates.ts')).toBe(templates);
+        expect(run.log).toContain(`pipes.ts\n  ${REQUIRED_KEY}`);
+        expect(run.log).toContain(`templates.ts\n  ${REQUIRED_KEY}`);
+        expect(run.log).not.toContain(REQUIRED_READ);
+    });
+
+    it('reports a read of required on the data of a custom pipe', async () => {
+        const source = [
+            "import { KbqBasePipe } from '@koobiq/components/filter-bar';",
+            'export class ColorPipe extends KbqBasePipe<string> {',
+            '    get locked() { return !!this.data.required; }',
+            '}',
+            ''
+        ].join('\n');
+        const template = '@if (!data?.required) {\n    <i class="kbq-pipe__remove" (click)="onRemove()"></i>\n}\n';
+        const run = await runV21Upgrade({ 'color-pipe.ts': source, 'color-pipe.html': template });
+
+        expect(run.read('color-pipe.ts')).toBe(source);
+        expect(run.read('color-pipe.html')).toBe(template);
+        expect(run.log).toContain(`color-pipe.ts\n  ${REQUIRED_READ}`);
+        expect(run.log).toContain(`color-pipe.html\n  ${REQUIRED_READ}`);
+    });
+
+    it('leaves the required key and reads of forms and validators next to a filter bar alone', async () => {
+        const source = [
+            "import { Validators } from '@angular/forms';",
+            "import { KbqFilter, KbqPipeTypes } from '@koobiq/components/filter-bar';",
+            'export class App {',
+            "    readonly field = { name: 'email', type: 'text', required: true, validators: [Validators.required] };",
+            '    readonly filters: KbqFilter[] = [',
+            '        {',
+            "            name: 'All',",
+            '            readonly: false,',
+            '            disabled: false,',
+            '            changed: false,',
+            '            saved: false,',
+            '            pipes: [',
+            "                { name: 'Status', type: KbqPipeTypes.Select, value: null, cleanable: true,",
+            '                  removable: false, disabled: false }',
+            '            ]',
+            '        }',
+            '    ];',
+            '    readonly schema = { required: true, nested: { cleanable: false } };',
+            '    readonly label = input.required<string>();',
+            '    get mandatory() { return this.field.required || this.email.hasValidator(Validators.required); }',
+            '}',
+            ''
+        ].join('\n');
+        const unrelated = [
+            "export const pipe = { name: 'deploy', required: true, cleanable: false, removable: false };",
+            'export const isRequired = (pipe: { required: boolean }) => pipe.required;',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'form.ts': source, 'deploy.ts': unrelated });
+
+        expect(run.read('form.ts')).toBe(source);
+        expect(run.read('deploy.ts')).toBe(unrelated);
+        expect(run.log).not.toContain(REQUIRED_KEY);
+        expect(run.log).not.toContain(REQUIRED_READ);
     });
 
     it('leaves the current names, other changes streams and look-alikes alone', async () => {

@@ -17,7 +17,6 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
-import { TransitionCheckState } from '@koobiq/components/core';
 
 // @public
 export const KBQ_CHECKBOX_CLICK_ACTION: InjectionToken<KbqCheckableClickAction>;
@@ -95,8 +94,6 @@ export class KbqCheckboxRequiredValidator extends CheckboxRequiredValidator {
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqCheckboxRequiredValidator, never>;
 }
-
-export { TransitionCheckState }
 
 // (No @packageDocumentation comment for this package)
 

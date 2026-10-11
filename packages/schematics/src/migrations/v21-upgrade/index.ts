@@ -1,8 +1,17 @@
-import { Path } from '@angular-devkit/core';
+import { JsonValue, Path, workspaces } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { readWorkspace, writeWorkspace } from '@schematics/angular/utility';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { Replacement, WarnPattern, scssReplacements, templateReplacements, tsReplacements, warnPatterns } from './data';
+import {
+    Replacement,
+    WarnPattern,
+    scssReplacements,
+    styleEntryReplacements,
+    templateReplacements,
+    tsReplacements,
+    warnPatterns
+} from './data';
 import { Schema } from './schema';
 
 const TS_EXT = '.ts';
@@ -196,6 +205,99 @@ function pickReplacements(filePath: string): Replacement[] | null {
     return null;
 }
 
+/** Rewrites a `styles` entry: a path, or an object with an `input` path. */
+function rewriteStyleEntry(entry: JsonValue): JsonValue {
+    if (typeof entry === 'string') return applyReplacements(entry, styleEntryReplacements).content;
+
+    if (entry && typeof entry === 'object' && !Array.isArray(entry) && typeof entry.input === 'string') {
+        const input = applyReplacements(entry.input, styleEntryReplacements).content;
+
+        return input === entry.input ? entry : { ...entry, input };
+    }
+
+    return entry;
+}
+
+/** Rewrites the entries of a `styles` array and drops the duplicates a rewrite produces; `null` if unchanged. */
+function migrateStyleEntries(entries: JsonValue[]): JsonValue[] | null {
+    // The key of each kept entry → whether it was rewritten.
+    const kept = new Map<string, boolean>();
+    const result: JsonValue[] = [];
+    let changed = false;
+
+    for (const entry of entries) {
+        const next = rewriteStyleEntry(entry);
+        const rewritten = next !== entry;
+        const key = JSON.stringify(next);
+
+        if (rewritten) changed = true;
+
+        if (kept.has(key)) {
+            if (rewritten || kept.get(key)) {
+                changed = true;
+                continue;
+            }
+        } else {
+            kept.set(key, rewritten);
+        }
+
+        result.push(next);
+    }
+
+    return changed ? result : null;
+}
+
+/**
+ * Rewrites the `styles` of every target and configuration of `project` (every project when omitted) in
+ * `angular.json`, which lies outside the project directory the rest of the migration walks. Returns whether
+ * anything changed.
+ */
+async function migrateWorkspaceStyles(
+    tree: Tree,
+    context: SchematicContext,
+    project: string | undefined,
+    fix: boolean
+): Promise<boolean> {
+    let workspace: workspaces.WorkspaceDefinition;
+
+    try {
+        workspace = await readWorkspace(tree);
+    } catch {
+        return false;
+    }
+
+    let changed = false;
+
+    for (const [name, definition] of workspace.projects) {
+        if (project && name !== project) continue;
+
+        for (const target of definition.targets.values()) {
+            for (const options of [target.options, ...Object.values(target.configurations ?? {})]) {
+                const styles = options?.styles;
+
+                if (!options || !Array.isArray(styles)) continue;
+
+                const migrated = migrateStyleEntries(styles);
+
+                if (!migrated) continue;
+
+                options.styles = migrated;
+                changed = true;
+            }
+        }
+    }
+
+    if (!changed) return false;
+
+    if (fix) {
+        await writeWorkspace(tree, workspace);
+    } else {
+        logMessage(context.logger, ['[v21-upgrade] would update the styles in angular.json (run with --fix to apply)']);
+    }
+
+    return true;
+}
+
 export default function v21Upgrade(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
         const { project } = options;
@@ -272,6 +374,8 @@ export default function v21Upgrade(options: Schema): Rule {
                 ]);
             }
         });
+
+        if (await migrateWorkspaceStyles(tree, context, project, fix)) touched++;
 
         logMessage(context.logger, [
             `[v21-upgrade] processed tree under "${root || '<workspace root>'}", ` +

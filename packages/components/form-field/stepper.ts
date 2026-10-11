@@ -152,12 +152,6 @@ export class KbqStepper {
         this.destroyRef.onDestroy(() => this.mouseUp.complete());
     }
 
-    /**
-     * @deprecated No longer required — `KbqStepper` resolves its control automatically via DI.
-     * @docs-private
-     */
-    connectTo(_: any): void {}
-
     /** @docs-private */
     onStepUp(event: MouseEvent): void {
         this.handleStep(event, (control) => control.stepUp(control.step()), this.stepUp);

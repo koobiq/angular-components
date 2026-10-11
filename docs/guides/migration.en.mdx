@@ -511,7 +511,15 @@ ng g @koobiq/components:v21-upgrade --project "<your project>"
 
 ### Deprecated API removal (21.0.0)
 
-The APIs deprecated for removal in the next major release are removed in 21.0.0. A renamed member or alias is rewritten by `v21-upgrade`; for the rest it reports the file and the replacement to use.
+The APIs deprecated in 20.x are removed in 21.0.0, those whose note promised removal in the next major release and those deprecated without a date alike. A renamed member or alias is rewritten by `v21-upgrade`; for the rest it reports the file and the replacement to use.
+
+#### Accordion
+
+| Removed                                   | Use instead                                                                             | Migration |
+| ----------------------------------------- | --------------------------------------------------------------------------------------- | --------- |
+| the `kbq-accordion-trigger__action` class | a `kbq-accordion-header__actions` element next to the trigger in `kbq-accordion-header` | reported  |
+
+An action inside the trigger is a focusable element inside a `role="button"`, so the actions move out of the trigger: see [Interactive elements](/en/components/accordion/overview#interactive-elements). `v21-upgrade` reports the class in templates, style sheets and code.
 
 #### Code block and icon button
 
@@ -545,13 +553,17 @@ The aliases no longer fill in for their replacements: a `<kbq-code-block>` that 
 
 #### Dropdown and select
 
-| Removed                                                        | Use instead                                                                               | Migration |
-| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------- |
-| `KbqDropdown.triggerWidth`, `KbqDropdownPanel.triggerWidth`    | `KbqDropdownTrigger.widthOrigin`, to match the panel to an element other than the trigger | reported  |
-| `offsetY` of `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect` | the `--kbq-connected-overlay-gap` CSS variable, set on `:root` or on the overlay pane     | reported  |
-| `AUTOCOMPLETE_PANEL_HEIGHT`                                    | a constant of your own: the panel is capped by `--kbq-autocomplete-size-panel-max-height` | reported  |
+| Removed                                                             | Use instead                                                                               | Migration |
+| ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------- |
+| `KbqDropdown.triggerWidth`, `KbqDropdownPanel.triggerWidth`         | `KbqDropdownTrigger.widthOrigin`, to match the panel to an element other than the trigger | reported  |
+| `offsetY` of `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`      | the `--kbq-connected-overlay-gap` CSS variable, set on `:root` or on the overlay pane     | reported  |
+| `AUTOCOMPLETE_PANEL_HEIGHT`                                         | a constant of your own: the panel is capped by `--kbq-autocomplete-size-panel-max-height` | reported  |
+| `DropdownPositionX` / `DropdownPositionY`                           | `KbqDropdownPositionX` / `KbqDropdownPositionY`                                           | rewritten |
+| `KbqSelectPanelWidth`, `KbqTreeSelectPanelWidth`                    | `KbqPanelWidth` from `@koobiq/components/core`                                            | rewritten |
+| `clearValue()` of `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect` | a projected `<kbq-cleaner />`; from code, reset the bound form control                    | reported  |
+| the `kbq-dropdown__group-header_small` class                        | `<kbq-optgroup label="…" />`, `KbqOptgroup` from `@koobiq/components/core`                | reported  |
 
-None of them was an input, so no template binds them, and only `offsetY` of `kbq-timezone-select` still had an effect: it moved the panel. `v21-upgrade` reports `.triggerWidth` in a file that uses the dropdown, `triggerWidth` in a `KbqDropdownPanel` implementation, `.offsetY` in a file that uses one of the selects and an `offsetY` field of their subclass; the `offsetY` input of `KbqDropdownTrigger` stays.
+None of the removed members was an input, so no template binds them, and of `triggerWidth`, `offsetY` and `AUTOCOMPLETE_PANEL_HEIGHT` only `offsetY` of `kbq-timezone-select` still had an effect: it moved the panel. `v21-upgrade` reports `.triggerWidth` in a file that uses the dropdown, `triggerWidth` in a `KbqDropdownPanel` implementation, `.offsetY` in a file that uses one of the selects and an `offsetY` field of their subclass; the `offsetY` input of `KbqDropdownTrigger` stays. It renames the position types in a file that names `@koobiq/components/dropdown` and moves the panel width types to the core import; the position types elsewhere, an aliased import and a re-export are reported. `.clearValue` is reported in a file that uses one of the selects, except on `this` and on a form field, whose `clearValue()` stays; like the cleaner, it spared the options `clearPredicate` keeps, while a reset control loses them all. `<kbq-optgroup>` renders the subheading of the removed modifier inside a dropdown; `kbq-dropdown__group-header` itself stays.
 
 #### Filter bar
 
@@ -560,8 +572,9 @@ None of them was an input, so no template binds them, and only `offsetY` of `kbq
 | `KbqFilterBarRefresher`               | `KbqFilterRefresher`                                                                                   | rewritten                    |
 | `KbqFilterBar.changes`                | `filter()` read in an `effect()`, or the `(filterChange)` output: `changes` never emitted              | reported                     |
 | `KbqPipeMinWidth` (`kbqPipeMinWidth`) | nothing: a pipe lays its name and value out as shrinkable grid tracks, which keeps a short part intact | removed; other uses reported |
+| `KbqPipe.required`                    | `cleanable: false` and `removable: false`: the filter bar never read `required`                        | reported                     |
 
-`v21-upgrade` reports `.changes` in a file that names `KbqFilterBar`. It removes `KbqPipeMinWidth` from the `@koobiq/components/filter-bar` import and from `imports` arrays and the `kbqPipeMinWidth` attribute from templates, and reports any other reference to the directive.
+`v21-upgrade` reports `.changes` in a file that names `KbqFilterBar`. It removes `KbqPipeMinWidth` from the `@koobiq/components/filter-bar` import and from `imports` arrays and the `kbqPipeMinWidth` attribute from templates, and reports any other reference to the directive. It reports a read of `data.required` in a custom pipe, and a `required` key only in an object literal that also has `cleanable`, `removable` or `type: KbqPipeTypes.…`: the `required` of a form config or a validator in the same file is left alone.
 
 #### Form field
 
@@ -576,23 +589,25 @@ None of them was an input, so no template binds them, and only `offsetY` of `kbq
 | `KbqInputPassword.checkRules()` / `.checkRule`                 | `control.updateValueAndValidity()` after changing the validators                    | reported  |
 | `KbqFormField.canCleanerClearByEsc`                            | nothing: it was unused                                                              | reported  |
 | `KbqFormField.onKeyDown()`                                     | nothing: it was a no-op                                                             | reported  |
+| `KbqStepper.connectTo()`                                       | nothing: the stepper finds the number input of its form field by itself             | reported  |
 
-`KbqReactivePasswordHint` shows the state it is given: put each rule on the form control as a validator and bind `[hasError]` to its error, for example `control.hasError('minLength')`. It has no counterpart of `[rule]`, `[min]`, `[max]`, `[regex]`, `[checkRule]` or `[viewFormField]`, so place it inside the `kbq-form-field`, which links it to the control through `aria-describedby`. `v21-upgrade` reports the first four where they are imported from `@koobiq/components/form-field`, `<kbq-password-hint>` and its classes in templates and style sheets, a check of the `passwordStrength` error, `.passwordHints`, `.hasPasswordHint` and `.onKeyDown()` on a form field, every `canCleanerClearByEsc`, and `checkRules()` in a file that uses `KbqInputPassword`.
+`KbqReactivePasswordHint` shows the state it is given: put each rule on the form control as a validator and bind `[hasError]` to its error, for example `control.hasError('minLength')`. It has no counterpart of `[rule]`, `[min]`, `[max]`, `[regex]`, `[checkRule]` or `[viewFormField]`, so place it inside the `kbq-form-field`, which links it to the control through `aria-describedby`. `v21-upgrade` reports the first four where they are imported from `@koobiq/components/form-field`, `<kbq-password-hint>` and its classes in templates and style sheets, a check of the `passwordStrength` error, `.passwordHints`, `.hasPasswordHint` and `.onKeyDown()` on a form field, every `canCleanerClearByEsc`, `checkRules()` in a file that uses `KbqInputPassword`, and `connectTo()` in a file that uses `KbqStepper`.
 
 #### Checkbox and toggle
 
 `KbqCheckbox` and `KbqToggleComponent` no longer implement `ControlValueAccessor`. The `KbqCheckable` host directive has been the value accessor of both, so forms never called their own members; `[(ngModel)]` and `[formControl]` work as before.
 
-| Removed                                           | Use instead                                   | Migration |
-| ------------------------------------------------- | --------------------------------------------- | --------- |
-| `KbqCheckbox` / `KbqToggleComponent.writeValue()` | `checked = !!value`                           | reported  |
-| `.setDisabledState()` of both                     | `disabled = isDisabled`                       | reported  |
-| `.registerOnChange()` of both                     | the `(change)` output                         | reported  |
-| `.registerOnTouched()` of both                    | the `touched` state of the bound form control | reported  |
-| `KbqCheckbox.onTouched`                           | nothing: it was never called                  | reported  |
-| `KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR`             | nothing: `KbqCheckable` registers itself      | reported  |
+| Removed                                                   | Use instead                                   | Migration |
+| --------------------------------------------------------- | --------------------------------------------- | --------- |
+| `KbqCheckbox` / `KbqToggleComponent.writeValue()`         | `checked = !!value`                           | reported  |
+| `.setDisabledState()` of both                             | `disabled = isDisabled`                       | reported  |
+| `.registerOnChange()` of both                             | the `(change)` output                         | reported  |
+| `.registerOnTouched()` of both                            | the `touched` state of the bound form control | reported  |
+| `KbqCheckbox.onTouched`                                   | nothing: it was never called                  | reported  |
+| `KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR`                     | nothing: `KbqCheckable` registers itself      | reported  |
+| `TransitionCheckState` from `@koobiq/components/checkbox` | the same enum from `@koobiq/components/core`  | rewritten |
 
-`v21-upgrade` reports these uses in a file that names either class or its tag, except calls on `this`. A call that has to stay can go to the host directive: `viewChild(KbqCheckbox, { read: KbqCheckable })`, with `KbqCheckable` from `@koobiq/components/core`.
+`v21-upgrade` reports these uses in a file that names either class or its tag, except calls on `this`. A call that has to stay can go to the host directive: `viewChild(KbqCheckbox, { read: KbqCheckable })`, with `KbqCheckable` from `@koobiq/components/core`. It moves `TransitionCheckState` from the checkbox import into the core one, and reports it imported under an alias, re-exported or read through a namespace import of the checkbox.
 
 #### Navbar, ellipsis center and description list
 
@@ -626,6 +641,19 @@ The trigger inputs without the `kbqPopover` prefix are removed from `KbqPopoverT
 
 `v21-upgrade` rewrites bindings, static and valueless attributes only on an element that carries `kbqPopover` or `kbqPopoverConfirm`: other components, such as the dropdown and the select, have inputs of the same names. It reports a `hostDirectives` entry of `KbqPopoverTrigger` that exposes a removed input; expose the prefixed one instead, for example `'kbqPopoverHasBackdrop: hasBackdrop'`.
 
+#### Styles and theming
+
+| Removed                                                                                                     | Use instead                                                                                                  | Migration                          |
+| ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ | ---------------------------------- |
+| the arguments of `koobiq-theme()`, `koobiq-typography()` and `kbq-core-theme()`                             | nothing: they were ignored                                                                                   | removed; with nested `()` reported |
+| `kbq-contrast()`, `kbq-palette()`, `kbq-color()`                                                            | the CSS variables of the theme, for example `var(--kbq-foreground-contrast)`                                 | reported                           |
+| `kbq-typography-config()`                                                                                   | the `--kbq-typography-*` CSS variables                                                                       | reported                           |
+| `@koobiq/components/core/styles/tokens`                                                                     | the modules it forwarded: `@koobiq/design-tokens/web/variables`, `palette`, `typography` and `md-typography` | reported                           |
+| `prebuilt-themes/light-theme.css`, `prebuilt-themes/dark-theme.css`                                         | `prebuilt-themes/theme.css`                                                                                  | rewritten                          |
+| the `md-h1`…`md-h6`, `md-body`, `md-body-mono`, `md-caption`, `md-table-cell` and `md-table-header` classes | the `kbq-md-` class of the same name, for example `kbq-md-h1`                                                | rewritten, reported                |
+
+The light and dark files were copies of `theme.css`, which holds both themes. `v21-upgrade` rewrites them in style sheets, code, templates and the `styles` of `angular.json`, and keeps a single `theme.css` where both were loaded. A theme map built only to pass to `koobiq-theme()`, such as `kbq-light-theme($tokens)`, can go along with the argument. The markdown classes are rewritten in `class` attributes, `[class.…]` bindings and selectors; in any other string, such as `classList.add('md-h1')` or `[ngClass]`, they are reported.
+
 #### Tag input
 
 Validation belongs to the `<kbq-tag-list>` control, so the validation members of the tag input are removed. A `[formControl]` or `[ngModel]` bound to `<input kbqTagInputFor>` keeps working: `kbqAutocomplete` drives the input through it.
@@ -637,6 +665,25 @@ Validation belongs to the `<kbq-tag-list>` control, so the validation members of
 | `KbqTagTextControl.ngControl`     | nothing: the library never read it                                            | —         |
 
 `v21-upgrade` reports these uses in a file that names `KbqTagInput` or binds its `exportAs`, except on `this`, and a subclass of `KbqTagInput` that mentions either member. `KbqTagTextControl` is not exported, and a control passed to `KbqTagList.registerInput()` that still declares `ngControl` keeps compiling: the member was optional.
+
+#### Toast container
+
+| Removed                                          | Use instead                                                               | Migration |
+| ------------------------------------------------ | ------------------------------------------------------------------------- | --------- |
+| `--kbq-toast-stack-size-margin-top`              | `--kbq-toast-stack-size-margin-vertical`                                  | rewritten |
+| `--kbq-toast-stack-size-margin-right`            | `--kbq-toast-stack-size-margin-horizontal`                                | rewritten |
+| `KbqToastContainerComponent.dispatchScrollEvent` | nothing: the container reports its own reflow through `elementScrolled()` | reported  |
+
+The removed properties already set both edges: `-top` also set the bottom margin of a stack at the bottom, and `-right` the left margin of a stack on the left. `v21-upgrade` renames them in style sheets, templates and code, and reports a file that declares both a removed and a new name: the new one used to win, after the rename the cascade decides.
+
+#### Tree option
+
+| Removed                                                      | Use instead                                    | Migration |
+| ------------------------------------------------------------ | ---------------------------------------------- | --------- |
+| `KbqTreeOptionChange.isUserInput`                            | nothing: the tree never set it, it was `false` | reported  |
+| the second argument of the `KbqTreeOptionChange` constructor | nothing: `new KbqTreeOptionChange(option)`     | reported  |
+
+A check of `isUserInput` on a tree option change never passed: delete it with the branch it guarded. `v21-upgrade` reports `.isUserInput` in a file that names `KbqTreeOptionChange`, `$event.isUserInput` bound to an output of `<kbq-tree-option>`, and a second argument passed to the constructor or to `super()` in a subclass. The `isUserInput` of `KbqOptionSelectionChange` and of `KbqTreeSelectChange` stays.
 
 #### Running the migration
 

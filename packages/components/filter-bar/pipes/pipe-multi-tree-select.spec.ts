@@ -1040,9 +1040,9 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
 
             const select = getPipeComponent().select();
 
-            // `KbqTreeSelect.clearValue()` empties the selection model directly, bypassing the pipe's
-            // `onClear()` and taking the locked values with it — hence no `KbqCleaner` in the
-            // template, which is what leaves `canShowCleaner` permanently false.
+            // A `KbqCleaner` clears through `KbqTreeSelect.clear()`, which deselects on the selection model
+            // directly, bypassing the pipe's `onClear()` — hence no `KbqCleaner` in the template, which is
+            // what leaves `canShowCleaner` permanently false.
             expect(select.cleaner()).toBeUndefined();
             expect(select.canShowCleaner).toBe(false);
         });

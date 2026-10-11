@@ -137,8 +137,6 @@ export class KbqToastContainerComponent extends CdkScrollable {
     createTemplate(data: KbqToastData, template: TemplateRef<any>, onTop: boolean): EmbeddedViewRef<KbqToastTemplateContext>;
     // (undocumented)
     createToast<C>(data: KbqToastData, componentType: Type<C>, onTop: boolean): ComponentRef<C>;
-    // @deprecated
-    dispatchScrollEvent: () => void;
     elementScrolled(): Observable<Event>;
     // (undocumented)
     getInjector(data: KbqToastData): Injector;

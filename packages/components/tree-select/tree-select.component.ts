@@ -112,12 +112,6 @@ export type KbqTreeSelectTriggerValue = {
     viewValue: string;
 };
 
-/**
- * Tree select panel width type.
- * @deprecated Use `KbqPanelWidth` from `@koobiq/components/core` instead.
- */
-export type KbqTreeSelectPanelWidth = KbqPanelWidth;
-
 /** Options for the `kbq-tree-select` that can be configured using the `KBQ_TREE_SELECT_OPTIONS` injection token. */
 export type KbqTreeSelectOptions = Partial<{
     /**
@@ -1169,24 +1163,6 @@ export class KbqTreeSelect
 
         this.onChange(this.selectedValues);
         this.selectionChange.emit(new KbqTreeSelectChange(this, null, false, targets));
-    }
-
-    /**
-     * Clears the current selection.
-     * @deprecated Activate the projected `KbqCleaner` instead.
-     * @docs-private
-     */
-    clearValue(event: Event): void {
-        const cleaner = this.cleaner();
-
-        if (cleaner) {
-            cleaner.clear(event);
-        } else {
-            event.stopPropagation();
-            event.preventDefault();
-            this.clear();
-            this.focus();
-        }
     }
 
     /**

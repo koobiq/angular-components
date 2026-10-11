@@ -54,7 +54,6 @@ import {
     TAB,
     ThemePalette,
     UP_ARROW,
-    createFakeEvent,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
@@ -893,6 +892,8 @@ class MultiTreeSelectWithClearPredicate {
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
+
+                <kbq-cleaner />
             </kbq-tree-select>
         </kbq-form-field>
     `
@@ -3677,12 +3678,16 @@ describe('KbqTreeSelect', () => {
             expect(fixture.componentInstance.selectionChangeListener).toHaveBeenCalled();
         });
 
-        it('should emit an event on clearValue', async () => {
+        it('should emit an event when the cleaner clears the value', async () => {
+            fixture.componentInstance.treeSelect().writeValue('rootNode_1');
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
             expect(fixture.componentInstance.selectionChangeListener).not.toHaveBeenCalled();
 
-            fixture.componentInstance.treeSelect().clearValue(createFakeEvent('click'));
+            fixture.debugElement.query(By.directive(KbqCleaner)).nativeElement.click();
 
-            expect(fixture.componentInstance.selectionChangeListener).toHaveBeenCalled();
+            expect(fixture.componentInstance.selectionChangeListener).toHaveBeenCalledTimes(1);
         });
         // todo эта проверка для ситуации когда нельзя снять выделение с элемента,
         // но для этого требуется реализация параметра noUnselect, поэтому пока этот TC добавлен в исключения.

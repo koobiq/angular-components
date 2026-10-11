@@ -511,7 +511,15 @@ ng g @koobiq/components:v21-upgrade --project "<your project>"
 
 ### Удаление устаревших API (21.0.0)
 
-API, которые были помечены к удалению в следующем мажорном релизе, удалены в 21.0.0. Переименованный член или псевдоним переписывает схематик `v21-upgrade`; об остальном он сообщает с указанием файла и замены.
+API, устаревшие в 20.x, удалены в 21.0.0: и те, чья пометка обещала удаление в следующем мажорном релизе, и те, что были помечены без срока. Переименованный член или псевдоним переписывает схематик `v21-upgrade`; об остальном он сообщает с указанием файла и замены.
+
+#### Accordion
+
+| Удалено                               | Что использовать                                                                        | Миграция   |
+| ------------------------------------- | --------------------------------------------------------------------------------------- | ---------- |
+| класс `kbq-accordion-trigger__action` | элемент `kbq-accordion-header__actions` рядом с триггером внутри `kbq-accordion-header` | сообщается |
+
+Действие внутри триггера — это фокусируемый элемент внутри `role="button"`, поэтому действия выносятся из триггера — см. [Интерактивные элементы](/ru/components/accordion/overview#интерактивные-элементы). `v21-upgrade` сообщает о классе в шаблонах, стилях и коде.
 
 #### Code block и icon button
 
@@ -545,13 +553,17 @@ API, которые были помечены к удалению в следу�
 
 #### Dropdown и select
 
-| Удалено                                                       | Что использовать                                                                                         | Миграция   |
-| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | ---------- |
-| `KbqDropdown.triggerWidth`, `KbqDropdownPanel.triggerWidth`   | `KbqDropdownTrigger.widthOrigin` — чтобы панель совпадала по ширине не с триггером, а с другим элементом | сообщается |
-| `offsetY` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect` | CSS-переменная `--kbq-connected-overlay-gap` на `:root` или на панели оверлея                            | сообщается |
-| `AUTOCOMPLETE_PANEL_HEIGHT`                                   | своя константа: высоту панели ограничивает `--kbq-autocomplete-size-panel-max-height`                    | сообщается |
+| Удалено                                                            | Что использовать                                                                                         | Миграция       |
+| ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------- | -------------- |
+| `KbqDropdown.triggerWidth`, `KbqDropdownPanel.triggerWidth`        | `KbqDropdownTrigger.widthOrigin` — чтобы панель совпадала по ширине не с триггером, а с другим элементом | сообщается     |
+| `offsetY` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`      | CSS-переменная `--kbq-connected-overlay-gap` на `:root` или на панели оверлея                            | сообщается     |
+| `AUTOCOMPLETE_PANEL_HEIGHT`                                        | своя константа: высоту панели ограничивает `--kbq-autocomplete-size-panel-max-height`                    | сообщается     |
+| `DropdownPositionX` / `DropdownPositionY`                          | `KbqDropdownPositionX` / `KbqDropdownPositionY`                                                          | переписывается |
+| `KbqSelectPanelWidth`, `KbqTreeSelectPanelWidth`                   | `KbqPanelWidth` из `@koobiq/components/core`                                                             | переписывается |
+| `clearValue()` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect` | вложенный `<kbq-cleaner />`; из кода — сброс привязанного контрола формы                                 | сообщается     |
+| класс `kbq-dropdown__group-header_small`                           | `<kbq-optgroup label="…" />`, `KbqOptgroup` из `@koobiq/components/core`                                 | сообщается     |
 
-Ни один из них не был входом, поэтому в шаблонах они не привязываются, и действовал только `offsetY` у `kbq-timezone-select`: он сдвигал панель. `v21-upgrade` сообщает о `.triggerWidth` в файле, где используется dropdown, о `triggerWidth` в реализации `KbqDropdownPanel`, о `.offsetY` в файле, где используется один из селектов, и о поле `offsetY` в их наследнике; вход `offsetY` у `KbqDropdownTrigger` остаётся.
+Ни один из удалённых членов не был входом, поэтому в шаблонах они не привязываются, а из `triggerWidth`, `offsetY` и `AUTOCOMPLETE_PANEL_HEIGHT` действовал только `offsetY` у `kbq-timezone-select`: он сдвигал панель. `v21-upgrade` сообщает о `.triggerWidth` в файле, где используется dropdown, о `triggerWidth` в реализации `KbqDropdownPanel`, о `.offsetY` в файле, где используется один из селектов, и о поле `offsetY` в их наследнике; вход `offsetY` у `KbqDropdownTrigger` остаётся. Типы позиций миграция переименовывает в файле, где упомянут `@koobiq/components/dropdown`, а типы ширины панели переводит на импорт из ядра; о типах позиций в других файлах, об импорте под псевдонимом и о реэкспорте она сообщает. О `.clearValue` она сообщает в файле, где используется один из селектов, кроме вызовов на `this` и на form field, у которого `clearValue()` остаётся; как и cleaner, метод оставлял выбранными опции, которые сохраняет `clearPredicate`, а сброс контрола снимает все. `<kbq-optgroup>` рисует подзаголовок удалённого модификатора внутри dropdown; сам `kbq-dropdown__group-header` остаётся.
 
 #### Filter bar
 
@@ -560,8 +572,9 @@ API, которые были помечены к удалению в следу�
 | `KbqFilterBarRefresher`               | `KbqFilterRefresher`                                                                                        | переписывается                            |
 | `KbqFilterBar.changes`                | чтение `filter()` внутри `effect()` или выход `(filterChange)`: из `changes` ничего не приходило            | сообщается                                |
 | `KbqPipeMinWidth` (`kbqPipeMinWidth`) | ничего: пайп раскладывает имя и значение по сжимаемым колонкам сетки, и короткая часть и так остаётся целой | удаляется; о других обращениях сообщается |
+| `KbqPipe.required`                    | `cleanable: false` и `removable: false`: `KbqFilterBar` никогда не читал `required`                         | сообщается                                |
 
-`v21-upgrade` сообщает о `.changes` в файле, где упомянут `KbqFilterBar`. Он удаляет `KbqPipeMinWidth` из импорта `@koobiq/components/filter-bar` и из массивов `imports`, а атрибут `kbqPipeMinWidth` — из шаблонов, и сообщает об остальных обращениях к директиве.
+`v21-upgrade` сообщает о `.changes` в файле, где упомянут `KbqFilterBar`. Он удаляет `KbqPipeMinWidth` из импорта `@koobiq/components/filter-bar` и из массивов `imports`, а атрибут `kbqPipeMinWidth` — из шаблонов, и сообщает об остальных обращениях к директиве. Он сообщает о чтении `data.required` в своём пайпе, а о ключе `required` — только в объектном литерале, где есть и `cleanable`, `removable` или `type: KbqPipeTypes.…`: ключи `required` конфигураций форм и валидаторов в том же файле не затрагиваются.
 
 #### Form field
 
@@ -576,23 +589,25 @@ API, которые были помечены к удалению в следу�
 | `KbqInputPassword.checkRules()` / `.checkRule`                 | `control.updateValueAndValidity()` после замены валидаторов               | сообщается |
 | `KbqFormField.canCleanerClearByEsc`                            | ничего: свойство не использовалось                                        | сообщается |
 | `KbqFormField.onKeyDown()`                                     | ничего: метод ничего не делал                                             | сообщается |
+| `KbqStepper.connectTo()`                                       | ничего: `KbqStepper` сам находит числовое поле в своём `kbq-form-field`   | сообщается |
 
-`KbqReactivePasswordHint` показывает то состояние, которое ему передали: задайте каждое правило как валидатор контрола и привяжите `[hasError]` к его ошибке, например `control.hasError('minLength')`. Аналогов `[rule]`, `[min]`, `[max]`, `[regex]`, `[checkRule]` и `[viewFormField]` у него нет, поэтому размещайте подсказку внутри `kbq-form-field` — так поле связывает её с контролом через `aria-describedby`. `v21-upgrade` сообщает о первых четырёх API там, где они импортированы из `@koobiq/components/form-field`, о `<kbq-password-hint>` и его классах в шаблонах и стилях, о проверке ошибки `passwordStrength`, о `.passwordHints`, `.hasPasswordHint` и `.onKeyDown()` у поля формы, о каждом `canCleanerClearByEsc` и о `checkRules()` в файле, где используется `KbqInputPassword`.
+`KbqReactivePasswordHint` показывает то состояние, которое ему передали: задайте каждое правило как валидатор контрола и привяжите `[hasError]` к его ошибке, например `control.hasError('minLength')`. Аналогов `[rule]`, `[min]`, `[max]`, `[regex]`, `[checkRule]` и `[viewFormField]` у него нет, поэтому размещайте подсказку внутри `kbq-form-field` — так поле связывает её с контролом через `aria-describedby`. `v21-upgrade` сообщает о первых четырёх API там, где они импортированы из `@koobiq/components/form-field`, о `<kbq-password-hint>` и его классах в шаблонах и стилях, о проверке ошибки `passwordStrength`, о `.passwordHints`, `.hasPasswordHint` и `.onKeyDown()` у поля формы, о каждом `canCleanerClearByEsc`, о `checkRules()` в файле, где используется `KbqInputPassword`, и о `connectTo()` в файле, где используется `KbqStepper`.
 
 #### Checkbox и toggle
 
 `KbqCheckbox` и `KbqToggleComponent` больше не реализуют `ControlValueAccessor`. У обоих его уже реализовывала хост-директива `KbqCheckable`, поэтому формы их собственные члены не вызывали; `[(ngModel)]` и `[formControl]` работают как прежде.
 
-| Удалено                                           | Что использовать                          | Миграция   |
-| ------------------------------------------------- | ----------------------------------------- | ---------- |
-| `KbqCheckbox` / `KbqToggleComponent.writeValue()` | `checked = !!value`                       | сообщается |
-| `.setDisabledState()` у обоих                     | `disabled = isDisabled`                   | сообщается |
-| `.registerOnChange()` у обоих                     | выход `(change)`                          | сообщается |
-| `.registerOnTouched()` у обоих                    | состояние `touched` привязанного контрола | сообщается |
-| `KbqCheckbox.onTouched`                           | ничего: он никогда не вызывался           | сообщается |
-| `KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR`             | ничего: `KbqCheckable` регистрируется сам | сообщается |
+| Удалено                                                 | Что использовать                                | Миграция       |
+| ------------------------------------------------------- | ----------------------------------------------- | -------------- |
+| `KbqCheckbox` / `KbqToggleComponent.writeValue()`       | `checked = !!value`                             | сообщается     |
+| `.setDisabledState()` у обоих                           | `disabled = isDisabled`                         | сообщается     |
+| `.registerOnChange()` у обоих                           | выход `(change)`                                | сообщается     |
+| `.registerOnTouched()` у обоих                          | состояние `touched` привязанного контрола       | сообщается     |
+| `KbqCheckbox.onTouched`                                 | ничего: он никогда не вызывался                 | сообщается     |
+| `KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR`                   | ничего: `KbqCheckable` регистрируется сам       | сообщается     |
+| `TransitionCheckState` из `@koobiq/components/checkbox` | то же перечисление из `@koobiq/components/core` | переписывается |
 
-`v21-upgrade` сообщает о таких обращениях в файле, где упомянут любой из классов или его тег, кроме вызовов на `this`. Если вызов нужно сохранить, его можно адресовать хост-директиве: `viewChild(KbqCheckbox, { read: KbqCheckable })`, где `KbqCheckable` берётся из `@koobiq/components/core`.
+`v21-upgrade` сообщает о таких обращениях в файле, где упомянут любой из классов или его тег, кроме вызовов на `this`. Если вызов нужно сохранить, его можно адресовать хост-директиве: `viewChild(KbqCheckbox, { read: KbqCheckable })`, где `KbqCheckable` берётся из `@koobiq/components/core`. `TransitionCheckState` он переносит из импорта `@koobiq/components/checkbox` в импорт `@koobiq/components/core`, а об импорте под другим именем, реэкспорте и чтении через импорт пространства имён чекбокса сообщает.
 
 #### Navbar, ellipsis center и description list
 
@@ -626,6 +641,19 @@ API, которые были помечены к удалению в следу�
 
 `v21-upgrade` переписывает привязки, статические атрибуты и атрибуты без значения только на элементе с `kbqPopover` или `kbqPopoverConfirm`: у других компонентов, например у dropdown и select, есть входы с теми же именами. Он сообщает о записи `hostDirectives` с `KbqPopoverTrigger`, которая открывает удалённый вход; открывайте вместо него вход с префиксом, например `'kbqPopoverHasBackdrop: hasBackdrop'`.
 
+#### Стили и темы
+
+| Удалено                                                                                              | Что использовать                                                                                                 | Миграция                                |
+| ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | --------------------------------------- |
+| аргументы `koobiq-theme()`, `koobiq-typography()` и `kbq-core-theme()`                               | ничего: они игнорировались                                                                                       | удаляются; с вложенными `()` сообщается |
+| `kbq-contrast()`, `kbq-palette()`, `kbq-color()`                                                     | CSS-переменные темы, например `var(--kbq-foreground-contrast)`                                                   | сообщается                              |
+| `kbq-typography-config()`                                                                            | CSS-переменные `--kbq-typography-*`                                                                              | сообщается                              |
+| `@koobiq/components/core/styles/tokens`                                                              | модули, которые он пробрасывал: `@koobiq/design-tokens/web/variables`, `palette`, `typography` и `md-typography` | сообщается                              |
+| `prebuilt-themes/light-theme.css`, `prebuilt-themes/dark-theme.css`                                  | `prebuilt-themes/theme.css`                                                                                      | переписывается                          |
+| классы `md-h1`…`md-h6`, `md-body`, `md-body-mono`, `md-caption`, `md-table-cell` и `md-table-header` | класс `kbq-md-` с тем же именем, например `kbq-md-h1`                                                            | переписывается, сообщается              |
+
+Светлый и тёмный файлы были копиями `theme.css`, в котором есть обе темы. `v21-upgrade` переписывает их в таблицах стилей, коде, шаблонах и `styles` в `angular.json` и оставляет один `theme.css` там, где подключались оба. Карту темы, собранную только для передачи в `koobiq-theme()`, например `kbq-light-theme($tokens)`, можно удалить вместе с аргументом. Классы markdown переписываются в атрибутах `class`, привязках `[class.…]` и селекторах; о любой другой строке, например `classList.add('md-h1')` или `[ngClass]`, схематик сообщает.
+
 #### Tag input
 
 Валидация принадлежит контролу `<kbq-tag-list>`, поэтому члены поля ввода тегов, связанные с валидацией, удалены. `[formControl]` или `[ngModel]` на `<input kbqTagInputFor>` работают как прежде: через них `kbqAutocomplete` управляет полем ввода.
@@ -637,6 +665,25 @@ API, которые были помечены к удалению в следу�
 | `KbqTagTextControl.ngControl`     | ничего: библиотека его не читала                                                              | —          |
 
 `v21-upgrade` сообщает о таких обращениях в файле, где упомянут `KbqTagInput` или привязан его `exportAs`, кроме обращений на `this`, а также о наследнике `KbqTagInput`, который упоминает любой из этих членов. `KbqTagTextControl` не экспортируется, а контрол, который передаётся в `KbqTagList.registerInput()` и по-прежнему объявляет `ngControl`, компилируется: свойство было необязательным.
+
+#### Контейнер toast
+
+| Удалено                                          | Что использовать                                                              | Миграция       |
+| ------------------------------------------------ | ----------------------------------------------------------------------------- | -------------- |
+| `--kbq-toast-stack-size-margin-top`              | `--kbq-toast-stack-size-margin-vertical`                                      | переписывается |
+| `--kbq-toast-stack-size-margin-right`            | `--kbq-toast-stack-size-margin-horizontal`                                    | переписывается |
+| `KbqToastContainerComponent.dispatchScrollEvent` | ничего: контейнер сам сообщает о перестроении стека через `elementScrolled()` | сообщается     |
+
+Удалённые свойства и раньше задавали оба края: `-top` задавал и нижний отступ стека внизу экрана, а `-right` — левый отступ стека слева. `v21-upgrade` переименовывает их в стилях, шаблонах и коде и сообщает о файле, где объявлены и удалённое, и новое имя: раньше побеждало новое, после переименования всё решает каскад.
+
+#### Tree option
+
+| Удалено                                            | Что использовать                                      | Миграция   |
+| -------------------------------------------------- | ----------------------------------------------------- | ---------- |
+| `KbqTreeOptionChange.isUserInput`                  | ничего: дерево его не задавало, значение было `false` | сообщается |
+| второй аргумент конструктора `KbqTreeOptionChange` | ничего: `new KbqTreeOptionChange(option)`             | сообщается |
+
+Проверка `isUserInput` у события опции дерева никогда не проходила: удалите её вместе с веткой, которую она охраняла. `v21-upgrade` сообщает о `.isUserInput` в файле, где упомянут `KbqTreeOptionChange`, о `$event.isUserInput` в привязке к выходу `<kbq-tree-option>` и о втором аргументе конструктора или вызова `super()` в наследнике. `isUserInput` у `KbqOptionSelectionChange` и у `KbqTreeSelectChange` остаётся.
 
 #### Запуск миграции
 

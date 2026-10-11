@@ -12,19 +12,9 @@ import { KbqDropdownItem } from './dropdown-item.component';
 
 /** Position of the dropdown panel along the x-axis. */
 export type KbqDropdownPositionX = 'before' | 'after' | 'center';
-/**
- * @deprecated Use `KbqDropdownPositionX` instead.
- * @docs-private
- */
-export type DropdownPositionX = KbqDropdownPositionX;
 
 /** Position of the dropdown panel along the y-axis. */
 export type KbqDropdownPositionY = 'above' | 'below';
-/**
- * @deprecated Use `KbqDropdownPositionY` instead.
- * @docs-private
- */
-export type DropdownPositionY = KbqDropdownPositionY;
 
 /** Reason why the menu was closed. */
 export type DropdownCloseReason = void | 'click' | 'keydown' | 'tab';

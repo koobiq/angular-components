@@ -122,8 +122,6 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     readonly cleaner: _angular_core.Signal<KbqCleaner | undefined>;
     clear(): void;
     readonly clearPredicate: _angular_core.InputSignalWithTransform<(option: KbqOptionBase) => boolean, (option: KbqOptionBase) => boolean>;
-    // @deprecated
-    clearValue(event: Event): void;
     close(): void;
     readonly closedOutput: _angular_core.OutputRef<void>;
     readonly closedStream: Observable<void>;
@@ -375,9 +373,6 @@ export type KbqSelectOptions = Partial<{
 
 // @public
 export const kbqSelectOptionsProvider: (options: KbqSelectOptions) => Provider;
-
-// @public @deprecated
-export type KbqSelectPanelWidth = KbqPanelWidth;
 
 // @public
 export const minimumTimeToDisplayLoading = 300;
