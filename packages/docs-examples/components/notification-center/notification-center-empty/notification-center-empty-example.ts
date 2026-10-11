@@ -13,6 +13,7 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNotificationCenterModule, KbqNotificationCenterService } from '@koobiq/components/notification-center';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
+import { injectExampleText } from '../localized-data';
 
 type ExampleAction = {
     id: string;
@@ -63,6 +64,8 @@ enum NavbarIcItems {
 export class NotificationCenterEmptyExample {
     readonly notificationService = inject(KbqNotificationCenterService);
 
+    protected readonly text = injectExampleText();
+
     private readonly themeService = inject(KbqThemeService, { optional: true });
     protected readonly currentTheme = computed(() => this.themeService?.colorScheme() ?? 'light');
 
@@ -85,12 +88,12 @@ export class NotificationCenterEmptyExample {
     protected items = NavbarIcItems;
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
 
-    protected readonly actions: ExampleAction[] = [
+    protected readonly actions = computed<ExampleAction[]>(() => [
         {
             id: '1',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Filled,
-            text: 'Primary Action'
+            text: this.text().primaryAction
         },
         {
             id: '2',
@@ -98,7 +101,7 @@ export class NotificationCenterEmptyExample {
             style: KbqButtonStyles.Transparent,
             icon: 'kbq-ellipsis-horizontal_16'
         }
-    ];
+    ]);
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;

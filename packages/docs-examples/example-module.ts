@@ -4280,7 +4280,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-empty-example.ts",
       "notification-center-empty-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-empty-example",
     "primaryFile": "notification-center-empty-example.ts",
     "importPath": "components/notification-center"
@@ -4293,7 +4295,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-error-example.ts",
       "notification-center-error-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-error-example",
     "primaryFile": "notification-center-error-example.ts",
     "importPath": "components/notification-center"
@@ -4306,7 +4310,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-infinite-scroll-example.ts",
       "notification-center-infinite-scroll-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-infinite-scroll-example",
     "primaryFile": "notification-center-infinite-scroll-example.ts",
     "importPath": "components/notification-center"
@@ -4319,7 +4325,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-overview-example.ts",
       "notification-center-overview-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-overview-example",
     "primaryFile": "notification-center-overview-example.ts",
     "importPath": "components/notification-center"
@@ -4332,7 +4340,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-popover-example.ts",
       "notification-center-popover-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-popover-example",
     "primaryFile": "notification-center-popover-example.ts",
     "importPath": "components/notification-center"
@@ -4345,7 +4355,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-push-example.ts",
       "notification-center-push-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-push-example",
     "primaryFile": "notification-center-push-example.ts",
     "importPath": "components/notification-center"
