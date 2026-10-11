@@ -10,7 +10,7 @@ import {
     Injectable,
     TemplateRef,
     Type,
-    ViewChild
+    viewChild
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -1183,7 +1183,6 @@ describe('KbqTitleDirective', () => {
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title>Hello World</div>
     `
@@ -1192,7 +1191,6 @@ class SimpleTitleComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title></div>
     `
@@ -1201,7 +1199,6 @@ class EmptyTitleComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title [kbqTooltipDisabled]="tooltipDisabled">Hello World</div>
     `
@@ -1212,7 +1209,6 @@ class ExplicitlyDisabledTitleComponent {
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title><span>Some text</span></div>
     `
@@ -1221,7 +1217,6 @@ class ElementChildTitleComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title>
             <div #kbqTitleContainer class="container-el">
@@ -1234,7 +1229,6 @@ class WithRefsTitleComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <button kbq-title>Focus me</button>
     `
@@ -1243,7 +1237,6 @@ class FocusTitleComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title>{{ text }}</div>
     `
@@ -1254,7 +1247,6 @@ class ContentObserverTitleComponent {
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div class="parent" id="overflow-text" kbq-title>
             {{ longValue }}
@@ -1287,7 +1279,6 @@ class OverflowTooltipTitleComponent {
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div id="complex-overflow" kbq-title>
             <div #kbqTitleContainer class="parent">
@@ -1339,7 +1330,6 @@ class ComplexTooltipTitleComponent {
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title class="vertical-overflow">
             {{ longValue }}
@@ -1364,19 +1354,21 @@ class VerticalOverflowTooltipTitleComponent {
 
 @Component({
     selector: 'title-text-ref-host',
-    standalone: true,
     template: `
         <span #kbqTitleTextInner class="text-ref-inner">Inner ref text</span>
     `,
     providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: TitleTextRefHostComponent }]
 })
 class TitleTextRefHostComponent implements KbqTitleTextRef {
-    @ViewChild('kbqTitleTextInner', { static: true }) textElement: ElementRef;
+    private readonly textElementQuery = viewChild.required<ElementRef>('kbqTitleTextInner');
+
+    get textElement(): ElementRef {
+        return this.textElementQuery();
+    }
 }
 
 @Component({
     imports: [KbqTitleDirective, TitleTextRefHostComponent],
-    standalone: true,
     template: `
         <title-text-ref-host kbq-title />
     `
@@ -1385,7 +1377,6 @@ class TitleTextRefHostWrapperComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div id="tpl-overflow" [kbq-title]="tooltipTpl">
             <span #kbqTitleText class="tpl-text">{{ longValue }}</span>
@@ -1402,7 +1393,6 @@ class TemplateContentTitleComponent {
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div [kbq-title]="'Explicit tooltip'">Hello World</div>
     `
@@ -1411,7 +1401,6 @@ class StringContentTitleComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title>
             <span #kbqTitleText class="child-name">Name</span>
@@ -1423,7 +1412,6 @@ class MultiChildTitleComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div [kbq-title]="tooltipText">Hello World</div>
     `
@@ -1434,7 +1422,6 @@ class BoundContentTitleComponent {
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title [kbqPlacementPriority]="['bottom']">Hello World</div>
     `
@@ -1443,7 +1430,6 @@ class ExplicitPriorityTitleComponent {}
 
 @Component({
     imports: [KbqTitleDirective],
-    standalone: true,
     template: `
         <div kbq-title [kbqPlacement]="'left'">Hello World</div>
     `

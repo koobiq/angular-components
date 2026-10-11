@@ -192,9 +192,9 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     }
 })
 export class E2eInputStateAndStyle {
-    inputValue = signal('Input Value');
-    inputMonoValue = signal('P@a$$w0rd');
-    inputNumberValue = signal(123456);
+    readonly inputValue = signal('Input Value');
+    readonly inputMonoValue = signal('P@a$$w0rd');
+    readonly inputNumberValue = signal(123456);
     keyboardValue: number | null = null;
     errorStateMatcher = (state: ('error' | string)[]): ErrorStateMatcher => new CustomErrorStateMatcher(state);
 

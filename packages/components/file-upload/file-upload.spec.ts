@@ -2490,7 +2490,7 @@ class BasicSingleFileUpload {
     disabled: boolean;
     file: KbqFileItem | null;
     accept: string[] = [];
-    fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
+    readonly fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
 
     onChange = vi.fn().mockImplementation((file: KbqFileItem) => {
         this.file = file;
@@ -2541,8 +2541,8 @@ class BasicMultipleFileUpload {
     readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
     disabled: boolean;
     files: KbqFileItem[];
-    fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
-    addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
+    readonly fullScreenDropZone = signal<KbqDropzoneData | boolean | undefined>(undefined);
+    readonly addStrategy = signal<KbqFileUploadAddStrategyValues>(KbqFileUploadAddStrategy.Concat);
 
     onChange = vi.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
@@ -2733,8 +2733,8 @@ class TwoWayBindingSingleFileUpload {
     `
 })
 class TestLocalDropzone {
-    multipleFileUpload = viewChild.required(KbqMultipleFileUploadComponent);
-    singleFileUpload = viewChild.required(KbqSingleFileUploadComponent);
+    readonly multipleFileUpload = viewChild.required(KbqMultipleFileUploadComponent);
+    readonly singleFileUpload = viewChild.required(KbqSingleFileUploadComponent);
     connectedComponent?: KbqSingleFileUploadComponent | KbqMultipleFileUploadComponent;
 }
 

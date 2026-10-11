@@ -1,4 +1,4 @@
-import { Component, DebugElement, Inject, Type, inject, viewChild, viewChildren } from '@angular/core';
+import { Component, DebugElement, Type, inject, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -19,7 +19,6 @@ import {
     DateAdapter,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
-    KbqLocaleService,
     LEFT_ARROW,
     ONE,
     SPACE,
@@ -955,7 +954,7 @@ describe(KbqTimepicker.name, () => {
         timeFormat: TimeFormats;
         model: any = null;
 
-        constructor(@Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
+        readonly localeService = inject(KBQ_LOCALE_SERVICE);
     }
 
     describe('with Locale change', () => {
@@ -1022,7 +1021,6 @@ describe(KbqTimepicker.name, () => {
 
     @Component({
         imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule, KbqIconModule],
-        standalone: true,
         template: `
             <form [formGroup]="form">
                 <kbq-form-field>
@@ -1041,7 +1039,6 @@ describe(KbqTimepicker.name, () => {
 
     @Component({
         imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
-        standalone: true,
         template: `
             <form [formGroup]="form">
                 <kbq-form-field>
@@ -1224,7 +1221,6 @@ describe(KbqTimepicker.name, () => {
 
     @Component({
         imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
-        standalone: true,
         template: `
             <kbq-form-field>
                 <input kbqTimepicker [formControl]="control" />
