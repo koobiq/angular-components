@@ -377,6 +377,18 @@ the dropdown, then asserts the two items and that none of them is focused before
 recurrence fails on a named state instead of a pixel count. **Verified:** the spec ×30 in Docker
 (240/240).
 
+**Recurred in CI on 2026-10-11**, same 23709 px, after both assertions had passed. The trace has the item
+`cdk-focused cdk-mouse-focused` only in the snapshot of `toHaveScreenshot`, so a `mouseenter` reached it
+during the capture. The page is 234 px tall in a 200 px viewport, and the target, 202 px with its
+border, does not fit either: Chromium captures it by growing the viewport, the page stops being scrolled
+and moves down under the pointer resting on the overflow button. A probe that grew the viewport to
+240 px focused `Action 6`, to 260 px `Action 5`, and to 300 px flipped the dropdown below the trigger;
+whether and how far the capture grows it is what varied between runs.
+
+**Fix:** the viewport is 240 px tall, so the page fits, nothing scrolls and the capture moves nothing.
+The dropdown, no longer offset by the scroll, lands on another fraction of a pixel, so `2-light.png` was
+re-recorded in Docker (58 px of corner anti-aliasing). **Verified:** the spec ×30 in Docker (240/240).
+
 ## Not fixed
 
 - **`tabs › E2eTabsStates › states`** — 1 occurrence, 18769 px by Playwright's count, 27480 raw. The
