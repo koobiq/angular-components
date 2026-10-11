@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { kbqInjectLocaleService } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
  * @title app-switcher
@@ -11,19 +13,33 @@ import { KbqIcon } from '@koobiq/components/icon';
     imports: [
         KbqAppSwitcherModule,
         KbqButtonModule,
-        KbqIcon
+        KbqIcon,
+        KbqToolTipModule
     ],
     template: `
         App: {{ selectedApp.name }}
         <br />
         <br />
-        <button kbq-button aria-label="Apps" kbqAppSwitcher [sites]="sites" [(selectedApp)]="selectedApp">
+        <button
+            kbq-button
+            aria-label="Apps"
+            kbqAppSwitcher
+            [kbqTooltip]="tooltip()"
+            [sites]="sites"
+            [(selectedApp)]="selectedApp"
+        >
             <i kbq-icon="kbq-bento-menu_16"></i>
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppSwitcherOverviewExample {
+    private readonly localeService = kbqInjectLocaleService({ optional: true });
+
+    protected readonly tooltip = computed(() =>
+        this.localeService?.localeId() === 'ru-RU' ? 'Все приложения' : 'All apps'
+    );
+
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"
