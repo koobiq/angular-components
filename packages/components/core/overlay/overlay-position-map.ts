@@ -1,6 +1,7 @@
 import { ConnectionPositionPair, Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 
+/** @internal */
 export const POSITION_MAP: { [key: string]: ConnectionPositionPair } = {
     top: {
         originX: 'center',
@@ -88,6 +89,7 @@ export const POSITION_MAP: { [key: string]: ConnectionPositionPair } = {
     }
 };
 
+/** @internal */
 export const EXTENDED_OVERLAY_POSITIONS = [
     POSITION_MAP.top,
     POSITION_MAP.topLeft,
@@ -103,7 +105,7 @@ export const EXTENDED_OVERLAY_POSITIONS = [
     POSITION_MAP.leftBottom
 ];
 
-export const TOP_POSITION_PRIORITY = [
+const TOP_POSITION_PRIORITY = [
     POSITION_MAP.top,
     POSITION_MAP.bottom,
     POSITION_MAP.right,
@@ -113,7 +115,7 @@ export const TOP_POSITION_PRIORITY = [
     POSITION_MAP.bottomRight
 ];
 
-export const BOTTOM_POSITION_PRIORITY = [
+const BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.bottom,
     POSITION_MAP.top,
     POSITION_MAP.topLeft,
@@ -122,7 +124,7 @@ export const BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.leftBottom
 ];
 
-export const RIGHT_POSITION_PRIORITY = [
+const RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.right,
     POSITION_MAP.left,
     POSITION_MAP.leftTop,
@@ -131,7 +133,7 @@ export const RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.bottom
 ];
 
-export const LEFT_POSITION_PRIORITY = [
+const LEFT_POSITION_PRIORITY = [
     POSITION_MAP.left,
     POSITION_MAP.right,
     POSITION_MAP.rightTop,
@@ -140,7 +142,7 @@ export const LEFT_POSITION_PRIORITY = [
     POSITION_MAP.bottom
 ];
 
-export const RIGHT_TOP_POSITION_PRIORITY = [
+const RIGHT_TOP_POSITION_PRIORITY = [
     POSITION_MAP.rightTop,
     POSITION_MAP.leftTop,
     POSITION_MAP.left,
@@ -149,7 +151,7 @@ export const RIGHT_TOP_POSITION_PRIORITY = [
     POSITION_MAP.bottomLeft
 ];
 
-export const RIGHT_BOTTOM_POSITION_PRIORITY = [
+const RIGHT_BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.rightBottom,
     POSITION_MAP.leftBottom,
     POSITION_MAP.left,
@@ -158,7 +160,7 @@ export const RIGHT_BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.bottomLeft
 ];
 
-export const LEFT_TOP_POSITION_PRIORITY = [
+const LEFT_TOP_POSITION_PRIORITY = [
     POSITION_MAP.leftTop,
     POSITION_MAP.rightTop,
     POSITION_MAP.right,
@@ -167,7 +169,7 @@ export const LEFT_TOP_POSITION_PRIORITY = [
     POSITION_MAP.bottomRight
 ];
 
-export const LEFT_BOTTOM_POSITION_PRIORITY = [
+const LEFT_BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.leftBottom,
     POSITION_MAP.rightBottom,
     POSITION_MAP.right,
@@ -176,7 +178,7 @@ export const LEFT_BOTTOM_POSITION_PRIORITY = [
     POSITION_MAP.bottomRight
 ];
 
-export const TOP_LEFT_POSITION_PRIORITY = [
+const TOP_LEFT_POSITION_PRIORITY = [
     POSITION_MAP.topLeft,
     POSITION_MAP.topRight,
     POSITION_MAP.bottomLeft,
@@ -186,7 +188,7 @@ export const TOP_LEFT_POSITION_PRIORITY = [
     POSITION_MAP.rightBottom
 ];
 
-export const TOP_RIGHT_POSITION_PRIORITY = [
+const TOP_RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.topRight,
     POSITION_MAP.topLeft,
     POSITION_MAP.bottomRight,
@@ -196,7 +198,7 @@ export const TOP_RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.rightBottom
 ];
 
-export const BOTTOM_RIGHT_POSITION_PRIORITY = [
+const BOTTOM_RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.bottomRight,
     POSITION_MAP.bottomLeft,
     POSITION_MAP.topRight,
@@ -206,7 +208,7 @@ export const BOTTOM_RIGHT_POSITION_PRIORITY = [
     POSITION_MAP.rightTop
 ];
 
-export const BOTTOM_LEFT_POSITION_PRIORITY = [
+const BOTTOM_LEFT_POSITION_PRIORITY = [
     POSITION_MAP.bottomLeft,
     POSITION_MAP.bottomRight,
     POSITION_MAP.topLeft,
@@ -216,6 +218,7 @@ export const BOTTOM_LEFT_POSITION_PRIORITY = [
     POSITION_MAP.leftTop
 ];
 
+/** @internal */
 export const POSITION_PRIORITY_STRATEGY = {
     top: TOP_POSITION_PRIORITY,
     topLeft: TOP_LEFT_POSITION_PRIORITY,

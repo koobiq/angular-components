@@ -13,6 +13,7 @@ New versions include improvements but also contain **breaking changes**; they mu
 - **21.0.0**: the move to Angular 21: zoneless change detection, CSS animations instead of `@angular/animations`, and signal inputs, outputs and queries.
 - **21.0.0**: removal of the APIs deprecated before 21.0.0.
 - **21.0.0**: removal of `ThemePalette`.
+- **21.0.0**: removal of the core API nothing in the library used.
 - **21.0.0**: the actions panel overlay container.
 - **21.0.0**: legacy splitter deprecation.
 - **21.0.0**: removal of the overlay demotion mechanism.
@@ -710,6 +711,33 @@ With `--fix false` it only reports what it would change.
 `Error`, `Warning` and `Success` have the same values in both enums, so the rewrite changes nothing on screen. `Primary`, `Secondary` (`Default` is its alias) and `Info` set a `kbq-primary`, `kbq-secondary` or `kbq-info` class that no component styles, so such a component was drawn without its color rules; without a color it takes its default one. `Empty` is `''`, which also falls back to the default color, while `KbqComponentColors.Empty` is `'empty'`, a color of its own: do not swap one for the other.
 
 `v21-upgrade` rewrites the three members and drops the `ThemePalette` import once nothing else names it. It reports every other use in a file that imports `ThemePalette` from `@koobiq/components/core`, including a field that hands the enum to a template.
+
+### Unused core API removal (21.0.0)
+
+`@koobiq/components/core` drops the undocumented exports, members and Sass that nothing in the library used. They were never deprecated: most are leftovers of removed features or implementation details that leaked into the public API.
+
+| Removed                                                                                                            | Use instead                                                                                     | Migration                          |
+| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `POSITION_MAP`, `EXTENDED_OVERLAY_POSITIONS`, `POSITION_PRIORITY_STRATEGY`, the twelve `*_POSITION_PRIORITY` lists | `kbqPlacement` on the trigger; copy a value you need                                            | reported                           |
+| `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`, `isWithin()`       | a value or function of your own                                                                 | reported                           |
+| `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`                                                                              | nothing: `KBQ_SELECT_SCROLL_STRATEGY` has a root default; provide the token itself to change it | reported                           |
+| `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`                                                                             | nothing: `KbqCheckable` registers itself                                                        | reported                           |
+| `KbqHover`                                                                                                         | `(mouseenter)` and `(mouseleave)`, or `:hover`                                                  | reported                           |
+| `CanColor`                                                                                                         | `Signal<KbqComponentColors \| string>`, or `KbqColorDirective`                                  | reported                           |
+| `KbqAnimationCurves`, `KbqAnimationDurations`                                                                      | constants of your own: the library animates in CSS                                              | reported                           |
+| `KbqRectangleItem`, `countGroupLabelsBeforeOption()`                                                               | no replacement                                                                                  | reported                           |
+| `KbqPopUp.warning`, `.markForCheck()`, `.handleBodyInteraction()`                                                  | no replacement: nothing called them                                                             | `handleBodyInteraction()` reported |
+| `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                               | private now: the pipe arguments and the formatters locale configuration                         | reported                           |
+| `KbqFormElement.isRow`                                                                                             | the `kbq-form__row` class of the element                                                        | —                                  |
+| the `mcLine` attribute                                                                                             | `kbq-line`                                                                                      | rewritten                          |
+
+The Sass that goes is reachable only through a deep import, since `@koobiq/components` forwards none of it:
+
+- the modules `core/styles/functions` (its index, `number` and `string`), `typography/typography-utils`, `common/clearfix` and `common/popup`;
+- `kbq-markdown-typography-config()`, the `typography-utils` getters (`kbq-typography-level()`, `kbq-font-size()`…), `popup-params`, `input-placeholder`, `rtl-value()` and `kbq-typography-css-variables`;
+- the timing variables of `core/styles/functions/timing` but `$ease-out-circ`, `$ease-in-out-quad` and `$ease-in-out-circ`.
+
+For typography, use the `--kbq-typography-*` CSS variables or `kbq-typography-level-to-styles-css-variables()` of `core/styles/common/tokens`; copy anything else into your own styles. `v21-upgrade` reports each load and use. The compiled CSS also loses a few prefixes for browsers the library does not support: `-ms-text-size-adjust`, `-ms-overflow-style`, `-moz-` and `-ms-user-select`, the old flexbox `display` values and an `@-moz-document` copy of `.layout-fill`.
 
 ### Actions panel overlay container (21.0.0)
 

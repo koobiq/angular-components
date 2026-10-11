@@ -37,9 +37,71 @@ const THEME_PALETTE: Replacement[] = [
     }
 ];
 
+// The `mcLine` alias of the `kbq-line` attribute, in templates and in selectors written in code.
+const MC_LINE: Replacement = { from: '(?<![\\w-])mcLine(?![\\w-])', to: 'kbq-line' };
+
+/** Undocumented core exports nothing in the library needed, removed in 21.0.0, with what to do instead. */
+const UNUSED_EXPORTS: { symbols: string[]; message: string }[] = [
+    {
+        symbols: [
+            'POSITION_MAP',
+            'EXTENDED_OVERLAY_POSITIONS',
+            'POSITION_PRIORITY_STRATEGY',
+            '\\w+_POSITION_PRIORITY',
+            'ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT',
+            'SELECT_PANEL_VIEWPORT_PADDING',
+            'NUMBER_FORMAT_REGEXP',
+            'isWithin'
+        ],
+        message:
+            'The pop-up position lists (`POSITION_MAP`, `EXTENDED_OVERLAY_POSITIONS`, `POSITION_PRIORITY_STRATEGY`, ' +
+            'the `*_POSITION_PRIORITY` lists), `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, ' +
+            '`SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP` and `isWithin()` are no longer exported: ' +
+            'they are implementation details of the pop-ups, the select and the number pipes. Copy the values ' +
+            'you need; for a pop-up position, set `kbqPlacement` on the trigger.'
+    },
+    {
+        symbols: ['KBQ_SELECT_SCROLL_STRATEGY_PROVIDER'],
+        message:
+            '`KBQ_SELECT_SCROLL_STRATEGY_PROVIDER` was removed: `KBQ_SELECT_SCROLL_STRATEGY` has a root default, ' +
+            'so drop the provider; to change the strategy, provide `KBQ_SELECT_SCROLL_STRATEGY` itself.'
+    },
+    {
+        symbols: ['KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR'],
+        message:
+            '`KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR` is no longer exported: `KbqCheckable` registers itself as the ' +
+            'value accessor, so drop the provider.'
+    },
+    {
+        symbols: ['KbqHover'],
+        message:
+            '`KbqHover` was removed: bind `(mouseenter)` and `(mouseleave)`, or style `:hover`. Its host class ' +
+            '`kbq-hover` forced the hover look of the themes on every host.'
+    },
+    {
+        symbols: ['CanColor'],
+        message:
+            '`CanColor` was removed: nothing implemented it. Type the member `Signal<KbqComponentColors | string>`, ' +
+            'or add `KbqColorDirective` to the host directives.'
+    },
+    {
+        symbols: ['KbqAnimationCurves', 'KbqAnimationDurations'],
+        message:
+            '`KbqAnimationCurves` and `KbqAnimationDurations` were removed: they timed the `@angular/animations` ' +
+            'triggers the library no longer has. Copy the values you need into your own constants.'
+    },
+    {
+        symbols: ['KbqRectangleItem', 'countGroupLabelsBeforeOption'],
+        message:
+            '`KbqRectangleItem` (left over from the removed navbar-ic) and `countGroupLabelsBeforeOption()` were ' +
+            'removed without a replacement: nothing in the library used them.'
+    }
+];
+
 /**
  * Removed in 21.0.0: the `Default` members of `KbqThemeSelector` and `KbqThemeNames`, `KbqDefaultThemes`,
- * `KbqTheme`, the legacy `ThemeService`, `getOptionScrollPosition` and `ThemePalette`.
+ * `KbqTheme`, the legacy `ThemeService`, `getOptionScrollPosition`, `ThemePalette`, the unused undocumented
+ * exports and members, and the `mcLine` alias.
  */
 export const core: AreaData = {
     tsReplacements: [
@@ -48,8 +110,19 @@ export const core: AreaData = {
         ...rename('KbqTheme', 'KbqThemeConfig'),
         ...THEME_PALETTE
     ],
-    templateReplacements: DEFAULT_ENUM_MEMBERS,
+    templateReplacements: [...DEFAULT_ENUM_MEMBERS, MC_LINE],
     warnPatterns: [
+        ...UNUSED_EXPORTS.map(({ symbols, message }) => ({
+            pattern: importedFromCore(`(?:${symbols.join('|')})`),
+            message
+        })),
+        {
+            pattern: '\\.(?:handleBodyInteraction\\(|isSpecialFormatForRULocale\\(|roundingOptions\\b)',
+            message:
+                '`KbqPopUp.handleBodyInteraction()` was removed: nothing called it. `isSpecialFormatForRULocale()` ' +
+                'and `roundingOptions` of the number pipes are private: configure a pipe through its arguments and ' +
+                'the formatters locale configuration.'
+        },
         {
             pattern: '\\bKbqTheme\\b',
             message:

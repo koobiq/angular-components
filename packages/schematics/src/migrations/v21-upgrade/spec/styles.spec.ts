@@ -6,6 +6,9 @@ const THEME_MAPS = '`kbq-light-theme()` and `kbq-dark-theme()` are deprecated';
 const TYPOGRAPHY_CONFIG = '`kbq-typography-config()` was removed';
 const TOKENS_MODULE = '`@koobiq/components/core/styles/tokens` was removed';
 const MARKDOWN_CLASSES = 'The unprefixed markdown typography classes';
+const UNUSED_MODULES = 'The Sass modules `core/styles/functions`';
+const UNUSED_MEMBERS = '`kbq-markdown-typography-config()`, the getters of `typography-utils`';
+const TIMING = 'Of the timing variables of `core/styles/functions/timing`';
 
 const PREBUILT = 'node_modules/@koobiq/components/prebuilt-themes';
 
@@ -89,6 +92,58 @@ describe('v21-upgrade: styles', () => {
         expect(run.log).toContain(`use.scss\n  ${TOKENS_MODULE}`);
         expect(run.log).toContain(`import.scss\n  ${TOKENS_MODULE}`);
         expect(run.log).toContain(`forward.scss\n  ${TOKENS_MODULE}`);
+    });
+
+    it('reports a load of the removed Sass modules', async () => {
+        const run = await runV21Upgrade({
+            'functions.scss': "@use '@koobiq/components/core/styles/functions' as fn;\n",
+            'string.scss': "@use '~@koobiq/components/core/styles/functions/string';\n",
+            'utils.scss': "@import '@koobiq/components/core/styles/typography/_typography-utils.scss';\n",
+            'popup.scss': '@use "../../node_modules/@koobiq/components/core/styles/common/popup" as *;\n'
+        });
+
+        for (const file of ['functions.scss', 'string.scss', 'utils.scss', 'popup.scss']) {
+            expect(run.log).toContain(`${file}\n  ${UNUSED_MODULES}`);
+        }
+    });
+
+    it('reports the removed Sass members and timing variables', async () => {
+        const run = await runV21Upgrade({
+            'members.scss': [
+                "@use '@koobiq/components/core/styles/common/tokens' as tokens;",
+                '$md: kbq-markdown-typography-config($tokens);',
+                '.a { @include tokens.kbq-typography-css-variables(button, text); }',
+                ''
+            ].join('\n'),
+            'timing.scss': [
+                "@use '@koobiq/components/core/styles/functions/timing' as *;",
+                '.b { transition: opacity 1s $ease-in-out-quad, transform 1s $ease-out-back; }',
+                ''
+            ].join('\n'),
+            'kept.scss': [
+                "@use '@koobiq/components/core/styles/functions/timing' as *;",
+                '.c { transition: opacity 1s $ease-out-circ, transform 1s $ease-in-out-circ; }',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).toContain(`members.scss\n  ${UNUSED_MEMBERS}`);
+        expect(run.log).toContain(`timing.scss\n  ${TIMING}`);
+        expect(run.log).not.toContain('kept.scss');
+    });
+
+    it('leaves the typography mixin that stays and similar names alone', async () => {
+        const styles = [
+            "@use '@koobiq/components/core/styles/common/tokens' as tokens;",
+            '$ease-in-quad: linear;',
+            '.a { @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big); }',
+            '.b { line-height: var(--kbq-line-height); font-size: my-kbq-font-size(1); }',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'kept-styles.scss': styles });
+
+        expect(run.read('kept-styles.scss')).toBe(styles);
+        expect(run.log).not.toContain('kept-styles.scss');
     });
 
     it('rewrites light-theme.css and dark-theme.css to theme.css and keeps one load of it', async () => {
@@ -186,7 +241,6 @@ describe('v21-upgrade: styles', () => {
             "@use '@koobiq/components/prebuilt-themes/theme.css';",
             '@include koobiq-theme();',
             '@include brand-koobiq-theme($theme);',
-            '$m: kbq-markdown-typography-config($tokens);',
             '$c: kbq-color-scheme(dark);',
             '$b: brand-kbq-dark-theme($tokens);',
             '.kbq-md-h1, .md-body-x, .cmd-body {',
