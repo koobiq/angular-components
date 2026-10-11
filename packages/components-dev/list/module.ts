@@ -81,7 +81,7 @@ export class DevDocsExamples {}
 export class DevApp {
     private clipboard = inject(Clipboard);
 
-    list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
+    readonly list = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
 
     readonly selectAllItems = signal(Array.from({ length: 5 }, (_, i) => `Item ${i}`));
     readonly selectAllDraggable = signal(false);
