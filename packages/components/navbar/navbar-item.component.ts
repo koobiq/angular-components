@@ -170,11 +170,11 @@ export class KbqNavbarDivider {
         '[attr.tabindex]': 'tabIndex',
         // `aria-disabled` and not the `disabled` content attribute: these are custom elements, not form
         // controls, so the browser and assistive technology both ignore `disabled` on them.
-        '[attr.aria-disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'explicitlyDisabled || null',
 
         class: 'kbq-navbar-focusable-item',
         '[class.kbq-navbar-item_has-nested]': '!!nestedElement',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'explicitlyDisabled',
 
         '(focus)': 'onFocusHandler()',
         '(blur)': 'blur()'
@@ -230,11 +230,12 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
      *
      * Deliberately kept a plain accessor input rather than a signal: `FocusKeyManager` reads it as a boolean
      * through its default skip predicate, and a signal would always read truthy there — the manager would then
-     * skip every item and arrow navigation would stop working entirely.
+     * skip every item and arrow navigation would stop working entirely. It also reads `true` for a decorative
+     * element, which the key manager has to skip just the same.
      */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
-        return this._disabled;
+        return this._disabled || this.decorative;
     }
 
     set disabled(value: boolean) {
@@ -245,6 +246,23 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     }
 
     private _disabled = false;
+
+    /**
+     * Keeps an element with nothing to interact with out of the roving focus order, without announcing or
+     * styling it as disabled.
+     *
+     * @internal
+     */
+    decorative = false;
+
+    /**
+     * Whether the item was disabled through `disabled`, as opposed to being decorative.
+     *
+     * @internal
+     */
+    get explicitlyDisabled(): boolean {
+        return this._disabled;
+    }
 
     /**
      * Items are never in the tab order themselves: the navbar host owns the single tab stop and moves focus
