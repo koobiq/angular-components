@@ -115,11 +115,32 @@ export class KbqNavbarBrand extends KbqTooltipTrigger implements AfterContentIni
         this.arrow = false;
         this.offset = 0;
 
-        this.navbarFocusableItem.disabled = !this.isLink;
+        // A brand that is not a link has nothing to activate: it is kept out of the roving focus order, but
+        // not announced or styled as disabled.
+        this.navbarFocusableItem.decorative = !this.isLink;
+
+        // A disabled navbar item takes `pointer-events: none`, which on a brand would also stop the tooltip a
+        // collapsed brand depends on. Capturing on the host runs ahead of every listener of the link, `RouterLink`
+        // included.
+        const unlisten = this.renderer.listen(
+            this.nativeElement,
+            'click',
+            (event: MouseEvent) => this.preventDisabledActivation(event),
+            { capture: true }
+        );
+
+        this.destroyRef.onDestroy(unlisten);
     }
 
     ngAfterContentInit(): void {
         this.updateTooltip();
+    }
+
+    private preventDisabledActivation(event: MouseEvent): void {
+        if (!this.navbarFocusableItem.explicitlyDisabled) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
     }
 
     private updateTooltip(): void {

@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Component, viewChild } from '@angular/core';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LEFT_ARROW, RIGHT_ARROW, TAB } from '@koobiq/cdk/keycodes';
@@ -320,6 +320,59 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             expect(brand.content).toBe('Updated');
+        }));
+
+        it('a purely decorative brand is neither announced nor styled as disabled', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestNonAnchorBrandApp);
+
+            fixture.detectChanges();
+            flush();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+            const focusableItem = fixture.debugElement
+                .query(By.directive(KbqNavbarFocusableItem))
+                .injector.get(KbqNavbarFocusableItem);
+
+            expect(brandEl.classList).not.toContain('kbq-disabled');
+            expect(brandEl.hasAttribute('disabled')).toBe(false);
+            // Still skipped by the roving focus order.
+            expect(focusableItem.disabled).toBe(true);
+        }));
+
+        it('a disabled brand swallows clicks, so its link is not followed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestDisabledBrandApp);
+
+            fixture.detectChanges();
+            flush();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+            const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+            fixture.nativeElement.querySelector('.kbq-navbar-title').dispatchEvent(click);
+
+            expect(brandEl.classList).toContain('kbq-disabled');
+            expect(click.defaultPrevented).toBe(true);
+            expect(fixture.componentInstance.clicked).toBe(false);
+        }));
+
+        it('an enabled brand link is followed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestBrandApp);
+
+            fixture.detectChanges();
+            flush();
+
+            let preventedBeforeLink: boolean | undefined;
+
+            fixture.nativeElement.querySelector('.kbq-navbar-brand').addEventListener('click', (event: Event) => {
+                preventedBeforeLink = event.defaultPrevented;
+                // So that jsdom does not try to navigate.
+                event.preventDefault();
+            });
+            fixture.nativeElement
+                .querySelector('.kbq-navbar-title')
+                .dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+
+            expect(preventedBeforeLink).toBe(false);
         }));
     });
 
@@ -751,6 +804,38 @@ class TestTitleApp {
 })
 class TestBrandApp {
     collapsedText: string = '';
+}
+
+@Component({
+    selector: 'test-non-anchor-brand-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <div kbq-navbar-brand>
+                    <div kbq-navbar-title>App Name</div>
+                </div>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestNonAnchorBrandApp {}
+
+@Component({
+    selector: 'test-disabled-brand-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <a href="#" kbq-navbar-brand disabled (click)="clicked = true">
+                    <div kbq-navbar-title>App Name</div>
+                </a>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestDisabledBrandApp {
+    clicked = false;
 }
 
 @Component({
