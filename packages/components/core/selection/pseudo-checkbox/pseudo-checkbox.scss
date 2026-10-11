@@ -31,11 +31,6 @@
         display: none;
     }
 
-    &.kbq-pseudo-checkbox-checked,
-    &.kbq-pseudo-checkbox-indeterminate {
-        border-color: transparent;
-    }
-
     &.kbq-checked {
         .kbq-checkbox-checkmark {
             display: inline-block;
