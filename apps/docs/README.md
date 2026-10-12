@@ -16,7 +16,7 @@ yarn install
 # Build the packages, the examples and the docs content, then serve the site on http://localhost:4200
 yarn run docs
 
-# Only regenerate the pages, the API pages and llms.txt, then serve the site; needs a previous `yarn run docs`
+# Only regenerate the docs content, then serve the site and recompile a page on save; needs a previous `yarn run docs`
 yarn run docs:start:dev
 
 # Build application (prerendered)
