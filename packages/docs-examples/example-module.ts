@@ -5518,18 +5518,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "skeleton-in-sidepanel-example.ts",
     "importPath": "components/skeleton"
   },
-  "skeleton-table": {
-    "packagePath": "components/skeleton/skeleton-table",
-    "title": "Skeleton table preset",
-    "componentName": "SkeletonTableExample",
-    "files": [
-      "skeleton-table-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "skeleton-table-example",
-    "primaryFile": "skeleton-table-example.ts",
-    "importPath": "components/skeleton"
-  },
   "skeleton-tabs": {
     "packagePath": "components/skeleton/skeleton-tabs",
     "title": "Skeleton tabs preset",
@@ -8268,7 +8256,6 @@ export type LiveExampleId =
   | 'skeleton-grid'
   | 'skeleton-group'
   | 'skeleton-in-sidepanel'
-  | 'skeleton-table'
   | 'skeleton-tabs'
   | 'skeleton-tree'
   | 'skeleton-typography'

@@ -34,11 +34,9 @@ By default, the [table](en/components/table) preset shows a header row, three da
 
 For [AG Grid](en/components/ag-grid/overview), the preset also supports pinned columns. Set their number with `pinnedColumns`.
 
-<Example id="skeleton-table" />
-
 <Example id="skeleton-grid" />
 
-#### Badges and tags
+#### Element groups
 
 The `kbq-skeleton-group` preset displays a row of identical placeholders, such as for a [tag list](en/components/tag-list) or a row of [badges](en/components/badge). Choose the placeholder type with `preset` and set the number of items with `count`. The preset also supports buttons, icons and links.
 
@@ -74,12 +72,6 @@ The [tree](en/components/tree) preset shows placeholders for nodes and their lab
 
 <Example id="skeleton-tree" />
 
-### Loading a side panel in parts
-
-Data in a [side panel](en/components/sidepanel) can load in parts. Show the content that has loaded, and use a suitable preset for each part that is still loading.
-
-<Example id="skeleton-in-sidepanel" />
-
 ### The `kbqSkeleton` directive
 
 The `kbqSkeleton` directive turns an already-rendered element and its content into one placeholder while preserving the element's current shape and size. Use it when the element is already in the markup but its content is loading or refreshing. The data does not have to be loaded first: the directive needs the element itself so it can show its geometry. For example, enable it on text, a badge or a button while the corresponding block content loads. The element cannot be interacted with while the directive is enabled.
@@ -87,6 +79,20 @@ The `kbqSkeleton` directive turns an already-rendered element and its content in
 Unlike the basic block, the directive uses the shape of an existing element. Unlike a preset, it does not create a predefined structure for a component that is not yet in the markup. If the future element cannot be rendered yet, use the basic block or a suitable preset.
 
 <Example id="skeleton-directive" />
+
+### Usage examples
+
+#### Code block
+
+While code is loading, a fixed-height skeleton occupies the space reserved for the code block.
+
+<Example id="skeleton-code-block" />
+
+#### Loading a side panel in parts
+
+Data in a [side panel](en/components/sidepanel) can load in parts. Show the content that has loaded, and use a suitable preset for each part that is still loading.
+
+<Example id="skeleton-in-sidepanel" />
 
 ### Guidelines
 

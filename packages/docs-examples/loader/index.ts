@@ -901,8 +901,6 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonGroupExample);
         case 'skeleton-in-sidepanel':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonInSidepanelExample);
-        case 'skeleton-table':
-            return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTableExample);
         case 'skeleton-tabs':
             return import('@koobiq/docs-examples/components/skeleton').then((m) => m.SkeletonTabsExample);
         case 'skeleton-tree':

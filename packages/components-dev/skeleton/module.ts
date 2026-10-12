@@ -11,12 +11,12 @@ import {
     SkeletonGridExample,
     SkeletonGroupExample,
     SkeletonInSidepanelExample,
-    SkeletonTableExample,
     SkeletonTabsExample,
     SkeletonTreeExample,
     SkeletonTypographyExample
 } from 'packages/docs-examples/components/skeleton';
 import { DevThemeToggle } from '../theme-toggle';
+import { DevSkeletonTableExample } from './examples/skeleton-table-example';
 
 @Component({
     selector: 'dev-examples',
@@ -26,7 +26,7 @@ import { DevThemeToggle } from '../theme-toggle';
         SkeletonElementsExample,
         SkeletonTypographyExample,
         SkeletonDlExample,
-        SkeletonTableExample,
+        DevSkeletonTableExample,
         SkeletonGridExample,
         SkeletonGroupExample,
         SkeletonFormFieldExample,
@@ -59,7 +59,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
 
         <h2 class="dev-example-title">Skeleton table preset</h2>
-        <skeleton-table-example />
+        <dev-skeleton-table-example />
         <hr />
 
         <h2 class="dev-example-title">Skeleton grid preset</h2>
