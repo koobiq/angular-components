@@ -160,8 +160,7 @@
         .kbq-inline-edit__menu-mask-fade {
             width: 32px;
             background: var(--kbq-mask-background, transparent);
-            // @TODO remove fallback (#DS-3002)
-            mask-image: linear-gradient(90deg, transparent, var(--kbq-plt-black, var(--kbq-black-default)));
+            mask-image: linear-gradient(90deg, transparent, var(--kbq-plt-black));
         }
 
         .kbq-inline-edit__menu-mask-container {
