@@ -118,10 +118,10 @@
 // nearest theme wins: a `.kbq-dark .kbq-skeleton` rule would also match inside a light section of a dark page.
 :where(:root, .kbq-light) {
     --kbq-skeleton-filter: contrast(0) brightness(0);
-    --kbq-skeleton-fill: var(--kbq-semantic-contrast-a1, var(--kbq-palette-grey-0-a8));
+    --kbq-skeleton-fill: var(--kbq-semantic-contrast-a1);
 }
 
 :where(.kbq-dark) {
     --kbq-skeleton-filter: contrast(0) brightness(0) invert(1);
-    --kbq-skeleton-fill: var(--kbq-semantic-dark-contrast-a2, var(--kbq-palette-grey-100-a8));
+    --kbq-skeleton-fill: var(--kbq-semantic-dark-contrast-a2);
 }
