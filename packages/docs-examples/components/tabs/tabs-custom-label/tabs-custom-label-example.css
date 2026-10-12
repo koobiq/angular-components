@@ -17,5 +17,5 @@
     line-height: var(--kbq-typography-text-compact-line-height);
     font-weight: var(--kbq-typography-text-compact-font-weight);
     letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
-    color: var(--kbq-palette-grey-50);
+    color: var(--kbq-foreground-contrast-secondary);
 }
