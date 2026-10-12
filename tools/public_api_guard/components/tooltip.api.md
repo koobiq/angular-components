@@ -158,6 +158,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     set tooltipPlacementPriority(value: string | string[] | null);
     get tooltipVisible(): boolean;
     set tooltipVisible(value: boolean);
+    protected trackPointerLeave(event: MouseEvent): void;
     get trigger(): string;
     set trigger(value: string);
     protected _trigger: string;
