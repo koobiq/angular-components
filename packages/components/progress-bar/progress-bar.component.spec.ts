@@ -24,7 +24,17 @@ describe('KbqProgressBar', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqProgressBarModule, KbqLocaleServiceModule, TestApp, ProjectedApp, LabelledApp]
+            imports: [
+                KbqProgressBarModule,
+                KbqLocaleServiceModule,
+                TestApp,
+                ProjectedApp,
+                LabelledApp,
+                CaptionedApp,
+                TextedApp,
+                MultipleApp,
+                IndeterminateApp
+            ]
         }).compileComponents();
     });
 
@@ -246,8 +256,60 @@ describe('KbqProgressBar', () => {
             ).toBe('upload-label');
         });
 
+        it('should name a bar that has a caption but no text from the locale', () => {
+            const captioned = TestBed.createComponent(CaptionedApp);
+
+            captioned.detectChanges();
+
+            const element = captioned.debugElement.query(By.css('kbq-progress-bar')).nativeElement;
+
+            expect(element.getAttribute('aria-label')).toBe(DEFAULT_ARIA_LABEL);
+            expect(element.getAttribute('aria-labelledby')).toBeNull();
+        });
+
+        it('should describe a bar that has a text but no caption with nothing', () => {
+            const texted = TestBed.createComponent(TextedApp);
+
+            texted.detectChanges();
+
+            const element = texted.debugElement.query(By.css('kbq-progress-bar')).nativeElement;
+
+            expect(element.getAttribute('aria-describedby')).toBeNull();
+            expect(element.getAttribute('aria-labelledby')).toBe(
+                texted.debugElement.query(By.css('[kbq-progress-bar-text]')).nativeElement.getAttribute('id')
+            );
+        });
+
+        it('should keep every bar pointing at its own projected text', () => {
+            const multiple = TestBed.createComponent(MultipleApp);
+
+            multiple.detectChanges();
+
+            const bars = multiple.debugElement.queryAll(By.css('kbq-progress-bar'));
+            const texts = multiple.debugElement.queryAll(By.css('[kbq-progress-bar-text]'));
+
+            expect(bars).toHaveLength(2);
+            expect(texts[0].nativeElement.getAttribute('id')).not.toBe(texts[1].nativeElement.getAttribute('id'));
+            expect(bars[0].nativeElement.getAttribute('aria-labelledby')).toBe(
+                texts[0].nativeElement.getAttribute('id')
+            );
+            expect(bars[1].nativeElement.getAttribute('aria-labelledby')).toBe(
+                texts[1].nativeElement.getAttribute('id')
+            );
+        });
+
         it('should have no axe violations', async () => {
             expect(await axe(projected.nativeElement)).toHaveNoViolations();
+        });
+
+        // The range is absent in this mode, which is the only axis the indeterminate `progressbar` has
+        // left for an accessibility rule to disagree with.
+        it('should have no axe violations in indeterminate mode', async () => {
+            const indeterminate = TestBed.createComponent(IndeterminateApp);
+
+            indeterminate.detectChanges();
+
+            expect(await axe(indeterminate.nativeElement)).toHaveNoViolations();
         });
     });
 
@@ -319,3 +381,51 @@ class ProjectedApp {
     `
 })
 class LabelledApp {}
+
+@Component({
+    selector: 'captioned-app',
+    imports: [KbqProgressBarModule],
+    template: `
+        <kbq-progress-bar [value]="30">
+            <div kbq-progress-bar-caption>3 of 12 files</div>
+        </kbq-progress-bar>
+    `
+})
+class CaptionedApp {}
+
+@Component({
+    selector: 'texted-app',
+    imports: [KbqProgressBarModule],
+    template: `
+        <kbq-progress-bar [value]="30">
+            <div kbq-progress-bar-text>Uploading the archive</div>
+        </kbq-progress-bar>
+    `
+})
+class TextedApp {}
+
+@Component({
+    selector: 'multiple-app',
+    imports: [KbqProgressBarModule],
+    template: `
+        <kbq-progress-bar [value]="30">
+            <div kbq-progress-bar-text>Uploading the archive</div>
+        </kbq-progress-bar>
+        <kbq-progress-bar [value]="60">
+            <div kbq-progress-bar-text>Uploading the report</div>
+        </kbq-progress-bar>
+    `
+})
+class MultipleApp {}
+
+@Component({
+    selector: 'indeterminate-app',
+    imports: [KbqProgressBarModule],
+    template: `
+        <kbq-progress-bar [mode]="'indeterminate'">
+            <div kbq-progress-bar-text>Uploading the archive</div>
+            <div kbq-progress-bar-caption>3 of 12 files</div>
+        </kbq-progress-bar>
+    `
+})
+class IndeterminateApp {}

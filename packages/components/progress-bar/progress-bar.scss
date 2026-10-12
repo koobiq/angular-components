@@ -3,10 +3,14 @@
 @use './progress-bar-theme' as *;
 
 // The fill is sized statically, so the animation only has to move and stretch it: both are
-// compositor-only, and neither is the thing that makes the bar visible.
+// compositor-only, and neither is the thing that makes the bar visible. `translateX()` is a share of
+// the fill's own width, and the two ends are chosen so that no frame is empty: at `0%` its leading
+// edge sits exactly on the track's, and `400%` carries it clear of the track even at the widest
+// `scaleX()`. Anything further left parks the fill outside the clipped track for the start of every
+// iteration, which reads as an animation that restarts.
 @keyframes kbq-progress-bar-indeterminate {
     0% {
-        transform: translateX(-150%) scaleX(1);
+        transform: translateX(-100%) scaleX(1);
     }
 
     100% {
