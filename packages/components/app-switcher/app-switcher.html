@@ -93,9 +93,8 @@
                                     <div
                                         [kbq-app-switcher-dropdown-site]="site"
                                         [kbqDropdownTriggerFor]="dropdownWithSelectedSite"
+                                        [kbqDropdownTriggerData]="{ site }"
                                         [offsetX]="0"
-                                        (mouseenter)="activeSite = site"
-                                        (focus)="activeSite = site"
                                     ></div>
                                 }
                             }
@@ -108,49 +107,46 @@
                     variable is only visible inside the view that declares it. Their hosts render empty (the
                     content moves into an overlay when opened), so `role="none"` keeps the menu ownership
                     chain intact.
+
+                    Each panel is shared by its triggers, so it renders the data of the trigger that opened it
+                    (`kbqDropdownTriggerData`), not of the last hovered row: the safe area keeps a panel open
+                    while the pointer crosses other triggers.
                 -->
-                <kbq-dropdown
-                    #dropdownWithSelectedSite="kbqDropdown"
-                    role="none"
-                    [class]="'kbq-app-switcher-sites'"
-                    (closed)="resetActiveSite()"
-                >
-                    @for (app of activeSite?.apps; track app.id || app.name) {
-                        @if (app.aliases) {
-                            <div
-                                #dropdownWithGroupedAppsTrigger="kbqDropdownTrigger"
-                                [kbq-app-switcher-dropdown-app]="app"
-                                [kbqDropdownTriggerFor]="dropdownWithGroupedApps"
-                                [offsetX]="0"
-                                [class.kbq-pressed]="dropdownWithGroupedAppsTrigger.opened"
-                                (mouseenter)="activeApp = app"
-                                (focus)="activeApp = app"
-                            ></div>
-                        } @else {
-                            <a
-                                rel="noopener noreferrer"
-                                [attr.href]="app.link ?? null"
-                                [kbq-app-switcher-dropdown-app]="app"
-                                (click)="selectAppInSite(activeSite, app)"
-                            ></a>
+                <kbq-dropdown #dropdownWithSelectedSite="kbqDropdown" role="none" [class]="'kbq-app-switcher-sites'">
+                    <ng-template let-site="site" kbqDropdownContent>
+                        @for (app of site.apps; track app.id || app.name) {
+                            @if (app.aliases) {
+                                <div
+                                    #dropdownWithGroupedAppsTrigger="kbqDropdownTrigger"
+                                    [kbq-app-switcher-dropdown-app]="app"
+                                    [kbqDropdownTriggerFor]="dropdownWithGroupedApps"
+                                    [kbqDropdownTriggerData]="{ site, app }"
+                                    [offsetX]="0"
+                                    [class.kbq-pressed]="dropdownWithGroupedAppsTrigger.opened"
+                                ></div>
+                            } @else {
+                                <a
+                                    rel="noopener noreferrer"
+                                    [attr.href]="app.link ?? null"
+                                    [kbq-app-switcher-dropdown-app]="app"
+                                    (click)="selectAppInSite(site, app)"
+                                ></a>
+                            }
                         }
-                    }
+                    </ng-template>
                 </kbq-dropdown>
 
-                <kbq-dropdown
-                    #dropdownWithGroupedApps="kbqDropdown"
-                    role="none"
-                    [class]="'kbq-app-switcher-sites'"
-                    (closed)="resetActiveApp()"
-                >
-                    @for (alias of activeApp?.aliases; track alias.id) {
-                        <a
-                            rel="noopener noreferrer"
-                            [attr.href]="alias.link ?? null"
-                            [kbq-app-switcher-dropdown-app]="alias"
-                            (click)="selectAppInSite(activeSite, alias)"
-                        ></a>
-                    }
+                <kbq-dropdown #dropdownWithGroupedApps="kbqDropdown" role="none" [class]="'kbq-app-switcher-sites'">
+                    <ng-template let-site="site" let-app="app" kbqDropdownContent>
+                        @for (alias of app.aliases; track alias.id) {
+                            <a
+                                rel="noopener noreferrer"
+                                [attr.href]="alias.link ?? null"
+                                [kbq-app-switcher-dropdown-app]="alias"
+                                (click)="selectAppInSite(site, alias)"
+                            ></a>
+                        }
+                    </ng-template>
                 </kbq-dropdown>
             }
         </div>

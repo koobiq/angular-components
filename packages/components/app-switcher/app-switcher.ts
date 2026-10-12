@@ -55,6 +55,7 @@ import {
     UP_ARROW,
     applyPopupMargins,
     kbqLocaleConfigurationOverrideProvider,
+    kbqSiblingPopupProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -303,11 +304,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
     //  This input is used in a control flow expression (e.g. `@if` or `*ngIf`)
     //  and migrating would break narrowing currently.
     @Input() trigger: KbqAppSwitcherTrigger;
-
-    /** @docs-private */
-    protected activeSite: KbqAppSwitcherSite | undefined;
-    /** @docs-private */
-    protected activeApp: KbqAppSwitcherApp | undefined;
 
     /** @docs-private */
     readonly input = viewChild(KbqInput);
@@ -586,18 +582,6 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
         this.trigger.selectedApp.set(app);
     }
 
-    /** Drops the flyout content once its dropdown closes, so a reopened panel never shows the previous site.
-     * @docs-private */
-    protected resetActiveSite(): void {
-        this.activeSite = undefined;
-    }
-
-    /** The same for the nested group of a flyout app.
-     * @docs-private */
-    protected resetActiveApp(): void {
-        this.activeApp = undefined;
-    }
-
     private filterSites(query: string | null): KbqAppSwitcherSite[] {
         const sites = this.trigger.originalSites;
 
@@ -617,6 +601,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit, 
 
 @Directive({
     selector: '[kbqAppSwitcher]',
+    providers: [kbqSiblingPopupProvider(KbqAppSwitcherTrigger)],
     host: {
         '[class.kbq-app-switcher_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen',
