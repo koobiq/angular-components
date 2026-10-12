@@ -16,20 +16,21 @@
  * are written.
  */
 
-const { readdirSync, readFileSync, rmSync } = require('node:fs');
-const { join } = require('node:path');
+import { readdirSync, readFileSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
 
 const CHECK_PATH = 'dist/tokens-docs-check/';
 
-// Must be set before index.js pulls in sdConfig, which reads it to resolve the build path.
+// Must be set before index.mjs is imported, which is why these imports are dynamic: it pulls in
+// sdConfig, which reads the variable to resolve the build path.
 process.env.KBQ_TOKENS_DOCS_OUT = CHECK_PATH;
 
 rmSync(CHECK_PATH, { force: true, recursive: true });
 
-require('./index');
+await import('./index.mjs');
 
-const { BUILD_PATH } = require('./config');
-const sdConfig = require('./sdConfig');
+const { BUILD_PATH } = await import('./config.mjs');
+const { default: sdConfig } = await import('./sdConfig.mjs');
 
 const read = (path, file) => readFileSync(join(path, file), 'utf8');
 
