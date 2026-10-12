@@ -35,6 +35,7 @@ export enum DocsStructureItemId {
     Dl = 'dl',
     Dropdown = 'dropdown',
     DynamicTranslation = 'dynamic-translation',
+    EllipsisCenter = 'ellipsis-center',
     EmptyState = 'empty-state',
     Icon = 'icon',
     IconButton = 'icon-button',
@@ -558,6 +559,17 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'dynamic-translation',
                     hasExamples: true
+                },
+                {
+                    id: DocsStructureItemId.EllipsisCenter,
+                    name: {
+                        ru: 'Ellipsis center',
+                        en: 'Ellipsis center'
+                    },
+                    path: 'packages/components/ellipsis-center',
+                    hasApi: true,
+                    apiId: 'ellipsis-center',
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.EmptyState,

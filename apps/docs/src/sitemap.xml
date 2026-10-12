@@ -190,6 +190,12 @@
 		<loc>https://koobiq.io/en/components/dynamic-translation/examples</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/ellipsis-center/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/ellipsis-center/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/empty-state/overview</loc>
 	</url>
 	<url>
@@ -776,6 +782,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/dynamic-translation/examples</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/ellipsis-center/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/ellipsis-center/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/empty-state/overview</loc>
