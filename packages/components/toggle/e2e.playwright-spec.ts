@@ -44,7 +44,7 @@ test.describe('KbqToggleModule', () => {
 
             await expect(input).toHaveAttribute('aria-busy', 'true');
             await expect(input).toHaveAttribute('aria-disabled', 'true');
-            await expect(input).toBeEnabled();
+            await expect(input).toBeDisabled();
         });
 
         test('should not animate when reduced motion is preferred', async ({ page }) => {
