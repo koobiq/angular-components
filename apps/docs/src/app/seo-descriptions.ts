@@ -252,8 +252,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Сайдпанель — это окно, которое выезжает из-за границы экрана и располагается поверх основного контента страницы."
     },
     "skeleton": {
-        "en": "KbqSkeleton is a temporary placeholder that occupies the space of the loading element and displays its approximate layout while the actual content is still loading.",
-        "ru": "Скелетон — временная заглушка, которая занимает место загружаемого элемента и показывает его примерную форму."
+        "en": "A skeleton is a temporary placeholder that occupies the space of loading content and shows its approximate structure. Use a skeleton when the structure of the future block is known: the placeholder…",
+        "ru": "Скелетон — временная заглушка, которая показывает примерную форму загружаемого содержимого. Он подходит, если заранее известны его элементы и их расположение."
     },
     "split-button": {
         "en": "A split button combines several related actions into a single control. The primary action is immediately accessible, while additional options are hidden in a dropdown menu.",
