@@ -13,36 +13,18 @@ nvm use
 # Install dependencies
 yarn install
 
-# Build packages
-yarn run build:angular-luxon-adapter
-yarn run build:angular-moment-adapter
-yarn run styles:build-all
-yarn run build:components
-yarn run build:components-experimental
+# Build what the site reads (components, the Luxon adapter, the examples), generate the pages, then serve
+# them on http://localhost:4200
+yarn run docs
 
-# Generate the example catalogue, which the pages are compiled against
-yarn run build:docs-examples-module
-
-# Generate content
-yarn run build:docs-content
-yarn run build:package-docs-content
-
-# Build examples
-yarn run build:docs-examples
-
-# Generate sitemap
-yarn run docs:generate-sitemap
-
-# Generate llms.txt, llms-full.txt and the Markdown of every page for agents
-yarn run docs:generate-llms
-
-# Generate prerender routes
-yarn run docs:generate-prerender-routes
-
-# Run application
+# Only regenerate the pages and serve them, once the packages and the examples are built
 yarn run docs:start:dev
-# Then open http://localhost:4200
 
-# Build application
+# Build application (prerendered)
 yarn run docs:build
 ```
+
+The site imports `@koobiq/*` from `dist/`: rerun `yarn run build:components` after changing a component, and
+`yarn run build:docs-examples` after changing an example. After adding, removing or renaming a route in
+`src/app/structure.ts`, regenerate the committed `sitemap.xml`, `prerender-routes.txt` and `llms.txt` with
+`yarn run docs:generate-sitemap`, `yarn run docs:generate-prerender-routes` and `yarn run docs:generate-llms`.
