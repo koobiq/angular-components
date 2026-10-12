@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model } from '@angular/core';
 import { AbstractControl, FormGroupDirective, FormsModule, NgForm } from '@angular/forms';
 import { ErrorStateMatcher, KbqOptgroup, KbqSelectFooter, KbqSelectSearch } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -199,10 +199,10 @@ export class E2eTimezonePanelStates extends BaseTimezoneStates {}
 
                 <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-                @for (group of data; track group) {
+                @for (group of filteredData(); track group) {
                     <kbq-optgroup [label]="group.countryName">
                         @for (timezone of group.zones; track timezone) {
-                            <kbq-timezone-option [timezone]="timezone" />
+                            <kbq-timezone-option [highlightText]="control()" [timezone]="timezone" />
                         }
                     </kbq-optgroup>
                 }
@@ -232,6 +232,20 @@ export class E2eTimezonePanelStates extends BaseTimezoneStates {}
 })
 export class E2eTimezoneWithSearch extends BaseTimezoneStates {
     control = model('');
+
+    /** Narrows the list the way a consumer does, so the option's own city filter and highlight have something to show. */
+    protected readonly filteredData = computed(() => {
+        const query = this.control().trim().toLowerCase();
+
+        if (!query) return this.data;
+
+        return this.data
+            .map((group) => ({
+                ...group,
+                zones: group.zones.filter(({ city, cities }) => `${city}, ${cities}`.toLowerCase().includes(query))
+            }))
+            .filter(({ zones }) => zones.length > 0);
+    });
 }
 
 @Component({

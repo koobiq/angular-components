@@ -73,6 +73,7 @@ export class KbqTimezoneModule {
 // @public (undocumented)
 export class KbqTimezoneOption extends KbqOption {
     readonly foldDiacritics: i0.InputSignal<boolean>;
+    getLabel(): string;
     // (undocumented)
     readonly highlightText: i0.InputSignal<string | readonly string[]>;
     protected get resolvedOffset(): string;
@@ -123,6 +124,7 @@ export class KbqTimezoneSelect extends KbqSelect {
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
     get multiple(): boolean;
     set multiple(value: boolean);
+    ngOnInit(): void;
     readonly timezoneLocaleConfiguration: i0.Signal<KbqTimezoneLocaleConfiguration>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*", "kbq-select-footer,[kbq-select-footer]"], true, never>;

@@ -11,7 +11,7 @@
  *   and ties break on `city` rather than on `countryName`, which was always equal inside a group.
  * - `KbqTimezoneGroup.countryCode` is `string | null` — the aggregate bucket belongs to no country.
  * - `KbqTimezoneZone.offset` is optional; omitted, it is resolved from the IANA `id` at render time.
- * - `kbq-timezone-select` rejects `multiple` instead of half-rendering it.
+ * - `kbq-timezone-select` rejects `multiple` and `multiline` instead of half-rendering them.
  *
  * Warn-only. The replacement for a dropped argument is a composition whose shape depends on what the call
  * site meant by it, and neither the promotion nor the aggregate label can be derived from the call.
@@ -45,7 +45,10 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: TIMEZONE_TYPE,
-        pattern: '\\bgetZonesGroupedByCountry\\s*\\(\\s*[A-Za-z_$][\\w$.]*\\s*\\)',
+        // Any call with no comma before its first closing parenthesis, so an argument that is itself a call —
+        // `getZonesGroupedByCountry(this.getZones())` — is reported too: it compiles unchanged, which is exactly
+        // why it must not go unmentioned.
+        pattern: '\\bgetZonesGroupedByCountry\\s*\\((?![^)]*,)',
         message:
             'getZonesGroupedByCountry no longer reads the host time zone and no longer collapses anything: ' +
             'it returns one group per country, ordered by country name. A single-argument call used to mean ' +
@@ -81,10 +84,12 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: TIMEZONE_TYPE,
-        pattern: '\\[multiple\\]|\\.\\s*multiple\\s*=(?!=)',
+        pattern: '<kbq-timezone-select\\b[^>]*\\bmulti(?:ple|line)\\b|\\.\\s*multiple\\s*=(?!=)',
         message:
             'kbq-timezone-select rejects multiple selection with an error instead of accepting it and ' +
-            'rendering a trigger that shows one of the selected values. Use kbq-select for multiple selection.'
+            'rendering a trigger that shows one of the selected values — through multiple and through ' +
+            'multiline alike, since multiline turns on multiple selection as well. Use kbq-select for ' +
+            'multiple selection.'
     }
 ];
 
@@ -99,6 +104,9 @@ export const SUMMARY = [
     '  UtcOffsetPipe and CitiesByFilterPipe are exported, and KbqTimezoneModule re-exports KbqOptionModule, ' +
         'so the documented usage with kbq-optgroup works from the module alone.',
     '  filterCitiesBySearchString rejoins on ", " instead of ",", so a filtered list no longer starts with ' +
-        'a stray space, and its offset guard requires a digit — a lone sign or a backslash is searched for ' +
-        'instead of being silently dropped.'
+        'a stray space. Its offset guard recognizes an offset still being typed (+, +03:, 0330) and keeps ' +
+        'the city list whole for it, but a lone hyphen-minus is searched for, so Baden-Baden can be found.',
+    '  Typing letters in the select moves to the option whose city starts with them. Typeahead used to ' +
+        'match the whole line, which opens with UTC, so it never reached past the first option.',
+    '  The overlay pane carries kbq-select-overlay, as it does for kbq-select.'
 ];

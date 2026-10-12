@@ -1,4 +1,4 @@
-`kbq-timezone-select` is a timezone selection component that extends `kbq-select`. It has the same capabilities, except for multiple selection — `[multiple]="true"` is rejected with an error rather than half-rendered. It can work with both `kbq-timezone-option` and `kbq-option`.
+`kbq-timezone-select` is a timezone selection component that extends `kbq-select`. It has the same capabilities, except for multiple selection — `[multiple]="true"` and `multiline` are rejected with an error rather than half-rendered. It can work with both `kbq-timezone-option` and `kbq-option`.
 
 `kbq-timezone-option` is a timezone list item that extends `kbq-option`. It has the same capabilities but its own display template. Import it together with `KbqTimezoneOptionTooltip` (both come with `KbqTimezoneModule`): the directive is what shows the full city list when the option clamps it.
 
@@ -45,6 +45,10 @@ Search splits a multi-word query into parts and searches for them independently,
 The placeholder of the search field comes from the active locale unless you bind one yourself.
 
 <Example id="timezone-search-overview" />
+
+### Keyboard and accessibility
+
+Keyboard control and screen-reader announcements are those of the [select](/en/components/select). One thing differs: typing letters in the field or in the open menu moves to the option whose city starts with them. Offsets are not matched this way — every option would start with `UTC` — so use the search to find a zone by its offset.
 
 ### Custom trigger
 

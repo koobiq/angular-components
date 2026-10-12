@@ -18,7 +18,7 @@ both were wrong.
 | `timezonesSortComparator`                           | returned the first zone's offset               | returns the difference, ties on `city`        |
 | `KbqTimezoneGroup.countryCode`                      | `string`                                       | `string \| null`                              |
 | `KbqTimezoneZone.offset`                            | required, rendered verbatim                    | optional, resolved from `id` when absent      |
-| `kbq-timezone-select` `[multiple]`                  | accepted, half-rendered                        | throws                                        |
+| `kbq-timezone-select` `multiple`, `multiline`       | accepted, half-rendered                        | throws                                        |
 
 `timezonesSortComparator` deserves a note. Its body returned `parseOffset(first.offset)` rather than a
 difference, so `cmp(+05:00, +02:00)` and `cmp(+02:00, +05:00)` were both positive: it is not a valid
@@ -35,14 +35,14 @@ rendered differently on a developer's laptop, on CI and on an SSR server versus 
 Nothing is rewritten. Restoring the old rendering takes a composition of two or three helpers, and which one
 a call site meant — promote the country, collapse the rest, or both — cannot be read off the call.
 
-| Pattern                                           | Manual migration                                                                                                |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `getZonesGroupedByCountry(zones, label, country)` | `collapseOtherCountries(getZonesGroupedByCountry(zones), country, label)`                                       |
-| `getZonesGroupedByCountry(zones, label)`          | `collapseOtherCountries(getZonesGroupedByCountry(zones), kbqResolveHostCountry(zones), label)`                  |
-| `getZonesGroupedByCountry(zones)`                 | `promoteCountry(getZonesGroupedByCountry(zones), kbqResolveHostCountry(zones))` for a real per-country grouping |
-| `group.countryCode`                               | Nullable — an aggregate bucket belongs to no country                                                            |
-| `zone.offset`                                     | `resolveZoneOffset(zone)`; omit the field to have it derived from the IANA `id`                                 |
-| `[multiple]` on `kbq-timezone-select`             | Use `kbq-select`                                                                                                |
+| Pattern                                            | Manual migration                                                                                                |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `getZonesGroupedByCountry(zones, label, country)`  | `collapseOtherCountries(getZonesGroupedByCountry(zones), country, label)`                                       |
+| `getZonesGroupedByCountry(zones, label)`           | `collapseOtherCountries(getZonesGroupedByCountry(zones), kbqResolveHostCountry(zones), label)`                  |
+| `getZonesGroupedByCountry(zones)`                  | `promoteCountry(getZonesGroupedByCountry(zones), kbqResolveHostCountry(zones))` for a real per-country grouping |
+| `group.countryCode`                                | Nullable — an aggregate bucket belongs to no country                                                            |
+| `zone.offset`                                      | `resolveZoneOffset(zone)`; omit the field to have it derived from the IANA `id`                                 |
+| `multiple` or `multiline` on `kbq-timezone-select` | Use `kbq-select`                                                                                                |
 
 ## Notes with no call site to point at
 
@@ -52,8 +52,15 @@ a call site meant — promote the country, collapse the rest, or both — cannot
 - `UtcOffsetPipe` and `CitiesByFilterPipe` are exported, and `KbqTimezoneModule` re-exports
   `KbqOptionModule`, so the documented usage with `kbq-optgroup` works from the module alone.
 - `filterCitiesBySearchString` rejoins on `', '` instead of `','`, so a filtered list no longer begins with
-  a stray space, and its offset guard requires a digit — a lone sign or a backslash used to match it and be
-  dropped from the search silently.
+  a stray space. Its offset guard recognizes an offset that is still being typed — `+`, `+03:`, `0330` — and
+  leaves the city list whole for it, as before. A lone hyphen-minus is the one sign it now searches for,
+  because it is also how `Baden-Baden` is found.
+- Typeahead matches the city. `getLabel()` used to return the whole line, which opens with `UTC`, so typing
+  a city's first letters never moved past the first option, and a zone west of UTC — written with U+2212 —
+  could not be reached by typing at all.
+- The overlay pane carries `kbq-select-overlay`, as it does for `kbq-select`: the forked template did not
+  bind `cdkConnectedOverlayPanelClass`, so a style keyed on `.cdk-overlay-pane.kbq-select-overlay` missed
+  the timezone panel.
 - `KbqTimezoneOption` provides `KBQ_TITLE_TEXT_REF` and marks its city label, so a `[kbq-title]` inside an
   option measures the label rather than the whole two-column row.
 - The search placeholder follows the active locale instead of latching to whichever one was applied first.

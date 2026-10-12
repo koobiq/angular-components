@@ -210,8 +210,12 @@ function sortZonesByOffset(zones: readonly KbqTimezoneZone[]): KbqTimezoneZone[]
         .map(({ zone }) => zone);
 }
 
-/** A bare UTC offset: an optional sign and at least one digit, e.g. `3`, `+3`, `−05:30`. */
-const UTC_OFFSET_PATTERN = /^[-—−+]?\d{1,2}(?::\d{1,2})?$/;
+/**
+ * A bare UTC offset, including one still being typed: `3`, `+3`, `+03:`, `−05:30`, `0330`, or a sign alone. A
+ * lone hyphen-minus is the exception — it is also how a hyphenated city is searched for (`Baden-Baden`) — but
+ * `+`, `−` and `—` occur in no city name, so a query that is only one of them already describes the zone.
+ */
+const UTC_OFFSET_PATTERN = /^(?:[+−—]|[-+−—]?\d{1,2}(?::?\d{0,2})?)$/;
 
 /**
  * Filtering timezone cities by search string. Accepts a single pattern or several (matching a

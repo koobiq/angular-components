@@ -74,6 +74,22 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('no longer reads the host time zone');
     });
 
+    it('reports a single-argument call whose argument is itself a call', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { getZonesGroupedByCountry } from '@koobiq/components/timezone';\n" +
+                'export class App { groups = getZonesGroupedByCountry(this.getZones()); }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('no longer reads the host time zone');
+    });
+
     it('reports the comparator, whose result and tiebreak both changed', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
@@ -100,6 +116,33 @@ describe(SCHEMATIC_NAME, () => {
         await run(first);
 
         expect(messages.join('\n')).toContain('rejects multiple selection');
+    });
+
+    it.each(['multiple', 'multiline'])('reports a static %s attribute, which is rejected now', async (attribute) => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(ts, `const template = \`<kbq-timezone-select ${attribute} [(value)]="zone" />\`;\n`);
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('rejects multiple selection');
+    });
+
+    it('does not report a multiple bound on another select in the same file', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            'const template = `<kbq-select [multiple]="true" /><kbq-timezone-select [(value)]="zone" />`;\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('rejects multiple selection');
     });
 
     it('says nothing at all when the project does not use the timezone package', async () => {

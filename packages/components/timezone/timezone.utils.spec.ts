@@ -326,8 +326,14 @@ describe('KbqTimezone utils', () => {
             expect(filterCitiesBySearchString(cities, ['+3', 'kazan'])).toBe('Kazan');
         });
 
-        it('should treat a lone sign as a search pattern rather than as an offset', () => {
+        it('should treat a lone hyphen-minus as a search pattern rather than as an offset', () => {
             expect(filterCitiesBySearchString('Baden-Baden, Kazan', '-')).toBe('Baden-Baden');
+        });
+
+        it('should keep every city while an offset is still being typed', () => {
+            for (const partial of ['+', '−', '—', '+03:', '-05:', '+0330', '033']) {
+                expect(filterCitiesBySearchString(cities, partial)).toBe(cities);
+            }
         });
 
         it('should treat regex special characters in the pattern literally', () => {

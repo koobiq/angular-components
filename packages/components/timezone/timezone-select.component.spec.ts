@@ -320,6 +320,13 @@ class TimezoneSelectWithCustomTrigger {
 class MultipleTimezoneSelect {}
 
 @Component({
+    selector: 'multiline-timezone-select',
+    imports: [KbqTimezoneModule],
+    template: '<kbq-timezone-select multiline />'
+})
+class MultilineTimezoneSelect {}
+
+@Component({
     selector: 'timezone-select-with-locale-search',
     imports: [
         KbqInputModule,
@@ -613,6 +620,21 @@ describe('KbqTimezoneSelect', () => {
             expect(formControl.value).toBe(options[0].value);
         }));
 
+        it('should select an option by typing the first letters of its city', fakeAsync(() => {
+            const formControl = fixture.componentInstance.control;
+            const options = fixture.componentInstance.options();
+
+            // `city1` is a prefix of `city17` too, so only matching on the city itself reaches the third option.
+            for (const key of 'city17') {
+                dispatchKeyboardEvent(select, 'keydown', key.toUpperCase().charCodeAt(0), undefined, key);
+            }
+
+            tick(200);
+            flush();
+
+            expect(formControl.value).toBe(options[2].value);
+        }));
+
         it.each([
             ['DOWN_ARROW', DOWN_ARROW],
             ['UP_ARROW', UP_ARROW]
@@ -700,6 +722,16 @@ describe('KbqTimezoneSelect', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.select().panelOpen).toBe(false);
+        }));
+
+        it('should mark the overlay pane the way kbq-select does', fakeAsync(() => {
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            expect(overlayContainerElement.querySelector('.cdk-overlay-pane')!.classList).toContain(
+                'kbq-select-overlay'
+            );
         }));
 
         it('should be able to set extra classes on the panel', fakeAsync(() => {
@@ -1236,6 +1268,14 @@ describe('KbqTimezoneSelect', () => {
             expect(() => (fixture.componentInstance.select().multiple = true)).toThrow(
                 getKbqTimezoneSelectMultipleError().message
             );
+        });
+
+        it('should reject multiline, which turns on multiple selection as well', () => {
+            configureTestingModule([MultilineTimezoneSelect]);
+
+            const fixture = TestBed.createComponent(MultilineTimezoneSelect);
+
+            expect(() => fixture.detectChanges()).toThrow(getKbqTimezoneSelectMultipleError().message);
         });
     });
 

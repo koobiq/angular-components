@@ -31,7 +31,7 @@ import { KbqSelect, KbqSelectHiddenItemsMeasurer } from '@koobiq/components/sele
 export class KbqTimezoneSelectTrigger {}
 
 /**
- * Returns an exception to be thrown when `multiple` is turned on for a timezone select, which renders one
+ * Returns an exception to be thrown when `multiple` or `multiline` is turned on for a timezone select, which renders one
  * value in its trigger and has no multi-selection template behind it.
  *
  * @docs-private
@@ -152,5 +152,18 @@ export class KbqTimezoneSelect extends KbqSelect {
             search.setPlaceholder(placeholder);
             this.appliedLocalePlaceholder = true;
         });
+    }
+
+    /**
+     * Rejects `multiline`, which switches the select to multiple selection as surely as `multiple` does. It is
+     * a signal input, so no setter can intercept it; this is the last point before the selection model is
+     * built from it.
+     */
+    override ngOnInit(): void {
+        if (this.multiline()) {
+            throw getKbqTimezoneSelectMultipleError();
+        }
+
+        super.ngOnInit();
     }
 }

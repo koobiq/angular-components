@@ -78,12 +78,21 @@ export class KbqTimezoneOption extends KbqOption {
     }
 
     /**
-     * The same line as {@link viewValue}, but with the city list narrowed by `highlightText` exactly as the
+     * The same line as `viewValue`, but with the city list narrowed by `highlightText` exactly as the
      * rendered list is. The overflow tooltip shows this one, so it never lists a city the search has just
      * filtered out of the option under it.
      */
     get tooltipViewValue(): string {
         return this.buildViewValue(filterCitiesBySearchString(this.timezone.cities, this.highlightText()));
+    }
+
+    /**
+     * The city, which is what typeahead matches. `viewValue` opens with the offset, so every option would
+     * start with `UTC` and typing a city's first letters would never move past the first one — and a zone west
+     * of UTC is written with U+2212, which a keyboard cannot type at all.
+     */
+    override getLabel(): string {
+        return this.timezone.city;
     }
 
     private buildViewValue(cities: string): string {
