@@ -78,7 +78,29 @@
 
 #### Глобальная конфигурация
 
-Провайдер `kbqSkeletonPresetsConfigurationProvider` задает значения шаблонов для приложения или его части. Если он не задает значение, используется значение ближайшего родительского провайдера.
+Провайдер `kbqSkeletonPresetsConfigurationProvider` задает значения шаблонов для приложения или его части. Если значение не задано, используется значение ближайшего родительского провайдера.
+
+```ts
+import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skeleton';
+
+@Component({
+    providers: [
+        kbqSkeletonPresetsConfigurationProvider({
+            typographyLines: 1,
+            dlRows: 3,
+            tableRows: 3,
+            tableColumns: 3,
+            groupCount: 3,
+            accordionRows: 3,
+            checkableRows: 1,
+            tabsCount: 3,
+            tabsContentLines: 3,
+            treeRows: 3,
+            treeChildren: 3
+        })
+    ]
+})
+```
 
 ### Скелетон для отрисованного элемента
 
