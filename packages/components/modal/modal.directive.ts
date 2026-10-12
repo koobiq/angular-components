@@ -31,7 +31,7 @@ import { KBQ_MODAL } from './modal.type';
              to pierce encapsulation to escape it. -->
         <ng-content select="[kbqModalTitleActions]" />
 
-        @if (modal.kbqClosable) {
+        @if (modal.kbqClosable()) {
             <button
                 class="kbq-modal-close kbq-button_transparent"
                 type="button"

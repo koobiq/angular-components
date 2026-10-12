@@ -78,7 +78,7 @@ export class EmployeeDetails {
     }
 }
 
-/** The content of the delete confirmation; `kbqOnOk` reads its form. */
+/** The content of the delete confirmation; `kbqOkClick` reads its form. */
 @Component({
     selector: 'check-employee-delete',
     imports: [ReactiveFormsModule, KbqCheckboxModule],
@@ -165,11 +165,11 @@ export class SidepanelScenario {
             data: this.employee(),
             kbqOkText: 'Delete',
             kbqCancelText: 'Cancel',
-            kbqOnOk: (confirmation) => {
+            kbqOkClick: (confirmation) => {
                 this.log(`delete confirmed, reports: ${confirmation.deleteReports.value}`);
                 this.deleted.set(true);
             },
-            kbqOnCancel: () => this.log('delete cancelled')
+            kbqCancelClick: () => this.log('delete cancelled')
         });
 
         ref.afterOpen.subscribe(() => this.log('delete opened'));

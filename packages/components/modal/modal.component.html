@@ -160,16 +160,16 @@
                         <button
                             kbq-button
                             [attr.autofocus]="true"
-                            [class.kbq-progress]="kbqOkLoading"
+                            [class.kbq-progress]="loading('ok')"
                             [color]="componentColors.Contrast"
                             (click)="onClickOkCancel('ok')"
                         >
                             {{ kbqOkText() }}
                         </button>
                     }
-                    @if (kbqCancelText) {
-                        <button kbq-button [class.kbq-progress]="kbqCancelLoading" (click)="onClickOkCancel('cancel')">
-                            {{ cancelText }}
+                    @if (kbqCancelText()) {
+                        <button kbq-button [class.kbq-progress]="loading('cancel')" (click)="onClickOkCancel('cancel')">
+                            {{ kbqCancelText() }}
                         </button>
                     }
                 }
@@ -190,22 +190,22 @@
     >
         <ng-container [ngTemplateOutlet]="tplContentBody" />
     </div>
-    @if (kbqOkText || kbqCancelText) {
-        <div class="kbq-confirm-footer">
-            @if (kbqOkText) {
+    @if (kbqOkText() || kbqCancelText()) {
+        <div class="kbq-confirm-footer" [kbqOverflowShadowBottom]="confirmBodyOverflow">
+            @if (kbqOkText()) {
                 <button
                     kbq-button
                     [attr.autofocus]="true"
-                    [class.kbq-progress]="kbqOkLoading"
-                    [color]="kbqOkType"
+                    [class.kbq-progress]="loading('ok')"
+                    [color]="kbqOkType()"
                     (click)="onClickOkCancel('ok')"
                 >
-                    {{ okText }}
+                    {{ kbqOkText() }}
                 </button>
             }
-            @if (kbqCancelText) {
-                <button kbq-button [class.kbq-progress]="kbqCancelLoading" (click)="onClickOkCancel('cancel')">
-                    {{ cancelText }}
+            @if (kbqCancelText()) {
+                <button kbq-button [class.kbq-progress]="loading('cancel')" (click)="onClickOkCancel('cancel')">
+                    {{ kbqCancelText() }}
                 </button>
             }
         </div>

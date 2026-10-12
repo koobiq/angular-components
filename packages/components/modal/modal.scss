@@ -25,15 +25,6 @@
 
     list-style: none;
 
-    // Set by `changeAnimationState` for the length of the opening zoom.
-    /* stylelint-disable-next-line selector-class-pattern */
-    &.zoom-enter {
-        animation-duration: 0.3s;
-        // reset scale avoid mousePosition bug
-        transform: none;
-        opacity: 0;
-    }
-
     &.kbq-modal_small {
         width: var(--kbq-modal-size-small-width);
     }

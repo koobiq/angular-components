@@ -791,10 +791,11 @@ export class KbqDatepickerInput<D>
             event.preventDefault();
 
             this.datepicker?.open();
-        } else if (this.isKeyForClose(event)) {
+        } else if (this.isKeyForClose(event) && this.datepicker?.opened) {
+            // Consumed only when there is a calendar to close, so a dialog around the input still takes the key.
             event.preventDefault();
 
-            this.datepicker?.close();
+            this.datepicker.close();
         } else if (keyCode === TAB) {
             this.datepicker?.close(false);
         } else if (this.isKeyForByPass(event)) {
