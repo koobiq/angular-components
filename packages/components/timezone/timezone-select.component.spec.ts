@@ -9,6 +9,7 @@ import {
     DOWN_ARROW,
     ESCAPE,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
+    KbqComponentColors,
     KbqOptionModule,
     KbqOptionSelectionChange,
     KbqOverlayLayer,
@@ -751,6 +752,24 @@ describe('KbqTimezoneSelect', () => {
             const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
 
             expect(options[1].classList).not.toContain('kbq-selected');
+        }));
+
+        it('should colour the arrow when the error state changes outside the select', fakeAsync(() => {
+            const { control } = fixture.componentInstance;
+            const arrow = trigger.querySelector('.kbq-select__arrow')!;
+
+            control.setErrors({ required: true });
+            control.markAsTouched();
+            fixture.detectChanges();
+            flush();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.Error}`);
+
+            control.markAsUntouched();
+            fixture.detectChanges();
+            flush();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
         }));
     });
 
