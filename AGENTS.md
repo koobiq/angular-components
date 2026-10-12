@@ -79,7 +79,7 @@ yarn run build:angular-moment-adapter  # Build Moment date adapter
 yarn run build:cli                     # Build release management CLI
 yarn run build:schematics              # Build Angular CLI schematics
 yarn run styles:build-all              # Compile all SCSS into dist/scss-compiled and the prebuilt themes into dist/components/prebuilt-themes
-yarn run docs                          # Build the packages and examples the docs site reads, generate its pages, then serve it
+yarn run docs                          # Build every package, generate docs content and examples, then serve the docs site
 yarn run docs:build                    # Build docs app for production (prerendered)
 ```
 
