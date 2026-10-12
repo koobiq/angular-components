@@ -79,10 +79,17 @@ bootstrapApplication(AppComponent, {
   "node_modules/@koobiq/icons/fonts/kbq-icons.css",
   "node_modules/@koobiq/design-tokens/web/css-tokens.css",
   "node_modules/@koobiq/design-tokens/web/css-tokens-light.css",
+  "node_modules/@koobiq/design-tokens/web/component-tokens.css",
+  "node_modules/@koobiq/design-tokens/web/component-tokens-light.css",
   "node_modules/@koobiq/components/prebuilt-themes/theme.css",
   "src/styles.css"
 ]
 ```
+
+В файлах `component-tokens-*.css` лежат значения трёх компонентов, токены которых пакет
+`@koobiq/design-tokens` всё ещё поставляет, — code-block, scrollbar и skeleton. Эти файлы
+подключаются по вашему выбору, а копий их значений в библиотеке нет, поэтому без них эти три
+компонента останутся без оформления.
 
 ### Настройка темы
 
