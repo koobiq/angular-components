@@ -196,7 +196,7 @@ Every pull request runs these workflows:
 | Workflow                          | What it runs                                                                                                                             |
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-tokens-data` |
-| Unit tests                        | `styles:build-all`, then every `unit:*` script                                                                                           |
+| Unit tests                        | `styles:build-all`, then every `unit:*` script except `unit:all`                                                                         |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                         |
 | API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`         |
 | Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`          |
