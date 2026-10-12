@@ -186,7 +186,7 @@ describe('KbqIconButton', () => {
         it('should warn in dev mode when it has no accessible name', () => {
             const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-            TestBed.createComponent(TestApp).detectChanges();
+            TestBed.createComponent(UnnamedTestApp).detectChanges();
 
             expect(warn).toHaveBeenCalledWith(expect.stringContaining('no accessible name'), expect.anything());
 
@@ -274,12 +274,19 @@ describe('KbqIconButton', () => {
     template: `
         <button
             kbq-icon-button="kbq-chevron-down-s_16"
+            aria-label="Collapse"
             [color]="color"
             [disabled]="isDisabled"
             (click)="onClick()"
         ></button>
 
-        <i kbq-icon-button="kbq-chevron-down-s_16" [color]="color" [disabled]="isDisabled" (click)="onClick()"></i>
+        <i
+            kbq-icon-button="kbq-chevron-down-s_16"
+            aria-label="Collapse"
+            [color]="color"
+            [disabled]="isDisabled"
+            (click)="onClick()"
+        ></i>
     `
 })
 class TestApp {
@@ -293,13 +300,22 @@ class TestApp {
     selector: 'size-test-app',
     imports: [KbqIconModule],
     template: `
-        <i kbq-icon-button="kbq-chevron-down-s_16" [size]="size" [small]="small"></i>
+        <i kbq-icon-button="kbq-chevron-down-s_16" aria-label="Collapse" [size]="size" [small]="small"></i>
     `
 })
 class SizeTestApp {
     size: KbqIconButtonSize = 'normal';
     small = false;
 }
+
+@Component({
+    selector: 'unnamed-test-app',
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon-button="kbq-chevron-down-s_16"></i>
+    `
+})
+class UnnamedTestApp {}
 
 @Component({
     selector: 'named-test-app',
