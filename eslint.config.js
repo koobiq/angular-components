@@ -171,7 +171,11 @@ module.exports = tseslint.config(
 
     // Rules for JavaScript and TypeScript files
     {
-        files: ['**/*.js', '**/*.ts'],
+        files: [
+            '**/*.js',
+            '**/*.mjs',
+            '**/*.ts'
+        ],
         extends: [
             eslint.configs.recommended,
             promise.configs['flat/recommended']
@@ -601,7 +605,11 @@ module.exports = tseslint.config(
 
     // Override rules for /tools
     {
-        files: ['tools/**/*.ts', 'tools/**/*.js'],
+        files: [
+            'tools/**/*.ts',
+            'tools/**/*.js',
+            'tools/**/*.mjs'
+        ],
         rules: {
             // plugin:eslint
             'no-console': 0,
@@ -636,7 +644,12 @@ module.exports = tseslint.config(
 
     // plugin:prettier — must be last so it can turn off conflicting formatting rules
     {
-        files: ['**/*.js', '**/*.ts', '**/*.html'],
+        files: [
+            '**/*.js',
+            '**/*.mjs',
+            '**/*.ts',
+            '**/*.html'
+        ],
         extends: [prettierRecommended]
     }
 );
