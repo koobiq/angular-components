@@ -1615,7 +1615,7 @@
         "dev-markdown": {
             "projectType": "application",
             "root": "packages/components-dev/markdown",
-            "sourceRoot": "packages/markdown-dev/markdown",
+            "sourceRoot": "packages/components-dev/markdown",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
