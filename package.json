@@ -206,7 +206,7 @@
         "validate:license": "ts-node --project ./tools/validate-licenses/tsconfig.json ./tools/validate-licenses/validate-licenses.ts",
         "-----RELEASE-----": "----------------------------------------------------------------------------------------",
         "release:extract-docs-meta": "yarn run docs:api-gen && yarn run docs:generate-sitemap && yarn run docs:generate-prerender-routes && yarn run docs:generate-llms",
-        "release:stage:commit": "yarn run docs:prune-is-new-badges && yarn run release:extract-docs-meta && ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage-commit",
+        "release:stage:commit": "yarn run docs:prune-is-new-badges && ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage-commit",
         "release:publish:ci-github": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci-github",
         "-----DEV-----": "--------------------------------------------------------------------------------------------",
         "dev:all": "ng serve dev-all --port 3003",
@@ -340,6 +340,11 @@
             "angular-luxon-adapter",
             "angular-moment-adapter",
             "cli"
-        ]
+        ],
+        "hooks": {
+            "post-version-bump": [
+                "yarn run release:extract-docs-meta"
+            ]
+        }
     }
 }
