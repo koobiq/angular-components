@@ -1,26 +1,28 @@
-const { simpleMapColors, simpleMapTypography, getTokensOverviewData } = require('./templates');
-const { updateObject, sortSections } = require('./utils');
-const { NO_HEADER, CUSTOM_HEADER } = require('./config');
+import { CUSTOM_HEADER, NO_HEADER } from './config.mjs';
+import { getTokensOverviewData, simpleMapColors, simpleMapTypography } from './templates.mjs';
+import { sortSections, tokenValue, updateObject } from './utils.mjs';
 
-module.exports = (StyleDictionary) => {
+export default (StyleDictionary) => {
     StyleDictionary.registerFormat({
         name: 'docs/typography-ts',
-        formatter: function ({ dictionary }) {
+        format: ({ dictionary }) => {
             const filtered = [];
 
             for (const token of dictionary.allTokens) {
                 const isTypographyTypeMissing =
                     filtered.findIndex(({ attributes }) => attributes.type === token.attributes.type) === -1;
 
-                if (isTypographyTypeMissing && token.attributes.item === 'font-size') {
+                // One entry per preset. `fontSize` is the sub-property every preset has, and the
+                // one the sort below reads; DTCG keeps the composite's sub-properties camelCase.
+                if (isTypographyTypeMissing && token.attributes.item === 'fontSize') {
                     filtered.push(token);
                 }
             }
 
             // Sort by font-size
             filtered.sort((a, b) => {
-                const aFontSize = parseInt(a.value);
-                const bFontSize = parseInt(b.value);
+                const aFontSize = parseInt(tokenValue(a));
+                const bFontSize = parseInt(tokenValue(b));
 
                 if (aFontSize < bFontSize) return 1;
                 if (aFontSize > bFontSize) return -1;
@@ -36,17 +38,12 @@ module.exports = (StyleDictionary) => {
 
     StyleDictionary.registerFormat({
         name: 'docs/colors-ts',
-        formatter: function ({ dictionary }) {
+        format: ({ dictionary }) => {
             // group tokens by types
-            const groupedTokens = dictionary.allTokens.reduce((res, currentToken) => {
-                const section =
-                    typeof currentToken.original.value === 'string' &&
-                    currentToken.original.value.startsWith('{palette')
-                        ? NO_HEADER
-                        : currentToken.attributes.type;
-
-                return updateObject(res, section, currentToken);
-            }, {});
+            const groupedTokens = dictionary.allTokens.reduce(
+                (res, currentToken) => updateObject(res, currentToken.attributes.type, currentToken),
+                {}
+            );
 
             // since there is only 1 group with recursive data
             // made it manually to not overload the logic
@@ -69,14 +66,10 @@ module.exports = (StyleDictionary) => {
 
     StyleDictionary.registerFormat({
         name: 'docs/palette-ts',
-        formatter: function ({ dictionary }) {
-            dictionary.allTokens = dictionary.allTokens.filter(
-                (token, pos, allTokens) => allTokens.indexOf(token) === pos
-            );
+        format: ({ dictionary }) => {
+            const unique = dictionary.allTokens.filter((token, pos, allTokens) => allTokens.indexOf(token) === pos);
 
-            const grouped = dictionary.allTokens.reduce((res, token) => {
-                return updateObject(res, token.attributes.type, token);
-            }, {});
+            const grouped = unique.reduce((res, token) => updateObject(res, token.attributes.type, token), {});
 
             const sections = Object.entries(grouped).map(simpleMapColors);
 
@@ -86,29 +79,16 @@ module.exports = (StyleDictionary) => {
 
     StyleDictionary.registerFormat({
         name: 'docs/globals-ts',
-        formatter: function ({ dictionary }) {
-            return getTokensOverviewData(dictionary);
-        }
+        format: ({ dictionary }) => getTokensOverviewData(dictionary)
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/border-radius-ts',
-        formatter: function ({ dictionary }) {
-            return getTokensOverviewData(dictionary);
-        }
-    });
-
-    StyleDictionary.registerFormat({
-        name: 'docs/border-radius-ts',
-        formatter: function ({ dictionary }) {
-            return getTokensOverviewData(dictionary);
-        }
+        format: ({ dictionary }) => getTokensOverviewData(dictionary)
     });
 
     StyleDictionary.registerFormat({
         name: 'docs/shadows-ts',
-        formatter: function ({ dictionary }) {
-            return getTokensOverviewData(dictionary);
-        }
+        format: ({ dictionary }) => getTokensOverviewData(dictionary)
     });
 };
