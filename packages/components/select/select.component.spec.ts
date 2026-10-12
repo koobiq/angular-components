@@ -42,6 +42,7 @@ import {
     HOME,
     KBQ_LOCALE_SERVICE,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KbqComponentColors,
     KbqLocaleService,
     KbqLocaleServiceModule,
     KbqOption,
@@ -5279,6 +5280,28 @@ describe('KbqSelect', () => {
             flush();
 
             expect(select.classList).not.toContain('kbq-invalid');
+        }));
+
+        it('should colour the arrow when the error state changes outside the select', fakeAsync(() => {
+            const arrow = select.querySelector('.kbq-select__arrow')!;
+
+            // Initialization leaves the select's view marked; settle it so that nothing but the error state
+            // can repaint the arrow.
+            fixture.detectChanges();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
+
+            testComponent.formControl.markAsTouched();
+            fixture.detectChanges();
+            flush();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.Error}`);
+
+            testComponent.formControl.markAsUntouched();
+            fixture.detectChanges();
+            flush();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
         }));
 
         it('should appear as invalid when the parent form group is submitted', fakeAsync(() => {
