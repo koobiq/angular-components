@@ -1,8 +1,8 @@
 /**
  * Compiles the MDX pages of the documentation site into Angular components under `dist/docs-pages`,
- * which the docs app imports as `@koobiq/docs-pages`. With `--watch`, recompiles on every change.
+ * which the docs app imports as `@koobiq/docs-pages`.
  */
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, watch, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { globSync } from 'glob';
 import { dirname, join } from 'path';
 import { docsGetPagePaths } from '../../apps/docs/src/app/page-paths';
@@ -88,7 +88,8 @@ const generate = (): void => {
     console.log(`Compiled ${pages.length} MDX pages into ${OUTPUT_DIR}`);
 };
 
-const run = (): boolean => {
+/** Compiles every page and reports a failure instead of throwing, so that a watcher keeps running. */
+export const compileDocsPages = (): boolean => {
     try {
         generate();
 
@@ -100,26 +101,6 @@ const run = (): boolean => {
     }
 };
 
-if (process.argv.includes('--watch')) {
-    run();
-
-    // One save arrives as several events, and a run compiles every page, so the runs are collapsed into one.
-    let pending: NodeJS.Timeout | undefined;
-
-    const scheduleRun = (path: string): void => {
-        console.log(`${path} changed`);
-        clearTimeout(pending);
-        pending = setTimeout(run, 50);
-    };
-
-    // The example catalogue is read once: restart the watcher after adding an example.
-    for (const directory of ['packages/components', 'docs']) {
-        watch(directory, { recursive: true }, (_event, fileName) => {
-            if (fileName?.endsWith('.mdx')) {
-                scheduleRun(join(directory, fileName));
-            }
-        });
-    }
-} else if (!run()) {
+if (require.main === module && !compileDocsPages()) {
     process.exitCode = 1;
 }
