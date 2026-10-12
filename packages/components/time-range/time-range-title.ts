@@ -77,13 +77,9 @@ export class KbqTimeRangeTitle {
         if (timeRangeUnit === 'other') {
             switch (context.type) {
                 case 'range': {
-                    return (
-                        localeConfiguration.title.for +
-                        ' ' +
-                        this.timeRangeService.dateFormatter.rangeLongDate(
-                            this.timeRangeService.dateAdapter.deserialize(context.startDateTime ?? ''),
-                            this.timeRangeService.dateAdapter.deserialize(context.endDateTime ?? '')
-                        )
+                    return this.timeRangeService.dateFormatter.rangeLongDate(
+                        this.timeRangeService.dateAdapter.deserialize(context.startDateTime ?? ''),
+                        this.timeRangeService.dateAdapter.deserialize(context.endDateTime ?? '')
                     );
                 }
                 case 'allTime': {
@@ -103,16 +99,12 @@ export class KbqTimeRangeTitle {
 
         if (!context.startDateTime) return '';
 
-        return (
-            localeConfiguration.title.for +
-            ' ' +
-            this.timeRangeService.dateFormatter.duration(
-                this.timeRangeService.dateAdapter.deserialize(context.startDateTime),
-                this.timeRangeService.dateAdapter.today(),
-                [timeRangeUnit],
-                false,
-                localeConfiguration.durationTemplate.title
-            )
+        return this.timeRangeService.dateFormatter.duration(
+            this.timeRangeService.dateAdapter.deserialize(context.startDateTime),
+            this.timeRangeService.dateAdapter.today(),
+            [timeRangeUnit],
+            false,
+            localeConfiguration.durationTemplate.title
         );
     });
 }

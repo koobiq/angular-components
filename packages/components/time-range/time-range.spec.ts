@@ -230,7 +230,9 @@ describe('KbqTimeRange', () => {
 
             // Replacing the types is not the user picking a range, so nothing may reach the control.
             expect(componentInstance.control.value).toBeNull();
-            expect(getTriggerNativeElement(debugElement).textContent).toContain('Выберите период');
+            expect(getTriggerNativeElement(debugElement).textContent).toContain(
+                ruRULocaleData.timeRange.title.placeholder
+            );
         }));
 
         it('should work with custom ranges', () => {

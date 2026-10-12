@@ -5,6 +5,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../localized-data';
 
 /**
  * @title Navbar vertical
@@ -22,8 +23,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalExample {
+    protected readonly text = injectExampleText();
+
     readonly popUpPlacements = PopUpPlacements;
     readonly colors = KbqComponentColors;
-    readonly apps: readonly string[] = ['User Management', 'Knowledge Hub', 'Secret Notes'];
-    readonly selectedApp = signal<string>(this.apps[0]);
+    /** Position of the selected app in `text().apps`, so the selection survives a locale switch. */
+    readonly selectedApp = signal(0);
 }

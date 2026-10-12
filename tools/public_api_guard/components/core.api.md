@@ -541,12 +541,13 @@ export const enUSLocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -609,7 +610,6 @@ export const enUSLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -823,12 +823,13 @@ export const esLALocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -891,7 +892,6 @@ export const esLALocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -1373,12 +1373,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -1441,7 +1442,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -1630,12 +1630,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -1698,7 +1699,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -1883,12 +1883,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -1951,7 +1952,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -2142,12 +2142,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -2210,7 +2211,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -2397,12 +2397,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -2465,7 +2466,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -3152,12 +3152,13 @@ export type KbqFilterBarLocaleConfiguration = {
         searchPlaceholder: string;
         searchEmptyResult: string;
         saveAsNewFilter: string;
-        saveChanges: string;
-        saveAsNew: string;
+        saveChangesHeader: string;
+        saveChangesButton: string;
+        saveAsNewHeader: string;
+        saveAsNewButton: string;
         change: string;
         resetChanges: string;
         remove: string;
-        error: string;
         errorHint: string;
         saveButton: string;
         cancelButton: string;
@@ -4752,7 +4753,6 @@ export type KbqTimepickerLocaleConfiguration = {
 // @public
 export type KbqTimeRangeLocaleConfiguration = {
     title: {
-        for: string;
         placeholder: string;
     };
     editor: {
@@ -5322,12 +5322,13 @@ export const ptBRLocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -5390,7 +5391,6 @@ export const ptBRLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -5800,12 +5800,13 @@ export const ruRULocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -5868,7 +5869,6 @@ export const ruRULocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -6187,12 +6187,13 @@ export const tkTMLocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -6255,7 +6256,6 @@ export const tkTMLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
