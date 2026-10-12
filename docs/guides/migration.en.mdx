@@ -1875,6 +1875,7 @@ The bar carries progress semantics for the first time: `role="progressbar"` on t
 Two more with nothing to migrate. The a11y locale gained a `progressBar` key, used as the accessible name of a bar carrying neither an `aria-label` nor a projected text — override it through `kbqA11yLocaleConfigurationProvider` like any other. And the inner track no longer repeats the host `id`, so one bar renders exactly one element answering to it and an `aria-describedby` or `<label for>` aimed at the bar is no longer ambiguous.
 
 Reported by `progress-bar-percentage-and-aria`.
+
 #### Progress spinner
 
 `size` was the last accessor input on the spinner, and the reason the automated signal migration skipped it: its setter stored the size and computed the SVG circle radius in one go. The radius is a `computed` now and `size` is a plain `input()`. `id`, `value` and `mode` became signal inputs back in 20.0.0 and no migration has covered them until now, so this one rewrites their reads as well. A read left un-called is silent rather than loud: `spinner.value > 50` is always false and `{{ spinner.value }}` prints the function source.

@@ -16,13 +16,17 @@ test.describe('KbqProgressBar', () => {
             await expect(screenshotTarget).toHaveScreenshot('01-dark.png');
         });
 
-        // Stated explicitly even though the whole suite already runs reduced: this is the preference the
-        // assertion is about, and it must survive a change to the shared config.
         test.describe('reduced motion', () => {
-            test.use({ reducedMotion: 'reduce' });
-
             test('leaves the indeterminate fill narrower than a complete bar', async ({ page }) => {
                 await page.goto('/E2eProgressBarStateAndStyle');
+
+                // The preference comes from `contextOptions` in the shared config, and it is the whole
+                // premise of what follows — so it is asserted rather than re-declared here. Re-declaring
+                // it would mean overriding `contextOptions` wholesale and losing the viewport and
+                // device scale factor along with it; asserting it fails loudly if the config changes.
+                await expect
+                    .poll(() => page.evaluate(() => matchMedia('(prefers-reduced-motion: reduce)').matches))
+                    .toBe(true);
 
                 const fillWidth = (testid: string) =>
                     page

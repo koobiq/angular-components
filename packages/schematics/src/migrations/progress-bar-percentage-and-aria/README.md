@@ -1,8 +1,8 @@
 # progress-bar-percentage-and-aria
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
-(registered for `21.0.0-0`). Reports the progress-bar review changes a consumer has to act on. It
-never writes to the tree.
+Migration schematic invoked automatically by `ng update @koobiq/components@21` (registered for
+`21.0.0-0`). Reports the progress-bar review changes a consumer has to act on. It never writes to
+the tree.
 
 ## Background
 
