@@ -26,6 +26,7 @@
 /packages/components/clamped-text/*                         @NikGurev
 /packages/components/divider/*                              @NikGurev
 /packages/components/dropdown/*                             @NikGurev
+/packages/components/ellipsis-center/*                      @NikGurev
 /packages/components/empty-state/*                          @NikGurev
 /packages/components/file-upload/*                          @NikGurev
 /packages/components/icon/*                                 @NikGurev
