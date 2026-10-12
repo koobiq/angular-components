@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import {
     AgGridAndActionsPanelExample,
     AgGridAndContentPanelExample,
-    AgGridColumnMenuExample,
     AgGridColumnStateExample,
     AgGridCopySelectedExample,
     AgGridExportExample,
@@ -14,10 +13,12 @@ import {
     AgGridOverviewExample,
     AgGridQuickFilterStateExample,
     AgGridRowActionsExample,
+    AgGridRowDetailExample,
     AgGridRowDraggingExample,
     AgGridRowFocusStateExample,
     AgGridRowGroupExample,
     AgGridRowSelectionStateExample,
+    AgGridSettingsMenuExample,
     AgGridSkeletonCellRendererExample,
     AgGridStatusBarExample
 } from 'packages/docs-examples/components/ag-grid';
@@ -26,7 +27,8 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     selector: 'dev-examples',
     imports: [
-        AgGridColumnMenuExample,
+        AgGridSettingsMenuExample,
+        AgGridRowDetailExample,
         AgGridOverviewExample,
         AgGridRowDraggingExample,
         AgGridRowGroupExample,
@@ -48,7 +50,9 @@ import { DevThemeToggle } from '../theme-toggle';
         AgGridLongCellContentExample
     ],
     template: `
-        <ag-grid-column-menu-example />
+        <ag-grid-settings-menu-example />
+        <hr />
+        <ag-grid-row-detail-example />
         <hr />
         <ag-grid-loading-overlay-example />
         <hr />
