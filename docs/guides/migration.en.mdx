@@ -1699,7 +1699,18 @@ Initial focus was `getElementsByTagName('button')[0]?.focus()`: the first button
 
 `[cdkFocusInitial]` and `autofocus` inside the dialog still win over all of them.
 
-**The close controls of a declarative modal were inert, and they work now.** `handleCloseResult` branched on the runtime type of the trigger: an `EventEmitter` was emitted and the method returned, and only `KbqModalService.create()` ever replaced the emitters with closures. So on a `<kbq-modal [(kbqVisible)]>` the ×, the dim layer and the predefined OK/Cancel buttons emitted and did nothing — the repository's own dev app shipped a modal that could not be dismissed. The emitter form is a notification now and the dialog closes; the veto stays on the callable form, which keeps the dialog open by returning `false` (or a promise of `false`). If you bound `(kbqOnOk)` to keep a dialog open while validating, pass `kbqOnOk` as a function instead.
+**The close controls of a declarative modal were inert, and they work now.** `handleCloseResult` branched on the runtime type of the trigger: an `EventEmitter` was emitted and the method returned, and only `KbqModalService.create()` ever replaced the emitters with closures. So on a `<kbq-modal [(kbqVisible)]>` the ×, the dim layer and the predefined OK/Cancel buttons emitted and did nothing — the repository's own dev app shipped a modal that could not be dismissed. The cause was the declaration: `kbqOnOk` and `kbqOnCancel` were each `@Input()` and `@Output()` on one property, typed `EventEmitter<T> | OnClickCallback<T>`, so the dialog had to branch on what it found there at runtime — and binding both forms on one dialog silently lost the output, because Angular subscribed to the default emitter in the create pass and the input then replaced the property with the function.
+
+Each flow is two members now, and you bind one of them:
+
+| Before                                     | After                                                       | What it does                                     |
+| ------------------------------------------ | ----------------------------------------------------------- | ------------------------------------------------ |
+| `kbqOnOk` / `kbqOnCancel` as a function    | `kbqOkClick` / `kbqCancelClick` — `@Input()`                | Decides: returning `false` keeps the dialog open |
+| `(kbqOnOk)` / `(kbqOnCancel)` as an output | `(kbqOnOk)` / `(kbqOnCancel)` — unchanged, `@Output()` only | Notifies; the dialog closes either way           |
+
+`(kbqOnOk)` and `(kbqOnCancel)` template bindings are unaffected. What moves is the option and the input: `modalService.create({ kbqOnOk: fn })` becomes `kbqOkClick: fn`, and `[kbqOnOk]="fn"` becomes `[kbqOkClick]="fn"`. `ModalOptions.kbqOnOk` is an `EventEmitter<C>` now and `ModalOptions.kbqOkClick` is the callback, so passing a function under the old key is a compile error rather than a silent change of meaning. Binding both the handler and the event on one dialog is reported in development mode: the handler decides, so the event is never emitted.
+
+`KbqModalService.create()` and `confirm()` also stopped forcing a no-op handler into the options — the dialog emits and closes on its own when no handler is bound.
 
 **<kbd>Escape</kbd> has one implementation for both entry paths.** It used to be handled twice: the service path filtered on `kbqCloseByESC` and ran through `kbqOnCancel` but ignored a veto, while the declarative path closed unconditionally, ignoring `kbqCloseByESC` entirely and skipping `kbqOnCancel`. Escape is the Cancel button now — it honours `kbqCloseByESC`, and a `kbqOnCancel` returning `false` stops it. The keyboard table's third row, "Submit the form by pressing Enter in any text input", described behaviour that was never implemented and is gone from the guide.
 
@@ -1723,9 +1734,24 @@ Two dead style hooks went with it: `.kbq-modal-open` — the class was applied n
 
 Two smaller fixes with nothing to migrate: `_modal-animation.scss` honours `prefers-reduced-motion: reduce`, and `afterOpen`/`afterClose` are driven by `animationend` with the 300 ms timer only as a fallback, so they fire as soon as the animation is over and immediately when motion is reduced. And the confirm dialog's body has the custom scrollbar and the overflow shadows every other variant already had.
 
-**The inputs are still decorators, on purpose.** Unlike the rest of this review series, `KbqModalComponent` did not move to `input()`, so no consumer read needs an added `()`. `ModalBuilderForService` applies the whole options object with `Object.assign(this.modalRef.instance, inputs)`, and a bulk assignment overwrites an `InputSignal` rather than writing through it. `kbqOnOk` and `kbqOnCancel` are the harder half: each is `@Input()` and `@Output()` on one property, holding either an `EventEmitter` or a callback and branched on at runtime, which has no signal equivalent. `kbqVisible` would collapse cleanly into `model()` and will move when those two do.
+**Every input is a signal now.** Both things that blocked it are gone: `kbqOnOk`/`kbqOnCancel` are split into an input and an output (above), and `ModalBuilderForService` no longer applies the options with `Object.assign(this.modalRef.instance, inputs)` — a bulk assignment would overwrite an `InputSignal` rather than write through it. The options reach the dialog through the new `KBQ_MODAL_OPTIONS` token instead, as the _initial values_ of its inputs: a service-created dialog has no template bindings, so an input it does not bind keeps that initial value for life.
 
-Reported by `modal-dialog-semantics`.
+Template bindings are unaffected — `[kbqTitle]`, `[kbqSize]`, `[kbqMaskClosable]`, `[(kbqVisible)]` and the rest are unchanged, and `kbqVisibleChange` is now generated by the `model()` under the same name and type. What breaks is programmatic access:
+
+| Before                                       | After                                                     |
+| -------------------------------------------- | --------------------------------------------------------- |
+| `modal.kbqVisible`                           | `modal.kbqVisible()`                                      |
+| `modal.kbqVisible = true`                    | `modal.kbqVisible.set(true)`, or `open()` / `close()`     |
+| `modal.kbqTitle`, `modal.kbqSize`, …         | `modal.kbqTitle()`, `modal.kbqSize()`, …                  |
+| `modal.kbqTitle = 'x'` and every other input | Bind the attribute — a signal input cannot be assigned to |
+
+`kbqVisible` is a `model()`; every other input is read-only. Three of them keep a writable shadow inside the dialog, because something other than the binding drives them: `kbqOkLoading`/`kbqCancelLoading` while a handler's returned promise is pending, and `kbqMask` while another dialog covers this one. Those shadows are private — the input keeps reporting what was bound, which is also why re-binding it still takes effect.
+
+Two smaller consequences. `kbqFooter` is no longer overwritten with its own formatted copy on init, so it reports exactly what was bound; the defaults are filled in on the way to the template. And `KbqModalComponent` no longer declares `implements ModalOptions`: that interface is the service's contract, and the component's inputs are signals, so the two no longer match structurally.
+
+The four template type guards went with it — `isTemplateRef`, `isNonEmptyString`, `isComponent` and `isModalButtons` are gone, replaced by one classification per slot. They were `protected` and `@docs-private` already, so only a subclass could notice. `animateMaskTo` stays, and `setMaskEnabled` joins it, because `KbqModalControlService` still orchestrates the dim layer of covered dialogs from outside; that orchestration belongs in the dialog and has not moved yet.
+
+Reported by `modal-dialog-semantics` and `modal-signals`.
 
 #### Navbar
 

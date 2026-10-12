@@ -1,3 +1,4 @@
+import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { KbqModalControlService } from './modal-control.service';
@@ -5,6 +6,11 @@ import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
 
 class MockModalRef extends KbqModalRef {
+    // `handleMultipleMasks` reaches past the ref into the component to read these, so a ref that
+    // does not carry them cannot be registered at all.
+    kbqVisible = signal(false);
+    kbqMask = signal(false);
+
     afterOpen = new Subject<void>();
     beforeClose = new Subject<void>();
     afterClose = new Subject<void>();

@@ -70,6 +70,15 @@ export interface KbqModal {
 /** Injection token exposing the dialog to the directives composed inside it. */
 export const KBQ_MODAL = new InjectionToken<KbqModal>('KBQ_MODAL');
 
+/**
+ * Options `KbqModalService` passes to the dialog it creates. The dialog reads them as the initial
+ * values of its inputs, which is how the imperative path reaches signal inputs at all: a dialog
+ * created by the service has no template bindings, so an input keeps its initial value for life.
+ * Never provided on the declarative path, where the bindings carry the same values.
+ * @docs-private
+ */
+export const KBQ_MODAL_OPTIONS = new InjectionToken<ModalOptions>('KBQ_MODAL_OPTIONS');
+
 // Public options for using by service
 export interface ModalOptions<C = any, R = any> {
     /** Layout the dialog renders. Default is `'default'`. */
@@ -139,27 +148,30 @@ export interface ModalOptions<C = any, R = any> {
     /** Whether the predefined OK button renders its progress state. */
     kbqOkLoading?: boolean;
     /**
-     * Handler of the predefined OK button. A function returning `false` (or a promise of `false`)
-     * keeps the dialog open; anything else closes it.
+     * Decision handler of the predefined OK button. Returning `false` (or a promise of `false`)
+     * keeps the dialog open; anything else closes it. Pair of the `kbqOnOk` output — bind one.
      */
-    kbqOnOk?: EventEmitter<C> | OnClickCallback<C>;
+    kbqOkClick?: OnClickCallback<C>;
+    /** Emitter notified when the predefined OK button is activated. Pair of `kbqOkClick` — bind one. */
+    kbqOnOk?: EventEmitter<C>;
     /** Caption of the predefined Cancel button. The button is not rendered without it. */
     kbqCancelText?: string;
     /** Whether the predefined Cancel button renders its progress state. */
     kbqCancelLoading?: boolean;
     /**
-     * Handler of the predefined Cancel button, the close button, <kbd>Escape</kbd> and the dim
-     * layer. A function returning `false` (or a promise of `false`) keeps the dialog open.
+     * Decision handler of the predefined Cancel button, the close button, <kbd>Escape</kbd> and the
+     * dim layer. Returning `false` (or a promise of `false`) keeps the dialog open. Pair of the
+     * `kbqOnCancel` output — bind one.
      */
-    kbqOnCancel?: EventEmitter<C> | OnClickCallback<C>;
+    kbqCancelClick?: OnClickCallback<C>;
+    /** Emitter notified when the dialog is cancelled. Pair of `kbqCancelClick` — bind one. */
+    kbqOnCancel?: EventEmitter<C>;
 
     /** Data being injected into the child component. */
     data?: unknown;
 }
 
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
-    kbqOnOk?: OnClickCallback<T>;
-    kbqOnCancel?: OnClickCallback<T>;
     /**
      * The injector used to create the component that will be attached.
      * If specified, it overrides the injector provided by `KbqModalService`.

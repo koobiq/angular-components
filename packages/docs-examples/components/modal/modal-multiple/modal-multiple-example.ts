@@ -25,8 +25,8 @@ export class ModalMultipleExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Save'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Save'),
+            kbqCancelClick: () => console.log('Cancel')
         });
 
         this.showSuccessModal();
@@ -40,8 +40,8 @@ export class ModalMultipleExample {
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('OK'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 }

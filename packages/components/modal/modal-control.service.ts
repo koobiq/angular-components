@@ -186,16 +186,16 @@ export class KbqModalControlService {
     private handleMultipleMasks(modalRef: KbqModalRef) {
         const modals = Array.from(this.registeredMetaMap.values()).map((v) => v.modalRef) as KbqModalComponent[];
 
-        if (modals.filter((modal) => modal.kbqVisible).length > 1) {
+        if (modals.filter((modal) => modal.kbqVisible()).length > 1) {
             const visibleModalsWithMask = modals
                 .splice(0, modals.length - 1)
-                .filter((modal) => modal.kbqVisible && modal.kbqMask);
+                .filter((modal) => modal.kbqVisible() && modal.kbqMask());
 
             // Trigger leave animation on other masks, then disable them after animation completes
             visibleModalsWithMask.forEach((modal) => {
                 setTimeout(() => {
                     modal.getInstance().animateMaskTo(null);
-                    modal.getInstance().kbqMask = false;
+                    modal.getInstance().setMaskEnabled(false);
                     modal.markForCheck();
                 }, MODAL_ANIMATE_DURATION);
 
@@ -209,7 +209,7 @@ export class KbqModalControlService {
                 // one every time round.
                 setTimeout(() => {
                     modalRef.getInstance().animateMaskTo(null);
-                    modalRef.getInstance().kbqMask = false;
+                    modalRef.getInstance().setMaskEnabled(false);
                 }, MODAL_ANIMATE_DURATION);
 
                 modalRef.getInstance().animateMaskTo('leave');
@@ -220,7 +220,7 @@ export class KbqModalControlService {
                         modal.markForCheck();
                     }, MODAL_ANIMATE_DURATION);
 
-                    modal.getInstance().kbqMask = true;
+                    modal.getInstance().setMaskEnabled(true);
                     modal.getInstance().animateMaskTo('enter');
 
                     modal.markForCheck();
