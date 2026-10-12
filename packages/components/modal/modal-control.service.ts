@@ -52,7 +52,9 @@ export class KbqModalControlService {
     private rootRegisteredMetaMap: Map<KbqModalRef, IRegisteredMeta> = this.parentService ? null : new Map();
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    private rootVisibleModals: WritableSignal<KbqModalRef[]> = this.parentService ? null : signal<KbqModalRef[]>([]);
+    private readonly rootVisibleModals: WritableSignal<KbqModalRef[]> = this.parentService
+        ? null
+        : signal<KbqModalRef[]>([]);
 
     // Lazy, so the copy a child-level service never reads costs nothing.
     private readonly rootTopVisibleModal: Signal<KbqModalRef | null> = computed(() => {
@@ -195,10 +197,12 @@ export class KbqModalControlService {
             visibleModalsWithMask.forEach((modal) => {
                 setTimeout(() => {
                     modal.getInstance().animateMaskTo(null);
-                    modal.getInstance().kbqMask = false;
+                    modal.getInstance().setMaskEnabled(false);
+                    modal.markForCheck();
                 }, MODAL_ANIMATE_DURATION);
 
                 modal.getInstance().animateMaskTo('leave');
+                modal.markForCheck();
             });
 
             // On close, restore other masks with enter animation, then reset animation state after it completes
@@ -215,10 +219,13 @@ export class KbqModalControlService {
                 visibleModalsWithMask.forEach((modal) => {
                     setTimeout(() => {
                         modal.getInstance().animateMaskTo(null);
+                        modal.markForCheck();
                     }, MODAL_ANIMATE_DURATION);
 
                     modal.getInstance().setMaskEnabled(true);
                     modal.getInstance().animateMaskTo('enter');
+
+                    modal.markForCheck();
                 });
             });
 

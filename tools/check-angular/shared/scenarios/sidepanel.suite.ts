@@ -206,7 +206,7 @@ export function defineSidepanelSuite(config: CheckConfig): void {
             expect(fixture.componentInstance.events()).toEqual(['delete opened']);
         });
 
-        it('runs kbqOnOk with the content component on OK, then closes and emits afterClose', async () => {
+        it('runs kbqOkClick with the content component on OK, then closes and emits afterClose', async () => {
             const modal = await openModal();
 
             byTestId(modal, 'delete-reports').querySelector('input')!.click();
@@ -230,7 +230,7 @@ export function defineSidepanelSuite(config: CheckConfig): void {
             expect(document.querySelector('.kbq-modal-overlay')).toBeNull();
         });
 
-        it('closes on Escape through kbqOnCancel', async () => {
+        it('closes on Escape through kbqCancelClick', async () => {
             await openModal();
 
             pressEscape();

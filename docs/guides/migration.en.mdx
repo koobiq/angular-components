@@ -438,20 +438,6 @@ ng g @koobiq/components:datepicker-signals --project "<your project>"
 
 **Without a locale service, the placeholder names the format the input takes.** It used to be the `ru-RU` one whatever locale the date adapter parsed in. It now follows the date adapter of the input — `KBQ_DATE_LOCALE`, Angular's `LOCALE_ID` unless provided, on a component too — so with the default `en-US` it reads `yyyy-mm-dd`; for a locale the library ships no strings for, or a format set through `KBQ_DATE_FORMATS`, it is the format itself, such as `yyyy/mm/dd`. To keep the former one, bind `[placeholder]` or pass it to `kbqDatepickerLocaleConfigurationProvider()`. With a locale service nothing changes.
 
-#### Modal
-
-The inputs of `KbqModalComponent` are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`, and `kbqAfterOpen`, `kbqAfterClose`, `kbqBeforeClose`, `kbqOnOk` and `kbqOnCancel` are outputs named `<member>Output` over the unchanged emitters. Bindings, the options of `KbqModalService`, and reads and writes through `getInstance()` work as before.
-
-- **A subclass** that implements `ngOnChanges` calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` or `@Output()` overrides `<member>Input` or `<member>Output` instead, e.g. `kbqTitleInput`. `kbqVisible` and `kbqMaskClosable` are fields rather than getters and setters; `kbqMask`, `kbqOkLoading` and `kbqCancelLoading` stay getters and setters, now over signals.
-- **A `SimpleChanges` passed to `ngOnChanges` by hand** is keyed by the `<member>Input` names: `kbqVisibleInput`, not `kbqVisible`.
-- **A bound `undefined`** leaves the member as it is: hide the modal with `false`.
-
-`modal-signals` reports every subclass and every direct call of `ngOnChanges`:
-
-```bash
-ng g @koobiq/components:modal-signals --project "<your project>"
-```
-
 #### Tabs
 
 The inputs of `KbqTabGroup`, `KbqTab`, `KbqTabNavBar`, `KbqTabLink` and of the header, labels and bodies inside the tab group are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `tabGroup.selectedIndex`, `tabGroup.headerPosition`, `tab.disabled` or `tabLink.active` works as before. Their queries are signal queries behind getters: `KbqTabGroup.tabs` and `KbqTabNavBar.items` are still `QueryList`s whose `changes` emit as before.
@@ -2234,7 +2220,7 @@ Each flow is two members now, and you bind one of them:
 
 `KbqModalService.create()` and `confirm()` also stopped forcing a no-op handler into the options — the dialog emits and closes on its own when no handler is bound.
 
-**<kbd>Escape</kbd> has one implementation for both entry paths.** It used to be handled twice: the service path filtered on `kbqCloseByESC` and ran through `kbqOnCancel` but ignored a veto, while the declarative path closed unconditionally, ignoring `kbqCloseByESC` entirely and skipping `kbqOnCancel`. Escape is the Cancel button now — it honours `kbqCloseByESC`, and a `kbqOnCancel` returning `false` stops it. The keyboard table's third row, "Submit the form by pressing Enter in any text input", described behaviour that was never implemented and is gone from the guide.
+**<kbd>Escape</kbd> has one implementation for both entry paths.** It used to be handled twice: the service path filtered on `kbqCloseByESC` and ran through `kbqOnCancel` but ignored a veto, while the declarative path closed unconditionally, ignoring `kbqCloseByESC` entirely and skipping `kbqOnCancel`. Escape is the Cancel button now — it honours `kbqCloseByESC`, and a `kbqCancelClick` returning `false` stops it — except an Escape a control inside the dialog already handled, such as a datepicker closing its calendar. The keyboard table's third row, "Submit the form by pressing Enter in any text input", described behaviour that was never implemented and is gone from the guide.
 
 **A service-created dialog is destroyed with its opener.** `ModalBuilderForService` disposed its overlay from exactly one place — the `kbqAfterClose` subscription — and nothing tied it to the caller. Destroying the component that opened it, through a route change or an `*ngIf`, left the dialog painted over the next view, `afterClose` never emitted, and `document.body { overflow: hidden }` was never released, so the page could no longer be scrolled at all. The dialog's lifetime is bound to `options.injector` now, or to the root environment injector when none is passed, and the overlay is created with `disposeOnNavigation: true`. The body scroll lock is released from `ngOnDestroy` as well, and `KbqModalControlService` releases a modal that was created and destroyed without ever being shown — it used to hold that modal, its view and its subscriptions forever.
 

@@ -1,4 +1,4 @@
-﻿import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
@@ -10,7 +10,6 @@ import {
     Injector,
     NgModule,
     Provider,
-    signal,
     Type,
     viewChild
 } from '@angular/core';
@@ -18,11 +17,14 @@ import { ComponentFixture, TestBed, inject as testingInject } from '@angular/cor
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
+    createKeyboardEvent,
     createMouseEvent,
+    dispatchEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
     ENTER,
     ESCAPE,
+    KBQ_WINDOW,
     KbqComponentColors,
     ruRULocaleData,
     TAB
@@ -34,15 +36,9 @@ import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
-import { MODAL_ANIMATE_DURATION, ModalSize, OnClickCallback } from './modal.type';
+import { IModalOptionsForService, MODAL_ANIMATE_DURATION, ModalSize } from './modal.type';
 
 const ANIMATION_DURATION = MODAL_ANIMATE_DURATION * 2;
-
-const animationEnd = () => vi.advanceTimersByTimeAsync(MODAL_ANIMATE_DURATION);
-
-// `whenStable()` waits for the zoneless scheduler, which races a timeout against an animation frame: a real frame
-// lets it settle while the timeouts of the modal animation stay fake.
-const useFakeTimeouts = () => vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
 
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers });
@@ -97,10 +93,9 @@ describe('KbqModal', () => {
             await vi.advanceTimersByTimeAsync(ANIMATION_DURATION * 2);
         });
 
-        it('should trigger both afterOpen/kbqAfterOpen and have the correct openModals length', async () => {
+        it('should trigger afterOpen and have the correct openModals length', async () => {
             const spy = vi.fn();
-            const kbqAfterOpen = new EventEmitter<void>();
-            const modalRef = modalService.create({ kbqAfterOpen });
+            const modalRef = modalService.create();
 
             modalRef.afterOpen.subscribe(spy);
 
@@ -108,15 +103,15 @@ describe('KbqModal', () => {
             expect(spy).not.toHaveBeenCalled();
 
             await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
-            expect(spy).toHaveBeenCalledTimes(2);
+            expect(spy).toHaveBeenCalledTimes(1);
             expect(modalService.openModals.indexOf(modalRef)).toBeGreaterThan(-1);
             expect(modalService.openModals.length).toBe(1);
         });
 
         // The emitter passed in the options used to *become* instance.kbqAfterOpen through
         // `Object.assign`, so a single emitter served both subscriptions. It is mirrored now.
-        it('should mirror the open event onto the kbqAfterOpen emitter passed in the options', fakeAsync(() => {
-            const spy = jest.fn();
+        it('should mirror the open event onto the kbqAfterOpen emitter passed in the options', async () => {
+            const spy = vi.fn();
             const kbqAfterOpen = new EventEmitter<void>();
             const modalRef = modalService.create({ kbqAfterOpen });
 
@@ -127,9 +122,9 @@ describe('KbqModal', () => {
             fixture.detectChanges();
             expect(spy).not.toHaveBeenCalled();
 
-            tick(ANIMATION_DURATION);
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
             expect(spy).toHaveBeenCalledTimes(1);
-        }));
+        });
 
         // Both elements scroll, so both have to be driven by the custom scrollbar: a native one takes
         // layout width the moment it appears and shifts everything it narrows.
@@ -290,7 +285,7 @@ describe('KbqModal', () => {
             expect(modalService.openModals.length).toBe(1);
         });
 
-        it('should trigger nzOnOk/nzOnCancel', () => {
+        it('should trigger kbqOkClick/kbqCancelClick', () => {
             const spyOk = vi.fn();
             const spyCancel = vi.fn();
             const modalRef: KbqModalRef = modalService.create({
@@ -323,53 +318,6 @@ describe('KbqModal', () => {
             await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
 
             expect(modalRef.getElement().querySelectorAll('.kbq-progress').length).toBe(1);
-        });
-
-        it('should drop the progress state of a footer button once its onClick promise settles', async () => {
-            let settle!: () => void;
-            const pending = new Promise<void>((resolve) => (settle = resolve));
-            const modalRef = modalService.create({
-                kbqFooter: [{ label: 'button 1', type: 'primary', onClick: () => pending }]
-            });
-
-            fixture.detectChanges();
-            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
-
-            const button = modalRef.getElement().querySelector<HTMLButtonElement>('.kbq-modal-footer button')!;
-
-            button.click();
-            fixture.detectChanges();
-
-            expect(button.classList).toContain('kbq-progress');
-
-            settle();
-            await pending;
-            fixture.detectChanges();
-
-            expect(button.classList).not.toContain('kbq-progress');
-        });
-
-        it('should show the OK button of a confirm modal in progress while its kbqOnOk promise is pending', async () => {
-            let settle!: (doClose: false) => void;
-            const pending = new Promise<false>((resolve) => (settle = resolve));
-            const modalRef = modalService.confirm({ kbqOkText: 'OK', kbqOnOk: () => pending });
-
-            fixture.detectChanges();
-            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
-
-            const ok = modalRef.getElement().querySelector<HTMLButtonElement>('.kbq-confirm-footer button')!;
-
-            ok.click();
-            fixture.detectChanges();
-
-            expect(ok.classList).toContain('kbq-progress');
-
-            // `false` keeps the modal open.
-            settle(false);
-            await pending;
-            fixture.detectChanges();
-
-            expect(ok.classList).not.toContain('kbq-progress');
         });
 
         it('should process show flag', async () => {
@@ -444,8 +392,8 @@ describe('KbqModal', () => {
         // The input and the output used to be one property, so binding both silently lost the
         // output: Angular subscribed to the default emitter and the input then replaced it.
         it('should let kbqOkClick decide the close and report that kbqOnOk cannot also be bound', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation();
-            const emitted = jest.fn();
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+            const emitted = vi.fn();
             const modalRef: KbqModalRef = modalService.create({ kbqOkClick: () => false });
 
             modalRef.getInstance().kbqOnOk.subscribe(emitted);
@@ -461,7 +409,7 @@ describe('KbqModal', () => {
         });
 
         it('should emit kbqOnOk and close when no kbqOkClick is bound', () => {
-            const emitted = jest.fn();
+            const emitted = vi.fn();
             const modalRef: KbqModalRef = modalService.create();
 
             modalRef.getInstance().kbqOnOk.subscribe(emitted);
@@ -725,6 +673,315 @@ describe('KbqModal', () => {
             buttonElement.focus();
             await testFocusRestoreFor('keyboard');
         });
+
+        it('should carry dialog semantics named by its title', async () => {
+            modalService.create({ kbqTitle: 'Dialog title', kbqCaption: 'Dialog caption' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const dialog = overlayContainerElement.querySelector('.kbq-modal-container')!;
+
+            expect(dialog.getAttribute('role')).toBe('dialog');
+            expect(dialog.getAttribute('aria-modal')).toBe('true');
+            expect(dialog.getAttribute('tabindex')).toBe('-1');
+
+            const labelledBy = dialog.getAttribute('aria-labelledby')!;
+            const describedBy = dialog.getAttribute('aria-describedby')!;
+
+            expect(overlayContainerElement.querySelector(`#${labelledBy}`)!.textContent).toContain('Dialog title');
+            expect(overlayContainerElement.querySelector(`#${describedBy}`)!.textContent).toContain('Dialog caption');
+            expect(dialog.getAttribute('aria-label')).toBeNull();
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should fall back to kbqAriaLabel when the dialog has no title', async () => {
+            modalService.create({ kbqContent: 'text', kbqAriaLabel: 'Named by option' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const dialog = overlayContainerElement.querySelector('.kbq-modal-container')!;
+
+            expect(dialog.getAttribute('aria-labelledby')).toBeNull();
+            expect(dialog.getAttribute('aria-label')).toBe('Named by option');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should take the page behind the dialog out of the accessibility tree', async () => {
+            fixture.detectChanges();
+
+            const background = Array.from(document.body.children).find((child) =>
+                child.contains(fixture.nativeElement)
+            )!;
+
+            expect(background.hasAttribute('inert')).toBe(false);
+
+            const modalRef = modalService.create({ kbqContent: 'text' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(background.hasAttribute('inert')).toBe(true);
+            // The overlays themselves stay reachable, dialogs and anything opened from them alike.
+            expect(overlayContainerElement.hasAttribute('inert')).toBe(false);
+
+            modalRef.close();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(background.hasAttribute('inert')).toBe(false);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should keep only the topmost dialog reachable when modals stack', async () => {
+            const first = modalService.create({ kbqContent: 'first' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const second = modalService.create({ kbqContent: 'second' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(first.getElement().querySelector('[inert]')).toBeTruthy();
+            expect(second.getElement().querySelector('[inert]')).toBeNull();
+
+            second.close();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(first.getElement().querySelector('[inert]')).toBeNull();
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should move focus into a dialog that holds no button at all', async () => {
+            buttonElement.focus();
+
+            const modalRef = modalService.create({ kbqContent: 'text' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(modalRef.getElement().querySelectorAll('button').length).toBe(0);
+
+            const dialog = overlayContainerElement.querySelector('.kbq-modal-container')!;
+
+            expect(document.activeElement).toBe(dialog);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should trap focus on the dialog element itself', async () => {
+            modalService.create({ kbqTitle: 'Trapped', kbqOkText: 'Ok' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const dialog = overlayContainerElement.querySelector('.kbq-modal-container')!;
+
+            // The trap wraps the dialog, not the inner content wrapper, so the dialog element can
+            // be the focus target for `kbqAutoFocus: 'dialog'` and still be inside the trap.
+            expect(dialog.previousElementSibling!.classList).toContain('cdk-focus-trap-anchor');
+            expect(dialog.nextElementSibling!.classList).toContain('cdk-focus-trap-anchor');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should let cdkFocusInitial win over the first tabbable control', async () => {
+            modalService.open({ kbqComponent: ModalWithFocusInitialComponent, kbqAriaLabel: 'Marked' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(document.activeElement).toBe(overlayContainerElement.querySelector('[data-testid="marked"]'));
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should focus the dialog itself when kbqAutoFocus is "dialog"', async () => {
+            modalService.create({ kbqTitle: 'Long read', kbqContent: 'text', kbqAutoFocus: 'dialog' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(document.activeElement).toBe(overlayContainerElement.querySelector('.kbq-modal-container'));
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should leave focus alone when kbqAutoFocus is false', async () => {
+            buttonElement.focus();
+
+            modalService.create({ kbqTitle: 'Untouched', kbqAutoFocus: false });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(document.activeElement).toBe(buttonElement);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should honour kbqCloseByESC on the service path', async () => {
+            const modalRef = modalService.create({ kbqTitle: 'Kept', kbqCloseByESC: false });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        // The builder used to defer Escape until `afterOpen`, on `overlayRef.keydownEvents()` and
+        // bypassing the veto. The host listener cannot see the keystroke that opened the dialog —
+        // that one lands on the trigger, outside the dialog — so the defer has nothing left to guard,
+        // and Escape pressed while the dialog animates in closes it the same way as any other.
+        it('should close on Escape pressed before the opening animation is over', async () => {
+            const modalRef = modalService.create({ kbqTitle: 'Closing' });
+
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+            fixture.detectChanges();
+
+            expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should leave an Escape a control inside the dialog consumed', async () => {
+            const modalRef = modalService.create({ kbqTitle: 'Kept' });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const event = createKeyboardEvent('keydown', ESCAPE);
+
+            event.preventDefault();
+            dispatchEvent(modalRef.getElement(), event);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should route Escape through kbqCancelClick on the service path', async () => {
+            const spyCancel = vi.fn();
+            const modalRef = modalService.create({ kbqTitle: 'Cancellable', kbqCancelClick: spyCancel });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+            fixture.detectChanges();
+
+            expect(spyCancel).toHaveBeenCalled();
+            expect(modalRef.getInstance().kbqVisible()).toBe(false);
+
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should let a kbqCancelClick callback veto Escape', async () => {
+            const modalRef = modalService.create({ kbqTitle: 'Vetoed', kbqCancelClick: () => false });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            dispatchKeyboardEvent(modalRef.getElement(), 'keydown', ESCAPE);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(modalRef.getInstance().kbqVisible()).toBe(true);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should build the dialog class list from the class name, the size and the animation', async () => {
+            const modalRef = modalService.create({ kbqClassName: 'custom-modal', kbqSize: ModalSize.Small });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const dialog = overlayContainerElement.querySelector('.kbq-modal-container')!;
+
+            expect(dialog.classList).toContain('custom-modal');
+            expect(dialog.classList).toContain('kbq-modal_small');
+            expect(dialog.classList).not.toContain('zoom-enter');
+
+            expect(modalRef).toBeTruthy();
+            await vi.runOnlyPendingTimersAsync();
+        });
+    });
+
+    // The dialog is rendered but never closed here: awaiting the leave animation would spend the
+    // suite's whole budget, and the TestBed teardown disposes the overlay anyway.
+    describe('axe', () => {
+        let fixture: ComponentFixture<ModalByServiceComponent>;
+        let modalService: KbqModalService;
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({ imports: [ModalTestModule] });
+            fixture = TestBed.createComponent(ModalByServiceComponent);
+            modalService = TestBed.inject(KbqModalService);
+            overlayContainer = TestBed.inject(OverlayContainer);
+            overlayContainerElement = overlayContainer.getContainerElement();
+        });
+
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        const render = (options: IModalOptionsForService) => {
+            modalService.create(options);
+            fixture.detectChanges();
+        };
+
+        it('should have no violations for a default dialog', async () => {
+            render({
+                kbqTitle: 'Default',
+                kbqCaption: 'Caption',
+                kbqContent: 'text',
+                kbqOkText: 'Ok',
+                kbqCancelText: 'Cancel'
+            });
+
+            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations for an untitled dialog named by kbqAriaLabel', async () => {
+            render({ kbqContent: 'text', kbqAriaLabel: 'Simple dialog' });
+
+            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations for a confirm dialog', async () => {
+            modalService.confirm({ kbqContent: 'Sure?', kbqAriaLabel: 'Confirm', kbqOkText: 'Ok' });
+            fixture.detectChanges();
+
+            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+        });
+
+        it('should have no violations for a custom dialog', async () => {
+            modalService.open({ kbqComponent: TestModalContentComponent, kbqAriaLabel: 'Custom' });
+            fixture.detectChanges();
+
+            expect(await axe(overlayContainerElement)).toHaveNoViolations();
+        });
     });
 
     describe('with dynamic injectors', () => {
@@ -764,158 +1021,11 @@ describe('KbqModal', () => {
         });
     });
 
-    describe('declared in a template', () => {
-        // One input per modal, so a member fed from the wrong input stays at its default.
-        const boundInputs: [keyof KbqModalComponent, unknown][] = [
-            ['kbqModalType', 'confirm'],
-            ['kbqComponent', TestModalContentComponent],
-            ['kbqContent', 'Content'],
-            ['kbqFooter', 'Footer'],
-            ['kbqWidth', 320],
-            ['kbqSize', ModalSize.Large],
-            ['kbqWrapClassName', 'wrap-class'],
-            ['kbqClassName', 'container-class'],
-            ['kbqStyle', { width: '1px' }],
-            ['kbqTitle', 'Title'],
-            ['kbqCaption', 'Caption'],
-            ['kbqCloseByESC', false],
-            ['kbqClosable', false],
-            ['kbqMask', false],
-            ['kbqMaskClosable', true],
-            ['kbqMaskStyle', { opacity: '0' }],
-            ['kbqBodyStyle', { padding: '0' }],
-            ['kbqOkText', 'OK'],
-            ['kbqOkType', KbqComponentColors.Theme],
-            ['kbqRestoreFocus', false],
-            ['kbqOkLoading', true],
-            ['kbqOnOk', () => false],
-            ['kbqCancelText', 'Cancel'],
-            ['kbqCancelLoading', true],
-            ['kbqOnCancel', () => false],
-            ['kbqGetContainer', document.createElement('div')]
-        ];
-
-        it.each(boundInputs)('should hand a bound %s over to its member', async (name, value) => {
-            const fixture = TestBed.createComponent(KbqModalComponent);
-
-            fixture.componentRef.setInput(name, value);
-            await fixture.whenStable();
-
-            expect(fixture.componentInstance[name]).toBe(value);
-        });
-
-        it('should open and close through [(kbqVisible)]', async () => {
-            useFakeTimeouts();
-
-            const fixture = TestBed.createComponent(ModalInTemplate);
-            const host = fixture.componentInstance;
-
-            await fixture.whenStable();
-
-            const modal = host.modal();
-            const wrap = modal.getElement().querySelector<HTMLElement>('.kbq-modal-wrap')!;
-
-            expect(wrap.style.display).toBe('none');
-
-            host.visible.set(true);
-            await fixture.whenStable();
-
-            expect(modal.kbqVisible).toBe(true);
-            expect(wrap.style.display).toBe('');
-
-            await animationEnd();
-            expect(host.afterOpen).toHaveBeenCalled();
-            host.beforeClose.mockClear();
-            host.afterClose.mockClear();
-
-            dispatchKeyboardEvent(modal.getElement(), 'keydown', ESCAPE);
-
-            expect(host.visible()).toBe(false);
-            expect(host.beforeClose).toHaveBeenCalled();
-
-            await fixture.whenStable();
-            await animationEnd();
-            await fixture.whenStable();
-
-            expect(host.afterClose).toHaveBeenCalled();
-            expect(wrap.style.display).toBe('none');
-        });
-
-        it('should emit kbqOnOk and kbqOnCancel when no callback is bound', async () => {
-            const fixture = TestBed.createComponent(ModalInTemplate);
-            const host = fixture.componentInstance;
-
-            host.visible.set(true);
-            await fixture.whenStable();
-
-            const [ok, cancel] = Array.from(host.modal().getKbqFooter().querySelectorAll('button'));
-
-            ok.click();
-            cancel.click();
-
-            expect(host.ok).toHaveBeenCalledTimes(1);
-            expect(host.cancel).toHaveBeenCalledTimes(1);
-            expect(host.visible()).toBe(true);
-        });
-
-        it('should call a bound kbqOnOk callback instead of emitting, and close', async () => {
-            useFakeTimeouts();
-
-            const fixture = TestBed.createComponent(ModalInTemplate);
-            const host = fixture.componentInstance;
-            const callback = vi.fn();
-
-            host.okCallback.set(callback);
-            host.visible.set(true);
-            await fixture.whenStable();
-
-            host.modal().getKbqFooter().querySelector('button')!.click();
-
-            expect(callback).toHaveBeenCalled();
-            expect(host.ok).not.toHaveBeenCalled();
-            expect(host.visible()).toBe(false);
-
-            await fixture.whenStable();
-            await animationEnd();
-        });
-
-        it.each<[string, number, 'okCallback' | 'cancelCallback']>([
-            ['OK', 0, 'okCallback'],
-            ['Cancel', 1, 'cancelCallback']
-        ])(
-            'should show the %s button in progress while its callback promise is pending',
-            async (_, index, callback) => {
-                useFakeTimeouts();
-
-                const fixture = TestBed.createComponent(ModalInTemplate);
-                const host = fixture.componentInstance;
-                let settle!: (doClose: false) => void;
-                const pending = new Promise<false>((resolve) => (settle = resolve));
-
-                host[callback].set(() => pending);
-                host.visible.set(true);
-                await fixture.whenStable();
-
-                const button = host.modal().getKbqFooter().querySelectorAll('button')[index];
-
-                button.click();
-                await fixture.whenStable();
-
-                expect(button.classList).toContain('kbq-progress');
-
-                // `false` keeps the modal open.
-                settle(false);
-                await pending;
-                await fixture.whenStable();
-
-                expect(button.classList).not.toContain('kbq-progress');
-
-                await animationEnd();
-            }
-        );
-    });
-
     describe('with manually composed content', () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
         const closeModal = async (fixture: ComponentFixture<unknown>, modalRef: KbqModalRef) => {
             modalRef.close();
             fixture.detectChanges();
@@ -923,8 +1033,6 @@ describe('KbqModal', () => {
         };
 
         it('should project the caption into the header, below the title', async () => {
-            vi.useFakeTimers();
-
             const fixture = createComponent(ModalWithCaptionComponent);
             const modalRef = fixture.componentInstance.open();
 
@@ -942,9 +1050,53 @@ describe('KbqModal', () => {
             await closeModal(fixture, modalRef);
         });
 
-        it('should cast the top overflow shadow from the header holding the caption', async () => {
-            vi.useFakeTimers();
+        it.each([
+            [undefined, 1],
+            [true, 1],
+            [false, 0]
+        ])('should follow kbqClosable %s in the composed title', async (kbqClosable, closeButtons) => {
+            const fixture = createComponent(ModalWithoutCaptionComponent);
+            const modalRef = fixture.componentInstance.open(kbqClosable);
 
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(document.querySelectorAll('.kbq-modal-header .kbq-modal-close').length).toBe(closeButtons);
+
+            await closeModal(fixture, modalRef);
+        });
+
+        it('should name and describe the dialog from the composed title and caption', async () => {
+            const fixture = createComponent(ModalWithCaptionComponent);
+            const modalRef = fixture.componentInstance.open();
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const dialog = document.querySelector('.kbq-modal-container')!;
+            const labelledBy = dialog.getAttribute('aria-labelledby')!;
+            const describedBy = dialog.getAttribute('aria-describedby')!;
+
+            expect(document.querySelector(`#${labelledBy}`)!.textContent).toContain('Title');
+            expect(document.querySelector(`#${describedBy}`)!.classList).toContain('kbq-modal-caption');
+            expect(document.querySelector(`#${describedBy}`)!.textContent).toContain('Caption');
+
+            await closeModal(fixture, modalRef);
+        });
+
+        it('should leave aria-describedby off a composed dialog with no caption', async () => {
+            const fixture = createComponent(ModalWithoutCaptionComponent);
+            const modalRef = fixture.componentInstance.open();
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            expect(document.querySelector('.kbq-modal-container')!.getAttribute('aria-describedby')).toBeNull();
+
+            await closeModal(fixture, modalRef);
+        });
+
+        it('should cast the top overflow shadow from the header holding the caption', async () => {
             const fixture = createComponent(ModalWithCaptionComponent);
             const modalRef = fixture.componentInstance.open();
 
@@ -962,24 +1114,6 @@ describe('KbqModal', () => {
 
             await closeModal(fixture, modalRef);
         });
-
-        it('should drop the close button of the title once kbqClosable is cleared', async () => {
-            useFakeTimeouts();
-
-            const fixture = createComponent(ModalWithCaptionComponent);
-            const modalRef = fixture.componentInstance.open();
-
-            await fixture.whenStable();
-
-            expect(modalRef.getElement().querySelector('.kbq-modal-header .kbq-modal-close')).not.toBeNull();
-
-            modalRef.getInstance().kbqClosable = false;
-            await fixture.whenStable();
-
-            expect(modalRef.getElement().querySelector('.kbq-modal-header .kbq-modal-close')).toBeNull();
-
-            await animationEnd();
-        });
     });
 
     describe('with reduced motion', () => {
@@ -989,9 +1123,12 @@ describe('KbqModal', () => {
             useValue: { ...window, matchMedia: () => ({ matches: true }) }
         };
 
-        it('should not report the dialog open before its view exists', fakeAsync(() => {
-            // Deliberately no autoDetectChanges: `create()` has to run before the first change
-            // detection, which is what it does on the imperative path in an application.
+        it('should not report the dialog open before its view exists', async () => {
+            vi.useFakeTimers();
+
+            // Deliberately no detectChanges: `create()` has to run before the first change
+            // detection, which is what it does on the imperative path in an application. The
+            // zoneless auto-detection is scheduled, so it does not run before `open()` either.
             TestBed.configureTestingModule({ imports: [ModalOpenerComponent], providers: [reducedMotion] });
 
             const fixture = TestBed.createComponent(ModalOpenerComponent);
@@ -1002,17 +1139,17 @@ describe('KbqModal', () => {
                 .open()
                 .afterOpen.subscribe(() => (bodyAtAfterOpen = document.querySelector('.kbq-modal-body')));
 
-            tick(ANIMATION_DURATION);
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
             fixture.detectChanges();
-            tick(ANIMATION_DURATION);
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
 
             // There is no animation to wait for under reduced motion, but settling synchronously
             // reported the dialog open before its template had rendered — so the scrollbar flash
             // hanging off afterOpen, and anything a consumer does there, found nothing to act on.
             expect(bodyAtAfterOpen).toBeTruthy();
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('KbqModalService providedIn root', () => {
@@ -1060,7 +1197,8 @@ describe('KbqModal', () => {
         let overlayContainerElement: HTMLElement;
 
         beforeEach(() => {
-            TestBed.configureTestingModule({ imports: [DeclarativeModalComponent, NoopAnimationsModule] });
+            vi.useFakeTimers();
+            TestBed.configureTestingModule({ imports: [DeclarativeModalComponent] });
             fixture = TestBed.createComponent(DeclarativeModalComponent);
             overlayContainer = TestBed.inject(OverlayContainer);
             overlayContainerElement = overlayContainer.getContainerElement();
@@ -1068,18 +1206,18 @@ describe('KbqModal', () => {
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        const open = () => {
+        const open = async () => {
             fixture.detectChanges();
             fixture.componentInstance.visible = true;
             fixture.detectChanges();
-            tick(ANIMATION_DURATION);
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
             fixture.detectChanges();
         };
 
         const query = <T extends Element>(selector: string) => overlayContainerElement.querySelector<T>(selector)!;
 
-        it('should close on the close button', fakeAsync(() => {
-            open();
+        it('should close on the close button', async () => {
+            await open();
 
             query<HTMLButtonElement>('.kbq-modal-close').click();
             fixture.detectChanges();
@@ -1087,24 +1225,24 @@ describe('KbqModal', () => {
             expect(fixture.componentInstance.visible).toBe(false);
             expect(fixture.componentInstance.cancelCount).toBe(1);
 
-            tick(ANIMATION_DURATION);
-            flush();
-        }));
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should close on a click on the mask', fakeAsync(() => {
-            open();
+        it('should close on a click on the mask', async () => {
+            await open();
 
             dispatchMouseEvent(query('.kbq-modal-wrap'), 'mousedown');
             fixture.detectChanges();
 
             expect(fixture.componentInstance.visible).toBe(false);
 
-            tick(ANIMATION_DURATION);
-            flush();
-        }));
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should close on the predefined OK button', fakeAsync(() => {
-            open();
+        it('should close on the predefined OK button', async () => {
+            await open();
 
             const [ok] = Array.from(query('.kbq-modal-footer').querySelectorAll('button'));
 
@@ -1114,12 +1252,12 @@ describe('KbqModal', () => {
             expect(fixture.componentInstance.visible).toBe(false);
             expect(fixture.componentInstance.okCount).toBe(1);
 
-            tick(ANIMATION_DURATION);
-            flush();
-        }));
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should close on Escape and emit kbqOnCancel first', fakeAsync(() => {
-            open();
+        it('should close on Escape and emit kbqOnCancel first', async () => {
+            await open();
 
             dispatchKeyboardEvent(query('.kbq-modal-container'), 'keydown', ESCAPE);
             fixture.detectChanges();
@@ -1127,24 +1265,24 @@ describe('KbqModal', () => {
             expect(fixture.componentInstance.cancelCount).toBe(1);
             expect(fixture.componentInstance.visible).toBe(false);
 
-            tick(ANIMATION_DURATION);
-            flush();
-        }));
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should ignore Escape when kbqCloseByESC is false', fakeAsync(() => {
+        it('should ignore Escape when kbqCloseByESC is false', async () => {
             fixture.componentInstance.closeByESC = false;
-            open();
+            await open();
 
             dispatchKeyboardEvent(query('.kbq-modal-container'), 'keydown', ESCAPE);
             fixture.detectChanges();
-            tick(ANIMATION_DURATION);
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
 
             expect(fixture.componentInstance.visible).toBe(true);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
-        it('should move focus into the dialog and back to the trigger', fakeAsync(() => {
+        it('should move focus into the dialog and back to the trigger', async () => {
             fixture.detectChanges();
 
             const trigger = fixture.componentInstance.trigger().nativeElement;
@@ -1154,7 +1292,7 @@ describe('KbqModal', () => {
 
             fixture.componentInstance.visible = true;
             fixture.detectChanges();
-            tick(ANIMATION_DURATION);
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
             fixture.detectChanges();
 
             expect(document.activeElement).not.toBe(trigger);
@@ -1162,12 +1300,12 @@ describe('KbqModal', () => {
 
             fixture.componentInstance.visible = false;
             fixture.detectChanges();
-            tick(ANIMATION_DURATION);
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
 
             expect(document.activeElement).toBe(trigger);
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('lifecycle', () => {
@@ -1176,7 +1314,7 @@ describe('KbqModal', () => {
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [ModalOpenerHostComponent, NeverOpenedModalComponent, NoopAnimationsModule]
+                imports: [ModalOpenerHostComponent, NeverOpenedModalComponent]
             });
             overlayContainer = TestBed.inject(OverlayContainer);
             overlayContainerElement = overlayContainer.getContainerElement();
@@ -1184,13 +1322,15 @@ describe('KbqModal', () => {
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        it('should tear the dialog down with the component that opened it', fakeAsync(() => {
+        it('should tear the dialog down with the component that opened it', async () => {
+            vi.useFakeTimers();
+
             const fixture = TestBed.createComponent(ModalOpenerHostComponent);
 
             fixture.detectChanges();
             fixture.componentInstance.opener()!.open();
             fixture.detectChanges();
-            tick(ANIMATION_DURATION);
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
 
             expect(overlayContainerElement.querySelector('.kbq-modal-container')).toBeTruthy();
             expect(document.body.style.overflow).toBe('hidden');
@@ -1201,8 +1341,8 @@ describe('KbqModal', () => {
             expect(overlayContainerElement.querySelector('.kbq-modal-container')).toBeNull();
             expect(document.body.style.overflow).toBe('');
 
-            flush();
-        }));
+            await vi.runOnlyPendingTimersAsync();
+        });
 
         it('should release a modal that was never opened when its host is destroyed', () => {
             const fixture = TestBed.createComponent(NeverOpenedModalComponent);
@@ -1323,8 +1463,8 @@ class ModalWithoutCaptionContentComponent {}
 class ModalWithoutCaptionComponent {
     private readonly modalService = inject(KbqModalService);
 
-    open(): KbqModalRef {
-        return this.modalService.open({ kbqComponent: ModalWithoutCaptionContentComponent });
+    open(kbqClosable?: boolean): KbqModalRef {
+        return this.modalService.open({ kbqComponent: ModalWithoutCaptionContentComponent, kbqClosable });
     }
 }
 
@@ -1376,39 +1516,6 @@ class ModalByServiceFromDropdownComponent {
             kbqCancelText: 'Cancel'
         });
     }
-}
-
-@Component({
-    selector: 'modal-in-template',
-    imports: [KbqModalModule],
-    template: `
-        <kbq-modal
-            kbqTitle="Title"
-            kbqOkText="OK"
-            kbqCancelText="Cancel"
-            [kbqOnOk]="okCallback()"
-            [kbqOnCancel]="cancelCallback()"
-            [(kbqVisible)]="visible"
-            (kbqAfterOpen)="afterOpen()"
-            (kbqBeforeClose)="beforeClose()"
-            (kbqAfterClose)="afterClose()"
-            (kbqOnOk)="ok()"
-            (kbqOnCancel)="cancel()"
-        >
-            Content
-        </kbq-modal>
-    `
-})
-class ModalInTemplate {
-    readonly modal = viewChild.required(KbqModalComponent);
-    readonly visible = signal(false);
-    readonly okCallback = signal<OnClickCallback<unknown> | undefined>(undefined);
-    readonly cancelCallback = signal<OnClickCallback<unknown> | undefined>(undefined);
-    readonly afterOpen = vi.fn();
-    readonly beforeClose = vi.fn();
-    readonly afterClose = vi.fn();
-    readonly ok = vi.fn();
-    readonly cancel = vi.fn();
 }
 
 @Component({
