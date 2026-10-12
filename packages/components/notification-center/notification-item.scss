@@ -93,8 +93,11 @@
         margin-right: var(--kbq-size-3xs);
     }
 
+    // The dot keeps its width once read, or the title gains that width and rewraps under the pointer.
+    // Placed before the time, so the time keeps the position it had before the dot was hidden.
     &.kbq-notification-item-time_read .kbq-notification-item-time__state {
-        display: none;
+        visibility: hidden;
+        order: -1;
     }
 }
 
