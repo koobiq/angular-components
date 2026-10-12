@@ -39,6 +39,7 @@ import {
     PopUpSizes,
     PopUpTriggers,
     applyPopupMargins,
+    kbqSiblingPopupProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -351,6 +352,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
 
 @Directive({
     selector: '[kbqNotificationCenterTrigger]',
+    providers: [kbqSiblingPopupProvider(KbqNotificationCenterTrigger)],
     host: {
         '[class.kbq-notification-center_open]': 'isOpen',
         '[class.kbq-active]': 'hasClickTrigger && isOpen'

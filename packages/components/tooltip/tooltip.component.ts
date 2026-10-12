@@ -159,7 +159,8 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         '[class.kbq-tooltip_open]': 'isOpen',
 
         '(keydown)': 'keydownHandler($event)',
-        '(touchend)': 'touchendHandler()'
+        '(touchend)': 'touchendHandler()',
+        '(mouseleave)': 'trackPointerLeave($event)'
     },
     exportAs: 'kbqTooltip'
 })
@@ -492,9 +493,17 @@ export class KbqTooltipTrigger
      * Set when that pop-up opens and released only once the pointer or the focus genuinely leaves the host,
      * never on the pop-up closing. Both matter: a pop-up restores focus to its trigger when it closes (see
      * `KbqPopoverComponent.onEscape`), and removing its backdrop replays `mouseenter` on the trigger without
-     * the pointer having moved — either would otherwise pop the tooltip up out of nowhere.
+     * the pointer having moved — either would otherwise pop the tooltip up out of nowhere. A pointer that left
+     * the host while the pop-up was open (see `pointerLeftWhileMuted`) releases it by coming back once the
+     * pop-up is closed.
      */
     private mutedBySiblingPopup = false;
+
+    /**
+     * Whether the pointer left the host while muted. A backdrop inserted under the resting pointer fires
+     * `mouseleave` as well, but with the pointer still within the host — that one does not count.
+     */
+    private pointerLeftWhileMuted = false;
 
     /**
      * Sets up an effect that mirrors a `forDisabledComponent`'s disabled signal: when that component is disabled it
@@ -520,6 +529,7 @@ export class KbqTooltipTrigger
             )
             .subscribe(() => {
                 this.mutedBySiblingPopup = true;
+                this.pointerLeftWhileMuted = false;
 
                 this.hideAsInactive();
             });
@@ -580,7 +590,14 @@ export class KbqTooltipTrigger
      */
     show(delay: number = this.enterDelay) {
         if (this.mutedBySiblingPopup) {
-            return;
+            const pointerReturned =
+                this.triggerName === 'mouseenter' &&
+                this.pointerLeftWhileMuted &&
+                !this.siblingPopups.some(({ isAttached }) => isAttached);
+
+            if (!pointerReturned) return;
+
+            this.mutedBySiblingPopup = false;
         }
 
         // `isAttached` is checked directly, not just the `mutedBySiblingPopup` latch: `openedChange` can lag
@@ -620,6 +637,19 @@ export class KbqTooltipTrigger
         }
 
         super.hide(delay);
+    }
+
+    /**
+     * Records whether the pointer left the host while muted, see `pointerLeftWhileMuted`.
+     * @docs-private
+     */
+    protected trackPointerLeave(event: MouseEvent): void {
+        if (!this.mutedBySiblingPopup) return;
+
+        const { left, right, top, bottom } = this.elementRef.nativeElement.getBoundingClientRect();
+
+        this.pointerLeftWhileMuted =
+            event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom;
     }
 
     /**
