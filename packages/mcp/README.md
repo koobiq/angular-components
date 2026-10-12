@@ -3,7 +3,7 @@
 MCP server for the Koobiq design system. Resolves component APIs, icons and design tokens for a
 coding agent so it stops guessing names.
 
-Status: working prototype. Eight read-only tools, measured against 151 tests, not yet published.
+Status: working prototype. Nine read-only tools, measured against 167 tests, not yet published.
 
 ## Why stdio and not a hosted endpoint
 
@@ -16,6 +16,37 @@ The three Koobiq packages are on independent release lines — `@koobiq/componen
 `@koobiq/icons` 12.x, `@koobiq/design-tokens` 3.x, and the `peerDependencies` of the components
 package permit icons `^11 || ^12`. There is therefore no single "Koobiq version" to resolve, and
 each package is read on its own.
+
+## Why a stdio server installs express
+
+It does not use it. The server imports two modules of `@modelcontextprotocol/sdk` —
+`server/mcp.js` and `server/stdio.js` — and those reach 16 files of the SDK and load four packages:
+`ajv`, `ajv-formats`, `zod` and `zod-to-json-schema`.
+
+The SDK declares 17 runtime dependencies. The other 13 belong to the transports and the OAuth
+helpers this server never constructs: `express`, `express-rate-limit`, `cors`, `hono`,
+`@hono/node-server`, `jose`, `pkce-challenge`, `eventsource`, `eventsource-parser`, `raw-body`,
+`content-type`, `cross-spawn`, `json-schema-typed`. They are declared on the package as a whole
+rather than scoped to the entry points that need them, so a consumer downloads all of them and
+loads none.
+
+That gap is not free. It is where the audit finding came from: `express` 5.2.1 resolved
+`proxy-addr` 2.0.7, which carries a critical advisory — this repository's lockfile now resolves
+2.0.8, so the check passes, but the tail is still shipped.
+
+Two things worth keeping straight about whose problem this is. The SDK is not new to this
+repository: `@angular/cli` 20.3.38 already depends on it for its own `ng mcp`, so the tree carried
+express before this package existed. What _is_ new is the SDK as a **runtime** dependency of a
+package this repository publishes, which departs from the rule that published packages depend only
+on `tslib`.
+
+The way out, if that rule is to hold: stdio MCP is newline-delimited JSON-RPC over two pipes, so
+the transport and the handful of methods this server answers — `initialize`, `tools/list`,
+`tools/call` — can be written directly, in on the order of 150 lines, dropping all 17. The reason
+not to do it yet is that the SDK is also what keeps `tools/list` and the error shapes matching what
+clients expect across protocol revisions, and the revision is still moving. The cost of that choice
+should be paid deliberately before publishing, not discovered by a consumer reading
+`package.json`.
 
 ## Where the data comes from
 
@@ -41,16 +72,17 @@ published documentation can only ever describe the newest names.
 
 ## Tools
 
-| Tool                   | Answers                                                                                                                                                |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `search`               | one ranked index over entry points, symbols, members, examples, icons, tokens and guides, in English and Russian                                       |
-| `get_component`        | inputs under the names a template writes, with the type each accepts; outputs, selectors, `exportAs`. Inherited and host-directive inputs are labelled |
-| `get_example`          | source of one live example from the documentation site                                                                                                 |
-| `get_icon`             | usable attribute value and markup for an icon                                                                                                          |
-| `get_token`            | CSS custom property, value per theme, deprecation status                                                                                               |
-| `get_guide`            | installation, theming, localization, validation, schematics, smart search, migration — narrowed in three steps                                         |
-| `migrate`              | what changed between two versions, which entry points lost API, and where the written instructions are                                                 |
-| `which_component_when` | which component answers a task, and which neighbour would be the wrong choice — with the reason                                                        |
+| Tool                   | Answers                                                                                                                                      |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `search`               | one ranked index over entry points, symbols, members, examples, icons, tokens and guides, in English and Russian                             |
+| `get_component`        | inputs under the names a template writes, with the type each accepts; outputs, selectors, `exportAs`. A borrowed API is folded to its names  |
+| `get_example`          | source of one live example from the documentation site                                                                                       |
+| `get_icon`             | usable attribute value and markup for an icon                                                                                                |
+| `get_token`            | CSS custom property, value per theme, deprecation status                                                                                     |
+| `get_guide`            | installation, theming, localization, validation, schematics, smart search, migration — narrowed in three steps, addressed in either language |
+| `migrate`              | what changed between two versions, which entry points lost API, and where the written instructions are                                       |
+| `which_component_when` | which component answers a task, and which neighbour would be the wrong choice — with the reason                                              |
+| `list_components`      | every documented area of the library as one closed list, so the set can be known rather than guessed at from `node_modules`                  |
 
 Registered in a fixed order on purpose. `tools/list` renders into the prefix of every model
 request, ahead of the system prompt, so a list whose order varies invalidates the prompt cache each
@@ -61,16 +93,18 @@ turn and the schemas get billed at full rate instead of the cache-read rate.
 From `npm run probe`, which drives the real server over stdio:
 
 ```
-tool schemas         ≈ 1598–2238 tokens   this server's share, paid per request, eight tools
-average answer       ≈ 320 tokens         over 12 representative calls
-search               ≈ 98–184
-get_component        ≈ 494 whole entry point, ≈ 182 narrowed to one symbol
+tool schemas         ≈ 1789–2504 tokens   this server's share, paid per request, nine tools
+average answer       ≈ 353 tokens         over 13 representative calls
+search               ≈ 182–359
+get_component        ≈ 329–460 whole entry point, ≈ 86–120 narrowed to one symbol
+                     ≈ 1399 for navbar against 1754 unfolded, every name still named
+list_components      ≈ 529–740            all 74 ids, the import rule and the exceptions to it
 get_guide            ≈ 348 listing → 139 sections → 125 one section
-migrate              ≈ 358 summary of 2930 raw changes
+migrate              ≈ 358 summary of 4694 raw changes
 which_component_when ≈ 94–371
-get_icon             ≈ 93
-get_token            ≈ 84
-get_example          ≈ 1802               every file of the example; needs a default filter
+get_icon             ≈ 93–130
+get_token            ≈ 49–76
+get_example          ≈ 1802–2523          every file of the example; needs a default filter
 ```
 
 Two things these numbers are not.
@@ -80,7 +114,7 @@ schema figure is a range. JSON tokenizes worse than prose.
 
 And the schema figure is **this server's share of the per-request tax, not the whole tax**. A
 client reports one number for every server it has connected plus its own built-in tools; a session
-showing 14.4k of loaded tool schemas across 113 tools is not measuring these eight. Judge the cost
+showing 14.4k of loaded tool schemas across 113 tools is not measuring these nine. Judge the cost
 of adding this server by its own payload, and the cost of a crowded client by the client's own
 breakdown.
 

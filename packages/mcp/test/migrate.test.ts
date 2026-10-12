@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { loadCatalog } from '../src/catalog.ts';
 import { parseGuide } from '../src/indexer/parse-guide.ts';
+import { compare } from '../src/semver.ts';
 import { changesFor, meaningful, migrationSections, summarise, type ApiHistory } from '../src/sources/history.ts';
 import { toolMigrate, toolSearch } from '../src/tools.ts';
 import type { Guide } from '../src/types.ts';
@@ -189,4 +190,22 @@ test('indexing a second language stayed cheap', () => {
     );
 
     assert.ok(russian > 500, `only ${russian} Russian strings indexed`);
+});
+
+test('a `from` below the recorded history says the counts are partial', () => {
+    // The history starts where the API reports do. Asked from under that, `summarise` quietly
+    // starts at the first release it has: the totals are real but incomplete, and a reader
+    // upgrading from 18.0.0 took 670 removals for the whole bill.
+    const oldest = Object.keys(catalog.history()).sort(compare)[0];
+
+    assert.ok(oldest && oldest !== '18.0.0', `fixture drift: the history now starts at ${oldest}`);
+
+    const below = toolMigrate(catalog, { from: '18.0.0' });
+
+    assert.match(below, /INCOMPLETE/);
+    assert.match(below, new RegExp(`earliest release on record is ${oldest.replace(/\./g, '\\.')}`));
+    // Carried into the per-entry-point answer too, which is where the numbers get acted on.
+    assert.match(toolMigrate(catalog, { from: '18.0.0', component: 'select' }), /INCOMPLETE/);
+
+    assert.ok(!/INCOMPLETE/.test(toolMigrate(catalog, { from: oldest })), 'the lowest recorded release is in range');
 });

@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import { indexSkew, loadCatalog } from '../src/catalog.ts';
 import { search } from '../src/search.ts';
 import { readIcons } from '../src/sources/icons.ts';
-import { toolGetComponent, toolGetIcon, toolGetToken, toolSearch } from '../src/tools.ts';
+import { toolGetComponent, toolGetIcon, toolGetToken, toolListComponents, toolSearch } from '../src/tools.ts';
 import { CONSUMER } from './project.ts';
 
 /**
@@ -226,4 +226,107 @@ test('search says why a source is missing, whether or not something else matched
     }
 
     assert.ok(!/unavailable/i.test(toolSearch(catalog, { query: 'удалить' })), 'a working source is not announced');
+});
+
+test('lists every documented area, and says it is the whole list', () => {
+    const listed = toolListComponents(catalog, {});
+
+    for (const entry of catalog.index.components) {
+        assert.match(listed, new RegExp(`\\b${entry.id.replace(/-/g, '\\-')}\\b`), `${entry.id} is missing`);
+    }
+
+    assert.match(listed, /complete list/, 'nothing says the list is closed');
+    assert.match(listed, new RegExp(`^${catalog.index.components.length} documented areas`));
+});
+
+test('names the areas that have no entry point to import, rather than implying one', () => {
+    const listed = toolListComponents(catalog, {});
+    const groups = catalog.index.components.filter((entry) => !entry.importPath).map((entry) => entry.id);
+
+    // `validation` and `forms` are documented pages exported from `core`. The import rule stated
+    // at the top of the answer would send an agent to `@koobiq/components/validation`, which is
+    // not published — so the exceptions have to be named, not left to the rule.
+    assert.ok(groups.includes('validation'), 'fixture drift: validation used to have no entry point of its own');
+    for (const id of groups) assert.ok(listed.includes(id), `${id} is not listed as an exception`);
+});
+
+test('summaries are optional and answer in the language asked for', () => {
+    const ids = toolListComponents(catalog, {});
+    const summarised = toolListComponents(catalog, { detail: 'summary' });
+    const russian = toolListComponents(catalog, { detail: 'summary', lang: 'ru' });
+
+    assert.ok(summarised.length > ids.length * 2, 'the summaries did not arrive');
+    assert.match(russian, /[а-я]{4}/, 'no Russian text in the Russian summaries');
+});
+
+test('an entry point published under a nested path is imported by that path, not by its id', () => {
+    // The API report flattens the slash — `scrollbar-deprecated.api.md` describes
+    // `@koobiq/components/scrollbar/deprecated` — so deriving the import from the id yields a
+    // specifier that resolves to nothing.
+    const nested = catalog.index.components.find((entry) => entry.id === 'scrollbar-deprecated');
+
+    assert.ok(nested, 'fixture drift: the deprecated scrollbar entry point is gone');
+    assert.equal(nested.importPath, '@koobiq/components/scrollbar/deprecated');
+    assert.match(toolGetComponent(catalog, { id: 'scrollbar-deprecated' }), /scrollbar\/deprecated';/);
+});
+
+test('the live reader finds entry points nested inside another one', () => {
+    const live = catalog.api();
+
+    assert.ok(live, 'the components package was not resolved');
+
+    const nested = live.entryPoints.filter((id) => id.includes('/'));
+
+    assert.deepEqual(nested, ['scrollbar/deprecated', 'splitter/deprecated']);
+    // Reading it is the point: a top-level scan reports the entry point as having no API at all.
+    assert.ok((live.read('scrollbar/deprecated') ?? []).length > 0, 'nested entry point read as empty');
+});
+
+test('a whole borrowed API is folded to its names, and expands on request', () => {
+    // `KbqNavbarBrand` declares a couple of inputs of its own and borrows a dozen more from the
+    // tooltip trigger. Printed in full, for it and `KbqNavbarItem` both, those were two thirds of
+    // the answer for `navbar`.
+    //
+    // Which mechanism carries them is not asserted: the tooltip arrives through `extends` in
+    // 20.3.1 and as a host directive in 20.4.0, and a test pinned to either would fail on a
+    // release that only moved it.
+    const folded = toolGetComponent(catalog, { id: 'navbar' });
+    const whole = toolGetComponent(catalog, { id: 'navbar', include: ['inherited'] });
+    const fold = /^ {2}\+(\d+) (?:inherited from|via host directive) (\S+): (.+)$/m.exec(folded);
+
+    assert.ok(fold, 'nothing was folded in navbar');
+
+    const [, count, , names] = fold;
+
+    assert.equal(names!.split(', ').length, Number(count), 'the count has to match the names beside it');
+    assert.ok(Number(count) >= 5, `folded a group of only ${count}`);
+
+    const first = names!.split(', ')[0]!;
+
+    assert.ok(!new RegExp(`\\[input\\] {2}${first}\\b`).test(folded), 'a folded binding is not also printed in full');
+    assert.match(whole, new RegExp(`\\[(input|output)\\] *${first}\\b`), 'include: ["inherited"] must expand it');
+    assert.ok(
+        !/\+\d+ (inherited from|via host directive) \S+: /.test(whole),
+        'nothing folds once types were asked for'
+    );
+    assert.ok(folded.length < whole.length * 0.8, `folding saved only ${whole.length - folded.length} characters`);
+});
+
+test('a couple of borrowed inputs stay inline, where folding would cost a call to say nothing', () => {
+    // The group sizes separate cleanly: an origin contributes 1 to 3 bindings, or 6 to 28. The
+    // small end is an inherited `color` or `tabIndex` — the input most callers came for.
+    assert.match(toolGetComponent(catalog, { id: 'navbar' }), /\[input\] {2}tabIndex: .*\(inherited from navbar\)/);
+});
+
+test('a named member is shown in full even when its whole group would be folded', () => {
+    const folded = toolGetComponent(catalog, { id: 'navbar' });
+    const names = /^ {2}\+\d+ (?:inherited from|via host directive) \S+: (.+)$/m.exec(folded)?.[1];
+
+    assert.ok(names, 'nothing was folded in navbar');
+
+    const member = names.split(', ')[0]!;
+    const targeted = toolGetComponent(catalog, { id: 'navbar', members: [member] });
+
+    assert.match(targeted, new RegExp(`\\[(input|output)\\] *${member}\\b`));
+    assert.ok(!/\+\d+ (inherited from|via host directive) \S+: /.test(targeted), 'the caller named it');
 });

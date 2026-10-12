@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { compare, isRelease, sortReleases } from '../semver.js';
 import type { Guide } from '../types.js';
-import { dataDir, git, readBlobs, repoRoot } from './git.js';
+import { dataDir, git, readBlobs, repoRoot, requireTags } from './git.js';
 import { parseGuide, titleFromId } from './parse-guide.js';
 
 /**
@@ -181,6 +181,9 @@ export const buildGuides = (repo: string): Guide[] => {
 
 const main = (): void => {
     const repo = resolve(process.argv[2] ?? process.env.KOOBIQ_REPO ?? repoRoot());
+
+    requireTags(repo, 'the text of each guide');
+
     const started = Date.now();
     const guides = buildGuides(repo);
 
