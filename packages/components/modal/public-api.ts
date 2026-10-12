@@ -1,3 +1,4 @@
+export * from './css-unit.pipe';
 export * from './modal-ref.class';
 export * from './modal.component';
 export * from './modal.directive';
