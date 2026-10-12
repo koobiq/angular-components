@@ -16,6 +16,7 @@ Adding a theme to the page means putting a class on `<body>`. Everything below i
 
 - [Install the Koobiq package](/en/main/installation).
 - Include `css-tokens.css`, `css-tokens-light.css` and `css-tokens-dark.css` — these hold the global values.
+- Include `component-tokens.css`, `component-tokens-light.css` and `component-tokens-dark.css` — these hold the values of the three components whose tokens the package still ships: [code-block](/en/components/code-block), [scrollbar](/en/components/scrollbar) and [skeleton](/en/components/skeleton). Without them those three render unstyled.
 - Include the prebuilt styles in your main stylesheet. Components and overlays (popups, dropdowns) need this to render correctly:
 
 ```sass
@@ -232,7 +233,7 @@ The variables of a component are declared next to its code, in its tokens file, 
 <div class="kbq-callout__header">Note</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Component tokens in the `@koobiq/design-tokens` package are no longer updated and will be removed in version 4.0.0. If you still have them in your own copies of `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` or `css-tokens-font.css`, delete them — components carry their own defaults now.
+Version 4.0.0 of `@koobiq/design-tokens` removed the component tokens, except for code-block, scrollbar and skeleton, which it now ships as opt-in files — `component-tokens.css` and its light and dark halves. Everything else is carried by the components themselves. If copies of the removed tokens are still in your own `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` or `css-tokens-font.css`, delete them, and run `npx koobiq-tokens-codemod src` to find what else the upgrade touches.
 
 </div>
 </div>
