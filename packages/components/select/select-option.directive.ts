@@ -33,6 +33,12 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
      */
     readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
+    /**
+     * The hint repeats text the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an
+     * option that fits.
+     * @docs-private */
+    protected override readonly derivedDisabledWins = true;
+
     get textElement(): HTMLElement {
         return this.option.textElement.nativeElement;
     }
@@ -75,18 +81,18 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
         super.ngAfterViewInit();
 
         this.content = this.option.viewValue;
-        this.disabled = !this.isOverflown;
+        this.setDerivedDisabled(!this.isOverflown);
 
         this.resizeSubscription = this.resizeObserver
             .observe(this.textElement)
             .pipe(debounceTime(this.debounceInterval))
-            .subscribe(() => (this.disabled = !this.isOverflown));
+            .subscribe(() => this.setDerivedDisabled(!this.isOverflown));
 
         this.contentObserverSubscription = this.contentObserver
             .observe(this.textElement)
             .pipe(throttleTime(this.debounceInterval))
             .subscribe(() => {
-                this.disabled = !this.isOverflown;
+                this.setDerivedDisabled(!this.isOverflown);
                 this.content = this.option.viewValue;
             });
 
@@ -104,10 +110,10 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     }
 
     handleElementEnter() {
-        this.disabled = !this.isOverflown;
+        this.setDerivedDisabled(!this.isOverflown);
     }
 
     handleElementLeave() {
-        this.disabled = true;
+        this.setDerivedDisabled(true);
     }
 }

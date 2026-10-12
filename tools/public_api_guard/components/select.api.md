@@ -84,6 +84,7 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
+    protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
     // (undocumented)

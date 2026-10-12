@@ -1,5 +1,5 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Point } from '@angular/cdk/drag-drop';
 import { Overlay, OverlayConfig, OverlayRef, ScrollStrategy } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
@@ -427,9 +427,10 @@ export class KbqTooltipTrigger
 
     /**
      * Input (`kbqTooltipDisabled`) controlling whether the tooltip is disabled; setting it to `true` hides it.
+     * `undefined` leaves the decision to the trigger, like an unset input.
      *
-     * Reads back the *effective* state, which for subclasses that derive one of their own (see
-     * `foldDisabled`) is not necessarily the value that was written.
+     * Reads back the *effective* state, which for triggers that derive one of their own (see
+     * `derivedDisabledWins`) is not necessarily the value that was written.
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
@@ -438,29 +439,24 @@ export class KbqTooltipTrigger
         return this._disabled;
     }
 
-    set disabled(value) {
-        this.explicitlyDisabled = coerceBooleanProperty(value);
+    set disabled(value: BooleanInput) {
+        this.explicitlyDisabled = value === undefined ? undefined : coerceBooleanProperty(value);
 
         this.applyDisabled();
     }
 
     /**
-     * Value the consumer assigned to `kbqTooltipDisabled`, or `undefined` while the input was never set.
-     * Kept apart from `derivedDisabled` so the consumer's binding and the state a subclass computes cannot
-     * overwrite each other in whichever order they happen to run.
-     *
-     * How the two combine is `foldDisabled()`, not this field: the base lets the input win in both
-     * directions, while a subclass whose derived state means *there is nothing to show* overrides that, so
-     * an explicit `false` there cannot conjure a hint for text that was never clipped.
+     * Whether the state this trigger derives means *there is nothing to show*, so an explicit
+     * `kbqTooltipDisabled="false"` cannot override it, as for a hint that repeats text the host never clipped.
+     * Otherwise the explicit value wins in both directions, so `false` on a wrapped control that is not disabled
+     * still asks for a tooltip.
      * @docs-private */
-    protected explicitlyDisabled: boolean | undefined;
+    protected readonly derivedDisabledWins: boolean = false;
 
-    /**
-     * State a subclass derived from what it renders — the wrapped control being disabled here, text overflow
-     * in `KbqTitleDirective` and `KbqEllipsisCenterDirective`. Kept apart from `explicitlyDisabled` so both
-     * survive, whichever order they are written in.
-     * @docs-private */
-    protected derivedDisabled: boolean | undefined;
+    // Kept apart so the consumer's binding and the state the trigger derives cannot overwrite each other,
+    // whichever order they are written in; `foldDisabled()` combines them.
+    private explicitlyDisabled: boolean | undefined;
+    private derivedDisabled: boolean | undefined;
 
     /** Input (`kbqEnterDelay`) — delay in milliseconds before the tooltip is shown. Defaults to `400`. */
     // TODO: Skipped for migration because:
@@ -768,14 +764,11 @@ export class KbqTooltipTrigger
         this.applyDisabled();
     }
 
-    /**
-     * Effective `disabled`: the consumer's `kbqTooltipDisabled` wins over the derived state in both
-     * directions, so `false` on a wrapped control that is not disabled still asks for a tooltip.
-     *
-     * Subclasses whose derived state means *there is nothing to show* override this — a hint that repeats
-     * text the host had to clip cannot be conjured for text that was never clipped.
-     * @docs-private */
-    protected foldDisabled(): boolean {
+    private foldDisabled(): boolean {
+        if (this.derivedDisabledWins) {
+            return this.explicitlyDisabled === true || (this.derivedDisabled ?? false);
+        }
+
         return this.explicitlyDisabled ?? this.derivedDisabled ?? false;
     }
 
