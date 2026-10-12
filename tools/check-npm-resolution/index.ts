@@ -123,7 +123,8 @@ const documentedInstalls = [
     // The guide pins this one, because the scrollbar relies on a specific build of it.
     `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`,
     '@koobiq/icons',
-    '@koobiq/design-tokens',
+    // The guide holds this one to the major the peer range allows; bare, it takes whatever major is `latest`.
+    '@koobiq/design-tokens@^3',
     '@koobiq/date-adapter',
     '@koobiq/date-formatter',
     '@koobiq/luxon-date-adapter',
