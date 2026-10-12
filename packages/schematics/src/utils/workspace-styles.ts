@@ -16,24 +16,33 @@ function isApplicationProject(project: workspaces.ProjectDefinition): boolean {
 const KOOBIQ_STATIC_STYLE_ENTRIES = [
     'node_modules/@koobiq/icons/fonts/kbq-icons.css',
     'node_modules/@koobiq/design-tokens/web/css-tokens.css',
+    'node_modules/@koobiq/design-tokens/web/component-tokens.css',
     'node_modules/@koobiq/components/prebuilt-themes/theme.css'
 ];
 
-const THEME_TOKENS_PATTERN = /^node_modules\/@koobiq\/design-tokens\/web\/css-tokens-(light|dark)\.css$/;
+const THEME_TOKENS_PATTERN = /^node_modules\/@koobiq\/design-tokens\/web\/(css|component)-tokens-(light|dark)\.css$/;
 
 /**
  * The style entries documented in the installation guide, in the order they must be loaded.
  * `'auto'` includes both token files, since `KbqThemeService` switches between them at runtime —
  * a static `'light'`/`'dark'` choice only needs its own.
+ *
+ * `component-tokens*.css` carries the values of the components whose tokens @koobiq/design-tokens
+ * still ships — code-block, scrollbar and skeleton. They are opt-in since v4, and the library does
+ * not declare copies of them, so an application that leaves them out renders those three unstyled.
  */
 export function getKoobiqStyleEntries(theme: KoobiqTheme): string[] {
-    const [icons, tokens, prebuiltTheme] = KOOBIQ_STATIC_STYLE_ENTRIES;
-    const themeTokens = theme === 'auto' ? [
-                  'node_modules/@koobiq/design-tokens/web/css-tokens-light.css',
-                  'node_modules/@koobiq/design-tokens/web/css-tokens-dark.css'
-              ] : [`node_modules/@koobiq/design-tokens/web/css-tokens-${theme}.css`];
+    const [icons, tokens, componentTokens, prebuiltTheme] = KOOBIQ_STATIC_STYLE_ENTRIES;
+    const themes: KoobiqTheme[] = theme === 'auto' ? ['light', 'dark'] : [theme];
 
-    return [icons, tokens, ...themeTokens, prebuiltTheme];
+    return [
+        icons,
+        tokens,
+        ...themes.map((name) => `node_modules/@koobiq/design-tokens/web/css-tokens-${name}.css`),
+        componentTokens,
+        ...themes.map((name) => `node_modules/@koobiq/design-tokens/web/component-tokens-${name}.css`),
+        prebuiltTheme
+    ];
 }
 
 /**

@@ -7,7 +7,6 @@
 /* stylelint-disable selector-pseudo-class-no-unknown */
 
 @use '../common/tokens';
-@use './scrollbar-tokens';
 
 @mixin _scrollbar-state($state, $color) {
     &.kbq-#{$state} {
