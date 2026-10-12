@@ -443,6 +443,11 @@
             "description": "Reports the icon call sites the icon review reaches: the removed KbqIcon.small input (published but read by nothing) on a [kbq-icon] or [kbq-icon-item] (small on an icon button is v21-upgrade's), the icon buttons on a host that is not a native <button> that handle (click) but no key, the tabindex retyped from any to number | null, and the protected name marker replaced by appliesMaxHeight. Warn-only. Notes the parts with no call site: <i kbq-icon> is aria-hidden by default and a meaningful icon has to opt out with role=\"img\" and an aria-label, kbq-icon-button warns in dev mode when it has no accessible name and gets role=\"button\" and aria-disabled but no keyboard activation, the --kbq-icon-*-color tokens are consumed with a var() fallback instead of being declared on .kbq-icon so a container can re-theme the icons inside it, the SVG resolution no longer dies on the first unresolved name, and KbqIconRegistry looks sprite symbols up by id.",
             "factory": "./migrations/icon-semantics-and-api/index",
             "schema": "./migrations/icon-semantics-and-api/schema.json"
+        },
+        "design-tokens-v4": {
+            "description": "Moves the project to @koobiq/design-tokens 4, which @koobiq/components now requires: v4 removed the component tokens and the library stopped declaring copies of the three it still ships — code-block, scrollbar and skeleton — so a project left on v3 renders those three with no values at all. The entry is rewritten wherever the project declared it and added to dependencies when it declared it nowhere, since a project can reach the tokens through the library's peer dependency alone. Warns about the three steps left by hand: adding component-tokens.css and its light/dark half to the styles, running `npx koobiq-tokens-codemod src` over the project's own styles and templates for the moved import paths and the renamed tokens, and looking at the code blocks and scrollbars — the only two places v4 changes pixels without being asked.",
+            "factory": "./migrations/design-tokens-v4/index",
+            "schema": "./migrations/design-tokens-v4/schema.json"
         }
     }
 }

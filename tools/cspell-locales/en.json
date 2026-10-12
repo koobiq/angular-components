@@ -12,6 +12,7 @@
         "autotable",
         "behaviour",
         "bento",
+        "codemod",
         "codeowners",
         "combinators",
         "commitlint",
