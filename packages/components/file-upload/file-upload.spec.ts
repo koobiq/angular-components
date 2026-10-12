@@ -495,6 +495,21 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.files).toHaveLength(0);
         });
 
+        // Every row carries the same button, so the localized "Remove" alone announces identically for
+        // each one and gives no way to tell which file it deletes. The locale entry is documented as
+        // "followed by that value's own text"; KbqSelect builds its remove label the same way.
+        it('should name the remove button after the file it removes', () => {
+            component.disabled = false;
+            fixture.detectChanges();
+
+            dispatchEvent(component.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+            fixture.detectChanges();
+
+            const action = fixture.debugElement.query(By.css(`.${fileItemActionCssClass}`)).nativeElement;
+
+            expect(action.getAttribute('aria-label')).toContain(FILE_NAME);
+        });
+
         it('should focus the file input after the last file is removed', fakeAsync(() => {
             component.disabled = false;
             fixture.detectChanges();

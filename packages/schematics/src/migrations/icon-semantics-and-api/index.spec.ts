@@ -54,7 +54,9 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('KbqIcon.small was removed');
     });
 
-    it('reports a KbqIcon content query that starts resolving buttons and items', async () => {
+    // KbqIconButton and KbqIconItem deliberately do not register under the KbqIcon token, so a consumer
+    // query keeps resolving exactly what it resolved before and there is nothing to report.
+    it('leaves a KbqIcon content query alone', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
         const messages = collectLogs();
@@ -67,7 +69,7 @@ describe(SCHEMATIC_NAME, () => {
 
         await run(first);
 
-        expect(messages.join('\n')).toContain('provide the KbqIcon token now');
+        expect(messages.join('\n')).not.toContain('contentChild');
     });
 
     it('reports a keydown handler sitting on an icon button', async () => {
@@ -111,6 +113,24 @@ describe(SCHEMATIC_NAME, () => {
         await run(first);
 
         expect(messages.join('\n')).toContain('appliesMaxHeight');
+    });
+
+    // `.name` is one of the most common property names there is, and the file-level anchor is any
+    // KbqIcon identifier — an icon-heavy component reading `file.name` must not be reported.
+    it('leaves an unrelated .name read alone', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqIconModule } from '@koobiq/components/icon';\n" +
+                'export class App { label(file: File) { return file.name; } }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('appliesMaxHeight');
     });
 
     it('says nothing at all when the project does not use icons', async () => {

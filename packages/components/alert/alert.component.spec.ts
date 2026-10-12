@@ -243,6 +243,29 @@ describe(KbqAlert.name, () => {
 
             expect(fixture.debugElement.query(By.css('.kbq-alert__close-button'))).not.toBeNull();
         });
+
+        // The close button is a `kbq-icon-button`, which sits in the icon slot's DOM position. It must not
+        // answer the status-icon query, or a dismissible alert with no status icon lays out an empty box.
+        it('should not open the icon slot for a close button alone', () => {
+            const fixture = createComponent(ConfigurableTestApp);
+
+            fixture.componentInstance.showClose.set(true);
+            fixture.detectChanges();
+
+            expect(fixture.debugElement.query(By.css('.kbq-alert__icon'))).toBeNull();
+        });
+
+        it('should not auto-tint a close button to the alert color', () => {
+            const fixture = createComponent(ConfigurableTestApp);
+
+            fixture.componentInstance.alertColor.set(KbqAlertColors.Error);
+            fixture.componentInstance.showClose.set(true);
+            fixture.detectChanges();
+
+            const closeButton = fixture.debugElement.query(By.css('[kbq-alert-close-button]')).nativeElement;
+
+            expect(closeButton.classList).not.toContain('kbq-error');
+        });
     });
 
     describe('closed output', () => {

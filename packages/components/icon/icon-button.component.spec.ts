@@ -4,7 +4,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, ThemePalette } from '@koobiq/components/core';
-import { KbqIcon, KbqIconButton, KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
+import { KbqIcon, KbqIconButtonSize, KbqIconModule } from '@koobiq/components/icon';
 import { axe } from 'jest-axe';
 
 describe('KbqIconButton', () => {
@@ -203,6 +203,47 @@ describe('KbqIconButton', () => {
             warn.mockRestore();
         });
 
+        // KbqStepper and the datepicker toggle are both mouse-only affordances beside a control that
+        // already carries the keyboard interaction; assistive technology never reaches them.
+        it('should stay silent when the host is hidden from assistive technology', () => {
+            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+            TestBed.createComponent(HiddenTestApp).detectChanges();
+
+            expect(warn).not.toHaveBeenCalled();
+
+            warn.mockRestore();
+        });
+
+        // `routerLink` and a bound `[attr.href]` are written in the update pass, long after a directive
+        // constructor has run — an anchor that navigates must still be announced as a link.
+        it('should leave an anchor that gains its href later without a button role', () => {
+            const fixture = TestBed.createComponent(LateHrefApp);
+
+            fixture.detectChanges();
+
+            const anchor = fixture.nativeElement.querySelector('a') as HTMLElement;
+
+            expect(anchor.hasAttribute('href')).toBe(true);
+            expect(anchor.hasAttribute('role')).toBe(false);
+        });
+
+        it('should not overwrite a role the caller set', () => {
+            const fixture = TestBed.createComponent(ExplicitRoleApp);
+
+            fixture.detectChanges();
+
+            expect((fixture.nativeElement.querySelector('i') as HTMLElement).getAttribute('role')).toBe('switch');
+        });
+
+        it('should not render an unparsable tabindex', () => {
+            const fixture = TestBed.createComponent(BadTabindexApp);
+
+            fixture.detectChanges();
+
+            expect((fixture.nativeElement.querySelector('i') as HTMLElement).hasAttribute('tabindex')).toBe(false);
+        });
+
         it('should have no violations', async () => {
             const named = TestBed.createComponent(NamedTestApp);
 
@@ -212,15 +253,18 @@ describe('KbqIconButton', () => {
         });
     });
 
-    // ICN-ARCH-01: host metadata is inherited, the DI token is not.
-    it('should be found by a KbqIcon content query', () => {
+    // ICN-ARCH-01: host metadata is inherited from KbqIcon, the DI token is not — and deliberately stays
+    // that way. A `contentChild(KbqIcon)` is looking for a decorative icon to position or tint; answering
+    // it with an interactive control made KbqAlert render an empty icon box for a dismissible alert and
+    // re-tint its close button to the alert color.
+    it('should not be matched by a KbqIcon content query', () => {
         const fixture = TestBed.createComponent(IconQueryTestApp);
 
         fixture.detectChanges();
 
         const queryHost = fixture.debugElement.query(By.directive(IconQueryHost)).componentInstance as IconQueryHost;
 
-        expect(queryHost.icon()).toBeInstanceOf(KbqIconButton);
+        expect(queryHost.icon()).toBeUndefined();
     });
 });
 
@@ -265,6 +309,47 @@ class SizeTestApp {
     `
 })
 class NamedTestApp {}
+
+@Component({
+    selector: 'hidden-test-app',
+    imports: [KbqIconModule],
+    template: `
+        <i aria-hidden="true" kbq-icon-button="kbq-chevron-down-s_16" [tabindex]="-1"></i>
+    `
+})
+class HiddenTestApp {}
+
+/** Stands in for `routerLink`, which writes its `href` through a host binding in the update pass. */
+@Component({
+    selector: 'late-href-app',
+    imports: [KbqIconModule],
+    template: `
+        <a kbq-icon-button="kbq-chevron-down-s_16" aria-label="Settings" [attr.href]="href"></a>
+    `
+})
+class LateHrefApp {
+    href = '/settings';
+}
+
+@Component({
+    selector: 'explicit-role-app',
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon-button="kbq-chevron-down-s_16" aria-label="Toggle" role="switch" aria-checked="false"></i>
+    `
+})
+class ExplicitRoleApp {}
+
+@Component({
+    selector: 'bad-tabindex-app',
+    imports: [KbqIconModule],
+    template: `
+        <i kbq-icon-button="kbq-chevron-down-s_16" aria-label="Collapse" [tabindex]="value"></i>
+    `
+})
+class BadTabindexApp {
+    value = '';
+}
 
 /** Mirrors the shape of `KbqTagRemove`: a co-located directive that activates the host itself. */
 @Directive({

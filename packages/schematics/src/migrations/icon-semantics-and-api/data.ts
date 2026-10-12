@@ -8,15 +8,13 @@
  *   `aria-hidden="false"` and then supplies its own `role="img"` and `aria-label`.
  * - `kbq-icon-button` on anything but a native `<button>` gets `role="button"`, `aria-disabled` and
  *   Enter/Space activation, and warns in dev mode when it has no accessible name.
- * - `KbqIconButton` and `KbqIconItem` provide the `KbqIcon` DI token, so a `contentChild(KbqIcon)` in
- *   consumer code starts resolving them.
  * - `KbqIcon.small` is removed — it was published but read by nothing.
  * - `KbqIcon.name`, the string that stood in for an `instanceof`, is replaced by the protected
  *   `appliesMaxHeight` flag.
  * - `KbqIconButton.tabindex` is `number | null` instead of `any`, and `iconName` is `string | undefined`.
  *
- * Warn-only. Whether an icon is decorative, what an icon button should be called and whether a widened
- * content query still wants every match are all decisions the schematic cannot make.
+ * Warn-only. Whether an icon is decorative and what an icon button should be called are both decisions
+ * the schematic cannot make.
  */
 
 /** Import specifier that marks a file as an icon consumer. */
@@ -45,16 +43,6 @@ export const warnPatterns: WarnPattern[] = [
             '[size]="\'compact\'".'
     },
     {
-        anchor: ICON_TYPE,
-        pattern:
-            '(?:contentChild(?:ren)?|ContentChild(?:ren)?)\\s*(?:<[^>]*>)?\\s*\\(\\s*(?:forwardRef\\(\\s*\\(\\s*\\)\\s*=>\\s*)?KbqIcon\\b',
-        message:
-            'KbqIconButton and KbqIconItem provide the KbqIcon token now, so this query starts resolving ' +
-            'them. Host metadata is inherited and the DI token was not, which is why the query used to ' +
-            'walk past an icon button that carries the .kbq-icon class. Narrow the query if it only ever ' +
-            'wanted a bare icon.'
-    },
-    {
         anchor: '\\bkbq-icon-button\\b',
         pattern: '\\(keydown',
         message:
@@ -72,7 +60,10 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: '\\bKbqIcon\\w*\\b',
-        pattern: '(?:\\.\\s*|\\boverride\\s+)name\\s*(?:=(?!=)|[;:),\\]}])',
+        // Only the `override` form. `.name` is far too common a property — `file.name`, `error.name`,
+        // `control.name` — and the anchor is any KbqIcon identifier in the file, so matching a bare
+        // member access reported the marker for code that never had anything to do with it.
+        pattern: '\\boverride\\s+name\\s*(?:=(?!=)|[:;])',
         message:
             'KbqIcon.name — the protected string that stood in for an instanceof and decided whether the ' +
             'inline max-height is written — is replaced by the protected `appliesMaxHeight` boolean, which ' +

@@ -13,7 +13,6 @@ recorded an internal decision.
 | ------------------------------------- | ------------------------- | --------------------------------------------- |
 | `<i kbq-icon>`                        | in the accessibility tree | `aria-hidden="true"` by default               |
 | `kbq-icon-button` on a non-`<button>` | focusable, no semantics   | `role="button"`, Enter/Space, `aria-disabled` |
-| `KbqIconButton` / `KbqIconItem` DI    | no `KbqIcon` token        | provide `KbqIcon`                             |
 | `KbqIcon.small`                       | published input           | removed                                       |
 | `KbqIcon.name`                        | `'KbqIcon'` string        | `appliesMaxHeight` boolean                    |
 | `KbqIconButton.tabindex`              | `any`                     | `number \| null`                              |
@@ -30,13 +29,12 @@ became redundant. An icon that is the only carrier of its meaning has to say so:
 
 ## What it does _not_ do
 
-Nothing is rewritten. Whether an icon is decorative, what an icon button should be called, and
-whether a widened content query still wants every match are all decisions the schematic cannot make.
+Nothing is rewritten. Whether an icon is decorative and what an icon button should be called are both
+decisions the schematic cannot make.
 
 | Pattern                         | Manual migration                                         |
 | ------------------------------- | -------------------------------------------------------- |
 | `small` on a plain `[kbq-icon]` | Drop it — nothing ever read it                           |
-| `contentChild(KbqIcon)`         | Narrow the query if it only ever wanted a bare icon      |
 | `(keydown…)` on an icon button  | `preventDefault()` to keep sole ownership of Enter/Space |
 | `tabindex` on an icon button    | Pass a number (a numeric string is still transformed)    |
 | `.name` on a `KbqIcon` subclass | Override the protected `appliesMaxHeight` instead        |

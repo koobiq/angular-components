@@ -31,7 +31,9 @@
                 margin-inline-start: var(--kbq-size-s);
                 align-self: center;
 
-                color: var(--kbq-icon-fade-contrast-color);
+                // The design token is the fallback because `--kbq-icon-fade-contrast-color` is no longer
+                // declared on `.kbq-icon`; this selector outranks the themed one, so it has to carry it.
+                color: var(--kbq-icon-fade-contrast-color, var(--kbq-icon-contrast-fade));
             }
         }
     }

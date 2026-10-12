@@ -6,7 +6,6 @@ import {
     Component,
     computed,
     effect,
-    forwardRef,
     inject,
     Input,
     input,
@@ -39,15 +38,15 @@ const ACTIVATION_KEYS = ['Enter', ' ', 'Spacebar'];
  *
  * It has no text of its own, so give it an `aria-label` (or an `aria-labelledby`); in dev mode it warns
  * when it has neither.
+ *
+ * It extends `KbqIcon` for the rendering, but deliberately does not register under that DI token: a
+ * `contentChild(KbqIcon)` is looking for a decorative icon to position or tint, and an interactive
+ * control is not one. See the note on `KbqIconItem`.
  */
 @Component({
     selector: `[kbq-icon-button]`,
     template: '<ng-content />',
     styleUrls: ['icon-button.scss', 'icon-button-tokens.scss'],
-    // Host metadata is inherited through `ɵɵInheritDefinitionFeature`, DI tokens are not: without this a
-    // `contentChild(KbqIcon)` walks straight past an icon button. `providers` are not inherited either,
-    // so every subclass in the hierarchy needs its own entry.
-    providers: [{ provide: KbqIcon, useExisting: forwardRef(() => KbqIconButton) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -55,7 +54,6 @@ const ACTIVATION_KEYS = ['Enter', ' ', 'Spacebar'];
 
         '[attr.tabindex]': 'tabindex',
         '[attr.disabled]': 'disabled || null',
-        '[attr.role]': 'hostRole',
         '[attr.aria-disabled]': 'disabled || null',
 
         '[class.kbq-disabled]': 'disabled',
@@ -89,7 +87,17 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
      */
     // TODO: Skipped for migration because:
     //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: (value: unknown): number | null => (value == null ? null : numberAttribute(value)) })
+    // `numberAttribute` returns NaN for anything it cannot parse, and `tabindex="NaN"` is an invalid
+    // attribute the browser ignores — which silently takes the button out of the tab order.
+    @Input({
+        transform: (value: unknown): number | null => {
+            if (value == null) return null;
+
+            const tabindex = numberAttribute(value);
+
+            return Number.isNaN(tabindex) ? null : tabindex;
+        }
+    })
     get tabindex(): number | null {
         return this.disabled ? null : this._tabindex;
     }
@@ -122,22 +130,8 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     /** The button sizes itself through its own padding, so it never gets the bare icon's `max-height`. */
     protected override readonly appliesMaxHeight: boolean = false;
 
-    /** `null` on an element that is a button already; `'button'` on everything else. @docs-private */
-    protected readonly hostRole: 'button' | null;
-
-    private readonly nativelyActivated: boolean;
-    private accessibleNameWarned = false;
-
     constructor() {
         super();
-
-        const host = this.getHostElement();
-
-        // A link that navigates keeps its own role and its own Enter handling; anything else is a button
-        // only because this component says so, and has to be told to behave like one.
-        this.nativelyActivated =
-            NATIVELY_ACTIVATED_NODES.includes(host.nodeName) || (host.nodeName === 'A' && host.hasAttribute('href'));
-        this.hostRole = this.nativelyActivated ? null : 'button';
 
         // @todo 20 In the next major release this line will be deleted.
         toObservable(this.disabledSignal).subscribe((value) => (this._disabled = value));
@@ -147,12 +141,43 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();
+        this.applyButtonRole();
         this.warnIfMissingAccessibleName();
         this.listenForKeyboardActivation();
     }
 
     ngOnDestroy() {
         this.stopFocusMonitor();
+    }
+
+    /**
+     * Whether the host already behaves like a button, so the browser activates it from the keyboard and
+     * announces it without help.
+     *
+     * Read on demand rather than captured in the constructor: `routerLink` and a bound `[attr.href]` both
+     * write the attribute during the update pass, so an anchor that navigates carries no `href` at all
+     * while directive constructors run.
+     */
+    private isNativelyActivated(): boolean {
+        const host = this.getHostElement();
+
+        return NATIVELY_ACTIVATED_NODES.includes(host.nodeName) || (host.nodeName === 'A' && host.hasAttribute('href'));
+    }
+
+    /**
+     * A link that navigates keeps its own role; anything else is a button only because this component
+     * says so, and has to be announced as one.
+     *
+     * Written through the renderer instead of a host binding, because the binding is evaluated in the
+     * parent's update pass — before `routerLink` has set its `href` — and on an `OnPush` component it may
+     * never be evaluated again to correct itself.
+     */
+    private applyButtonRole(): void {
+        const host = this.getHostElement();
+
+        if (this.isNativelyActivated() || host.hasAttribute('role')) return;
+
+        this.renderer.setAttribute(host, 'role', 'button');
     }
 
     /**
@@ -165,7 +190,9 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
      * to check.
      */
     private listenForKeyboardActivation(): void {
-        if (this.nativelyActivated) return;
+        // A `<button>` or an `<input>` can never stop being natively activated, so it needs no listener.
+        // An anchor can still gain its `href` later, so it gets one and re-checks when the key arrives.
+        if (NATIVELY_ACTIVATED_NODES.includes(this.getHostElement().nodeName)) return;
 
         this.destroyRef.onDestroy(
             this.renderer.listen(this.getHostElement(), 'keydown', (event: KeyboardEvent) =>
@@ -175,7 +202,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     }
 
     private activateFromKeyboard(event: KeyboardEvent): void {
-        if (this.disabled || event.defaultPrevented) return;
+        if (this.disabled || event.defaultPrevented || this.isNativelyActivated()) return;
         if (!ACTIVATION_KEYS.includes(event.key)) return;
 
         // Space scrolls the page, and both keys are usually acted on by whatever list or overlay the
@@ -189,11 +216,18 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     /**
      * `KbqIcon` renders a decorative glyph, so an icon button carries no text. Without an
      * `aria-label`/`aria-labelledby`/`title` it has no accessible name at all (AXE `button-name`).
+     *
+     * A host that opted into `aria-hidden="true"` is exempt: assistive technology never reaches it, so it
+     * has nothing to be named for. `KbqStepper` and the datepicker toggle are both built that way — a
+     * mouse-only affordance beside a control that already carries the keyboard interaction.
      */
     private warnIfMissingAccessibleName(): void {
-        if (!isDevMode() || this.accessibleNameWarned) return;
+        if (!isDevMode()) return;
 
         const host = this.getHostElement();
+
+        if (host.getAttribute('aria-hidden') === 'true') return;
+
         const hasAccessibleName =
             !!host.textContent?.trim() ||
             host.hasAttribute('aria-label') ||
@@ -201,8 +235,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
             host.hasAttribute('title');
 
         if (hasAccessibleName) return;
-
-        this.accessibleNameWarned = true;
 
         // eslint-disable-next-line no-console
         console.warn('KbqIconButton has no accessible name. Add [aria-label] or [aria-labelledby] to it.', host);

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { KbqIconButton } from './icon-button.component';
 import { KBQ_ICON_ERROR_STATE_CONTEXT, KbqIconErrorStateContext } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
+import { kbqIconsResolverProvider } from './icon-registry-providers';
 import { KbqIcon } from './icon.component';
 
 const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><path d="M0 0h16v16H0z"/></svg>';
@@ -162,6 +163,25 @@ describe('KbqIcon', () => {
             class DecorativeIconButtonApp {}
 
             const fixture = TestBed.createComponent(DecorativeIconButtonApp);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).getAttribute('aria-hidden')).toBe('true');
+        });
+
+        // `cond ? true : null` is how a template leaves an attribute unset. `booleanAttribute(null)` is
+        // `false`, which would have turned "say nothing" into an explicit opt-out of the default.
+        it('should treat a null binding as no answer at all', () => {
+            @Component({
+                selector: 'null-aria-hidden-app',
+                imports: [KbqIcon],
+                template: `
+                    <i kbq-icon="kbq-plus_16" [attr.aria-hidden]="null"></i>
+                `
+            })
+            class NullAriaHiddenApp {}
+
+            const fixture = TestBed.createComponent(NullAriaHiddenApp);
 
             fixture.detectChanges();
 
@@ -361,5 +381,37 @@ describe('KbqIcon', () => {
         const icon = fixture.debugElement.query(By.directive(KbqIcon)).componentInstance as KbqIcon;
 
         expect(icon.getHostElement()).toBe(hostOf(fixture));
+    });
+
+    // A resolver is consumer code. One that throws used to escape the `switchMap` project function,
+    // reach the outer subscription and end it — the same defect as ICN-BUG-01, by another route.
+    it('should survive a resolver that throws', () => {
+        TestBed.resetTestingModule();
+        TestBed.configureTestingModule({
+            providers: [
+                kbqIconsResolverProvider((name) => {
+                    if (name === 'kbq-boom_16') throw Error('resolver blew up');
+
+                    return null;
+                })
+            ]
+        });
+
+        TestBed.inject(KbqIconRegistry).addSvgIconLiteral(
+            'kbq-play_64',
+            TestBed.inject(DomSanitizer).bypassSecurityTrustHtml(ICON_SVG)
+        );
+
+        const fixture = TestBed.createComponent(IconTestApp);
+
+        fixture.componentInstance.name.set('kbq-boom_16');
+        fixture.detectChanges();
+
+        expect(hostOf(fixture).querySelector('svg')).toBeNull();
+
+        fixture.componentInstance.name.set('kbq-play_64');
+        fixture.detectChanges();
+
+        expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
     });
 });

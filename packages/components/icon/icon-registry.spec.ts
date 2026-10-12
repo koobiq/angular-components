@@ -8,6 +8,7 @@ const ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><p
 const SPRITE_SVG = `<svg xmlns="http://www.w3.org/2000/svg">
   <symbol id="check_16" viewBox="0 0 16 16"><path d="M1 8l4 4 8-8"/></symbol>
   <symbol id="close_16" viewBox="0 0 16 16"><path d="M2 2l12 12M14 2L2 14"/></symbol>
+  <symbol id="3d-view_16" viewBox="0 0 16 16"><path d="M0 0h16v16H0z"/></symbol>
 </svg>`;
 
 describe('KbqIconRegistry', () => {
@@ -158,6 +159,23 @@ describe('KbqIconRegistry', () => {
 
             expect(http.match('/sprite.svg')).toHaveLength(0);
         });
+
+        // Symbol ids come from the consumer's sprite, so they are not guaranteed to be valid CSS
+        // identifiers. Looking one up as `#${name}` made a leading digit a selector syntax error, and
+        // the icon never resolved.
+        it('extracts a symbol whose id is not a valid CSS identifier', (done) => {
+            registry.addSvgIconSet(sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg'));
+
+            registry.getNamedSvgIcon('3d-view_16').subscribe({
+                next: (svg) => {
+                    expect(svg).toBeInstanceOf(SVGElement);
+                    done();
+                },
+                error: (error: Error) => done.fail(error.message)
+            });
+
+            http.expectOne('/sprite.svg').flush(SPRITE_SVG);
+        });
     });
 
     describe('addSvgIconSetInNamespace', () => {
@@ -251,6 +269,29 @@ describe('KbqIconRegistry', () => {
                     )
                 );
             }).toThrow();
+        });
+    });
+
+    // A synchronous throw escapes `getNamedSvgIcon` at the call site, where no `catchError` can reach it
+    // and a subscriber's `error` callback never runs. Every failure of this class is an error
+    // notification instead, which is what lets `KbqIcon` fall back to the font class.
+    describe('without an HttpClient', () => {
+        it('reports a URL-backed icon through an error notification', (done) => {
+            TestBed.resetTestingModule();
+
+            const bare = TestBed.inject(KbqIconRegistry);
+
+            bare.addSvgIcon('remote_16', TestBed.inject(DomSanitizer).bypassSecurityTrustResourceUrl('/remote.svg'));
+
+            expect(() => {
+                bare.getNamedSvgIcon('remote_16').subscribe({
+                    next: () => done.fail('should not emit'),
+                    error: (error: Error) => {
+                        expect(error.message).toContain('HttpClient is required');
+                        done();
+                    }
+                });
+            }).not.toThrow();
         });
     });
 });

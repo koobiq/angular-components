@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqColorDirective } from '@koobiq/components/core';
-import { of, ReplaySubject, Subscription } from 'rxjs';
+import { defer, of, ReplaySubject, Subscription } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
@@ -61,7 +61,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      */
     readonly ariaHidden = input<boolean | undefined, unknown>(undefined, {
         alias: 'aria-hidden',
-        transform: (value) => (value === undefined ? undefined : booleanAttribute(value))
+        // `null` is how a template says "leave it unset" (`cond ? true : null`), so it means the default
+        // rather than `false` — `booleanAttribute(null)` would turn it into an explicit opt-out.
+        transform: (value) => (value == null ? undefined : booleanAttribute(value))
     });
 
     /** Whether an icon of this kind is decorative when the caller says nothing. Overridden by subclasses. */
@@ -95,6 +97,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * Whether the icon follows the error state of the host it sits in (a form field, for one), painting
      * itself red while that host reports an error.
      */
+    // Kept as an accessor `@Input()` rather than an `input()`: `KbqCleaner` writes it from its own
+    // constructor, and an `input()` has no setter to write. The setter is also where the error-state
+    // subscription is made and torn down, which a signal input cannot intercept.
     @Input({ transform: booleanAttribute })
     get autoColor(): boolean {
         return this.autoColorEnabled;
@@ -165,7 +170,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         const size = this.resolveIconSize();
         const host = this.getHostElement();
 
-        if (size) {
+        if (size !== undefined) {
             this.renderer.setStyle(host, 'max-height', `${size}px`);
         } else {
             // Without this the ceiling written for the previous name keeps clipping the new glyph.
@@ -199,9 +204,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
                 // `catchError` inside the `switchMap` keeps an unresolved name from completing the outer
                 // subscription: in the default font-icon setup every name is unresolved, so a terminal
                 // `error` callback would leave the icon unable to render any later name at all.
+                //
+                // `defer` puts the lookup itself inside the inner observable, so a consumer-supplied
+                // resolver that throws is caught here too rather than escaping the `switchMap` project
+                // function — where it would reach the outer subscription and kill it for good.
                 switchMap((name) =>
                     this.registry && name
-                        ? this.registry.getNamedSvgIcon(name).pipe(catchError(() => of(null)))
+                        ? defer(() => this.registry!.getNamedSvgIcon(name)).pipe(catchError(() => of(null)))
                         : of(null)
                 ),
                 takeUntilDestroyed(this.destroyRef)
@@ -223,7 +232,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         if (svg) {
             const size = this.resolveIconSize();
 
-            if (size) {
+            if (size !== undefined) {
                 this.renderer.setAttribute(svg, 'width', `${size}`);
                 this.renderer.setAttribute(svg, 'height', `${size}`);
             }

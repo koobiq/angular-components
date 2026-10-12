@@ -88,9 +88,10 @@ describe('KbqIconItem', () => {
         expect(hostOf().style.maxHeight).toBe('');
     });
 
-    // ICN-ARCH-01: the host class is inherited from KbqIcon, the DI token is not — without the explicit
-    // provider a `contentChild(KbqIcon)` walks straight past an icon item.
-    it('should be found by a KbqIcon content query', () => {
+    // ICN-ARCH-01: the host class is inherited from KbqIcon, the DI token is not — and deliberately stays
+    // that way. KbqAlert asks for `KbqIcon` and `KbqIconItem` separately and reports two projected status
+    // icons when both answer; a shared token collapses the pair and the report goes with it.
+    it('should not be matched by a KbqIcon content query', () => {
         const projection = TestBed.createComponent(IconItemProjectionApp);
 
         projection.detectChanges();
@@ -98,6 +99,6 @@ describe('KbqIconItem', () => {
         const queryHost = projection.debugElement.query(By.directive(IconItemQueryApp))
             .componentInstance as IconItemQueryApp;
 
-        expect(queryHost.icon()).toBeInstanceOf(KbqIconItem);
+        expect(queryHost.icon()).toBeUndefined();
     });
 });

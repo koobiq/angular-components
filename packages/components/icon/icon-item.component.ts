@@ -1,16 +1,18 @@
-import { ChangeDetectionStrategy, Component, forwardRef, Input, input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input, ViewEncapsulation } from '@angular/core';
 import { KbqIcon } from './icon.component';
 
 /**
  * An icon on a filled round background — the status badge of an alert or an empty state. Decorative like
  * `KbqIcon`, and hidden from assistive technology by the same default.
+ *
+ * Host metadata is inherited from `KbqIcon` through `ɵɵInheritDefinitionFeature`; DI tokens are not, so a
+ * `contentChild(KbqIcon)` does not match an icon item. That is deliberate — a host that wants both asks
+ * for both, the way `KbqAlert` does, and telling them apart is what lets it report two projected icons.
  */
 @Component({
     selector: `[kbq-icon-item]`,
     template: '<ng-content />',
     styleUrls: ['icon-item.scss', 'icon-item-tokens.scss'],
-    // See the note on `KbqIconButton`: the host class is inherited, the `KbqIcon` token has to be provided.
-    providers: [{ provide: KbqIcon, useExisting: forwardRef(() => KbqIconItem) }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

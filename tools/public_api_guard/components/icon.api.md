@@ -79,7 +79,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     readonly disabledSignal: i0.WritableSignal<boolean>;
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
-    protected readonly hostRole: 'button' | null;
     iconName: string | undefined;
     protected readonly isCompact: i0.Signal<boolean>;
     // (undocumented)

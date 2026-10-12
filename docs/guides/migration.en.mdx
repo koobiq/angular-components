@@ -1662,12 +1662,11 @@ Icons were in the accessibility tree and icon buttons were not buttons. `<i kbq-
 
 `kbq-icon-button` is never hidden, and on a host that is not a native `<button>` — which is 129 of the 180 call sites in this repository alone — it supplies the semantics the element does not have: `role="button"`, `aria-disabled` and Enter/Space activation. It stands down when the key event is already `defaultPrevented`, so a handler on the same element that calls `preventDefault()` keeps sole ownership of the key. It also warns in dev mode when it has neither `aria-label` nor `aria-labelledby`, because a glyph gives it no accessible name at all.
 
-`KbqIconButton` and `KbqIconItem` provide the `KbqIcon` DI token. Host metadata is inherited through `ɵɵInheritDefinitionFeature` and DI tokens are not, so a `contentChild(KbqIcon)` used to walk past an icon button that carries the `.kbq-icon` class — which is why a link containing only an icon button got no spacing and a navbar item built on an icon item was never collapsed.
+**A `contentChild(KbqIcon)` still resolves only a bare icon.** Host metadata is inherited through `ɵɵInheritDefinitionFeature` and DI tokens are not, so such a query walks past an icon button and an icon item even though both carry the `.kbq-icon` class. Registering the subclasses under the token was tried and reverted: an icon button is an interactive control, and every query of this kind is looking for a decorative icon to position or tint. Answering one with a button made `KbqAlert` lay out an empty icon box for a dismissible alert with no status icon, and re-tint its close button to the alert color; answering one with an icon item collapsed the pair `KbqAlert` compares to report two projected status icons. A host that wants both asks for both, the way `KbqAlert` does.
 
 | Pattern                         | Manual migration                                                         |
 | ------------------------------- | ------------------------------------------------------------------------ |
 | `small` on a plain `[kbq-icon]` | Drop it — nothing ever read it; `KbqIconButton.small` is unaffected      |
-| `contentChild(KbqIcon)`         | Narrow the query if it only ever wanted a bare icon                      |
 | `(keydown…)` on an icon button  | `preventDefault()` to keep sole ownership of Enter and Space             |
 | `[tabindex]` on an icon button  | `number \| null` instead of `any`; a numeric string is still transformed |
 | `.name` on a `KbqIcon` subclass | Override the protected `appliesMaxHeight` instead                        |
