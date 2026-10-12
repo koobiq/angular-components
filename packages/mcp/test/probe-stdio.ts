@@ -84,6 +84,7 @@ const textOf = (response: Response): string => {
 };
 
 const CALLS: { label: string; name: string; args: Record<string, unknown> }[] = [
+    { label: 'перечень всего набора', name: 'list_components', args: {} },
     { label: 'поиск компонента по селектору', name: 'search', args: { query: 'kbq-alert' } },
     { label: 'поиск иконки по смыслу (рус.)', name: 'search', args: { query: 'удалить', kinds: ['icon'], limit: 5 } },
     { label: 'поиск токена', name: 'search', args: { query: 'background error', kinds: ['token'], limit: 5 } },

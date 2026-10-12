@@ -31,6 +31,26 @@ export const git = (repo: string, args: string[], input?: string): string => {
 };
 
 /**
+ * Refuses to build from a checkout that has no release tags.
+ *
+ * Both the guides and the API history are read at tags, and `git` answers an unreachable tag by
+ * saying nothing — so a shallow clone does not fail, it produces an artefact that is merely empty.
+ * That is the worst of the three outcomes: `actions/checkout` fetches depth 1 and no tags by
+ * default, and the first CI run on this package built a `history.json` covering 0 releases with
+ * every guide flagged unreleased, while every step reported success.
+ */
+export const requireTags = (repo: string, what: string): void => {
+    if (git(repo, ['tag', '--list', '*.*.*']).trim().length > 0) return;
+
+    process.stderr.write(
+        `\nNO RELEASE TAGS in ${repo}\n` +
+            `${what} is read at tags, so this checkout would produce an empty or working-tree-only index.\n` +
+            `In CI, give the checkout step \`with: fetch-depth: 0\`. Locally, run \`git fetch --tags\`.\n`
+    );
+    process.exit(1);
+};
+
+/**
  * Reads many blobs from one tag in a single `git cat-file --batch`.
  *
  * One spawn rather than one per file: 78 tags times ~16 files is 1200 processes otherwise.

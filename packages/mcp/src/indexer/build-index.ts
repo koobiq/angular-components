@@ -1,5 +1,5 @@
 import { existsSync, globSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { basename, join, resolve } from 'node:path';
+import { basename, dirname, join, resolve, sep } from 'node:path';
 import type { ComponentEntry, ComponentIndex, IndexProvenance } from '../types.js';
 import { dataDir, git, repoRoot } from './git.js';
 import { parseApiReport } from './parse-api-md.js';
@@ -77,8 +77,26 @@ const readMdxPage = (repo: string, id: string, lang: 'en' | 'ru'): { sections: s
     return { sections: sections.map((section) => section.heading), ...(summary ? { summary } : {}) };
 };
 
+/**
+ * Import path per entry point, keyed the way an API report is named.
+ *
+ * Not `@koobiq/components/<id>`, because two entry points are nested and their report flattens the
+ * slash: `scrollbar-deprecated.api.md` describes `@koobiq/components/scrollbar/deprecated`, and the
+ * flattened spelling resolves to nothing. An entry point is a directory with an `ng-package.json`,
+ * so the repository's own layout is what gets read rather than a list kept in step by hand.
+ */
+const readEntryPoints = (repo: string): Map<string, string> =>
+    new Map(
+        globSync(join('packages', 'components', '**', 'ng-package.json'), { cwd: repo })
+            .map((file) => dirname(file).split(sep).slice(2).join('/'))
+            // The root barrel of `@koobiq/components` carries one too, and slices to nothing.
+            .filter((path) => path.length > 0)
+            .map((path): [string, string] => [path.replace(/\//g, '-'), path])
+    );
+
 export const buildIndex = (repo: string): ComponentIndex => {
     const guardDir = join(repo, 'tools', 'public_api_guard', 'components');
+    const entryPoints = readEntryPoints(repo);
     const { version } = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf-8')) as { version: string };
 
     const examplesByComponent = parseExampleModule(
@@ -102,7 +120,7 @@ export const buildIndex = (repo: string): ComponentIndex => {
 
         return {
             id,
-            importPath: guard ? `@koobiq/components/${id}` : null,
+            importPath: guard ? `@koobiq/components/${entryPoints.get(id) ?? id}` : null,
             apiGuarded: Boolean(guard),
             symbols: guard ? parseApiReport(readFileSync(guard, 'utf-8')) : [],
             examples: (examplesByComponent.get(id) ?? []).sort((a, b) => a.id.localeCompare(b.id)),

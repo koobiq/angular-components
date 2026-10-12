@@ -9,6 +9,7 @@ import {
     toolGetGuide,
     toolGetIcon,
     toolGetToken,
+    toolListComponents,
     toolMigrate,
     toolSearch,
     toolWhichComponent
@@ -54,15 +55,15 @@ const register = (server: McpServer, catalog: Catalog): void => {
         'get_component',
         {
             description:
-                'Public API of one entry point of @koobiq/components, read from the version installed in this project. Returns inputs under the names a template writes, with the type each accepts, plus outputs, selectors and exportAs. Inherited and host-directive inputs are included and labelled. Methods and internals are omitted unless asked for.',
+                'Public API of one entry point of @koobiq/components, read from the version installed in this project. Returns inputs under the names a template writes, with the type each accepts, plus outputs, selectors and exportAs. Inherited and host-directive inputs are labelled; a large borrowed group is listed by name only. Methods and internals are omitted unless asked for.',
             inputSchema: {
                 id: z.string().describe('Entry point id, e.g. "select" or "@koobiq/components/select"'),
                 symbols: z.array(z.string()).optional().describe('Expand exactly these exported symbols'),
                 members: z.array(z.string()).optional().describe('Keep only these inputs, outputs or members'),
                 include: z
-                    .array(z.enum(['methods', 'internals']))
+                    .array(z.enum(['methods', 'internals', 'inherited']))
                     .optional()
-                    .describe('Add public methods, or everything including lifecycle hooks and compiler fields')
+                    .describe('Types of the borrowed inputs, public methods, or all compiler fields too')
             }
         },
         async (args) => text(toolGetComponent(catalog, args))
@@ -150,6 +151,22 @@ const register = (server: McpServer, catalog: Catalog): void => {
             }
         },
         async (args) => text(toolWhichComponent(catalog, args))
+    );
+
+    server.registerTool(
+        'list_components',
+        {
+            description:
+                'The complete list of what @koobiq/components contains, as ids that get_component, get_example and search accept. Use instead of listing node_modules: that reports build output as entry points and misses the nested ones.',
+            inputSchema: {
+                detail: z
+                    .enum(['summary'])
+                    .optional()
+                    .describe('Add one sentence per id saying what it is for; omit for ids only'),
+                lang: z.enum(['en', 'ru']).optional().describe('Language of the summaries, default en')
+            }
+        },
+        async (args) => text(toolListComponents(catalog, args))
     );
 };
 

@@ -73,12 +73,31 @@ export type ComponentsApi = {
 
 const ENTRY_PREFIX = '@koobiq/components/';
 
-/** Entry point directories, discovered rather than listed: the set changes every few releases. */
-const listEntryPoints = (root: string): string[] =>
-    readdirSync(root, { withFileTypes: true })
-        .filter((entry) => entry.isDirectory() && existsSync(join(root, entry.name, 'index.d.ts')))
-        .map((entry) => entry.name)
-        .sort();
+/**
+ * Entry point directories, discovered rather than listed: the set changes every few releases.
+ *
+ * One level down as well, because two entry points are nested inside another's directory —
+ * `scrollbar/deprecated` and `splitter/deprecated`. A top-level scan finds 64 where the package
+ * publishes 66, and the two it misses are the ones a project that has not migrated off the
+ * deprecated scrollbar still imports.
+ */
+const listEntryPoints = (root: string): string[] => {
+    const found: string[] = [];
+
+    for (const entry of readdirSync(root, { withFileTypes: true })) {
+        if (!entry.isDirectory()) continue;
+
+        if (existsSync(join(root, entry.name, 'index.d.ts'))) found.push(entry.name);
+
+        for (const nested of readdirSync(join(root, entry.name), { withFileTypes: true })) {
+            if (nested.isDirectory() && existsSync(join(root, entry.name, nested.name, 'index.d.ts'))) {
+                found.push(`${entry.name}/${nested.name}`);
+            }
+        }
+    }
+
+    return found.sort();
+};
 
 /**
  * Reads an entry point, following the barrel if there is one.

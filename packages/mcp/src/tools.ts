@@ -4,7 +4,7 @@ import { normalize, rarity, score, terms } from './matching.js';
 import { search, type HitKind } from './search.js';
 import { compare } from './semver.js';
 import type { ResolvedSymbol } from './sources/components.js';
-import { findSection, guideCaveat, guideIds, pickGuide } from './sources/guides.js';
+import { findSection, guideCaveat, guideIds, pickGuide, sectionPath } from './sources/guides.js';
 import { changesFor, migrationSections, summarise } from './sources/history.js';
 import { describeRename, resolveRename } from './sources/icon-renames.js';
 import { parseChoices, parseKeywords } from './sources/which-component.js';
@@ -20,8 +20,69 @@ import type { ComponentEntry } from './types.js';
 
 const DOCS = 'https://koobiq.io/en';
 
+const PREFIX = /^@koobiq\/components\//;
+
 const findComponent = (catalog: Catalog, id: string): ComponentEntry | undefined =>
-    catalog.index.components.find((entry) => entry.id === id.replace(/^@koobiq\/components\//, ''));
+    catalog.index.components.find((entry) => entry.id === id.replace(PREFIX, ''));
+
+/**
+ * Directory the installed package lays an entry point out under, which is not always its id.
+ *
+ * `scrollbar-deprecated` is documented and API-reported under that name but published as
+ * `scrollbar/deprecated`. The id is what a caller passes and what search returns; the import path
+ * is what the typings on disk are arranged by.
+ */
+const entryPointOf = (component: ComponentEntry | undefined, id: string): string =>
+    component?.importPath?.replace(PREFIX, '') ?? id;
+
+/**
+ * How many bindings one origin has to contribute before its group is folded down to names.
+ *
+ * Five, taken from the distribution rather than chosen by feel: measured over 20.3.1 an origin
+ * contributes 1, 2 or 3 bindings — an inherited `color` or `tabIndex`, the input most callers came
+ * for — and then the sizes jump to 6, 7, 20, 21 and 28, which are whole other components. The
+ * threshold sits in that gap. `KbqNavbarBrand` declares two inputs of its own and borrows the
+ * tooltip trigger's entire surface; printed in full, for it and `KbqNavbarItem` both, those were
+ * two thirds of the answer for `navbar`.
+ *
+ * Folded to names rather than to a count, because a count costs a round trip to act on while the
+ * names are what a template writes. Types come back with `include: ["inherited"]`.
+ */
+const FOLD_FROM = 5;
+
+type Binding = { alias: string; name: string; from?: string; viaHostDirective?: string };
+
+const originOf = (entry: Binding): string | undefined => entry.viaHostDirective ?? entry.from;
+
+/**
+ * Which origins contribute enough bindings to be worth folding, and how they reach the element.
+ *
+ * Counted over inputs and outputs together, so an origin folds whole: the tooltip trigger reaches
+ * `KbqNavbarBrand` with eleven inputs and two outputs, and folding the inputs while printing the
+ * outputs in full would describe one borrowed API in two different shapes.
+ *
+ * The two mechanisms have to stay apart in the answer. `from` is an entry point, so it can be read
+ * with `get_component`; a host directive is named by its class, which `get_component` does not
+ * take — and the library moves bindings between the two, with the tooltip arriving on the navbar
+ * through `extends` in 20.3.1 and as a host directive in 20.4.0.
+ */
+const foldedOrigins = (symbol: ResolvedSymbol): Map<string, 'entry-point' | 'host-directive'> => {
+    const counted = new Map<string, { count: number; kind: 'entry-point' | 'host-directive' }>();
+
+    for (const entry of [...symbol.inputs, ...symbol.outputs]) {
+        const origin = originOf(entry);
+
+        if (!origin) continue;
+
+        const kind = entry.viaHostDirective ? 'host-directive' : 'entry-point';
+
+        counted.set(origin, { count: (counted.get(origin)?.count ?? 0) + 1, kind });
+    }
+
+    return new Map(
+        [...counted].filter(([, entry]) => entry.count >= FOLD_FROM).map(([origin, entry]) => [origin, entry.kind])
+    );
+};
 
 /**
  * One symbol of the installed package.
@@ -33,7 +94,7 @@ const findComponent = (catalog: Catalog, id: string): ComponentEntry | undefined
 const describeLive = (
     symbol: ResolvedSymbol,
     members: string[] | undefined,
-    include: Set<'methods' | 'internals'>
+    include: Set<'methods' | 'internals' | 'inherited'>
 ): string[] => {
     const head = [
         `${symbol.name} — ${symbol.kind}`,
@@ -53,8 +114,20 @@ const describeLive = (
               ? `  (inherited from ${entry.from})`
               : '';
 
+    // A named member is always printed in full, inherited or not: the caller said which one.
+    const folded =
+        include.has('inherited') || members?.length
+            ? new Map<string, 'entry-point' | 'host-directive'>()
+            : foldedOrigins(symbol);
+
+    const whole = (entry: Binding): boolean => {
+        const from = originOf(entry);
+
+        return from === undefined || !folded.has(from);
+    };
+
     for (const input of symbol.inputs) {
-        if (!only(input.alias) && !only(input.name)) continue;
+        if ((!only(input.alias) && !only(input.name)) || !whole(input)) continue;
 
         const flags = [input.required ? 'required' : null, input.isSignal ? 'signal' : null].filter(Boolean).join(', ');
 
@@ -65,9 +138,22 @@ const describeLive = (
     }
 
     for (const output of symbol.outputs) {
-        if (!only(output.alias) && !only(output.name)) continue;
+        if ((!only(output.alias) && !only(output.name)) || !whole(output)) continue;
 
         lines.push(`  [output] ${output.alias}: ${output.type ?? 'unknown'}${origin(output)}`);
+    }
+
+    for (const [from, kind] of folded) {
+        const names = [...symbol.inputs, ...symbol.outputs]
+            .filter((entry) => originOf(entry) === from)
+            .map((entry) => entry.alias);
+
+        lines.push(
+            kind === 'host-directive'
+                ? `  +${names.length} via host directive ${from}: ${names.join(', ')}`
+                : `  +${names.length} inherited from ${from}: ${names.join(', ')}`,
+            `           types via include: ["inherited"]` + (kind === 'entry-point' ? `, or get_component ${from}` : '')
+        );
     }
 
     const methods = symbol.members.filter(
@@ -120,29 +206,37 @@ export const toolSearch = (catalog: Catalog, args: { query: string; kinds?: HitK
  * of which 4 are bindable. The split is mechanical, not a guess — Angular's own declaration says
  * which members are inputs, the rest is sorted by what it is named and how it is declared.
  *
- *   default     inputs, outputs, selector, exportAs
+ *   default     inputs, outputs, selector, exportAs — a large borrowed group folded to its names
+ *   inherited   the types of those too
  *   methods     public methods that are not lifecycle hooks
  *   internals   compiler plumbing, private state, `ngAcceptInputType_*`
  */
 export const toolGetComponent = (
     catalog: Catalog,
-    args: { id: string; symbols?: string[]; members?: string[]; include?: ('methods' | 'internals')[] }
+    args: {
+        id: string;
+        symbols?: string[];
+        members?: string[];
+        include?: ('methods' | 'internals' | 'inherited')[];
+    }
 ): string => {
-    const component = findComponent(catalog, args.id);
+    const asked = args.id.replace(PREFIX, '');
+    const component = findComponent(catalog, asked);
     const live = catalog.api();
 
-    if (!component && !live?.entryPoints.includes(args.id)) {
+    if (!component && !live?.entryPoints.includes(asked)) {
         const known = catalog.index.components.map((entry) => entry.id);
-        const near = known.filter((id) => id.includes(args.id) || args.id.includes(id)).slice(0, 5);
+        const near = known.filter((id) => id.includes(asked) || asked.includes(id)).slice(0, 5);
 
         return [
             `Unknown entry point "${args.id}".`,
-            near.length > 0 ? `Closest: ${near.join(', ')}` : `Run search first; ${known.length} entry points exist.`
+            near.length > 0 ? `Closest: ${near.join(', ')}` : `Call list_components for all ${known.length} of them.`
         ].join('\n');
     }
 
-    const id = component?.id ?? args.id;
-    const symbols = live?.read(id) ?? [];
+    const id = component?.id ?? asked;
+    const entryPoint = entryPointOf(component, id);
+    const symbols = live?.read(entryPoint) ?? [];
 
     if (!live) {
         return [
@@ -173,7 +267,7 @@ export const toolGetComponent = (
             ''
         );
     } else {
-        lines.push(`import { ... } from '@koobiq/components/${id}';`, '');
+        lines.push(`import { ... } from '@koobiq/components/${entryPoint}';`, '');
     }
 
     // A directive with nothing bindable is not written by hand — `KbqButtonCssStyler` shares the
@@ -396,6 +490,10 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
         guide.lang !== lang ? `Only the ${guide.lang} text is indexed for this guide.` : null
     ].filter((line): line is string => line !== null);
 
+    // Listed as addresses rather than as bare headings: a repeated heading is not an address, and
+    // the listing is where a caller copies one from.
+    const addresses = guide.sections.map((_, index) => sectionPath(guide, index));
+
     if (!args.section) {
         return [
             ...provenance,
@@ -403,20 +501,27 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
             guide.lede.slice(0, 600),
             '',
             'Sections:',
-            ...guide.sections.map((section) => `  ${section.heading}`),
+            ...addresses.map((path) => `  ${path}`),
             '',
-            `Call again with section to read one.`
+            `Call again with section to read one. Pass the path as shown, "parent > heading" included.`
         ].join('\n');
     }
 
-    const section = findSection(guide, args.section);
+    const hit = findSection(guides, guide, args.section);
 
-    if (!section) {
+    if (hit.kind === 'ambiguous') {
         return [
-            `No section "${args.section}" in ${guide.title}.`,
-            `Sections: ${guide.sections.map((entry) => entry.heading).join(' | ')}`
+            `"${args.section}" names ${hit.paths.length} sections of ${guide.title}.`,
+            `Ask for one of:`,
+            ...hit.paths.map((path) => `  ${path}`)
         ].join('\n');
     }
+
+    if (hit.kind === 'missing') {
+        return [`No section "${args.section}" in ${guide.title}.`, `Sections: ${addresses.join(' | ')}`].join('\n');
+    }
+
+    const { section } = hit;
 
     // A guide may name an example that has since been renamed or deleted. Saying so costs one line
     // and saves a `get_example` call that can only fail.
@@ -426,7 +531,10 @@ export const toolGetGuide = (catalog: Catalog, args: { id?: string; section?: st
 
     return [
         ...provenance,
-        `Section: ${section.heading}`,
+        `Section: ${hit.path}`,
+        // The caller asked in one language and was answered from the other's headings. Worth a
+        // line: it tells them which spelling to use next time, and that the text below is right.
+        hit.viaLang ? `Addressed by its ${hit.viaLang} heading; the ${guide.lang} text is below.` : null,
         '',
         section.body,
         live.length > 0 ? `\nRunnable examples: ${live.join(', ')} — fetch with get_example.` : '',
@@ -459,7 +567,16 @@ export const toolMigrate = (
     const to = args.to ?? installed ?? versions.sort(compare).at(-1)!;
     const range = summarise(history, args.from, to);
 
-    const covered = `History covers ${versions.sort(compare)[0]} to ${versions.sort(compare).at(-1)}.`;
+    const oldest = versions.sort(compare)[0]!;
+    const covered = `History covers ${oldest} to ${versions.sort(compare).at(-1)}.`;
+
+    // The history begins where the API reports do. Asked from below that, the totals are real but
+    // partial and nothing in the answer used to say which — a reader upgrading from 18.0.0 took
+    // 670 removals for the whole bill when the record only starts at 18.1.0.
+    const partial =
+        compare(args.from, oldest) < 0
+            ? `INCOMPLETE: the earliest release on record is ${oldest}, so anything removed or changed between ${args.from} and ${oldest} is not counted below.`
+            : null;
 
     if (range.releases.length === 0) {
         return [
@@ -499,6 +616,7 @@ export const toolMigrate = (
 
         return [
             `${entryPoint}: ${range.from} → ${to}`,
+            partial,
             `${changes.length} changes — ${changes.filter((change) => change.change === 'removed').length} removed, ` +
                 `${changes.filter((change) => change.change === 'updated').length} updated, ` +
                 `${changes.filter((change) => change.change === 'added').length} added`,
@@ -538,6 +656,7 @@ export const toolMigrate = (
     return [
         `Upgrading @koobiq/components ${range.from} → ${to}`,
         installed && installed !== to ? `This project is on ${installed}.` : null,
+        partial,
         '',
         `${range.releases.length} releases changed the API: ${range.totals.removed} removed, ` +
             `${range.totals.updated} updated, ${range.totals.added} added, across ${range.impact.length} entry points.`,
@@ -672,4 +791,94 @@ export const toolWhichComponent = (catalog: Catalog, args: { task: string; lang?
         `Read the whole cluster: ${clusters.map((cluster) => `get_guide which-component-when "${cluster}"`).join(' · ')}`,
         `Then get_component for the API of whichever you pick.`
     ].join('\n');
+};
+
+/**
+ * Every documented area of the library, as one closed list.
+ *
+ * Exists because the alternative was observed: an agent with no way to ask reads
+ * `node_modules/@koobiq/components/*` instead, and that answer is wrong in both directions. It
+ * returns `fesm2022`, `prebuilt-themes` and `schematics` as if they were entry points, it misses
+ * the two that are nested one level down, and it cannot know about the ten documented areas that
+ * are not directories at all — `validation` and `forms` among them.
+ *
+ * `search` cannot stand in for this. It ranks, so it answers "here are the closest twelve", never
+ * "those are all of them" — and it is the second claim that stops an agent from guessing a name.
+ */
+export const toolListComponents = (catalog: Catalog, args: { detail?: 'summary'; lang?: 'en' | 'ru' }): string => {
+    const entries = [...catalog.index.components].sort((a, b) => a.id.localeCompare(b.id));
+
+    if (entries.length === 0) {
+        return `No component index is bundled with this build of @koobiq/mcp. See ${DOCS}/components.`;
+    }
+
+    const live = catalog.api();
+    const lang = args.lang ?? 'en';
+    const lines: string[] = [];
+
+    lines.push(
+        `${entries.length} documented areas of @koobiq/components — the complete list, nothing else is exported.`,
+        `Import path is @koobiq/components/<id> unless listed otherwise below.`,
+        ''
+    );
+
+    if (args.detail === 'summary') {
+        for (const entry of entries) {
+            const summary = (lang === 'ru' ? entry.summaryRu : entry.summary) ?? entry.summary;
+            const first = summary?.replace(/`/g, '').split(/(?<=[.!?])\s/)[0] ?? '';
+
+            lines.push(`${entry.id}${first ? ` — ${first.length > 110 ? `${first.slice(0, 110)}…` : first}` : ''}`);
+        }
+    } else {
+        lines.push(entries.map((entry) => entry.id).join(', '));
+    }
+
+    lines.push('');
+
+    const groups = entries.filter((entry) => !entry.importPath);
+
+    if (groups.length > 0) {
+        lines.push(
+            `No entry point of their own — documented separately, exported from another one:`,
+            `  ${groups.map((entry) => entry.id).join(', ')}`,
+            ''
+        );
+    }
+
+    // Spelled out rather than left to the rule above, because for these the rule produces a path
+    // that does not resolve: the API report flattens the slash, so the id is `scrollbar-deprecated`.
+    const renamed = entries.filter(
+        (entry) => entry.importPath && entry.importPath !== `@koobiq/components/${entry.id}`
+    );
+
+    if (renamed.length > 0) {
+        lines.push(
+            `Published under a path that is not the id:`,
+            ...renamed.map((entry) => `  ${entry.id} → ${entry.importPath}`),
+            ''
+        );
+    }
+
+    // The list is the index's, and the index ships with this server. Saying which of its ids the
+    // installed version does not have is the one thing a bundled list can get wrong on its own.
+    if (live) {
+        const missing = entries.filter(
+            (entry) => entry.importPath && !live.entryPoints.includes(entryPointOf(entry, entry.id))
+        );
+
+        if (missing.length > 0) {
+            lines.push(
+                `Documented here but absent from the installed @koobiq/components@${live.version} — do not import these:`,
+                `  ${missing.map((entry) => entry.id).join(', ')}`,
+                ''
+            );
+        }
+    }
+
+    lines.push(
+        `Next: which_component_when to pick one for a task, get_component for its API, get_example for working code.`,
+        `Context: ${describeContext(catalog)}`
+    );
+
+    return lines.join('\n');
 };

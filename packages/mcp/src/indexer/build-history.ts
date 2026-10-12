@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { compare, isRelease, sortReleases } from '../semver.js';
-import { dataDir, git, readBlobs, repoRoot } from './git.js';
+import { dataDir, git, readBlobs, repoRoot, requireTags } from './git.js';
 import { parseApiReport } from './parse-api-md.js';
 
 /**
@@ -117,6 +117,9 @@ export const buildHistory = (repo: string, lowest = '18.0.0'): ApiHistory => {
 
 const main = (): void => {
     const repo = resolve(process.argv[2] ?? process.env.KOOBIQ_REPO ?? repoRoot());
+
+    requireTags(repo, 'the API history');
+
     const lowest = process.argv[3] ?? '18.0.0';
     const started = Date.now();
     const history = buildHistory(repo, lowest);
