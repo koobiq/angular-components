@@ -195,10 +195,7 @@ test('the answer names the installed version, never the version this server was 
     const installed = catalog.project.packages.get('@koobiq/components')?.version;
 
     assert.ok(installed);
-    assert.match(
-        output,
-        new RegExp(`@koobiq/components@${installed.replace(/\./g, '\\.')} \\(resolved in this project\\)`)
-    );
+    assert.ok(output.includes(`@koobiq/components@${installed} (resolved in this project)`));
 });
 
 test('a project without the package is told so instead of being given the index', () => {

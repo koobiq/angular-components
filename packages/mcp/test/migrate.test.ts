@@ -112,10 +112,7 @@ test('`to` defaults to the version this project resolved', () => {
     const installed = catalog.project.packages.get('@koobiq/components')?.version;
 
     assert.ok(installed);
-    assert.match(
-        toolMigrate(catalog, { from: '18.4.0' }),
-        new RegExp(`18\\.4\\.0 → ${installed.replace(/\./g, '\\.')}`)
-    );
+    assert.ok(toolMigrate(catalog, { from: '18.4.0' }).includes(`18.4.0 → ${installed}`));
 });
 
 test('a backwards or empty range says so instead of returning nothing', () => {
@@ -203,7 +200,7 @@ test('a `from` below the recorded history says the counts are partial', () => {
     const below = toolMigrate(catalog, { from: '18.0.0' });
 
     assert.match(below, /INCOMPLETE/);
-    assert.match(below, new RegExp(`earliest release on record is ${oldest.replace(/\./g, '\\.')}`));
+    assert.ok(below.includes(`earliest release on record is ${oldest}`), below.split('\n')[1]);
     // Carried into the per-entry-point answer too, which is where the numbers get acted on.
     assert.match(toolMigrate(catalog, { from: '18.0.0', component: 'select' }), /INCOMPLETE/);
 

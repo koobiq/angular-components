@@ -231,12 +231,16 @@ test('search says why a source is missing, whether or not something else matched
 test('lists every documented area, and says it is the whole list', () => {
     const listed = toolListComponents(catalog, {});
 
+    // Split into tokens rather than searched for as substrings: `tree` occurs inside
+    // `tree-select`, so containment would pass for an id the answer never names.
+    const named = new Set(listed.split(/[\s,]+/));
+
     for (const entry of catalog.index.components) {
-        assert.match(listed, new RegExp(`\\b${entry.id.replace(/-/g, '\\-')}\\b`), `${entry.id} is missing`);
+        assert.ok(named.has(entry.id), `${entry.id} is missing`);
     }
 
     assert.match(listed, /complete list/, 'nothing says the list is closed');
-    assert.match(listed, new RegExp(`^${catalog.index.components.length} documented areas`));
+    assert.ok(listed.startsWith(`${catalog.index.components.length} documented areas`));
 });
 
 test('names the areas that have no entry point to import, rather than implying one', () => {
