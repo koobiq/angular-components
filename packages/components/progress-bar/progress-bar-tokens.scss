@@ -6,6 +6,9 @@
     /* THEME TOKENS */
     --kbq-progress-bar-bar-background: var(--kbq-background-contrast-fade);
     --kbq-progress-bar-bar-foreground: var(--kbq-icon-theme);
+    --kbq-progress-bar-bar-contrast-foreground: var(--kbq-icon-contrast);
+    --kbq-progress-bar-bar-contrast-fade-foreground: var(--kbq-icon-contrast-fade);
+    --kbq-progress-bar-bar-error-foreground: var(--kbq-icon-error);
     --kbq-progress-bar-text-color: var(--kbq-foreground-contrast);
     --kbq-progress-bar-caption-color: var(--kbq-foreground-contrast-secondary);
 }

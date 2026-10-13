@@ -470,6 +470,7 @@ export const enUSLocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -753,6 +754,7 @@ export const esLALocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -1302,6 +1304,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1560,6 +1563,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1813,6 +1817,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2071,6 +2076,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2326,6 +2332,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2677,6 +2684,7 @@ export type KbqA11yLocaleConfiguration = {
     resizePanels: string;
     toastRegion: string;
     optionActions: string;
+    progressBar: string;
 };
 
 // @public
@@ -5252,6 +5260,7 @@ export const ptBRLocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5729,6 +5738,7 @@ export const ruRULocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -6116,6 +6126,7 @@ export const tkTMLocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;

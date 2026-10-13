@@ -1,24 +1,38 @@
 @use '../core/styles/functions/timing';
 
-@use '../core/styles/common/tokens' as *;
-
 @use './progress-bar-theme' as *;
 
+// The fill is sized statically, so the animation only has to move and stretch it: both are
+// compositor-only, and neither is the thing that makes the bar visible. `translateX()` is a share of
+// the fill's own width, and the two ends are chosen so that no frame is empty: at `0%` its leading
+// edge sits exactly on the track's, and `400%` carries it clear of the track even at the widest
+// `scaleX()`. Anything further left parks the fill outside the clipped track for the start of every
+// iteration, which reads as an animation that restarts.
 @keyframes kbq-progress-bar-indeterminate {
     0% {
-        width: 25%;
-        transform: translateX(-150%);
+        transform: translateX(-100%) scaleX(1);
     }
 
     100% {
-        width: 40%;
-        transform: translateX(250%);
+        transform: translateX(400%) scaleX(1.6);
+    }
+}
+
+// Reduced motion still has to read as "running", and an opacity pulse is not a motion trigger
+// under WCAG 2.3.3.
+@keyframes kbq-progress-bar-indeterminate-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
     }
 }
 
 .kbq-progress-bar {
     display: block;
-    overflow: hidden;
 
     .kbq-progress-bar-text {
         margin-bottom: var(--kbq-progress-bar-size-container-content-gap);
@@ -37,6 +51,8 @@
 
     & .kbq-progress-bar__line {
         height: 100%;
+        // Load-bearing: the indeterminate animation stretches the fill with `scaleX()`, which grows it
+        // away from its leading edge only while the origin stays at the left.
         transform-origin: top left;
 
         border-radius: var(--kbq-progress-bar-size-bar-border-radius);
@@ -44,13 +60,21 @@
 
     &.kbq-progress-bar_determinate .kbq-progress-bar__line {
         transition: width 0.3s;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
     }
 
     &.kbq-progress-bar_indeterminate .kbq-progress-bar__line {
+        // Declared outside the keyframes so that suppressing the animation cannot leave the fill at
+        // `width: auto`, which covers the whole track and reads as a finished operation.
+        width: 25%;
+
         animation: kbq-progress-bar-indeterminate 2.1s timing.$ease-in-out-quad infinite;
 
         @media (prefers-reduced-motion: reduce) {
-            animation: none;
+            animation: kbq-progress-bar-indeterminate-pulse 2s ease-in-out infinite;
         }
     }
 }

@@ -21,7 +21,8 @@ export const esLALocaleData = {
         resizeColumns: 'Redimensionar columnas',
         resizePanels: 'Redimensionar paneles',
         toastRegion: 'Notificaciones',
-        optionActions: 'Acciones'
+        optionActions: 'Acciones',
+        progressBar: 'Progreso'
     },
     select: {
         hiddenItemsText: '+{{ number }}',

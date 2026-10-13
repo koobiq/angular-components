@@ -21,7 +21,8 @@ export const tkTMLocaleData = {
         resizeColumns: 'Sütünleriň giňligini üýtget',
         resizePanels: 'Panelleriň ölçegini üýtget',
         toastRegion: 'Bildirişler',
-        optionActions: 'Hereketler'
+        optionActions: 'Hereketler',
+        progressBar: 'Ösüş'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
