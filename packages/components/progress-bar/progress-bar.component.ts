@@ -1,13 +1,18 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    Directive,
-    ViewEncapsulation,
     computed,
     contentChild,
-    input
+    Directive,
+    input,
+    ViewEncapsulation
 } from '@angular/core';
-import { KbqColorDirective, KbqComponentColors, kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
+import {
+    kbqAnimationsDisabled,
+    KbqColorDirective,
+    KbqComponentColors,
+    kbqInjectA11yLocaleConfiguration
+} from '@koobiq/components/core';
 
 /** Whether the bar reports a known share of the work, or an operation whose duration is unknown. */
 export type ProgressBarMode = 'determinate' | 'indeterminate';
@@ -95,6 +100,13 @@ export class KbqProgressBar extends KbqColorDirective {
      * neither is given, the bar falls back to the `progressBar` name from the a11y locale.
      */
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    /**
+     * Whether the fill follows a new value without a transition. The indeterminate fill is an activity indicator, like
+     * the spinner, and keeps moving.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Anything other than `indeterminate` reports a value, matching the branch the template renders. */
     protected readonly indeterminate = computed(() => this.mode() === 'indeterminate');

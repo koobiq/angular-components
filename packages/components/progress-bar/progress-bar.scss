@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/functions/timing';
 
 @use './progress-bar-theme' as *;
@@ -61,9 +62,7 @@
     &.kbq-progress-bar_determinate .kbq-progress-bar__line {
         transition: width 0.3s;
 
-        @media (prefers-reduced-motion: reduce) {
-            transition: none;
-        }
+        @include animation.kbq-animations-off();
     }
 
     &.kbq-progress-bar_indeterminate .kbq-progress-bar__line {

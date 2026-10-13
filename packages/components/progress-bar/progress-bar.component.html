@@ -6,7 +6,11 @@
             <div class="kbq-progress-bar__line kbq-progress-bar__line_indeterminate"></div>
         }
         @default {
-            <div class="kbq-progress-bar__line kbq-progress-bar__line_determinate" [style.width.%]="percentage()"></div>
+            <div
+                class="kbq-progress-bar__line kbq-progress-bar__line_determinate"
+                [class.kbq-animations-disabled]="animationsDisabled"
+                [style.width.%]="percentage()"
+            ></div>
         }
     }
 </div>
