@@ -40,7 +40,7 @@ import {
     ENTER,
     ESCAPE,
     KBQ_A11Y_LOCALE_CONFIGURATION,
-    KBQ_WINDOW,
+    kbqAnimationsDisabled,
     KbqComponentColors,
     KbqLocaleOverridesDirective,
     KbqOverflowShadowBottom,
@@ -133,7 +133,7 @@ export class KbqModalComponent<T = any, R = any>
     private focusMonitor = inject(FocusMonitor);
     private readonly inputModalityDetector = inject(InputModalityDetector);
     private readonly injector = inject(Injector);
-    private readonly window = inject(KBQ_WINDOW);
+    private readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
@@ -614,7 +614,8 @@ export class KbqModalComponent<T = any, R = any>
      * @docs-private
      */
     animateMaskTo(state: AnimationState): void {
-        this.maskPhase.set(state);
+        // The phase classes are the layer's whole motion, so leaving them off is what disables it.
+        this.maskPhase.set(this.animationsDisabled ? null : state);
     }
 
     /**
@@ -945,13 +946,13 @@ export class KbqModalComponent<T = any, R = any>
 
     /**
      * Runs the enter/leave animation and settles when it is really over: on `animationend`, as soon
-     * as the dialog is rendered when the user asked for reduced motion, and on a timer when neither
-     * arrives.
+     * as the dialog is rendered when animations are disabled (`kbqAnimationsDisabled`), and on a
+     * timer when neither arrives.
      */
     private animateTo(isVisible: boolean): Promise<any> {
         this.changeAnimationState(isVisible ? 'enter' : 'leave');
 
-        if (this.prefersReducedMotion()) {
+        if (this.animationsDisabled) {
             this.changeAnimationState(null);
 
             // There is no animation to wait for, but `open()` still runs before the first change
@@ -996,13 +997,6 @@ export class KbqModalComponent<T = any, R = any>
 
             timer = setTimeout(finish, MODAL_ANIMATE_DURATION);
         });
-    }
-
-    private prefersReducedMotion(): boolean {
-        return (
-            typeof this.window.matchMedia === 'function' &&
-            this.window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        );
     }
 
     private formatModalButtons(buttons: IModalButtonOptions<T>[]): IModalButtonOptions<T>[] {

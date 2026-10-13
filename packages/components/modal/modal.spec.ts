@@ -24,6 +24,7 @@ import {
     dispatchMouseEvent,
     ENTER,
     ESCAPE,
+    KBQ_ANIMATIONS_CONFIG,
     KBQ_WINDOW,
     KbqComponentColors,
     ruRULocaleData,
@@ -1147,6 +1148,60 @@ describe('KbqModal', () => {
             // reported the dialog open before its template had rendered — so the scrollbar flash
             // hanging off afterOpen, and anything a consumer does there, found nothing to act on.
             expect(bodyAtAfterOpen).toBeTruthy();
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+    });
+
+    describe('with animations disabled', () => {
+        let fixture: ComponentFixture<ModalOpenerComponent>;
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+
+            TestBed.configureTestingModule({
+                imports: [ModalOpenerComponent],
+                providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+            });
+
+            fixture = TestBed.createComponent(ModalOpenerComponent);
+        });
+
+        it('should open and close without waiting for the animation', async () => {
+            const opened = vi.fn();
+            const closed = vi.fn();
+            const modalRef = fixture.componentInstance.open();
+
+            modalRef.afterOpen.subscribe(opened);
+            modalRef.afterClose.subscribe(closed);
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(1);
+
+            expect(opened).toHaveBeenCalledTimes(1);
+            expect(document.querySelector('.kbq-modal-container')!.classList).not.toContain('zoom-enter');
+
+            modalRef.close();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(1);
+
+            expect(closed).toHaveBeenCalledTimes(1);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should not fade the layer of a covered dialog', async () => {
+            fixture.componentInstance.open();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(1);
+
+            fixture.componentInstance.open();
+            fixture.detectChanges();
+
+            const masks = Array.from(document.querySelectorAll('.kbq-modal-mask'));
+
+            expect(masks.length).toBe(2);
+            masks.forEach((mask) => expect(mask.className).not.toMatch(/fade-/));
 
             await vi.runOnlyPendingTimersAsync();
         });
