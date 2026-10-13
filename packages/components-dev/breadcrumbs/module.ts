@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet, Routes } from '@angular/router';
 import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadcrumbs';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -73,3 +73,47 @@ export class DevAboutPage {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {}
+
+/** Product and about pages, rendered into the `<router-outlet />` of `template.html`. */
+const devChildRoutes: Routes = [
+    {
+        path: 'products',
+        data: { breadcrumb: 'Products' },
+        component: DevProductsPage,
+        children: [
+            {
+                path: ':id',
+                data: { breadcrumb: 'Product Details' },
+                component: DevProductDetailsPage
+            }
+        ]
+    },
+    {
+        path: 'about',
+        data: { breadcrumb: 'About' },
+        component: DevAboutPage
+    }
+];
+
+/** Standalone entry point: `DevApp` is the bootstrap component, so it stays out of the route tree. */
+export const devPageRoutes: Routes = [
+    {
+        path: '',
+        data: { breadcrumb: 'Home' },
+        children: devChildRoutes
+    }
+];
+
+/**
+ * Entry point for the `dev-all` shell, which mounts this app under `/breadcrumbs`. `DevApp` is
+ * attached to the same empty-path node the standalone table uses rather than wrapped in another one:
+ * the extra level would deepen the `ActivatedRoute` tree that `BreadcrumbsRoutingExample` walks.
+ */
+export const devRoutes: Routes = [
+    {
+        path: '',
+        component: DevApp,
+        data: { breadcrumb: 'Home' },
+        children: devChildRoutes
+    }
+];
