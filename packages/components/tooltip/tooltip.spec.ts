@@ -779,6 +779,21 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain('SIBLING');
         });
 
+        it('should show the tooltip when the pointer that left while the pop-up was open comes back', async () => {
+            vi.useFakeTimers();
+
+            component.popup().open();
+            await vi.runOnlyPendingTimersAsync();
+            // Unlike the replay above, the pointer moves off the host, e.g. into the pop-up's panel.
+            dispatchMouseEvent(trigger, 'mouseleave', 100, 100);
+            component.popup().close();
+            component.popup().detach();
+
+            await showByHover(fixture, trigger);
+
+            expect(overlayContainerElement.textContent).toContain('SIBLING');
+        });
+
         it('should show the tooltip again after the pointer leaves the trigger', async () => {
             vi.useFakeTimers();
 

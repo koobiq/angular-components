@@ -14,6 +14,7 @@ import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { TransitionCheckState } from '@koobiq/components/core';
 
@@ -44,10 +45,10 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     readonly checkedInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     clickAction: KbqToggleClickAction;
     readonly clickActionInput: _angular_core.InputSignal<KbqCheckableClickAction>;
-    protected currentCheckState: TransitionCheckState;
+    protected readonly currentCheckState: Signal<TransitionCheckState>;
     // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    set disabled(value: boolean);
     readonly disabledInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
     focus(): void;
@@ -65,8 +66,6 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     readonly inputElement: Signal<ElementRef<HTMLInputElement>>;
     // (undocumented)
     get inputId(): string;
-    // Warning: (ae-forgotten-export) The symbol "ToggleLabelPositionType" needs to be exported by the entry point koobiq-components-toggle.d.ts
-    //
     // (undocumented)
     readonly labelPosition: _angular_core.InputSignal<ToggleLabelPositionType>;
     readonly loading: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -90,7 +89,9 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     set tabIndex(value: number);
     readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     // (undocumented)
-    readonly value: _angular_core.InputSignal<string>;
+    protected readonly uniqueId: string;
+    // (undocumented)
+    readonly value: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; "isSignal": true; }; "labelPosition": { "alias": "labelPosition"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "name": { "alias": "name"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "loading": { "alias": "loading"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; "tabIndexInput": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "checkedInput": { "alias": "checked"; "required": false; "isSignal": true; }; "indeterminateInput": { "alias": "indeterminate"; "required": false; "isSignal": true; }; "clickActionInput": { "alias": "clickAction"; "required": false; "isSignal": true; }; "idInput": { "alias": "id"; "required": false; "isSignal": true; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], true, [{ directive: typeof i1.KbqCheckable; inputs: {}; outputs: {}; }]>;
     // (undocumented)

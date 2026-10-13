@@ -22,13 +22,17 @@
         (keydown.enter)="onEnterKeydown($event)"
     />
     <div class="kbq-toggle-bar-container">
-        <div class="kbq-toggle-bar" [class.kbq-progress]="loading()">
+        <div
+            class="kbq-toggle-bar"
+            [class.kbq-animations-disabled]="animationsDisabled"
+            [class.kbq-progress]="loading()"
+        >
             <div
                 class="kbq-toggle__circle"
-                [class]="`kbq-toggle__circle_${currentCheckState}`"
+                [class]="`kbq-toggle__circle_${currentCheckState()}`"
                 [class.kbq-animations-disabled]="animationsDisabled"
             ></div>
-            <div class="kbq-toggle__thumb"></div>
+            <div class="kbq-toggle__thumb" [class.kbq-animations-disabled]="animationsDisabled"></div>
         </div>
     </div>
 

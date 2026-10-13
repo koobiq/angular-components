@@ -1725,13 +1725,18 @@ describe('KbqAppSwitcher', () => {
             expect(siteSpy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.id }));
             expect(appSpy).toHaveBeenCalledWith(expect.objectContaining({ id: SITE_B.apps[0].id }));
         });
+    });
 
-        it('clears the flyout content once its dropdown closes', async () => {
+    // The flyouts of the other sites share one dropdown, and so do the flyouts of the groups inside them.
+    describe('Integration — switching between flyouts', () => {
+        let fixture: ComponentFixture<AppSwitcherOtherSites>;
+        let trigger: KbqAppSwitcherTrigger;
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
+
+        beforeEach(async () => {
             vi.useFakeTimers();
 
-            const fixture = createComponent(AppSwitcherMultiSite);
-
-        beforeEach(fakeAsync(() => {
             fixture = createComponent(AppSwitcherOtherSites);
             trigger = getTrigger(fixture);
             overlayContainer = TestBed.inject(OverlayContainer);
@@ -1740,7 +1745,7 @@ describe('KbqAppSwitcher', () => {
             trigger.show();
             await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
-        }));
+        });
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
@@ -1760,22 +1765,101 @@ describe('KbqAppSwitcher', () => {
         const siteRow = (name: string) => row('.kbq-app-switcher-dropdown-site', name);
         const appRow = (name: string) => row('.kbq-app-switcher-dropdown-app', name);
 
-        const hover = (element: HTMLElement) => {
+        const hover = async (element: HTMLElement) => {
             dispatchMouseEvent(element, 'mouseenter');
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
         };
 
-            dispatchKeyboardEvent(siteRow, 'keydown', ENTER);
+        /** Leaves `from` with its flyout open and lands on `to` without passing through that flyout. */
+        const moveStraight = (from: HTMLElement, to: HTMLElement) => {
+            dispatchMouseEvent(from, 'mouseleave', 100, 100);
+            dispatchMouseEvent(to, 'mouseenter');
+            fixture.detectChanges();
+        };
+
+        const waitForSwitch = async () => {
+            await vi.advanceTimersByTimeAsync(NESTED_HOVER_SWITCH_DELAY);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+        };
+
+        it('shows the apps of a site reached straight from another site row', async () => {
+            await hover(siteRow(SITE_C.name));
+
+            expect(flyouts()).toEqual([['Group', 'Other']]);
+
+            moveStraight(siteRow(SITE_C.name), siteRow(SITE_B.name));
+            await waitForSwitch();
+
+            expect(flyouts()).toEqual([[APP_3.name, APP_4.name]]);
+        });
+
+        it('selects the site of a flyout reached straight from another site row', async () => {
+            await hover(siteRow(SITE_C.name));
+            moveStraight(siteRow(SITE_C.name), siteRow(SITE_B.name));
+            await waitForSwitch();
+
+            const app = appRow(APP_3.name);
+
+            // The rows are real links; stop jsdom from trying to navigate away.
+            app.addEventListener('click', (event) => event.preventDefault());
+            app.click();
+
+            expect(trigger.selectedSite()!.id).toBe(SITE_B.id);
+            expect(trigger.selectedApp()!.id).toBe(APP_3.id);
+        });
+
+        it('keeps the apps of a flyout while the pointer crosses another site row on its way there', async () => {
+            await hover(siteRow(SITE_B.name));
+            moveStraight(siteRow(SITE_B.name), siteRow(SITE_C.name));
+            await vi.advanceTimersByTimeAsync(NESTED_HOVER_SWITCH_DELAY - 10);
+            fixture.detectChanges();
+
+            expect(flyouts()).toEqual([[APP_3.name, APP_4.name]]);
+        });
+
+        it('shows only the apps of the site that reopens a closed flyout', async () => {
+            const openByKeyboard = async (element: HTMLElement) => {
+                element.focus();
+                dispatchKeyboardEvent(element, 'keydown', ENTER);
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+            };
+
+            await openByKeyboard(siteRow(SITE_B.name));
+
+            expect(flyouts()).toEqual([[APP_3.name, APP_4.name]]);
+
+            dispatchKeyboardEvent(overlayContainerElement.querySelector('.kbq-dropdown__panel')!, 'keydown', ESCAPE);
             await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
-            dispatchKeyboardEvent(siteRow, 'keydown', ESCAPE);
-            await vi.advanceTimersByTimeAsync(0);
-            fixture.detectChanges();
+            expect(flyouts()).toEqual([]);
 
-            expect(popup['activeSite']).toBeUndefined();
+            await openByKeyboard(siteRow(SITE_C.name));
+
+            expect(flyouts()).toEqual([['Group', 'Other']]);
+        });
+
+        it('shows the apps of a group reached straight from another group', async () => {
+            await hover(siteRow(SITE_C.name));
+            await hover(appRow('Group'));
+
+            expect(flyouts()).toEqual([
+                ['Group', 'Other'],
+                GROUP_APPS.map(({ name }) => name)
+            ]);
+
+            moveStraight(appRow('Group'), appRow('Other'));
+            await waitForSwitch();
+
+            expect(flyouts()).toEqual([
+                ['Group', 'Other'],
+                OTHER_GROUP_APPS.map(({ name }) => name)
+            ]);
         });
     });
 
@@ -1958,68 +2042,70 @@ describe('KbqAppSwitcher', () => {
         let overlayContainerElement: HTMLElement;
 
         /** Opens the tooltip by hover and settles its enter delay and the deferred reposition. */
-        const showTooltip = () => {
+        const showTooltip = async () => {
             dispatchMouseEvent(triggerElement, 'mouseenter');
             fixture.detectChanges();
-            tick(TOOLTIP_ENTER_DELAY);
+            await vi.advanceTimersByTimeAsync(TOOLTIP_ENTER_DELAY);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
         };
 
-        const openSwitcher = () => {
+        const openSwitcher = async () => {
             dispatchMouseEvent(triggerElement, 'click');
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
         };
 
-        beforeEach(fakeAsync(() => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+
             fixture = createComponent(AppSwitcherWithTooltip);
             triggerElement = fixture.debugElement.query(By.directive(KbqAppSwitcherTrigger)).nativeElement;
             overlayContainer = TestBed.inject(OverlayContainer);
             overlayContainerElement = overlayContainer.getContainerElement();
-        }));
+        });
 
         afterEach(() => overlayContainer.ngOnDestroy());
 
-        it('does not show the tooltip while the pointer returns to the trigger of an open switcher', fakeAsync(() => {
-            openSwitcher();
+        it('does not show the tooltip while the pointer returns to the trigger of an open switcher', async () => {
+            await openSwitcher();
             dispatchMouseEvent(triggerElement, 'mouseleave', 100, 100);
             fixture.detectChanges();
 
-            showTooltip();
+            await showTooltip();
 
             expect(overlayContainerElement.querySelector('.kbq-app-switcher')).toBeTruthy();
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
-        }));
+        });
 
-        it('does not show the tooltip when the switcher closes with Escape and focus returns to the trigger', fakeAsync(() => {
-            openSwitcher();
+        it('does not show the tooltip when the switcher closes with Escape and focus returns to the trigger', async () => {
+            await openSwitcher();
 
             dispatchKeyboardEvent(overlayContainerElement.querySelector('.kbq-app-switcher')!, 'keydown', ESCAPE);
-            tick(TOOLTIP_ENTER_DELAY);
+            await vi.advanceTimersByTimeAsync(TOOLTIP_ENTER_DELAY);
             fixture.detectChanges();
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
             expect(overlayContainerElement.querySelector('.kbq-app-switcher')).toBeFalsy();
             expect(document.activeElement).toBe(triggerElement);
             expect(overlayContainerElement.textContent).not.toContain('TOOLTIP');
-        }));
+        });
 
-        it('shows the tooltip once the pointer that left for the switcher returns after it closes', fakeAsync(() => {
-            openSwitcher();
+        it('shows the tooltip once the pointer that left for the switcher returns after it closes', async () => {
+            await openSwitcher();
             dispatchMouseEvent(triggerElement, 'mouseleave', 100, 100);
             fixture.detectChanges();
 
             dispatchKeyboardEvent(overlayContainerElement.querySelector('.kbq-app-switcher')!, 'keydown', ESCAPE);
-            tick();
+            await vi.advanceTimersByTimeAsync(0);
             fixture.detectChanges();
 
-            showTooltip();
+            await showTooltip();
 
             expect(overlayContainerElement.textContent).toContain('TOOLTIP');
-        }));
+        });
     });
 
     describe('teardown', () => {

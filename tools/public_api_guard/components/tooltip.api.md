@@ -207,6 +207,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     get tooltipVisible(): boolean;
     set tooltipVisible(value: boolean);
     readonly tooltipVisibleInput: InputSignal<boolean | undefined>;
+    protected trackPointerLeave(event: MouseEvent): void;
     get trigger(): string;
     set trigger(value: string);
     protected _trigger: string;

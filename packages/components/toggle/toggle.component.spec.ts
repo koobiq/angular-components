@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
-import { KBQ_CHECKABLE_CLICK_ACTION, KbqCheckedState } from '@koobiq/components/core';
+import { KBQ_ANIMATIONS_CONFIG, KBQ_CHECKABLE_CLICK_ACTION, KbqCheckedState } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqToggleComponent, KbqToggleModule } from './index';
 
@@ -106,7 +106,7 @@ describe('KbqToggle', () => {
             testComponent.isDisabled = true;
             fixture.detectChanges();
 
-            const onToggleChangeSpyFn = jest.spyOn(testComponent, 'onToggleChange');
+            const onToggleChangeSpyFn = vi.spyOn(testComponent, 'onToggleChange');
 
             // A real browser never dispatches a click on a disabled control, so it has to be dispatched
             // manually to reach the handler that must decline it.
@@ -716,7 +716,7 @@ describe('KbqToggle', () => {
         });
 
         it('should ignore a click, keep the native input in sync and not bubble the click twice', () => {
-            const onToggleClickSpyFn = jest.spyOn(fixture.componentInstance, 'onToggleClick');
+            const onToggleClickSpyFn = vi.spyOn(fixture.componentInstance, 'onToggleClick');
 
             fixture.nativeElement.querySelector('label').click();
             fixture.detectChanges();
@@ -757,11 +757,11 @@ describe('KbqToggle', () => {
     });
 
     describe('with touched state', () => {
-        it('should mark the control as touched on focus without changing its value', fakeAsync(() => {
+        it('should mark the control as touched on focus without changing its value', async () => {
             const fixture = createComponent(ToggleWithFormDirectives);
 
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             const toggleElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             const ngModel = toggleElement.injector.get<NgModel>(NgModel);
@@ -770,14 +770,30 @@ describe('KbqToggle', () => {
             expect(ngModel.touched).toBe(false);
 
             TestBed.inject(FocusMonitor).focusVia(inputElement, 'keyboard');
-            tick();
             inputElement.blur();
             fixture.detectChanges();
-            flush();
+            await fixture.whenStable();
 
             expect(ngModel.touched).toBe(true);
             expect(fixture.componentInstance.isGood).toBe(false);
-        }));
+        });
+    });
+
+    describe('with animations disabled', () => {
+        it('should take the motion off the switch', () => {
+            const fixture = createComponent(SingleToggle, [
+                { provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }
+            ]);
+
+            fixture.detectChanges();
+
+            const animated: HTMLElement[] = Array.from(
+                fixture.nativeElement.querySelectorAll('.kbq-toggle-bar, .kbq-toggle__circle, .kbq-toggle__thumb')
+            );
+
+            expect(animated.length).toBe(3);
+            animated.forEach((element) => expect(element.classList).toContain('kbq-animations-disabled'));
+        });
     });
 });
 

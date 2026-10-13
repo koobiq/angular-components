@@ -13,10 +13,12 @@ import {
     OnChanges,
     OnDestroy,
     output,
+    Signal,
     SimpleChanges,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
 import {
     KBQ_CHECKABLE_CLICK_ACTION,
@@ -88,7 +90,7 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
 
     readonly value = input<string | undefined>(undefined);
 
-    get disabled() {
+    get disabled(): boolean {
         return this.checkable.disabled();
     }
 
@@ -153,7 +155,12 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Defines the behavior when a user clicks on the toggle. */
-    clickAction: KbqToggleClickAction = inject(KBQ_CHECKABLE_CLICK_ACTION, { optional: true }) || undefined;
+    // `KBQ_CHECKBOX_CLICK_ACTION` is the legacy fallback, kept for apps that already configure it globally
+    // to control click behavior for both checkbox and toggle.
+    clickAction: KbqToggleClickAction =
+        inject(KBQ_CHECKABLE_CLICK_ACTION, { optional: true }) ??
+        inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true }) ??
+        undefined;
 
     protected readonly uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
@@ -310,12 +317,9 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
         }
     }
 
-    private setTransitionCheckState() {
-        if (this.indeterminate) {
-            this.transitionCheckState(TransitionCheckState.Indeterminate);
-        } else {
-            this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
-        }
+    /** Id of the element wrapping the projected hint, referenced by the input's `aria-describedby`. */
+    protected get hintId(): string {
+        return `${this.id || this.uniqueId}-hint`;
     }
 
     /** A native checkbox only reacts to Space, so Enter is forwarded to it manually. */

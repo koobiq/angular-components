@@ -90,8 +90,6 @@ export interface KbqAppSwitcherApp {
 // @public
 export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecked, OnChanges, AfterViewInit, OnDestroy {
     constructor();
-    protected activeApp: KbqAppSwitcherApp | undefined;
-    protected activeSite: KbqAppSwitcherSite | undefined;
     protected get allItems(): QueryList<KbqDropdownItem>;
     escapeHandler(): void;
     filteredSites: KbqAppSwitcherSite[];

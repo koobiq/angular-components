@@ -77,9 +77,7 @@ $toggle-thumb-offset: 8px;
         height: var(--kbq-toggle-size-normal-height);
         width: var(--kbq-toggle-size-normal-width);
 
-        @media (prefers-reduced-motion: reduce) {
-            transition: none;
-        }
+        @include animation.kbq-animations-off();
 
         .kbq-toggle__thumb {
             position: absolute;
@@ -92,9 +90,7 @@ $toggle-thumb-offset: 8px;
             border-radius: var(--kbq-size-border-width);
             transition: left 50ms ease-in-out;
 
-            @media (prefers-reduced-motion: reduce) {
-                transition: none;
-            }
+            @include animation.kbq-animations-off();
         }
     }
 
