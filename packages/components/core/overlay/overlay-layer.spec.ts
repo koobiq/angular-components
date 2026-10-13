@@ -305,6 +305,33 @@ describe('KbqOverlayLayer', () => {
             expect(host.classList).toContain('cdk-overlay-popover');
             expect(host.firstElementChild).toBe(overlayRef.backdropElement);
         });
+
+        it('keeps the backdrop before the host on every attach in a layer', () => {
+            const overlayRef = createOverlay({ hasBackdrop: true });
+            const host = overlayRef.hostElement;
+
+            layers.adopt(overlayRef, element('#inside'));
+            attach(overlayRef);
+
+            expect(host.previousElementSibling).toBe(overlayRef.backdropElement);
+
+            detach(overlayRef);
+            attach(overlayRef);
+
+            expect(host.previousElementSibling).toBe(overlayRef.backdropElement);
+        });
+
+        it('keeps the backdrop before the host when re-attached after being adopted on attach', () => {
+            const overlayRef = createOverlay({ hasBackdrop: true });
+
+            // As the `cdkConnectedOverlay` consumers do from its `(attach)` output.
+            overlayRef.attachments().subscribe(() => layers.adopt(overlayRef, element('#inside')));
+            attach(overlayRef);
+            detach(overlayRef);
+            attach(overlayRef);
+
+            expect(overlayRef.hostElement.previousElementSibling).toBe(overlayRef.backdropElement);
+        });
     });
 
     it('leaves panels in place outside the browser', () => {
