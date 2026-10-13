@@ -1,13 +1,16 @@
 <label class="kbq-toggle-layout" [attr.for]="inputId" [class.kbq-toggle-layout_left]="labelPosition() === 'left'">
     <input
         #input
-        role="switch"
         type="checkbox"
         class="kbq-toggle-input cdk-visually-hidden"
+        [attr.aria-busy]="loading() ? 'true' : null"
         [attr.aria-checked]="getAriaChecked()"
+        [attr.aria-describedby]="hintId"
+        [attr.aria-disabled]="disabled || loading() ? 'true' : null"
         [attr.aria-label]="ariaLabel() || null"
         [attr.aria-labelledby]="ariaLabelledby()"
         [attr.name]="name()"
+        [attr.role]="indeterminate ? null : 'switch'"
         [attr.value]="value()"
         [checked]="checked"
         [disabled]="disabled"
@@ -16,11 +19,11 @@
         [tabIndex]="tabIndex"
         (change)="onChangeEvent($event)"
         (click)="onInputClick($event)"
-        (keydown.enter)="input.click()"
+        (keydown.enter)="onEnterKeydown($event)"
     />
     <div class="kbq-toggle-bar-container">
         <div class="kbq-toggle-bar" [class.kbq-progress]="loading()">
-            <div class="kbq-toggle__circle" [@switch]="currentCheckState"></div>
+            <div class="kbq-toggle__circle" [@switch]="currentCheckState()"></div>
             <div class="kbq-toggle__thumb"></div>
         </div>
     </div>
@@ -34,6 +37,9 @@
             <ng-content />
         </span>
 
-        <ng-content select="kbq-hint" />
+        <!-- Hidden from the accessible name computation of the enclosing label; exposed as the input's description. -->
+        <div class="kbq-toggle__hint" aria-hidden="true" [id]="hintId">
+            <ng-content select="kbq-hint" />
+        </div>
     </div>
 </label>
