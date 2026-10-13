@@ -12,7 +12,7 @@ import { getAllowedPublishBranches } from './version-name/publish-branches';
 const { red, italic, yellow, green } = chalk;
 const { prompt } = inquirer;
 
-export type LifecycleStage = 'pre-publish' | 'post-publish';
+export type LifecycleStage = 'post-version-bump' | 'pre-publish' | 'post-publish';
 export interface IReleaseTaskConfig {
     projectDir: string;
     repoToken: string;
@@ -128,13 +128,12 @@ export class BaseReleaseTask {
         }
     }
 
-    /** Builds all release packages that should be published. */
+    /** Runs the commands listed for the given stage under `release.hooks` in the project package.json. */
     protected runReleaseCommands(commandType: LifecycleStage) {
-        const binDir = join(this.config.projectDir, 'node_modules/.bin');
-        const spawnOptions: ExecSyncOptions = { cwd: binDir, stdio: 'inherit' };
-        const preReleaseCommands = this.packageJson?.release?.hooks?.[commandType] ?? [];
+        const spawnOptions: ExecSyncOptions = { cwd: this.config.projectDir, stdio: 'inherit' };
+        const commands: string[] = this.packageJson?.release?.hooks?.[commandType] ?? [];
 
-        for (const command of preReleaseCommands) {
+        for (const command of commands) {
             execSync(command, spawnOptions);
         }
     }

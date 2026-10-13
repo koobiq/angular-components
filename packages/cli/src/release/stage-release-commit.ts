@@ -78,6 +78,9 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
             console.log();
         }
 
+        // Generated files that embed the version, such as the docs llms.txt, have to see the new one.
+        this.runReleaseCommands('post-version-bump');
+
         await promptAndGenerateChangelog(join(this.config.projectDir, CHANGELOG_FILE_NAME), this.config);
 
         console.log();

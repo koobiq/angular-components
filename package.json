@@ -195,8 +195,8 @@
         "-----RELEASE-----": "----------------------------------------------------------------------------------------",
         "release:extract-changelog": "ts-node --project tools/extract-release-notes/tsconfig.json tools/extract-release-notes",
         "release:extract-docs-meta": "yarn run docs:generate-sitemap && yarn run docs:generate-prerender-routes && yarn run docs:generate-llms-txt",
-        "release:stage": "yarn run release:extract-docs-meta && ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage",
-        "release:stage:commit": "yarn run docs:prune-is-new-badges && yarn run release:extract-docs-meta && ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage-commit",
+        "release:stage": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage",
+        "release:stage:commit": "yarn run docs:prune-is-new-badges && ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli stage-commit",
         "release:publish:ci": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci",
         "release:publish:dist": "ts-node --project p packages/cli/tsconfig.lib.json packages/cli/src/cli publish-dist",
         "release:publish:ci-gitlab": "ts-node --project packages/cli/tsconfig.lib.json packages/cli/src/cli publish-ci-gitlab",
@@ -323,6 +323,11 @@
             "angular-luxon-adapter",
             "angular-moment-adapter",
             "cli"
-        ]
+        ],
+        "hooks": {
+            "post-version-bump": [
+                "yarn run release:extract-docs-meta"
+            ]
+        }
     }
 }
