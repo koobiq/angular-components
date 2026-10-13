@@ -42,17 +42,26 @@ export function kbqAnimationsDisabled(): boolean {
 
 /**
  * Settles once the CSS animations and transitions running on an element have finished, cancelled ones
- * included; `null` when none runs — animations turned off, reduced motion, no Web Animations API (the
- * server, jsdom).
+ * included, or once `timeout` milliseconds have passed when it is given: a paused animation never finishes.
+ * `null` when none runs — animations turned off, reduced motion, no Web Animations API (the server, jsdom).
  * @docs-private
  */
-export function kbqAnimationsSettled(element: Element | null | undefined): Promise<void> | null {
+export function kbqAnimationsSettled(element: Element | null | undefined, timeout?: number): Promise<void> | null {
     const animations = (element?.getAnimations?.() ?? []).filter(
         // An infinite animation (a spinner in the content) never finishes.
         (animation) => animation.effect?.getComputedTiming().endTime !== Infinity
     );
 
-    return animations.length ? Promise.allSettled(animations.map(({ finished }) => finished)).then(() => {}) : null;
+    if (!animations.length) return null;
+
+    const finished = Promise.allSettled(animations.map(({ finished }) => finished)).then(() => {});
+
+    if (timeout === undefined) return finished;
+
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+    const expired = new Promise<void>((resolve) => (timeoutId = setTimeout(resolve, timeout)));
+
+    return Promise.race([finished, expired]).finally(() => clearTimeout(timeoutId));
 }
 
 /**
@@ -73,14 +82,12 @@ export function kbqAfterAnimations(
     if (destroyRef.destroyed) return { destroy: () => {} };
 
     let active = true;
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
     const settle = (): void => {
-        const settled = kbqAnimationsSettled(element());
+        const settled = kbqAnimationsSettled(element(), injector.get(MAX_ANIMATION_TIMEOUT));
 
         if (!settled) return finish();
 
-        timeoutId = setTimeout(finish, injector.get(MAX_ANIMATION_TIMEOUT));
         settled.then(finish);
     };
 
@@ -91,7 +98,6 @@ export function kbqAfterAnimations(
     const stop = (): void => {
         active = false;
         renderRef?.destroy();
-        clearTimeout(timeoutId);
     };
 
     const unregister = destroyRef.onDestroy(stop);

@@ -15,6 +15,7 @@ import {
     inject,
     Injector,
     input,
+    MAX_ANIMATION_TIMEOUT,
     OnChanges,
     OnDestroy,
     OnInit,
@@ -223,7 +224,10 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
                 this.renderedPosition = to;
                 this.translationStarted(to);
 
-                const settled = kbqAnimationsSettled(this.contentElement().nativeElement);
+                const settled = kbqAnimationsSettled(
+                    this.contentElement().nativeElement,
+                    this.injector.get(MAX_ANIMATION_TIMEOUT)
+                );
 
                 if (!settled) return this.translationDone(from, to);
 

@@ -2753,7 +2753,7 @@ export interface KbqAnimationsConfig {
 export function kbqAnimationsDisabled(): boolean;
 
 // @public
-export function kbqAnimationsSettled(element: Element | null | undefined): Promise<void> | null;
+export function kbqAnimationsSettled(element: Element | null | undefined, timeout?: number): Promise<void> | null;
 
 // @public
 export type KbqAppSwitcherLocaleConfiguration = {
