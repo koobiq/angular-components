@@ -4,6 +4,7 @@ const CVA_MEMBERS = 'KbqCheckbox and KbqToggleComponent no longer implement Cont
 const ON_TOUCHED = 'KbqCheckbox.onTouched was removed';
 const TRANSITION_STATE = 'TransitionCheckState is no longer exported from @koobiq/components/checkbox';
 const LABEL_TEXT_CHANGE = 'KbqToggleComponent.onLabelTextChange() does nothing now';
+const CHECK_STATE = 'KbqToggleComponent.currentCheckState is a Signal<TransitionCheckState> now';
 
 describe('v21-upgrade: forms-controls', () => {
     it('reports writeValue() called on a KbqCheckbox query', async () => {
@@ -109,6 +110,41 @@ describe('v21-upgrade: forms-controls', () => {
         expect(run.read('toggle-label.html')).toBe(template);
         expect(run.log).toContain(`toggle-label.ts\n  ${LABEL_TEXT_CHANGE}`);
         expect(run.log).toContain(`toggle-label.html\n  ${LABEL_TEXT_CHANGE}`);
+    });
+
+    it('reports currentCheckState read as a value in a toggle subclass', async () => {
+        const source = [
+            "import { KbqToggleComponent } from '@koobiq/components/toggle';",
+            'export class Toggle extends KbqToggleComponent {',
+            '    get circleClass() { return `circle_${this.currentCheckState}`; }',
+            '}',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'toggle-state.ts': source });
+
+        expect(run.read('toggle-state.ts')).toBe(source);
+        expect(run.log).toContain(`toggle-state.ts\n  ${CHECK_STATE}`);
+    });
+
+    it('leaves a migrated currentCheckState() and one outside a toggle subclass alone', async () => {
+        const run = await runV21Upgrade({
+            'migrated.ts': [
+                "import { KbqToggleComponent } from '@koobiq/components/toggle';",
+                'export class Toggle extends KbqToggleComponent {',
+                '    get circleClass() { return `circle_${this.currentCheckState()}`; }',
+                '}',
+                ''
+            ].join('\n'),
+            'checkbox.ts': [
+                "import { KbqCheckbox } from '@koobiq/components/checkbox';",
+                'export class Checkbox extends KbqCheckbox {',
+                '    get state() { return this.currentCheckState; }',
+                '}',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).not.toContain(CHECK_STATE);
     });
 
     it('leaves an onLabelTextChange() of your own alone', async () => {

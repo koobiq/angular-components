@@ -599,6 +599,8 @@ API, устаревшие в 20.x, удалены в 21.0.0: и те, чья п�
 
 `KbqToggleComponent.onLabelTextChange()` теперь ничего не делает, устарел и будет удален в 22.0.0: удалите вызов. `v21-upgrade` сообщает о нем.
 
+Защищенное поле `KbqToggleComponent.currentCheckState` стало `Signal<TransitionCheckState>`, общим с хост-директивой `KbqCheckable`: наследник читает его как `currentCheckState()` и меняет через сеттеры `checked` и `indeterminate`. `v21-upgrade` сообщает о чтении без вызова в наследнике.
+
 #### Navbar, ellipsis center и description list
 
 | Удалено                                   | Что использовать                                                                                              | Миграция               |
@@ -880,6 +882,7 @@ export class MyTrigger {
 | `header` / `footer`                                                                 | свойства              | удалены                                                                  |
 | `KbqAppSwitcherComponent.isTrapFocus` / `updateTrapFocus()`                         | публичный API         | удалены                                                                  |
 | `KbqAppSwitcherDropdownApp.getIcon()`                                               | публичный метод       | удалён                                                                   |
+| `KbqAppSwitcherComponent.activeSite` / `activeApp`                                  | защищённые            | удалены: контекст шаблона `kbqDropdownContent` выпадающего меню          |
 | `KbqAppSwitcherListItem.collapsed`                                                  | свойство              | `ModelSignal<boolean>`                                                   |
 | Инпуты `app` / `site` у `KbqAppSwitcherListItem` / `-DropdownApp` / `-DropdownSite` | необязательные инпуты | обязательные сигналы `input.required`                                    |
 
@@ -925,6 +928,8 @@ ng g @koobiq/components:app-switcher-signals --project "<your project>"
 **`header` / `footer`**: удалены. Всплывающая панель их никогда не показывала: значение просто уезжало в оверлей и терялось — строку нужно удалить.
 
 **`isTrapFocus` / `updateTrapFocus()`**: удалены из `KbqAppSwitcherComponent`. Его шаблон никогда не привязывал `[cdkTrapFocus]`, поэтому они ничего не делали.
+
+**`activeSite` / `activeApp`** у наследника `KbqAppSwitcherComponent`: удалены. Каждое выпадающее меню другого сайта или группы берёт сайт и приложение из контекста своего шаблона `kbqDropdownContent`, который заполняет `kbqDropdownTriggerData`.
 
 **`KbqAppSwitcherDropdownApp.getIcon()`**: удалён. Инлайновую разметку очищает `KbqAppSwitcherIconSanitizer`, а отрисовывает сам компонент.
 

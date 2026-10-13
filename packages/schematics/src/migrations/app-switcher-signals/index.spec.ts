@@ -296,6 +296,18 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages).toContain('`updateTrapFocus()` were removed');
         });
 
+        it('warns about the removed active site and app of a subclass', async () => {
+            const messages = await warningsFor('const site = this.activeSite; super.activeApp;');
+
+            expect(messages).toContain('`KbqAppSwitcherComponent.activeSite` / `activeApp` were removed');
+        });
+
+        it('leaves an activeSite of a receiver other than this alone', async () => {
+            const messages = await warningsFor('const site = this.state.activeSite;');
+
+            expect(messages).not.toContain('`activeApp` were removed');
+        });
+
         it('warns about the removed getIcon of the flyout row', async () => {
             const messages = await warningsFor('this.row.getIcon(app.icon);');
 

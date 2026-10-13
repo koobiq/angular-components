@@ -90,6 +90,14 @@ export const tsWarnPatterns: WarnPattern[] = [
             'bound `[cdkTrapFocus]`, so neither did anything. Delete the usage.'
     },
     {
+        // Protected, so only a subclass reaches them.
+        pattern: '\\b(?:this|super)\\.active(?:Site|App)\\b',
+        message:
+            '`KbqAppSwitcherComponent.activeSite` / `activeApp` were removed: each flyout reads its site and app ' +
+            'from the context of its `kbqDropdownContent` template, which `kbqDropdownTriggerData` fills. Read ' +
+            'them there.'
+    },
+    {
         pattern: '\\bgetIcon\\s*\\(',
         message:
             '`KbqAppSwitcherDropdownApp.getIcon()` was removed. Inline `icon` markup is now sanitized by ' +

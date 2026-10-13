@@ -65,7 +65,7 @@
             "schema": "./migrations/dropdown-demote-overlay/schema.json"
         },
         "app-switcher-signals": {
-            "description": "Migrates KbqAppSwitcherTrigger consumers to its model()-based API (selectedApp reads become calls, writes become .set()) and warns on selectedSite value semantics, the removed header/footer/isTrapFocus/getIcon members and the new inline-icon sanitization",
+            "description": "Migrates KbqAppSwitcherTrigger consumers to its model()-based API (selectedApp reads become calls, writes become .set()) and warns on selectedSite value semantics, the removed header/footer/isTrapFocus/getIcon members and the protected activeSite/activeApp and the new inline-icon sanitization",
             "factory": "./migrations/app-switcher-signals/index",
             "schema": "./migrations/app-switcher-signals/schema.json"
         },
