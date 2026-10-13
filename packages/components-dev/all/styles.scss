@@ -1,85 +1,64 @@
-.dev-row {
+// `dev-all`-prefixed on purpose: the routed dev apps ship `ViewEncapsulation.None` stylesheets that
+// define `.dev-shell`, `.dev-sidebar` and `.dev-container` globally.
+.dev-all-shell {
     display: flex;
-
     flex-direction: row;
 
-    flex-wrap: wrap;
+    height: 100vh;
 }
 
-.dev-box {
-    min-width: 30%;
-    width: 30%;
-
-    margin: 20px;
-}
-
-.kbq-badge {
-    margin-right: 15px;
-}
-
-.kbq-alert {
-    margin-bottom: 15px;
-}
-
-.dev-lines {
-    flex-grow: 1;
-    margin-top: 8px;
-}
-
-.dev-line-container:not(:first-child) {
-    margin-top: 16px;
-}
-
-.dev-container {
+.dev-all-sidebar {
     display: flex;
-    align-items: center;
-
-    .dev-spinners {
-        display: flex;
-        flex-grow: 1;
-        margin-top: 8px;
-        list-style: none;
-        padding: 0;
-    }
-
-    .dev-spinner-container {
-        margin-left: 16px;
-    }
-
-    .dev-line-container:not(:first-child) {
-        margin-top: 16px;
-    }
-}
-
-.dev-radio-group {
-    display: inline-flex;
+    flex: 0 0 280px;
     flex-direction: column;
+    gap: var(--kbq-size-s);
+
+    min-width: 0;
+    padding: var(--kbq-size-s);
+
+    background-color: var(--kbq-background-bg-secondary);
+
+    overflow: hidden;
 }
 
-.dev-radio-button {
-    margin-bottom: 10px;
-}
+.dev-all-nav {
+    display: flex;
+    flex-direction: column;
 
-.dev-selected-value {
-    margin: 15px 0;
-}
-
-.kbq-tag {
-    margin-right: 4px;
-}
-
-.dev-container .kbq-form-field {
-    width: 200px;
-}
-
-.dev-toggle-demo-container {
-    margin-bottom: 8px;
-}
-
-.dev-toggles-container {
-    max-width: 500px;
-}
-
-.kbq-tree-selection {
     overflow-y: auto;
+}
+
+.dev-all-nav__link {
+    padding: var(--kbq-size-xxs) var(--kbq-size-xs);
+
+    color: var(--kbq-foreground-contrast);
+    text-decoration: none;
+
+    border-radius: var(--kbq-size-xxs);
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--kbq-states-background-contrast-less-hover);
+    }
+}
+
+.dev-all-nav__link_active {
+    color: var(--kbq-foreground-theme);
+
+    background-color: var(--kbq-states-background-contrast-less-active);
+}
+
+.dev-all-nav__empty {
+    padding: var(--kbq-size-xs);
+
+    color: var(--kbq-foreground-contrast-secondary);
+}
+
+// No padding: `popover` and `tooltip` set `dev-app { height: 100%; width: 100% }`, which would overflow.
+.dev-all-content {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    overflow: auto;
 }

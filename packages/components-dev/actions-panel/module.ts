@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet, Routes } from '@angular/router';
 import {
     ActionsPanelAdaptiveExample,
     ActionsPanelCloseExample,
@@ -46,7 +46,7 @@ export class DevDocsExamples {}
     ],
     template: `
         <h2>Page1</h2>
-        <a routerLink="/page-2">Go to page-2</a>
+        <a routerLink="../page-2">Go to page-2</a>
         <hr />
 
         <dev-examples />
@@ -61,7 +61,7 @@ export class DevPage1 {}
     imports: [RouterLink],
     template: `
         <h2>Page2</h2>
-        <a routerLink="/page-1">Go to page-1</a>
+        <a routerLink="../page-1">Go to page-1</a>
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -82,3 +82,13 @@ export class DevPage2 {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {}
+
+/** Pages rendered into the `<router-outlet />` of `template.html`. */
+export const devPageRoutes: Routes = [
+    { path: '', redirectTo: 'page-1', pathMatch: 'full' },
+    { path: 'page-1', component: DevPage1 },
+    { path: 'page-2', component: DevPage2 }
+];
+
+/** Entry point for the `dev-all` shell, which mounts this app under `/actions-panel`. */
+export const devRoutes: Routes = [{ path: '', component: DevApp, children: devPageRoutes }];
