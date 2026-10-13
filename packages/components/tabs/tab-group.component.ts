@@ -601,16 +601,31 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         );
     }
 
-    /** Index that owns `tabindex="0"`, falling back to the first enabled tab when focus sits on a disabled one. */
+    /**
+     * Index that owns `tabindex="0"`, falling back to the first enabled tab when focus sits on a
+     * disabled one.
+     *
+     * The template calls this once per tab, so the common path stays allocation-free: `QueryList.get`
+     * indexes the backing array, where `toArray()` would copy the whole thing N times per check and
+     * make rendering the strip quadratic in the number of tabs.
+     */
     private getRovingTabIndex(tabHeader: KbqTabHeader): number {
-        const tabs = this.tabs?.toArray() || [];
         const { focusIndex } = tabHeader;
+        const focused = this.tabs?.get(focusIndex);
 
-        if (tabs[focusIndex] && !tabs[focusIndex].disabled()) {
+        if (focused && !focused.disabled()) {
             return focusIndex;
         }
 
-        return tabs.findIndex((tab) => !tab.disabled());
+        const length = this.tabs?.length ?? 0;
+
+        for (let index = 0; index < length; index++) {
+            if (!this.tabs.get(index)!.disabled()) {
+                return index;
+            }
+        }
+
+        return -1;
     }
 
     /** First tab that can actually be selected, so that a leading disabled tab is not the default. */

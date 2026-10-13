@@ -140,7 +140,11 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     /** Tracks which element has focus; used for keyboard navigation */
     get focusIndex(): number {
-        return this.keyManager ? this.keyManager.activeItemIndex! : 0;
+        // Before `ngAfterContentInit` builds the key manager the selection is where focus would land —
+        // `updateActiveItem(this._selectedIndex)` is the first thing that runs once it exists. Falling
+        // back to `0` instead would hand the roving `tabindex="0"` to the first tab on the very first
+        // render of any group that does not open on it.
+        return this.keyManager ? this.keyManager.activeItemIndex! : this._selectedIndex;
     }
 
     /** When the focus index is set, we must manually send focus to the correct label */
@@ -200,12 +204,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     //  Accessor inputs cannot be migrated as they are too complex.
     @Input({ transform: booleanAttribute })
     set vertical(value: boolean) {
-        if (this._vertical === value) {
-            return;
-        }
-
         this._vertical = value;
-        this.verticalChanged = true;
     }
 
     get vertical(): boolean {
@@ -214,8 +213,8 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     private _vertical = false;
 
-    /** Whether the orientation changed and the pagination state has to be re-evaluated. */
-    private verticalChanged = false;
+    /** `disablePagination` as of the last content check — see `ngAfterContentChecked`. */
+    private previousDisablePagination = false;
 
     /**
      * The number of tab labels that are displayed on the header. When this changes, the header
@@ -237,6 +236,14 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     /** Whether DOM focus currently sits on one of the items. */
     private focusWasInside = false;
+
+    /**
+     * Index of the item that last took DOM focus, or `-1`. Recorded from the `focusin` target rather
+     * than read back from `keyManager.activeItemIndex`, because the `selectedIndex` setter writes that
+     * field too — and on an `items.changes` tick a subscriber registered earlier (`KbqTabNavBar`'s
+     * `updateActiveLink`) repoints it at the *active* item before focus restoration gets to run.
+     */
+    private focusedItemIndex = -1;
 
     /** State of the in-progress mouse/pen drag gesture, if any. */
     private dragState: DragState | null = null;
@@ -315,9 +322,12 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
                 .pipe(takeUntilDestroyed())
                 .subscribe(() => this.stopInterval());
 
-            fromEvent(nativeElement, 'focusin')
+            fromEvent<FocusEvent>(nativeElement, 'focusin')
                 .pipe(takeUntilDestroyed())
-                .subscribe(() => (this.focusWasInside = true));
+                .subscribe(({ target }) => {
+                    this.focusWasInside = true;
+                    this.focusedItemIndex = this.indexOfItemContaining(target);
+                });
 
             // Only a move onto a known element outside gives up ownership: a destroyed item reports
             // no `relatedTarget` at all, and that case is what the restore below exists for.
@@ -454,6 +464,10 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // event in order to provide a public event that notifies about focus changes. Also we realign
         // the tabs container by scrolling the new focused tab into the visible section.
         this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((newFocusIndex) => {
+            // `change` only fires for deliberate focus moves (`setActiveItem`), never for the
+            // bookkeeping `updateActiveItem` the `selectedIndex` setter does — which is exactly the
+            // distinction `focusedItemIndex` has to preserve.
+            this.focusedItemIndex = newFocusIndex;
             this.indexFocused.emit(newFocusIndex);
             this.setTabFocus(newFocusIndex);
         });
@@ -464,9 +478,14 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     }
 
     ngAfterContentChecked(): void {
+        // Diff the derived value rather than a flag on one of its two inputs: `disablePagination` is
+        // `_disablePagination || _vertical`, so watching only `vertical` left a header whose
+        // `[disablePagination]` binding was toggled at runtime with stale paginator state.
+        const disablePagination = this.disablePagination;
+
         // If the number of tab labels have changed, check if scrolling should be enabled
-        if (this.tabLabelCount !== this.items.length || this.verticalChanged) {
-            this.verticalChanged = false;
+        if (this.tabLabelCount !== this.items.length || this.previousDisablePagination !== disablePagination) {
+            this.previousDisablePagination = disablePagination;
 
             // Read before `tabLabelCount` moves. Gated on growth rather than on any change: losing a tab
             // cannot start the strip scrolling, so re-announcing it there would be noise.
@@ -718,6 +737,15 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * destroyed element takes focus down to `<body>` and a keyboard user has to tab in from the top of
      * the document again (WCAG 2.4.3).
      */
+    /** Index of the item owning `target`, or `-1` — `target` is the item itself or something inside it. */
+    private indexOfItemContaining(target: EventTarget | null): number {
+        if (!target || !this.items) {
+            return -1;
+        }
+
+        return this.items.toArray().findIndex(({ elementRef }) => elementRef.nativeElement.contains(target as Node));
+    }
+
     private restoreFocusAfterItemsChange(): void {
         if (!this.focusWasInside || !this.keyManager) {
             return;
@@ -733,7 +761,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             return;
         }
 
-        const previousIndex = Math.max(0, Math.min(items.length - 1, this.keyManager.activeItemIndex ?? 0));
+        const previousIndex = Math.max(0, Math.min(items.length - 1, this.focusedItemIndex));
         const index =
             items[previousIndex] && !items[previousIndex].disabled
                 ? previousIndex

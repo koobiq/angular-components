@@ -183,7 +183,8 @@ export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentI
 
         '[attr.id]': 'id',
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled || null',
+        // No `[attr.disabled]`: the directive sits on an `<a>`, where `disabled` is not a valid
+        // attribute and no assistive technology reads it. Styling goes through `.kbq-disabled`.
         '[attr.aria-disabled]': 'disabled',
         '[attr.aria-selected]': 'ariaSelected',
         '[attr.role]': 'role',

@@ -75,12 +75,14 @@ describe(KbqTabNavBar.name, () => {
                 .queryAll(By.css('a'))
                 .map((tabLinkDebugEl) => tabLinkDebugEl.nativeElement);
 
-            expect(tabLinkElements.every((tabLinkEl) => !tabLinkEl.hasAttribute('disabled'))).toBe(true);
+            expect(tabLinkElements.every((tabLinkEl) => !tabLinkEl.classList.contains('kbq-disabled'))).toBe(true);
 
             component.disabled = true;
             fixture.detectChanges();
 
-            expect(tabLinkElements.every((tabLinkEl) => tabLinkEl.hasAttribute('disabled'))).toBe(true);
+            // The class, not a `disabled` attribute: this directive sits on an `<a>`, where that
+            // attribute is neither valid HTML nor read by any assistive technology.
+            expect(tabLinkElements.every((tabLinkEl) => tabLinkEl.classList.contains('kbq-disabled'))).toBe(true);
         });
 
         it('should update the tabindex if links are disabled', () => {
@@ -217,10 +219,63 @@ describe(KbqTabNavBar.name, () => {
             expect(links.every((link) => !link.hasAttribute('aria-selected'))).toBe(true);
         });
 
+        it('should mark a disabled link with aria-disabled and no disabled attribute', () => {
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
+
+            // `disabled` is not a valid attribute on an anchor, and no assistive technology reads it
+            // there — the same defect the review already fixed on the tab labels.
+            expect(links.some((link) => link.hasAttribute('disabled'))).toBe(false);
+            expect(links.every((link) => link.getAttribute('aria-disabled') === 'true')).toBe(true);
+        });
+
         it('should mark the active link with aria-current instead', () => {
             const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
 
             expect(links.map((link) => link.getAttribute('aria-current'))).toEqual(['page', null, null]);
+        });
+    });
+
+    describe('disablePagination', () => {
+        it('should re-evaluate pagination when disablePagination alone changes', () => {
+            const fixture = TestBed.createComponent(TabNavBarWithDisablePagination);
+
+            fixture.detectChanges();
+
+            const navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance as KbqTabNavBar;
+            const updatePagination = jest.spyOn(navBar, 'updatePagination');
+
+            // Neither the orientation nor the link count changes here, so a dirty flag hung off
+            // `vertical` alone never fires — even though `disablePagination` feeds the same derived
+            // value and leaves the paginator arrows stale.
+            fixture.componentInstance.disablePagination = true;
+            fixture.detectChanges();
+
+            expect(updatePagination).toHaveBeenCalled();
+        });
+    });
+
+    describe('focus restoration', () => {
+        it('should move focus to the neighbouring link, not the active one, when the focused link is removed', () => {
+            const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+
+            fixture.detectChanges();
+
+            const links = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('a'));
+
+            // Link 0 is the active one; focus sits on the last link instead.
+            links()[2].focus();
+            fixture.detectChanges();
+
+            fixture.componentInstance.tabs = [0, 1];
+            fixture.detectChanges();
+
+            // `updateActiveLink()` runs on the same `items.changes` tick and writes `selectedIndex`,
+            // which also moves `keyManager.activeItemIndex`. Restoration has to remember where focus
+            // actually was rather than reading that field back, or it lands on the active link.
+            expect(document.activeElement).toBe(links()[1]);
         });
     });
 
@@ -355,6 +410,19 @@ class SimpleTabNavBarTestApp {
 })
 class TabLinkWithTabIndexBinding {
     tabIndex = 0;
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <nav kbqTabNavBar [disablePagination]="disablePagination">
+            <a kbqTabLink [active]="$first">One</a>
+            <a kbqTabLink>Two</a>
+        </nav>
+    `
+})
+class TabNavBarWithDisablePagination {
+    disablePagination = false;
 }
 
 @Component({

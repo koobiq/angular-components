@@ -8,9 +8,18 @@ import { Schema } from './schema';
 const LABEL = '[tabs-signals-and-aria]';
 const EXTENSIONS = ['.ts', '.html'];
 
+// Compiled once: every pattern here is a module-level constant, and the tree walk below would
+// otherwise recompile each of them for every file in the project.
+const TABS_TYPE_REGEX = new RegExp(TABS_TYPE);
+const COMPILED_WARN_PATTERNS = warnPatterns.map(({ anchor, pattern, message }) => ({
+    anchor: new RegExp(anchor),
+    pattern: new RegExp(pattern),
+    message
+}));
+
 /** A file is a tabs consumer if it imports the package, names a component, or renders one. */
 function referencesTabs(content: string): boolean {
-    return content.includes(TABS_PACKAGE) || new RegExp(TABS_TYPE).test(content);
+    return content.includes(TABS_PACKAGE) || TABS_TYPE_REGEX.test(content);
 }
 
 /**
@@ -42,8 +51,8 @@ export default function tabsSignalsAndAria(options: Schema): Rule {
 
             consumers++;
 
-            for (const { anchor, pattern, message } of warnPatterns) {
-                if (!new RegExp(anchor).test(content) || !new RegExp(pattern).test(content)) continue;
+            for (const { anchor, pattern, message } of COMPILED_WARN_PATTERNS) {
+                if (!anchor.test(content) || !pattern.test(content)) continue;
 
                 reported++;
 

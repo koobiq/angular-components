@@ -83,8 +83,13 @@ export class KbqTabBody implements OnInit, OnDestroy {
     /** Event emitted before the centering of the tab begins. */
     @Output() readonly beforeCentering: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    /** Event emitted before the centering of the tab begins. */
-    @Output() readonly afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    /**
+     * Event emitted once the tab has finished animating away from the center.
+     *
+     * Carries no payload: it is only ever emitted with none, so the `boolean` it used to advertise was
+     * always `undefined` at runtime.
+     */
+    @Output() readonly afterLeavingCenter: EventEmitter<void> = new EventEmitter<void>();
 
     /** Event emitted when the tab completes its animation towards the center. */
     readonly onCentered = output<void>();

@@ -139,4 +139,37 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(messages.join('\n')).not.toContain('[tabs-signals-and-aria]');
     });
+
+    it('does not mistake KbqTable for a tabs component', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        // `KbqTable` is a different component in the same library; a greedy `KbqTab\w*` swallows it.
+        appTree.overwrite(
+            ts,
+            "import { KbqTable } from '@koobiq/components/table';\n" +
+                'export class App { resizeStream = new Subject<Event>(); table?: KbqTable; }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('[tabs-signals-and-aria]');
+    });
+
+    it('reports a comparison read of KbqTab.disabled, not just a bare one', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTab } from '@koobiq/components/tabs';\n" +
+                'export class App { check(tab: KbqTab) { return tab.disabled === true; } }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('read it as a call, tab.disabled()');
+    });
 });

@@ -2070,8 +2070,15 @@ The roving `tabindex` follows the header's focus position rather than the select
 | `.getTabIndex(tab, index)` | `getTabIndex(tab, tabHeader, index)`; `null` is now `-1`           |
 | `KbqVerticalTabsCssStyler` | Stop importing it — the class follows the `vertical` binding       |
 | `.kbq-tab-label[disabled]` | Target `.kbq-disabled`, or `[aria-disabled="true"]` in a test      |
+| `a[kbqTabLink][disabled]`  | Same: `.kbq-disabled`, or `[aria-disabled="true"]`                 |
 
 `KbqTabGroup.disabled` is removed outright. It was published, documented and listed in the API table, and no template bound it and no style targeted it — `<kbq-tab-group disabled>` compiled, type-checked and did nothing.
+
+**A tab link is an anchor, so it carries `aria-disabled` now.** `KbqTabLink` emitted a bare `disabled` attribute alongside it — the same defect the tab labels had, one file over. `disabled` is defined for form controls, not for `<a>`, so no assistive technology ever read it there and the styling went through `.kbq-disabled` the whole time. The input itself is unchanged; only the attribute is gone.
+
+**`afterLeavingCenter` admits it carries nothing.** `KbqTabBody.afterLeavingCenter` was typed `EventEmitter<boolean>` but is only ever emitted with no argument, so every subscriber has always received `undefined`. It is `EventEmitter<void>`, which is what it always was at runtime — a handler that declared a `boolean` parameter stops compiling and should drop it.
+
+**Toggling `disablePagination` re-measures again.** The header only re-ran its pagination check when the orientation or the tab count changed, even though `disablePagination` feeds the same derived value — so a nav bar whose `[disablePagination]` binding was flipped at runtime kept stale paginator arrows until something else disturbed it.
 
 Two changes with nothing to match on. `KbqTabHeader` is `OnPush` like every other component in the package, so a host that mutated it outside Angular and relied on the `Default` strategy has to mark it for check. And the four `on-surface` theme branches read the `--kbq-tabs-tab-item-*-on-surface-*` tokens they always declared instead of the `on-background` family — a value overridden only on the `on-background` tokens no longer reaches a group or nav bar with `[onSurface]`.
 

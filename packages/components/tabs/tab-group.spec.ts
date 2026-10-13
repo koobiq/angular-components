@@ -320,6 +320,22 @@ describe('KbqTabGroup', () => {
 
             expect(disabledFirst.componentInstance.tabGroup().selectedIndex).toBe(1);
         });
+
+        it('should put the tab stop on the selected tab from the very first render', () => {
+            // The labels are projected content of `KbqTabGroup`'s own template, so their
+            // `[attr.tabindex]` is evaluated before the header's `ngAfterContentInit` builds the
+            // `FocusKeyManager`. Reading the header's focus position before that point must fall back
+            // to the selection, not to index 0, or a group opened on any tab but the first hands the
+            // tab stop to the wrong tab until the next animation frame repaints it.
+            const selectedSecond = TestBed.createComponent(SimpleTabsTestApp);
+
+            selectedSecond.detectChanges();
+
+            const labels: HTMLElement[] = Array.from(selectedSecond.nativeElement.querySelectorAll('.kbq-tab-label'));
+
+            expect(selectedSecond.componentInstance.selectedIndex).toBe(1);
+            expect(labels.map((label) => label.getAttribute('tabindex'))).toEqual(['-1', '0', '-1']);
+        });
     });
 
     describe('dynamic binding tabs', () => {

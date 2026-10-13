@@ -10,15 +10,17 @@ writes to the tree.
 The review closed the members that were wired to nothing and gave `KbqTabGroup` the ARIA tabs pattern
 that `KbqTabNavBar`, in the same package, already had.
 
-| Member                         | Before               | After                                   |
-| ------------------------------ | -------------------- | --------------------------------------- |
-| `KbqTabGroup.resizeStream`     | public `Subject`     | removed                                 |
-| `(window:resize)` on the group | host listener        | removed                                 |
-| `KbqTabGroup.disabled`         | published input      | removed                                 |
-| `KbqTab.disabled`              | accessor input       | signal input                            |
-| `KbqTabGroup.getTabIndex()`    | `(tab, index)`       | `(tab, tabHeader, index)`, never `null` |
-| `KbqVerticalTabsCssStyler`     | applies a host class | deprecated no-op                        |
-| `KbqTabLabelWrapper` host      | `[attr.disabled]`    | `[attr.aria-disabled]`                  |
+| Member                          | Before                  | After                                   |
+| ------------------------------- | ----------------------- | --------------------------------------- |
+| `KbqTabGroup.resizeStream`      | public `Subject`        | removed                                 |
+| `(window:resize)` on the group  | host listener           | removed                                 |
+| `KbqTabGroup.disabled`          | published input         | removed                                 |
+| `KbqTab.disabled`               | accessor input          | signal input                            |
+| `KbqTabGroup.getTabIndex()`     | `(tab, index)`          | `(tab, tabHeader, index)`, never `null` |
+| `KbqVerticalTabsCssStyler`      | applies a host class    | deprecated no-op                        |
+| `KbqTabLabelWrapper` host       | `[attr.disabled]`       | `[attr.aria-disabled]`                  |
+| `KbqTabLink` host               | `[attr.disabled]`       | `[attr.aria-disabled]` only             |
+| `KbqTabBody.afterLeavingCenter` | `EventEmitter<boolean>` | `EventEmitter<void>`                    |
 
 `resizeStream` deserves a note. Nothing was ever subscribed to it: `subscribeToResize()` read the
 `vertical` signal input in the constructor, before Angular writes inputs, so it returned early on
@@ -44,6 +46,27 @@ expression, and an attribute selector has to be rewritten by hand.
 | `.getTabIndex(tab, index)` | Pass the header: `getTabIndex(tab, tabHeader, index)`           |
 | `KbqVerticalTabsCssStyler` | Stop importing it; the class follows the `vertical` binding now |
 | `.kbq-tab-label[disabled]` | Target `.kbq-disabled`, or `[aria-disabled="true"]` in a test   |
+
+## What it cannot reach
+
+`KbqTabGroup.disabled` is matched only where the type name and the property access sit on one line —
+`<kbq-tab-group disabled>`, or a single-statement access. The idiomatic two-step form, where the
+reference is typed once and read later,
+
+```ts
+@ViewChild(KbqTabGroup) group: KbqTabGroup;
+// ...
+if (this.group.disabled) { … }
+```
+
+is **not** reported. Widening it to the whole file would fire on every unrelated `.disabled` in any
+file that mentions a tab group — which, since these files usually also carry `<kbq-tab [disabled]>`,
+is most of them. Search for `.disabled` on a tab group by hand; the removed input did nothing, so a
+missed call site is dead code rather than a behaviour change.
+
+`KbqTabLink.disabled` is unchanged and stays a plain boolean input — only the `<a>`'s invalid
+`disabled` _attribute_ is gone, replaced by `aria-disabled`. A stylesheet matching `a[disabled]`
+inside a nav bar has to move to `.kbq-disabled`.
 
 ## Notes with no call site to point at
 

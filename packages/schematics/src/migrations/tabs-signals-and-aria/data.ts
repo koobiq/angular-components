@@ -23,8 +23,16 @@
 /** Import specifier that marks a file as a tabs consumer. */
 export const TABS_PACKAGE = '@koobiq/components/tabs';
 
-/** Identifier and element shapes that mark a consumer without an import. */
-export const TABS_TYPE = '\\bKbqTab\\w*\\b|\\bkbq-tab(?:-group|-nav-bar)?\\b|\\bkbqTab(?:NavBar|Link|Label)\\b';
+/**
+ * Identifier and element shapes that mark a consumer without an import.
+ *
+ * `KbqTabs?(?![a-z])` rather than `KbqTab\w*`: the greedy form also swallows `KbqTable`, a different
+ * component in the same library, so a file that merely renders a table was reported as a tabs
+ * consumer. Requiring a non-lowercase character after the optional `s` keeps every real export
+ * (`KbqTab`, `KbqTabGroup`, `KbqTabNavBar`, `KbqTabsModule`) and drops `KbqTable*`.
+ */
+export const TABS_TYPE =
+    '\\bKbqTabs?(?![a-z])\\w*\\b|\\bkbq-tab(?:-group|-nav-bar)?\\b|\\bkbqTab(?:NavBar|Link|Label)\\b';
 
 export interface WarnPattern {
     /** Owner of the member. The pattern is only evaluated for files that also name it. */
@@ -61,7 +69,10 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: '\\bKbqTab\\b',
-        pattern: '\\.\\s*disabled\\b(?!\\s*[=(])',
+        // `=(?!=)` rather than a bare `=` in the lookahead: rejecting any `=` also rejected
+        // `tab.disabled === true`, which the assignment pattern above deliberately skips too — so the
+        // most common comparison shape fell between the two and was never reported at all.
+        pattern: '\\.\\s*disabled\\b(?!\\s*(?:=(?!=)|\\())',
         message: 'KbqTab.disabled is a signal input: read it as a call, tab.disabled().'
     },
     {

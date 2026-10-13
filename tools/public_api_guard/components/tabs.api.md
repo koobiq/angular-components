@@ -65,7 +65,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     checkPaginationEnabled(): void;
-    checkScrollingControls(): void;
     // (undocumented)
     protected readonly destroyRef: DestroyRef;
     get disablePagination(): boolean;
@@ -77,7 +76,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     get focusIndex(): number;
     set focusIndex(value: number);
     getLayoutDirection(): Direction;
-    getMaxScrollDistance(): number;
     // (undocumented)
     handleKeydown(event: KeyboardEvent): void;
     handlePaginatorClick(direction: ScrollDirection): void;
@@ -106,13 +104,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     onContentChanges(): void;
     // (undocumented)
     abstract readonly previousPaginator: ElementRef<HTMLElement>;
-    get scrollDistance(): number;
-    set scrollDistance(v: number);
-    scrollHeader(direction: ScrollDirection): {
-        maxScrollDistance: number;
-        distance: number;
-    };
-    scrollToLabel(labelIndex: number): void;
+    protected get scrollbarMode(): KbqScrollbarMode;
+    protected abstract readonly scrollbarViewport: KbqScrollbarViewport;
+    scrollHeader(direction: ScrollDirection): void;
     get selectedIndex(): number;
     set selectedIndex(value: number);
     readonly selectFocusedIndex: EventEmitter<number>;
@@ -124,7 +118,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     // (undocumented)
     abstract readonly tabListContainer: ElementRef<HTMLElement>;
     updatePagination(): void;
-    updateTabScrollPosition(): void;
     set vertical(value: boolean);
     // (undocumented)
     get vertical(): boolean;
@@ -191,7 +184,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 // @public
 export class KbqTabBody implements OnInit, OnDestroy {
     constructor();
-    readonly afterLeavingCenter: EventEmitter<boolean>;
+    readonly afterLeavingCenter: EventEmitter<void>;
     readonly animationDuration: i0.InputSignal<string>;
     readonly beforeCentering: EventEmitter<boolean>;
     bodyPosition: KbqTabBodyPositionState;
