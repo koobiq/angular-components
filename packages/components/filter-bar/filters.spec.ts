@@ -884,7 +884,7 @@ describe('KbqFilters', () => {
             expect(component.filterName.enabled).toBe(true);
         });
 
-        it('should keep the inline "name already exists" error after re-enabling the control', async () => {
+        it('should keep the "name already exists" error after re-enabling the control', async () => {
             vi.useFakeTimers();
 
             const filter = createFilter([], { name: 'Test' });
@@ -1389,6 +1389,74 @@ describe('KbqFilters', () => {
             expect(items[items.length - 1].textContent).toContain(
                 KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.saveAsNewFilter
             );
+        });
+
+        it('should label the actions of a changed saved filter with their own strings', async () => {
+            vi.useFakeTimers();
+
+            const strings = KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters;
+
+            initFixture(createFilter([], { saved: true, changed: true }));
+
+            filtersDebugElement.query(By.css('.kbq-button_action')).nativeElement.click();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const labels = Array.from(document.querySelectorAll('.kbq-dropdown-item'), (item) =>
+                item.textContent?.trim()
+            );
+
+            expect(labels).toEqual([
+                strings.saveChangesButton,
+                strings.saveAsNewButton,
+                strings.change,
+                strings.resetChanges,
+                strings.remove
+            ]);
+        });
+
+        it.each([
+            ['saving a new filter', 'openSaveAsNewFilterPopover', 'saveAsNewHeader'],
+            ['renaming the filter', 'openChangeFilterNamePopover', 'saveChangesHeader']
+        ] as const)('should title the popover and name its field when %s', async (_, open, header) => {
+            vi.useFakeTimers();
+
+            const text = KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters[header];
+
+            initFixture(createFilter([], { name: 'Existing', saved: true }));
+
+            getFiltersComponent()[open]();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(document.querySelector('.kbq-popover__header')?.textContent?.trim()).toBe(text);
+            expect(document.querySelector('.kbq-popover__content input')?.getAttribute('aria-label')).toBe(text);
+        });
+
+        it('should report a taken name in the alert alone, keeping the field invalid', async () => {
+            vi.useFakeTimers();
+
+            initFixture(createFilter([], { name: 'Existing', saved: true }));
+
+            const component = getFiltersComponent();
+
+            component.openSaveAsNewFilterPopover();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            // Touched, as after a click on the save button: the form field shows errors in that state only.
+            component.filterName.setValue('Existing');
+            component.filterName.markAsTouched();
+            component.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+            fixture.detectChanges();
+
+            const content = document.querySelector('.kbq-popover__content')!;
+
+            expect(content.querySelector('kbq-alert')?.textContent?.trim()).toBe(
+                KBQ_FILTER_BAR_DEFAULT_LOCALE_CONFIGURATION.filters.errorHint
+            );
+            expect(content.querySelector('input')?.getAttribute('aria-invalid')).toBe('true');
+            expect(content.querySelector('kbq-error')).toBeNull();
         });
     });
 

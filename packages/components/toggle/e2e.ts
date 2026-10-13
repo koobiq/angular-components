@@ -19,7 +19,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                             <td>
                                 <div>
                                     @for (type of types; track type) {
-                                        <!-- eslint-disable-next-line @angular-eslint/template/prefer-template-literal -->
                                         @let dataTestId = 'e2eToggle-' + color + '-' + state + '-' + type;
                                         <kbq-toggle
                                             [attr.data-testid]="dataTestId"

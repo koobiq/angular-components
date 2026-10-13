@@ -58,6 +58,7 @@ import {
     applyPopupMargins,
     kbqLocaleConfigurationOverrideProvider,
     kbqQueryListFrom,
+    kbqSiblingPopupProvider,
     ruRULocaleData
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';

@@ -173,7 +173,7 @@
     },
     "scripts": {
         "prepare": "husky",
-        "clean": "playwright clear-cache && ng cache clean && rimraf .angular dist playwright-report .playwright-mcp test-results --verbose",
+        "clean": "playwright clear-cache && rimraf .angular dist playwright-report playwright-report-docs blob-report .playwright-mcp test-results --verbose",
         "postinstall": "tsc -p tools/builders/tsconfig.json",
         "build:angular-moment-adapter": "ng build angular-moment-adapter",
         "build:angular-luxon-adapter": "ng build angular-luxon-adapter",
@@ -297,7 +297,6 @@
         "unit:schematics": "vitest run --project node packages/schematics/",
         "unit:cli": "vitest run --project node packages/cli/",
         "unit:koobiq-docs": "vitest run --project angular apps/docs/",
-        "unit:api-gen": "vitest run --project node tools/api-gen/",
         "unit:tools": "vitest run --project node tools/",
         "-----E2E_TESTS-----": "--------------------------------------------------------------------------------------",
         "dev:e2e": "ng serve dev-e2e",

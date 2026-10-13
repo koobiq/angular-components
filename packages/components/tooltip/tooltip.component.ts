@@ -961,9 +961,7 @@ export class KbqTooltipTrigger
     show(delay: number = this.enterDelay) {
         if (this.mutedBySiblingPopup) {
             const pointerReturned =
-                this.triggerName === 'mouseenter' &&
-                this.pointerLeftWhileMuted &&
-                !this.siblingPopups.some(({ isAttached }) => isAttached);
+                this.triggerName === 'mouseenter' && this.pointerLeftWhileMuted && !this.siblingPopupAttached;
 
             if (!pointerReturned) return;
 
@@ -1024,6 +1022,19 @@ export class KbqTooltipTrigger
      */
     private get siblingPopupAttached(): boolean {
         return untracked(() => this.siblingPopups.some(({ isAttached }) => isAttached));
+    }
+
+    /**
+     * Records whether the pointer left the host while muted, see `pointerLeftWhileMuted`.
+     * @docs-private
+     */
+    protected trackPointerLeave(event: MouseEvent): void {
+        if (!this.mutedBySiblingPopup) return;
+
+        const { left, right, top, bottom } = this.elementRef.nativeElement.getBoundingClientRect();
+
+        this.pointerLeftWhileMuted =
+            event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom;
     }
 
     /**

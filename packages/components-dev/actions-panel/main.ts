@@ -21,11 +21,7 @@ export class DevCustomOverlayContainer extends OverlayContainer {
 bootstrapApplication(DevApp, {
     providers: [
         provideZonelessChangeDetection(),
-        provideRouter([
-            { path: '', redirectTo: 'page-1', pathMatch: 'full' },
-            { path: 'page-1', component: DevPage1 },
-            { path: 'page-2', component: DevPage2 }
-        ]),
+        provideRouter(devPageRoutes),
         kbqLocaleServiceProvider(),
         { provide: OverlayContainer, useClass: DevCustomOverlayContainer }
     ]

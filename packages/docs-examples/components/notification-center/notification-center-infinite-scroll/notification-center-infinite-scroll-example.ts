@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, untracked } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -8,7 +8,6 @@ import { KbqComponentColors, KbqFormattersModule, KbqThemeService } from '@koobi
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLink } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import {
     KbqNotificationCenterModule,
@@ -69,7 +68,6 @@ enum NavbarIcItems {
         KbqFormattersModule,
         KbqDropdownModule,
         KbqEmptyStateModule,
-        KbqLink,
         KbqNavbarModule,
         KbqTopBarModule
     ],
@@ -118,7 +116,8 @@ export class NotificationCenterInfiniteScrollExample {
         // The loaded notifications follow a locale switch; their ids are their positions in the list.
         effect(() => {
             const text = this.text();
-            const items = this.notificationService.items;
+            // Untracked: `items` is a signal this effect writes.
+            const items = untracked(() => this.notificationService.items);
 
             if (!items.length) return;
 
