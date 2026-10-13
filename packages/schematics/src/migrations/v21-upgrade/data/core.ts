@@ -138,6 +138,15 @@ const DEPRECATED: { pattern: string; message: string }[] = [
         message:
             '`FocusKeyManager.getFocusOrigin()` is deprecated and will be removed in 22.0.0: keep the origin you ' +
             'pass to `setFocusOrigin()`.'
+    },
+    {
+        // Beside `placeholder` or under `datepicker`: a `KBQ_DATE_FORMATS` object, its replacement, has the key too.
+        pattern:
+            '\\bdatepicker\\s*:\\s*\\{[^{}]*\\bdateInput\\s*:|\\bplaceholder\\s*:[^{}]*\\bdateInput\\s*:|' +
+            '\\bdateInput\\s*:[^{}]*\\bplaceholder\\s*:|\\.datepicker\\??\\.dateInput\\b',
+        message:
+            '`dateInput` of the datepicker locale configuration is deprecated and will be removed in 22.0.0: ' +
+            'nothing reads it. Set the input format through `KBQ_DATE_FORMATS`.'
     }
 ];
 
