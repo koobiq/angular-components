@@ -18,6 +18,7 @@ const DEPRECATED_HELPERS = '`isDigit()`, `isBoolean()` and `KbqMeasureScrollbarS
 const LINE_SETTER = '`KbqLineSetter` was removed';
 const LINE_CLASSES = 'A list item no longer gets the `kbq-2-line`';
 const FOCUS_ORIGIN = '`FocusKeyManager.getFocusOrigin()` is deprecated';
+const DATE_INPUT = '`dateInput` of the datepicker locale configuration is deprecated';
 
 describe('v21-upgrade: core', () => {
     it('rewrites KbqThemeSelector.Default to Light', async () => {
@@ -291,7 +292,12 @@ describe('v21-upgrade: core', () => {
             'date.ts': "import { DurationLongFormatterPipe } from '@koobiq/components/core';\n",
             'highlight.html': '<span [innerHTML]="item | mcHighlight: query"></span>\n',
             'helpers.ts': "import { isBoolean, KbqMeasureScrollbarService } from '@koobiq/components/core';\n",
-            'keys.ts': 'export const origin = (manager: any) => manager.getFocusOrigin();\n'
+            'keys.ts': 'export const origin = (manager: any) => manager.getFocusOrigin();\n',
+            'locale.ts':
+                "export const locale = { datepicker: { placeholder: 'дд.мм.гггг', dateInput: 'dd.MM.yyyy' } };\n",
+            'provider.ts':
+                "export const provider = { provide: TOKEN, useValue: { dateInput: 'yyyy-MM-dd', placeholder: 'гггг' } };\n",
+            'read.ts': 'export const format = (locale: any) => locale.datepicker?.dateInput;\n'
         });
 
         expect(run.log).toContain(`date.html\n  ${LEGACY_DATE_PIPES}`);
@@ -299,6 +305,18 @@ describe('v21-upgrade: core', () => {
         expect(run.log).toContain(`highlight.html\n  ${MC_HIGHLIGHT}`);
         expect(run.log).toContain(`helpers.ts\n  ${DEPRECATED_HELPERS}`);
         expect(run.log).toContain(`keys.ts\n  ${FOCUS_ORIGIN}`);
+        expect(run.log).toContain(`locale.ts\n  ${DATE_INPUT}`);
+        expect(run.log).toContain(`provider.ts\n  ${DATE_INPUT}`);
+        expect(run.log).toContain(`read.ts\n  ${DATE_INPUT}`);
+    });
+
+    it('leaves the date formats and the dateInput output of the datepicker alone', async () => {
+        const run = await runV21Upgrade({
+            'formats.ts': "export const formats = { dateInput: 'yyyy-MM-dd', monthYearLabel: 'LLL yyyy' };\n",
+            'input.html': '<input [kbqDatepicker]="picker" placeholder="Date" (dateInput)="onInput($event)" />\n'
+        });
+
+        expect(run.log).not.toContain(DATE_INPUT);
     });
 
     it('leaves the kbq date and highlight pipes and a logical or alone', async () => {
