@@ -1034,7 +1034,8 @@ export class KbqTooltipTrigger
         const { left, right, top, bottom } = this.elementRef.nativeElement.getBoundingClientRect();
 
         this.pointerLeftWhileMuted =
-            event.clientX < left || event.clientX > right || event.clientY < top || event.clientY > bottom;
+            // A box covers [left, right) and [top, bottom): a point on its right or bottom edge is outside it.
+            event.clientX < left || event.clientX >= right || event.clientY < top || event.clientY >= bottom;
     }
 
     /**
