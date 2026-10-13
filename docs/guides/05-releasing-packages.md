@@ -16,6 +16,8 @@ This command create and push a release commit and tag with changelog and bumped 
 CLI steps:
 
 - (**need validation**) choose bump version
+- write the new version to `package.json`, then run the `release.hooks["post-version-bump"]` commands:
+  `release:extract-docs-meta` regenerates the sitemap, the prerender routes and `llms.txt` for that version
 - (**need validation**) create `release name`
     - you can use [angular-release-name-generator](https://www.npmjs.com/package/angular-release-name-generator)
 - (**need validation**) create changelog
