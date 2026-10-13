@@ -146,6 +146,7 @@ export class E2eInlineEditStates {
                 <i
                     kbqInlineEditMenu
                     kbq-icon-button="kbq-ellipsis-vertical_16"
+                    aria-label="Actions"
                     [kbqDropdownTriggerFor]="dropdown"
                     [color]="'contrast-fade'"
                 ></i>
@@ -202,6 +203,7 @@ export class E2eInlineEditTruncation {}
                 <i
                     kbqInlineEditMenu
                     kbq-icon-button="kbq-ellipsis-vertical_16"
+                    aria-label="Actions"
                     [kbqDropdownTriggerFor]="dropdown"
                     [color]="'contrast-fade'"
                 ></i>
@@ -319,6 +321,7 @@ export class E2eInlineEditActionButtons {
                     kbqInlineEditMenu
                     data-testid="e2eInlineEditSaveStatesMenu"
                     kbq-icon-button="kbq-ellipsis-vertical_16"
+                    aria-label="Actions"
                     [kbqDropdownTriggerFor]="dropdown"
                     [color]="'contrast-fade'"
                 ></i>
