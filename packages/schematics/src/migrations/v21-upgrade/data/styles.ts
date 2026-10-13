@@ -22,12 +22,17 @@ const MARKDOWN_CLASS_SELECTOR: Replacement = {
     to: '.kbq-md-$1'
 };
 
+/** The `kbq-scrollbar` class token: not the `<kbq-scrollbar>` element, nor a class that starts with it. */
+const SCROLLBAR_CLASS = 'kbq-scrollbar(?![\\w-])';
+const QUOTED_SCROLLBAR_CLASS = `['"\`]${SCROLLBAR_CLASS}['"\`]`;
+
 /**
  * Removed in 21.0.0: the arguments of `koobiq-theme()`, `koobiq-typography()` and `kbq-core-theme()`,
  * `kbq-contrast()`, `kbq-palette()`, `kbq-color()`, `kbq-typography-config()`, `core/styles/tokens`, the prebuilt
  * `light-theme.css` and `dark-theme.css`, the unprefixed markdown typography classes (`md-h1`, …), and the Sass
- * modules, mixins, functions and timing variables nothing in the library used. Also reports `kbq-light-theme()` and
- * `kbq-dark-theme()`, deprecated for removal in 22.0.0.
+ * modules, mixins, functions and timing variables nothing in the library used. Also reports, deprecated for removal
+ * in 22.0.0, `kbq-light-theme()`, `kbq-dark-theme()`, the `kbq-scrollbar` class with `kbq-scrollbar-theme()`, and
+ * the `--kbq-scrollbar-*` variables of that class the new scrollbar does not share.
  */
 export const styles: AreaData = {
     templateReplacements: [
@@ -65,6 +70,36 @@ export const styles: AreaData = {
                 '`kbq-light-theme()` and `kbq-dark-theme()` are deprecated and will be removed in 22.0.0: nothing in the ' +
                 'library reads the theme map they build. Use the CSS variables of the theme instead, for example ' +
                 '`var(--kbq-foreground-contrast)`.'
+        },
+        {
+            pattern:
+                // A selector, `[class.kbq-scrollbar]` or a query.
+                `\\.${SCROLLBAR_CLASS}` +
+                // A `class` attribute, a `[class]` binding or a `class` host property.
+                `|(?<![\\w-])['"]?class\\]?['"]?\\s*[=:]\\s*(?:"[^"]*|'[^']*|\`[^\`]*)(?<![\\w-])${SCROLLBAR_CLASS}` +
+                // `classList.add()`, `Renderer2.addClass()`, an `[ngClass]` key.
+                `|(?:classList\\.\\w+|(?:add|remove)Class)\\([^()]*${QUOTED_SCROLLBAR_CLASS}` +
+                `|${QUOTED_SCROLLBAR_CLASS}\\s*:` +
+                '|(?<![\\w-])kbq-scrollbar-theme\\(',
+            message:
+                'The `kbq-scrollbar` class and its `kbq-scrollbar-theme()` mixin are deprecated and will be removed ' +
+                'in 22.0.0, and no library component carries the class any more: put `kbqNativeScrollbar` on the ' +
+                'element that scrolls, with `kbqNativeScrollbarDescendants` to style the scrollbars inside it as the ' +
+                'class did, or wrap the content in `<kbq-scrollbar>` (both from `@koobiq/components/scrollbar`).'
+        },
+        {
+            pattern:
+                '(?<![\\w-])--kbq-scrollbar-(?:size-(?:track-(?:dimension|padding-(?:vertical|horizontal))|' +
+                'thumb-(?:width|min-size|border-radius))|thumb-disabled-background|' +
+                'track-(?:default|hover|active)-(?:background|border))(?![\\w-])',
+            message:
+                'The `--kbq-scrollbar-size-*`, `--kbq-scrollbar-thumb-disabled-background` and ' +
+                '`--kbq-scrollbar-track-{default,hover,active}-{background,border}` variables are deprecated and ' +
+                'will be removed in 22.0.0: only the `kbq-scrollbar` class and the `KbqScrollbar` of ' +
+                '`@koobiq/components/scrollbar/deprecated` read them. The new scrollbar reads ' +
+                '`--kbq-scrollbar-track-size` for the track dimension, `--kbq-scrollbar-thumb-gap` (the gap on each ' +
+                'side of the thumb) for the thumb width, `--kbq-scrollbar-thumb-min-size` and ' +
+                '`--kbq-scrollbar-track-background`; the others have no counterpart.'
         },
         {
             pattern: '(?<![\\w-])kbq-typography-config\\(',

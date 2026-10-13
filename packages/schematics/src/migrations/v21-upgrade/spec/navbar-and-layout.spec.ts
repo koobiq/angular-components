@@ -7,6 +7,7 @@ const OUTER_ELEMENT_WIDTH = '`KbqNavbarTitle.outerElementWidth` was removed';
 const RESIZE_STREAM = '`KbqEllipsisCenterDirective.resizeStream` was removed';
 const DL_MIN_WIDTH_WITH_BREAKPOINT = '`minWidth` was removed from `<kbq-dl>`';
 const DL_MIN_WIDTH_ACCESS = '`KbqDlComponent.minWidth` was removed';
+const LOADER_OVERLAY = '`transparent` and `card` of `<kbq-loader-overlay>` are deprecated';
 
 describe('v21-upgrade: navbar and layout', () => {
     describe('KbqNavbarBrand.longTitle', () => {
@@ -49,6 +50,26 @@ describe('v21-upgrade: navbar and layout', () => {
                     '    `',
                     '})',
                     'export class App {}',
+                    ''
+                ].join('\n')
+            );
+            expect(run.log).toContain(LONG_TITLE_BINDING);
+        });
+
+        it('looks past a > inside a quoted value and ignores the selector inside one', async () => {
+            const template = [
+                '<a [class.wide]="a > b" kbq-navbar-brand [longTitle]="true"></a>',
+                '<a kbq-navbar-brand [title]="a > b" longTitle></a>',
+                '<a data-role="kbq-navbar-brand" kbq-navbar-item [longTitle]="true"></a>',
+                ''
+            ].join('\n');
+            const run = await runV21Upgrade({ 'brand-quoted.html': template });
+
+            expect(run.read('brand-quoted.html')).toBe(
+                [
+                    '<a [class.wide]="a > b" kbq-navbar-brand></a>',
+                    '<a kbq-navbar-brand [title]="a > b"></a>',
+                    '<a data-role="kbq-navbar-brand" kbq-navbar-item [longTitle]="true"></a>',
                     ''
                 ].join('\n')
             );
@@ -130,6 +151,28 @@ describe('v21-upgrade: navbar and layout', () => {
             expect(run.log).toContain(DL_MIN_WIDTH_WITH_BREAKPOINT);
         });
 
+        it('looks past a > inside a quoted value for minWidth and for verticalBreakpoint', async () => {
+            const template = [
+                '<kbq-dl *ngIf="a > b" [minWidth]="400"></kbq-dl>',
+                '<kbq-dl [minWidth]="400" *ngIf="a > b" [verticalBreakpoint]="500"></kbq-dl>',
+                ''
+            ].join('\n');
+            const run = await runV21Upgrade({ 'dl-quoted.html': template });
+
+            expect(run.read('dl-quoted.html')).toBe(
+                template.replace('*ngIf="a > b" [minWidth]', '*ngIf="a > b" [verticalBreakpoint]')
+            );
+            expect(run.log).toContain(DL_MIN_WIDTH_WITH_BREAKPOINT);
+        });
+
+        it('does not take verticalBreakpoint inside a value for the attribute', async () => {
+            const template = '<kbq-dl [minWidth]="verticalBreakpoint"></kbq-dl>\n';
+            const run = await runV21Upgrade({ 'dl-value.html': template });
+
+            expect(run.read('dl-value.html')).toBe('<kbq-dl [verticalBreakpoint]="verticalBreakpoint"></kbq-dl>\n');
+            expect(run.log).not.toContain(DL_MIN_WIDTH_WITH_BREAKPOINT);
+        });
+
         it('reports programmatic access', async () => {
             const source = [
                 "import { KbqDlComponent } from '@koobiq/components/dl';",
@@ -143,6 +186,33 @@ describe('v21-upgrade: navbar and layout', () => {
 
             expect(run.read('dl-access.ts')).toBe(source);
             expect(run.log).toContain(DL_MIN_WIDTH_ACCESS);
+        });
+    });
+
+    describe('KbqLoaderOverlay transparent and card', () => {
+        it('reports them on the element, past a > inside a value, and in code', async () => {
+            const run = await runV21Upgrade({
+                'static.html': '<kbq-loader-overlay *ngIf="n > 0" transparent></kbq-loader-overlay>\n',
+                'bound.html': '<kbq-loader-overlay [card]="isCard"></kbq-loader-overlay>\n',
+                'code.ts': [
+                    "import { KbqLoaderOverlay } from '@koobiq/components/loader-overlay';",
+                    "export const set = (ref: ComponentRef<KbqLoaderOverlay>) => ref.setInput('card', true);",
+                    ''
+                ].join('\n')
+            });
+
+            expect(run.log).toContain(`static.html\n  ${LOADER_OVERLAY}`);
+            expect(run.log).toContain(`bound.html\n  ${LOADER_OVERLAY}`);
+            expect(run.log).toContain(`code.ts\n  ${LOADER_OVERLAY}`);
+        });
+
+        it('leaves surface and the same names elsewhere alone', async () => {
+            const run = await runV21Upgrade({
+                'surface.html': '<kbq-loader-overlay surface="card" [class.transparent]="x"></kbq-loader-overlay>\n',
+                'other.html': '<kbq-card card transparent></kbq-card>\n'
+            });
+
+            expect(run.log).not.toContain(LOADER_OVERLAY);
         });
     });
 

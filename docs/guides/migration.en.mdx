@@ -179,7 +179,7 @@ The schematic emits warnings for what cannot be rewritten safely:
 
 **Modals**: ModalOptions.kbqComponentParams → the data field + inject(KBQ_MODAL_DATA).
 
-**Code block**: the deprecated `canLoad` / `codeFiles` inputs are renamed to `canDownload` / `files`. Template bindings are migrated automatically; programmatic access (`.canLoad`, `.codeFiles`) must be updated by hand.
+**Code block**: the deprecated `canLoad` / `codeFiles` inputs are renamed to `canDownload` / `files`. Template bindings are migrated automatically, except on a `<kbq-code-block>` that binds the replacement too: it is reported, merge each pair into one binding. Programmatic access (`.canLoad`, `.codeFiles`) must be updated by hand.
 
 ### Filter-bar upgrade (20.2.0)
 
@@ -346,7 +346,7 @@ Koobiq components no longer use `@angular/animations`, which Angular deprecated:
 
 - **The motion is off under `prefers-reduced-motion: reduce`.** To turn it off in the whole application, for example in an end-to-end suite, provide `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` from `@koobiq/components/core`. `provideNoopAnimations()` still turns it off, but it belongs to the deprecated package.
 - **The exported triggers are removed**: `fadeAnimation` and `kbqSelectAnimations` from `core`, `kbqDropdownAnimations`, `fadeInItems` and `transformDropdown` from `dropdown`, `kbqTabsAnimations` from `tabs`. `KbqSidepanelAnimationState` is no longer exported from `sidepanel`.
-- **The members that carried an `AnimationEvent` are removed.** `KbqPopUp.animationStart()` and `animationDone()`: a subclass overrides the protected `afterShowAnimation()`. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` and `onAnimationDone()`: a custom trigger calls `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` and `onAnimationDone()`: listen to `stateChanged`. `KbqTabBody.onTranslateTabStarted()` and `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` and `onAnimation()`, the `animationStateChanged` of the sidepanel and actions panel containers, and `animationState`, `animationTransform` and `setAnimationState()` of the sidepanel container: follow a panel through its ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`.
+- **The members that carried an `AnimationEvent` are removed.** `KbqPopUp.animationStart()` and `animationDone()`: a subclass overrides the protected `afterShowAnimation()`. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` and `onAnimationDone()`: a custom trigger calls `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` and `onAnimationDone()`: listen to `stateChanged`. `KbqTabBody.onTranslateTabStarted()` and `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` and `onAnimation()`, the `animationStateChanged` of the sidepanel and actions panel containers, and `animationState`, `animationTransform` and `setAnimationState()` of the sidepanel container: follow a panel through its ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`. The protected `KbqContentPanelContainer.contentAnimationState` fed the removed `@contentAnimation` trigger: a subclass reads `isOpened()`.
 - **The dropdown panel no longer fades out**: it is closed, and its lazy content detached, as soon as the trigger reports it.
 - **In a spec, what waited for an animation callback now waits for the next render**: `fixture.detectChanges()` or `await fixture.whenStable()`. jsdom has no Web Animations API, so nothing animates there.
 
@@ -521,7 +521,7 @@ An action inside the trigger is a focusable element inside a `role="button"`, so
 | the `kbq-icon-button_small` class               | `kbq-icon-button_compact`         | rewritten |
 | `KbqIconButton.small`                           | `size` (`'compact'` / `'normal'`) | reported  |
 
-The aliases no longer fill in for their replacements: a `<kbq-code-block>` that binds both `canLoad` and `canDownload`, or both `codeFiles` and `files`, is reported and has to merge each pair into one binding. A bound `[small]="expr"` becomes `[size]="(expr) ? 'compact' : 'normal'"`. A valueless `small` never took effect, because the input had no boolean transform; it is reported, as is a static `small` with any other value than `"true"`, which made the button compact.
+The aliases no longer fill in for their replacements: a `<kbq-code-block>` that binds both `canLoad` and `canDownload`, or both `codeFiles` and `files`, is reported and has to merge each pair into one binding. So is one that binds `canDownload` or `files` twice, which is what the 20.0.0 migration made of such a pair: only the last binding takes effect. A bound `[small]="expr"` becomes `[size]="(expr) ? 'compact' : 'normal'"`. A valueless `small` never took effect, because the input had no boolean transform; it is reported, as is a static `small` with any other value than `"true"`, which made the button compact.
 
 #### Core
 
@@ -596,6 +596,8 @@ None of the removed members was an input, so no template binds them, and of `tri
 | `TransitionCheckState` from `@koobiq/components/checkbox` | the same enum from `@koobiq/components/core`  | rewritten |
 
 `v21-upgrade` reports these uses in a file that names either class or its tag, except calls on `this`. A call that has to stay can go to the host directive: `viewChild(KbqCheckbox, { read: KbqCheckable })`, with `KbqCheckable` from `@koobiq/components/core`. It moves `TransitionCheckState` from the checkbox import into the core one, and reports it imported under an alias, re-exported or read through a namespace import of the checkbox.
+
+`KbqToggleComponent.onLabelTextChange()` does nothing now and is deprecated for removal in 22.0.0: delete the call. `v21-upgrade` reports it.
 
 #### Navbar, ellipsis center and description list
 
@@ -673,6 +675,17 @@ The removed properties already set both edges: `-top` also set the bottom margin
 
 A check of `isUserInput` on a tree option change never passed: delete it with the branch it guarded. `v21-upgrade` reports `.isUserInput` in a file that names `KbqTreeOptionChange`, `$event.isUserInput` bound to an output of `<kbq-tree-option>`, and a second argument passed to the constructor or to `super()` in a subclass. The `isUserInput` of `KbqOptionSelectionChange` and of `KbqTreeSelectChange` stays.
 
+| Deprecated, removed in 22.0.0                     | Use instead                                                     | Migration |
+| ------------------------------------------------- | --------------------------------------------------------------- | --------- |
+| `(onSelectAll)` on `<kbq-tree-selection>`         | `(selectAllChange)`                                             | rewritten |
+| `(onCopy)` on `<kbq-tree-selection>`              | `(copyChange)`                                                  | rewritten |
+| `(onSelectionChange)` on `<kbq-tree-option>`      | `(selectionChange)`                                             | rewritten |
+| `KbqTreeSelection.onSelectAll`, `.onCopy` in code | `selectAllChange`, `copyChange`                                 | reported  |
+| `KbqTreeOption.onSelectionChange` in code         | `selectionChange`                                               | reported  |
+| `KbqTreeNode.mostRecentTreeNode`                  | a query of the nodes, for example `viewChildren(KbqTreeOption)` | reported  |
+
+The replacements emit the same events. The `onSelectAll` and `onCopy` outputs of `kbq-list-selection` and the `onSelectAll` output of `kbq-tree-select` are not deprecated and stay.
+
 #### Running the migration
 
 `v21-upgrade` is registered for 21.0.0, so an `ng update` to that version runs it:
@@ -702,22 +715,23 @@ With `--fix false` it only reports what it would change.
 
 `@koobiq/components/core` drops the undocumented exports, members and Sass that nothing in the library used. They were never deprecated: most are leftovers of removed features or implementation details that leaked into the public API.
 
-| Removed                                                                                                            | Use instead                                                                                     | Migration                          |
-| ------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | ---------------------------------- |
-| `POSITION_MAP`, `EXTENDED_OVERLAY_POSITIONS`, `POSITION_PRIORITY_STRATEGY`, the twelve `*_POSITION_PRIORITY` lists | `kbqPlacement` on the trigger; copy a value you need                                            | reported                           |
-| `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`, `isWithin()`       | a value or function of your own                                                                 | reported                           |
-| `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`                                                                              | nothing: `KBQ_SELECT_SCROLL_STRATEGY` has a root default; provide the token itself to change it | reported                           |
-| `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`                                                                             | nothing: `KbqCheckable` registers itself                                                        | reported                           |
-| `KbqHover`                                                                                                         | `(mouseenter)` and `(mouseleave)`, or `:hover`                                                  | reported                           |
-| `CanColor`                                                                                                         | `Signal<KbqComponentColors \| string>`, or `KbqColorDirective`                                  | reported                           |
-| `KbqAnimationCurves`, `KbqAnimationDurations`                                                                      | constants of your own: the library animates in CSS                                              | reported                           |
-| `KbqRectangleItem`, `countGroupLabelsBeforeOption()`                                                               | no replacement                                                                                  | reported                           |
-| `KbqPopUp.warning`, `.markForCheck()`, `.handleBodyInteraction()`                                                  | no replacement: nothing called them                                                             | `handleBodyInteraction()` reported |
-| `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                               | private now: the pipe arguments and the formatters locale configuration                         | reported                           |
-| `KbqFormElement.isRow`                                                                                             | the `kbq-form__row` class of the element                                                        | —                                  |
-| `KbqLineSetter` and the `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` classes of a list item                        | nothing: no style read them; `KbqListItem.lines` counts the lines                               | reported                           |
-| the `mcListIcon` attribute of a list item                                                                          | `kbq-list-icon`                                                                                 | rewritten                          |
-| the `mcLine` attribute                                                                                             | `kbq-line`                                                                                      | rewritten                          |
+| Removed                                                                                                            | Use instead                                                                                                                                                                                            | Migration |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------- |
+| `POSITION_MAP`, `EXTENDED_OVERLAY_POSITIONS`, `POSITION_PRIORITY_STRATEGY`, the twelve `*_POSITION_PRIORITY` lists | `kbqPlacement` on the trigger; copy a value you need                                                                                                                                                   | reported  |
+| `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`, `isWithin()`       | a value or function of your own                                                                                                                                                                        | reported  |
+| `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`                                                                              | nothing: `KBQ_SELECT_SCROLL_STRATEGY` has a root default; provide the token itself to change it                                                                                                        | reported  |
+| `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`                                                                             | nothing: `KbqCheckable` registers itself                                                                                                                                                               | reported  |
+| `KbqHover`                                                                                                         | `(mouseenter)` and `(mouseleave)`, or `:hover`                                                                                                                                                         | reported  |
+| `CanColor`                                                                                                         | `Signal<KbqComponentColors \| string>`, or `KbqColorDirective`                                                                                                                                         | reported  |
+| `KbqAnimationCurves`, `KbqAnimationDurations`                                                                      | constants of your own: the library animates in CSS                                                                                                                                                     | reported  |
+| `KbqRectangleItem`, `countGroupLabelsBeforeOption()`                                                               | no replacement                                                                                                                                                                                         | reported  |
+| `KbqPopUp.markForCheck()`                                                                                          | nothing after `updateClassMap()` or a change of `visibility`, which re-render the pop-up; for another field, `changeDetectorRef.markForCheck()` in a subclass, `instance.detectChanges()` in a trigger | reported  |
+| `KbqPopUp.warning`, `.handleBodyInteraction()`, the protected `closeOnInteraction`                                 | no replacement: `warning` did nothing, nothing called `handleBodyInteraction()`, and `closeOnInteraction` only gated it                                                                                | reported  |
+| `KbqDecimalPipe.isSpecialFormatForRULocale()`, `KbqRoundDecimalPipe.roundingOptions`                               | private now: the pipe arguments and the formatters locale configuration                                                                                                                                | reported  |
+| `KbqFormElement.isRow`                                                                                             | the `kbq-form__row` class of the element                                                                                                                                                               | reported  |
+| `KbqLineSetter` and the `kbq-2-line`, `kbq-3-line`, `kbq-multi-line` classes of a list item                        | nothing: no style read them; `KbqListItem.lines` counts the lines                                                                                                                                      | reported  |
+| the `mcListIcon` attribute of a list item                                                                          | `kbq-list-icon`                                                                                                                                                                                        | rewritten |
+| the `mcLine` attribute                                                                                             | `kbq-line`                                                                                                                                                                                             | rewritten |
 
 The Sass that goes is reachable only through a deep import, since `@koobiq/components` forwards none of it:
 
@@ -1440,6 +1454,24 @@ After fully moving to the new component and removing imports from `@koobiq/compo
 npm uninstall overlayscrollbars
 ```
 
+#### The kbq-scrollbar class
+
+The global `kbq-scrollbar` class, styled by `koobiq-theme()`, and its variables are deprecated and will be removed in 22.0.0. Library components no longer carry the class, so these variables set on `.kbq-scrollbar` no longer reach the scrollbars of the autocomplete, code block, file upload, markdown, modal, popover, select, sidepanel, tabs, textarea or tree select. `v21-upgrade` reports the class, `kbq-scrollbar-theme()` and the variables the new scrollbar does not share.
+
+| Deprecated, removed in 22.0.0                                                                                                                                                                                       | Use instead                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| the `kbq-scrollbar` class, `kbq-scrollbar-theme()`                                                                                                                                                                  | `kbqNativeScrollbar` on the element that scrolls, with `kbqNativeScrollbarDescendants` for the scrollbars inside it as the class did, or `<kbq-scrollbar>` |
+| `--kbq-scrollbar-size-track-dimension`                                                                                                                                                                              | `--kbq-scrollbar-track-size`                                                                                                                               |
+| `--kbq-scrollbar-size-thumb-width`                                                                                                                                                                                  | `--kbq-scrollbar-thumb-gap`, the gap on each side of the thumb: (track size - thumb width) / 2                                                             |
+| `--kbq-scrollbar-size-thumb-min-size`                                                                                                                                                                               | `--kbq-scrollbar-thumb-min-size`                                                                                                                           |
+| `--kbq-scrollbar-size-thumb-border-radius`                                                                                                                                                                          | nothing: the thumb takes `--kbq-size-border-radius`                                                                                                        |
+| `--kbq-scrollbar-thumb-default-background`, `--kbq-scrollbar-thumb-hover-background`, `--kbq-scrollbar-thumb-active-background`                                                                                     | the same variables                                                                                                                                         |
+| `--kbq-scrollbar-thumb-disabled-background`                                                                                                                                                                         | nothing: the new scrollbar has no disabled state                                                                                                           |
+| `--kbq-scrollbar-track-default-background`, `--kbq-scrollbar-track-hover-background`, `--kbq-scrollbar-track-active-background`                                                                                     | nothing: the class did not read them; the new scrollbar paints its track with `--kbq-scrollbar-track-background`                                           |
+| `--kbq-scrollbar-track-default-border`, `--kbq-scrollbar-track-hover-border`, `--kbq-scrollbar-track-active-border`, `--kbq-scrollbar-size-track-padding-vertical`, `--kbq-scrollbar-size-track-padding-horizontal` | nothing: the class did not read them                                                                                                                       |
+
+Set the variables on the element that carries `kbqNativeScrollbar` or on `<kbq-scrollbar>`: their defaults are declared on that element itself, as with the class.
+
 ### Locale layer typing (21.0.0)
 
 The locale layer is fully typed now, every localized component takes its strings through one shared
@@ -1493,11 +1525,14 @@ and `kbq-tree-select` is no longer wiped by the next `setLocale()`.
 `KBQ_<SECTION>_LOCALE_CONFIGURATION`, its defaults `KBQ_<SECTION>_DEFAULT_LOCALE_CONFIGURATION`, the
 override helper `kbq<Section>LocaleConfigurationProvider()` and the type `Kbq<Section>LocaleConfiguration` —
 so `navbar` lost the `VERTICAL_` its type never had, `input` the `NUMBER_`, and `sizeUnits` its
-`kbqFilesizeFormatter…` helper. The names in a 20.x release stay as deprecated aliases; the schematic moves
-you onto the new ones. Removed outright, because they duplicated a name that already existed:
-`KbqFilterBarConfiguration` and `KbqVerticalNavbarConfiguration` (use `KbqFilterBarLocaleConfiguration` and
-`KbqNavbarLocaleConfiguration`), the deprecated `Kbq*LocaleConfig` type aliases, and
-`kbqInjectKbqClampedLocaleConfiguration`. The unused `navbarIc` locale section is gone too.
+`kbqFilesizeFormatter…` helper. The names in a 20.x release stay as deprecated aliases until 22.0.0; the
+schematic moves you onto the new ones. `KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION` is only reported, because it is
+the `number` slice of the section rather than the whole of it: read `KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION.number`,
+the same object. Removed outright, with no alias, and renamed by the schematic: `KbqFilterBarConfiguration` (now
+`KbqFilterBarLocaleConfiguration`), the `Kbq*LocaleConfig` types (now `Kbq*LocaleConfiguration`, with
+`KbqNumberInputLocaleConfig` becoming `KbqInputNumberLocaleConfiguration`) and
+`kbqInjectKbqClampedLocaleConfiguration` (now `kbqInjectClampedTextLocaleConfiguration`). The unused `navbarIc`
+locale section is gone too.
 
 **Reading and overriding no longer share a word.** A component resolves its strings into
 `localeConfiguration()`, a signal — the member was called `configuration` on seven components and
@@ -2170,7 +2205,9 @@ Handled by `link-signals`: the `disabled` reads are rewritten, the rest is repor
 
 `size` and `card` were already signals in 20.2.0 and did not change.
 
-Handled by `loader-overlay-signals`: the `text` and `caption` reads are rewritten, the rest is reported.
+**`transparent` and `card` are deprecated in favour of `surface`** and will be removed in 22.0.0. `surface` wins over both when set: use `surface="bg"` (or `bg-secondary` / `bg-tertiary`, to match what lies underneath) for a transparent overlay, `surface="solid"` for an opaque one, and `surface="card"` instead of `card`. An overlay that binds none of them keeps rendering as `surface="bg"`.
+
+Handled by `loader-overlay-signals`: the `text` and `caption` reads are rewritten, the rest is reported. `v21-upgrade` reports `transparent` and `card`.
 
 #### Markdown
 
@@ -2757,13 +2794,14 @@ The flip is silent. Markup that never mentioned the input compiles unchanged and
 
 Already opted out, so nothing to do for them: the built-in overflow hints (`kbq-title`, `kbqEllipsisCenter`, the option and timezone hints) and any tooltip whose `kbqTrigger` is `manual` or `none` — hovering such a pane neither opens nor closes it, so there is nothing hoverable to protect.
 
-| Pattern                                           | Manual migration                                                                         |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `kbqTooltip` with no `ignoreTooltipPointerEvents` | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target           |
-| `.scheduler`                                      | Removed; schedule on a scheduler you own                                                 |
-| `getMouseLeaveListener(delay)`                    | Drop the argument — the listener reads the trigger's own `leaveDelay`                    |
-| `placementChange`                                 | Emits `KbqPopUpPlacementValues`; reading is unaffected, emitting a plain `string` breaks |
-| `.content` / `.header` / `.context` / `.modifier` | `unknown` and the real enum replaced `any`; a value read out needs a cast                |
+| Pattern                                                    | Manual migration                                                                                                                              |
+| ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `kbqTooltip` with no `ignoreTooltipPointerEvents`          | Add `[ignoreTooltipPointerEvents]="true"` where a pane overlays a click target                                                                |
+| `.scheduler`                                               | Removed; schedule on a scheduler you own                                                                                                      |
+| `getMouseLeaveListener(delay)`                             | Drop the argument — the listener reads the trigger's own `leaveDelay`                                                                         |
+| `placementChange`                                          | Emits `KbqPopUpPlacementValues`; reading is unaffected, emitting a plain `string` breaks                                                      |
+| `.content` / `.header` / `.context` / `.modifier`          | `unknown` and the real enum replaced `any`; a value read out needs a cast                                                                     |
+| `KBQ_TOOLTIP_OPEN_TIME` / `KBQ_TOOLTIP_OPEN_TIME_PROVIDER` | Deprecated no-ops, removed in 22.0.0: set the window with `KBQ_TOOLTIP_INSTANT_SHOW_WINDOW`, restart it with `KbqTooltipDelayTracker.reset()` |
 
 Three fixes with nothing to migrate: the pane carries `role="tooltip"` and the trigger points `aria-describedby` at it, so a host that added either by hand can drop it; <kbd>Escape</kbd> closes a hover tooltip on a non-focusable element, which previously only worked while the trigger itself had focus; and `KbqTooltipTrigger` can be imported standalone, because `KBQ_TOOLTIP_SCROLL_STRATEGY` has a factory default and the NgModule is no longer load-bearing.
 

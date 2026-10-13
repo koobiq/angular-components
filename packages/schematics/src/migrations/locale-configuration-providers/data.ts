@@ -204,6 +204,13 @@ export const memberWarnPatterns: WarnPattern[] = [
             'KbqSingleFileUploadComponent and KbqMultipleFileUploadComponent — they duplicated the ' +
             'per-instance channel every other component uses. Bind [localeOverrides] keyed by section ' +
             '({ fileUpload: { single: … } }) and read localeConfiguration().single / .multiple.'
+    },
+    {
+        // Not a rename: the replacement carries the whole input section, of which this is the `number` slice.
+        pattern: '\\bKBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION\\b',
+        message:
+            'KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION is deprecated and will be removed in 22.0.0: read ' +
+            '`KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION.number` from `@koobiq/components/input`, the same object.'
     }
 ];
 

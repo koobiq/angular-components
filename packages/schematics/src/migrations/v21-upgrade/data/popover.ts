@@ -1,4 +1,5 @@
 import type { AreaData, Replacement } from '../data';
+import { TAG_BODY } from './tag-body';
 
 /** The removed unprefixed `KbqPopoverTrigger` inputs and the `kbqPopover…` inputs that replace them. */
 const RENAMED_INPUTS: Record<string, string> = {
@@ -10,10 +11,6 @@ const RENAMED_INPUTS: Record<string, string> = {
     closeOnScroll: 'kbqPopoverCloseOnScroll',
     backdropClass: 'kbqPopoverBackdropClass'
 };
-
-// One step inside an opening tag: a quoted value is taken whole, so neither `>` nor an attribute-like word
-// inside it counts.
-const TAG_BODY = `(?:[^<>"']|"[^"]*"|'[^']*')`;
 
 /**
  * Renames `[name]=`, `name=` and a bare `name` on an element that carries `kbqPopover` or `kbqPopoverConfirm`,

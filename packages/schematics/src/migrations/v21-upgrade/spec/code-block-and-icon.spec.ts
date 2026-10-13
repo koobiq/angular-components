@@ -1,6 +1,7 @@
 import { runV21Upgrade } from '../testing';
 
 const CODE_BLOCK_PAIR = 'binds `canLoad` next to `canDownload`';
+const CODE_BLOCK_TWICE = 'binds `canDownload` or `files` twice';
 const CODE_BLOCK_MEMBER = 'their backing inputs `canLoadInput` and `codeFilesInput`';
 const SCROLLABLE = 'KbqCodeBlock.scrollableCodeContent was removed';
 const SMALL_ATTRIBUTE = 'KbqIconButton `small` was removed';
@@ -56,6 +57,54 @@ describe('v21-upgrade: code-block-and-icon', () => {
 
         expect(run.read('pair.html')).toBe(template);
         expect(run.log).toContain(CODE_BLOCK_PAIR);
+    });
+
+    it('looks past a > inside a quoted value for the alias and for its replacement', async () => {
+        const template = [
+            '<kbq-code-block *ngIf="a > b" [canLoad]="x" [files]="files" />',
+            '<kbq-code-block [canLoad]="x" *ngIf="a > b" [canDownload]="y" />',
+            `<kbq-code-block [codeFiles]="legacy" [title]="n > 0 ? 'a' : 'b'" [files]="files" />`,
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'quoted.html': template });
+
+        expect(run.read('quoted.html')).toBe(template.replace('[canLoad]="x" [files]', '[canDownload]="x" [files]'));
+        expect(run.log).toContain(CODE_BLOCK_PAIR);
+    });
+
+    it('reports a code block that binds canDownload or files twice', async () => {
+        const template = [
+            '<kbq-code-block [canDownload]="a" *ngIf="a > b" [canDownload]="b" [files]="files" />',
+            '<kbq-code-block',
+            '    [files]="files"',
+            '    files="legacy"',
+            '/>',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'twice.html': template });
+
+        expect(run.read('twice.html')).toBe(template);
+        expect(run.log).toContain(CODE_BLOCK_TWICE);
+    });
+
+    it('does not count a name inside a value or in the content as a second binding', async () => {
+        const template = [
+            '<kbq-code-block [canDownload]="allowed && canDownload" [files]="all ? files : []" />',
+            '<kbq-code-block [canLoad]="allowed && canDownload" [codeFiles]="all ? files : []">',
+            '    canDownload files',
+            '</kbq-code-block>',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'once.html': template });
+
+        expect(run.read('once.html')).toBe(
+            template.replace(
+                '[canLoad]="allowed && canDownload" [codeFiles]',
+                '[canDownload]="allowed && canDownload" [files]'
+            )
+        );
+        expect(run.log).not.toContain(CODE_BLOCK_PAIR);
+        expect(run.log).not.toContain(CODE_BLOCK_TWICE);
     });
 
     it('reports canLoad, codeFiles and their backing inputs read off a KbqCodeBlock', async () => {
@@ -126,6 +175,37 @@ describe('v21-upgrade: code-block-and-icon', () => {
 
         expect(run.read('small-left.html')).toBe(template);
         expect(run.log).toContain(SMALL_ATTRIBUTE);
+    });
+
+    it('looks past a > inside a quoted value on an icon button', async () => {
+        const template = [
+            '<button [disabled]="n > 0" kbq-icon-button="kbq-plus_16" [small]="true"></button>',
+            '<button kbq-icon-button="kbq-plus_16" [small]="true" [disabled]="n > 0" size="normal"></button>',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'small-quoted.html': template });
+
+        expect(run.read('small-quoted.html')).toBe(
+            template.replace(
+                'kbq-icon-button="kbq-plus_16" [small]="true"></button>',
+                'kbq-icon-button="kbq-plus_16" size="compact"></button>'
+            )
+        );
+        expect(run.log).toContain(SMALL_ATTRIBUTE);
+    });
+
+    it('does not take the names inside a quoted value for attributes', async () => {
+        const template = [
+            '<button class="toolbar kbq-icon-button" [small]="true"></button>',
+            `<i kbq-icon-button="kbq-plus_16" [small]="dense" [title]="wide ? size : ''"></i>`,
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'small-values.html': template });
+
+        expect(run.read('small-values.html')).toBe(
+            template.replace(`[small]="dense"`, `[size]="dense ? 'compact' : 'normal'"`)
+        );
+        expect(run.log).not.toContain(SMALL_ATTRIBUTE);
     });
 
     it('rewrites the kbq-icon-button_small class in styles and code', async () => {

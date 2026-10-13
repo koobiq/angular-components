@@ -1,14 +1,20 @@
 import type { AreaData } from '../data';
+import { TAG_BODY } from './tag-body';
 
 // An opening tag that carries the brand directive, as an element or an attribute, wherever it sits in the tag.
-const BRAND_TAG = '<(?=[^>]*?\\bkbq-navbar-brand(?![\\w-]))[^>]*?';
+const BRAND_TAG = `<(?=${TAG_BODY}*?\\bkbq-navbar-brand(?![\\w-]))${TAG_BODY}*?`;
 // An opening `<kbq-dl>` tag that does not set `verticalBreakpoint` as well, which would end up bound twice.
-const DL_TAG_WITHOUT_BREAKPOINT = '<kbq-dl(?![\\w-])(?![^>]*\\bverticalBreakpoint\\b)[^>]*?\\s';
+const DL_TAG_WITHOUT_BREAKPOINT = `<kbq-dl(?![\\w-])(?!${TAG_BODY}*\\bverticalBreakpoint\\b)${TAG_BODY}*?\\s`;
 const QUOTED_VALUE = '(?:"[^"]*"|\'[^\']*\')';
+const LOADER_OVERLAY_DEPRECATED =
+    '`transparent` and `card` of `<kbq-loader-overlay>` are deprecated and will be removed in 22.0.0: set ' +
+    '`surface` instead, `bg` (or `bg-secondary`, `bg-tertiary`) for a transparent overlay, `solid` for an opaque ' +
+    'one and `card` for `card`.';
 
 /**
  * Removed in 21.0.0: KbqNavbarBrand.longTitle, KbqNavbarItem.getTitleWidth (with KbqNavbarTitle.outerElementWidth,
- * which only fed it), the ellipsis center resizeStream and KbqDlComponent.minWidth.
+ * which only fed it), the ellipsis center resizeStream and KbqDlComponent.minWidth. Also reports `transparent` and
+ * `card` of the loader overlay, deprecated for removal in 22.0.0.
  */
 export const navbarAndLayout: AreaData = {
     templateReplacements: [
@@ -60,7 +66,7 @@ export const navbarAndLayout: AreaData = {
         },
         {
             anchor: '<kbq-dl(?![\\w-])',
-            pattern: '<kbq-dl(?![\\w-])(?=[^>]*\\bverticalBreakpoint\\b)[^>]*\\s\\[?minWidth\\b',
+            pattern: `<kbq-dl(?![\\w-])(?=${TAG_BODY}*\\bverticalBreakpoint\\b)${TAG_BODY}*\\s\\[?minWidth\\b`,
             message:
                 '`minWidth` was removed from `<kbq-dl>` and is left as is where `verticalBreakpoint` is set too. ' +
                 'It took precedence, so move its value into `verticalBreakpoint` and delete it.'
@@ -71,6 +77,16 @@ export const navbarAndLayout: AreaData = {
             message:
                 '`KbqDlComponent.minWidth` was removed: read and set `verticalBreakpoint` instead. It defaults ' +
                 'to 400, where an unset `minWidth` read `undefined`.'
+        },
+        {
+            anchor: '<kbq-loader-overlay(?![\\w-])',
+            pattern: `<kbq-loader-overlay(?![\\w-])${TAG_BODY}*\\s\\[?(?:transparent|card)(?![\\w-])`,
+            message: LOADER_OVERLAY_DEPRECATED
+        },
+        {
+            anchor: '\\bKbqLoaderOverlay\\b',
+            pattern: '\\.(?:transparent|card)\\s*\\(|setInput\\(\\s*["\'](?:transparent|card)["\']',
+            message: LOADER_OVERLAY_DEPRECATED
         }
     ]
 };

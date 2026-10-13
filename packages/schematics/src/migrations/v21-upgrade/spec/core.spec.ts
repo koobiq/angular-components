@@ -12,6 +12,8 @@ const CAN_COLOR = '`CanColor` was removed';
 const ANIMATION_ENUMS = '`KbqAnimationCurves` and `KbqAnimationDurations` were removed';
 const NO_REPLACEMENT = '`KbqRectangleItem` (left over from the removed navbar-ic)';
 const PRIVATE_MEMBERS = '`KbqPopUp.handleBodyInteraction()` was removed';
+const POP_UP_MEMBERS = '`KbqPopUp.markForCheck()`, `warning` and the protected `closeOnInteraction` were removed';
+const FORM_ELEMENT_ROW = '`KbqFormElement.isRow` was removed';
 const LEGACY_DATE_PIPES = 'The unprefixed date pipes';
 const MC_HIGHLIGHT = 'The `mcHighlight` pipe (`KbqHighlightPipe`) is deprecated';
 const DEPRECATED_HELPERS = '`isDigit()`, `isBoolean()` and `KbqMeasureScrollbarService`';
@@ -257,6 +259,92 @@ describe('v21-upgrade: core', () => {
         });
 
         expect(run.log).toContain(`members.ts\n  ${PRIVATE_MEMBERS}`);
+    });
+
+    it('reports the removed pop-up members used by a subclass of a pop-up or its trigger', async () => {
+        const run = await runV21Upgrade({
+            'trigger.ts': [
+                "import { KbqTooltipTrigger } from '@koobiq/components/tooltip';",
+                'export class HintTrigger extends KbqTooltipTrigger {',
+                '    override updateClassMap(placement = this.placement) {',
+                '        super.updateClassMap(placement);',
+                '        this.instance?.markForCheck();',
+                '    }',
+                '}',
+                ''
+            ].join('\n'),
+            'pop-up.ts': [
+                "import { KbqPopUp } from '@koobiq/components/core';",
+                'export abstract class Panel extends KbqPopUp {',
+                '    refresh() { if (this.warning) this.markForCheck(); }',
+                '}',
+                ''
+            ].join('\n'),
+            'popover.ts': [
+                "import { KbqPopoverComponent } from '@koobiq/components/popover';",
+                'export class Hint extends KbqPopoverComponent {',
+                '    protected override closeOnInteraction = false;',
+                '}',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).toContain(`trigger.ts\n  ${POP_UP_MEMBERS}`);
+        expect(run.log).toContain(`pop-up.ts\n  ${POP_UP_MEMBERS}`);
+        expect(run.log).toContain(`popover.ts\n  ${POP_UP_MEMBERS}`);
+    });
+
+    it('leaves markForCheck() of a change detector alone, in a pop-up subclass too', async () => {
+        const run = await runV21Upgrade({
+            'component.ts': [
+                "import { ChangeDetectorRef, Component, inject } from '@angular/core';",
+                "@Component({ template: '' })",
+                'export class App {',
+                '    private readonly cdr = inject(ChangeDetectorRef);',
+                '    warning = false;',
+                '    markForCheck() { this.cdr.markForCheck(); }',
+                '    warn() { this.warning = true; this.markForCheck(); }',
+                '}',
+                ''
+            ].join('\n'),
+            'tooltip.ts': [
+                "import { KbqTooltipComponent } from '@koobiq/components/tooltip';",
+                'export class Hint extends KbqTooltipComponent {',
+                "    warningText = '';",
+                '    warn(text: string) { this.warningText = text; this.changeDetectorRef.markForCheck(); }',
+                '}',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).not.toContain(POP_UP_MEMBERS);
+    });
+
+    it('reports isRow read from a form element', async () => {
+        const run = await runV21Upgrade({
+            'form.html': '<div class="kbq-form__row" #row="kbqFormElement">{{ row.isRow ? "row" : "" }}</div>\n',
+            'form.ts': [
+                "import { KbqFormElement } from '@koobiq/components/core';",
+                'export const isRow = (element: KbqFormElement) => element.isRow;',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).toContain(`form.html\n  ${FORM_ELEMENT_ROW}`);
+        expect(run.log).toContain(`form.ts\n  ${FORM_ELEMENT_ROW}`);
+    });
+
+    it('leaves isRow of other classes and the other form element members alone', async () => {
+        const run = await runV21Upgrade({
+            'grid.ts': 'export const isRow = (cell: { isRow: boolean }) => cell.isRow;\n',
+            'fieldset.ts': [
+                "import { KbqFormElement } from '@koobiq/components/core';",
+                'export const state = (table: any, element: KbqFormElement) => [table.isRowSelected, element.isFieldSet];',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).not.toContain(FORM_ELEMENT_ROW);
     });
 
     it('rewrites the mcLine and mcListIcon aliases in templates and selectors', async () => {

@@ -13,6 +13,7 @@
  * - `placementChange` — `EventEmitter<string>` → `EventEmitter<KbqPopUpPlacementValues>`.
  * - `content`, `header`, `context`, `modifier` — the `any` in their types became `unknown` or the
  *   real enum.
+ * - `KBQ_TOOLTIP_OPEN_TIME` / `KBQ_TOOLTIP_OPEN_TIME_PROVIDER` — deprecated no-ops, removed in 22.0.0.
  *
  * Warn-only. A narrowed type is fixed by giving the call site the right type, which cannot be derived
  * from the assignment, and the default flip has no call site at all.
@@ -79,6 +80,15 @@ export const warnPatterns: WarnPattern[] = [
             'context is `unknown`, and modifier is KbqEnumValues<TooltipModifier>. Assigning still works; a ' +
             'value read back out needs a cast, and a modifier written as a free-form string has to be one of ' +
             'the enum members.'
+    },
+    {
+        anchor: '\\bKBQ_TOOLTIP_OPEN_TIME',
+        pattern: '\\bKBQ_TOOLTIP_OPEN_TIME(?:_PROVIDER)?\\b',
+        message:
+            'KBQ_TOOLTIP_OPEN_TIME and KBQ_TOOLTIP_OPEN_TIME_PROVIDER are deprecated and will be removed in ' +
+            '22.0.0. The tooltip no longer reads them, so providing or writing them has no effect. Set the ' +
+            'instant-show window with KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, and call KbqTooltipDelayTracker.reset() ' +
+            'to make the next tooltip wait its full enter delay.'
     }
 ];
 

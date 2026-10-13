@@ -3,6 +3,7 @@ import { runV21Upgrade } from '../testing';
 const CVA_MEMBERS = 'KbqCheckbox and KbqToggleComponent no longer implement ControlValueAccessor';
 const ON_TOUCHED = 'KbqCheckbox.onTouched was removed';
 const TRANSITION_STATE = 'TransitionCheckState is no longer exported from @koobiq/components/checkbox';
+const LABEL_TEXT_CHANGE = 'KbqToggleComponent.onLabelTextChange() does nothing now';
 
 describe('v21-upgrade: forms-controls', () => {
     it('reports writeValue() called on a KbqCheckbox query', async () => {
@@ -86,6 +87,46 @@ describe('v21-upgrade: forms-controls', () => {
 
         expect(run.read('checkbox-accessor.ts')).toBe(source);
         expect(run.log).toContain('checkbox-accessor.ts\n  KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR was removed');
+    });
+
+    it('reports onLabelTextChange() called on a toggle', async () => {
+        const source = [
+            "import { KbqToggleComponent } from '@koobiq/components/toggle';",
+            'export class App {',
+            '    readonly toggle = viewChild.required(KbqToggleComponent);',
+            '    rename() { this.toggle().onLabelTextChange(); }',
+            '}',
+            ''
+        ].join('\n');
+        const template = [
+            '<kbq-toggle #toggle="kbqToggle">{{ label }}</kbq-toggle>',
+            '<button (click)="toggle.onLabelTextChange()">Rename</button>',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'toggle-label.ts': source, 'toggle-label.html': template });
+
+        expect(run.read('toggle-label.ts')).toBe(source);
+        expect(run.read('toggle-label.html')).toBe(template);
+        expect(run.log).toContain(`toggle-label.ts\n  ${LABEL_TEXT_CHANGE}`);
+        expect(run.log).toContain(`toggle-label.html\n  ${LABEL_TEXT_CHANGE}`);
+    });
+
+    it('leaves an onLabelTextChange() of your own alone', async () => {
+        const own = [
+            '@Component({',
+            '    template: `<kbq-toggle><span (cdkObserveContent)="onLabelTextChange()">{{ label }}</span></kbq-toggle>`',
+            '})',
+            'export class Labelled {',
+            '    onLabelTextChange() {}',
+            '    refresh() { this.onLabelTextChange(); }',
+            '}',
+            ''
+        ].join('\n');
+        const unrelated =
+            'export const refresh = (field: { onLabelTextChange(): void }) => field.onLabelTextChange();\n';
+        const run = await runV21Upgrade({ 'labelled.ts': own, 'field.ts': unrelated });
+
+        expect(run.log).not.toContain(LABEL_TEXT_CHANGE);
     });
 
     it('moves the TransitionCheckState import from the checkbox entry point to core', async () => {
