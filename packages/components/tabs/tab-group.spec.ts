@@ -1,4 +1,4 @@
-﻿import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { AsyncPipe } from '@angular/common';
 import { Component, DebugElement, OnInit, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick, waitForAsync } from '@angular/core/testing';
@@ -1183,7 +1183,7 @@ class VerticalTabsTestApp {
 @Component({
     imports: [KbqTabsModule],
     template: `
-        <kbq-tab-group>
+        <kbq-tab-group [useStateSaving]="false">
             @for (tab of tabs; track tab) {
                 <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
             }
