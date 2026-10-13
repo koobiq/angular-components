@@ -1190,17 +1190,30 @@ describe('KbqModal', () => {
             await vi.runOnlyPendingTimersAsync();
         });
 
-        it('should not fade the layer of a covered dialog', async () => {
+        it('should hand the layer over to a covering dialog and back at once, without a fade', async () => {
             fixture.componentInstance.open();
             fixture.detectChanges();
             await vi.advanceTimersByTimeAsync(1);
 
-            fixture.componentInstance.open();
+            const covering = fixture.componentInstance.open();
+
             fixture.detectChanges();
 
-            const masks = Array.from(document.querySelectorAll('.kbq-modal-mask'));
+            // The covered dialog stops painting its layer right away, so the two never overlap.
+            let masks = Array.from(document.querySelectorAll('.kbq-modal-mask'));
 
-            expect(masks.length).toBe(2);
+            expect(masks.length).toBe(1);
+            masks.forEach((mask) => expect(mask.className).not.toMatch(/fade-/));
+
+            await vi.advanceTimersByTimeAsync(1);
+            covering.close();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(1);
+            fixture.detectChanges();
+
+            masks = Array.from(document.querySelectorAll('.kbq-modal-mask'));
+
+            expect(masks.length).toBe(1);
             masks.forEach((mask) => expect(mask.className).not.toMatch(/fade-/));
 
             await vi.runOnlyPendingTimersAsync();
