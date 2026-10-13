@@ -58,6 +58,15 @@ export const formsControls: AreaData = {
                 'the toggle reads nothing from its label, so a change of it needs no re-check. Delete the call.'
         },
         {
+            // Protected, so only a subclass reaches it; a read that is already a call is migrated.
+            anchor: '\\bextends\\s+KbqToggleComponent\\b',
+            pattern: '\\bcurrentCheckState\\b(?!\\s*\\()',
+            message:
+                'KbqToggleComponent.currentCheckState is a Signal<TransitionCheckState> now, shared with the host ' +
+                'KbqCheckable: read it as currentCheckState(). It is read-only; a transition goes through the ' +
+                'checked and indeterminate setters. Manual migration required.'
+        },
+        {
             // A plain named import is moved by the rewrite above.
             pattern:
                 `\\bTransitionCheckState\\s+as\\s+\\w+${CHECKBOX_CLAUSE_END}` +

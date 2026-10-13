@@ -599,6 +599,8 @@ None of the removed members was an input, so no template binds them, and of `tri
 
 `KbqToggleComponent.onLabelTextChange()` does nothing now and is deprecated for removal in 22.0.0: delete the call. `v21-upgrade` reports it.
 
+The protected `KbqToggleComponent.currentCheckState` is a `Signal<TransitionCheckState>` shared with the host `KbqCheckable`: a subclass reads it as `currentCheckState()` and changes it through the `checked` and `indeterminate` setters. `v21-upgrade` reports a read without the call in a subclass.
+
 #### Navbar, ellipsis center and description list
 
 | Removed                                   | Use instead                                                                                                     | Migration         |
@@ -880,6 +882,7 @@ In version 21.0.0 `KbqAppSwitcherTrigger` moved `selectedApp` and `selectedSite`
 | `header` / `footer`                                                                  | properties          | removed                                                            |
 | `KbqAppSwitcherComponent.isTrapFocus` / `updateTrapFocus()`                          | public API          | removed                                                            |
 | `KbqAppSwitcherDropdownApp.getIcon()`                                                | public method       | removed                                                            |
+| `KbqAppSwitcherComponent.activeSite` / `activeApp`                                   | protected           | removed: the context of the flyout's `kbqDropdownContent` template |
 | `KbqAppSwitcherListItem.collapsed`                                                   | property            | `ModelSignal<boolean>`                                             |
 | `app` / `site` inputs of `KbqAppSwitcherListItem` / `-DropdownApp` / `-DropdownSite` | optional inputs     | `input.required` signals                                           |
 
@@ -925,6 +928,8 @@ The schematic emits warnings for what cannot be rewritten safely:
 **`header` / `footer`**: removed. The popup never rendered either, so the value was pushed into the overlay and dropped — delete the usage.
 
 **`isTrapFocus` / `updateTrapFocus()`**: removed from `KbqAppSwitcherComponent`. Its template never bound `[cdkTrapFocus]`, so neither did anything.
+
+**`activeSite` / `activeApp`** of a `KbqAppSwitcherComponent` subclass: removed. Each flyout of another site or group reads its site and app from the context of its `kbqDropdownContent` template, which `kbqDropdownTriggerData` fills.
 
 **`KbqAppSwitcherDropdownApp.getIcon()`**: removed. Inline markup is sanitized by `KbqAppSwitcherIconSanitizer` and rendered by the component itself.
 

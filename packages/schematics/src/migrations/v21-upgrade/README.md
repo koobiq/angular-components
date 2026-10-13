@@ -129,7 +129,8 @@ file that names `KbqCheckbox`, `KbqToggleComponent` or their tags:
   `checked` / `disabled`, listen to `(change)`, or call it on the host `KbqCheckable`;
 - a use of `.onTouched` (except on `this`), checkbox only: forms never called it, delete it;
 - a call of `.onLabelTextChange()` (except on `this`), toggle only: it does nothing now and is deprecated for
-  removal in 22.0.0, delete it.
+  removal in 22.0.0, delete it;
+- a read of `currentCheckState` without the call in a class that extends `KbqToggleComponent`: it is a signal now.
 
 **Navbar, ellipsis center, description list and loader overlay** — rewrites:
 
