@@ -3,9 +3,12 @@ import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors } f
 import { PasswordValidators } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
-/** Allows printable ASCII only: latin letters, digits, spaces and special characters. */
+/**
+ * Allows printable ASCII only: latin letters, digits, spaces and special characters. An empty password fails too,
+ * as it fails the other rules.
+ */
 const latinAndSpecialSymbols = ({ value }: AbstractControl): ValidationErrors | null =>
-    typeof value === 'string' && /[^\x20-\x7E]/.test(value) ? { latinAndSpecialSymbols: true } : null;
+    typeof value === 'string' && !/^[\x20-\x7E]+$/.test(value) ? { latinAndSpecialSymbols: true } : null;
 
 /**
  * @title Input password
