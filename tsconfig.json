@@ -107,7 +107,8 @@
         "transpileOnly": true,
         "compilerOptions": {
             "types": ["node"],
-            "module": "CommonJS"
+            "module": "CommonJS",
+            "moduleResolution": "node"
         }
     },
     "angularCompilerOptions": {
