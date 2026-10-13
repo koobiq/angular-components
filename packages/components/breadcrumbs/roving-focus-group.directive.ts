@@ -92,7 +92,10 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
 
     /** @docs-private */
     handleBlur() {
+        if (!this.isTabbingBackOut()) return;
+
         this.isTabbingBackOut.set(false);
+        this.syncTabIndex();
     }
 
     /** @docs-private */
@@ -131,6 +134,13 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
     /** @docs-private */
     onItemShiftTab() {
         this.isTabbingBackOut.set(true);
+        this.syncTabIndex();
+    }
+
+    // The browser picks the Shift+Tab target right after the keydown, and the `focusout` that follows also
+    // comes before the host binding renders, so each latch transition writes the attribute at once.
+    private syncTabIndex(): void {
+        this.elementRef.nativeElement.setAttribute('tabindex', String(this.tabIndex));
     }
 
     /**

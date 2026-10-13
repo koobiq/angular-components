@@ -431,20 +431,43 @@ describe(KbqBreadcrumbs.name, () => {
             expect(nativeElement.style.outline).toBe('');
         });
 
-        it('should re-enter the tab order once focus has left after a Shift+Tab', () => {
+        it('should leave the tab order as soon as Shift+Tab is pressed, before anything renders', () => {
             const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
             const { nativeElement: host } = getBreadcrumbsDebugElement(fixture.debugElement);
             const anchor = fixture.debugElement.query(By.css('a[kbq-button]')).nativeElement;
 
             expect(host.getAttribute('tabindex')).toBe('0');
 
+            // A browser moves the focus right after the keydown, and the `focusout` comes before any render.
             dispatchEvent(anchor, new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
-            fixture.detectChanges();
 
             expect(host.getAttribute('tabindex')).toBe('-1');
 
             // `blur` does not bubble, so the latch has to be released by `focusout`.
             dispatchEvent(anchor, new FocusEvent('focusout', { bubbles: true }));
+
+            expect(host.getAttribute('tabindex')).toBe('0');
+
+            fixture.detectChanges();
+
+            expect(host.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('should stay out of the tab order across a render until focus leaves after a Shift+Tab', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
+            const { nativeElement: host } = getBreadcrumbsDebugElement(fixture.debugElement);
+            const anchor = fixture.debugElement.query(By.css('a[kbq-button]')).nativeElement;
+
+            // A Shift+Tab the page prevents leaves the focus in place, so a render lands before the `focusout`.
+            dispatchEvent(anchor, new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true }));
+            fixture.detectChanges();
+
+            expect(host.getAttribute('tabindex')).toBe('-1');
+
+            dispatchEvent(anchor, new FocusEvent('focusout', { bubbles: true }));
+
+            expect(host.getAttribute('tabindex')).toBe('0');
+
             fixture.detectChanges();
 
             expect(host.getAttribute('tabindex')).toBe('0');

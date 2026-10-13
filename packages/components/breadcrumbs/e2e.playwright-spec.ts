@@ -86,6 +86,25 @@ test.describe('KbqBreadcrumbsModule', () => {
     });
 });
 
+test.describe('KbqBreadcrumbs keyboard', () => {
+    // jsdom performs no sequential focus navigation, so only a real browser shows where Shift+Tab lands.
+    test('should leave the trail on Shift+Tab from an item', async ({ page }) => {
+        await page.goto('/E2eBreadcrumbsInForm');
+
+        const trail = page.getByTestId('e2eBreadcrumbsForm').locator('.kbq-breadcrumbs');
+        const isFocusInTrail = () => trail.evaluate((element) => element.contains(document.activeElement));
+
+        await page.getByTestId('e2eFirstField').focus();
+        await page.keyboard.press('Shift+Tab');
+
+        await expect(trail.locator('.kbq-breadcrumb-item').first()).toBeFocused();
+
+        await page.keyboard.press('Shift+Tab');
+
+        await expect.poll(isFocusInTrail).toBe(false);
+    });
+});
+
 test.describe('KbqBreadcrumbs inside a form', () => {
     // A `<button>` defaults to `type="submit"`, which makes it a candidate for the form's default
     // button — the one the browser activates on Enter in a field. Breadcrumbs navigate, so none of
