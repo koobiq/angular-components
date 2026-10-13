@@ -2314,6 +2314,24 @@ describe('KbqTreeSelect', () => {
                     );
                 });
 
+                it('should not fall back to the form-field label when aria-labelledby is set to an empty string', async () => {
+                    fixture.destroy();
+
+                    const labelledFixture = TestBed.createComponent(TreeSelectWithAriaName);
+
+                    labelledFixture.componentInstance.label = 'Dish';
+                    labelledFixture.componentInstance.ariaLabelledby = '';
+                    labelledFixture.componentInstance.ariaLabel = 'Pick a dish';
+                    labelledFixture.detectChanges();
+                    await vi.runOnlyPendingTimersAsync();
+
+                    const labelledSelect = getTreeSelectElement(labelledFixture);
+                    const label = labelledFixture.debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
+
+                    expect(labelledSelect.getAttribute('aria-labelledby')).not.toBe(label.id);
+                    expect(labelledSelect.getAttribute('aria-label')).toBe('Pick a dish');
+                });
+
                 it('should have no axe violations when named only by the placeholder', async () => {
                     // axe-core schedules its work on timers.
                     vi.useRealTimers();

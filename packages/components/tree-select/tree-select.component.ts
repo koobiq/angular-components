@@ -485,7 +485,7 @@ export class KbqTreeSelect
      * @internal
      */
     protected get resolvedAriaLabelledby(): string | null {
-        return this.ariaLabelledby() || this.parentFormField?.labelId() || null;
+        return this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null;
     }
 
     /** Object used to control when error messages are shown. */
