@@ -757,7 +757,7 @@ describe('KbqToggle', () => {
     });
 
     describe('with touched state', () => {
-        it('should mark the control as touched on focus without changing its value', async () => {
+        it('should mark the control as touched once focus leaves it, without changing its value', async () => {
             const fixture = createComponent(ToggleWithFormDirectives);
 
             fixture.detectChanges();
@@ -770,6 +770,12 @@ describe('KbqToggle', () => {
             expect(ngModel.touched).toBe(false);
 
             TestBed.inject(FocusMonitor).focusVia(inputElement, 'keyboard');
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            // A `required` error must not show while the control is only focused.
+            expect(ngModel.touched).toBe(false);
+
             inputElement.blur();
             fixture.detectChanges();
             await fixture.whenStable();

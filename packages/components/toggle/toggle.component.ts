@@ -247,8 +247,10 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
         this.focusMonitor
             .monitor(this.elementRef.nativeElement, true)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            // Interacting with the control marks it as touched even when the value does not change.
-            .subscribe((origin) => origin && this.checkable.onTouched());
+            // `FocusMonitor` emits the origin on focus and `null` on blur, so the control becomes touched when
+            // focus leaves it, as a checkbox does: marking it on the way in shows a `required` error before any
+            // interaction.
+            .subscribe((origin) => !origin && this.checkable.onTouched());
     }
 
     ngOnDestroy() {
