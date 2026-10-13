@@ -304,8 +304,8 @@ export const DOCS_SEO_DESCRIPTIONS = {
         "ru": "Поле с временем (таймпикер) — это специальное поле ввода, которое позволяет вводить только время."
     },
     "timezone": {
-        "en": "kbq-timezone-select is a timezone selection component that extends kbq-select. It has the same capabilities, except for multiple selection. It can work with both kbq-timezone-option and kbq-option.",
-        "ru": "kbq-timezone-select - компонент выбора таймзоны является расширением kbq-select. Имеет те же возможности, за исключением множественного выбора. Может работать как с kbq-timezone-option, так и с…"
+        "en": "kbq-timezone-select is a timezone selection component that extends kbq-select. It has the same capabilities, except for multiple selection — [multiple]=\"true\" and multiline are rejected with an…",
+        "ru": "kbq-timezone-select - компонент выбора таймзоны является расширением kbq-select. Имеет те же возможности, за исключением множественного выбора — [multiple]=\"true\" и multiline не поддерживаются и…"
     },
     "title": {
         "en": "The kbq-title directive shows a tooltip with the full text when the element's content does not fit and is truncated with an ellipsis. The tooltip appears only on actual overflow — on hover or…",

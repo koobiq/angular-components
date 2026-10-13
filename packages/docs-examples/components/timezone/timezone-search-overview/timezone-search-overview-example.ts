@@ -8,7 +8,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import {
     collapseOtherCountries,
     getZonesGroupedByCountry,
-    KBQ_TIMEZONE_CONFIGURATION,
+    KBQ_TIMEZONE_LOCALE_CONFIGURATION,
     kbqResolveHostCountry,
     KbqTimezoneGroup,
     KbqTimezoneModule,
@@ -74,7 +74,7 @@ export class TimezoneSearchOverviewExample implements OnInit {
     protected searchTokens: string[] = [];
 
     private readonly data: KbqTimezoneZone[];
-    private readonly configuration = kbqInjectLocaleConfiguration('timezone', KBQ_TIMEZONE_CONFIGURATION);
+    private readonly configuration = kbqInjectLocaleConfiguration('timezone', KBQ_TIMEZONE_LOCALE_CONFIGURATION);
 
     constructor() {
         this.data = timezones.map(({ associatedZones, ...zone }) => ({
