@@ -691,6 +691,9 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
 
             trigger = component.trigger().nativeElement;
+            // jsdom lays nothing out: give the trigger a box the pointer can be inside of.
+            trigger.getBoundingClientRect = () =>
+                ({ left: 0, top: 0, right: 100, bottom: 30, x: 0, y: 0, width: 100, height: 30 }) as DOMRect;
         });
 
         it('should hide a visible tooltip when the pop-up opens', async () => {
@@ -786,6 +789,21 @@ describe('KbqTooltip', () => {
             await vi.runOnlyPendingTimersAsync();
             // Unlike the replay above, the pointer moves off the host, e.g. into the pop-up's panel.
             dispatchMouseEvent(trigger, 'mouseleave', 100, 100);
+            component.popup().close();
+            component.popup().detach();
+
+            await showByHover(fixture, trigger);
+
+            expect(overlayContainerElement.textContent).toContain('SIBLING');
+        });
+
+        it('should count a pointer that left across the right edge as gone', async () => {
+            vi.useFakeTimers();
+
+            component.popup().open();
+            await vi.runOnlyPendingTimersAsync();
+            // A box covers [left, right), so the first point past it is its right edge.
+            dispatchMouseEvent(trigger, 'mouseleave', 100, 10);
             component.popup().close();
             component.popup().detach();
 
