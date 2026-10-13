@@ -1,4 +1,14 @@
-import { afterNextRender, ANIMATION_MODULE_TYPE, DestroyRef, inject, InjectionToken, Injector } from '@angular/core';
+import { isPlatformServer } from '@angular/common';
+import {
+    afterNextRender,
+    ANIMATION_MODULE_TYPE,
+    DestroyRef,
+    inject,
+    InjectionToken,
+    Injector,
+    MAX_ANIMATION_TIMEOUT,
+    PLATFORM_ID
+} from '@angular/core';
 import { KBQ_WINDOW } from '../tokens/window';
 
 /** Configuration of the motion of Koobiq components. */
@@ -47,8 +57,9 @@ export function kbqAnimationsSettled(element: Element | null | undefined): Promi
 
 /**
  * Calls `callback` once the CSS animations and transitions running on an element after the next render
- * have finished, and right after that render when none runs (see `kbqAnimationsSettled`). The wait ends
- * with the injector; `destroy()` cancels it.
+ * have finished, and right after that render when none runs (see `kbqAnimationsSettled`). An animation
+ * that does not finish in `MAX_ANIMATION_TIMEOUT` (a paused one) is no longer waited for. On the server,
+ * where nothing renders, calls back in a microtask. The wait ends with the injector; `destroy()` cancels it.
  * @docs-private
  */
 export function kbqAfterAnimations(
@@ -62,28 +73,33 @@ export function kbqAfterAnimations(
     if (destroyRef.destroyed) return { destroy: () => {} };
 
     let active = true;
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
 
-    const renderRef = afterNextRender(
-        () => {
-            const settled = kbqAnimationsSettled(element());
+    const settle = (): void => {
+        const settled = kbqAnimationsSettled(element());
 
-            if (!settled) return finish();
+        if (!settled) return finish();
 
-            settled.then(finish);
-        },
-        { injector }
-    );
+        timeoutId = setTimeout(finish, injector.get(MAX_ANIMATION_TIMEOUT));
+        settled.then(finish);
+    };
 
-    const unregister = destroyRef.onDestroy(() => {
+    // `afterNextRender` does nothing on the server.
+    const server = isPlatformServer(injector.get(PLATFORM_ID));
+    const renderRef = server ? null : afterNextRender(settle, { injector });
+
+    const stop = (): void => {
         active = false;
-        renderRef.destroy();
-    });
+        renderRef?.destroy();
+        clearTimeout(timeoutId);
+    };
+
+    const unregister = destroyRef.onDestroy(stop);
 
     const destroy = (): void => {
         if (!active) return;
 
-        active = false;
-        renderRef.destroy();
+        stop();
         unregister();
     };
 
@@ -93,6 +109,8 @@ export function kbqAfterAnimations(
         destroy();
         callback();
     };
+
+    if (server) Promise.resolve().then(finish);
 
     return { destroy };
 }

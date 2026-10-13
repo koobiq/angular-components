@@ -109,7 +109,7 @@ describe('KbqSidepanelService', () => {
         sidepanelRef.afterOpened().subscribe(afterOpenedCallback);
 
         rootComponentFixture.detectChanges();
-        await vi.runOnlyPendingTimersAsync();
+        await vi.advanceTimersByTimeAsync(0);
 
         expect(afterOpenedCallback).not.toHaveBeenCalled();
 

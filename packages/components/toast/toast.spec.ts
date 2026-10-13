@@ -706,7 +706,7 @@ describe('KbqToastService', () => {
             service.hide(first.id);
             service.hide(second.id);
             render();
-            await vi.runOnlyPendingTimersAsync();
+            await vi.advanceTimersByTimeAsync(0);
             expect(hostOf(second).isConnected).toBe(false);
             expect(detach).not.toHaveBeenCalled();
 
