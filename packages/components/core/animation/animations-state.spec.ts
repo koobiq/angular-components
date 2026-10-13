@@ -1,6 +1,57 @@
 import { ApplicationRef, Injector, MAX_ANIMATION_TIMEOUT, PLATFORM_ID } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { kbqAfterAnimations } from './animations-state';
+import { kbqAfterAnimations, kbqAnimationsSettled } from './animations-state';
+
+/** An element running one paused animation: a finite end, but `finished` never settles. */
+const elementWithPausedAnimation = (): HTMLElement => {
+    const element = document.createElement('div');
+
+    element.getAnimations = () => [
+        {
+            effect: { getComputedTiming: () => ({ endTime: 300 }) },
+            finished: new Promise(() => {})
+        } as unknown as Animation
+    ];
+
+    return element;
+};
+
+describe('kbqAnimationsSettled', () => {
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    it('should settle a paused animation once the timeout has passed', async () => {
+        vi.useFakeTimers();
+
+        const settled = vi.fn();
+
+        kbqAnimationsSettled(elementWithPausedAnimation(), 1000)!.then(settled);
+
+        await vi.advanceTimersByTimeAsync(999);
+        expect(settled).not.toHaveBeenCalled();
+
+        await vi.advanceTimersByTimeAsync(1);
+        expect(settled).toHaveBeenCalledTimes(1);
+    });
+
+    it('should clear the timeout once the animations have finished', async () => {
+        vi.useFakeTimers();
+
+        const element = document.createElement('div');
+
+        element.getAnimations = () => [
+            {
+                effect: { getComputedTiming: () => ({ endTime: 300 }) },
+                finished: Promise.resolve()
+            } as unknown as Animation
+        ];
+
+        await kbqAnimationsSettled(element, 1000);
+
+        expect(vi.getTimerCount()).toBe(0);
+    });
+});
 
 describe('kbqAfterAnimations', () => {
     afterEach(() => {
@@ -10,17 +61,9 @@ describe('kbqAfterAnimations', () => {
     it('should stop waiting for an animation that never finishes after MAX_ANIMATION_TIMEOUT', async () => {
         vi.useFakeTimers();
 
-        const element = document.createElement('div');
+        const element = elementWithPausedAnimation();
         const callback = vi.fn();
         const timeout = TestBed.inject(MAX_ANIMATION_TIMEOUT);
-
-        // A paused animation: a finite end, but `finished` never settles.
-        element.getAnimations = () => [
-            {
-                effect: { getComputedTiming: () => ({ endTime: 300 }) },
-                finished: new Promise(() => {})
-            } as unknown as Animation
-        ];
 
         kbqAfterAnimations(() => element, callback, TestBed.inject(Injector));
         TestBed.inject(ApplicationRef).tick();
