@@ -607,6 +607,80 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).not.toContain('codeFiles=');
     });
 
+    it('rewrites canLoad/codeFiles only on <kbq-code-block>, past a > inside a quoted value', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+        const template = [
+            '<kbq-code-block *ngIf="a > b" [canLoad]="x" codeFiles="a.ts"></kbq-code-block>',
+            '<kbq-code-block canLoad [codeFiles]="files"></kbq-code-block>',
+            '<my-loader [canLoad]="x" canLoad="true" [codeFiles]="files" codeFiles="a.ts"></my-loader>',
+            ''
+        ].join('\n');
+
+        appTree.overwrite(html, template);
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toBe(
+            [
+                '<kbq-code-block *ngIf="a > b" [canDownload]="x" files="a.ts"></kbq-code-block>',
+                '<kbq-code-block canDownload [files]="files"></kbq-code-block>',
+                '<my-loader [canLoad]="x" canLoad="true" [codeFiles]="files" codeFiles="a.ts"></my-loader>',
+                ''
+            ].join('\n')
+        );
+    });
+
+    it('keeps and reports an alias on a <kbq-code-block> that binds its replacement too', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+        const template = [
+            '<kbq-code-block [canLoad]="x" *ngIf="a > b" [canDownload]="y" [codeFiles]="f"></kbq-code-block>',
+            '<kbq-code-block codeFiles="a.ts" [title]="n > 0 ? \'a\' : \'b\'" [files]="files"></kbq-code-block>',
+            ''
+        ].join('\n');
+        const messages: string[] = [];
+
+        appTree.overwrite(html, template);
+        runner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toBe(template.replace('[codeFiles]="f"', '[files]="f"'));
+        expect(messages.some((m) => m.includes('binds `canLoad` next to `canDownload`'))).toBe(true);
+    });
+
+    it('does not report a <kbq-code-block> that binds each input once', async () => {
+        const [first] = projects.keys();
+        const { html } = paths(projects.get(first)!);
+        const messages: string[] = [];
+
+        appTree.overwrite(
+            html,
+            '<kbq-code-block [canLoad]="allowed && canDownload" [codeFiles]="all ? files : []">canDownload files</kbq-code-block>\n'
+        );
+        runner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(html)).toBe(
+            '<kbq-code-block [canDownload]="allowed && canDownload" [files]="all ? files : []">canDownload files</kbq-code-block>\n'
+        );
+        expect(messages.some((m) => m.includes('binds `canLoad` next to `canDownload`'))).toBe(false);
+    });
+
     it('warns about KbqCodeBlock.scrollableCodeContent (use scrollTo())', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

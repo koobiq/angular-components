@@ -10,7 +10,8 @@ const CHECKBOX_CLAUSE_END = `(?=[^}]*\\}\\s*from\\s*['"]${CHECKBOX}['"])`;
 
 /**
  * Removed in 21.0.0: the unused ControlValueAccessor members of KbqCheckbox and KbqToggleComponent, and the
- * re-export of `TransitionCheckState` from the checkbox entry point.
+ * re-export of `TransitionCheckState` from the checkbox entry point. Also reports
+ * `KbqToggleComponent.onLabelTextChange()`, deprecated for removal in 22.0.0.
  */
 export const formsControls: AreaData = {
     tsReplacements: [
@@ -48,6 +49,13 @@ export const formsControls: AreaData = {
                 'KbqCheckbox.onTouched was removed: forms never called it, the KbqCheckable host directive ' +
                 'tracks touched. Drop the call or assignment and read touched from the bound [formControl] / ' +
                 '[(ngModel)]. Manual migration required.'
+        },
+        {
+            anchor: `\\bKbqToggleComponent\\b|<kbq-toggle\\b|["']kbqToggle["']`,
+            pattern: `${NOT_ON_THIS}\\.onLabelTextChange\\s*\\(`,
+            message:
+                'KbqToggleComponent.onLabelTextChange() does nothing now and is deprecated for removal in 22.0.0: ' +
+                'the toggle reads nothing from its label, so a change of it needs no re-check. Delete the call.'
         },
         {
             // A plain named import is moved by the rewrite above.

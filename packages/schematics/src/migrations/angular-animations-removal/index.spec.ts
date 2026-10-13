@@ -82,6 +82,30 @@ describe(SCHEMATIC_NAME, () => {
         expect(log).toContain('1 use(s) reported');
     });
 
+    it('reports the animation state of the content panel container, not its current members', async () => {
+        const [first] = projects.keys();
+        const messages = collectLogs();
+
+        appTree.create(
+            filePath(projects.get(first)!, 'content-panel.ts'),
+            "import { KbqContentPanelContainer } from '@koobiq/components/content-panel';\n" +
+                'export class Container extends KbqContentPanelContainer {\n' +
+                '    protected readonly shifted = computed(() => this.contentAnimationState().value);\n' +
+                '}\n'
+        );
+        appTree.create(
+            filePath(projects.get(first)!, 'content.ts'),
+            'export const margin = (container: any) => [container.contentMargin(), container.contentAnimating()];\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('KbqContentPanelContainer.contentAnimationState was removed');
+        expect(log).toContain('1 use(s) reported');
+    });
+
     it('suggests KBQ_ANIMATIONS_CONFIG in place of the no-op animations', async () => {
         const [first] = projects.keys();
         const messages = collectLogs();

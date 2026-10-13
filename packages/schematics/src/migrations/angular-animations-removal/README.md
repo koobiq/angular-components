@@ -26,6 +26,7 @@ Nothing is rewritten: what replaces a member depends on what the code did with t
 | `onAnimationStart`, `onAnimationDone`, `onAnimation`, `onTranslateTab*`      | `KbqSidebar.stateChanged`, `KbqTabGroup.animationDone`, the ref's outputs    |
 | `animationStateChanged`                                                      | The ref: `afterOpened()`, `beforeClosed()`, `afterClosed()`                  |
 | `animationState`, `animationTransform`, `setAnimationState()`                | The ref's outputs; `KbqSidebar.stateChanged`                                 |
+| `contentAnimationState` of `KbqContentPanelContainer`                        | `isOpened()`                                                                 |
 | `KbqToastService.animation`                                                  | Remove: the overlay detaches once the last exit has ended                    |
 | `NoopAnimationsModule`, `provideNoopAnimations()`                            | `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` |
 | `provideAnimations()`, `provideAnimationsAsync()`, `BrowserAnimationsModule` | Remove, unless the application declares `animations: [...]` itself           |

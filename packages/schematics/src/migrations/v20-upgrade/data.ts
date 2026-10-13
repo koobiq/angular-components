@@ -185,6 +185,18 @@ export const tsReplacements: Replacement[] = [
     }
 ];
 
+// One step inside an opening tag: a quoted value is taken whole, so neither `>` nor an attribute-like word inside
+// it counts.
+const TAG_BODY = `(?:[^<>"']|"[^"]*"|'[^']*')`;
+
+// The start of an attribute on an opening `<kbq-code-block>` tag that does not bind `name` itself.
+const codeBlockTagWithout = (name: string): string =>
+    String.raw`(<kbq-code-block(?![\w-])(?!${TAG_BODY}*[\s\[]${name}[\]\s=/>])${TAG_BODY}*?\s\[?)`;
+
+// Either attribute of a pair on one `<kbq-code-block>` tag.
+const codeBlockTagWith = (first: string, second: string): string =>
+    String.raw`<kbq-code-block(?![\w-])(?=${TAG_BODY}*[\s\[]${first}[\]\s=/>])(?=${TAG_BODY}*[\s\[]${second}[\]\s=/>])`;
+
 /** Template (HTML / inline-template string) replacements — selectors + attributes. */
 export const templateReplacements: Replacement[] = [
     // ─── Selector renames (component tag names) ───────────────────────────
@@ -242,12 +254,10 @@ export const templateReplacements: Replacement[] = [
     { from: '(<kbq-search-expandable\\b[^>]*?\\s)tooltip="', to: '$1tooltipText="' },
 
     // ─── KbqCodeBlock deprecated input renames ────────────────────────────
-    // Scoped strictly to the attribute form (`[x]` binding or `x="…"` static)
-    // so the common words `canDownload` / `files` elsewhere are never touched.
-    { from: '\\[canLoad\\]', to: '[canDownload]' },
-    { from: '\\bcanLoad="', to: 'canDownload="' },
-    { from: '\\[codeFiles\\]', to: '[files]' },
-    { from: '\\bcodeFiles="', to: 'files="' },
+    // `[x]="…"`, `x="…"` and a valueless `x`, only on a `<kbq-code-block>` that does not bind the replacement
+    // as well: the two bindings would end up under one name. Such a tag is reported below.
+    { from: String.raw`${codeBlockTagWithout('canDownload')}canLoad(?=\]?[\s=/>])`, to: '$1canDownload' },
+    { from: String.raw`${codeBlockTagWithout('files')}codeFiles(?=\]?[\s=/>])`, to: '$1files' },
 
     // ─── Tooltip warning trigger → kbqTooltip + modifier ───────────────────
     // Two-step: first add modifier attribute, then rename binding key.
@@ -329,6 +339,12 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqCodeBlock.canLoad → canDownload and .codeFiles → files. Template bindings are auto-migrated; ' +
             'update any programmatic (TypeScript) access manually.'
+    },
+    {
+        pattern: `${codeBlockTagWith('canLoad', 'canDownload')}|${codeBlockTagWith('codeFiles', 'files')}`,
+        message:
+            'A <kbq-code-block> that binds `canLoad` next to `canDownload`, or `codeFiles` next to `files`, was ' +
+            'left untouched: merge each pair into one `canDownload` / `files` binding. Manual migration required.'
     },
     {
         pattern: '\\[initialValue\\]|\\binitialValue="',

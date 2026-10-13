@@ -27,7 +27,8 @@ move the actions out of the trigger into a `kbq-accordion-header__actions` eleme
 - Rewrites `small` on an icon button to `size`: `[small]="true"` and `small="true"` → `size="compact"`,
   `[small]="false"` → `size="normal"`, any other binding → `[size]="(expr) ? 'compact' : 'normal'"`.
 - Rewrites the `kbq-icon-button_small` class to `kbq-icon-button_compact` in styles and code.
-- Reports a code block that binds an alias next to its replacement, an icon button that sets both
+- Reports a code block that binds an alias next to its replacement or binds `canDownload` or `files` twice
+  (what the 20.0.0 migration made of such a pair), an icon button that sets both
   `small` and `size` or a static `small` other than `"true"`, programmatic `canLoad` / `codeFiles` /
   `canLoadInput` / `codeFilesInput` / `small`, and `scrollableCodeContent`, which is removed.
 
@@ -57,6 +58,11 @@ Reports:
   what to do instead;
 - a call of `.handleBodyInteraction()`, and a read of `.isSpecialFormatForRULocale()` or `.roundingOptions`,
   private members of the number pipes now;
+- in a subclass of a pop-up or of its trigger, `markForCheck()`, `warning` or `closeOnInteraction` on `this`,
+  `super` or `instance`, or overridden: delete a `markForCheck()` after `updateClassMap()` or a visibility change,
+  which re-render the pop-up, and use `changeDetectorRef.markForCheck()` or `instance.detectChanges()` for another
+  field;
+- `.isRow` in a file that names `KbqFormElement` or `kbqFormElement`: check the `kbq-form__row` class;
 - deprecated for removal in 22.0.0: the unprefixed date pipes and their `ImpurePipe` twins (in templates and as
   imported classes), the `mcHighlight` pipe, `isDigit`, `isBoolean`, `KbqMeasureScrollbarService`,
   `FocusKeyManager.getFocusOrigin()` and `dateInput` of the datepicker locale configuration, each with its
@@ -121,9 +127,11 @@ file that names `KbqCheckbox`, `KbqToggleComponent` or their tags:
 
 - a use of `.writeValue`, `.registerOnChange`, `.registerOnTouched` or `.setDisabledState` (except on `this`): set
   `checked` / `disabled`, listen to `(change)`, or call it on the host `KbqCheckable`;
-- a use of `.onTouched` (except on `this`), checkbox only: forms never called it, delete it.
+- a use of `.onTouched` (except on `this`), checkbox only: forms never called it, delete it;
+- a call of `.onLabelTextChange()` (except on `this`), toggle only: it does nothing now and is deprecated for
+  removal in 22.0.0, delete it.
 
-**Navbar, ellipsis center and description list** — rewrites:
+**Navbar, ellipsis center, description list and loader overlay** — rewrites:
 
 - `minWidth` → `verticalBreakpoint` on `<kbq-dl>`, as a binding or a static attribute, unless the tag sets
   `verticalBreakpoint` too;
@@ -139,6 +147,8 @@ Reports:
 - `.resizeStream` in a file that names `KbqEllipsisCenterDirective`: delete it;
 - a `<kbq-dl>` that sets both `minWidth` and `verticalBreakpoint`: `minWidth` took precedence, move its value;
 - `.minWidth()` and `setInput('minWidth', …)` in a file that names `KbqDlComponent`: use `verticalBreakpoint`.
+- `transparent` and `card` on `<kbq-loader-overlay>`, and their reads and `setInput()` in a file that names
+  `KbqLoaderOverlay`: deprecated for removal in 22.0.0, set `surface` instead.
 
 **Popover**
 
@@ -180,6 +190,10 @@ Reports:
 - arguments of those mixins that hold parentheses;
 - `kbq-contrast()`, `kbq-palette()`, `kbq-color()` and `kbq-typography-config()`;
 - `kbq-light-theme()` and `kbq-dark-theme()`, deprecated for removal in 22.0.0;
+- deprecated for removal in 22.0.0 too, the `kbq-scrollbar` class, which no library component carries any more (a
+  selector, a `class` attribute or host property, `[class.…]`, an `[ngClass]` key, `classList` and `addClass()`),
+  `kbq-scrollbar-theme()`, and its `--kbq-scrollbar-*` variables the new scrollbar does not share: use
+  `kbqNativeScrollbar` or `<kbq-scrollbar>`;
 - a `@use`, `@import` or `@forward` of `@koobiq/components/core/styles/tokens`: load the design tokens modules
   directly;
 - a load of the removed modules `core/styles/functions` (its index, `number`, `string`),
@@ -204,13 +218,20 @@ Reports:
 - Reports a file that declares both a removed and a new name, and `dispatchScrollEvent` in a file that names
   `KbqToastContainerComponent` or uses `<kbq-toast-container>`: delete the call.
 
-**Tree** — rewrites nothing; reports:
+**Tree** — rewrites the listeners of the outputs deprecated for removal in 22.0.0, which emit the same events as
+their replacements: `(onSelectAll)` → `(selectAllChange)` and `(onCopy)` → `(copyChange)` on
+`<kbq-tree-selection>`, `(onSelectionChange)` → `(selectionChange)` on `<kbq-tree-option>`. Reports:
 
 - `.isUserInput` in a file that names `KbqTreeOptionChange`, and `$event.isUserInput` bound to an output of
   `<kbq-tree-option>`: it was always `false`, delete the check;
-- `new KbqTreeOptionChange(…)` with a second argument, and a `super(…)` call with one in a subclass: drop it.
+- `new KbqTreeOptionChange(…)` with a second argument, and a `super(…)` call with one in a subclass: drop it;
+- `.onSelectAll` / `.onCopy` in a file that names `KbqTreeSelection`, and `.onSelectionChange` in a file that
+  names `KbqTreeOption`: use the replacement output;
+- `.mostRecentTreeNode` in a file that imports `@koobiq/components/tree`: deprecated, nothing reads it.
 
-The `isUserInput` of `KbqOptionSelectionChange` and `KbqTreeSelectChange` stays and is not reported.
+The `isUserInput` of `KbqOptionSelectionChange` and `KbqTreeSelectChange` stays and is not reported, nor are the
+`onSelectAll` and `onCopy` of `kbq-list-selection` and the `onSelectAll` of `kbq-tree-select`, which are not
+deprecated.
 
 ## Running it manually
 

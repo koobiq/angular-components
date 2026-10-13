@@ -117,6 +117,49 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('emits KbqPopUpPlacementValues instead of string');
     });
 
+    it('reports the deprecated open-time token', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { inject } from '@angular/core';\n" +
+                "import { KBQ_TOOLTIP_OPEN_TIME } from '@koobiq/components/tooltip';\n" +
+                'export class App { reset() { inject(KBQ_TOOLTIP_OPEN_TIME).value = 0; } }\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('KBQ_TOOLTIP_OPEN_TIME_PROVIDER are deprecated');
+    });
+
+    it('reports the open-time provider but not a file already on the instant-show window', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const migrated = ts.replace(/[^/]+$/, 'migrated.ts');
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KBQ_TOOLTIP_OPEN_TIME_PROVIDER } from '@koobiq/components/tooltip';\n" +
+                'export const providers = [KBQ_TOOLTIP_OPEN_TIME_PROVIDER];\n'
+        );
+        appTree.create(
+            migrated,
+            "import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqTooltipDelayTracker } from '@koobiq/components/tooltip';\n" +
+                'export const providers = [{ provide: KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, useValue: 500 }];\n' +
+                'export const reset = (tracker: KbqTooltipDelayTracker) => tracker.reset();\n'
+        );
+
+        await run(first);
+
+        const reports = messages.filter((message) => message.includes('KBQ_TOOLTIP_OPEN_TIME_PROVIDER are deprecated'));
+
+        expect(reports).toHaveLength(1);
+        expect(reports[0]).toContain(ts);
+    });
+
     it('says nothing at all when the project does not use tooltips', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

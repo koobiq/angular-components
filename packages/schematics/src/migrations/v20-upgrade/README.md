@@ -29,9 +29,10 @@ from three ordered tables in `data.ts`:
   `<kbq-datepicker-toggle-icon>`, `<kbq-risk-level>` → `<kbq-badge>`,
   `<kbq-navbar-ic>` → `<kbq-navbar>`, `[kbqWarningTooltip]` →
   `kbqTooltipModifier="warning" [kbqTooltip]`, `kbqFormFieldWithoutBorders` →
-  `noBorders`, the deprecated `KbqCodeBlock` input attributes
-  (`[canLoad]` / `canLoad=` → `canDownload`, `[codeFiles]` / `codeFiles=` →
-  `files`), the `KbqFilterBarSearch` inputs that survived the tag rename
+  `noBorders`, the deprecated `KbqCodeBlock` input attributes on a
+  `<kbq-code-block>` that does not bind the replacement too (`canLoad` →
+  `canDownload`, `codeFiles` → `files`: bindings, static and valueless attributes),
+  the `KbqFilterBarSearch` inputs that survived the tag rename
   (`emitValueByEnter` → `isEmitValueByEnterEnabled`, `onSearchTimeout` →
   `emitValueTimeout`, `tooltip` → `tooltipText`), and template-ref exportAs renames
   (`="kbqWarningTooltip"` → `="kbqTooltip"`).
@@ -50,6 +51,7 @@ without auto-fixing:
 | `[apps]` (app-switcher)                           | Wrap in single-site `[sites]="[{ id, name, apps }]"` and read with `KbqAppSwitcherSite`                |
 | `scrollableCodeContent` (code-block)              | Use the `scrollTo()` method instead                                                                    |
 | `.canLoad` / `.codeFiles` (code-block, TS access) | Template bindings are auto-migrated; update programmatic access to `.canDownload` / `.files` manually  |
+| alias next to its replacement (code-block)        | Left untouched: merge `canLoad` + `canDownload` and `codeFiles` + `files` into one binding each        |
 | `required` (KbqFilter)                            | Use `cleanable = false` and `removable = false` (best-effort match — verify it is a KbqFilter config)  |
 | `[initialValue]` (filter-search)                  | Seed the bound `[formControl]` / `[(ngModel)]` — the component has no value input                      |
 | `(onSearch)` (filter-search)                      | Read the query from the bound control instead                                                          |

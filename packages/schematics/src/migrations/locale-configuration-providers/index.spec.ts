@@ -541,6 +541,43 @@ describe(SCHEMATIC_NAME, () => {
             expect(messages.join('\n')).toContain('The externalConfiguration member was removed');
         });
 
+        it('warns about the deprecated number input defaults instead of renaming them', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+            const source =
+                "import { KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION } from '@koobiq/components/input';\n" +
+                'const separator = KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION.fractionSeparator;\n';
+
+            appTree.overwrite(ts, source);
+
+            expect((await run(first)).readText(ts)).toBe(source);
+            expect(messages.join('\n')).toContain('KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION is deprecated');
+        });
+
+        it('does not warn about a file that already reads the number slice of the input section', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const migrated = ts.replace(/[^/]+$/, 'migrated.ts');
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, 'const separator = KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION.fractionSeparator;\n');
+            appTree.create(
+                migrated,
+                "import { KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION } from '@koobiq/components/input';\n" +
+                    'const separator = KBQ_INPUT_DEFAULT_LOCALE_CONFIGURATION.number.fractionSeparator;\n'
+            );
+
+            await run(first);
+
+            const reports = messages.filter((message) =>
+                message.includes('KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION is deprecated')
+            );
+
+            expect(reports).toHaveLength(1);
+            expect(reports[0]).toContain(ts);
+        });
+
         it('always reports the locale resolution change', async () => {
             const [first] = projects.keys();
             const messages = collectLogs();

@@ -105,6 +105,13 @@ const UNUSED_EXPORTS: { symbols: string[]; message: string }[] = [
     }
 ];
 
+// The 20.x classes deriving from `KbqPopUp` or `KbqPopUpTrigger`: a trigger reaches its pop-up through the untyped
+// `instance`, so a removed member called there only fails at run time.
+const POP_UP_SUBCLASS =
+    '\\bextends\\s+(?:KbqPopUp(?:Trigger)?|Kbq(?:Tooltip|Popover(?:Confirm)?|NotificationCenter|AppSwitcher)' +
+    '(?:Component|Trigger)|Kbq(?:Title|EllipsisCenter)Directive|KbqPasswordToggle|KbqNavbar(?:Item|Brand)|' +
+    'Kbq(?:Timezone)?OptionTooltip)\\b';
+
 // The unprefixed date pipes and their `ImpurePipe` twins, by pipe name and by class name.
 const LEGACY_DATE_PIPE =
     '(?:absolute(?:Long|Short)Date(?:Time)?|relative(?:Long|Short)Date(?:Time)?|range(?:Long|Short)Date(?:Time)?|' +
@@ -182,6 +189,26 @@ export const core: AreaData = {
                 '`KbqPopUp.handleBodyInteraction()` was removed: nothing called it. `isSpecialFormatForRULocale()` ' +
                 'and `roundingOptions` of the number pipes are private: configure a pipe through its arguments and ' +
                 'the formatters locale configuration.'
+        },
+        {
+            anchor: POP_UP_SUBCLASS,
+            pattern:
+                '\\b(?:this|super|instance)[!?]?\\.(?:markForCheck\\s*\\(|warning\\b|closeOnInteraction\\b)|' +
+                '\\boverride\\s+(?:readonly\\s+)?(?:markForCheck|warning|closeOnInteraction)\\b',
+            message:
+                '`KbqPopUp.markForCheck()`, `warning` and the protected `closeOnInteraction` were removed. Delete a ' +
+                '`markForCheck()` made after `updateClassMap()` or a change of `visibility`: both re-render the ' +
+                'pop-up now. After writing a field of its own, a pop-up subclass calls ' +
+                '`this.changeDetectorRef.markForCheck()`; a trigger that writes the fields of its pop-up calls ' +
+                '`this.instance.detectChanges()`. `warning` did nothing and `closeOnInteraction` only gated the ' +
+                'removed `handleBodyInteraction()`: delete them.'
+        },
+        {
+            anchor: '\\bKbqFormElement\\b|["\']kbqFormElement["\']',
+            pattern: '\\.isRow\\b',
+            message:
+                '`KbqFormElement.isRow` was removed: it only reflected the `kbq-form__row` class of the element, ' +
+                'so check that class instead.'
         },
         {
             pattern: '\\bKbqTheme\\b',

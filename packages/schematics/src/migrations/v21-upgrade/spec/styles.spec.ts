@@ -9,6 +9,8 @@ const MARKDOWN_CLASSES = 'The unprefixed markdown typography classes';
 const UNUSED_MODULES = 'The Sass modules `core/styles/functions`';
 const UNUSED_MEMBERS = '`kbq-markdown-typography-config()`, the getters of `typography-utils`';
 const TIMING = 'Of the timing variables of `core/styles/functions/timing`';
+const SCROLLBAR_CLASS = 'The `kbq-scrollbar` class and its `kbq-scrollbar-theme()` mixin are deprecated';
+const SCROLLBAR_VARIABLES = 'The `--kbq-scrollbar-size-*`, `--kbq-scrollbar-thumb-disabled-background`';
 
 const PREBUILT = 'node_modules/@koobiq/components/prebuilt-themes';
 
@@ -233,6 +235,82 @@ describe('v21-upgrade: styles', () => {
         expect(run.read('ng-class.html')).toBe(template);
         expect(run.log).toContain(`class-list.ts\n  ${MARKDOWN_CLASSES}`);
         expect(run.log).toContain(`ng-class.html\n  ${MARKDOWN_CLASSES}`);
+    });
+
+    it('reports the deprecated kbq-scrollbar class and its theme mixin and leaves them alone', async () => {
+        const files = {
+            'selector.scss': '.panel.kbq-scrollbar {\n    --kbq-scrollbar-thumb-default-background: red;\n}\n',
+            'mixin.scss': [
+                "@use '@koobiq/components/core/styles/theming/scrollbar-theme' as scrollbar;",
+                '@include scrollbar.kbq-scrollbar-theme();',
+                ''
+            ].join('\n'),
+            'attribute.html': '<div class="panel kbq-scrollbar"></div>\n',
+            'binding.html': '<div [class.kbq-scrollbar]="scrollable"></div>\n',
+            'ng-class.html': '<div [ngClass]="{ \'kbq-scrollbar\': scrollable }"></div>\n',
+            'host.ts': "@Directive({ host: { class: 'panel kbq-scrollbar' } })\nexport class Panel {}\n",
+            'class-list.ts': "export const mark = (el: HTMLElement) => el.classList.add('kbq-scrollbar');\n",
+            'query.ts': "export const body = () => document.querySelector('.kbq-modal-body.kbq-scrollbar');\n"
+        };
+        const run = await runV21Upgrade(files);
+
+        for (const [name, content] of Object.entries(files)) {
+            expect(run.read(name)).toBe(content);
+            expect(run.log).toContain(`${name}\n  ${SCROLLBAR_CLASS}`);
+        }
+
+        expect(run.log).not.toContain(SCROLLBAR_VARIABLES);
+    });
+
+    it('reports the variables of the kbq-scrollbar class the new scrollbar does not share', async () => {
+        const run = await runV21Upgrade({
+            'size.scss': '.panel {\n    --kbq-scrollbar-size-track-dimension: 12px;\n}\n',
+            'track.css': '.panel { border-color: var(--kbq-scrollbar-track-hover-border); }\n',
+            'disabled.ts': "panel.style.setProperty('--kbq-scrollbar-thumb-disabled-background', 'grey');\n"
+        });
+
+        expect(run.log).toContain(`size.scss\n  ${SCROLLBAR_VARIABLES}`);
+        expect(run.log).toContain(`track.css\n  ${SCROLLBAR_VARIABLES}`);
+        expect(run.log).toContain(`disabled.ts\n  ${SCROLLBAR_VARIABLES}`);
+        expect(run.log).not.toContain(SCROLLBAR_CLASS);
+    });
+
+    it('leaves the new scrollbar, its variables and the classes that share the prefix alone', async () => {
+        const run = await runV21Upgrade({
+            'new-scrollbar.html': [
+                '<kbq-scrollbar class="list"></kbq-scrollbar>',
+                '<div kbqNativeScrollbar kbqNativeScrollbarDescendants class="list kbq-scrollbar-viewport"></div>',
+                '<div kbq-scrollbar></div>',
+                ''
+            ].join('\n'),
+            'new-scrollbar.scss': [
+                'kbq-scrollbar,',
+                '[kbq-scrollbar],',
+                '.kbq-scrollbar-viewport,',
+                '.kbq-scrollbar-component,',
+                '.kbq-scrollbar__content,',
+                '.my-kbq-scrollbar {',
+                '    --kbq-scrollbar-track-size: 12px;',
+                '    --kbq-scrollbar-thumb-gap: 2px;',
+                '    --kbq-scrollbar-thumb-min-size: 24px;',
+                '    --kbq-scrollbar-track-background: transparent;',
+                '    --kbq-scrollbar-thumb-hover-background: red;',
+                '    @include kbq-scrollbar-component-theme();',
+                '}',
+                ''
+            ].join('\n'),
+            'new-scrollbar.ts': [
+                "@Component({ selector: 'kbq-scrollbar', template: '<kbq-scrollbar class=\"list\"></kbq-scrollbar>' })",
+                'export class ScrollbarStub {',
+                "    readonly scrollbar = document.querySelector('kbq-scrollbar');",
+                "    readonly viewport = document.querySelector('.kbq-scrollbar-viewport');",
+                '}',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).not.toContain(SCROLLBAR_CLASS);
+        expect(run.log).not.toContain(SCROLLBAR_VARIABLES);
     });
 
     it('leaves unrelated styles, classes and style entries alone', async () => {

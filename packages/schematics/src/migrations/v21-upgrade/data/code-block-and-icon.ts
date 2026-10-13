@@ -1,12 +1,17 @@
 import type { AreaData } from '../data';
+import { TAG_BODY } from './tag-body';
 
 // The start of an attribute on an opening `<kbq-code-block>` tag that does not bind `name` itself.
 const codeBlockTagWithout = (name: string): string =>
-    String.raw`(<kbq-code-block(?![\w-])(?![^>]*[\s\[]${name}[\]\s=/>])[^>]*?\s\[?)`;
+    String.raw`(<kbq-code-block(?![\w-])(?!${TAG_BODY}*[\s\[]${name}[\]\s=/>])${TAG_BODY}*?\s\[?)`;
 
 // Either attribute of a pair on one `<kbq-code-block>` tag.
 const codeBlockTagWith = (first: string, second: string): string =>
-    String.raw`<kbq-code-block(?![\w-])(?=[^>]*[\s\[]${first}[\]\s=/>])(?=[^>]*[\s\[]${second}[\]\s=/>])`;
+    String.raw`<kbq-code-block(?![\w-])(?=${TAG_BODY}*[\s\[]${first}[\]\s=/>])(?=${TAG_BODY}*[\s\[]${second}[\]\s=/>])`;
+
+// An opening `<kbq-code-block>` tag that binds `name` twice.
+const codeBlockTagTwice = (name: string): string =>
+    String.raw`<kbq-code-block(?![\w-])(?=${TAG_BODY}*[\s\[]${name}(?=[\]\s=/>])${TAG_BODY}*[\s\[]${name}[\]\s=/>])`;
 
 // A file that names the component or reaches it through its `exportAs`.
 const CODE_BLOCK_ANCHOR = String.raw`\bKbqCodeBlock\b|["']kbqCodeBlock["']`;
@@ -14,7 +19,7 @@ const CODE_BLOCK_ANCHOR = String.raw`\bKbqCodeBlock\b|["']kbqCodeBlock["']`;
 const ICON_BUTTON_ATTRIBUTE = String.raw`[\s\[]kbq-icon-button(?![\w-])`;
 
 // The start of an attribute on an opening icon button tag that does not set `size` itself.
-const ICON_BUTTON_TAG = String.raw`(<[a-zA-Z][\w-]*(?=[^>]*${ICON_BUTTON_ATTRIBUTE})(?![^>]*[\s\[]size[\]\s=/>])[^>]*?\s)`;
+const ICON_BUTTON_TAG = String.raw`(<[a-zA-Z][\w-]*(?=${TAG_BODY}*${ICON_BUTTON_ATTRIBUTE})(?!${TAG_BODY}*[\s\[]size[\]\s=/>])${TAG_BODY}*?\s)`;
 
 // A property path such as `isSmall`, `options.small` or `small()`, which needs no parentheses in a ternary.
 const PATH = String.raw`[A-Za-z_$][\w$]*(?:\(\))?(?:\??\.[A-Za-z_$][\w$]*(?:\(\))?)*`;
@@ -45,6 +50,14 @@ export const codeBlockAndIcon: AreaData = {
                 'true, and `codeFiles` applied while `files` was empty.'
         },
         {
+            anchor: String.raw`<kbq-code-block(?![\w-])`,
+            pattern: `${codeBlockTagTwice('canDownload')}|${codeBlockTagTwice('files')}`,
+            message:
+                'A <kbq-code-block> that binds `canDownload` or `files` twice is what the 20.0.0 migration left of ' +
+                '`canLoad` or `codeFiles` bound next to its replacement. Only the last binding takes effect: merge ' +
+                'the two into one.'
+        },
+        {
             anchor: CODE_BLOCK_ANCHOR,
             pattern: String.raw`\.(?:canLoad|codeFiles)(?:Input)?\b`,
             message:
@@ -62,9 +75,9 @@ export const codeBlockAndIcon: AreaData = {
         {
             anchor: ICON_BUTTON_ATTRIBUTE,
             pattern:
-                String.raw`<[a-zA-Z][\w-]*(?=[^>]*${ICON_BUTTON_ATTRIBUTE})(?:` +
-                String.raw`(?=[^>]*[\s\[]size[\]\s=/>])[^>]*[\s\[]small[\]\s=/>]|` +
-                String.raw`[^>]*\s(?:small(?!\s*=\s*"true")(?=[\s=/>])|\[small\]\s*=\s*'))`,
+                String.raw`<[a-zA-Z][\w-]*(?=${TAG_BODY}*${ICON_BUTTON_ATTRIBUTE})(?:` +
+                String.raw`(?=${TAG_BODY}*[\s\[]size[\]\s=/>])${TAG_BODY}*[\s\[]small[\]\s=/>]|` +
+                String.raw`${TAG_BODY}*\s(?:small(?!\s*=\s*"true")(?=[\s=/>])|\[small\]\s*=\s*'))`,
             message:
                 'KbqIconButton `small` was removed: set `size="compact"`. Left untouched: an icon button that ' +
                 'sets both `small` and `size`, a single-quoted `[small]` binding, and a static `small` other ' +

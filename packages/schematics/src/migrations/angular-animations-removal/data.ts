@@ -73,6 +73,13 @@ export const warnPatterns: WarnPattern[] = [
             'Ignore this if animationState is a member of your own component.'
     },
     {
+        pattern: '\\bcontentAnimationState\\b',
+        message:
+            'KbqContentPanelContainer.contentAnimationState was removed with the @contentAnimation trigger it fed: ' +
+            'the content makes room for the opened panel with a CSS transition. Read isOpened() for the state of ' +
+            'the panel.'
+    },
+    {
         pattern: '\\.animation\\s*\\.\\s*(pipe|subscribe|next)\\b',
         message:
             'KbqToastService.animation (and KbqToastStack.animation) were removed: a toast plays its exit animation ' +
