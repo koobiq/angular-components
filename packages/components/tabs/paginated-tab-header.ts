@@ -732,11 +732,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     protected abstract itemSelected(event: KeyboardEvent): void;
 
-    /**
-     * Moves focus onto the neighbouring item when the one that held it was removed. Without this the
-     * destroyed element takes focus down to `<body>` and a keyboard user has to tab in from the top of
-     * the document again (WCAG 2.4.3).
-     */
     /** Index of the item owning `target`, or `-1` — `target` is the item itself or something inside it. */
     private indexOfItemContaining(target: EventTarget | null): number {
         if (!target || !this.items) {
@@ -746,6 +741,11 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         return this.items.toArray().findIndex(({ elementRef }) => elementRef.nativeElement.contains(target as Node));
     }
 
+    /**
+     * Moves focus onto the neighbouring item when the one that held it was removed. Without this the
+     * destroyed element takes focus down to `<body>` and a keyboard user has to tab in from the top of
+     * the document again (WCAG 2.4.3).
+     */
     private restoreFocusAfterItemsChange(): void {
         if (!this.focusWasInside || !this.keyManager) {
             return;
