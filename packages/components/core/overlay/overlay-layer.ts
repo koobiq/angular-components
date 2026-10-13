@@ -75,6 +75,11 @@ class KbqOverlayLayerRegistry implements KbqOverlayLayers {
         const target = this.findLayer(origin)?.getContainerElement() ?? root;
 
         if (target === parent) {
+            // `usePopover` stays on in the config, so CDK prepends the backdrop of every attach into the host.
+            if (isInLayer) {
+                this.setInTopLayer(overlayRef, false);
+            }
+
             return;
         }
 
