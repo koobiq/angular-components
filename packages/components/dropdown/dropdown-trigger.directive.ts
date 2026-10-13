@@ -297,6 +297,9 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             if (!dropdown) return;
 
             const subscription = outputToObservable(dropdown.closed).subscribe((reason) => {
+                // Only the trigger that has the panel open closes it and its chain.
+                if (!this.openedState()) return;
+
                 // A click, Tab or an activated item closes the entire chain of nested dropdowns.
                 const closesChain =
                     reason === 'click' ||

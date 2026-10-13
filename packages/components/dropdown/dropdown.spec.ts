@@ -2394,6 +2394,35 @@ describe('KbqDropdown', () => {
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(0);
         });
 
+        it('should not close the open root dropdown when a nested dropdown that is not open is closed', () => {
+            compileTestComponent();
+            instance.rootTrigger().open();
+            fixture.detectChanges();
+
+            instance.levelOneDropdown().close();
+            fixture.detectChanges();
+
+            expect(instance.rootTrigger().opened).toBe(true);
+            expect(instance.rootCloseCallback).not.toHaveBeenCalled();
+        });
+
+        it('should not emit the root closed again when a closed nested dropdown is closed again', () => {
+            compileTestComponent();
+            instance.rootTrigger().open();
+            fixture.detectChanges();
+
+            instance.levelOneTrigger().open();
+            fixture.detectChanges();
+
+            instance.levelOneDropdown().close();
+            fixture.detectChanges();
+
+            instance.levelOneDropdown().close();
+            fixture.detectChanges();
+
+            expect(instance.rootCloseCallback).toHaveBeenCalledExactlyOnceWith('click');
+        });
+
         it('should toggle a nested dropdown when its trigger is added after init', async () => {
             vi.useFakeTimers();
 
@@ -2477,6 +2506,27 @@ describe('KbqDropdown', () => {
             await vi.advanceTimersByTimeAsync(500);
 
             expect(overlay.querySelectorAll(PANEL_SELECTOR).length).toBe(2);
+        });
+
+        it('should emit the root closed once when an item of a nested dropdown shared by several triggers is clicked', async () => {
+            vi.useFakeTimers();
+
+            const repeaterFixture = createComponent(NestedDropdownRepeater);
+
+            overlay = overlayContainerElement;
+
+            repeaterFixture.detectChanges();
+            repeaterFixture.componentInstance.rootTriggerEl().nativeElement.click();
+            repeaterFixture.detectChanges();
+
+            dispatchMouseEvent(overlay.querySelector('.level-one-trigger')!, 'mouseenter');
+            repeaterFixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(500);
+
+            overlay.querySelectorAll<HTMLElement>(PANEL_SELECTOR)[1].querySelector<HTMLElement>(ITEM_SELECTOR)!.click();
+            repeaterFixture.detectChanges();
+
+            expect(repeaterFixture.componentInstance.rootCloseCallback).toHaveBeenCalledExactlyOnceWith('click');
         });
 
         it('should close the initial dropdown if the user moves away while animating', async () => {
@@ -4610,7 +4660,7 @@ class NestedDropdown {
     ],
     template: `
         <button #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
-        <kbq-dropdown #root="kbqDropdown">
+        <kbq-dropdown #root="kbqDropdown" (closed)="rootCloseCallback($event)">
             @for (item of items; track item) {
                 <button class="level-one-trigger" kbq-dropdown-item [kbqDropdownTriggerFor]="levelOne">
                     {{ item }}
@@ -4627,6 +4677,7 @@ class NestedDropdown {
 class NestedDropdownRepeater {
     readonly rootTriggerEl = viewChild.required<ElementRef<HTMLElement>>('rootTriggerEl');
     readonly levelOneDropdown = viewChild.required<KbqDropdown>('levelOne');
+    readonly rootCloseCallback = vi.fn();
 
     items = ['one', 'two', 'three'];
 }
