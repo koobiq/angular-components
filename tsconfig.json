@@ -107,8 +107,8 @@
         "transpileOnly": true,
         "compilerOptions": {
             "types": ["node"],
-            "module": "CommonJS",
-            "moduleResolution": "node"
+            "module": "nodenext",
+            "moduleResolution": "nodenext"
         }
     },
     "angularCompilerOptions": {
