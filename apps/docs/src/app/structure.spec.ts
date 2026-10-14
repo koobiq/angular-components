@@ -45,12 +45,9 @@ describe('docs structure registry', () => {
     });
 
     it('only registers valid ISO dates for isNew badges', () => {
-        const dates = docsGetIsNewExpiryDates();
+        // A line can have no badge left once `docs:prune-is-new-badges` has removed the expired ones.
+        const invalidDates = docsGetIsNewExpiryDates().filter((date) => !DateTime.fromISO(date).isValid);
 
-        expect(dates.length).toBeGreaterThan(0);
-
-        for (const date of dates) {
-            expect(DateTime.fromISO(date).isValid).toBe(true);
-        }
+        expect(invalidDates).toEqual([]);
     });
 });
