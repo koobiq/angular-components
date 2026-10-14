@@ -459,7 +459,9 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         });
     }
 
+    /** Raises the stack above the overlays opened after it. */
     private toTop(overlayRef: OverlayRef) {
+        const host = overlayRef.hostElement;
         const overlays = this.overlayContainer.getContainerElement().childNodes;
         const last = overlays[overlays.length - 1];
 
@@ -467,9 +469,22 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         // sibling for a node that is already last and falls through to `insertBefore(x, null)`, whose
         // insert steps take `x` out of its parent first — a real detach and re-attach of the wrapper
         // holding every live toast, on every `show()`.
-        if (overlays.length > 1 && last !== overlayRef.hostElement) {
-            last.after(overlayRef.hostElement);
+        if (overlays.length < 2 || last === host) {
+            return;
         }
+
+        // A popover host is in the top layer, painted in the order the popovers were shown in, not in DOM
+        // order. Taking it out of the DOM hides the popover, which drops the stack beneath every overlay
+        // there, so it is shown again instead. Its place in the DOM stays, so it is raised again on every
+        // `show()` while that overlay is open.
+        if (overlayRef.getConfig().usePopover && host.matches(':popover-open')) {
+            host.hidePopover();
+            host.showPopover();
+
+            return;
+        }
+
+        last.after(host);
     }
 
     private createOverlay(): OverlayRef {
