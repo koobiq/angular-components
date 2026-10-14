@@ -190,9 +190,16 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
     /** @docs-private */
     isTrapFocus: boolean = false;
 
-    /** @docs-private */
+    /**
+     * No longer read: the flyouts take their site and app from `kbqDropdownTriggerData`. Kept so that
+     * the API of this line stays the same.
+     * @docs-private
+     */
     protected activeSite: KbqAppSwitcherSite;
-    /** @docs-private */
+    /**
+     * No longer read, the same as `activeSite`.
+     * @docs-private
+     */
     protected activeApp: KbqAppSwitcherApp;
 
     /** @docs-private */
