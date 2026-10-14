@@ -11,14 +11,17 @@
             cdkMonitorElementFocus
             kbqTabLabelWrapper
             class="kbq-tab-label"
-            [attr.tabindex]="getTabIndex(tab, $index)"
+            role="tab"
+            [attr.aria-controls]="getTabContentId($index)"
+            [attr.aria-selected]="selectedIndex === $index"
+            [attr.tabindex]="getTabIndex(tab, tabHeader, $index)"
             [class.kbq-selected]="selectedIndex === $index"
             [class.kbq-tab-label_empty]="tab.empty()"
             [class.kbq-tab-label_horizontal]="!vertical()"
             [class.kbq-tab-label_underlined]="underlined()"
             [class.kbq-tab-label_vertical]="vertical()"
             [class.kbq-tab-label_icon-only]="tab.iconOnlyLabel"
-            [disabled]="tab.disabled"
+            [disabled]="tab.disabled()"
             [id]="getTabLabelId($index)"
             [kbqPlacement]="tab.tooltipPlacement()"
             [kbqTooltip]="tab.tooltipTitle"
@@ -44,7 +47,10 @@
 <div #tabBodyWrapper class="kbq-tab-body__wrapper">
     @for (tab of tabs; track tab) {
         <kbq-tab-body
+            role="tabpanel"
             [animationDuration]="animationDuration"
+            [attr.aria-labelledby]="getTabLabelId($index)"
+            [attr.tabindex]="selectedIndex === $index ? 0 : null"
             [class.kbq-tab-body__active]="selectedIndex === $index"
             [content]="tab.content!"
             [id]="getTabContentId($index)"

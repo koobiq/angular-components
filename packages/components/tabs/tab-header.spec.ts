@@ -13,6 +13,10 @@ import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 /** Audit interval (ms) the header waits before re-checking pagination after a scroll-box resize. See `RESIZE_AUDIT_TIME`. */
 const RESIZE_AUDIT_TIME = 100;
 
+/** Must match `SCROLL_CD_THROTTLE` in `paginated-tab-header.ts` — the audit window before a
+ * native scroll event reaches change detection. */
+const SCROLL_CD_THROTTLE = 48;
+
 @Injectable()
 class MockResizeObserver extends SharedResizeObserver {
     // A plain `Subject`, not a `BehaviorSubject`: the latter replays its initial `[]` to every new
@@ -627,7 +631,7 @@ describe('KbqTabHeader', () => {
             jest.restoreAllMocks();
         });
 
-        it('should toggle kbq-disabled on the previous/next arrows at each scroll bound without removing them from the DOM', () => {
+        it('should toggle kbq-disabled on the previous/next arrows at each scroll bound without removing them from the DOM', fakeAsync(() => {
             const before = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_before');
             const after = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_after');
 
@@ -637,11 +641,15 @@ describe('KbqTabHeader', () => {
             // scrollWidth(400) - clientWidth(100) = 300, i.e. the max scrollLeft a real browser would allow.
             header.tabListContainer.nativeElement.scrollLeft = 300;
             header.tabListContainer.nativeElement.dispatchEvent(new Event('scroll'));
+
+            // `KbqTabHeader` is OnPush — arrow state from a native scroll event is only reflected
+            // once the audited change-detection tick fires.
+            tick(SCROLL_CD_THROTTLE);
             fixture.detectChanges();
 
             expect(before.classList.contains('kbq-disabled')).toBe(false);
             expect(after.classList.contains('kbq-disabled')).toBe(true);
-        });
+        }));
 
         it('should not start a drag for small movement, allowing a normal click to select a tab', () => {
             const tabListContainer = header.tabListContainer.nativeElement;
@@ -939,6 +947,42 @@ describe('KbqTabHeader', () => {
 
                 expect((header as any).activeTabOffsetLeft).toBeUndefined();
             });
+        });
+    });
+
+    describe('markup', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(SimpleTabHeaderApp);
+            fixture.detectChanges();
+            appComponent = fixture.componentInstance;
+        });
+
+        it('should render the label strip as a tablist', () => {
+            const content: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-list__content');
+
+            expect(content.getAttribute('role')).toBe('tablist');
+            expect(content.hasAttribute('aria-orientation')).toBe(false);
+        });
+
+        it('should hide the decorative underline from assistive technology', () => {
+            const underline: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+            expect(underline.getAttribute('aria-hidden')).toBe('true');
+        });
+
+        it('should still move the underline when the selection changes, now that the header is OnPush', () => {
+            const header = appComponent.tabHeader();
+            const underline: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+            const target = header.items.get(2)!.elementRef.nativeElement;
+
+            Object.defineProperty(target, 'offsetLeft', { configurable: true, value: 100 });
+            Object.defineProperty(target, 'offsetWidth', { configurable: true, value: 60 });
+
+            appComponent.selectedIndex = 2;
+            fixture.detectChanges();
+
+            expect(underline.style.left).toBe('112px');
+            expect(underline.style.width).toBe('36px');
         });
     });
 });

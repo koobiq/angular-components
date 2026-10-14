@@ -83,21 +83,10 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
     private _tooltipTitle = '';
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        return this._disabled;
-    }
+    /** Whether the tab is disabled: it cannot be selected and has no interactive states. */
+    readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
-    private _disabled: boolean = false;
-
+    /** Placement of the tooltip shown for a truncated or empty label. */
     readonly tooltipPlacement = input<KbqPopUpPlacementValues>(PopUpPlacements.Right);
 
     /** Plain text label for the tab, used when there is no template label. */

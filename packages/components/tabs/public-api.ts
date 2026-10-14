@@ -1,3 +1,4 @@
+export * from './paginated-tab-header';
 export * from './tab-body.component';
 export * from './tab-content.directive';
 export * from './tab-group.component';

@@ -201,6 +201,41 @@ const e2eTabLabelStateSetter = (testid: string) => {
                 <kbq-tab [disabled]="$index === 1" [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
             }
         </kbq-tab-group>
+
+        <!-- transparent -->
+        <kbq-tab-group [transparent]="true">
+            @for (tab of tabs.slice(0, 2); track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- transparent on-surface -->
+        <kbq-tab-group [transparent]="true" [onSurface]="true">
+            @for (tab of tabs.slice(0, 2); track tab) {
+                <kbq-tab [tabId]="tab" [disabled]="$index === 1" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- vertical bound to false: the layout must follow the binding, not the attribute -->
+        <kbq-tab-group data-testid="e2eTabsVerticalBoundFalse" [vertical]="false">
+            @for (tab of tabs.slice(0, 2); track tab) {
+                <kbq-tab [tabId]="tab" [label]="tab">Active tab is {{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+
+        <!-- nav bar on-surface -->
+        <nav kbqTabNavBar [onSurface]="true">
+            @for (tab of tabs.slice(0, 3); track tab) {
+                <a kbqTabLink [active]="$first" [disabled]="$index === 1">{{ tab }}</a>
+            }
+        </nav>
+
+        <!-- nav bar transparent on-surface -->
+        <nav kbqTabNavBar [transparent]="true" [onSurface]="true">
+            @for (tab of tabs.slice(0, 3); track tab) {
+                <a kbqTabLink [active]="$first" [disabled]="$index === 1">{{ tab }}</a>
+            }
+        </nav>
     `,
     styles: `
         :host {

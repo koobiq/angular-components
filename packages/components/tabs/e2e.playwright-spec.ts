@@ -71,13 +71,19 @@ test.describe('KbqTabsModule', () => {
             // theme swap that follows repaints without touching any scroll position.
             await waitForSettledTabScroll(page);
 
-            // A track in each of the 100 tab bodies and in the 4 vertical headers; the horizontal headers run
+            // A track in each of the 106 tab bodies and in the 4 vertical headers; the horizontal headers run
             // in `hidden` mode. Waited last, because every scroll correction above reveals the track again.
-            await e2eWaitForSettledScrollbars(component, 104);
+            await e2eWaitForSettledScrollbars(component, 110);
 
             await expect(component).toHaveScreenshot('01-light.png');
             await e2eEnableDarkTheme(page);
             await expect(component).toHaveScreenshot('01-dark.png');
+        });
+
+        test('should follow the vertical binding rather than the attribute', async ({ page }) => {
+            await page.goto('/E2eTabsStates');
+
+            await expect(page.getByTestId('e2eTabsVerticalBoundFalse')).not.toHaveClass(/kbq-tab-group_vertical/);
         });
     });
 
