@@ -11,8 +11,7 @@ the class is rendered by a host binding. Every component built on the directive 
 
 `KbqButton`, `KbqButtonGroupRoot`, `KbqSplitButton`, `KbqCheckbox`, `KbqPseudoCheckbox`, `KbqToggleComponent`,
 `KbqRadioGroup`, `KbqRadioButton`, `KbqIcon`, `KbqIconButton`, `KbqIconItem`, `KbqFormField`, `KbqHint`,
-`KbqError`, `KbqPasswordHint`, `KbqReactivePasswordHint`, `KbqCleaner`, `KbqProgressBar`, `KbqProgressSpinner`,
-`KbqTag`.
+`KbqError`, `KbqReactivePasswordHint`, `KbqCleaner`, `KbqProgressBar`, `KbqProgressSpinner`, `KbqTag`.
 
 ## What it rewrites
 
