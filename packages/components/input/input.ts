@@ -24,6 +24,8 @@ import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
 // `typeof ngDevMode` is the guard the build optimizer folds away in production bundles.
 declare const ngDevMode: boolean | undefined;
 
+const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
+
 const KBQ_INPUT_INVALID_TYPES = [
     'button',
     'checkbox',
@@ -176,8 +178,9 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
 
     private readonly emptyValue = signal(true);
 
-    /** The value the element and `value` last agreed on. */
+    /** The value the element and `value` last agreed on, and the text the element showed then. */
     private syncedValue: unknown;
+    private syncedText: string;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -197,8 +200,12 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
             this.elementRef.nativeElement.type = 'text';
         }
 
-        this.value = signal(this.inputValueAccessor.value);
-        this.syncedValue = this.inputValueAccessor.value;
+        // Read once: a custom accessor may build a new value on every read.
+        const initialValue = this.inputValueAccessor.value;
+
+        this.value = signal(initialValue);
+        this.syncedValue = initialValue;
+        this.syncedText = this.elementRef.nativeElement.value;
 
         // A binding of `type` no longer reaches the element on its own: the directive takes the input. Textarea
         // elements don't support the type property or attribute.
@@ -236,6 +243,7 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
                     }
 
                     this.syncedValue = value;
+                    this.syncedText = this.elementRef.nativeElement.value;
                 }
 
                 this.dirtyCheckNativeValue();
@@ -303,10 +311,13 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
      */
     dirtyCheckNativeValue() {
         const nativeValue = this.inputValueAccessor.value;
+        const text = this.elementRef.nativeElement.value;
 
-        // Only a change of the element itself: a value set in code and not yet written must not be overwritten.
-        if (nativeValue !== this.syncedValue) {
+        // Only a change of the element itself: a value set in code and not yet written must not be overwritten. An
+        // object counts as changed only with the text, as a custom accessor may build a new one on every read.
+        if (nativeValue !== this.syncedValue && (!isObject(nativeValue) || text !== this.syncedText)) {
             this.syncedValue = nativeValue;
+            this.syncedText = text;
             this.value.set(nativeValue);
         }
 
