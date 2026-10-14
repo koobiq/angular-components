@@ -66,9 +66,12 @@
                                     #fileAction
                                     kbq-icon-button="kbq-circle-xmark_16"
                                     class="kbq-file-upload__action kbq-file-upload__grid-cell"
+                                    [attr.aria-label]="`${a11yNames().remove} ${file.file.name}`"
                                     [color]="file.hasError ? 'error' : 'contrast-fade'"
                                     [disabled]="disabled"
                                     (click)="deleteFile($index, $event, 'program')"
+                                    (keydown.enter)="deleteFile($index, $event, 'program')"
+                                    (keydown.space)="$event.preventDefault(); deleteFile($index, $event, 'program')"
                                 ></i>
                             </div>
                         </kbq-list-item>

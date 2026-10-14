@@ -2108,7 +2108,14 @@ class KbqTooltipWithTemplateRefContent {
         </div>
 
         <div #iconButtonTooltip="kbqTooltip" kbqTooltip="kbq-icon-button" [forDisabledComponent]="iconButton">
-            <i #iconButton #button kbq-icon-button="kbq-plus_16" color="theme" [disabled]="disableState"></i>
+            <i
+                #iconButton
+                #button
+                kbq-icon-button="kbq-plus_16"
+                aria-label="Create"
+                color="theme"
+                [disabled]="disableState"
+            ></i>
         </div>
 
         <div #linkTooltip="kbqTooltip" kbqTooltip="kbq-link" [forDisabledComponent]="link">

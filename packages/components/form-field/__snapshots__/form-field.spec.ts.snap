@@ -66,6 +66,7 @@ DebugElement {
     id="test-reactive-password-hint-id"
   >
     <i
+      aria-hidden="true"
       class="kbq kbq-icon kbq-xmark-s_16 kbq-error"
       style="max-height: 16px;"
     />
@@ -87,6 +88,7 @@ DebugElement {
     id="test-reactive-password-hint-id"
   >
     <i
+      aria-hidden="true"
       class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
       style="max-height: 16px;"
     />
@@ -108,6 +110,7 @@ DebugElement {
     id="test-reactive-password-hint-id"
   >
     <i
+      aria-hidden="true"
       class="kbq kbq-icon kbq-success kbq-check-s_16"
       style="max-height: 16px;"
     />

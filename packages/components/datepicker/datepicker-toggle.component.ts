@@ -34,6 +34,7 @@ export class KbqDatepickerToggleIcon {}
         <ng-content select="[kbqDatepickerToggleIcon]">
             <i
                 color="contrast-fade"
+                aria-hidden="true"
                 kbq-icon-button="kbq-calendar-o_16"
                 [tabindex]="-1"
                 [class.kbq-active]="datepicker() && datepicker().opened"

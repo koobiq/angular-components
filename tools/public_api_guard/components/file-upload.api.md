@@ -195,6 +195,7 @@ export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedT
 
 // @public
 export abstract class KbqFileUploadBase implements CanUpdateErrorState {
+    protected readonly a11yNames: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected announce(...messages: string[]): void;
     protected readonly announcement: _angular_core.WritableSignal<string>;
     protected readonly cdr: ChangeDetectorRef;
@@ -307,7 +308,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     protected get captionTextWhenSelected(): string;
     protected readonly customFileIcon: _angular_core.Signal<TemplateRef<any> | undefined>;
     cvaOnChange: (_: KbqFileItem[]) => void;
-    deleteFile(index: number, event?: MouseEvent, origin?: FocusOrigin): void;
+    deleteFile(index: number, event?: Event, origin?: FocusOrigin): void;
     protected readonly describedBy: _angular_core.Signal<string | null>;
     errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
@@ -358,7 +359,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     readonly allowed: _angular_core.InputSignal<"file" | "folder" | "mixed">;
     protected readonly captionContext: _angular_core.Signal<KbqFileUploadCaptionContext>;
     cvaOnChange: (_: KbqFileItem | null) => void;
-    deleteItem(event?: MouseEvent, origin?: FocusOrigin): void;
+    deleteItem(event?: Event, origin?: FocusOrigin): void;
     protected readonly describedBy: _angular_core.Signal<string | null>;
     errorStateMatcher: ErrorStateMatcher;
     get file(): KbqFileItem | null;

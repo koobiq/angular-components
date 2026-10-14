@@ -5,6 +5,7 @@ import {
     ErrorStateMatcher,
     KbqEnumValues,
     KbqFileUploadLocaleConfiguration,
+    kbqInjectA11yLocaleConfiguration,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -89,6 +90,8 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     readonly localeConfiguration: Signal<KbqFileUploadLocaleConfiguration> = inject(KbqLocaleOverridesDirective, {
         self: true
     }).read('fileUpload', KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION);
+    /** Accessible names of the icon-only controls the component renders itself. @docs-private */
+    protected readonly a11yNames = kbqInjectA11yLocaleConfiguration();
     /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
     /** @docs-private */

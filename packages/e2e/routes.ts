@@ -89,7 +89,7 @@ import {
     E2eFormFieldGroup,
     E2eFormFieldset
 } from '../components/form-field/e2e';
-import { E2eIconStateAndStyle, E2eIconSvg } from '../components/icon/e2e';
+import { E2eIconStateAndStyle, E2eIconSvg, E2eIconSvgDropdown } from '../components/icon/e2e';
 import {
     E2eInlineEditActionButtons,
     E2eInlineEditInteractiveContent,
@@ -367,6 +367,7 @@ const components: Record<string, Type<unknown>> = {
     E2eTimeRangeStates,
     E2eIconStateAndStyle,
     E2eIconSvg,
+    E2eIconSvgDropdown,
     E2eBadgeStyles,
     E2eBadgeAsyncIcon,
     E2eLinkStates,

@@ -784,8 +784,11 @@ describe('KbqPipeMultiTreeSelectComponent', () => {
                 }
             };
 
-            getParams(): KbqFilterBarLocaleConfiguration {
-                return this.params[this.changes.value];
+            // The real service answers every section; a mock that ignored `section` and always returned the
+            // filterBar slice fed it to readers of other sections too — the cleaner's `a11y.clear` resolved
+            // to `undefined` and tripped KbqIconButton's missing-accessible-name warning.
+            getParams(section: string): KbqFilterBarLocaleConfiguration | undefined {
+                return section === 'filterBar' ? this.params[this.changes.value] : undefined;
             }
 
             setLocale(id: string): void {

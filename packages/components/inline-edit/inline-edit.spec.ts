@@ -2354,6 +2354,7 @@ export class TestComponent extends BaseTestComponent {
             <i
                 kbqInlineEditMenu
                 kbq-icon-button="kbq-ellipsis-vertical_16"
+                aria-label="Actions"
                 [kbqDropdownTriggerFor]="dropdown"
                 [color]="'contrast-fade'"
             ></i>

@@ -16,7 +16,7 @@ import { KbqIconButton } from '@koobiq/components/icon';
                     {{ color | titlecase }}
                 </div>
 
-                <i kbq-icon-button="kbq-magnifying-glass_16" size="compact" [color]="color"></i>
+                <i kbq-icon-button="kbq-magnifying-glass_16" size="compact" aria-label="Search" [color]="color"></i>
             </div>
         }
     `,
