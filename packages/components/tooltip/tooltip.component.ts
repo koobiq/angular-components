@@ -25,7 +25,6 @@ import {
     effect,
     inject,
     input,
-    numberAttribute,
     untracked,
     viewChild
 } from '@angular/core';
@@ -49,7 +48,8 @@ import {
     applyPopupMargins,
     kbqCreateCaretOrigin,
     kbqGetSelectionRect,
-    kbqListenForCaretMoves
+    kbqListenForCaretMoves,
+    kbqOptionalNumberAttribute
 } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -182,9 +182,10 @@ export class KbqTooltipComponent extends KbqPopUp {
      * @docs-private
      */
     applyOffset(): void {
-        if (this.offset === null) return;
+        // An empty value removes a gap applied earlier, handing it back to the stylesheet.
+        const margin = this.offset == null ? '' : `${this.offset}px`;
 
-        applyPopupMargins(this.renderer, this.elementRef.nativeElement, this.prefix, `${this.offset}px`);
+        applyPopupMargins(this.renderer, this.elementRef.nativeElement, this.prefix, margin);
     }
 
     updateClassMap(placement: string, customClass: string, { modifier }: { modifier: KbqEnumValues<TooltipModifier> }) {
@@ -514,7 +515,10 @@ export class KbqTooltipTrigger
 
     /** Input (`kbqTooltipArrow`) — whether to render the tooltip's arrow/pointer. Defaults to `false`. */
     arrow: boolean = false;
-    /** Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger; `null` uses the default. */
+    /**
+     * Input (`kbqTooltipOffset`) — distance in pixels between the tooltip and its trigger. `null`, the default, keeps
+     * the gap of the stylesheet.
+     */
     offset: number | null = null;
 
     /** Output (`kbqPlacementChange`) that emits the new placement whenever the tooltip repositions. */
@@ -629,9 +633,7 @@ export class KbqTooltipTrigger
         }
 
         if (changes['offsetInput']) {
-            const offset = this.offsetInput();
-
-            if (offset !== undefined) this.offset = offset;
+            this.offset = this.offsetInput() ?? null;
         }
 
         if (changes['disabledInput']) {
@@ -777,9 +779,9 @@ export class KbqTooltipTrigger
     });
 
     /** @docs-private */
-    readonly offsetInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
+    readonly offsetInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'kbqTooltipOffset',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */

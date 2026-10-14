@@ -14,6 +14,13 @@ import { KbqPopUpTrigger } from './pop-up-trigger';
 })
 class TestPopUp extends KbqPopUp {
     protected prefix = 'test-pop-up';
+
+    /** Number of times the pop-up has finished animating in. */
+    entrances = 0;
+
+    protected override afterShowAnimation(): void {
+        this.entrances++;
+    }
 }
 
 describe('KbqPopUp', () => {
@@ -59,6 +66,21 @@ describe('KbqPopUp', () => {
         await vi.runOnlyPendingTimersAsync();
 
         expect(popUp.visibility).toBe(PopUpVisibility.Initial);
+    });
+
+    it('should wait for the entrance only when the pop-up appears', async () => {
+        popUp.show(0);
+        await vi.advanceTimersByTimeAsync(0);
+        fixture.detectChanges();
+
+        expect(popUp.entrances).toBe(1);
+
+        // What a re-hover does while the pop-up stays on screen.
+        popUp.show(0);
+        await vi.advanceTimersByTimeAsync(0);
+        fixture.detectChanges();
+
+        expect(popUp.entrances).toBe(1);
     });
 
     it('should render its visibility and classes without a manual check', async () => {

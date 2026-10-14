@@ -129,9 +129,15 @@ export abstract class KbqPopUp implements OnDestroy {
         this.showTimeoutId = setTimeout(() => {
             this.showTimeoutId = undefined;
 
+            // A re-hover re-enters `show()` on a pop-up already on screen, which has no entrance to wait for.
+            const appearing = !this.isVisible();
+
             this.visibility = PopUpVisibility.Visible;
             this.visibleChange.emit(true);
-            this.waitForShowAnimation();
+
+            if (appearing) {
+                this.waitForShowAnimation();
+            }
 
             if (this.trigger.triggerName === 'mouseenter') {
                 this.addEventListenerForHide();

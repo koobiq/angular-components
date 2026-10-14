@@ -1,4 +1,4 @@
-import { computed, inject, Injectable, Signal, signal, TemplateRef, untracked } from '@angular/core';
+import { computed, inject, Injectable, Signal, signal, TemplateRef, untracked, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
@@ -117,6 +117,12 @@ export class KbqNotificationCenterService {
      */
     private readonly readVersion = signal(0);
 
+    /**
+     * Read state of each notification a view follows, as last reported by `onRead` or a list update. One per
+     * item, so that reading a notification refreshes its own row only.
+     */
+    private readonly readStates = new WeakMap<KbqNotificationItem, WritableSignal<boolean>>();
+
     /** Pinged by every state setter; `changes` merges it with `onRead`. */
     private readonly stateChanges = new Subject<void>();
 
@@ -229,7 +235,11 @@ export class KbqNotificationCenterService {
     readonly empty: Signal<boolean> = computed(() => this.originalItems().length === 0);
 
     constructor() {
-        this.onRead.pipe(takeUntilDestroyed()).subscribe(() => this.readVersion.update((version) => version + 1));
+        this.onRead.pipe(takeUntilDestroyed()).subscribe((item) => {
+            this.readVersion.update((version) => version + 1);
+
+            if (item) this.syncReadState(item);
+        });
 
         this.toastService?.read.pipe(takeUntilDestroyed()).subscribe((toastData) => {
             const item = this.currentItems().find((item) => item.id === toastData?.id);
@@ -248,9 +258,16 @@ export class KbqNotificationCenterService {
      * @internal
      */
     isRead(item: KbqNotificationItem): boolean {
-        this.readVersion();
-        // The list handed back with `read` flipped in place.
-        this.originalItems();
+        let state = this.readStates.get(item);
+
+        if (!state) {
+            state = signal(!!item.read);
+            this.readStates.set(item, state);
+        }
+
+        // Followed for the dependency only: a view rendered anew shows the object as it is, even after a flip
+        // nothing reported.
+        state();
 
         return !!item.read;
     }
@@ -378,7 +395,14 @@ export class KbqNotificationCenterService {
 
     private setItems(items: KbqNotificationItem[]): void {
         this.originalItems.set(items);
+        // The list may be handed back with `read` flipped in place.
+        items.forEach((item) => this.syncReadState(item));
         this.notify();
+    }
+
+    /** Tells the view of `item` its read state, which refreshes it only when the state has changed. */
+    private syncReadState(item: KbqNotificationItem): void {
+        this.readStates.get(item)?.set(!!item.read);
     }
 
     /**

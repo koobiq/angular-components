@@ -37,7 +37,6 @@ import {
     booleanAttribute,
     inject,
     input,
-    numberAttribute,
     untracked,
     viewChild
 } from '@angular/core';
@@ -62,6 +61,7 @@ import {
     PopUpTriggers,
     applyPopupMargins,
     kbqInjectA11yLocaleConfiguration,
+    kbqOptionalNumberAttribute,
     kbqRepositionScrollStrategyFactory,
     kbqSiblingPopupProvider
 } from '@koobiq/components/core';
@@ -457,13 +457,18 @@ export class KbqPopoverTrigger
         // switched to `hover` later closes on the 0 it was born with otherwise, leaving no time to cross the
         // gap between the trigger and the panel.
         if (!this.leaveDelayBound) {
-            this.leaveDelay = this._trigger.includes(PopUpTriggers.Hover) ? defaultHoverLeaveDelay : 0;
+            this.leaveDelay = this.defaultLeaveDelay;
         }
 
         this.initListeners();
     }
 
     private _trigger: string = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
+
+    /** Leave delay while `kbqLeaveDelay` is not bound. */
+    private get defaultLeaveDelay(): number {
+        return this._trigger.includes(PopUpTriggers.Hover) ? defaultHoverLeaveDelay : 0;
+    }
 
     /** Input (`kbqPopoverSize`) — preset width of the panel. An unknown value falls back to `medium`. */
     get size(): KbqPopUpSizeValues {
@@ -699,13 +704,13 @@ export class KbqPopoverTrigger
     /** @docs-private */
     readonly kbqLeaveDelayInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'kbqLeaveDelay',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */
     readonly enterDelayInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'kbqEnterDelay',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */
@@ -789,9 +794,9 @@ export class KbqPopoverTrigger
     });
 
     /** @docs-private */
-    readonly offsetInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
+    readonly offsetInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'kbqPopoverOffset',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */
@@ -824,7 +829,8 @@ export class KbqPopoverTrigger
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member as the decorator input did, a bound `undefined` restoring the
-        // member's default; unbound, it leaves what code wrote.
+        // member's default; unbound, it leaves what code wrote. The `booleanAttribute` inputs are the exception:
+        // the transform reads a bound `undefined` as `false`.
         if (changes['triggerInput']) {
             this.trigger = this.triggerInput() ?? '';
         }
@@ -832,13 +838,17 @@ export class KbqPopoverTrigger
         if (changes['kbqLeaveDelayInput']) {
             const kbqLeaveDelay = this.kbqLeaveDelayInput();
 
-            if (kbqLeaveDelay !== undefined) this.kbqLeaveDelay = kbqLeaveDelay;
+            if (kbqLeaveDelay === undefined) {
+                // Counts as unbound, so that a hover popover gets its default delay back.
+                this.leaveDelayBound = false;
+                this.leaveDelay = this.defaultLeaveDelay;
+            } else {
+                this.kbqLeaveDelay = kbqLeaveDelay;
+            }
         }
 
         if (changes['enterDelayInput']) {
-            const enterDelay = this.enterDelayInput();
-
-            if (enterDelay !== undefined) this.enterDelay = enterDelay;
+            this.enterDelay = this.enterDelayInput() ?? 0;
         }
 
         if (changes['preventCloseInput']) {
@@ -918,9 +928,7 @@ export class KbqPopoverTrigger
         }
 
         if (changes['offsetInput']) {
-            const offset = this.offsetInput();
-
-            if (offset !== undefined) this.offset = offset;
+            this.offset = this.offsetInput() ?? defaultOffsetYWithArrow;
         }
 
         if (changes['autoFocusInput']) {
