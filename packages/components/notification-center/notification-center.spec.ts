@@ -41,6 +41,7 @@ import {
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
+import type { MockInstance } from 'vitest';
 
 /** Mirrors the panel's own rate-limit window for the scroll-to-bottom check. */
 const SCROLLED_TO_BOTTOM_AUDIT_TIME = 100;
@@ -1829,6 +1830,47 @@ describe('KbqNotificationCenter', () => {
             fixture.detectChanges();
 
             expect(renderedReadState(row)).toEqual({ dotRead: true, unreadLabel: false });
+        });
+
+        describe('with several rows open', () => {
+            let items: KbqNotificationItem[];
+            let isRead: MockInstance<KbqNotificationCenterService['isRead']>;
+
+            // A row reads its state through `isRead`, so the calls name the rows refreshed. Without the exhaustive
+            // `checkNoChanges`, which evaluates every binding, refreshed or not.
+            const refreshedRows = () => {
+                fixture.detectChanges(false);
+
+                return new Set(isRead.mock.calls.map(([item]) => item.title));
+            };
+
+            beforeEach(async () => {
+                vi.useFakeTimers();
+
+                items = ['a', 'b', 'c'].map((title) => createItem(title));
+                getService().items = items;
+
+                openCenter();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                isRead = vi.spyOn(getService(), 'isRead');
+            });
+
+            it('refreshes only the row whose toast is read', () => {
+                TestBed.inject(KbqToastService).read.next({ id: items[1].id });
+
+                expect(refreshedRows()).toEqual(new Set(['b']));
+            });
+
+            it('refreshes only the row read in place when the list is handed back', () => {
+                const service = getService();
+
+                items[1].read = true;
+                service.items = [...service.items];
+
+                expect(refreshedRows()).toEqual(new Set(['b']));
+            });
         });
     });
 

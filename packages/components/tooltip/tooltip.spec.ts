@@ -1385,6 +1385,25 @@ describe('KbqTooltip', () => {
 
             await vi.runOnlyPendingTimersAsync();
         });
+
+        it('should hand the gap back to the stylesheet when [kbqTooltipOffset] changes to null', async () => {
+            vi.useFakeTimers();
+
+            component.offset = 24;
+            fixture.detectChanges();
+            await showByHover(fixture, component.trigger().nativeElement);
+
+            expect(tooltipElement()?.style.marginBottom).toBe('24px');
+
+            component.offset = null;
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(tooltipElement()?.style.marginBottom).toBe('');
+
+            await vi.runOnlyPendingTimersAsync();
+        });
     });
 
     describe('kbqTooltipColor', () => {
@@ -2218,7 +2237,8 @@ describe('KbqTooltip', () => {
                 value: 'right',
                 read: (t) => t.tooltipPlacement,
                 reset: 'top'
-            }
+            },
+            { binding: 'kbqTooltipOffset', field: 'offset', value: 24, read: (t) => t.offset, reset: null }
         ];
 
         for (const { binding, field, value, read, reset } of cases) {
@@ -2410,6 +2430,7 @@ class TooltipInModal {
             [kbqPlacementPriority]="placementPriority"
             [kbqPlacement]="placement"
             [kbqVisible]="visible"
+            [kbqTooltipOffset]="offset"
         >
             Show
         </span>
@@ -2432,6 +2453,7 @@ class TooltipUndefinedInputs {
     placementPriority: string[] | undefined;
     placement: 'top' | 'right' | undefined;
     visible: boolean | undefined;
+    offset: number | undefined;
 }
 
 /**

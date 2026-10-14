@@ -7,6 +7,7 @@ import {
     ChangeDetectorRef,
     Component,
     ComponentRef,
+    computed,
     ElementRef,
     EmbeddedViewRef,
     inject,
@@ -53,8 +54,8 @@ export const KBQ_SIDEPANEL_WITH_INDENT = new InjectionToken<boolean>('kbq-sidepa
         '[attr.aria-label]': 'sidepanelConfig.ariaLabel ?? null',
         '[attr.aria-labelledby]': 'ariaLabelledBy',
         '[class.kbq-animations-disabled]': 'animationsDisabled',
-        '[style.transform]': 'stateTransform',
-        '[style.opacity]': 'stateOpacity'
+        '[style.transform]': 'stateTransform()',
+        '[style.opacity]': 'stateOpacity()'
     }
 })
 export class KbqSidepanelContainerComponent extends BasePortalOutlet implements OnDestroy {
@@ -207,8 +208,11 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.startTransition(state);
     }
 
-    /** @docs-private */
-    protected get stateTransform(): string | null {
+    /**
+     * Transform of the panel in its current state.
+     * @internal
+     */
+    protected readonly stateTransform = computed((): string | null => {
         const transforms = kbqSidepanelTransformAnimation[this.position];
 
         switch (this.animationState()) {
@@ -225,10 +229,13 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
             default:
                 return null;
         }
-    }
+    });
 
-    /** @docs-private */
-    protected get stateOpacity(): number | null {
+    /**
+     * Opacity of the panel in its current state.
+     * @internal
+     */
+    protected readonly stateOpacity = computed((): number | null => {
         switch (this.animationState()) {
             case KbqSidepanelAnimationState.Void:
             case KbqSidepanelAnimationState.BottomPanel:
@@ -238,7 +245,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
             default:
                 return 1;
         }
-    }
+    });
 
     /**
      * Recomputes whether this panel exposes an indent strip, after the stack it belongs to changed.

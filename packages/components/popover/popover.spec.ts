@@ -50,7 +50,12 @@ import {
     KBQ_POPOVER_CONFIRM_TEXT,
     KbqPopoverConfirmTrigger
 } from './popover-confirm.component';
-import { KbqPopoverComponent, KbqPopoverTrigger, defaultHoverLeaveDelay } from './popover.component';
+import {
+    KbqPopoverComponent,
+    KbqPopoverTrigger,
+    defaultHoverLeaveDelay,
+    defaultOffsetYWithArrow
+} from './popover.component';
 import { KbqPopoverModule } from './popover.module';
 
 /** `KbqTooltipTrigger` default enter delay (400 ms) plus a buffer for the deferred show. */
@@ -1959,6 +1964,15 @@ describe('KbqPopover', () => {
                 value: false,
                 read: (t) => t.popoverHideIfNotInViewPort(),
                 reset: true
+            },
+            { binding: 'kbqEnterDelay', field: 'enterDelay', value: 100, read: (t) => t.enterDelay, reset: 0 },
+            { binding: 'kbqLeaveDelay', field: 'leaveDelay', value: 300, read: (t) => t.leaveDelay, reset: 0 },
+            {
+                binding: 'kbqPopoverOffset',
+                field: 'offset',
+                value: 20,
+                read: (t) => t.offset,
+                reset: defaultOffsetYWithArrow
             }
         ];
 
@@ -1983,6 +1997,25 @@ describe('KbqPopover', () => {
             undefinedFixture.detectChanges();
 
             expect(undefinedInstance.popoverTrigger().popoverHideIfNotInViewPort()).toBe(true);
+        });
+
+        it('should restore the hover leave delay once kbqLeaveDelay changes to undefined', () => {
+            undefinedInstance.triggers = 'hover';
+            undefinedInstance.leaveDelay = 0;
+            undefinedFixture.detectChanges();
+            undefinedInstance.leaveDelay = undefined;
+            undefinedFixture.detectChanges();
+
+            expect(undefinedInstance.popoverTrigger().leaveDelay).toBe(defaultHoverLeaveDelay);
+        });
+
+        it('should reset kbqPopoverOffset to its default once the binding changes to null', () => {
+            undefinedInstance.offset = 20;
+            undefinedFixture.detectChanges();
+            undefinedInstance.offset = null;
+            undefinedFixture.detectChanges();
+
+            expect(undefinedInstance.popoverTrigger().offset).toBe(defaultOffsetYWithArrow);
         });
 
         it('should drop the header once its binding changes to undefined', async () => {
@@ -2180,6 +2213,9 @@ describe('KbqPopover', () => {
             [kbqPopoverPlacement]="placement"
             [kbqPopoverVisible]="visible"
             [kbqPopoverHideIfNotInViewPort]="hideIfNotInViewPort"
+            [kbqEnterDelay]="enterDelay"
+            [kbqLeaveDelay]="leaveDelay"
+            [kbqPopoverOffset]="offset"
         >
             Trigger
         </button>
@@ -2205,6 +2241,9 @@ class PopoverUndefinedInputs {
     placement: KbqPopUpPlacementValues | undefined;
     visible: boolean | undefined;
     hideIfNotInViewPort: boolean | null | undefined;
+    enterDelay: number | undefined;
+    leaveDelay: number | undefined;
+    offset: number | null | undefined;
 }
 
 @Component({
