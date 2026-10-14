@@ -1152,6 +1152,31 @@ class MultiSelect {
 }
 
 @Component({
+    selector: 'multi-select-with-sort-comparator',
+    imports: [
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select multiple [formControl]="control" [sortComparator]="sortComparator">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class MultiSelectWithSortComparator extends MultiSelect {
+    readonly sortComparator = vi.fn((a: FileFlatNode, b: FileFlatNode, _nodes: FileFlatNode[]) =>
+        b.name.localeCompare(a.name)
+    );
+}
+
+@Component({
     selector: 'select-early-sibling-access',
     imports: [
         KbqTreeSelectModule
@@ -5355,6 +5380,170 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
 
             expect(select().value()).toEqual(['rootNode_1', 'Documents']);
+        });
+    });
+
+    describe('with the data changing under a written value', () => {
+        const settle = async (fixture: ComponentFixture<unknown>) => {
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => configureKbqTreeSelectTestingModule([BasicTreeSelect, MultiSelect]));
+
+        it('should report nothing when the data is replaced with equal nodes (single)', async () => {
+            const fixture = TestBed.createComponent(BasicTreeSelect);
+            const { control, dataSource } = fixture.componentInstance;
+            const values: unknown[] = [];
+            const selectionChange = vi.fn();
+
+            control.setValue('rootNode_1');
+            await settle(fixture);
+
+            control.valueChanges.subscribe((value) => values.push(value));
+            fixture.componentInstance.select().selectionChange.subscribe(selectionChange);
+
+            dataSource.data = buildFileTree(TREE_DATA, 0);
+            await settle(fixture);
+
+            expect(values).toEqual([]);
+            expect(selectionChange).not.toHaveBeenCalled();
+            expect(control.dirty).toBe(false);
+            expect(fixture.componentInstance.select().value()).toBe('rootNode_1');
+        });
+
+        it('should report nothing when the data is replaced with equal nodes (multiple)', async () => {
+            const fixture = TestBed.createComponent(MultiSelect);
+            const { control, dataSource } = fixture.componentInstance;
+            const values: unknown[] = [];
+
+            control.setValue(['rootNode_1', 'Applications']);
+            await settle(fixture);
+
+            control.valueChanges.subscribe((value) => values.push(value));
+
+            dataSource.data = buildFileTree(TREE_DATA, 0);
+            await settle(fixture);
+
+            expect(values).toEqual([]);
+            expect(control.dirty).toBe(false);
+            expect(fixture.componentInstance.select().value()).toEqual(['rootNode_1', 'Applications']);
+        });
+
+        it('should apply a value written before the data arrives', async () => {
+            const fixture = TestBed.createComponent(BasicTreeSelect);
+            const { control, dataSource } = fixture.componentInstance;
+
+            dataSource.data = [];
+            await settle(fixture);
+
+            control.setValue('Applications');
+            await settle(fixture);
+
+            expect(fixture.componentInstance.select().empty()).toBe(true);
+
+            dataSource.data = buildFileTree(TREE_DATA, 0);
+            await settle(fixture);
+
+            expect(fixture.componentInstance.select().value()).toBe('Applications');
+            expect(fixture.componentInstance.select().triggerValue).toBe('Applications');
+            expect(control.dirty).toBe(false);
+        });
+
+        it('should apply the nodes of a multiple value as they arrive', async () => {
+            const fixture = TestBed.createComponent(MultiSelect);
+            const { control, dataSource } = fixture.componentInstance;
+
+            control.setValue(['rootNode_1', 'Applications']);
+            dataSource.data = buildFileTree({ rootNode_1: 'app' }, 0);
+            await settle(fixture);
+
+            expect(fixture.componentInstance.select().value()).toEqual(['rootNode_1']);
+
+            dataSource.data = buildFileTree(TREE_DATA, 0);
+            await settle(fixture);
+
+            expect(fixture.componentInstance.select().value()).toEqual(['rootNode_1', 'Applications']);
+            expect(control.value).toEqual(['rootNode_1', 'Applications']);
+            expect(control.dirty).toBe(false);
+        });
+
+        it('should not apply a written value over a selection of the user', async () => {
+            const fixture = TestBed.createComponent(BasicTreeSelect);
+            const { control, dataSource } = fixture.componentInstance;
+
+            dataSource.data = buildFileTree({ rootNode_1: 'app' }, 0);
+            control.setValue('Applications');
+            await settle(fixture);
+
+            fixture.componentInstance.select().open();
+            await settle(fixture);
+            overlayContainerElement.querySelector<HTMLElement>('kbq-tree-option')!.click();
+            await settle(fixture);
+
+            expect(control.value).toBe('rootNode_1');
+
+            dataSource.data = buildFileTree(TREE_DATA, 0);
+            await settle(fixture);
+
+            expect(fixture.componentInstance.select().value()).toBe('rootNode_1');
+            expect(control.value).toBe('rootNode_1');
+        });
+
+        it('should select a node whose value is 0 written before the content', async () => {
+            const fixture = TestBed.createComponent(BasicTreeSelect);
+            const { control, treeControl } = fixture.componentInstance;
+
+            treeControl.getValue = (node) => (node.name === 'rootNode_1' ? 0 : node.name);
+            control.setValue(0);
+            await settle(fixture);
+
+            expect(fixture.componentInstance.select().value()).toBe(0);
+            expect(fixture.componentInstance.select().triggerValue).toBe('rootNode_1');
+        });
+    });
+
+    describe('with multiple selection ordered', () => {
+        const settle = async (fixture: ComponentFixture<unknown>) => {
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        it('should order a written value by the panel, collapsed branches included', async () => {
+            configureKbqTreeSelectTestingModule([MultiSelect]);
+
+            const fixture = TestBed.createComponent(MultiSelect);
+
+            await settle(fixture);
+
+            fixture.componentInstance.control.setValue(['Applications', 'Sun', 'rootNode_1']);
+            await settle(fixture);
+
+            const tags = Array.from<Element>(fixture.nativeElement.querySelectorAll('.kbq-select__trigger kbq-tag'));
+
+            expect(fixture.componentInstance.select().value()).toEqual(['rootNode_1', 'Sun', 'Applications']);
+            expect(tags.map((tag) => tag.textContent!.trim())).toEqual(['rootNode_1', 'Sun', 'Applications']);
+        });
+
+        it('should hand sortComparator the data nodes in panel order', async () => {
+            configureKbqTreeSelectTestingModule([MultiSelectWithSortComparator]);
+
+            const fixture = TestBed.createComponent(MultiSelectWithSortComparator);
+            const { sortComparator, treeControl } = fixture.componentInstance;
+
+            await settle(fixture);
+
+            fixture.componentInstance.control.setValue(['rootNode_1', 'Sun', 'Applications']);
+            await settle(fixture);
+
+            const [a, b, nodes] = sortComparator.mock.calls[0];
+
+            expect(a).toBeInstanceOf(FileFlatNode);
+            expect(b).toBeInstanceOf(FileFlatNode);
+            expect(nodes).toBe(treeControl.dataNodes);
+            expect(fixture.componentInstance.select().value()).toEqual(['Sun', 'rootNode_1', 'Applications']);
         });
     });
 

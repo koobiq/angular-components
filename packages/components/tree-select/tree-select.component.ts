@@ -493,12 +493,11 @@ export class KbqTreeSelect
     readonly errorStateMatcher = input<ErrorStateMatcher>();
 
     /**
-     * Function used to sort the values in a select in multiple mode.
-     * Follows the same logic as `Array.prototype.sort`.
+     * Function used to sort the values in a select in multiple mode, by default their order in the panel.
+     * Follows the same logic as `Array.prototype.sort`. Receives two selected data nodes and every data node of the
+     * tree in panel order, collapsed branches included — a node in a collapsed branch has no option.
      */
-    readonly sortComparator = input<(a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number>(
-        undefined!
-    );
+    readonly sortComparator = input<(a: any, b: any, nodes: any[]) => number>(undefined!);
 
     /**
      * Decides which selected nodes the projected `KbqCleaner` removes: return `true` to clear the node,
@@ -868,8 +867,15 @@ export class KbqTreeSelect
     /** Reactive mirror of the state the error colour is derived from. */
     private readonly invalidState = signal(false);
 
-    // Used for storing the values that were assigned before the options were initialized.
-    private tempValues: string | string[] | null;
+    /**
+     * The last value the form wrote while the tree could not resolve all of it yet — before the content was
+     * initialized, or before the data held every node it names. Applied again as the data changes, until every node
+     * is found or the selection is reported to the form.
+     */
+    private pendingValue: { value: any } | null = null;
+
+    /** The data nodes {@link pendingValue} was last resolved against. */
+    private pendingValueDataNodes: readonly unknown[] | null = null;
 
     /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
     private writingValue = false;
@@ -1017,8 +1023,9 @@ export class KbqTreeSelect
         this.selectionModel.changed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.syncSelectionState();
 
-            if (!this.writingValue) {
-                this.onChange(this.selectedValues);
+            // Neither a written value nor the tree re-pointing the selection at reloaded data is the user's change.
+            if (!this.writingValue && !tree.syncingSelection) {
+                this.reportValue();
             }
 
             if (this.multiSelection) {
@@ -1041,9 +1048,14 @@ export class KbqTreeSelect
         // never re-created — every options change handled twice, for the lifetime of the component.
         tree.initializeForEmbedding(this.selectionModel);
 
-        // Options render after the first value reaches the control, so the trigger is built before any
-        // of them exists and its `disabled` flags can be stale.
         tree.renderedOptions.changes.pipe(delay(0), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            // A value written ahead of its data, such as one loaded over HTTP, is applied once the nodes arrive.
+            if (this.pendingValue && tree.treeControl.dataNodes !== this.pendingValueDataNodes) {
+                this.applyPendingValue();
+            }
+
+            // Options render after the first value reaches the control, so the trigger is built before any
+            // of them exists and its `disabled` flags can be stale.
             if (this.multiSelection && this.hasStaleTriggerValues()) {
                 this.refreshTriggerValues();
             }
@@ -1074,10 +1086,12 @@ export class KbqTreeSelect
             tree.noUnselectLast = false;
         }
 
-        if (this.tempValues) {
-            this.setSelectionByValue(this.tempValues);
-            this.tempValues = null;
+        // A missing value written ahead of the content leaves the selection as empty as it starts.
+        if (this.pendingValue?.value === null || this.pendingValue?.value === undefined) {
+            this.pendingValue = null;
         }
+
+        this.applyPendingValue();
 
         this.userInteractionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (!this.multiSelection && this.panelOpen) {
@@ -1161,9 +1175,15 @@ export class KbqTreeSelect
             this.tree()!.keyManager.setActiveItem(-1);
             this.changeDetectorRef.detectChanges();
 
-            this.onChange(this.selectedValues);
+            this.reportValue();
             this.selectionChange.emit(new KbqTreeSelectChange(this, null, false, targets));
         });
+    }
+
+    /** Reports the selection to the form, which then holds it instead of a value still waiting for its nodes. */
+    private reportValue(): void {
+        this.pendingValue = null;
+        this.onChange(this.selectedValues);
     }
 
     /**
@@ -1298,12 +1318,35 @@ export class KbqTreeSelect
     writeValue(value: any): void {
         // Untracked: a form control set from an `effect()` writes here synchronously.
         untracked(() => {
-            if (this.tree()?.treeControl) {
-                this.setSelectionByValue(value);
-            } else {
-                this.tempValues = value;
+            this.pendingValue = { value };
+
+            // Until then the select has no selection model shared with the tree, and `ngAfterContentInit` applies it.
+            if (this.contentInitialized()) {
+                this.applyPendingValue();
             }
         });
+    }
+
+    /** Applies the value the form wrote last, and lets it go once the data holds every node it names. */
+    private applyPendingValue(): void {
+        const pending = this.pendingValue;
+        const treeControl = this.tree()?.treeControl;
+
+        if (!pending || !treeControl) return;
+
+        // Dropped first, so a value that throws is not applied again with every change of the data.
+        this.pendingValue = null;
+        this.pendingValueDataNodes = treeControl.dataNodes;
+        this.setSelectionByValue(pending.value);
+
+        const { value } = pending;
+        const values: any[] =
+            value === null || value === undefined ? [] : this.multiSelection && Array.isArray(value) ? value : [value];
+
+        // Unless another value was written meanwhile.
+        if (this.pendingValue === null && !values.every((item) => treeControl.hasValue(item))) {
+            this.pendingValue = pending;
+        }
     }
 
     /**
@@ -1476,7 +1519,7 @@ export class KbqTreeSelect
             )
         );
 
-        this.onChange(this.selectedValues);
+        this.reportValue();
 
         this.restoreFocusAfterRemoval(removedIndex);
     }
@@ -1846,27 +1889,39 @@ export class KbqTreeSelect
                 !this.panelOpenValue() &&
                 !this.multiSelection &&
                 treeValue.keyManager.activeItem &&
-                // The active option follows a written value; selecting it again would report it as the user's.
-                !this.writingValue
+                // The active option follows a written value, or the selection the tree re-pointed at reloaded data;
+                // selecting it again would report it as the user's.
+                !this.writingValue &&
+                !treeValue.syncingSelection
             ) {
                 treeValue.keyManager.activeItem.selectViaInteraction();
             }
         });
     }
 
-    /** Sorts the selected values in the selected based on their order in the panel. */
+    /**
+     * Sorts the selected nodes by their order in the panel, collapsed branches included, or with `sortComparator`.
+     * A node missing from the data sorts after every node in it.
+     */
     private sortValues() {
-        if (this.multiSelection) {
-            const options = this.options.toArray();
+        if (!this.multiSelection) return;
 
-            this.selectionModel.sort((a, b) => {
-                const sortComparator = this.sortComparator();
+        const nodes = this.tree()!.treeControl.dataNodes ?? [];
+        const sortComparator = this.sortComparator();
 
-                return sortComparator ? sortComparator(a, b, options) : options.indexOf(a) - options.indexOf(b);
-            });
+        if (sortComparator) {
+            this.selectionModel.sort((a, b) => sortComparator(a, b, nodes));
+        } else {
+            // Indexed once: `indexOf` in the comparator would scan the whole data set on every comparison.
+            const order = new Map(nodes.map((node, index) => [node, index]));
+            const indexOf = (node: unknown) => order.get(node) ?? nodes.length;
 
-            this.syncSelectionState();
+            this.selectionModel.sort((a, b) => indexOf(a) - indexOf(b));
         }
+
+        this.syncSelectionState();
+        // The tags were built while the model emitted, ahead of the sort.
+        this.refreshTriggerValues();
     }
 
     /** Mirrors the selection into the `value` and `empty` signals. */

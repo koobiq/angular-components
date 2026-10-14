@@ -590,8 +590,24 @@ export class KbqTreeSelection
     /** The `disabled` binding the state was last set from, see `applyDisabledInput`. */
     private appliedDisabledInput: boolean | undefined;
 
-    /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
+    /** Backs {@link syncingSelection}: a change of the selection made by code is no change to report back. */
     private writingValue = false;
+
+    /**
+     * Whether the tree is changing the selection model itself — to a value the form wrote, or onto the nodes of
+     * reloaded data — rather than acting on the user. A host sharing the model, such as `KbqTreeSelect`, reports
+     * no such change.
+     * @docs-private
+     */
+    get syncingSelection(): boolean {
+        return this.writingValue;
+    }
+
+    /**
+     * The last value the form wrote while some of the nodes it names were not in the data yet. Applied again as the
+     * data changes, until every node is found or the selection is reported to the form.
+     */
+    private unresolvedValue: { value: any } | null = null;
 
     private destroyed = false;
 
@@ -775,9 +791,15 @@ export class KbqTreeSelection
             this.pendingValueReport = false;
 
             if (!this.destroyed) {
-                this.onChange(this.getSelectedValues());
+                this.reportValue();
             }
         });
+    }
+
+    /** Reports the selection to the form, which then holds it instead of a value still waiting for its nodes. */
+    private reportValue(): void {
+        this.unresolvedValue = null;
+        this.onChange(this.getSelectedValues());
     }
 
     /** (Re)points the change subscription at the current {@link selectionModel}. */
@@ -788,7 +810,7 @@ export class KbqTreeSelection
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 if (!this.writingValue) {
-                    this.onChange(this.getSelectedValues());
+                    this.reportValue();
                 }
 
                 this.renderedOptions.notifyOnChanges();
@@ -1290,21 +1312,38 @@ export class KbqTreeSelection
             // The form holds the value it writes, so a mode change has nothing left to report.
             this.pendingValueReport = false;
 
-            // Restored rather than cleared: a value written while this one is applied must not end the outer write.
-            const wasWritingValue = this.writingValue;
-
-            this.writingValue = true;
-
-            try {
-                if (value) {
-                    this.setOptionsFromValues(this.multiple ? value : [value]);
-                } else {
-                    this.selectionModel.clear();
-                }
-            } finally {
-                this.writingValue = wasWritingValue;
-            }
+            this.applyWrittenValue(value);
         });
+    }
+
+    /** Selects the nodes of a value the form wrote, and keeps the value for the data still to come if any is missing. */
+    private applyWrittenValue(value: any): void {
+        // A node value can be falsy, `0` or `''`: only a missing value clears the single selection.
+        const values: any[] | null = this.multiple
+            ? Array.isArray(value)
+                ? value
+                : null
+            : value === null || value === undefined
+              ? null
+              : [value];
+
+        this.syncSelection(() => (values ? this.setOptionsFromValues(values) : this.selectionModel.clear()));
+
+        this.unresolvedValue = values?.some((item) => !this.treeControl.hasValue(item)) ? { value } : null;
+    }
+
+    /** Runs a change of the selection made by code, which reports nothing back to the form or to a host. */
+    private syncSelection(change: () => void): void {
+        // Restored rather than cleared: a value written while this one is applied must not end the outer write.
+        const wasWritingValue = this.writingValue;
+
+        this.writingValue = true;
+
+        try {
+            change();
+        } finally {
+            this.writingValue = wasWritingValue;
+        }
     }
 
     /**
@@ -1354,6 +1393,9 @@ export class KbqTreeSelection
      * Rebinds orphan node references in selectionModel to current treeControl.dataNodes by value.
      * Needed after dataSource.data is replaced — selectionModel holds references to old node
      * objects, but options render with new ones, so toggle()/isSelected() break on identity.
+     *
+     * A value the form wrote ahead of its nodes is applied again instead, which resolves every node anew.
+     * Either way the selection only follows the data, so nothing is reported.
      */
     private syncSelectionModelToDataNodes(): void {
         const currentNodes = this.treeControl.dataNodes;
@@ -1362,6 +1404,12 @@ export class KbqTreeSelection
         // Skips work on filter / expand / selection-toggle re-renders where data ref is stable.
         if (currentNodes === this.lastSyncedDataNodes) return;
         this.lastSyncedDataNodes = currentNodes;
+
+        if (this.unresolvedValue) {
+            this.applyWrittenValue(this.unresolvedValue.value);
+
+            return;
+        }
 
         if (this.selectionModel.isEmpty() || !currentNodes?.length) return;
 
@@ -1387,7 +1435,7 @@ export class KbqTreeSelection
             return replacement ?? node;
         });
 
-        this.selectionModel.setSelection(...reconciled);
+        this.syncSelection(() => this.selectionModel.setSelection(...reconciled));
     }
 
     /** @docs-private */
