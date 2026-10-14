@@ -530,10 +530,10 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
             return;
         }
 
-        // When animations are enabled, Angular may end up removing the option from the DOM a little
-        // earlier than usual, causing it to be blurred and throwing off the logic in the tree
-        // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until after the next render.
+        // Deferred until the focus has settled: whatever takes it — this option's action button, or another option,
+        // which marks itself focused on a microtask — records it only after this blur. Reported before that, the move
+        // reads as the focus leaving the options: the option would drop its focused state while its own action button
+        // holds the focus, and the tree its active option.
         afterNextRender(
             () => {
                 // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.
