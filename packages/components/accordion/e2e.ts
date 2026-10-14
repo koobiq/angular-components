@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
+import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 
 @Component({
     selector: 'e2e-accordion-states',
@@ -164,6 +165,9 @@ export class E2eAccordionStates {}
             height: 600px;
         }
     `,
+    // The e2e app turns the motion of the components off; this fixture is about the motion, which follows
+    // the reduced motion a spec emulates.
+    providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: false } }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         'data-testid': 'e2eAccordionContentPanel'
