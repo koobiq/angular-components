@@ -217,14 +217,9 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
     private readonly hasFocusState = signal(false);
 
-    /**
-     * Whether the item is disabled.
-     *
-     * Deliberately kept a plain accessor input rather than a signal: `FocusKeyManager` reads it as a boolean
-     * through its default skip predicate, and a signal would always read truthy there — the manager would then
-     * skip every item and arrow navigation would stop working entirely. It also reads `true` for a decorative
-     * element, which the key manager has to skip just the same.
-     */
+    /** Whether the item is disabled. Also `true` for a decorative element, which the key manager skips as well. */
+    // An accessor, not a signal: `FocusKeyManager` reads it as a boolean through its default skip predicate, where a
+    // signal would always read truthy — the manager would skip every item and arrow navigation would stop working.
     get disabled(): boolean {
         return this.disabledState() || this.decorative();
     }
@@ -355,10 +350,10 @@ export class KbqNavbarFocusableItem implements OnChanges, AfterContentInit, Afte
 
     /** @docs-private */
     blur(): void {
-        // When animations are enabled, Angular may end up removing the option from the DOM a little
-        // earlier than usual, causing it to be blurred and throwing off the logic in the list
-        // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until after the next render. An item blurred by its own destruction has nothing to update.
+        // Deferred until the focus has settled: an item hands its focus to its nested button or form field, which
+        // registers its focus only after this blur, and the item gets no focus event of its own afterwards. A blur
+        // reported before that would read as no item being focused and clear the navbar's active item. An item
+        // blurred by its own destruction has nothing to update.
         if (this.destroyRef.destroyed) return;
 
         afterNextRender(

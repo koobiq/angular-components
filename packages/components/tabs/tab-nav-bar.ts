@@ -14,7 +14,6 @@ import {
     forwardRef,
     inject,
     input,
-    numberAttribute,
     OnChanges,
     OnDestroy,
     QueryList,
@@ -24,7 +23,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { isUndefined, kbqQueryListFrom } from '@koobiq/components/core';
+import { isUndefined, kbqOptionalNumberAttribute, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { startWith } from 'rxjs/operators';
@@ -263,7 +262,7 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
     /** @docs-private */
     readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'tabIndex',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     private readonly uniqueId = `kbq-tab-link-${nextUniqueId++}`;
@@ -356,11 +355,7 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
             if (disabled !== undefined) this.disabled = disabled;
         }
 
-        if (changes['tabIndexInput']) {
-            const tabIndex = this.tabIndexInput();
-
-            if (tabIndex !== undefined) this.tabIndex = tabIndex;
-        }
+        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
 
         // Last: the nav bar reads the id of the link that becomes active.
         if (changes['activeInput']) {

@@ -20,7 +20,6 @@ import {
     Injector,
     input,
     NgZone,
-    numberAttribute,
     OnChanges,
     OnDestroy,
     QueryList,
@@ -37,6 +36,7 @@ import {
     kbqAnimationsDisabled,
     kbqGetScrollOverflowTolerance,
     kbqHasScrollOverflow,
+    kbqOptionalNumberAttribute,
     LEFT_ARROW,
     RIGHT_ARROW,
     UP_ARROW
@@ -129,7 +129,7 @@ export abstract class KbqPaginatedTabHeader
     /** @docs-private */
     readonly selectedIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'selectedIndex',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */
@@ -351,11 +351,7 @@ export abstract class KbqPaginatedTabHeader
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
-        if (changes['selectedIndexInput']) {
-            const selectedIndex = this.selectedIndexInput();
-
-            if (selectedIndex !== undefined) this.selectedIndex = selectedIndex;
-        }
+        if (changes['selectedIndexInput']) this.selectedIndex = this.selectedIndexInput() ?? 0;
 
         if (changes['disablePaginationInput']) {
             const disablePagination = this.disablePaginationInput();

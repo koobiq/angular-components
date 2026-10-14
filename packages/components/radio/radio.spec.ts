@@ -739,6 +739,19 @@ describe('KbqRadio', () => {
 
             expect(radios[0].name).toBe(group.name());
         });
+
+        it.each([undefined, null])('should restore the default tabIndex once the binding changes to %s', (value) => {
+            host.tabIndex = 3;
+            fixture.detectChanges();
+
+            expect(radios[0].tabIndex).toBe(3);
+
+            host.tabIndex = value;
+            fixture.detectChanges();
+
+            expect(radios[0].tabIndex).toBe(0);
+            expect(fixture.nativeElement.querySelector('input').getAttribute('tabindex')).toBe('0');
+        });
     });
 
     describe('ControlValueAccessor', () => {
@@ -925,7 +938,7 @@ class RadiosInsideRadioGroup {
     imports: [KbqRadioModule],
     template: `
         <kbq-radio-group [value]="groupValue" [selected]="selected">
-            <kbq-radio-button [value]="'fire'" [labelPosition]="labelPosition" [name]="name">
+            <kbq-radio-button [value]="'fire'" [labelPosition]="labelPosition" [name]="name" [tabIndex]="tabIndex">
                 Charmander
             </kbq-radio-button>
             <kbq-radio-button [value]="secondValue">Squirtle</kbq-radio-button>
@@ -937,6 +950,7 @@ class RadioUndefinedBindings {
     selected: KbqRadioButton | undefined;
     labelPosition: 'before' | 'after' | undefined;
     name: string | undefined;
+    tabIndex: number | null | undefined;
     secondValue: string | undefined = 'water';
 }
 

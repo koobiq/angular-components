@@ -20,7 +20,6 @@ import {
     InjectionToken,
     input,
     isDevMode,
-    numberAttribute,
     OnChanges,
     OnDestroy,
     output,
@@ -32,7 +31,12 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_PARENT_ANIMATION_COMPONENT, kbqQueryListFrom, KbqStateSaving } from '@koobiq/components/core';
+import {
+    KBQ_PARENT_ANIMATION_COMPONENT,
+    kbqOptionalNumberAttribute,
+    kbqQueryListFrom,
+    KbqStateSaving
+} from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -195,7 +199,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     /** @docs-private */
     readonly selectedIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'selectedIndex',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */
@@ -313,11 +317,9 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member as the decorator input did, except that `undefined` resets a member
         // typed without it to its default; unbound, it leaves what code wrote.
-        if (changes['selectedIndexInput']) {
-            const selectedIndex = this.selectedIndexInput();
-
-            if (selectedIndex !== undefined) this.selectedIndex = selectedIndex;
-        }
+        // Assigned through `activeTab`, because the `selectedIndex` setter takes no `null` — the default, which selects
+        // the first enabled tab.
+        if (changes['selectedIndexInput']) this.activeTab = this.selectedIndexInput() ?? null;
 
         // A bound `undefined` is handed over too: binding `activeTab` at all lets the application drive the
         // selection, which turns the state saving off.
@@ -374,8 +376,8 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
      * a new selected tab should transition in (from the left or right).
      */
     ngAfterContentChecked() {
-        // Brings `tabs` up to date first, so that its `changes` subscribers run before the selection is computed, as
-        // they did with a decorator query.
+        // Brings `tabs` up to date first, so that its `changes` subscribers, which keep the selected tab when tabs are
+        // added or removed, run before the selection is computed.
         this.tabsList();
 
         // Don't clamp the `indexToSelect` immediately in the setter because it can happen that

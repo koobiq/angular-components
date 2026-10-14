@@ -22,6 +22,7 @@ import {
     dispatchMouseEvent
 } from '@koobiq/components/core';
 import { NESTED_HOVER_SWITCH_DELAY } from '@koobiq/components/dropdown';
+import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { of } from 'rxjs';
@@ -419,6 +420,15 @@ describe('KbqAppSwitcher', () => {
             expect(trigger.groupBy).toBe(defaultGroupBy);
             expect(trigger.currentApps).toHaveLength(2);
             expect(trigger.currentApps[0].aliases).toHaveLength(GROUP_APPS.length);
+        });
+
+        it.each([undefined, null])('falls back to the default offset for %s', (value) => {
+            expect(trigger.offset).toBe(4);
+
+            fixture.componentInstance.offset = value;
+            fixture.detectChanges();
+
+            expect(trigger.offset).toBe(defaultOffsetYWithArrow);
         });
     });
 
@@ -2348,6 +2358,7 @@ class AppSwitcherGrouped {
             [backdropClass]="backdropClass"
             [sites]="sites"
             [groupBy]="groupBy"
+            [offset]="offset"
         >
             Trigger
         </button>
@@ -2358,6 +2369,7 @@ class AppSwitcherBoundInputs {
     backdropClass: string | undefined = 'custom-backdrop';
     sites: KbqAppSwitcherSite[] | undefined = [{ ...GROUP_SITE, apps: [...GROUP_SITE.apps] }];
     groupBy: KbqAppSwitcherGroupBy | undefined = (app, _groups, untyped) => untyped.push(app);
+    offset: number | null | undefined = 4;
 }
 
 @Component({

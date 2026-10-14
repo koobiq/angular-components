@@ -141,10 +141,10 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     });
 
     /** Whether the AccordionItem is disabled. */
-    // Kept as an `@Input` accessor (not a signal): `KbqAccordionItem` is a `FocusKeyManager` option,
-    // and `ListKeyManagerOption.disabled` (core/a11y/key-manager) is read as a plain `boolean` — a
-    // signal function is always truthy, which makes the key manager treat every item as disabled.
-    // The getter also merges the item's own state with the parent accordion's (an effective value).
+    // An accessor, not a signal: `KbqAccordionItem` is a `FocusKeyManager` option, and
+    // `ListKeyManagerOption.disabled` (core/a11y/key-manager) is read as a plain `boolean` — a signal
+    // function is always truthy, which makes the key manager treat every item as disabled. The getter
+    // also merges the item's own state with the parent accordion's.
     get disabled(): boolean {
         return this.accordion.disabled() || this._disabled;
     }

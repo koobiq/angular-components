@@ -84,6 +84,8 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
 
     private lastFocusOrigin: FocusOrigin = null;
 
+    private tabOrderRestore?: ReturnType<typeof setTimeout>;
+
     private cachedOptionFocusChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
     private cachedOptionBlurChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
 
@@ -101,18 +103,8 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
 
-        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.tabIndex.set(-1);
-            // Also written to the DOM right away: the browser moves the focus as soon as this Tab is handled, and
-            // the binding is only applied by the change detection that runs after it.
-            this.elementRef.nativeElement.tabIndex = -1;
-
-            // Restored on a macrotask so the browser has moved focus out of the navbar first. Bound to the
-            // component's lifetime: without it the callback can run against a destroyed view.
-            const timeoutId = setTimeout(() => this.tabIndex.set(0));
-
-            this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
-        });
+        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.leaveTabOrder());
+        this.destroyRef.onDestroy(() => clearTimeout(this.tabOrderRestore));
 
         this.focusableItems.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.resetOptions();
@@ -218,6 +210,24 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
 
     private updateTabIndex(): void {
         this.tabIndex.set(this.focusableItems.length === 0 ? -1 : 0);
+    }
+
+    /**
+     * Takes the host out of the tab order while a Tab leaves the navbar, so that Shift+Tab from an item does not land
+     * on the host, which would hand the focus straight back to an item.
+     */
+    private leaveTabOrder(): void {
+        const host = this.elementRef.nativeElement;
+
+        // Written to the DOM only: the browser moves the focus as soon as this Tab is handled, before change
+        // detection could apply a binding, and `tabIndex` is a model the consumer may bind — writing it would
+        // report changes the consumer never made.
+        host.tabIndex = -1;
+
+        // Restored on a macrotask, once the browser has moved the focus. The binding still holds the model's value
+        // and will not write it again, so the restore puts that value back itself.
+        clearTimeout(this.tabOrderRestore);
+        this.tabOrderRestore = setTimeout(() => (host.tabIndex = this.tabIndex()));
     }
 
     private isValidIndex(index: number): boolean {

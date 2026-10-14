@@ -119,7 +119,7 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     /** Duration for the tab's animation. */
     readonly animationDuration = input<string>('0ms');
 
-    /** The duration as CSS: a bare number is in milliseconds, as the former animation trigger read it. */
+    /** The duration as CSS time: a bare number, which CSS rejects, is taken as milliseconds. */
     protected readonly cssAnimationDuration = computed(() => {
         const duration = this.animationDuration();
 

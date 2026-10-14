@@ -41,6 +41,7 @@ import {
     KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
+    kbqOptionalNumberAttribute,
     KbqSearchExpandableLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
@@ -280,7 +281,7 @@ export class KbqSearchExpandable
     /** @docs-private */
     readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'tabIndex',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -290,8 +291,7 @@ export class KbqSearchExpandable
             const isOpened = this.isOpenedInput();
 
             // A form directive on the element writes its value before this hook runs, and expands the field when the
-            // value is not empty: a first binding of `false` must not collapse it again. A decorator input was
-            // applied before that write, so it never could.
+            // value is not empty: a first binding of `false` must not collapse it again.
             if (isOpened !== undefined && (isOpened || !changes['isOpenedInput'].firstChange)) {
                 this.isOpened = isOpened;
             }
@@ -311,11 +311,7 @@ export class KbqSearchExpandable
             if (disabled !== undefined) this.disabled = disabled;
         }
 
-        if (changes['tabIndexInput']) {
-            const tabIndex = this.tabIndexInput();
-
-            if (tabIndex !== undefined) this.tabIndex = tabIndex;
-        }
+        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
     }
 
     constructor() {
