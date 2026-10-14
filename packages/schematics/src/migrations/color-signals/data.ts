@@ -24,7 +24,6 @@ const COLORED_TYPES = [
     'KbqFormField',
     'KbqHint',
     'KbqError',
-    'KbqPasswordHint',
     'KbqReactivePasswordHint',
     'KbqCleaner',
     'KbqProgressBar',
@@ -51,7 +50,6 @@ export const EXPORT_AS_TO_TYPE: Readonly<Record<string, string>> = {
     kbqFormField: 'KbqFormField',
     kbqHint: 'KbqHint',
     kbqError: 'KbqError',
-    kbqPasswordHint: 'KbqPasswordHint',
     kbqReactivePasswordHint: 'KbqReactivePasswordHint',
     kbqCleaner: 'KbqCleaner',
     kbqTag: 'KbqTag'
@@ -67,7 +65,6 @@ export const ELEMENT_TO_TYPE: Readonly<Record<string, string>> = {
     'kbq-form-field': 'KbqFormField',
     'kbq-hint': 'KbqHint',
     'kbq-error': 'KbqError',
-    'kbq-password-hint': 'KbqPasswordHint',
     'kbq-reactive-password-hint': 'KbqReactivePasswordHint',
     'kbq-cleaner': 'KbqCleaner',
     'kbq-progress-bar': 'KbqProgressBar',

@@ -113,8 +113,8 @@ function isSsrBuildTarget(buildTarget: workspaces.TargetDefinition): boolean {
  * `projectName`), merges the Koobiq style entries for `theme` into its `build` target's `styles`
  * array, when it has one. Returns per-project wiring info the caller uses to edit index.html and
  * the project's bootstrap file afterward — for every application project, regardless of whether it
- * had a `build` target to wire styles into, since the bootstrap file (and thus the theme/animations
- * providers) is resolved independently of it.
+ * had a `build` target to wire styles into, since the bootstrap file (and thus the theme providers)
+ * is resolved independently of it.
  *
  * Only the target literally named `build` is touched — not `test` (Karma) or `serve` — keeping the
  * change's blast radius minimal.
