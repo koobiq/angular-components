@@ -451,16 +451,19 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     ngAfterContentInit(): void {
         if (this.closeOnScroll === null) {
-            this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
-                if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
+            this.scrollDispatcher
+                .scrolled()
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe((scrollable: CdkScrollable | void) => {
+                    if (!scrollable?.getElementRef().nativeElement.classList.contains('kbq-hide-nested-popup')) return;
 
-                const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
-                const childRects = this.elementRef.nativeElement.getBoundingClientRect();
+                    const parentRects = scrollable.getElementRef().nativeElement.getBoundingClientRect();
+                    const childRects = this.elementRef.nativeElement.getBoundingClientRect();
 
-                if (childRects.bottom < parentRects.top || childRects.top > parentRects.bottom) {
-                    this.hide();
-                }
-            });
+                    if (childRects.bottom < parentRects.top || childRects.top > parentRects.bottom) {
+                        this.hide();
+                    }
+                });
         }
     }
 
