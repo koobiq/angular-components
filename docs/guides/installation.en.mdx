@@ -60,16 +60,16 @@ After installation, you need to include the library styles. Add the following fi
   "node_modules/@koobiq/icons/fonts/kbq-icons.css",
   "node_modules/@koobiq/design-tokens/web/css-tokens.css",
   "node_modules/@koobiq/design-tokens/web/css-tokens-light.css",
-  "node_modules/@koobiq/design-tokens/web/component-tokens.css",
-  "node_modules/@koobiq/design-tokens/web/component-tokens-light.css",
   "node_modules/@koobiq/components/prebuilt-themes/theme.css",
   "src/styles.css"
 ]
 ```
 
-The `component-tokens-*.css` files hold the values of the three components whose tokens
-`@koobiq/design-tokens` still ships — code-block, scrollbar and skeleton. They are opt-in, and the
-library does not carry copies of them, so leaving them out renders those three unstyled.
+`@koobiq/design-tokens` ships code-block, scrollbar and skeleton's tokens as opt-in files, separate
+from the rest — but `prebuilt-themes/theme.css` already carries their values, baked in at
+`@koobiq/components`' own build time, so the three render styled without an extra import. Load
+`@koobiq/design-tokens/web/component-tokens-{light,dark}.css` yourself only to override those values
+to something other than what `@koobiq/components` shipped with.
 
 ### Setting up theme
 

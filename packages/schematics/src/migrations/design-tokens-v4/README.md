@@ -2,9 +2,10 @@
 
 This schematic moves a project to `@koobiq/design-tokens` 4, which `@koobiq/components` now requires.
 
-The bump is not optional. v4 removed the component tokens, and the library stopped declaring copies of
-the three it still ships — code-block, scrollbar and skeleton — so a project left on v3 renders those
-three with no values at all.
+The bump is not optional — `@koobiq/components` declares `@koobiq/design-tokens@^4.0.0` as a peer
+dependency now. v4 removed the component tokens except for code-block, scrollbar and skeleton, which it
+ships as opt-in files; a project needs nothing extra for those three, since `@koobiq/components`' own
+`prebuilt-themes/theme.css` already bakes their values in.
 
 The entry is rewritten wherever the project declared it, `dependencies` or `devDependencies`, and
 added to `dependencies` when it declared it nowhere: a project can reach the tokens through the
@@ -18,9 +19,8 @@ for it, so this schematic points at that instead of reimplementing the same rewr
 npx koobiq-tokens-codemod src
 ```
 
-It is warn-only about the three manual steps: adding `component-tokens*.css` to the styles, running the
-codemod, and looking at the code blocks and scrollbars — the only two places v4 changes pixels without
-being asked.
+It is warn-only about the two manual steps: running the codemod, and looking at the code blocks and
+scrollbars — the only two places v4 changes pixels without being asked.
 
 [Params](schema.ts)
 
