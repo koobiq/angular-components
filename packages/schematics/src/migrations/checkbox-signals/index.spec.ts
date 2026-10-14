@@ -347,6 +347,38 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('read-only signal inputs');
     });
 
+    it('rewrites a read under a prefix operator that does not write, and leaves ++ / -- alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    read(checkbox: KbqCheckbox) {\n' +
+                '        return [!checkbox.big, -checkbox.value, +checkbox.id, ~checkbox.name];\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('return [!checkbox.big(), -checkbox.value(), +checkbox.id(), ~checkbox.name()];');
+        expect(messages.join('\n')).not.toContain('read-only signal inputs');
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCheckbox } from '@koobiq/components/checkbox';\n" +
+                'class Demo {\n' +
+                '    write(checkbox: KbqCheckbox) {\n' +
+                '        ++checkbox.value;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(ts)).toContain('++checkbox.value;');
+        expect(messages.join('\n')).toContain('read-only signal inputs');
+    });
+
     it('does not warn about a write on an unrelated receiver', async () => {
         const ts = firstTsPath();
 

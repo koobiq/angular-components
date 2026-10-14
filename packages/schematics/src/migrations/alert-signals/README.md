@@ -22,8 +22,9 @@ The schematic walks every `.ts` and `.html` file in the project (skipping `node_
 files that reference the alert:
 
 - **TypeScript reads.** For a receiver whose static type is annotated `KbqAlert` (method/function params, class
-  fields — including `@ViewChild(KbqAlert) x: KbqAlert` and constructor parameter-properties — and typed locals),
-  a read of a value-safe signal member becomes a call:
+  fields — including `@ViewChild(KbqAlert) x: KbqAlert`, constructor parameter-properties and `inject(KbqAlert)` —
+  and typed locals), a read of a value-safe signal member becomes a call. A nested declaration that reuses the
+  receiver's name, and `this.<field>` inside a `function` that rebinds `this`, are left alone:
     - `alert.compact` → `alert.compact()` (incl. optional chain `alert?.compact` → `alert.compact()`)
     - `alert.alertStyle` → `alert.alertStyle()`
 - **Template reference reads.** For a bare `#ref` or `#ref="kbqAlert"` on `<kbq-alert>`, reads of
@@ -42,7 +43,7 @@ These changes can't be rewritten safely and are surfaced as warnings (in both `f
 | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `alert.alertColor` read                                                                  | Now a read-only `InputSignal`: read as `alert.alertColor()`. **Value changed** — the getter used to return the CSS class `kbq-alert_<color>`, it now returns the raw color (`error`). Update any code that expected the class string. |
 | `alert.alertColor = …` write                                                             | The input is read-only. Drive it with the `[alertColor]` binding (or a signal in your own component), not an assignment.                                                                                                              |
-| `alert.compact = …` / `alertStyle` write, in code or through a template ref              | The inputs are read-only. Bind `[compact]` / `[alertStyle]` instead of assigning them.                                                                                                                                                |
+| `alert.compact = …` / `alertStyle` write, in code or through a template ref              | The inputs are read-only. Bind `[compact]` / `[alertStyle]` instead of assigning them. Also reported for `\|\|=`, `+=`, `++`, `delete` and a destructuring target.                                                                    |
 | `alert.icon` / `iconItem` / `button` / `title` / `control` / `closeButton` / `isColored` | Now `protected` — inaccessible from outside. Refactor to avoid reading component internals.                                                                                                                                           |
 | `[alertColor]` / `[alertStyle]` with a custom string                                     | The inputs are narrowed to the enum literals (`'error' \| 'warning' \| 'success' \| 'info'`, `'default' \| 'colored'`). Replace typos/custom strings with a valid value.                                                              |
 | `<kbq-alert compact>` (bare attribute)                                                   | Now applies the `booleanAttribute` transform, so the bare attribute really enables compact (it used to be a silent no-op). Verify this is intended.                                                                                   |
@@ -60,7 +61,8 @@ Pass `--fix=false` to see what would change without writing files.
 
 ## Limitations
 
-Receivers are matched by explicit `KbqAlert` type annotation only (no cross-package type inference), so
-aliased/inferred receivers (`const a = this.alert; a.compact`) are left untouched. `alertColor` is intentionally
+Receivers are matched by an explicit `KbqAlert` type annotation or an `inject()` initializer (no type inference),
+so inferred receivers (`const a = this.alert; a.compact`) and signal queries (`viewChild(KbqAlert)`) are left
+untouched. `alertColor` is intentionally
 **not** auto-rewritten because its value semantics changed. After running, **always inspect the diff** and act on
 the warnings before committing.

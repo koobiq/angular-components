@@ -3,7 +3,8 @@ import { memberAccessPattern } from './signal-members-migration';
 /**
  * Rewrites the members that became signals where a template reaches them through a reference variable:
  * a read becomes a call, a write to a member that stays writable becomes `.set(…)`, and a write to one that
- * is read-only now is left untouched and returned, so the migration can report it.
+ * is read-only now is left untouched and returned, so the migration can report it. A compound assignment or an
+ * increment has no `.set(…)` form, so it is left untouched and returned too.
  */
 
 /** A half-open `[start, end)` span of the template. */
@@ -29,6 +30,8 @@ export interface RefAccessResult {
     content: string;
     /** Read-only members written through a ref, left as they are. */
     readOnlyWrites: Set<string>;
+    /** Writable members written through a ref by a compound assignment or an increment, left as they are. */
+    compoundWrites: Set<string>;
 }
 
 /** `(click)` / `on-click`: the value is a statement list, where an assignment is legal. */
@@ -36,6 +39,12 @@ const EVENT_BINDING = /^(?:\(|on-)/;
 
 /** `[(ngModel)]` / `bindon-ngModel`: the value is a write target, which a signal fills without a call. */
 const TWO_WAY_BINDING = /^(?:\[\(|bindon-)/;
+
+/** A compound assignment (`+=`, `??=`, …) or a postfix `++` / `--` at the start of what follows an access. */
+const COMPOUND_WRITE_AFTER = /^\s*(?:\+\+|--|(?:\*\*|>>>|<<|>>|&&|\|\||\?\?|[-+*/%&|^])=(?!=))/;
+
+/** A prefix `++` / `--` at the end of what precedes an access. */
+const INCREMENT_BEFORE = /(?:\+\+|--)\s*$/;
 
 function escapeRegExp(value: string): string {
     return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -109,6 +118,7 @@ export function rewriteRefAccesses(
     const statements: Range[] = [];
     const twoWay: Range[] = [];
     const readOnlyWrites = new Set<string>();
+    const compoundWrites = new Set<string>();
     const writeEdits: Edit[] = [];
     const readEdits: Edit[] = [];
     const seen = new Set<number>();
@@ -152,6 +162,19 @@ export function rewriteRefAccesses(
 
             seen.add(end);
 
+            const member = match[2];
+            const statement = statements.find((range) => within(range, match.index, end));
+
+            // `(click)="ref.value += 1"`, `ref.value++`, `--ref.value`: a call there is no valid template.
+            if (
+                statement &&
+                (COMPOUND_WRITE_AFTER.test(template.slice(end, statement.end)) ||
+                    INCREMENT_BEFORE.test(template.slice(statement.start, match.index)))
+            ) {
+                (writable.has(member) ? compoundWrites : readOnlyWrites).add(member);
+                continue;
+            }
+
             const binding = twoWay.find((range) => within(range, match.index, end));
 
             // `[(ngModel)]="ref.value"` writes through the binding: a writable signal fills it as it is.
@@ -160,7 +183,7 @@ export function rewriteRefAccesses(
                 !template.slice(binding.start, match.index).trim() &&
                 !template.slice(end, binding.end).trim()
             ) {
-                if (!writable.has(match[2])) readOnlyWrites.add(match[2]);
+                if (!writable.has(member)) readOnlyWrites.add(member);
 
                 continue;
             }
@@ -178,5 +201,5 @@ export function rewriteRefAccesses(
         content = content.slice(0, start) + text + content.slice(end);
     }
 
-    return { content, readOnlyWrites };
+    return { content, readOnlyWrites, compoundWrites };
 }

@@ -277,6 +277,25 @@ describe('signalMembersRule', () => {
             expect(updated).toContain('widget.size++;');
             expect(updated).toContain('({ size: widget.size } = { size: 3 });');
         });
+
+        it('rewrites a read under a prefix operator that does not write, and leaves ++ / -- alone', async () => {
+            appTree.overwrite(
+                tsPath(),
+                "import { Widget } from '@acme/widgets';\n" +
+                    'class Demo {\n' +
+                    '    read(widget: Widget) {\n' +
+                    '        ++widget.size;\n' +
+                    '        --widget.size;\n' +
+                    '        return [!widget.size, -widget.size, +widget.label, ~widget.size];\n' +
+                    '    }\n' +
+                    '}\n'
+            );
+
+            const updated = (await run()).readText(tsPath());
+
+            expect(updated).toContain('        ++widget.size;\n        --widget.size;\n');
+            expect(updated).toContain('return [!widget.size(), -widget.size(), +widget.label(), ~widget.size()];');
+        });
     });
 
     describe('idempotence', () => {

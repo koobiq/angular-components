@@ -314,6 +314,187 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('select.disabled.set(true);');
     });
 
+    it.each([
+        { type: 'KbqSelect', entry: 'select' },
+        { type: 'KbqTimezoneSelect', entry: 'timezone' }
+    ])('rewrites a write to the writable value of $type to .set()', async ({ type, entry }) => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            `import { ${type} } from '@koobiq/components/${entry}';\n` +
+                'class Demo {\n' +
+                `    apply(select: ${type}) {\n` +
+                "        select.value = 'koobiq';\n" +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain("select.value.set('koobiq');");
+        expect(messages.join('\n')).not.toContain('can no longer be assigned');
+    });
+
+    it.each([
+        { type: 'KbqTreeSelect', entry: 'tree-select' },
+        { type: 'KbqTimepicker', entry: 'timepicker' },
+        { type: 'KbqDatepickerInput', entry: 'datepicker' }
+    ])('leaves a write to the read-only value of $type and reports it', async ({ type, entry }) => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            `import { ${type} } from '@koobiq/components/${entry}';\n` +
+                'class Demo {\n' +
+                `    apply(control: ${type}) {\n` +
+                '        control.value = null;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('control.value = null;');
+        expect(messages.join('\n')).toContain('`value` can no longer be assigned');
+    });
+
+    it('turns a write to value through a ref on <kbq-select> and <kbq-timezone-select> into .set()', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-select #select></kbq-select>\n' +
+                '<kbq-timezone-select #zone="kbqTimezoneSelect"></kbq-timezone-select>\n' +
+                '<kbq-tree-select #tree></kbq-tree-select>\n' +
+                '<button (click)="select.value = null; zone.value = null; tree.value = null">Reset</button>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('(click)="select.value.set(null); zone.value.set(null); tree.value = null"');
+    });
+
+    it('leaves a nested declaration that shadows a typed receiver alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqSelect } from '@koobiq/components/select';\n" +
+                'class Demo {\n' +
+                '    read(select: KbqSelect) {\n' +
+                '        const options = [1].map((select: HTMLSelectElement) => {\n' +
+                '            select.required = true;\n' +
+                '            return select.value;\n' +
+                '        });\n' +
+                '        return [select.empty, options];\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('            select.required = true;\n            return select.value;\n');
+        expect(updated).toContain('return [select.empty(), options];');
+        expect(messages.join('\n')).not.toContain('can no longer be assigned');
+    });
+
+    it('leaves this.<field> inside a function that rebinds this alone, and rewrites it inside an arrow', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqSelect } from '@koobiq/components/select';\n" +
+                'class Demo {\n' +
+                '    select: KbqSelect;\n' +
+                '    read() {\n' +
+                '        [1].forEach(function (this: any) {\n' +
+                '            return this.select.value;\n' +
+                '        });\n' +
+                '        return [1].map(() => this.select.value);\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('            return this.select.value;\n');
+        expect(updated).toContain('return [1].map(() => this.select.value());');
+    });
+
+    it('rewrites reads and writes on a receiver typed by inject()', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { inject } from '@angular/core';\n" +
+                "import { KbqInput } from '@koobiq/components/input';\n" +
+                "import { KbqSelect } from '@koobiq/components/select';\n" +
+                'class Demo {\n' +
+                '    private readonly select = inject(KbqSelect);\n' +
+                '    read() {\n' +
+                '        const input = inject(KbqInput);\n' +
+                "        input.value = '';\n" +
+                '        this.select.disabled = input.empty;\n' +
+                '        return this.select.value;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain("input.value.set('');");
+        expect(updated).toContain('this.select.disabled.set(input.empty());');
+        expect(updated).toContain('return this.select.value();');
+    });
+
+    it('leaves a compound assignment, an increment, delete and a destructuring target untouched and reports them', async () => {
+        const ts = firstTsPath();
+        const body =
+            "        input.value += 'x';\n" +
+            '        input.placeholder ??= data.value;\n' +
+            '        input.id++;\n' +
+            '        --input.id;\n' +
+            '        delete input.placeholder;\n' +
+            '        ({ value: input.value } = data);\n' +
+            '        [input.placeholder] = [data.value];\n';
+
+        appTree.overwrite(
+            ts,
+            "import { KbqInput } from '@koobiq/components/input';\n" +
+                'class Demo {\n' +
+                '    write(input: KbqInput, data: { value: string }) {\n' +
+                body +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+        const all = messages.join('\n');
+
+        expect(updated).toContain(body);
+        expect(all).toContain('`id` can no longer be assigned');
+        expect(all).toContain('`value`, `placeholder` are writable signals now');
+    });
+
+    it('rewrites a read under a prefix operator that does not write', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqInput } from '@koobiq/components/input';\n" +
+                'class Demo {\n' +
+                '    read(input: KbqInput) {\n' +
+                '        return [!input.focused, -input.value, +input.placeholder, ~input.id];\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('return [!input.focused(), -input.value(), +input.placeholder(), ~input.id()];');
+    });
+
     it.each(['KbqInput', 'KbqInputPassword', 'KbqTextarea'])(
         'rewrites %s value and placeholder writes to .set() and warns about a write to its read-only disabled',
         async (type) => {
@@ -404,6 +585,29 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('`id` can no longer be assigned');
     });
 
+    it('leaves a compound write or an increment through a ref alone and reports it', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-select #country></kbq-select>\n' +
+            '<input kbqInput #name="kbqInput" />\n' +
+            "<button (click)=\"name.value += '!'; name.placeholder ??= 'Name'; country.id ||= 'c'\">Mark</button>\n" +
+            '<button (click)="country.value++; --country.value; log(country.value - 1, country.value >= 2)">Step</button>\n';
+
+        appTree.overwrite(html, template);
+
+        const updated = (await run()).readText(html);
+        const all = messages.join('\n');
+
+        expect(updated).toBe(
+            template.replace(
+                'log(country.value - 1, country.value >= 2)',
+                'log(country.value() - 1, country.value() >= 2)'
+            )
+        );
+        expect(all).toContain('`id` can no longer be assigned');
+        expect(all).toContain('`value`, `placeholder` are writable signals now');
+    });
+
     it('rewrites reads of KbqTagInput state on a typed receiver and reports a write to it', async () => {
         const ts = firstTsPath();
 
@@ -446,6 +650,68 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(updated).toContain('{{ tagInput.placeholder() }} {{ tagInput.focused() }} {{ other.empty() }}');
         expect(updated).toContain('{{ native.id }}');
+    });
+
+    const REF_DIRECTIVES = [
+        { exportAs: 'kbqInput', markup: '<input kbqInput #own="kbqInput" #native />' },
+        { exportAs: 'kbqInputPassword', markup: '<input kbqInputPassword #own="kbqInputPassword" #native />' },
+        { exportAs: 'kbqTextarea', markup: '<textarea kbqTextarea #own="kbqTextarea" #native></textarea>' },
+        { exportAs: 'kbqTimepicker', markup: '<input kbqTimepicker #own="kbqTimepicker" #native />' },
+        {
+            exportAs: 'kbqDatepickerInput',
+            markup: '<input [kbqDatepicker]="picker" #own="kbqDatepickerInput" #native />'
+        }
+    ];
+
+    it.each(REF_DIRECTIVES)(
+        'rewrites reads via a #ref naming $exportAs, not via a bare #ref on the native element',
+        async ({ markup }) => {
+            const html = firstHtmlPath();
+
+            appTree.overwrite(
+                html,
+                `${markup}\n` + '@if (own.empty) {\n' + '    <span>{{ own.value }} {{ native.value }}</span>\n' + '}\n'
+            );
+
+            const updated = (await run()).readText(html);
+
+            expect(updated).toContain('@if (own.empty()) {');
+            expect(updated).toContain('{{ own.value() }} {{ native.value }}');
+        }
+    );
+
+    it('turns a write through a #ref naming kbqDatepickerInput into .set() and reports a read-only one', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<input [kbqDatepicker]="picker" #dp="kbqDatepickerInput" />\n' +
+                '<button (click)="dp.disabled = true; dp.value = null">Reset</button>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('(click)="dp.disabled.set(true); dp.value = null"');
+        expect(messages.join('\n')).toContain('`value` can no longer be assigned');
+    });
+
+    it('rewrites reads via a #ref naming kbqInput in an inline template of a component', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { Component } from '@angular/core';\n" +
+                "import { KbqInputModule } from '@koobiq/components/input';\n" +
+                '@Component({\n' +
+                '    imports: [KbqInputModule],\n' +
+                '    template: `<input kbqInput #name="kbqInput" />@if (name.empty) { <span>{{ name.value }}</span> }`\n' +
+                '})\n' +
+                'export class Demo {}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('@if (name.empty()) { <span>{{ name.value() }}</span> }');
     });
 
     it('warns about a custom KbqFormFieldControl implementation', async () => {
