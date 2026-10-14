@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, TemplateRef, untracked, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, TemplateRef, viewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -71,8 +71,7 @@ export class NotificationCenterPushExample {
 
             if (!actions) return;
 
-            // Untracked: `items` is a signal this effect writes.
-            const current = untracked(() => this.notificationService.items);
+            const current = this.notificationService.items;
             const pushed = current
                 .filter(({ id }) => id?.startsWith(PUSHED_ID))
                 .map((item) => ({ ...item, title: text.pushedTitle, caption: text.pushedCaption }));

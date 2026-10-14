@@ -7,7 +7,6 @@ import {
     inject,
     signal,
     TemplateRef,
-    untracked,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -140,8 +139,7 @@ export class NotificationCenterErrorExample {
             this.notificationService.items = createNotifications(
                 this.text(),
                 { actions },
-                // Untracked: `items` is a signal this effect writes.
-                untracked(() => this.notificationService.items)
+                this.notificationService.items
             );
         });
     }

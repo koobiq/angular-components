@@ -205,19 +205,28 @@ export class KbqNotificationCenterService {
         return value ? value.toString() : '';
     });
 
-    /** Notification items */
+    /**
+     * The notifications, as a snapshot: reading them does not make an `effect()` or a `computed()` depend on the
+     * list, so an effect can read and reassign it. Follow `changes` to react to updates.
+     */
     get items() {
-        return this.originalItems();
+        return this.currentItems();
     }
 
     set items(values: KbqNotificationItem[]) {
         this.setItems(this.setReadState(this.setIds(values)));
     }
 
-    /** true if there are no notifications. */
+    /** Whether there are no notifications. A snapshot, like `items`. */
     get isEmpty() {
-        return this.originalItems().length === 0;
+        return this.currentItems().length === 0;
     }
+
+    /**
+     * Whether there are no notifications, for the center's own view to follow.
+     * @internal
+     */
+    readonly empty: Signal<boolean> = computed(() => this.originalItems().length === 0);
 
     constructor() {
         this.onRead.pipe(takeUntilDestroyed()).subscribe(() => this.readVersion.update((version) => version + 1));
@@ -249,37 +258,37 @@ export class KbqNotificationCenterService {
     /** Set silent mode */
     setSilentMode(value: boolean) {
         this._silentMode.set(value);
-        this.stateChanges.next();
+        this.notify();
     }
 
     /** Set loading mode */
     setLoadingMode(value: boolean) {
         this._loadingMode.set(value);
-        this.stateChanges.next();
+        this.notify();
     }
 
     /** Set error mode */
     setErrorMode(value: boolean) {
         this._errorMode.set(value);
-        this.stateChanges.next();
+        this.notify();
     }
 
     /** Set the bottom "load more" spinner visibility. */
     setLoadingMore(value: boolean) {
         this._loadingMore.set(value);
-        this.stateChanges.next();
+        this.notify();
     }
 
     /** Set the bottom "load more" error state visibility. */
     setLoadMoreErrorMode(value: boolean) {
         this._loadMoreErrorMode.set(value);
-        this.stateChanges.next();
+        this.notify();
     }
 
     /** Set whether there are more notifications to load via infinite scroll. */
     setHasMore(value: boolean) {
         this._hasMore.set(value);
-        this.stateChanges.next();
+        this.notify();
     }
 
     /**
@@ -322,7 +331,7 @@ export class KbqNotificationCenterService {
 
         this.setItems(this.currentItems().filter((item) => removedItem !== item));
 
-        this.onDelete.next({ type: 'item', items: [removedItem] });
+        untracked(() => this.onDelete.next({ type: 'item', items: [removedItem] }));
     }
 
     /**
@@ -341,7 +350,7 @@ export class KbqNotificationCenterService {
 
         this.setItems(this.currentItems().filter((item) => !removedItems.includes(item)));
 
-        this.onDelete.next({ type: 'group', items: removedItems });
+        untracked(() => this.onDelete.next({ type: 'group', items: removedItems }));
     }
 
     /** Removes every notification. Removing from an already empty list is a no-op and emits nothing. */
@@ -356,7 +365,7 @@ export class KbqNotificationCenterService {
 
         this.setItems([]);
 
-        this.onDelete.next({ type: 'all', items });
+        untracked(() => this.onDelete.next({ type: 'all', items }));
     }
 
     /**
@@ -369,7 +378,15 @@ export class KbqNotificationCenterService {
 
     private setItems(items: KbqNotificationItem[]): void {
         this.originalItems.set(items);
-        this.stateChanges.next();
+        this.notify();
+    }
+
+    /**
+     * `changes` subscribers run synchronously, inside whatever called the command: untracked, so a command called
+     * from an `effect()` does not make it depend on the signals they read.
+     */
+    private notify(): void {
+        untracked(() => this.stateChanges.next());
     }
 
     private makeGroup = (item: KbqNotificationItem, groups: KbqNotificationsGroups) => {
