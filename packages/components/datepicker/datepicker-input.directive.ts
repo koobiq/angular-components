@@ -311,7 +311,7 @@ interface DateTimeObject {
         class: 'kbq-input kbq-datepicker',
         '[attr.id]': 'id()',
         '[attr.placeholder]': 'placeholder()',
-        '[attr.required]': 'required()',
+        '[attr.required]': 'required() || null',
         '[attr.disabled]': 'disabled() || null',
         '[attr.min]': 'min ? toISO8601(min) : null',
         '[attr.max]': 'max ? toISO8601(max) : null',
