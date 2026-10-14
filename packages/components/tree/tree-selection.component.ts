@@ -20,6 +20,7 @@ import {
     input,
     IterableDiffer,
     linkedSignal,
+    numberAttribute,
     OnDestroy,
     output,
     Provider,
@@ -193,7 +194,7 @@ interface SelectionModelOption {
     exportAs: 'kbqTreeSelection'
 })
 export class KbqTreeSelection
-    extends KbqTreeBase<any>
+    extends KbqTreeBase<any, FlatTreeControl<any>>
     implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
@@ -271,11 +272,6 @@ export class KbqTreeSelection
 
     get unorderedOptions(): QueryList<KbqTreeOption> {
         return this.unorderedOptionsList();
-    }
-
-    /** Controls the expanded state and holds the data nodes of the tree. A flat tree is the only kind it renders. */
-    override get treeControl(): FlatTreeControl<any> {
-        return super.treeControl as FlatTreeControl<any>;
     }
 
     readonly navigationChange = output<KbqTreeNavigationChange<KbqTreeOption>>();
@@ -547,7 +543,10 @@ export class KbqTreeSelection
     private readonly disabledState = signal(false);
 
     /** @docs-private */
-    readonly tabIndexInput = input<number | undefined>(undefined, { alias: 'tabIndex' });
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
 
     /** Tab index of the tree, `-1` while it is disabled. */
     get tabIndex(): number {
@@ -588,6 +587,9 @@ export class KbqTreeSelection
     /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
     private appliedMultipleInput: KbqMultipleInput | undefined;
 
+    /** The `disabled` binding the state was last set from, see `applyDisabledInput`. */
+    private appliedDisabledInput: boolean | undefined;
+
     /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
     private writingValue = false;
 
@@ -615,8 +617,14 @@ export class KbqTreeSelection
             untracked(() => this.applyMultipleInput());
         });
 
-        // The inputs below stay `undefined` until a template binds them, so an unbound one does not override
-        // what the `ControlValueAccessor` or the roving focus wrote.
+        effect(() => {
+            this.disabledInput();
+
+            untracked(() => this.applyDisabledInput());
+        });
+
+        // The input stays `undefined` until a template binds it, so an unbound one does not override what the
+        // roving focus wrote.
         effect(() => {
             const tabIndex = this.tabIndexInput();
 
@@ -624,12 +632,6 @@ export class KbqTreeSelection
 
             this.tabIndexState.set(tabIndex);
             this.userTabIndex = tabIndex;
-        });
-
-        effect(() => {
-            const disabled = this.disabledInput();
-
-            if (disabled !== undefined) this.disabledState.set(disabled);
         });
 
         effect(() => {
@@ -670,6 +672,22 @@ export class KbqTreeSelection
 
         this.appliedMultipleInput = multiple;
         this.setMultipleMode(resolveMultipleMode(multiple));
+    }
+
+    /**
+     * Sets the disabled state from the `disabled` binding, once per bound value, so that whichever of the binding
+     * and the form control changed last wins. An unbound input leaves what the form control wrote.
+     *
+     * Called by an effect, and by `setDisabledState` ahead of it: a forms directive on this element calls that
+     * from its own `ngOnChanges`, after the binding is set but before any effect of the view runs.
+     */
+    private applyDisabledInput(): void {
+        const disabled = this.disabledInput();
+
+        if (disabled === this.appliedDisabledInput) return;
+
+        this.appliedDisabledInput = disabled;
+        this.disabledState.set(!!disabled);
     }
 
     /**
@@ -1296,6 +1314,7 @@ export class KbqTreeSelection
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
      */
     setDisabledState(isDisabled: boolean): void {
+        this.applyDisabledInput();
         this.disabledState.set(isDisabled);
     }
 

@@ -33,6 +33,7 @@ import { KbqPseudoCheckbox } from '@koobiq/components/core';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import * as _koobiq_components_tree from '@koobiq/components/tree';
 import { MultipleMode } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -163,7 +164,7 @@ export class KbqTree extends KbqTreeBase<any> {
 }
 
 // @public
-export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
+export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
     constructor();
     protected applyNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer: IterableDiffer<T>, viewContainer: ViewContainerRef, parentData?: T): boolean;
     // (undocumented)
@@ -193,16 +194,16 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
     renderNodeChanges(data: T[] | ReadonlyArray<T>, dataDiffer?: IterableDiffer<T>, viewContainer?: ViewContainerRef, parentData?: T): void;
     saveState(): void;
     readonly trackBy: _angular_core.InputSignal<TrackByFunction<T>>;
-    get treeControl(): TreeControl<T>;
-    readonly treeControlInput: _angular_core.InputSignal<TreeControl<T>>;
+    get treeControl(): C;
+    readonly treeControlInput: _angular_core.InputSignal<C>;
     viewChange: BehaviorSubject<{
         start: number;
         end: number;
     }>;
     // (undocumented)
-    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeBase<any>, never, never, { "treeControlInput": { "alias": "treeControl"; "required": false; "isSignal": true; }; "trackBy": { "alias": "trackBy"; "required": false; "isSignal": true; }; "dataSourceInput": { "alias": "dataSource"; "required": false; "isSignal": true; }; }, {}, ["nodeDefs"], never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeBase<any, any>, never, never, { "treeControlInput": { "alias": "treeControl"; "required": false; "isSignal": true; }; "trackBy": { "alias": "trackBy"; "required": false; "isSignal": true; }; "dataSourceInput": { "alias": "dataSource"; "required": false; "isSignal": true; }; }, {}, ["nodeDefs"], never, true, never>;
     // (undocumented)
-    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeBase<any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqTreeBase<any, any>, never>;
 }
 
 // @public
@@ -308,7 +309,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
     refresh(): void;
     readonly refreshed: Subject<void>;
     // (undocumented)
-    tree: KbqTreeBase<T>;
+    tree: KbqTreeBase<T, TreeControl<T>>;
     // (undocumented)
     static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqTreeNode<any>, "kbq-tree-node", ["kbqTreeNode"], {}, {}, never, never, true, never>;
     // (undocumented)
@@ -367,7 +368,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     // (undocumented)
     paddingIndent(): string | null;
     // (undocumented)
-    protected tree: KbqTreeBase<T>;
+    protected tree: KbqTreeBase<T, _koobiq_components_tree.TreeControl<T>>;
     // (undocumented)
     protected treeNode: KbqTreeNode<T>;
     // (undocumented)
@@ -563,7 +564,7 @@ export class KbqTreeSelectAllEvent<T> {
 export const kbqTreeSelectAllValue = "selectAll";
 
 // @public (undocumented)
-export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqTreeSelection extends KbqTreeBase<any, FlatTreeControl<any>> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
     constructor();
     get allOptionsSelected(): boolean;
     readonly ariaLabel: _angular_core.InputSignal<string>;
@@ -667,10 +668,9 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     get showCheckbox(): boolean;
     protected get showSelectAll(): boolean;
     get tabIndex(): number;
-    readonly tabIndexInput: _angular_core.InputSignal<number | undefined>;
+    readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     protected toggleFocusedOption(): void;
     protected toggleSelectAll(): void;
-    get treeControl(): FlatTreeControl<any>;
     get typeAhead(): boolean;
     set typeAhead(value: boolean);
     readonly typeAheadInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;

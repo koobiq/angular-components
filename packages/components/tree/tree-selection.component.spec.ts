@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, DebugElement, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, InputSignal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -54,7 +54,8 @@ import {
     KbqTreeSelectAllEvent,
     KbqTreeSelection,
     KbqTreeSelectionChange,
-    NestedTreeControl
+    NestedTreeControl,
+    TreeControl
 } from './index';
 import { getKbqTreeSelectionOwnedMultipleError } from './tree-errors';
 
@@ -4114,6 +4115,120 @@ describe('KbqTreeSelection multiple mode with a form', () => {
         expect(control.value).toBe('Pictures');
         expect(control.pristine).toBe(true);
         expect(selectedLabels(fixture)).toEqual(['Pictures']);
+    });
+});
+
+@Component({
+    imports: [KbqTreeModule, ReactiveFormsModule],
+    template: `
+        <kbq-tree-selection
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            [disabled]="disabled"
+            [formControl]="control"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeSelectionWithFormControlAndDisabledBinding extends TreeParams {
+    disabled: boolean | undefined = false;
+    readonly control = new FormControl<string | null>({ value: null, disabled: true });
+    readonly tree = viewChild.required(KbqTreeSelection);
+}
+
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection tabIndex="-1" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeSelectionWithStaticTabIndex extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+}
+
+describe('KbqTreeSelection inputs', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [KbqTreeModule, ReactiveFormsModule] });
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    describe('disabled next to a form control', () => {
+        let fixture: ComponentFixture<TreeSelectionWithFormControlAndDisabledBinding>;
+        let tree: KbqTreeSelection;
+
+        beforeEach(() => {
+            // Angular warns about `disabled` next to a reactive form directive, which is the combination under test.
+            vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            fixture = TestBed.createComponent(TreeSelectionWithFormControlAndDisabledBinding);
+            fixture.detectChanges();
+
+            tree = fixture.componentInstance.tree();
+        });
+
+        it('should stay disabled by a control that starts disabled', () => {
+            expect(tree.disabled).toBe(true);
+            expect(tree.tabIndex).toBe(-1);
+        });
+
+        it('should follow whichever of the two changed last', () => {
+            fixture.componentInstance.control.enable();
+            fixture.detectChanges();
+
+            expect(tree.disabled).toBe(false);
+
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(tree.disabled).toBe(true);
+        });
+
+        it('should enable the tree once the bound disabled turns undefined', () => {
+            fixture.componentInstance.control.enable();
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            fixture.componentInstance.disabled = undefined;
+            fixture.detectChanges();
+
+            expect(tree.disabled).toBe(false);
+        });
+    });
+
+    it('should read a static tabIndex as a number', async () => {
+        vi.useFakeTimers();
+
+        const fixture = TestBed.createComponent(TreeSelectionWithStaticTabIndex);
+        const tree = fixture.componentInstance.tree;
+
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(tree().userTabIndex).toBe(-1);
+
+        // The tab stop given back after a Tab out of the tree is the bound one.
+        tree().onKeyDown(createKeyboardEvent('keydown', TAB));
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(tree().tabIndex).toBe(-1);
+    });
+
+    // A template binding is checked against the type of the input signal, which `check-spec-types` checks here: a
+    // nested control would pass on kbq-tree-selection and then fail on the API only a flat control has.
+    it('should take a flat tree control, unlike kbq-tree', () => {
+        const fixture = TestBed.createComponent(SimpleKbqTreeApp);
+
+        fixture.detectChanges();
+
+        expectTypeOf<KbqTreeSelection['treeControlInput']>().toEqualTypeOf<InputSignal<FlatTreeControl<any>>>();
+        expectTypeOf<KbqTree['treeControlInput']>().toEqualTypeOf<InputSignal<TreeControl<any>>>();
+        expect(fixture.componentInstance.tree().treeControl).toBe(fixture.componentInstance.treeControl);
     });
 });
 
