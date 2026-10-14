@@ -1,6 +1,5 @@
 import { DOCUMENT } from '@angular/common';
 import { computed, inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { kbqAnimationsDisabled } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
 import { KbqModalRef } from './modal-ref.class';
 import { KbqModalComponent } from './modal.component';
@@ -17,7 +16,6 @@ interface IRegisteredMeta {
 export class KbqModalControlService {
     private parentService = inject(KbqModalControlService, { optional: true, skipSelf: true });
     private readonly document = inject(DOCUMENT);
-    private readonly animationsDisabled = kbqAnimationsDisabled();
 
     // Track singleton afterAllClose through over the injection tree
     get afterAllClose(): Subject<void> {
@@ -200,7 +198,7 @@ export class KbqModalControlService {
                 modal.getInstance().animateMaskTo('leave');
                 modal.markForCheck();
 
-                this.afterMaskAnimation(() => {
+                this.afterMaskAnimation(modal, () => {
                     modal.getInstance().animateMaskTo(null);
                     modal.getInstance().setMaskEnabled(false);
                     modal.markForCheck();
@@ -213,7 +211,7 @@ export class KbqModalControlService {
                 // one every time round.
                 modalRef.getInstance().animateMaskTo('leave');
 
-                this.afterMaskAnimation(() => {
+                this.afterMaskAnimation(modalRef, () => {
                     modalRef.getInstance().animateMaskTo(null);
                     modalRef.getInstance().setMaskEnabled(false);
                 });
@@ -224,7 +222,7 @@ export class KbqModalControlService {
 
                     modal.markForCheck();
 
-                    this.afterMaskAnimation(() => {
+                    this.afterMaskAnimation(modal, () => {
                         modal.getInstance().animateMaskTo(null);
                         modal.markForCheck();
                     });
@@ -239,11 +237,12 @@ export class KbqModalControlService {
     }
 
     /**
-     * Runs `fn` once the mask animation started just now is over, at once when animations are disabled: the
-     * covered layer would otherwise stay painted under the new one for the whole duration.
+     * Runs `fn` once the mask animation of `modal` started just now is over, at once when that dialog has
+     * animations disabled: the covered layer would otherwise stay painted under the new one for the whole
+     * duration. Read per dialog, whose injector can be below the one of this service.
      */
-    private afterMaskAnimation(fn: () => void): void {
-        if (this.animationsDisabled) {
+    private afterMaskAnimation(modal: KbqModalRef, fn: () => void): void {
+        if (modal.getInstance().animationsDisabled) {
             fn();
 
             return;

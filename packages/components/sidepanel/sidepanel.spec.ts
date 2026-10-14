@@ -22,6 +22,7 @@ import {
     dispatchKeyboardEvent
 } from '@koobiq/components/core';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import {
     KBQ_SIDEPANEL_DATA,
@@ -878,6 +879,31 @@ describe('KbqSidepanelService', () => {
 
             expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
         });
+
+        it('should put a sidepanel opened from afterOpened of a lower one on top of the stack', async () => {
+            vi.useFakeTimers();
+
+            const bottom = sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false, id: 'bottom' });
+
+            bottom
+                .afterOpened()
+                .subscribe(() => sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false, id: 'top' }));
+            // Cuts the entrance of the first one short, which reports it as opened.
+            sidepanelService.open(SimpleSidepanelExample, { hasBackdrop: false, id: 'middle' });
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(
+                sidepanelService.openedSidepanels.map(({ id, containerInstance }) => [
+                    id,
+                    containerInstance.animationState()
+                ])
+            ).toEqual([
+                ['bottom', KbqSidepanelAnimationState.BottomPanel],
+                ['middle', KbqSidepanelAnimationState.Lower],
+                ['top', KbqSidepanelAnimationState.Visible]
+            ]);
+        });
     });
 
     describe('closing', () => {
@@ -897,6 +923,23 @@ describe('KbqSidepanelService', () => {
 
             expect(afterCloseCallback).toHaveBeenCalledTimes(1);
             expect(afterCloseCallback).toHaveBeenCalledWith('A');
+        });
+
+        it('should notify a beforeClosed subscriber that subscribed right after close()', async () => {
+            vi.useFakeTimers();
+
+            const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
+            const beforeClosed = vi.fn();
+
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            sidepanelRef.close();
+            sidepanelRef.beforeClosed().subscribe(beforeClosed);
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(beforeClosed).toHaveBeenCalledTimes(1);
         });
 
         it('should prevent the default action of the escape key it consumes', async () => {
@@ -923,6 +966,54 @@ describe('KbqSidepanelService', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(event.defaultPrevented).toBe(false);
+        });
+
+        it('should stay open on an escape key already spent by a control inside it', async () => {
+            vi.useFakeTimers();
+
+            const sidepanelRef = sidepanelService.open(SidepanelWithTooltip);
+
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const control = overlayContainerElement.querySelector<HTMLElement>('#with-tooltip')!;
+
+            control.addEventListener('keydown', (event) => event.preventDefault());
+            dispatchKeyboardEvent(control, 'keydown', ESCAPE);
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(sidepanelRef.containerInstance.animationState()).toBe(KbqSidepanelAnimationState.Visible);
+        });
+
+        it('should close only the tooltip open inside it on the first escape key, and itself on the next', async () => {
+            vi.useFakeTimers();
+
+            const sidepanelRef = sidepanelService.open(SidepanelWithTooltip);
+
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const tooltip = sidepanelRef.instance.tooltip();
+
+            tooltip.show(0);
+            await vi.runOnlyPendingTimersAsync();
+            rootComponentFixture.detectChanges();
+
+            expect(tooltip.isOpen).toBe(true);
+
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(tooltip.isOpen).toBe(false);
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).not.toBeNull();
+
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
         });
 
         it('should close the sidepanel underneath when a same-position stack is clicked through', async () => {
@@ -1271,6 +1362,16 @@ class ComponentForSidepanel {}
 class SidepanelTrigger {}
 
 @Component({
+    imports: [KbqButtonModule, KbqToolTipModule],
+    template: `
+        <button id="with-tooltip" kbq-button kbqTooltip="Hint" type="button">With a tooltip</button>
+    `
+})
+class SidepanelWithTooltip {
+    readonly tooltip = viewChild.required(KbqTooltipTrigger);
+}
+
+@Component({
     imports: [KbqSidepanelModule, KbqButtonModule],
     template: `
         <kbq-sidepanel-body>
@@ -1464,6 +1565,7 @@ const TEST_COMPONENTS = [
     SidepanelWithCloseResults,
     SidepanelWithLateHeader,
     SidepanelWithToggleableHeader,
+    SidepanelWithTooltip,
     SidepanelTrigger,
     ComponentWithTemplateForSidepanel,
     ComponentWithCloseButtonTemplate,

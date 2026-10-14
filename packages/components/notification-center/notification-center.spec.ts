@@ -21,6 +21,7 @@ import {
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     enUSLocaleData,
+    KBQ_ANIMATIONS_CONFIG,
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
     KbqLocaleService,
@@ -433,6 +434,41 @@ describe('KbqNotificationCenter', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(componentInstance.trigger().isOpen).toBe(false);
+        });
+
+        it('spends the Escape it closes on, so that a container underneath stays open', async () => {
+            vi.useFakeTimers();
+
+            openCenter();
+            await vi.runOnlyPendingTimersAsync();
+
+            const event = dispatchKeyboardEvent(queryPanel('button')!, 'keydown', ESCAPE, undefined, 'Escape');
+
+            expect(event.defaultPrevented).toBe(true);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('stays open on an Escape the tooltip inside it has spent', async () => {
+            vi.useFakeTimers();
+
+            // Opened from the keyboard, the panel focuses the silent-mode toggle, and that focus shows its tooltip.
+            useModality(new KeyboardEvent('keydown', { bubbles: true, key: 'Enter' }));
+            openCenter();
+            await vi.runOnlyPendingTimersAsync();
+
+            const toggle = debugElement.query(By.css('[data-testid="kbq-notification-center-silent-mode-toggle"]'));
+            const tooltip = toggle.injector.get(KbqTooltipTrigger);
+
+            expect(tooltip.isOpen).toBe(true);
+
+            dispatchKeyboardEvent(toggle.nativeElement, 'keydown', ESCAPE, undefined, 'Escape');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(tooltip.isOpen).toBe(false);
+            expect(componentInstance.trigger().isOpen).toBe(true);
         });
 
         it('returns focus to the trigger when the panel closes', async () => {
@@ -1144,6 +1180,30 @@ describe('KbqNotificationCenter', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(scrollSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('motion', () => {
+        const getList = () => queryPanel('[data-testid="kbq-notification-center-container"]')!;
+
+        it('scrolls the list smoothly by default', async () => {
+            vi.useFakeTimers();
+            setUpDefaultFixture();
+
+            openCenter();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(getList().classList).not.toContain('kbq-animations-disabled');
+        });
+
+        it('scrolls the list without motion when animations are disabled', async () => {
+            vi.useFakeTimers();
+            setUpDefaultFixture([{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]);
+
+            openCenter();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(getList().classList).toContain('kbq-animations-disabled');
         });
     });
 
