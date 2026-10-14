@@ -157,7 +157,7 @@ export class KbqRadioGroup
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, a bound `undefined` included;
+        // A bound input is handed to its member, a bound `undefined` included;
         // unbound, it leaves what code wrote.
         if (changes['valueInput']) {
             this.value = this.valueInput();
@@ -559,7 +559,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
     readonly nameInput = input<string | undefined>(undefined, { alias: 'name' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, a bound `undefined` included;
+        // A bound input is handed to its member, a bound `undefined` included;
         // unbound, it leaves what code wrote.
         if (changes['valueInput']) {
             this.value = this.valueInput();

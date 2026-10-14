@@ -100,7 +100,7 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
     private openedOnPress = false;
 
     ngOnChanges(changes: SimpleChanges) {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         if (changes['disabledInput']) {
             const disabled = this.disabledInput();
 

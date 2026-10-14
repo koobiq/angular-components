@@ -118,7 +118,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     override ngOnChanges(changes: SimpleChanges): void {
         super.ngOnChanges(changes);
 
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         // A bound `undefined` clears the text.
         if (changes['kbqEllipsisCenterInput']) this.kbqEllipsisCenter = this.kbqEllipsisCenterInput() ?? '';
     }

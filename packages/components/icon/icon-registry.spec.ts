@@ -142,8 +142,8 @@ describe('KbqIconRegistry', () => {
         });
 
         // Symbol ids come from the consumer's sprite, so they are not guaranteed to be valid CSS
-        // identifiers. Looking one up as `#${name}` made a leading digit a selector syntax error, and
-        // the icon never resolved.
+        // identifiers. Looked up as `#${name}`, a leading digit would be a selector syntax error, and
+        // the icon would never resolve.
         it('extracts a symbol whose id is not a valid CSS identifier', async () => {
             registry.addSvgIconSet(sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg'));
 

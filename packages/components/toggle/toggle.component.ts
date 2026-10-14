@@ -202,7 +202,7 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, except that `undefined` resets a member
+        // A bound input is handed to its member, except that `undefined` resets a member
         // typed without it to its default; unbound, it leaves what code wrote.
         if (changes['disabledInput']) {
             const disabled = this.disabledInput();

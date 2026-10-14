@@ -315,7 +315,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, except that `undefined` resets a member
+        // A bound input is handed to its member, except that `undefined` resets a member
         // typed without it to its default; unbound, it leaves what code wrote.
         // Assigned through `activeTab`, because the `selectedIndex` setter takes no `null` — the default, which selects
         // the first enabled tab.

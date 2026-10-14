@@ -501,7 +501,7 @@ export class KbqTagList
     readonly tabIndexInput = input<number | undefined>(undefined, { alias: 'tabIndex' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         if (changes['draggableInput']) {
             const draggable = this.draggableInput();
 

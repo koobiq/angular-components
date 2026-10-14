@@ -669,7 +669,7 @@ export class KbqDatepickerInput<D>
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         // Not in an effect, which runs too late: `min`, `max` and the filter revalidate the form control before the
         // template reads its errors.
         if (changes['kbqDatepickerInput']) {

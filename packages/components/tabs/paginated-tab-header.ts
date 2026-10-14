@@ -350,7 +350,7 @@ export abstract class KbqPaginatedTabHeader
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         if (changes['selectedIndexInput']) this.selectedIndex = this.selectedIndexInput() ?? 0;
 
         if (changes['disablePaginationInput']) {

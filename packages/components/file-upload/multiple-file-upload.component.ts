@@ -275,7 +275,7 @@ export class KbqMultipleFileUploadComponent
     readonly filesInput = input<KbqFileItem[] | undefined>(undefined, { alias: 'files' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         // A bound `undefined` falls back to the default matcher and clears the files.
         if (changes['errorStateMatcherInput']) {
             this.errorStateMatcher = this.errorStateMatcherInput() ?? this.defaultErrorStateMatcher;

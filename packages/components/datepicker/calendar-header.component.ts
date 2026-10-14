@@ -136,7 +136,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         if (changes['maxDateInput']) {
             const maxDate = this.maxDateInput();
 

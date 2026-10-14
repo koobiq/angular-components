@@ -828,7 +828,7 @@ export class KbqPopoverTrigger
     readonly popoverVisibleInput = input<boolean | undefined>(undefined, { alias: 'kbqPopoverVisible' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, a bound `undefined` restoring the
+        // A bound input is handed to its member, a bound `undefined` restoring the
         // member's default; unbound, it leaves what code wrote. The `booleanAttribute` inputs are the exception:
         // the transform reads a bound `undefined` as `false`.
         if (changes['triggerInput']) {
