@@ -13,6 +13,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFlexWrap, KbqOrientation } from '@koobiq/components/core';
 import { EMPTY, Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KbqOverflowItemsModule } from './module';
 import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from './overflow-items';
 
@@ -137,7 +138,7 @@ class TestOverflowItemsNoResult {
     selector: 'overflow-items-debounce-test',
     imports: [KbqOverflowItemsModule],
     template: `
-        <div kbqOverflowItems debounceTime="100" [style.width.px]="containerWidth()">
+        <div kbqOverflowItems [debounceTime]="debounceTime()" [style.width.px]="containerWidth()">
             <div kbqOverflowItemsResult [style.width.px]="resultWidth" [style.flex-shrink]="0">and more</div>
             @for (item of items(); track item.id) {
                 <div [kbqOverflowItem]="item.id" [style.width.px]="itemWidth" [style.flex-shrink]="0">
@@ -149,6 +150,7 @@ class TestOverflowItemsNoResult {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestOverflowItemsDebounce {
+    readonly debounceTime = signal(100);
     readonly items = signal(Array.from({ length: 10 }).map((_, i) => ({ id: `Item${i}` })));
     readonly containerWidth = signal(200);
     readonly itemWidth = 50;
@@ -337,32 +339,52 @@ describe('KbqOverflowItems', () => {
     });
 
     describe('debounceTime', () => {
-        it('should apply debounceTime input and recalculate on resize events', async () => {
+        let hostResize$: Subject<void>;
+        let fixture: ComponentFixture<TestOverflowItemsDebounce>;
+        let changesSpy: Mock;
+
+        beforeEach(async () => {
             vi.useFakeTimers();
 
-            const hostResize$ = new Subject<void>();
-            const bodyResize$ = new Subject<void>();
-            const observeSpy = vi.fn().mockImplementation((target: Element) => {
-                if (target === document.body) return bodyResize$.asObservable();
-
-                return hostResize$.asObservable();
-            });
-
-            const fixture = createComponent(TestOverflowItemsDebounce, [
-                { provide: SharedResizeObserver, useValue: { observe: observeSpy } }
+            hostResize$ = new Subject<void>();
+            fixture = createComponent(TestOverflowItemsDebounce, [
+                {
+                    provide: SharedResizeObserver,
+                    useValue: { observe: (target: Element) => (target === document.body ? EMPTY : hostResize$) }
+                }
             ]);
-            const directive = getOverflowItemsDirective(fixture.debugElement);
-            const hiddenItemsSpy = vi.spyOn(directive as any, 'getHiddenItems');
+            changesSpy = vi.fn();
+            getOverflowItemsDirective(fixture.debugElement).changes.subscribe(changesSpy);
 
             await vi.advanceTimersByTimeAsync(100);
-            hiddenItemsSpy.mockClear();
+            changesSpy.mockClear();
+        });
 
-            expect(directive.debounceTime()).toBe(100);
+        it('should recalculate once the bound time has passed since the last resize', async () => {
+            hostResize$.next();
+            await vi.advanceTimersByTimeAsync(50);
+            hostResize$.next();
+            await vi.advanceTimersByTimeAsync(99);
+
+            expect(changesSpy).not.toHaveBeenCalled();
+
+            await vi.advanceTimersByTimeAsync(1);
+
+            expect(changesSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should follow a change of the bound time', async () => {
+            fixture.componentInstance.debounceTime.set(300);
+            fixture.detectChanges();
 
             hostResize$.next();
+            await vi.advanceTimersByTimeAsync(299);
 
-            await vi.advanceTimersByTimeAsync(100);
-            expect(hiddenItemsSpy).toHaveBeenCalledTimes(1);
+            expect(changesSpy).not.toHaveBeenCalled();
+
+            await vi.advanceTimersByTimeAsync(1);
+
+            expect(changesSpy).toHaveBeenCalledTimes(1);
         });
     });
 

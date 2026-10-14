@@ -24,7 +24,7 @@ import {
     kbqInjectNativeElement,
     KbqOrientation
 } from '@koobiq/components/core';
-import { debounceTime, merge, skip, switchMap } from 'rxjs';
+import { debounce, merge, skip, switchMap, timer } from 'rxjs';
 
 /**
  * Manages the visibility of the element.
@@ -273,7 +273,11 @@ export class KbqOverflowItems {
             toObservable(this.orientation).pipe(skip(1)),
             resizeObservers
         )
-            .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                // Read per emission: the constructor that builds this runs before the input is set.
+                debounce(() => timer(this.debounceTime())),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe(() => {
                 const hiddenItems = this.getHiddenItems(
                     this.sortItemsByOrder(this.items()),
