@@ -13,8 +13,13 @@ import {
     untracked,
     WritableSignal
 } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@koobiq/components/core';
+import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
+    KbqErrorStateTracker,
+    kbqInjectAutofilled
+} from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
 
@@ -51,10 +56,15 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
-    private readonly errorStateValue = signal(false);
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
 
     /** Whether the component is in an error state. */
-    readonly errorState = this.errorStateValue.asReadonly();
+    readonly errorState = this.errorStateTracker.errorState;
 
     /** An object used to control when error messages are shown. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();
@@ -219,11 +229,8 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
     }
 
     updateErrorState() {
-        const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
-        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-
-        this.errorStateValue.set(matcher.isErrorState(control, parent));
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
     }
 
     /** Toggles the native input type between password and text. */

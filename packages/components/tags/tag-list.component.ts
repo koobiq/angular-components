@@ -31,13 +31,14 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
     FocusKeyManager,
     isNull,
     isSelectAll,
+    KbqErrorStateTracker,
     kbqQueryListFrom,
     runClearPredicate
 } from '@koobiq/components/core';
@@ -146,7 +147,12 @@ export class KbqTagList
      */
     readonly controlType: string = 'tag-list';
 
-    private readonly errorStateValue = signal(false);
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
 
     /**
      * Combined stream of all of the child tags' selection change events.
@@ -286,9 +292,6 @@ export class KbqTagList
         return tagInput ? tagInput.placeholder() : this.placeholderInput();
     });
 
-    /** Number of the rendered tags, mirrored from the `tags` query. */
-    private readonly tagsCount = signal(0);
-
     /** Whether any tags or the kbqTagInput inside of this tag-list has focus. */
     // Derived from the current tags: one removed while focused fires no blur. Read from the query, as syncing
     // `tags` emits `changes`, whose subscribers must not run inside a computed.
@@ -311,7 +314,7 @@ export class KbqTagList
     readonly empty = computed(() => {
         const tagInput = this.registeredInput();
 
-        return (!tagInput || tagInput.empty()) && this.tagsCount() === 0;
+        return (!tagInput || tagInput.empty()) && this.tagsQuery().length === 0;
     });
 
     /**
@@ -336,7 +339,7 @@ export class KbqTagList
 
     /** Whether the tags in the list can be reordered by dragging. */
     get draggable(): boolean {
-        return this._draggable() && !this.disabled();
+        return this.draggableState();
     }
 
     set draggable(value: boolean) {
@@ -345,6 +348,13 @@ export class KbqTagList
     }
 
     private readonly _draggable = signal(false);
+
+    // One signal per host value. The host bindings of every tag list in a view run in that view's reactive consumer,
+    // where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly draggableState = computed(() => this._draggable() && !this.disabled());
+    private readonly resolvedTabIndex = computed(() =>
+        this.disabled() || this.registeredInput() ? null : this._tabIndex()
+    );
 
     /**
      * Emits when the user drops tag inside tag list container.
@@ -388,7 +398,7 @@ export class KbqTagList
      * @docs-private
      */
     get tabIndex(): number | null {
-        return this.disabled() || this.registeredInput() ? null : this._tabIndex();
+        return this.resolvedTabIndex();
     }
 
     set tabIndex(value: number) {
@@ -448,7 +458,7 @@ export class KbqTagList
      *
      * @docs-private
      */
-    readonly errorState = this.errorStateValue.asReadonly();
+    readonly errorState = this.errorStateTracker.errorState;
 
     /** The tag input to add more tags */
     private tagInput: KbqTagTextControl;
@@ -572,8 +582,6 @@ export class KbqTagList
                 // Check to see if we have a destroyed tag and need to refocus
                 this.updateFocusForDestroyedTags();
 
-                this.tagsCount.set(this.tags.length);
-
                 // Defer setting the value in order to avoid the "Expression
                 // has changed after it was checked" errors from Angular.
                 Promise.resolve().then(() => {
@@ -608,11 +616,8 @@ export class KbqTagList
 
     /** @docs-private */
     updateErrorState() {
-        const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
-        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-
-        this.errorStateValue.set(matcher.isErrorState(control, parent));
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
     }
 
     /** @docs-private */

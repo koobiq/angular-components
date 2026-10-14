@@ -41,7 +41,7 @@ import {
     type AfterRenderRef
 } from '@angular/core';
 import { outputFromObservable, outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     CanUpdateErrorState,
     DOWN_ARROW,
@@ -59,6 +59,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqErrorStateTracker,
     KbqLocaleOverridesDirective,
     KbqPanelMaxHeight,
     KbqPanelMaxWidth,
@@ -222,8 +223,8 @@ export class KbqTreeSelectChange<T = any> {
         class: 'kbq-tree-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline()',
-        '[class.kbq-disabled]': 'disabled()',
-        '[class.kbq-invalid]': 'errorState()',
+        '[class.kbq-disabled]': 'disabledClass()',
+        '[class.kbq-invalid]': 'invalidClass()',
         // The tree-select is not a native control, so its combobox semantics, its accessible name and
         // its invalid/required/disabled states all have to be exposed explicitly.
         //
@@ -246,7 +247,7 @@ export class KbqTreeSelectChange<T = any> {
         '[attr.aria-required]': 'required()',
         '[attr.aria-disabled]': 'disabled() || null',
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled() || null',
+        '[attr.disabled]': 'disabledAttribute()',
         '(click)': 'handleClick()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
@@ -285,10 +286,15 @@ export class KbqTreeSelect
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
-    private readonly errorStateValue = signal(false);
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
 
     /** Whether the component is in an error state. */
-    readonly errorState = this.errorStateValue.asReadonly();
+    readonly errorState = this.errorStateTracker.errorState;
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -622,7 +628,7 @@ export class KbqTreeSelect
 
     /** Tab index of the select, `-1` while it is disabled. A value that is not an integer keeps the last valid one. */
     get tabIndex(): number | null {
-        return this.disabled() ? -1 : this.validTabIndex();
+        return this.resolvedTabIndex();
     }
 
     private readonly validTabIndex = linkedSignal<number | null, number | null>({
@@ -638,6 +644,19 @@ export class KbqTreeSelect
 
     /** Whether the select is disabled. Also set by the bound form control. */
     readonly disabled = linkedSignal(() => this.disabledInput());
+
+    // One signal per host value. The host bindings of every tree-select in a view run in that view's reactive
+    // consumer, where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly resolvedTabIndex = computed(() => (this.disabled() ? -1 : this.validTabIndex()));
+    private readonly resolvedAriaLabel = computed(() =>
+        this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder() || null
+    );
+    /** @internal */
+    protected readonly disabledAttribute = computed(() => this.disabled() || null);
+    /** @internal */
+    protected readonly disabledClass = computed(() => this.disabled());
+    /** @internal */
+    protected readonly invalidClass = computed(() => this.errorState());
 
     /** @docs-private */
     readonly selectAllHandlerInput = input<
@@ -847,7 +866,7 @@ export class KbqTreeSelect
      * repository is in. Left off while `aria-labelledby` is set, which outranks `aria-label` anyway.
      */
     protected get ariaLabelText(): string | null {
-        return this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder() || null;
+        return this.resolvedAriaLabel();
     }
 
     isEmptySearchResult: boolean;
@@ -1160,11 +1179,8 @@ export class KbqTreeSelect
     }
 
     updateErrorState() {
-        const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
-        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-
-        this.errorStateValue.set(matcher.isErrorState(control, parent));
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
     }
 
     /**

@@ -394,6 +394,29 @@ const crossFieldScope: CrossFieldErrorScope = (_key, value) =>
     (value as Partial<CrossFieldError> | undefined)?.controls ?? null;
 
 @Component({
+    selector: 'input-form-field-with-replaced-control',
+    imports: [KbqInputModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            @if (showDisabled()) {
+                <input kbqInput [formControl]="disabled" />
+            } @else {
+                <input kbqInput [formControl]="invalid" />
+            }
+        </kbq-form-field>
+    `
+})
+class InputFormFieldWithReplacedControl {
+    readonly showDisabled = signal(false);
+    readonly invalid = new FormControl('', Validators.required);
+    readonly disabled = new FormControl({ value: '', disabled: true });
+
+    constructor() {
+        this.invalid.markAsTouched();
+    }
+}
+
+@Component({
     selector: 'input-form-field-with-cross-field-matcher',
     imports: [KbqInputModule, ReactiveFormsModule],
     template: `
@@ -703,6 +726,22 @@ describe(KbqFormField.name, () => {
         componentInstance.control.disable();
         fixture.detectChanges();
         expect(formField.classes['kbq-disabled']).toBeTruthy();
+    });
+
+    it('should reflect the state of a control that replaces the previous one', () => {
+        const fixture = createComponent(InputFormFieldWithReplacedControl);
+        const { classList } = getFormFieldDebugElement(fixture.debugElement).nativeElement;
+
+        expect(classList).toContain('kbq-form-field_invalid');
+        expect(classList).toContain('ng-invalid');
+        expect(classList).not.toContain('kbq-disabled');
+
+        fixture.componentInstance.showDisabled.set(true);
+        fixture.detectChanges();
+
+        expect(classList).not.toContain('kbq-form-field_invalid');
+        expect(classList).not.toContain('ng-invalid');
+        expect(classList).toContain('kbq-disabled');
     });
 
     it('should add kbq-form-field_invalid selector for KbqFormField initially', () => {
