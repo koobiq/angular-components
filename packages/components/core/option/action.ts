@@ -4,6 +4,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     DestroyRef,
     inject,
     InjectionToken,
@@ -46,9 +47,12 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
     host: {
         class: 'kbq-option-action',
         role: 'button',
+        // The class reads `disabled` and the attributes a signal of their own (see `KbqOption`): the class binding
+        // runs after `aria-label`, so reading `disabled` there as well would be a repeated read. The two attributes
+        // run back to back, and a signal read twice in a row costs no scan.
         '[class.kbq-disabled]': 'disabled()',
-        '[attr.disabled]': 'disabled() || null',
-        '[attr.aria-disabled]': 'disabled() || null',
+        '[attr.disabled]': 'disabledAttribute()',
+        '[attr.aria-disabled]': 'disabledAttribute()',
         '[attr.aria-label]': 'resolvedAriaLabel',
         '[attr.tabIndex]': '-1',
         '(click)': 'onClick($event)',
@@ -93,6 +97,12 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
 
     /** Whether the action is disabled. */
     readonly disabled = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
+
+    /**
+     * Value of the `disabled` and `aria-disabled` attributes.
+     * @internal
+     */
+    protected readonly disabledAttribute = computed(() => this.disabled() || null);
 
     hasFocus: boolean = false;
 

@@ -4,6 +4,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     EventEmitter,
     inject,
@@ -150,13 +151,16 @@ export class KbqVirtualOption extends KbqOptionBase {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
+        // No signal is read by two of these bindings. Host bindings run in the reactive consumer of the declaring
+        // view, shared by every option in it, and a signal that consumer reads again after others is found by a
+        // scan of all it has read so far: a repeated read costs O(N²) per check across N options.
         '[attr.tabindex]': 'getTabIndex()',
         // Static rather than a host binding: a host binding is applied after the declaring view's own
         // attribute bindings, so it would silently overwrite an `[attr.role]` the consumer set on the
         // element. As an attribute it is only the default, and the consumer's binding still wins.
         role: 'option',
         '[attr.aria-selected]': 'getAriaSelected()',
-        '[attr.aria-disabled]': 'disabled',
+        '[attr.aria-disabled]': 'ariaDisabled()',
         class: 'kbq-option',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-option-multiple]': 'multiple',
@@ -256,8 +260,22 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** Whether the option is disabled, through its own input or its group. */
     get disabled(): boolean {
-        return !!this.group?.disabled() || this.disabledInput();
+        return this.disabledState();
     }
+
+    // A signal per option for the host bindings, since the group's is the same for all its options.
+    private readonly disabledState = computed(() => !!this.group?.disabled() || this.disabledInput());
+
+    /**
+     * Value of `aria-disabled`: the same as `disabled`, but a signal of its own, since `kbq-disabled` reads that one.
+     * @internal
+     */
+    protected readonly ariaDisabled = computed(() => this.disabled);
+
+    private readonly tabIndex = computed(() => (this.disabled ? '-1' : '0'));
+
+    // The selected state for `aria-selected`, apart from the one `kbq-selected` reads.
+    private readonly ariaSelected = computed(() => this.selected);
 
     /**
      * Whether or not the option is currently active and ready to be selected.
@@ -395,7 +413,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     getTabIndex(): string {
-        return this.disabled ? '-1' : '0';
+        return this.tabIndex();
     }
 
     /**
@@ -407,7 +425,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * default selection semantics step aside together with the default role.
      */
     protected getAriaSelected(): boolean | null {
-        return this.getHostElement().getAttribute('role') === 'option' ? this.selected : null;
+        return this.getHostElement().getAttribute('role') === 'option' ? this.ariaSelected() : null;
     }
 
     getHostElement(): HTMLElement {

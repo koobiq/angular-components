@@ -15,7 +15,7 @@ import {
     SimpleChanges,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 import { defer, Subscription } from 'rxjs';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
@@ -38,7 +38,7 @@ import { KbqIconRegistry } from './icon-registry';
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'svgIcon() ? null : iconName',
-        '[class.kbq-error]': 'color() === "error" || hasError || autoColorError',
+        '[class.kbq-error]': 'colorIsError() || hasError || autoColorError',
         '[attr.aria-hidden]': 'resolvedAriaHidden()'
     }
 })
@@ -111,6 +111,14 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         return this.autoColor && !!this.errorStateContext?.errorState();
     }
 
+    /**
+     * Whether `color` is the error color. A signal of its own because the color class binding already reads
+     * `color`: the host bindings of every icon in a view run in that view's reactive consumer, which finds a
+     * signal read a second time by scanning all it has read so far, O(N²) per check across N icons.
+     * @internal
+     */
+    protected readonly colorIsError = computed(() => this.color() === KbqComponentColors.Error);
+
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
     iconName: string | undefined;
 
@@ -136,10 +144,12 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly svgIcon = signal(false);
 
     /**
-     * Name the inline SVG is resolved for, set through `setIconName()`.
+     * Name the inline SVG is resolved for, which is `iconName` however that was set.
      * @docs-private
      */
-    protected readonly svgIconName = signal<string | undefined>(undefined);
+    protected get svgIconName(): string | undefined {
+        return this.iconName;
+    }
 
     /** Resolution of the inline SVG, replaced whenever the name changes. */
     private svgIconSubscription = Subscription.EMPTY;
@@ -161,14 +171,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     /**
-     * Sets the icon name outside of the template, keeping the SVG resolution stream in sync.
-     * `ngOnChanges` does not run for values assigned in a constructor, so subclasses have to use this.
+     * Sets the icon name from code and resolves its inline SVG again. Before the content is initialized,
+     * assigning `iconName` does the same.
      *
      * @docs-private
      */
     protected setIconName(name: string): void {
         this.iconName = name;
-        this.svgIconName.set(name);
 
         if (this.contentInitialized) this.resolveSvgIcon();
     }
@@ -192,7 +201,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
-        // A bound `undefined` turns auto color off and removes the icon, as the decorator inputs did.
+        // A bound `undefined` is a value as well: auto color turns off and the icon is removed.
         if (changes['autoColorInput']) this.autoColor = this.autoColorInput() ?? false;
 
         // A name change reaches the size through the resolution; an explicit size resolves nothing.
@@ -210,7 +219,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     /** Renders `svgIconName` as inline SVG when the registry knows it, dropping a resolution still pending. */
     private resolveSvgIcon(): void {
-        const name = this.svgIconName();
+        const name = this.svgIconName;
 
         this.svgIconSubscription.unsubscribe();
 

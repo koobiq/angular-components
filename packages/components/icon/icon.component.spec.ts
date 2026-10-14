@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { axe } from 'jest-axe';
 import { KbqIconButton } from './icon-button.component';
 import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
@@ -36,6 +37,39 @@ class TestApp {
 class AutoColorIcon {
     readonly autoColor = signal<boolean | undefined>(false);
 }
+
+@Component({
+    imports: [KbqIcon],
+    template: `
+        <i kbq-icon="kbq-plus_16" [color]="color()"></i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ColoredIcon {
+    readonly color = signal<string | undefined>(KbqComponentColors.Error);
+}
+
+@Component({
+    selector: '[name-in-constructor-icon]',
+    template: '<ng-content />',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class NameInConstructorIcon extends KbqIcon {
+    constructor() {
+        super();
+
+        this.iconName = 'kbq-plus_16';
+    }
+}
+
+@Component({
+    imports: [NameInConstructorIcon],
+    template: `
+        <i name-in-constructor-icon></i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class NameInConstructorHost {}
 
 @Component({
     imports: [KbqIcon],
@@ -319,8 +353,8 @@ describe('KbqIcon', () => {
             expect(svgs[0].querySelector('path')?.getAttribute('d')).toBe('M1 8l4 4 8-8');
         });
 
-        // The stream used to terminate on the first unresolved name, which the default font-icon
-        // configuration guarantees, leaving the element unable to render anything later.
+        // The default font-icon configuration resolves no name at all, so an unresolved name must not keep a later
+        // one from resolving.
         it('should still resolve a registered name after an unregistered one', () => {
             register('kbq-play_64');
 
@@ -371,6 +405,17 @@ describe('KbqIcon', () => {
             expect(hostOf(fixture).querySelectorAll('svg')).toHaveLength(1);
         });
 
+        it('should resolve a name a subclass assigns in its constructor', () => {
+            register('kbq-plus_16');
+
+            const fixture = TestBed.createComponent(NameInConstructorHost);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+            expect(hostOf(fixture).classList).not.toContain('kbq-plus_16');
+        });
+
         it('should remove the stale svg once the bound name turns undefined', () => {
             register('kbq-plus_16');
 
@@ -414,6 +459,51 @@ describe('KbqIcon', () => {
         fixture.detectChanges();
 
         expect(hostOf(fixture).querySelector('svg')).not.toBeNull();
+    });
+
+    // The color class of an error icon is `kbq-error` too; the `kbq-error` class binding must not take it away.
+    describe('error color', () => {
+        const iconOf = (fixture: ComponentFixture<ColoredIcon>): KbqIcon =>
+            fixture.debugElement.query(By.directive(KbqIcon)).componentInstance;
+
+        it('should keep the error class of a bound error color', () => {
+            const fixture = TestBed.createComponent(ColoredIcon);
+
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).toContain('kbq-error');
+
+            fixture.componentInstance.color.set(KbqComponentColors.Theme);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).not.toContain('kbq-error');
+            expect(hostOf(fixture).classList).toContain('kbq-theme');
+        });
+
+        it('should keep the error class of an error color set in code', () => {
+            const fixture = TestBed.createComponent(ColoredIcon);
+
+            fixture.componentInstance.color.set(undefined);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).not.toContain('kbq-error');
+
+            iconOf(fixture).color.set(KbqComponentColors.Error);
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).toContain('kbq-error');
+        });
+
+        it('should take the error class from hasError whatever the color', () => {
+            const fixture = TestBed.createComponent(ColoredIcon);
+
+            fixture.componentInstance.color.set(KbqComponentColors.Theme);
+            iconOf(fixture).hasError = true;
+            fixture.detectChanges();
+
+            expect(hostOf(fixture).classList).toContain('kbq-error');
+            expect(hostOf(fixture).classList).toContain('kbq-theme');
+        });
     });
 
     describe('autoColor', () => {
