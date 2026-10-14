@@ -971,6 +971,42 @@ describe('KbqInlineEdit', () => {
             expect(tooltipTrigger.isOpen).toBe(false);
         });
 
+        it('should stop watching the controls once the editor closes', async () => {
+            const fixture = setup(TestWithDynamicValidationTooltip);
+            const { componentInstance, debugElement } = fixture;
+            const inlineEdit: KbqInlineEdit = getInlineEditDebugElement(debugElement).componentInstance;
+            // Projected into the overlay only while editing, so out of the reach of `debugElement.query`.
+            const formField: KbqFormField = inlineEdit['formFieldRef']()!;
+            const controlReads = vi.spyOn(formField, 'control');
+
+            const editAndClose = async () => {
+                inlineEdit.toggleMode();
+                await fixture.whenStable();
+                inlineEdit.toggleMode();
+                await fixture.whenStable();
+            };
+
+            // Both measured changes go from one non-empty value to another, so the form field reacts the same.
+            const readsOnChange = async (value: string): Promise<number> => {
+                controlReads.mockClear();
+                componentInstance.control.setValue(value);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                return controlReads.mock.calls.length;
+            };
+
+            componentInstance.control.setValue('initial');
+            await editAndClose();
+
+            const readsAfterOneSession = await readsOnChange('first');
+
+            await editAndClose();
+            await editAndClose();
+
+            expect(await readsOnChange('second')).toBe(readsAfterOneSession);
+        });
+
         it('should show the tooltip immediately when the control is already fully visible', () => {
             const onscreenRect: DOMRect = {
                 top: 10,

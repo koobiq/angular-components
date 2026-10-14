@@ -32,7 +32,6 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -535,27 +534,32 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         this.setOverlayWidth();
 
+        // Hides the validation tooltip once the controls accept their values. Ended with the session by hand: an
+        // effect otherwise lives as long as its injector, and the tooltip only as long as the panel.
+        const validationTooltipWatcher = effect(
+            () => {
+                this.formFieldRefList().forEach((ref) => {
+                    ref.control().errorState();
+                    ref.control().value();
+                });
+
+                untracked(() => {
+                    const tooltipTrigger = this.tooltipTrigger();
+
+                    if (tooltipTrigger.isOpen && !this.isInvalid()) {
+                        tooltipTrigger.hide();
+                    }
+                });
+            },
+            { injector: this.injector }
+        );
+
         this.overlayDir()!
             .overlayRef.detachments()
             .pipe(take(1))
-            .subscribe(() => this.validationTooltipScrollHandle?.cancel());
-
-        const formFieldRefList = this.formFieldRefList();
-
-        const controlsState = computed(() =>
-            formFieldRefList.map((ref) => [ref.control().errorState(), ref.control().value()])
-        );
-
-        toObservable(controlsState, { injector: this.injector })
-            .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
             .subscribe(() => {
-                if (!this.isInvalid()) {
-                    const tooltipTrigger = this.tooltipTrigger();
-
-                    if (tooltipTrigger?.isOpen) {
-                        tooltipTrigger.hide();
-                    }
-                }
+                validationTooltipWatcher.destroy();
+                this.validationTooltipScrollHandle?.cancel();
             });
 
         this.watchTabOutsideThePanel();
