@@ -63,6 +63,7 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
 // @public (undocumented)
 export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState {
     constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, scrollStrategyFactory: any, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, localeService?: KbqLocaleService | undefined);
+    protected get ariaLabelledby(): string | null;
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
@@ -125,6 +126,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     protected readonly isBrowser: boolean;
     // (undocumented)
     isEmptySearchResult: boolean;
+    readonly isNativeLabelSupported = false;
     // (undocumented)
     isRtl(): boolean;
     multiline: boolean;

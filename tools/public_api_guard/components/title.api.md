@@ -17,6 +17,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     constructor(componentInstance?: KbqTitleTextRef | undefined);
     // (undocumented)
     get child(): HTMLElement;
+    protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
     // (undocumented)

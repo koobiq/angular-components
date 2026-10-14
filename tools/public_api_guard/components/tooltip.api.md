@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -120,9 +121,9 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     // (undocumented)
     get customClass(): string;
     set customClass(value: string);
-    // (undocumented)
+    protected readonly derivedDisabledWins: boolean;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     // (undocumented)
     enterDelay: number;
     // (undocumented)
@@ -162,6 +163,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected renderer: Renderer2;
     // (undocumented)
     protected scrollStrategy: () => ScrollStrategy;
+    protected setDerivedDisabled(value: boolean): void;
     // (undocumented)
     show(delay?: number): void;
     showForElement(element: HTMLElement): void;

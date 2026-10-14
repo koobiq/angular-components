@@ -78,6 +78,7 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
+    protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
     // (undocumented)
@@ -99,6 +100,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 // @public (undocumented)
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
     constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef<HTMLElement>, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
+    protected get ariaLabelledby(): string | null;
     backdropClass: string;
     readonly beforeOpened: OutputEmitterRef<void>;
     calculateHiddenItems: () => void;
@@ -152,6 +154,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     // (undocumented)
     protected readonly isBrowser: boolean;
     get isEmptySearchResult(): boolean;
+    readonly isNativeLabelSupported = false;
     isRtl(): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)

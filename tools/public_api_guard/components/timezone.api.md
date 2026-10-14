@@ -78,6 +78,7 @@ export class KbqTimezoneOption extends KbqOption {
 // @public (undocumented)
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
+    protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
     // (undocumented)

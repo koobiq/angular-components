@@ -15,6 +15,7 @@ import { Subject } from 'rxjs';
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     charWidth: number;
     debounceInterval: number;
+    protected readonly derivedDisabledWins = true;
     // (undocumented)
     set kbqEllipsisCenter(value: string);
     minVisibleLength: number;
