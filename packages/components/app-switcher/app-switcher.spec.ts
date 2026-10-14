@@ -1092,6 +1092,20 @@ describe('KbqAppSwitcher', () => {
                 expect(stopSpy).toHaveBeenCalled();
             });
 
+            it('stays open on an Escape a control inside it has already spent', async () => {
+                vi.useFakeTimers();
+
+                const { popup } = await open(AppSwitcherMultiSite);
+                const hideSpy = vi.spyOn(popup, 'hide').mockImplementation(() => {});
+                const event = createKeyboardEvent('keydown', ESCAPE, getHost());
+
+                // A tooltip inside the switcher closes on this key first and spends it.
+                event.preventDefault();
+                popup['keydownHandler'](event);
+
+                expect(hideSpy).not.toHaveBeenCalled();
+            });
+
             it('ignores keys safely before the key manager is initialized', async () => {
                 vi.useFakeTimers();
 
