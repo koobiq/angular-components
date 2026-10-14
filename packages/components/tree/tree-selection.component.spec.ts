@@ -3,7 +3,7 @@ import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Component, DebugElement, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
     A,
@@ -3763,6 +3763,14 @@ describe('KbqTreeSelection multiple mode', () => {
         expect(component.tree().selectionModel.isMultipleSelection()).toBe(false);
     });
 
+    it('should fall back to single selection when the binding turns undefined', () => {
+        component.multiple = undefined;
+        fixture.detectChanges();
+
+        expect(component.tree().multipleMode).toBeNull();
+        expect(component.tree().selectionModel.isMultipleSelection()).toBe(false);
+    });
+
     it('should keep the first selected node when narrowing to single selection', async () => {
         vi.useFakeTimers();
 
@@ -3977,6 +3985,135 @@ describe('KbqTreeSelection multiple mode, value shape and defaults', () => {
 
         expect(changes.length).toBe(1);
         expect(changes[0].options?.map(({ value }) => value)).toEqual([options[1].value]);
+    });
+});
+
+@Component({
+    imports: [KbqTreeModule, ReactiveFormsModule],
+    template: `
+        <kbq-tree-selection
+            multiple="checkbox"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            [formControl]="control"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class MultipleTreeWithFormControl extends TreeParams {
+    control = new FormControl<string[] | string>(['Pictures', 'Documents']);
+    readonly tree = viewChild.required(KbqTreeSelection);
+}
+
+@Component({
+    imports: [KbqTreeModule, ReactiveFormsModule],
+    template: `
+        <form [formGroup]="form">
+            <kbq-tree-selection
+                multiple="checkbox"
+                formControlName="nodes"
+                [dataSource]="dataSource"
+                [treeControl]="treeControl"
+            >
+                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+                <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                    <kbq-tree-node-toggle />
+                    {{ node.name }}
+                </kbq-tree-option>
+            </kbq-tree-selection>
+        </form>
+    `
+})
+class MultipleTreeWithFormControlName extends TreeParams {
+    readonly form = new FormGroup({ nodes: new FormControl<string[]>(['Pictures', 'Documents']) });
+    readonly tree = viewChild.required(KbqTreeSelection);
+}
+
+describe('KbqTreeSelection multiple mode with a form', () => {
+    beforeEach(() => {
+        vi.useFakeTimers();
+        TestBed.configureTestingModule({ imports: [KbqTreeModule, FormsModule, ReactiveFormsModule] });
+    });
+
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
+    const render = async (fixture: ComponentFixture<unknown>) => {
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+        fixture.detectChanges();
+    };
+
+    const selectedLabels = (fixture: ComponentFixture<unknown>): string[] =>
+        getNodes(fixture.nativeElement)
+            .filter((node) => node.classList.contains('kbq-selected'))
+            .map((node) => node.querySelector('.kbq-option-text')!.textContent!.trim());
+
+    it('should keep the value of a form control', async () => {
+        const fixture = TestBed.createComponent(MultipleTreeWithFormControl);
+        const { control, tree } = fixture.componentInstance;
+
+        await render(fixture);
+
+        expect(control.value).toEqual(['Pictures', 'Documents']);
+        expect(control.pristine).toBe(true);
+        expect(tree().getSelectedValues()).toEqual(['Pictures', 'Documents']);
+        expect(selectedLabels(fixture)).toEqual(['Pictures', 'Documents']);
+    });
+
+    it('should keep the value of a form control bound by name', async () => {
+        const fixture = TestBed.createComponent(MultipleTreeWithFormControlName);
+        const { form, tree } = fixture.componentInstance;
+
+        await render(fixture);
+
+        expect(form.value.nodes).toEqual(['Pictures', 'Documents']);
+        expect(form.pristine).toBe(true);
+        expect(tree().getSelectedValues()).toEqual(['Pictures', 'Documents']);
+        expect(selectedLabels(fixture)).toEqual(['Pictures', 'Documents']);
+    });
+
+    it('should keep ngModel pristine', async () => {
+        const fixture = TestBed.createComponent(TreeWithBoundMultiple);
+
+        fixture.componentInstance.modelValue = ['Pictures'];
+        await render(fixture);
+
+        const ngModel = fixture.debugElement.query(By.directive(KbqTreeSelection)).injector.get(NgModel);
+
+        expect(fixture.componentInstance.modelValue).toEqual(['Pictures']);
+        expect(ngModel.pristine).toBe(true);
+        expect(selectedLabels(fixture)).toEqual(['Pictures']);
+    });
+
+    it('should reject a value that is not an array', () => {
+        const fixture = TestBed.createComponent(MultipleTreeWithFormControl);
+
+        fixture.componentInstance.control = new FormControl<string[] | string>('Pictures');
+
+        expect(() => fixture.detectChanges()).toThrow('Value must be an array in multiple-selection mode.');
+    });
+
+    it('should keep a mode set in code when the form writes a value later', async () => {
+        const fixture = TestBed.createComponent(MultipleTreeWithFormControl);
+        const { control, tree } = fixture.componentInstance;
+
+        await render(fixture);
+
+        tree().multipleMode = null;
+        control.setValue('Pictures');
+        await render(fixture);
+
+        expect(tree().multipleMode).toBeNull();
+        expect(control.value).toBe('Pictures');
+        expect(control.pristine).toBe(true);
+        expect(selectedLabels(fixture)).toEqual(['Pictures']);
     });
 });
 
