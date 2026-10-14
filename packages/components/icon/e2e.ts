@@ -438,7 +438,10 @@ export class E2eIconSvg {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'layout-margin-top-l layout-margin-bottom-l layout-column',
+        // `layout-column` without a cross-axis alignment stretches the flex-item trigger button to the
+        // host's full width — and the dropdown matches its trigger's width — which is what blew the
+        // `04-*.png` baselines out to the viewport width over two short items.
+        class: 'layout-margin-top-l layout-margin-bottom-l layout-column layout-align-start-start',
         'data-testid': 'e2eIconSvgDropdown'
     }
 })
