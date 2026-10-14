@@ -63,6 +63,21 @@ const getActionsPanelCloseButton = (): HTMLElement => {
     return getActionsPanelContainerElement().querySelector('.kbq-actions-panel-container__close-button')!;
 };
 
+/**
+ * Gives `element` an animation that runs until the returned function ends it. jsdom has no Web Animations API, so
+ * without one every transition ends right after the render it starts in.
+ */
+const holdAnimation = (element: HTMLElement): (() => void) => {
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+
+    element.getAnimations = () => [
+        { finished, effect: { getComputedTiming: () => ({ endTime: 300 }) } } as unknown as Animation
+    ];
+
+    return finish;
+};
+
 @Component({
     selector: 'actions-panel-component',
     template: `
@@ -447,6 +462,30 @@ describe(KbqActionsPanelModule.name, () => {
         actionsPanelRef.afterOpened.subscribe(spy);
         await fixture.whenStable();
         expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should report an open interrupted by close as opened before reporting it closed', async () => {
+        const fixture = createComponent(ActionsPanelController);
+        const emitted: string[] = [];
+        const actionsPanelRef = fixture.componentInstance.openFromTemplate();
+        const finishAnimation = holdAnimation(getActionsPanelContainerElement());
+
+        actionsPanelRef.beforeOpened.subscribe(() => emitted.push('beforeOpened'));
+        actionsPanelRef.afterOpened.subscribe({
+            next: () => emitted.push('afterOpened'),
+            complete: () => emitted.push('afterOpened complete')
+        });
+        actionsPanelRef.beforeClosed.subscribe(() => emitted.push('beforeClosed'));
+        actionsPanelRef.afterClosed.subscribe(() => emitted.push('afterClosed'));
+
+        await fixture.whenStable();
+        expect(emitted).toEqual(['beforeOpened']);
+
+        actionsPanelRef.close();
+        finishAnimation();
+        await lastValueFrom(actionsPanelRef.afterClosed);
+
+        expect(emitted).toEqual(['beforeOpened', 'afterOpened', 'afterOpened complete', 'beforeClosed', 'afterClosed']);
     });
 
     it('should not autoFocus on open', async () => {

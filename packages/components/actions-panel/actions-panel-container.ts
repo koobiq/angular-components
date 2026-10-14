@@ -121,7 +121,9 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     private readonly injector = inject(Injector);
-    private stateAnimation?: { destroy(): void };
+
+    /** The transition in progress, ended early by the next one. */
+    private pendingTransition?: { state: 'visible' | 'hidden'; wait: { destroy(): void } };
 
     /** Whether the actions panel container has been destroyed. */
     private destroyed: boolean;
@@ -204,10 +206,23 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     }
 
     private waitForAnimation(state: 'visible' | 'hidden'): void {
-        this.stateAnimation?.destroy();
-        this.stateAnimation = kbqAfterAnimations(
+        const pending = this.pendingTransition;
+
+        // An entrance cut short by closing still ends, or the panel would never report having opened.
+        if (pending) {
+            pending.wait.destroy();
+            this.pendingTransition = undefined;
+            this.animationDone.next(pending.state);
+        }
+
+        // A subscriber may have disposed of the panel by now.
+        if (this.destroyed) return;
+
+        const wait = kbqAfterAnimations(
             () => this._elementRef.nativeElement,
             () => {
+                this.pendingTransition = undefined;
+
                 if (state === 'visible') {
                     this._trapFocus();
                 }
@@ -216,6 +231,8 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
             },
             this.injector
         );
+
+        this.pendingTransition = { state, wait };
     }
 
     private applyContainerClass(): void {

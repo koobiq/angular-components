@@ -24,7 +24,7 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     /** Emits when the actions panel starts opening, before its entrance animation plays. */
     readonly beforeOpened: Observable<void> = this.beforeOpenedSubject;
 
-    /** Emits when the actions panel has opened and appeared. */
+    /** Emits when the actions panel has opened and appeared, or once closing cuts its entrance short. */
     readonly afterOpened: Observable<void> = this.afterOpenedSubject;
 
     /** Emits when the actions panel starts closing, before its exit animation plays. */
@@ -76,15 +76,19 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
 
     /** Closes the actions panel. */
     close(result?: R): void {
-        if (!this.containerInstance) {
+        const container = this.containerInstance;
+
+        if (!container) {
             return;
         }
 
+        // The exit ends an entrance still in progress, so it starts ahead of `beforeClosed` for `afterOpened` to
+        // come first — and the container is let go before that, since an `afterOpened` subscriber may close again.
+        this.containerInstance = null!;
         this.result = result;
+        container.startCloseAnimation();
         this.beforeClosedSubject.next(result);
         this.beforeClosedSubject.complete();
-        this.containerInstance.startCloseAnimation();
-        this.containerInstance = null!;
     }
 
     private handleAnimation(): void {
