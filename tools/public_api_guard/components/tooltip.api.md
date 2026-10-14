@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -140,13 +141,11 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     createOverlay(): OverlayRef;
     get customClass(): string;
     set customClass(value: string);
-    protected derivedDisabled: boolean | undefined;
+    protected readonly derivedDisabledWins: boolean;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     enterDelay: number;
-    protected explicitlyDisabled: boolean | undefined;
     protected focusMonitor: FocusMonitor;
-    protected foldDisabled(): boolean;
     readonly forDisabledComponent: i0.InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
     protected getAnchorSize(): {
         width: number;

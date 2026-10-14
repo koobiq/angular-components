@@ -36,6 +36,12 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
      */
     readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
+    /**
+     * The hint shows rows the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an
+     * option that fits.
+     * @docs-private */
+    protected override readonly derivedDisabledWins = true;
+
     constructor() {
         super();
         this.tooltipPlacement = PopUpPlacements.Right;
@@ -83,7 +89,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     handleElementLeave(): void {
-        this.disabled = true;
+        this.setDerivedDisabled(true);
     }
 
     private checkTooltipDisabled = () => {
@@ -91,7 +97,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
 
         const count: number = this.option.tooltipContent().nativeElement.getClientRects().length;
 
-        this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;
+        this.setDerivedDisabled(count <= TOOLTIP_VISIBLE_ROWS_COUNT);
 
         this.changeDetectorRef.detectChanges();
     };

@@ -29,9 +29,6 @@ export interface KbqOptionActionParent {
         openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
         toggle(): void;
     };
-    tooltipTrigger: {
-        disabled: boolean;
-    };
     focus(): void;
 }
 
@@ -132,8 +129,6 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         outputToObservable(this.option.dropdownTrigger.dropdownClosed)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.preventShowingTooltip();
-
                 const lastDestroyReason = this.option.dropdownTrigger.lastDestroyReason;
 
                 if (lastDestroyReason) {
@@ -177,16 +172,6 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
 
         $event.preventDefault();
         $event.stopPropagation();
-    }
-
-    private preventShowingTooltip() {
-        if (!this.option.tooltipTrigger) {
-            return;
-        }
-
-        this.option.tooltipTrigger.disabled = true;
-
-        setTimeout(() => (this.option.tooltipTrigger.disabled = false));
     }
 }
 

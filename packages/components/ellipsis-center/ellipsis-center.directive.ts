@@ -77,6 +77,12 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     /**
+     * The hint spells out what the split hid, so `kbqTooltipDisabled="false"` cannot conjure one for a name
+     * that fits.
+     * @docs-private */
+    protected override readonly derivedDisabledWins = true;
+
+    /**
      * Shortest text worth splitting in the middle. Anything below it keeps its natural order and is cut off
      * at the end by the host's own `text-overflow`.
      *
@@ -143,14 +149,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         clearTimeout(this.refreshTimeoutId);
 
         super.ngOnDestroy();
-    }
-
-    /**
-     * The hint spells out what the split hid, so `kbqTooltipDisabled="false"` cannot conjure one for a name
-     * that fits — unlike the base, where an explicit value wins outright.
-     * @docs-private */
-    protected override foldDisabled(): boolean {
-        return this.explicitlyDisabled === true || (this.derivedDisabled ?? false);
     }
 
     /**

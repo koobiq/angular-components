@@ -1900,6 +1900,25 @@ describe('KbqTooltip', () => {
             expect(component.enabledTooltip().disabled).toBe(false);
         });
 
+        it('should leave the decision to the wrapped control while [kbqTooltipDisabled] is undefined', () => {
+            expect(component.boundTooltip().disabled).toBe(true);
+
+            component.controlDisabled = true;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(false);
+
+            component.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(true);
+
+            component.tooltipDisabled = undefined;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(false);
+        });
+
         it('should hide an open tooltip once the wrapped control stops being disabled', fakeAsync(() => {
             component.controlDisabled = true;
             fixture.detectChanges();
@@ -2385,12 +2404,23 @@ class TooltipPointerEvents {
         >
             <button #enabledButton kbq-button [disabled]="controlDisabled">Enabled</button>
         </div>
+
+        <div
+            #boundTooltip="kbqTooltip"
+            kbqTooltip="BOUND"
+            [forDisabledComponent]="boundButton"
+            [kbqTooltipDisabled]="tooltipDisabled"
+        >
+            <button #boundButton kbq-button [disabled]="controlDisabled">Bound</button>
+        </div>
     `
 })
 class TooltipForDisabledWithExplicitState {
     readonly explicitTooltip = viewChild.required<KbqTooltipTrigger>('explicitTooltip');
     readonly derivedTooltip = viewChild.required<KbqTooltipTrigger>('derivedTooltip');
     readonly enabledTooltip = viewChild.required<KbqTooltipTrigger>('enabledTooltip');
+    readonly boundTooltip = viewChild.required<KbqTooltipTrigger>('boundTooltip');
 
     controlDisabled = false;
+    tooltipDisabled: boolean | undefined;
 }

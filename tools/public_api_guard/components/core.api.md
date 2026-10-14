@@ -3786,10 +3786,6 @@ export interface KbqOptionActionParent {
     };
     // (undocumented)
     focus(): void;
-    // (undocumented)
-    tooltipTrigger: {
-        disabled: boolean;
-    };
 }
 
 // @public

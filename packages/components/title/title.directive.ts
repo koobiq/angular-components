@@ -81,6 +81,12 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     readonly ignoreTooltipPointerEvents = input<boolean>(true);
 
     /**
+     * The hint repeats text the host had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for a
+     * fully visible title.
+     * @docs-private */
+    protected override readonly derivedDisabledWins = true;
+
+    /**
      * `kbqTrigger` is a single input alias shared by the tooltip, the popover and this directive, so a host
      * carrying both `kbq-title` and `kbqPopover` feeds one value to both. The title tooltip ignores it and
      * always behaves as hover + keyboard focus; the setter exists only so such a host keeps working.
@@ -286,15 +292,6 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private */
     protected hideTooltip() {
         this.setDerivedDisabled(true);
-    }
-
-    /**
-     * The tooltip repeats text the host had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for a
-     * title that is fully visible — unlike the base, where an explicit value wins outright. A consumer's
-     * `kbqTooltipDisabled="true"`, in turn, is no longer overwritten by the next hover.
-     * @docs-private */
-    protected override foldDisabled(): boolean {
-        return this.explicitlyDisabled === true || (this.derivedDisabled ?? false);
     }
 
     /**
