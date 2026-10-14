@@ -23,8 +23,10 @@ import {
     COMMA,
     createKeyboardEvent,
     dispatchFakeEvent,
+    dispatchKeyboardEvent,
     ENTER,
     ErrorStateMatcher,
+    ESCAPE,
     SEMICOLON,
     SPACE,
     TAB
@@ -292,6 +294,19 @@ describe(KbqTagInput.name, () => {
         directive.emitTagEnd();
 
         expect(componentInstance.add).toHaveBeenCalledWith(expect.objectContaining({ value: 'existing-tag' }));
+    });
+
+    // A dialog around the field closes on an Escape that nothing inside it consumed.
+    it('should let Escape bubble out of the empty input', () => {
+        const fixture = createComponent(TestTagInputDefaultSeparators);
+        const ancestorKeydown = vi.fn();
+
+        fixture.nativeElement.addEventListener('keydown', ancestorKeydown);
+
+        const escapeEvent = dispatchKeyboardEvent(getInputElement(fixture), 'keydown', ESCAPE);
+
+        expect(ancestorKeydown).toHaveBeenCalledWith(escapeEvent);
+        expect(escapeEvent.defaultPrevented).toBe(false);
     });
 
     it('should filter duplicate values on paste when distinct=true', () => {
@@ -772,6 +787,21 @@ describe(KbqTagInput.name, () => {
                 await fixture.whenStable();
 
                 expect(componentInstance.tags).toEqual(['custom text']);
+            });
+
+            // The overlay hears the key on `body`, so the empty input must not keep Escape to itself.
+            it('closes the panel on Escape while the input is empty', async () => {
+                dispatchFakeEvent(inputElement, 'focusin');
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).not.toBeNull();
+
+                dispatchKeyboardEvent(inputElement, 'keydown', ESCAPE);
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).toBeNull();
             });
         });
 

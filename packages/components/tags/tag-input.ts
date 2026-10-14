@@ -18,6 +18,7 @@ import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
     COMMA,
     ENTER,
+    ESCAPE,
     hasModifierKey,
     KbqFieldSizingContent,
     kbqInjectAutofilled,
@@ -265,7 +266,12 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
             }
 
             this._tagList.keydown(event);
-            event.stopPropagation();
+
+            // The tag list ignores Escape, and an autocomplete panel, which hears the key on `body`, or a dialog
+            // around the field still has to get it.
+            if (event.keyCode !== ESCAPE) {
+                event.stopPropagation();
+            }
 
             return;
         }
