@@ -306,6 +306,33 @@ describe('KbqTooltip', () => {
         }));
     });
 
+    describe('lifecycle', () => {
+        let fixture: ComponentFixture<TooltipSimple>;
+        let component: TooltipSimple;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipSimple);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should complete the pop-up visibility stream when the tooltip is torn down', fakeAsync(() => {
+            const trigger = component.tooltipTrigger();
+
+            showByHover(fixture, component.triggerElementRef().nativeElement);
+
+            let completed = false;
+
+            trigger['instance'].visibleChange.subscribe({ complete: () => (completed = true) });
+
+            trigger.hide(0);
+            flush();
+            fixture.detectChanges();
+
+            expect(completed).toBe(true);
+        }));
+    });
+
     describe('forDisabledComponent input', () => {
         let fixture: ComponentFixture<KbqTooltipForDisabledComponent>;
         let component: KbqTooltipForDisabledComponent;
