@@ -100,7 +100,7 @@ export type KbqTagListDroppedEvent = Pick<CdkDragDrop<unknown>, 'event' | 'previ
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tag-list',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'disabled()',
         '[class.kbq-invalid]': 'errorState()',
         '[class.kbq-tag-list_selectable]': 'selectable()',
         '[class.kbq-tag-list_editable]': 'editable()',
@@ -286,14 +286,15 @@ export class KbqTagList
         return tagInput ? tagInput.placeholder() : this.placeholderInput();
     });
 
-    /** Whether one of the tags has focus, mirrored from their focus and blur events. */
-    private readonly tagFocused = signal(false);
-
     /** Number of the rendered tags, mirrored from the `tags` query. */
     private readonly tagsCount = signal(0);
 
     /** Whether any tags or the kbqTagInput inside of this tag-list has focus. */
-    readonly focused = computed(() => !!this.registeredInput()?.focused() || this.tagFocused());
+    // Derived from the current tags: one removed while focused fires no blur. Read from the query, as syncing
+    // `tags` emits `changes`, whose subscribers must not run inside a computed.
+    readonly focused = computed(
+        () => !!this.registeredInput()?.focused() || this.tagsQuery().some((tag) => tag.hasFocus)
+    );
 
     /**
      * Implemented as part of KbqFormFieldControl. Forwarded from the registered `kbqTagInput`, which
@@ -334,8 +335,6 @@ export class KbqTagList
     readonly disabled = linkedSignal(() => this.disabledInput());
 
     /** Whether the tags in the list can be reordered by dragging. */
-    // Stays an accessor: it folds in `disabled`, which comes from the form control when there is one. That
-    // is a plain property rather than a signal, so a `computed` would cache it and miss `control.disable()`.
     get draggable(): boolean {
         return this._draggable() && !this.disabled();
     }
@@ -385,8 +384,6 @@ export class KbqTagList
 
     /**
      * Tab index of the tag list. This property is ignored when the tag list contains a tag input or is disabled.
-     * Stays an accessor: it folds in `disabled`, which comes from the form control when there is one - a
-     * plain property a `computed` would not see change - and the setter records the value as user-provided.
      *
      * @docs-private
      */
@@ -980,15 +977,9 @@ export class KbqTagList
                 this.keyManager.setFocusOrigin(origin);
                 this.keyManager.updateActiveItem(tagIndex);
             }
-
-            this.tagFocused.set(this.hasFocusedTag());
         });
 
-        this.tagBlurChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(() => {
-            this.blur();
-
-            this.tagFocused.set(this.hasFocusedTag());
-        });
+        this.tagBlurChanges.pipe(takeUntil(this.tagsSubscriptions$)).subscribe(() => this.blur());
     }
 
     private listenToTagsRemoved(): void {
