@@ -3,7 +3,9 @@
  * file per area under `data/`.
  *
  * Each replacement uses a RegExp source string in `from` and a literal `to`; the driver compiles it with the `g`
- * flag. A warning reports what cannot be rewritten; its optional `anchor` limits it to files that also match it.
+ * flag. One that deletes an element of a list takes one of its commas with it (`listItemPattern`): nothing tidies
+ * the file afterwards. A warning reports what cannot be rewritten; its optional `anchor` limits it to files that also
+ * match it.
  */
 
 import { accordion } from './data/accordion';

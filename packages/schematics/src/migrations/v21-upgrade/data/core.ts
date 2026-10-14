@@ -1,3 +1,4 @@
+import { listItemPattern } from '../../../utils/list-item-pattern';
 import type { AreaData, Replacement } from '../data';
 
 const CORE = '@koobiq/components/core';
@@ -31,7 +32,7 @@ const THEME_PALETTE: Replacement[] = [
     {
         // The specifier, with one of its commas, once nothing else names it; an emptied clause is dropped by
         // `removeImport`.
-        from: `\\bThemePalette\\b(?!\\s+as\\b)\\s*,?\\s*(?=[^}]*\\}\\s*from\\s*['"]${CORE}['"])(?![\\s\\S]*\\bThemePalette\\b)`,
+        from: `${listItemPattern('\\bThemePalette\\b(?!\\s+as\\b)')}(?=[^}]*\\}\\s*from\\s*['"]${CORE}['"])(?![\\s\\S]*\\bThemePalette\\b)`,
         to: '',
         removeImport: { symbol: 'ThemePalette', from: CORE }
     }

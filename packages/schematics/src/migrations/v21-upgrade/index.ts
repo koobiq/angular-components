@@ -43,19 +43,6 @@ function applyReplacements(
 
         result = result.replace(new RegExp(from, 'g'), to);
 
-        // Tidy up double commas / empty-element commas left over from identifier
-        // deletions like `{ A, KbqValidationOptions, B }` → `{ A, , B }`.
-        // Also covers array forms like `providers: [a(), removedCall(), b()]`
-        // → `providers: [a(), , b()]` after a call-site rewrite to ''.
-        if (to === '' && before !== result) {
-            result = result
-                .replace(/,\s*,/g, ',')
-                .replace(/{\s*,/g, '{')
-                .replace(/,\s*}/g, ' }')
-                .replace(/\[\s*,/g, '[')
-                .replace(/,\s*\]/g, ' ]');
-        }
-
         if (ensureImport && before !== result) {
             importsToEnsure.push(ensureImport);
         }
@@ -91,7 +78,7 @@ function ensureImport(content: string, symbol: string, from: string): string {
     if (sameModule.test(content)) {
         return content.replace(sameModule, (_match, open: string, body: string, close: string) => {
             const trimmed = body.trim().replace(/,$/, '');
-            const next = trimmed.length === 0 ? ` ${symbol} ` : `${body.replace(/\s*$/, '')}, ${symbol} `;
+            const next = trimmed.length === 0 ? ` ${symbol} ` : `${body.replace(/,?\s*$/, '')}, ${symbol} `;
 
             return `${open}${next}${close}`;
         });
