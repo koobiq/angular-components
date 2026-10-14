@@ -49,6 +49,11 @@ describe('fail-on-console', () => {
         console.warn = realWarn;
     });
 
+    // jsdom reports an API it does not implement through its own virtual console, not `console.error`.
+    (typeof window === 'undefined' ? it.skip : it.fails)('fails a test that calls an API jsdom lacks', () => {
+        window.alert('canary');
+    });
+
     describe('with every mock restored after each test', () => {
         // Hooks run in stack order: the restore runs first, then the hook registered before it, the way a spec's
         // own `afterEach` runs before the TestBed teardown that destroys its fixtures.

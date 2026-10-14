@@ -25,6 +25,15 @@ ComponentFixture.prototype.detectChanges = function (this: ComponentFixture<unkn
     detectChanges.call(this, checkNoChanges);
 };
 
+// jsdom reports its own errors — an API it does not implement, a resource it could not load, a stylesheet it could
+// not parse — through its virtual console, which Vitest leaves writing to the worker's console instead of this
+// context's. Forwarded, they reach the console gate, as they did under Jest.
+(
+    globalThis as typeof globalThis & {
+        _virtualConsole?: { on(event: 'jsdomError', listener: (error: Error) => void): void };
+    }
+)._virtualConsole?.on('jsdomError', (error) => console.error(error));
+
 // jest-axe has no runtime dependency on Jest: `axe()` wraps axe-core and the matcher only formats.
 expect.extend(toHaveNoViolations);
 
