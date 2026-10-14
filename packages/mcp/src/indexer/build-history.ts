@@ -1,7 +1,7 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { compare, isRelease, sortReleases } from '../semver.js';
-import { dataDir, git, readBlobs, repoRoot, requireTags } from './git.js';
+import { dataDir, git, readBlobs, repoRoot, requireTags, stagedVersion } from './git.js';
 import { parseApiReport } from './parse-api-md.js';
 
 /**
@@ -33,6 +33,19 @@ export const releasesFrom = (repo: string, lowest: string): string[] =>
 /** One entry point's members at one release, keyed `Symbol` and `Symbol.member`. */
 type Surface = Map<string, Map<string, string>>;
 
+/** One report's members, keyed `Symbol` and `Symbol.member`, the way `diff` reads them. */
+const membersOf = (body: string): Map<string, string> => {
+    const members = new Map<string, string>();
+
+    for (const symbol of parseApiReport(body)) {
+        members.set(symbol.name, symbol.selector ? `selector ${symbol.selector}` : symbol.kind);
+
+        for (const member of symbol.members) members.set(`${symbol.name}.${member.name}`, member.signature);
+    }
+
+    return members;
+};
+
 /** Reads every report at a tag in one `git cat-file --batch` rather than one process per file. */
 const readSurface = (repo: string, tag: string): Surface => {
     const listed = git(repo, ['ls-tree', '-r', '--name-only', tag, `${GUARD_DIR}/`])
@@ -41,16 +54,27 @@ const readSurface = (repo: string, tag: string): Surface => {
 
     const surface: Surface = new Map();
 
-    for (const [path, body] of readBlobs(repo, tag, listed)) {
-        const members = new Map<string, string>();
+    for (const [path, body] of readBlobs(repo, tag, listed)) surface.set(basename(path, '.api.md'), membersOf(body));
 
-        for (const symbol of parseApiReport(body)) {
-            members.set(symbol.name, symbol.selector ? `selector ${symbol.selector}` : symbol.kind);
+    return surface;
+};
 
-            for (const member of symbol.members) members.set(`${symbol.name}.${member.name}`, member.signature);
-        }
+/**
+ * The working tree's reports, as the surface of the release being staged.
+ *
+ * `build:mcp:data` runs in the release pipeline after the version bump but before the release
+ * tag is created, so the release it must record has no tag to read yet. Its surface is the working
+ * tree: the reports were approved in the pull requests that changed the API, and the release does
+ * not touch them.
+ */
+const readWorkingSurface = (repo: string): Surface => {
+    const surface: Surface = new Map();
+    const guardDir = join(repo, GUARD_DIR);
 
-        surface.set(basename(path, '.api.md'), members);
+    if (!existsSync(guardDir)) return surface;
+
+    for (const file of readdirSync(guardDir).filter((name) => name.endsWith('.api.md'))) {
+        surface.set(basename(file, '.api.md'), membersOf(readFileSync(join(guardDir, file), 'utf-8')));
     }
 
     return surface;
@@ -122,7 +146,17 @@ const main = (): void => {
 
     const lowest = process.argv[3] ?? '18.0.0';
     const started = Date.now();
+    const releases = releasesFrom(repo, lowest);
     const history = buildHistory(repo, lowest);
+    const { version } = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf-8')) as { version: string };
+
+    // The release being staged has no tag yet, so it is recorded from the working tree under the
+    // version package.json was just bumped to.
+    if (stagedVersion(repo, lowest, version) && releases.at(-1)) {
+        const changed = diff(readSurface(repo, releases.at(-1)!), readWorkingSurface(repo));
+
+        if (Object.keys(changed).length > 0) history[version] = changed;
+    }
 
     const outputPath = join(dataDir(), 'history.json');
 
@@ -147,7 +181,7 @@ const main = (): void => {
     process.stdout.write(
         [
             `${outputPath}`,
-            `  releases with changes  ${Object.keys(history).length} of ${releasesFrom(repo, lowest).length}`,
+            `  releases with changes  ${Object.keys(history).length} of ${releases.length + (stagedVersion(repo, lowest, version) ? 1 : 0)}`,
             `  changes                ${changes}`,
             `  of those removals      ${removed}`,
             `  built in               ${((Date.now() - started) / 1000).toFixed(1)}s`,

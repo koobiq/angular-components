@@ -1,7 +1,7 @@
 import { existsSync, globSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve, sep } from 'node:path';
 import type { ComponentEntry, ComponentIndex, IndexProvenance } from '../types.js';
-import { dataDir, git, repoRoot } from './git.js';
+import { dataDir, git, repoRoot, stagedVersion } from './git.js';
 import { parseApiReport } from './parse-api-md.js';
 import { parseExampleModule } from './parse-examples.js';
 import { parseGuide } from './parse-guide.js';
@@ -11,8 +11,8 @@ import { parseIconRenames } from './parse-renames.js';
  * Builds `data/index.json` from this repository.
  *
  * Runs against the repository rather than the published package on purpose: the package ships
- * only typings and styles — no MDX and no examples — so the docs surface has to be captured at
- * build time. This belongs in that repository's CI; see TODO.md.
+ * only typings and styles — no MDX and no examples — so the docs surface has to be captured in the
+ * release pipeline, where `build:mcp:data` regenerates the committed `data/`.
  *
  *   yarn build:mcp:data
  */
@@ -52,7 +52,9 @@ const readProvenance = (repo: string, version: string): IndexProvenance => {
     return {
         version,
         commit: read(['rev-parse', '--short', 'HEAD']),
-        tag: read(['describe', '--tags', '--exact-match']),
+        // A release being staged has no tag yet: `git describe` answers nothing, but the version was
+        // just bumped past the newest tag, so that version *is* the tag about to be created.
+        tag: read(['describe', '--tags', '--exact-match']) ?? stagedVersion(repo, '18.0.0', version),
         dirtyFiles: status ? status.split('\n').filter(Boolean).length : 0
     };
 };
