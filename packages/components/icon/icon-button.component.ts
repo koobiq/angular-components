@@ -116,7 +116,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     override ngOnChanges(changes: SimpleChanges): void {
         super.ngOnChanges(changes);
 
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         // A bound `undefined` or `null` restores the default tabindex instead of dropping the button out of the tab order.
         if (changes['tabindexInput']) {
             const tabindex = this.tabindexInput();

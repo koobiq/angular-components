@@ -566,7 +566,7 @@ export class KbqTooltipTrigger
      * show/hide cycle.
      */
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, a bound `undefined` restoring the
+        // A bound input is handed to its member, a bound `undefined` restoring the
         // member's default; unbound, it leaves what code wrote.
         if (changes['triggerInput']) {
             this.trigger = this.triggerInput() ?? '';

@@ -280,7 +280,7 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, a bound `undefined` included;
+        // A bound input is handed to its member, a bound `undefined` included;
         // unbound, it leaves what code wrote.
         if (changes['valueInput']) {
             this.value = this.valueInput();
@@ -711,7 +711,7 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, a bound `undefined` included;
+        // A bound input is handed to its member, a bound `undefined` included;
         // unbound, it leaves what code wrote.
         if (changes['valueInput']) {
             this.value = this.valueInput();

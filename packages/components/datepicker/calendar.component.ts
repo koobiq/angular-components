@@ -167,7 +167,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote. A
+        // A bound input is handed to its member; unbound, it leaves what code wrote. A
         // bound `undefined` is handed over too, as an unset date: a bound that becomes unset lifts its restriction.
         if (changes['minDateInput']) this.minDate = this.minDateInput() ?? null;
 

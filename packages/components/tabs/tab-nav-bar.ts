@@ -343,7 +343,7 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
     private readonly tabNavBar = inject(KbqTabNavBar);
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did, except that `undefined` resets a member
+        // A bound input is handed to its member, except that `undefined` resets a member
         // typed without it to its default; unbound, it leaves what code wrote.
         if (changes['idInput']) {
             this.id = this.idInput() ?? this.uniqueId;

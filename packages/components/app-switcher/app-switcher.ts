@@ -347,7 +347,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     readonly triggerInput = input<KbqAppSwitcherTrigger | undefined>(undefined, { alias: 'trigger' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         if (changes['triggerInput']) {
             const trigger = this.triggerInput();
 

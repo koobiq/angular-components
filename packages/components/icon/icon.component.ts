@@ -200,7 +200,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         // A bound `undefined` is a value as well: auto color turns off and the icon is removed.
         if (changes['autoColorInput']) this.autoColor = this.autoColorInput() ?? false;
 

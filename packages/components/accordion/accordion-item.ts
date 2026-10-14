@@ -102,9 +102,9 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     }
 
     /**
-     * Follows the binding at once, the way a decorator input applied a static `expanded` while the view was
-     * created: every item of a single-mode accordion holds its bound state before the first of them reports
-     * in `ngOnInit` and collapses the others.
+     * Follows the binding at once, a static `expanded` included, while the view is created: every item of a
+     * single-mode accordion holds its bound state before the first of them reports in `ngOnInit` and collapses
+     * the others.
      */
     private readonly expandedState = linkedSignal(() => !!this.expandedInput());
 
@@ -186,7 +186,7 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
         // The state already follows the binding; a later change still has to be reported, once.
         if (changes['expandedInput'] && this.initialized && this.expanded !== this.reportedExpanded) {
             this.reportExpanded();

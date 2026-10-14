@@ -149,7 +149,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     override ngOnChanges(changes: SimpleChanges): void {
         super.ngOnChanges(changes);
 
-        // A bound input is handed to its member as the decorator input did, a bound `undefined` restoring the
+        // A bound input is handed to its member, a bound `undefined` restoring the
         // fallback; unbound, it leaves what code wrote.
         if (changes['confirmTextInput']) {
             this.confirmText = this.confirmTextInput();
