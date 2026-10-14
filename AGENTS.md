@@ -85,6 +85,8 @@ yarn run docs:build                    # Build docs app for production (prerende
 
 Libraries are built by the custom `@koobiq/builders:packager` builder around ng-packagr. It replaces the `{{VERSION}}` and `{{NG_VERSION}}` placeholders in the package manifests and in `packages/components/core/version.ts`; `{{NG_VERSION}}` comes from `requiredAngularVersion` in the root `package.json`. Never hardcode a version in those files.
 
+`@angular/build` is installed through a yarn `patch:` from `.yarn/patches/` that ports angular/angular-cli@6d9b360e5: without it a one-shot build never disposes its esbuild contexts and `ng build` never exits. The patch is cut for one version and Dependabot ignores the package, so bump it by hand with the rest of `@angular/*` and re-cut the patch for the new version (`yarn patch @angular/build`, then `yarn patch-commit -s`). Drop the patch and its entry in `.github/dependabot.yml` once the 21.x line ships the fix; 21.2.26 does not.
+
 The docs app resolves `@koobiq/*` from `dist/` (see `apps/docs/tsconfig.app.json`), so rebuild the libraries before `docs:build`, and again after changing a component you want to see on the site. `yarn run docs` runs the whole chain in the right order.
 
 ### Development
