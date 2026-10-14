@@ -63,9 +63,13 @@ const normalizeTreeState = (parsed: unknown): KbqTreeState | null => {
  * contract, the option-based selection model and the filtering pipeline have all diverged, so
  * `@angular/cdk/tree` is deliberately not a dependency of this package and upstream fixes have to be
  * ported by hand.
+ *
+ * `C` narrows the tree control a concrete tree accepts, and so the type its `treeControl` binding is checked against.
  */
 @Directive()
-export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
+export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
+    implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
+{
     protected differs = inject(IterableDiffers);
     protected changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -76,11 +80,18 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
     private readonly stateSaving = inject(KbqStateSaving, { optional: true });
 
     /** @docs-private */
-    readonly treeControlInput = input<TreeControl<T>>(undefined!, { alias: 'treeControl' });
+    readonly treeControlInput = input<C>(undefined!, { alias: 'treeControl' });
 
     /** Controls the expanded state and holds the data nodes of the tree. */
-    get treeControl(): TreeControl<T> {
+    get treeControl(): C {
         return this.treeControlInput();
+    }
+
+    /** {@link treeControl} as state saving reads it: by node value, which only a `FlatTreeControl` has. */
+    private get flatTreeControl(): FlatTreeControl<T> {
+        const treeControl: TreeControl<T> = this.treeControl;
+
+        return treeControl as FlatTreeControl<T>;
     }
 
     /**
@@ -436,7 +447,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
         // a setting worth carrying to the next visit.
         if (!this.stateSaving.host?.isConnected) return false;
 
-        if (typeof (this.treeControl as FlatTreeControl<T>).getValue !== 'function') {
+        if (typeof this.flatTreeControl.getValue !== 'function') {
             if (isDevMode() && !this.warnedAboutTreeControl) {
                 this.warnedAboutTreeControl = true;
 
@@ -472,7 +483,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
 
         this.lastRestoredDataNodes = currentNodes;
 
-        const treeControl = this.treeControl as FlatTreeControl<T>;
+        const treeControl = this.flatTreeControl;
         const found: T[] = [];
 
         for (const value of this.pendingValues) {
@@ -493,7 +504,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
 
     /** The values of the nodes that are currently expanded, plus the ones still waiting to appear. */
     private expandedValues(): KbqTreeState {
-        const treeControl = this.treeControl as FlatTreeControl<T>;
+        const treeControl = this.flatTreeControl;
         const expanded: string[] = [];
         let skipped = false;
 
