@@ -3,6 +3,24 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
 
+/**
+ * Gives `element` a width transition that runs until the returned function ends it. jsdom has no Web Animations
+ * API, so without one every transition ends right after the render it starts in.
+ */
+const holdTransition = (element: HTMLElement): (() => void) => {
+    let finish!: () => void;
+    const finished = new Promise<void>((resolve) => (finish = resolve));
+
+    element.getAnimations = () => [
+        { finished, effect: { getComputedTiming: () => ({ endTime: 200 }) } } as unknown as Animation
+    ];
+
+    return () => {
+        delete (element as Partial<HTMLElement>).getAnimations;
+        finish();
+    };
+};
+
 describe(KbqSidebarModule.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -107,6 +125,27 @@ describe(KbqSidebarModule.name, () => {
 
             expect(sidebarComponent.opened).toBeFalsy();
             expect(changeSpy).toHaveBeenCalledWith(false);
+        });
+
+        it('should transition the width only while it moves between the states', async () => {
+            const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+
+            expect(host.classList).not.toContain('kbq-sidebar_toggling');
+
+            const finish = holdTransition(host);
+
+            sidebarComponent.toggle();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(host.classList).toContain('kbq-sidebar_toggling');
+
+            finish();
+            // The end of the transition reaches the sidebar through a chain of promises.
+            await new Promise((resolve) => setTimeout(resolve));
+            await fixture.whenStable();
+
+            expect(host.classList).not.toContain('kbq-sidebar_toggling');
         });
 
         it('should toggle on `BracketLeft` keypress', () => {
@@ -305,6 +344,40 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
 
         // The width is captured on the way out, and jsdom reports no layout, so it lands as `0px`.
         expect(store.getState('sidebar-key')).toEqual({ opened: false, width: '0px' });
+    });
+
+    it('keeps the opened width when it closes while it still widens', async () => {
+        const fixture = create(UncontrolledSidebar);
+        const sidebar = fixture.componentInstance.sidebar();
+        const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+        let offsetWidth = 200;
+
+        Object.defineProperty(host, 'offsetWidth', { configurable: true, get: () => offsetWidth });
+        await fixture.whenStable();
+
+        sidebar.toggle();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        const finish = holdTransition(host);
+
+        sidebar.toggle();
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        // Halfway from the closed width to the opened one.
+        offsetWidth = 116;
+        sidebar.toggle();
+        fixture.detectChanges();
+        finish();
+        await fixture.whenStable();
+
+        expect(store.getState('sidebar-key')).toEqual({ opened: false, width: '200px' });
+
+        sidebar.toggle();
+        fixture.detectChanges();
+
+        expect(host.style.width).toBe('200px');
     });
 
     it('persists the width the content declares', () => {

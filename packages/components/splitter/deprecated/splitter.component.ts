@@ -608,7 +608,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
         '[class.kbq-splitter-area_resizing]': 'isResizing()'
     }
 })
-export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
+export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestroy {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
     private splitter = inject(KbqSplitterComponent);
@@ -626,9 +626,8 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
         this.renderer.removeStyle(this.elementRef.nativeElement, 'flex');
     }
 
-    ngAfterViewInit() {
-        this.splitter.addArea(this);
-
+    // Before the host bindings of the element apply, so that a component on it keeps the sizes it binds to its host.
+    ngOnInit() {
         this.removeStyle(StyleProperty.MaxWidth);
 
         if (this.splitter.direction === Direction.Vertical) {
@@ -638,6 +637,10 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
             this.setStyle(StyleProperty.Height, '100%');
             this.removeStyle(StyleProperty.Width);
         }
+    }
+
+    ngAfterViewInit() {
+        this.splitter.addArea(this);
 
         this.splitter.gutterPositionChange.subscribe(this.emitSizeChange);
     }

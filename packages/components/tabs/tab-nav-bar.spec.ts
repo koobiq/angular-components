@@ -2,6 +2,7 @@ import { Direction, Directionality } from '@angular/cdk/bidi';
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { KBQ_ANIMATIONS_CONFIG } from '@koobiq/components/core';
 import { KBQ_SCROLLBAR_OPTIONS, KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
@@ -365,6 +366,31 @@ describe(KbqTabNavBar.name, () => {
 
             expect(before.classList.contains('kbq-disabled')).toBe(false);
             expect(after.classList.contains('kbq-disabled')).toBe(true);
+        });
+    });
+
+    describe('underline motion', () => {
+        const underlineOf = (fixture: ComponentFixture<SimpleTabNavBarTestApp>): HTMLElement =>
+            fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+        it('should move the underline with motion by default', () => {
+            const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+
+            fixture.detectChanges();
+
+            expect(underlineOf(fixture).classList).not.toContain('kbq-animations-disabled');
+        });
+
+        it('should move the underline without motion when animations are disabled', () => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+            });
+
+            const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
+
+            fixture.detectChanges();
+
+            expect(underlineOf(fixture).classList).toContain('kbq-animations-disabled');
         });
     });
 
