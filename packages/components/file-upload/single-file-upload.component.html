@@ -39,6 +39,8 @@
                 [color]="invalid ? 'error' : 'contrast-fade'"
                 [disabled]="disabled"
                 (click)="deleteItem($event, 'program')"
+                (keydown.enter)="deleteItem($event, 'program')"
+                (keydown.space)="$event.preventDefault(); deleteItem($event, 'program')"
                 (keydown.backspace)="deleteItem()"
                 (keydown.delete)="deleteItem()"
             ></i>

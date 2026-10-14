@@ -70,6 +70,8 @@
                                     [color]="file.hasError ? 'error' : 'contrast-fade'"
                                     [disabled]="disabled"
                                     (click)="deleteFile($index, $event, 'program')"
+                                    (keydown.enter)="deleteFile($index, $event, 'program')"
+                                    (keydown.space)="$event.preventDefault(); deleteFile($index, $event, 'program')"
                                 ></i>
                             </div>
                         </kbq-list-item>

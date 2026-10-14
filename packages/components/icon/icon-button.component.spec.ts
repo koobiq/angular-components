@@ -1,4 +1,4 @@
-import { Component, contentChild, Directive, ElementRef, inject } from '@angular/core';
+import { Component, contentChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -133,54 +133,6 @@ describe('KbqIconButton', () => {
 
             expect(genericHost().getAttribute('aria-disabled')).toBe('true');
             expect(genericHost().hasAttribute('tabindex')).toBe(false);
-        });
-
-        it.each(['Enter', ' '])('should activate a non-button host with %s', (key) => {
-            const spyFn = jest.spyOn(fixture.componentInstance, 'onClick');
-
-            genericHost().dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
-
-            expect(spyFn).toHaveBeenCalledTimes(1);
-        });
-
-        it('should not activate a disabled host from the keyboard', () => {
-            const spyFn = jest.spyOn(fixture.componentInstance, 'onClick');
-
-            fixture.componentInstance.isDisabled = true;
-            fixture.detectChanges();
-
-            genericHost().dispatchEvent(
-                new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
-            );
-
-            expect(spyFn).not.toHaveBeenCalled();
-        });
-
-        it('should leave activation to the browser on a native button', () => {
-            const spyFn = jest.spyOn(fixture.componentInstance, 'onClick');
-
-            nativeButton().dispatchEvent(
-                new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true })
-            );
-
-            // jsdom does not synthesize the click a browser would, so the assertion is that the
-            // component did not add a second one of its own.
-            expect(spyFn).not.toHaveBeenCalled();
-        });
-
-        // `KbqTagRemove` and `KbqCleaner` both put their own Enter/Space handling on the very element the
-        // icon button sits on. Exactly one of the two has to end up synthesizing the click.
-        it('should stand down when a co-located handler already activated the host', () => {
-            const fixture = TestBed.createComponent(SelfActivatingApp);
-
-            fixture.detectChanges();
-
-            const host = fixture.nativeElement.querySelector('i') as HTMLElement;
-            const spyFn = jest.spyOn(fixture.componentInstance, 'onClick');
-
-            host.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
-
-            expect(spyFn).toHaveBeenCalledTimes(1);
         });
 
         it('should warn in dev mode when it has no accessible name', () => {
@@ -365,35 +317,6 @@ class ExplicitRoleApp {}
 })
 class BadTabindexApp {
     value = '';
-}
-
-/** Mirrors the shape of `KbqTagRemove`: a co-located directive that activates the host itself. */
-@Directive({
-    selector: '[selfActivating]',
-    host: {
-        '(keydown.enter)': 'activate($event)'
-    }
-})
-class SelfActivating {
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
-    protected activate(event: KeyboardEvent): void {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.elementRef.nativeElement.click();
-    }
-}
-
-@Component({
-    selector: 'self-activating-app',
-    imports: [KbqIconModule, SelfActivating],
-    template: `
-        <i selfActivating kbq-icon-button="kbq-chevron-down-s_16" aria-label="Remove" (click)="onClick()"></i>
-    `
-})
-class SelfActivatingApp {
-    onClick() {}
 }
 
 @Component({

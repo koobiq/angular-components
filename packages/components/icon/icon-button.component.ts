@@ -28,13 +28,11 @@ export type KbqIconButtonSize = 'compact' | 'normal';
 /** Host elements that are already buttons, or already activated from the keyboard by the browser. */
 const NATIVELY_ACTIVATED_NODES = ['BUTTON', 'INPUT'];
 
-/** `'Spacebar'` is what pre-Chromium Edge reports for the space bar. */
-const ACTIVATION_KEYS = ['Enter', ' ', 'Spacebar'];
-
 /**
  * An icon that acts as a button. Applied to a native `<button>` it only adds the styling; applied to any
  * other element — `<i>` is what the library itself mostly uses — it also supplies the semantics the
- * element does not have: `role="button"`, Enter/Space activation and `aria-disabled`.
+ * element does not have: `role="button"` and `aria-disabled`. It does not synthesize Enter/Space
+ * activation itself — attach a `(keydown.enter)`/`(keydown.space)` listener where it is used.
  *
  * It has no text of its own, so give it an `aria-label` (or an `aria-labelledby`); in dev mode it warns
  * when it has neither.
@@ -143,7 +141,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
         this.runFocusMonitor();
         this.applyButtonRole();
         this.warnIfMissingAccessibleName();
-        this.listenForKeyboardActivation();
     }
 
     ngOnDestroy() {
@@ -178,39 +175,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
         if (this.isNativelyActivated() || host.hasAttribute('role')) return;
 
         this.renderer.setAttribute(host, 'role', 'button');
-    }
-
-    /**
-     * Enter and Space have to synthesize the click a non-button host never fires on its own.
-     *
-     * The listener is registered here rather than declared in `host`, so that it runs after every
-     * listener the element already carries: `KbqTagRemove` and `KbqCleaner` activate this very element
-     * themselves, and the `defaultPrevented` check is what keeps the click from being synthesized twice.
-     * A host listener is registered during element creation and would always run first, with nothing yet
-     * to check.
-     */
-    private listenForKeyboardActivation(): void {
-        // A `<button>` or an `<input>` can never stop being natively activated, so it needs no listener.
-        // An anchor can still gain its `href` later, so it gets one and re-checks when the key arrives.
-        if (NATIVELY_ACTIVATED_NODES.includes(this.getHostElement().nodeName)) return;
-
-        this.destroyRef.onDestroy(
-            this.renderer.listen(this.getHostElement(), 'keydown', (event: KeyboardEvent) =>
-                this.activateFromKeyboard(event)
-            )
-        );
-    }
-
-    private activateFromKeyboard(event: KeyboardEvent): void {
-        if (this.disabled || event.defaultPrevented || this.isNativelyActivated()) return;
-        if (!ACTIVATION_KEYS.includes(event.key)) return;
-
-        // Space scrolls the page, and both keys are usually acted on by whatever list or overlay the
-        // button sits in.
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.getHostElement().click();
     }
 
     /**
