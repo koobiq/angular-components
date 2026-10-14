@@ -1277,6 +1277,10 @@ export class KbqTreeSelection
 
         // The form holds the value it writes, so a mode change has nothing left to report.
         this.pendingValueReport = false;
+
+        // Restored rather than cleared: a value written while this one is applied must not end the outer write.
+        const wasWritingValue = this.writingValue;
+
         this.writingValue = true;
 
         try {
@@ -1286,7 +1290,7 @@ export class KbqTreeSelection
                 this.selectionModel.clear();
             }
         } finally {
-            this.writingValue = false;
+            this.writingValue = wasWritingValue;
         }
     }
 

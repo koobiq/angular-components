@@ -2634,6 +2634,28 @@ describe('KbqTreeSelection', () => {
                 expect(component.onSelectionChange).not.toHaveBeenCalled();
             });
 
+            it('should stay pristine when a value is written while another one is applied', async () => {
+                component.control.setValue('Pictures');
+                await settle();
+
+                const tree = component.tree();
+                let written = false;
+                // Writes on the first change of the next write, before that write has selected its own node.
+                const subscription = tree.selectionModel.changed.subscribe(() => {
+                    if (written) return;
+
+                    written = true;
+                    tree.writeValue('Documents');
+                });
+
+                component.control.setValue('Downloads');
+                subscription.unsubscribe();
+                await settle();
+
+                expect(written).toBe(true);
+                expect(component.control.pristine).toBe(true);
+            });
+
             it('should stay pristine when the form is reset', async () => {
                 component.control.setValue('Pictures');
                 await settle();
