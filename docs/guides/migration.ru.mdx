@@ -356,6 +356,18 @@ ng g @koobiq/components:zoneless-change-detection --project "<your project>"
 ng g @koobiq/components:angular-animations-removal --project "<your project>"
 ```
 
+#### Оверлеи в верхнем слое
+
+CDK 21 открывает оверлеи как popover в верхнем слое браузера (top layer), и компоненты сохраняют это поведение: панель рисуется поверх всей страницы, какой бы контекст наложения ни окружал ее триггер. `z-index` у `.cdk-overlay-container` больше не задает порядок панелей относительно фиксированных и липких элементов приложения, поэтому его переопределение ни на что не влияет. Приложение, которое на это полагалось, отключает popover через `OVERLAY_DEFAULT_CONFIG` из `@angular/cdk/overlay`:
+
+```typescript
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
+
+bootstrapApplication(AppComponent, {
+    providers: [{ provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } }]
+});
+```
+
 #### Цвет как сигнал
 
 `color` директивы `KbqColorDirective` стал записываемым сигналом, как и `color` всех компонентов на ее основе: кнопок, чекбокса, переключателя, радиокнопок, иконок, поля формы, подсказок, кнопки очистки, прогресс-бара и спиннера, тега. Привязка `[color]` не изменилась.
@@ -613,7 +625,7 @@ API, устаревшие в 20.x, удалены в 21.0.0: и те, чья п�
 | `minWidth` у `<kbq-dl>`                   | `verticalBreakpoint`                                                                                          | переписывается         |
 | `KbqDlComponent.minWidth` в коде          | `verticalBreakpoint()`                                                                                        | сообщается             |
 
-`[longTitle]="true"` включал компактный заголовок даже для помещающегося названия, а `false` оставлял обычный для непомещающегося; замены у них нет. `outerElementWidth` хранил ширину, измеренную один раз при инициализации, и нужен был только `getTitleWidth()`. `minWidth` имел приоритет над `verticalBreakpoint`, поэтому у `<kbq-dl>`, где заданы оба, `minWidth` остаётся, и схематик о нём сообщает: перенесите значение в `verticalBreakpoint`. Если `[minWidth]` получал `null` или `undefined`, решение оставалось за `verticalBreakpoint`, а `[verticalBreakpoint]` с таким значением никогда не переключает список в вертикальный вид, поэтому привязывайте число.
+`[longTitle]="true"` включал компактный заголовок даже для помещающегося названия, а `false` оставлял обычный для непомещающегося; замены у них нет. `outerElementWidth` хранил ширину, измеренную один раз при инициализации, и нужен был только `getTitleWidth()`. `minWidth` имел приоритет над `verticalBreakpoint`, поэтому у `<kbq-dl>`, где заданы оба, `minWidth` остаётся, и схематик о нём сообщает: перенесите значение в `verticalBreakpoint`. Если `[minWidth]` получал `null` или `undefined`, решение оставалось за `verticalBreakpoint`, а `[verticalBreakpoint]` с таким значением никогда не переключает список в вертикальный вид, поэтому привязывайте число. `v21-upgrade` сообщает о каждом переименованном `minWidth`, значение которого — не числовой литерал.
 
 #### Триггер popover
 
@@ -711,7 +723,7 @@ ng g @koobiq/components:v21-upgrade --project "<your project>"
 
 У `Error`, `Warning` и `Success` в обоих перечислениях одни и те же значения, поэтому замена ничего не меняет на экране. `Primary`, `Secondary` (`Default` — его псевдоним) и `Info` ставят класс `kbq-primary`, `kbq-secondary` или `kbq-info`, который не стилизует ни один компонент, поэтому такой компонент рисовался без своих цветовых правил; без цвета он берет цвет по умолчанию. `Empty` — это `''`, при нем компонент тоже берет цвет по умолчанию, а `KbqComponentColors.Empty` — это `'empty'`, отдельный цвет: не заменяйте одно другим.
 
-`v21-upgrade` переписывает три члена и удаляет импорт `ThemePalette`, когда он больше нигде не упоминается. Об остальных использованиях в файле, который импортирует `ThemePalette` из `@koobiq/components/core`, схематик сообщает — в том числе о поле, через которое шаблон получает перечисление.
+`v21-upgrade` переписывает три члена и удаляет импорт `ThemePalette`, когда он больше нигде не упоминается. Об остальных использованиях в файле, который импортирует `ThemePalette` из `@koobiq/components/core`, схематик сообщает — в том числе о поле, через которое шаблон получает перечисление. Реэкспорт `ThemePalette` из `@koobiq/components/core` остается как есть, и схематик о нем сообщает: у `KbqComponentColors` другие члены и значения, поэтому реэкспортируйте его под собственным именем и перенесите файлы, которые импортируют `ThemePalette` через этот реэкспорт.
 
 ### Удаление неиспользуемого API core (21.0.0)
 
@@ -810,7 +822,7 @@ ng g @koobiq/components:splitter-deprecated-path --project "<your project>"
 
 Механизм удалён целиком: инпут, токен, класс и правило в стилях. Он работал с контейнером, а не с отдельными оверлеями, поэтому не мог понизить одну панель, не понизив вместе с ней все остальные оверлеи — модалки, sidepanel'ы, тосты и тултипы, — и делал это от имени того компонента, который открылся первым.
 
-**Теперь контейнер оверлеев всегда остаётся на `z-index: 1000`, поэтому панели показываются поверх `kbq-navbar` и `kbq-top-bar`, а не уезжают под них.**
+**Теперь панели показываются поверх `kbq-navbar` и `kbq-top-bar`, а не уезжают под них.** Они открываются в верхнем слое браузера (см. «Оверлеи в верхнем слое» в шаге обновления до Angular 21); с `usePopover: false` контейнер оверлеев остаётся на `z-index: 1000`, выше шапок на `990`.
 
 #### Запуск миграции
 
@@ -1263,7 +1275,7 @@ if (formField.hasCleaner() && formField.hint().length && hint.fillTextOff()) {
 
 Получатель определяется по явной аннотации типа (`KbqFormField`, `KbqHint`, `KbqError`, `KbqReactivePasswordHint`) — параметры, поля класса вместе с контентными запросами, параметры-свойства конструктора и типизированные локальные переменные.
 
-**Чтения состояния контрола становятся вызовами**, а запись идёт через `.set()` там, где член остался записываемым: `disabled` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` и `KbqDatepickerInput` (`select.disabled = true` → `select.disabled.set(true)`), `value` у `KbqInput`, `KbqInputPassword`, `KbqTextarea` и `KbqTagList`. Ссылочная переменная шаблона на `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` или `<kbq-tag-list>` тоже мигрируется.
+**Чтения состояния контрола становятся вызовами**, а запись идёт через `.set()` там, где член остался записываемым: `disabled` у `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` и `KbqDatepickerInput` (`select.disabled = true` → `select.disabled.set(true)`), `value` у `KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqTagList`, `KbqSelect` и `KbqTimezoneSelect`. Значение, заданное селекту, выбирает его опции при следующем обнаружении изменений и не вызывает `valueChange`. Ссылочная переменная шаблона на `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` или `<kbq-tag-list>` тоже мигрируется.
 
 **Доступное имя «крестика» переезжает в инпут:** `<kbq-cleaner [attr.aria-label]="label" />` → `<kbq-cleaner [aria-label]="label" />`.
 
@@ -1309,7 +1321,7 @@ export class ColorInput implements KbqFormFieldControl<string> {
 }
 ```
 
-**Остальное состояние контрола доступно только для чтения.** Не компилируются присваивания в `placeholder`, `required` и `id`, а также в `disabled` у контролов на нативном элементе и в `value` у `KbqSelect`, `KbqTreeSelect`, `KbqTimepicker` и `KbqDatepickerInput`: задавайте их привязкой в шаблоне, а значение — через контрол формы. Каждое присваивание выводится с именем файла.
+**Остальное состояние контрола доступно только для чтения.** Не компилируются присваивания в `placeholder`, `required` и `id`, а также в `disabled` у контролов на нативном элементе и в `value` у `KbqTreeSelect`, `KbqTimepicker` и `KbqDatepickerInput`: задавайте их привязкой в шаблоне, а значение — через контрол формы. Каждое присваивание выводится с именем файла.
 
 **Вместе с этим изменились помощники состояния ошибки.** `KbqErrorStateTracker` больше не принимает субъект `stateChanges`, а его `errorState` — как и `CanUpdateErrorState.errorState` — стал `Signal<boolean>`; `CanUpdateErrorState` больше не объявляет `errorStateMatcher`. Устаревшие `mixinErrorState` и `CanUpdateErrorStateCtor` удалены. `KbqIconErrorStateContext` тоже перешёл на сигналы, как и `id`, `placeholder`, `focused` и `empty` у `KbqTagInput`: их чтения становятся вызовами, о записи сообщается.
 
@@ -2880,7 +2892,7 @@ class MyToast extends KbqToastComponent {
 
 Два случая из шести проявляются молча. `KbqTreeBase` экспортируется и является задокументированной точкой расширения для собственного дерева: наследник, читающий `this.nodeDefs.length`, получит `0` — арность функции-сигнала — вместо количества определений узлов, а `this.nodeDefs.changes.subscribe(…)` бросит исключение. А `KbqTreeNodeToggle` сохранил `disabled` как алиас входа (сам вход объявлен как `disabledInput`), поэтому все привязки в шаблонах продолжают работать и ломаются только программные записи.
 
-Следом за ними `input()` получили `KbqTreeSelection` и `KbqTreeOption`: `treeControl`, `dataSource`, `disabled`, `tabIndex`, `multiple` и `selectAllHandler` дерева, `disabled` и `showCheckbox` опции читаются через геттер. Чтение не меняется, а программная запись больше не компилируется: задавайте их привязкой, а режим выбора — через `multipleMode`. `autoSelect`, `noUnselectLast`, `typeAhead` и `selectAll` по-прежнему доступны для записи, потому что в них пишет `KbqTreeSelect`.
+Следом за ними `input()` получили `KbqTreeSelection` и `KbqTreeOption`: `treeControl`, `dataSource`, `disabled`, `tabIndex` и `selectAllHandler` дерева, `disabled` и `showCheckbox` опции читаются через геттер. Чтение не меняется, а программная запись больше не компилируется: задавайте их привязкой. `multiple` тоже стал инпутом, а у его геттера никогда не было сеттера: режим выбора задавайте через `multipleMode`, он по-прежнему доступен для записи. `autoSelect`, `noUnselectLast`, `typeAhead` и `selectAll` по-прежнему доступны для записи, потому что в них пишет `KbqTreeSelect`.
 
 Сообщает `tree-signals`. Проект, который вообще отрисовывает дерево, получает ещё и сводку по всем шести членам: пять из них видны только там, где в них пишут, а потребитель, который просто читает один из них, получает значение с изменившимся типом и вообще никакой диагностики.
 

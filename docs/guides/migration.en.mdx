@@ -356,6 +356,18 @@ Koobiq components no longer use `@angular/animations`, which Angular deprecated:
 ng g @koobiq/components:angular-animations-removal --project "<your project>"
 ```
 
+#### Overlays in the top layer
+
+The CDK 21 opens overlays as popovers in the browser top layer, and the components keep that default: a panel is drawn above the whole page, whatever stacking context surrounds its trigger. The `z-index` of `.cdk-overlay-container` no longer orders panels against the application's own fixed and sticky elements, so an override of it has no effect. An application that relied on it opts out with `OVERLAY_DEFAULT_CONFIG` from `@angular/cdk/overlay`:
+
+```typescript
+import { OVERLAY_DEFAULT_CONFIG } from '@angular/cdk/overlay';
+
+bootstrapApplication(AppComponent, {
+    providers: [{ provide: OVERLAY_DEFAULT_CONFIG, useValue: { usePopover: false } }]
+});
+```
+
 #### Color as a signal
 
 `color` of `KbqColorDirective` is a writable signal, and so is the `color` of every component built on it: the buttons, checkbox, toggle, radio, icons, form field, hints, cleaner, progress bar and spinner, and tag. The `[color]` binding is unchanged.
@@ -613,7 +625,7 @@ The protected `KbqToggleComponent.currentCheckState` is a `Signal<TransitionChec
 | `minWidth` on `<kbq-dl>`                  | `verticalBreakpoint`                                                                                            | rewritten         |
 | `KbqDlComponent.minWidth` in code         | `verticalBreakpoint()`                                                                                          | reported          |
 
-`[longTitle]="true"` forced the compact title on a name that fits and `false` kept the default one for a name that does not; neither has a replacement. `outerElementWidth` held the width measured once on init and only fed `getTitleWidth()`. `minWidth` took precedence over `verticalBreakpoint`, so a `<kbq-dl>` that sets both keeps its `minWidth` and is reported: move the value into `verticalBreakpoint`. A `[minWidth]` that resolved to `null` or `undefined` left the decision to `verticalBreakpoint`, while `[verticalBreakpoint]` given such a value never switches to the vertical layout, so bind a number.
+`[longTitle]="true"` forced the compact title on a name that fits and `false` kept the default one for a name that does not; neither has a replacement. `outerElementWidth` held the width measured once on init and only fed `getTitleWidth()`. `minWidth` took precedence over `verticalBreakpoint`, so a `<kbq-dl>` that sets both keeps its `minWidth` and is reported: move the value into `verticalBreakpoint`. A `[minWidth]` that resolved to `null` or `undefined` left the decision to `verticalBreakpoint`, while `[verticalBreakpoint]` given such a value never switches to the vertical layout, so bind a number. `v21-upgrade` reports each renamed `minWidth` whose value is not a number literal.
 
 #### Popover trigger
 
@@ -711,7 +723,7 @@ With `--fix false` it only reports what it would change.
 
 `Error`, `Warning` and `Success` have the same values in both enums, so the rewrite changes nothing on screen. `Primary`, `Secondary` (`Default` is its alias) and `Info` set a `kbq-primary`, `kbq-secondary` or `kbq-info` class that no component styles, so such a component was drawn without its color rules; without a color it takes its default one. `Empty` is `''`, which also falls back to the default color, while `KbqComponentColors.Empty` is `'empty'`, a color of its own: do not swap one for the other.
 
-`v21-upgrade` rewrites the three members and drops the `ThemePalette` import once nothing else names it. It reports every other use in a file that imports `ThemePalette` from `@koobiq/components/core`, including a field that hands the enum to a template.
+`v21-upgrade` rewrites the three members and drops the `ThemePalette` import once nothing else names it. It reports every other use in a file that imports `ThemePalette` from `@koobiq/components/core`, including a field that hands the enum to a template. A re-export of `ThemePalette` from `@koobiq/components/core` is left as is and reported: `KbqComponentColors` has other members and values, so re-export it under its own name and migrate the files that import `ThemePalette` through it.
 
 ### Unused core API removal (21.0.0)
 
@@ -810,7 +822,7 @@ Until 21.0.0 an open `dropdown`, `select` or `popover` panel lowered the **share
 
 The whole mechanism was removed: the input, the token, the class and the stylesheet rule. It operated on the container rather than on individual overlays, so it could not lower a panel without lowering every other overlay — modals, sidepanels, toasts and tooltips included — and it did so from whichever component happened to open first.
 
-**The overlay container now stays at `z-index: 1000` at all times, so panels render above `kbq-navbar` and `kbq-top-bar` instead of sliding under them.**
+**Panels now render above `kbq-navbar` and `kbq-top-bar` instead of sliding under them.** They open in the browser top layer (see Overlays in the top layer in Upgrade to Angular 21); with `usePopover: false` the overlay container stays at `z-index: 1000`, above the bars at `990`.
 
 #### Running the migration
 
@@ -1263,7 +1275,7 @@ if (formField.hasCleaner() && formField.hint().length && hint.fillTextOff()) {
 
 A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`, `KbqError`, `KbqReactivePasswordHint`) — parameters, class fields including content queries, constructor parameter-properties and typed locals.
 
-**Reads of a control's state become calls**, and a write goes through `.set()` where the member stays writable: `disabled` on `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` and `KbqDatepickerInput` (`select.disabled = true` → `select.disabled.set(true)`), `value` on `KbqInput`, `KbqInputPassword`, `KbqTextarea` and `KbqTagList`. A template reference variable on `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` or `<kbq-tag-list>` is migrated too.
+**Reads of a control's state become calls**, and a write goes through `.set()` where the member stays writable: `disabled` on `KbqSelect`, `KbqTreeSelect`, `KbqTimezoneSelect`, `KbqTagList`, `KbqTimepicker` and `KbqDatepickerInput` (`select.disabled = true` → `select.disabled.set(true)`), `value` on `KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqTagList`, `KbqSelect` and `KbqTimezoneSelect`. A value set on a select selects its options on the next change detection and does not emit `valueChange`. A template reference variable on `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` or `<kbq-tag-list>` is migrated too.
 
 **The cleaner's accessible name moves to the input:** `<kbq-cleaner [attr.aria-label]="label" />` → `<kbq-cleaner [aria-label]="label" />`.
 
@@ -1309,7 +1321,7 @@ export class ColorInput implements KbqFormFieldControl<string> {
 }
 ```
 
-**The rest of a control's state is read-only.** Assignments to `placeholder`, `required` and `id` no longer compile, nor do assignments to `disabled` on the native-element controls and to `value` on `KbqSelect`, `KbqTreeSelect`, `KbqTimepicker` and `KbqDatepickerInput`: bind them in the template, or set the value through a form control. Each write is reported with its file.
+**The rest of a control's state is read-only.** Assignments to `placeholder`, `required` and `id` no longer compile, nor do assignments to `disabled` on the native-element controls and to `value` on `KbqTreeSelect`, `KbqTimepicker` and `KbqDatepickerInput`: bind them in the template, or set the value through a form control. Each write is reported with its file.
 
 **The error state helpers changed with it.** `KbqErrorStateTracker` no longer takes a `stateChanges` subject, and its `errorState` — like `CanUpdateErrorState.errorState` — is a `Signal<boolean>`; `CanUpdateErrorState` no longer declares `errorStateMatcher`. The deprecated `mixinErrorState` and `CanUpdateErrorStateCtor` were removed. `KbqIconErrorStateContext` is signal-based too, and so are `id`, `placeholder`, `focused` and `empty` of `KbqTagInput`: their reads become calls, a write is reported.
 
@@ -2867,7 +2879,7 @@ The tree moved its inputs and its query members to signals. Six members that use
 
 Two of the six are silent rather than loud. `KbqTreeBase` is exported and is the documented extension point for a custom tree: a subclass reading `this.nodeDefs.length` now gets `0` — the arity of the signal function — instead of the number of node definitions, and `this.nodeDefs.changes.subscribe(…)` throws. And `KbqTreeNodeToggle` kept `disabled` as the input alias (the input itself is declared as `disabledInput`), so every template binding keeps working and only imperative writes break.
 
-The inputs of `KbqTreeSelection` and `KbqTreeOption` followed: `treeControl`, `dataSource`, `disabled`, `tabIndex`, `multiple` and `selectAllHandler` of the tree, `disabled` and `showCheckbox` of the option are signal inputs read through a getter. A read is unchanged, a programmatic write no longer compiles: bind them, and set the selection mode through `multipleMode`. `autoSelect`, `noUnselectLast`, `typeAhead` and `selectAll` stay writable, since `KbqTreeSelect` writes them.
+The inputs of `KbqTreeSelection` and `KbqTreeOption` followed: `treeControl`, `dataSource`, `disabled`, `tabIndex` and `selectAllHandler` of the tree, `disabled` and `showCheckbox` of the option are signal inputs read through a getter. A read is unchanged, a programmatic write no longer compiles: bind them. `multiple` is an input now too, and its getter never had a setter: set the selection mode through `multipleMode`, which stays writable. `autoSelect`, `noUnselectLast`, `typeAhead` and `selectAll` stay writable, since `KbqTreeSelect` writes them.
 
 Reported by `tree-signals`. A project that renders a tree at all also gets a summary of all six members, because five of them are only visible at a call site that writes them — a consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
 
