@@ -49,7 +49,7 @@ import {
     type AfterRenderRef
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     ActiveDescendantKeyManager,
     BACKSPACE,
@@ -72,6 +72,7 @@ import {
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
     KbqComponentColors,
+    KbqErrorStateTracker,
     KbqLocaleOverridesDirective,
     KbqOptgroup,
     KbqOption,
@@ -247,7 +248,7 @@ export const minimumTimeToDisplayLoading = 300;
     encapsulation: ViewEncapsulation.None,
     host: {
         '[attr.tabindex]': 'tabIndex',
-        '[attr.disabled]': 'disabled() || null',
+        '[attr.disabled]': 'disabledAttribute()',
         // The select is not a native control, so its role, states and the relationship with the panel it
         // owns have to be exposed explicitly.
         role: 'combobox',
@@ -262,8 +263,8 @@ export const minimumTimeToDisplayLoading = 300;
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-select_multiline]': 'multiline()',
-        '[class.kbq-disabled]': 'disabled()',
-        '[class.kbq-invalid]': 'errorState()',
+        '[class.kbq-disabled]': 'disabledClass()',
+        '[class.kbq-invalid]': 'invalidClass()',
         '(click)': 'toggle()',
         '(keydown)': 'handleKeydown($event)',
         '(focus)': 'onFocus()',
@@ -318,10 +319,15 @@ export class KbqSelect
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
     private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
 
-    private readonly errorStateValue = signal(false);
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
 
     /** Whether the component is in an error state. */
-    readonly errorState = this.errorStateValue.asReadonly();
+    readonly errorState = this.errorStateTracker.errorState;
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -889,7 +895,7 @@ export class KbqSelect
     });
 
     get tabIndex(): number {
-        return this.disabled() ? -1 : this.tabIndexInput();
+        return this.resolvedTabIndex();
     }
 
     /** @docs-private */
@@ -904,6 +910,19 @@ export class KbqSelect
      * control.
      */
     readonly disabled = linkedSignal(() => this.disabledInput());
+
+    // One signal per host value. The host bindings of every select in a view run in that view's reactive consumer,
+    // where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly resolvedTabIndex = computed(() => (this.disabled() ? -1 : this.tabIndexInput()));
+    private readonly resolvedAriaLabelValue = computed(
+        () => this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder() || null)
+    );
+    /** @internal */
+    protected readonly disabledAttribute = computed(() => this.disabled() || null);
+    /** @internal */
+    protected readonly disabledClass = computed(() => this.disabled());
+    /** @internal */
+    protected readonly invalidClass = computed(() => this.errorState());
 
     private readonly focusedValue = signal(false);
     private readonly panelOpenValue = signal(false);
@@ -1172,7 +1191,7 @@ export class KbqSelect
      * @docs-private
      */
     protected get resolvedAriaLabel(): string | null {
-        return this.ariaLabel() ?? (this.ariaLabelledby ? null : this.placeholder() || null);
+        return this.resolvedAriaLabelValue();
     }
 
     /**
@@ -1408,11 +1427,8 @@ export class KbqSelect
 
     /** Updates the error state based on the error state matcher. */
     updateErrorState() {
-        const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
-        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-
-        this.errorStateValue.set(matcher.isErrorState(control, parent));
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
         this.syncLegacyInvalid();
     }
 

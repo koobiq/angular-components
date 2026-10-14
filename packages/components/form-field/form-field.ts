@@ -23,6 +23,7 @@ import {
     OnDestroy,
     Provider,
     Signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -231,9 +232,15 @@ export class KbqFormField
     private readonly error = contentChildren(KbqError);
     private readonly label = contentChild(KbqLabel);
 
+    // One signal per host value. The host bindings of every form field in a view run in that view's reactive
+    // consumer, where a signal read again by another binding costs a scan of everything the view has read.
+    private readonly invalidState = computed(() => !!this.control()?.errorState());
+    private readonly disabledState = computed(() => !!this.control()?.disabled());
+    private readonly autofilledState = computed(() => !!this.control()?.autofilled?.());
+
     /** Whether the form field is invalid. */
     get invalid(): boolean {
-        return !!this.control()?.errorState();
+        return this.invalidState();
     }
 
     /**
@@ -346,7 +353,7 @@ export class KbqFormField
 
     /** Whether the form field is disabled. */
     get disabled(): boolean {
-        return !!this.control()?.disabled();
+        return this.disabledState();
     }
 
     /**
@@ -360,7 +367,7 @@ export class KbqFormField
      * longer considers autofilled.
      */
     get autofilled(): boolean {
-        return !!this.control()?.autofilled?.();
+        return this.autofilledState();
     }
 
     /** Ids last written to the control's `aria-describedby`, to skip redundant DOM writes. */
@@ -425,7 +432,9 @@ export class KbqFormField
      * @docs-private
      */
     shouldForward(prop: keyof NgControl): boolean {
-        return !!this.control()?.ngControl?.[prop];
+        // Untracked: the `ng-*` state is no signal, and the computeds above already refresh the host bindings when
+        // the control is replaced.
+        return !!untracked(this.control)?.ngControl?.[prop];
     }
 
     /**

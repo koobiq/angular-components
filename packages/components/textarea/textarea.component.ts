@@ -21,12 +21,13 @@ import {
     WritableSignal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
 import {
     CanUpdateErrorState,
     ErrorStateMatcher,
     KBQ_PARENT_ANIMATION_COMPONENT,
     KBQ_WINDOW,
+    KbqErrorStateTracker,
     kbqInjectAutofilled,
     kbqOptionalNumberAttribute
 } from '@koobiq/components/core';
@@ -67,10 +68,15 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     private readonly ngZone = inject(NgZone);
     private readonly destroyRef = inject(DestroyRef);
 
-    private readonly errorStateValue = signal(false);
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
 
     /** Whether the component is in an error state. */
-    readonly errorState = this.errorStateValue.asReadonly();
+    readonly errorState = this.errorStateTracker.errorState;
 
     /**
      * Parameter enables or disables the ability to automatically increase the height.
@@ -303,11 +309,8 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     }
 
     updateErrorState() {
-        const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher() || this.defaultErrorStateMatcher;
-        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-
-        this.errorStateValue.set(matcher.isErrorState(control, parent));
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
     }
 
     /** @docs-private */

@@ -323,6 +323,20 @@ describe(KbqTagList.name, () => {
                 expect(tagListNativeElement.classList).toContain('kbq-tag-list');
             });
 
+            it('should be empty only while no tag is rendered', () => {
+                expect(tagListInstance.empty()).toBe(false);
+
+                testComponent.tags = [];
+                fixture.detectChanges();
+
+                expect(tagListInstance.empty()).toBe(true);
+
+                testComponent.tags = [0];
+                fixture.detectChanges();
+
+                expect(tagListInstance.empty()).toBe(false);
+            });
+
             it('should toggle the tags disabled state based on whether it is disabled', () => {
                 expect(tags.toArray().every((tag) => tag.disabled)).toBe(false);
 
