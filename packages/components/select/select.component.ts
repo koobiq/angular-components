@@ -1162,18 +1162,19 @@ export class KbqSelect
 
     /**
      * Whether the legacy `KbqValidateDirective` marks this control. The class it writes never changes
-     * after the host is created, so it is probed once instead of on every read of `colorForState` —
-     * which the trigger evaluates once per rendered tag.
+     * after the host is created, so it is probed once instead of on every change detection pass.
      */
-    private readonly hasLegacyValidateDirective = signal(false);
+    private hasLegacyValidateDirective = false;
+
+    // Mirror of the state the error colour is derived from. That state changes in `ngDoCheck`, while the
+    // parent is checked, and nothing marks this OnPush view for it — the signal is what repaints the trigger.
+    private readonly invalidState = signal(false);
 
     /** @docs-private */
     get colorForState(): KbqComponentColors {
         if (this.disabled) return KbqComponentColors.Empty;
 
-        return (this.hasLegacyValidateDirective() && this.ngControl?.invalid) || this.errorState
-            ? KbqComponentColors.Error
-            : KbqComponentColors.ContrastFade;
+        return this.invalidState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
     }
 
     /** Whether multiple choice is enabled. True if multiple or multiline mode is active. */
@@ -1298,9 +1299,10 @@ export class KbqSelect
         this.id = this.id;
 
         afterNextRender(() => {
-            this.hasLegacyValidateDirective.set(
-                this.elementRef.nativeElement.classList.contains('kbq-control_has-validate-directive')
+            this.hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
+                'kbq-control_has-validate-directive'
             );
+            this.syncInvalidState();
 
             this.observeVisibility();
 
@@ -1367,6 +1369,8 @@ export class KbqSelect
     ngDoCheck() {
         if (this.ngControl) {
             this.updateErrorState();
+        } else {
+            this.syncInvalidState();
         }
     }
 
@@ -1426,6 +1430,12 @@ export class KbqSelect
             this.errorState = newState;
             this.stateChanges.next();
         }
+
+        this.syncInvalidState();
+    }
+
+    private syncInvalidState(): void {
+        this.invalidState.set((this.hasLegacyValidateDirective && !!this.ngControl?.invalid) || this.errorState);
     }
 
     /**
