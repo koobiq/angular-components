@@ -1,7 +1,7 @@
-import { Component, viewChildren } from '@angular/core';
+import { Component, viewChild, viewChildren } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchFakeEvent } from '@koobiq/components/core';
+import { dispatchFakeEvent, KbqLine } from '@koobiq/components/core';
 import { KbqListItem, KbqListModule } from './index';
 
 describe('KbqList', () => {
@@ -60,6 +60,57 @@ describe('KbqList', () => {
         expect(list.nativeElement.getAttribute('role')).toBeNull();
 
         expect(listItem.nativeElement.getAttribute('role')).toBeNull();
+    });
+
+    describe('lines', () => {
+        it('should count the projected lines', () => {
+            const fixture = TestBed.createComponent(TestListWithLines);
+
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.listItem().lines.length).toBe(2);
+
+            fixture.componentInstance.showThirdLine = true;
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.listItem().lines.length).toBe(3);
+        });
+
+        it('should emit changes once a line is added', () => {
+            const fixture = TestBed.createComponent(TestListWithLines);
+
+            fixture.detectChanges();
+
+            const changes = vi.fn();
+
+            fixture.componentInstance.listItem().lines.changes.subscribe(changes);
+            fixture.componentInstance.showThirdLine = true;
+            fixture.detectChanges();
+
+            expect(changes).toHaveBeenCalledTimes(1);
+            expect(changes.mock.calls[0][0].length).toBe(3);
+        });
+
+        it('should count the lines when a template reads them first', () => {
+            const fixture = TestBed.createComponent(TestListWithLinesInTemplate);
+
+            fixture.detectChanges();
+
+            expect(fixture.nativeElement.querySelector('.test-line-count').textContent).toBe('2');
+        });
+
+        it('should keep the lines of an item read only once it is destroyed', () => {
+            const fixture = TestBed.createComponent(TestListWithLines);
+
+            fixture.detectChanges();
+
+            const listItem = fixture.componentInstance.listItem();
+
+            fixture.componentInstance.showItem = false;
+            fixture.detectChanges();
+
+            expect(listItem.lines.length).toBe(2);
+        });
     });
 });
 
@@ -132,3 +183,44 @@ class TestListWithItemWithCssClass extends BaseTestList {}
     `
 })
 class TestListWithMultipleItems extends BaseTestList {}
+
+@Component({
+    imports: [
+        KbqListModule,
+        KbqLine
+    ],
+    template: `
+        <kbq-list>
+            @if (showItem) {
+                <kbq-list-item>
+                    <h3 kbq-line>Paprika</h3>
+                    <p kbq-line>A seasoning</p>
+                    @if (showThirdLine) {
+                        <p kbq-line>Sweet</p>
+                    }
+                </kbq-list-item>
+            }
+        </kbq-list>
+    `
+})
+class TestListWithLines extends BaseTestList {
+    showItem = true;
+    readonly listItem = viewChild.required(KbqListItem);
+}
+
+@Component({
+    imports: [
+        KbqListModule,
+        KbqLine
+    ],
+    template: `
+        <kbq-list>
+            <kbq-list-item #item>
+                <h3 kbq-line>Paprika</h3>
+                <p kbq-line>A seasoning</p>
+            </kbq-list-item>
+        </kbq-list>
+        <span class="test-line-count">{{ item.lines.length }}</span>
+    `
+})
+class TestListWithLinesInTemplate {}
