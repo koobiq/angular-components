@@ -118,11 +118,21 @@ export const READ_ONLY_VALUE_CONTROL_TARGET: Target = {
 /** Native-element controls: `value` and `placeholder` stay writable, `disabled` follows the input and the form control. */
 export const INPUT_CONTROL_TARGET: Target = {
     id: 'KbqInput',
-    types: ['KbqInput', 'KbqInputPassword', 'KbqTextarea'],
+    types: ['KbqInput', 'KbqTextarea'],
     elements: {},
-    exportAs: ['kbqInput', 'kbqInputPassword', 'kbqTextarea'],
+    exportAs: ['kbqInput', 'kbqTextarea'],
     signalMembers: CONTROL_MEMBERS,
     writableMembers: new Set<string>(['value', 'placeholder'])
+};
+
+/** The password input: a native-element control whose `elementType` became a read-only signal too. */
+export const INPUT_PASSWORD_TARGET: Target = {
+    id: 'KbqInputPassword',
+    types: ['KbqInputPassword'],
+    elements: {},
+    exportAs: ['kbqInputPassword'],
+    signalMembers: [...CONTROL_MEMBERS, 'elementType'],
+    writableMembers: INPUT_CONTROL_TARGET.writableMembers
 };
 
 /** A receiver typed with the contract itself, which declares every member a read-only signal. */
@@ -150,6 +160,7 @@ export const TARGETS: readonly Target[] = [
     WRITABLE_VALUE_CONTROL_TARGET,
     READ_ONLY_VALUE_CONTROL_TARGET,
     INPUT_CONTROL_TARGET,
+    INPUT_PASSWORD_TARGET,
     FORM_FIELD_CONTROL_TARGET,
     TAG_INPUT_TARGET
 ];
@@ -194,6 +205,14 @@ export const READ_ONLY_QUERY_MEMBERS: readonly string[] = [
     'prefix',
     'suffix'
 ];
+
+/** Members that were writable fields and are now read-only signals only the control itself changes. */
+export const READ_ONLY_STATE_MEMBERS: readonly string[] = ['elementType'];
+
+/** Reported where a write reaches one of `READ_ONLY_STATE_MEMBERS`. */
+export const READ_ONLY_STATE_MESSAGE =
+    "`KbqInputPassword.elementType` can no longer be assigned: it is a read-only `Signal<'text' | 'password'>` " +
+    'now. Call `toggleType()` to show or hide the password instead.';
 
 export interface WarnPattern {
     pattern: string;

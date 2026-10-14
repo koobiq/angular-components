@@ -36,7 +36,11 @@ The schematic walks every `.ts` and `.html` file in the project (skipping
   `ref.isChanged()`, and in an event binding `ref.filter = saved` →
   `ref.filter.set(saved)`. `KbqFilterBar` has no `exportAs`, so a ref with a
   value (`#ref="ngModel"`) names another directive and is left alone, and so
-  is a property chain that only ends in the ref's name (`page.filterBar.filter`).
+  is a property chain that only ends in the ref's name
+  (`page.filterBar.filter`). Only the expressions of the view that declares
+  the ref are looked at — prose, comments and plain attributes are not — and a
+  ref whose name a `@for`, `let-`, `*ngFor` or `@let` variable or another
+  `#ref` shares is left alone.
 - **Rename.** `KbqFilterBarRefresher` → `KbqFilterRefresher` (the old name
   stayed an alias until 21.0.0).
 

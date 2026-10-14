@@ -13,6 +13,7 @@ The review typed the surface and dropped the members that only existed to feed t
 | `valueChange`                                                                                   | declared output   | removed                     |
 | `getPanelClasses()`, `getPanelTheme()`, `isRtl()`, `transformOrigin`                            | public            | removed                     |
 | `hiddenItemsText`, `hiddenItemsTextFormatter`                                                   | accessor / method | signal inputs               |
+| `hasBackdrop`, `searchMinOptionsThreshold`                                                      | accessor / input  | signals                     |
 | `hiddenItems`, `colorForState`                                                                  | plain members     | `WritableSignal` / `Signal` |
 | `options`, `tags`, `overlayDir`, `triggerRect`, `panelDoneAnimatingStream`, `changeDetectorRef` | public            | `protected`                 |
 | `KbqTreeSelectChange`                                                                           | `value: any`      | generic, typed `value`      |

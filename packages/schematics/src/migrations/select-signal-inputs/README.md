@@ -2,20 +2,23 @@
 
 Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the `KbqSelect` members that became signal inputs or stopped
-being public in the select review. It never writes to the tree.
+being public in the select review. It never writes to the tree. `KbqTimezoneSelect` extends `KbqSelect`,
+so a file that names only the timezone select is reported as well.
 
 ## Background
 
 The trigger-label surface moved to signal inputs, and the overlay plumbing was closed:
 
-| Member                     | Before                             | After                              |
-| -------------------------- | ---------------------------------- | ---------------------------------- |
-| `hiddenItemsText`          | accessor pair                      | `InputSignal<string \| undefined>` |
-| `hiddenItemsTextFormatter` | overridable method                 | input holding the function         |
-| `overlayDir`               | public                             | `protected`                        |
-| `triggerRect`              | public                             | `protected`                        |
-| `onRemoveMatcherItem`      | `$event: any`                      | `$event: Event`                    |
-| `selectEvents`             | exported from `core/select/events` | removed together with the module   |
+| Member                                                    | Before                             | After                                   |
+| --------------------------------------------------------- | ---------------------------------- | --------------------------------------- |
+| `hiddenItemsText`                                         | accessor pair                      | `InputSignal<string \| undefined>`      |
+| `hiddenItemsTextFormatter`                                | overridable method                 | input holding the function              |
+| `overlayDir`                                              | public                             | `protected`                             |
+| `triggerRect`                                             | public                             | `protected`                             |
+| `onRemoveMatcherItem`                                     | `$event: any`                      | `$event: Event`                         |
+| `selectEvents`                                            | exported from `core/select/events` | removed together with the module        |
+| `hasBackdrop`, `compareWith`, `searchMinOptionsThreshold` | inputs                             | signals                                 |
+| `multiple`, `tabIndex`, `selectAllHandler`                | inputs                             | signal inputs, still read as properties |
 
 The template surface is untouched — every input kept its alias, so `[hiddenItemsText]` and
 `[hiddenItemsTextFormatter]` bind exactly as before. Only programmatic access changed.
@@ -27,13 +30,15 @@ The template surface is untouched — every input kept its alias, so `[hiddenIte
 Nothing is rewritten. A read of a signal input becomes a call, a write becomes a template binding,
 and which of the two a call site wants cannot be derived from the expression.
 
-| Pattern                        | Manual migration                                                             |
-| ------------------------------ | ---------------------------------------------------------------------------- |
-| `.hiddenItemsText = …`         | Bind `[hiddenItemsText]` — an `input()` has no `.set()`                      |
-| `.hiddenItemsText`             | Read it as `hiddenItemsText()`; it reports `string \| undefined`             |
-| `.hiddenItemsTextFormatter`    | `hiddenItemsTextFormatter()(template, count)`; an override becomes a binding |
-| `.overlayDir` / `.triggerRect` | Protected; use the open/close API and the panel inputs                       |
-| `selectEvents`                 | Delete the import                                                            |
+| Pattern                                                        | Manual migration                                                             |
+| -------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `.hiddenItemsText = …`                                         | Bind `[hiddenItemsText]` — an `input()` has no `.set()`                      |
+| `.hiddenItemsText`                                             | Read it as `hiddenItemsText()`; it reports `string \| undefined`             |
+| `.hiddenItemsTextFormatter`                                    | `hiddenItemsTextFormatter()(template, count)`; an override becomes a binding |
+| `.overlayDir` / `.triggerRect`                                 | Protected; use the open/close API and the panel inputs                       |
+| `selectEvents`                                                 | Delete the import                                                            |
+| `.hasBackdrop` / `.compareWith` / `.searchMinOptionsThreshold` | Read them as calls: `compareWith()(a, b)`                                    |
+| `.multiple = …` and the other signal inputs                    | Bind them in the template                                                    |
 
 ## Notes with no call site to point at
 

@@ -342,6 +342,33 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toBe(template);
     });
 
+    it('leaves a ref named in prose, a comment or a plain attribute alone', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-alert #alert></kbq-alert>\n' +
+            '<!-- alert.compact is read below -->\n' +
+            '<p title="Use alert.compact for dense views">alert.compact = true makes it dense</p>\n' +
+            '<span>{{ alert.compact }}</span>\n';
+
+        appTree.overwrite(html, template);
+
+        expect((await run()).readText(html)).toBe(template.replace('{{ alert.compact }}', '{{ alert.compact() }}'));
+        expect(messages.join('\n')).not.toContain('can no longer be assigned');
+    });
+
+    it('leaves the reads of a @for variable that shares the name of a ref alone', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-alert #alert></kbq-alert>\n' +
+            '@for (alert of alerts; track alert.id) {\n' +
+            '    <span>{{ alert.compact }}</span>\n' +
+            '}\n';
+
+        appTree.overwrite(html, template);
+
+        expect((await run()).readText(html)).toBe(template);
+    });
+
     it('warns that KbqAlertModule no longer re-exports A11yModule / PlatformModule', async () => {
         const ts = firstTsPath();
 

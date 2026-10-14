@@ -22,6 +22,7 @@ const TOAST = owner('toast', 'Toast');
 const SIDEPANEL = owner('sidepanel', 'Sidepanel');
 const ACTIONS_PANEL = owner('actions-panel', 'ActionsPanel');
 const CONTENT_PANEL = owner('content-panel', 'ContentPanel');
+const MODAL = owner('modal', 'Modal');
 const POP_UP = [
     String.raw`\bKbqPopUp\w*`,
     owner('tooltip', 'Tooltip'),
@@ -56,6 +57,24 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'kbqTabsAnimations was removed from @koobiq/components/tabs: a tab body translates with a CSS ' +
             'transition that lasts `animationDuration`.'
+    },
+    {
+        pattern:
+            '\\b(kbqPopoverAnimations|kbqDatepickerAnimations|KbqNotificationCenterAnimations|' +
+            'kbqAppSwitcherAnimations)\\b',
+        message:
+            'kbqPopoverAnimations, kbqDatepickerAnimations, KbqNotificationCenterAnimations and ' +
+            'kbqAppSwitcherAnimations were removed from @koobiq/components/popover, /datepicker, ' +
+            '/notification-center and /app-switcher: their panels animate with CSS. Animate your own elements ' +
+            'with CSS, or with `animate.enter` / `animate.leave` in the template.'
+    },
+    {
+        anchor: MODAL,
+        pattern: '\\bMODAL_ANIMATE_DURATION\\b',
+        message:
+            'MODAL_ANIMATE_DURATION was removed from @koobiq/components/modal: the dialog animates with CSS and ' +
+            'waits for the end of the animation itself. Instead of a timer of that length, act on afterOpen / ' +
+            'afterClose of the KbqModalRef.'
     },
     {
         pattern: '\\bKbqSidepanelAnimationState\\b',

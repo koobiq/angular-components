@@ -381,6 +381,23 @@ describe('signalMembersRule', () => {
             expect((await run()).readText(htmlPath())).toContain('{{ w.size }}');
         });
 
+        it('does not rewrite a reference shadowed by a *ngFor variable', async () => {
+            appTree.overwrite(htmlPath(), '<acme-widget #w /><i *ngFor="let w of rows">{{ w.size }}</i>');
+
+            expect((await run()).readText(htmlPath())).toContain('{{ w.size }}');
+        });
+
+        it('does not rewrite a reference on an element with a structural directive from outside it', async () => {
+            appTree.overwrite(
+                htmlPath(),
+                '<acme-widget *ngIf="on" #w />{{ w.size }}<i *ngIf="on"><acme-widget #v />{{ v.size }}</i>'
+            );
+
+            expect((await run()).readText(htmlPath())).toBe(
+                '<acme-widget *ngIf="on" #w />{{ w.size }}<i *ngIf="on"><acme-widget #v />{{ v.size() }}</i>'
+            );
+        });
+
         it('does not rewrite a reference declared in an ng-template from outside it', async () => {
             appTree.overwrite(
                 htmlPath(),

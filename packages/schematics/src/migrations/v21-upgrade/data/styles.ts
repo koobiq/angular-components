@@ -8,9 +8,21 @@ const LIGHT_AND_DARK_THEMES: Replacement = {
     to: '$1theme.css'
 };
 
-/** Drops a line that repeats an earlier line loading `theme.css`, as a file that loaded both themes is left with. */
+/** A line that loads a style sheet: `@use`, `@import`, `@forward`, `<link>`, or a side-effect `import '…'`. */
+const LOAD_LINE = `[ \\t]*(?:@(?:use|import|forward)\\s|<link\\s|import\\s*['"])[^\\r\\n]*`;
+
+/** A line an import block holds besides the loads: a blank line or a one-line comment. */
+const IMPORT_BLOCK_LINE = `(?:${LOAD_LINE}|[ \\t]*(?://[^\\r\\n]*|/\\*.*?\\*/|<!--.*?-->)?[ \\t]*)`;
+
+/**
+ * Drops a line that repeats an earlier line loading `theme.css` in the same import block, as a file that loaded
+ * both themes is left with. Only a load followed by loads, blank lines and comments: anywhere else the two lines
+ * stand in different branches, such as the cases of a `switch` or two `@media` blocks.
+ */
 const REPEATED_THEME_LINE: Replacement = {
-    from: '(?<=^|\\n)([^\\r\\n]*@koobiq/components/prebuilt-themes/theme\\.css[^\\r\\n]*)([^]*?)\\r?\\n\\1(?=\\r?\\n|$)',
+    from:
+        `(?<=^|\\n)(${LOAD_LINE}@koobiq/components/prebuilt-themes/theme\\.css[^\\r\\n]*)` +
+        `((?:\\r?\\n${IMPORT_BLOCK_LINE})*?)\\r?\\n\\1(?=\\r?\\n|$)`,
     to: '$1$2'
 };
 

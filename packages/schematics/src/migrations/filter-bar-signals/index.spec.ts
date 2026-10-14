@@ -338,6 +338,34 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toBe(template);
     });
 
+    it('leaves a ref named in prose, a comment or a plain attribute alone', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-filter-bar #bar></kbq-filter-bar>\n' +
+            '<!-- bar.filter holds the pipes -->\n' +
+            '<p title="See bar.isChanged">Reset bar.filter = [] to clear it</p>\n' +
+            '<span>{{ bar.isChanged }}</span>\n';
+
+        appTree.overwrite(html, template);
+
+        expect((await run()).readText(html)).toBe(template.replace('{{ bar.isChanged }}', '{{ bar.isChanged() }}'));
+    });
+
+    it('rewrites reads through a ref only in the view that declares it', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<ng-template #filters><kbq-filter-bar #bar></kbq-filter-bar>{{ bar.isChanged }}</ng-template>\n' +
+                '<span>{{ bar.isChanged }}</span>\n'
+        );
+
+        expect((await run()).readText(html)).toBe(
+            '<ng-template #filters><kbq-filter-bar #bar></kbq-filter-bar>{{ bar.isChanged() }}</ng-template>\n' +
+                '<span>{{ bar.isChanged }}</span>\n'
+        );
+    });
+
     it('renames KbqFilterBarRefresher to KbqFilterRefresher', async () => {
         const ts = firstTsPath();
 

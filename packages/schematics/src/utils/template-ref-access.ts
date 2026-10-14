@@ -1,29 +1,34 @@
-import { memberAccessPattern } from './signal-members-migration';
+import { visitAll } from './ast';
+import {
+    memberAccessPattern,
+    Range,
+    TemplateExpression,
+    TemplateRefResolver,
+    TemplateScanner
+} from './signal-members-migration';
 
 /**
  * Rewrites the members that became signals where a template reaches them through a reference variable:
  * a read becomes a call, a write to a member that stays writable becomes `.set(…)`, and a write to one that
  * is read-only now is left untouched and returned, so the migration can report it. A compound assignment or an
  * increment has no `.set(…)` form, so it is left untouched and returned too.
+ *
+ * Only the expressions of the view that declares a ref are looked at — not prose, comments or plain attributes —
+ * and a ref whose name the template also gives to something else is left alone, as the shared engine does.
  */
-
-/** A half-open `[start, end)` span of the template. */
-interface Range {
-    start: number;
-    end: number;
-}
 
 interface Edit extends Range {
     text: string;
 }
 
-/** A reference variable and the members reachable through it. */
+/** What a reference variable reaches, and how. */
 export interface RefAccessPolicy {
-    name: string;
     /** Members that became signals. */
     members: readonly string[];
     /** Subset of `members` that stays writable. */
     writable: ReadonlySet<string>;
+    /** Members reported, in any form, wherever a ref reaches them. Never rewritten. */
+    reported?: readonly string[];
 }
 
 export interface RefAccessResult {
@@ -32,13 +37,9 @@ export interface RefAccessResult {
     readOnlyWrites: Set<string>;
     /** Writable members written through a ref by a compound assignment or an increment, left as they are. */
     compoundWrites: Set<string>;
+    /** `reported` members reached through a ref. */
+    reported: Set<string>;
 }
-
-/** `(click)` / `on-click`: the value is a statement list, where an assignment is legal. */
-const EVENT_BINDING = /^(?:\(|on-)/;
-
-/** `[(ngModel)]` / `bindon-ngModel`: the value is a write target, which a signal fills without a call. */
-const TWO_WAY_BINDING = /^(?:\[\(|bindon-)/;
 
 /** A compound assignment (`+=`, `??=`, …) or a postfix `++` / `--` at the start of what follows an access. */
 const COMPOUND_WRITE_AFTER = /^\s*(?:\+\+|--|(?:\*\*|>>>|<<|>>|&&|\|\||\?\?|[-+*/%&|^])=(?!=))/;
@@ -57,22 +58,12 @@ function assignmentPattern(ref: string, members: readonly string[]): RegExp {
     return new RegExp(`(?<![\\w$.])(${escapeRegExp(ref)}\\s*\\.\\s*(${names}))\\b(\\s*=(?!=)\\s*)`, 'g');
 }
 
-/** The value spans of the event and two-way bindings on every element of the parsed template. */
-function collectBindings(nodes: readonly any[], statements: Range[], twoWay: Range[]): void {
-    for (const node of nodes) {
-        for (const attr of node.attrs ?? []) {
-            const span = attr.valueSpan;
-
-            if (typeof attr.name !== 'string' || !span) continue;
-
-            const range = { start: span.start.offset, end: span.end.offset };
-
-            if (TWO_WAY_BINDING.test(attr.name)) twoWay.push(range);
-            else if (EVENT_BINDING.test(attr.name)) statements.push(range);
-        }
-
-        collectBindings(node.children ?? [], statements, twoWay);
-    }
+/** `<ref>.<member>` in any form, the optional chain included. */
+function anyAccessPattern(ref: string, members: readonly string[]): RegExp {
+    return new RegExp(
+        `(?<![\\w$.])${escapeRegExp(ref)}\\s*\\??\\.\\s*(${members.map(escapeRegExp).join('|')})\\b`,
+        'g'
+    );
 }
 
 /** End of the assigned expression that starts at `from`: the next top-level `;`, or the end of the statement list. */
@@ -104,102 +95,122 @@ function assignedExpressionEnd(template: string, from: number, limit: number): n
     return end;
 }
 
-const within = ({ start, end }: Range, from: number, to: number): boolean => from >= start && to <= end;
-
 /**
- * Rewrites reads and writes of `refs`' members in `template`, whose HTML AST is `rootNodes`. A ref that two
- * policies name is rewritten once, by the first of them.
+ * Rewrites reads and writes of the members reachable through the refs in `template`, whose HTML AST is
+ * `rootNodes`. `policyOf` tells what a `#ref` on an element is bound to, or `undefined` when it is not one of
+ * the migrated types.
  */
 export function rewriteRefAccesses(
     template: string,
     rootNodes: readonly unknown[],
-    refs: readonly RefAccessPolicy[]
+    policyOf: TemplateRefResolver<RefAccessPolicy>
 ): RefAccessResult {
-    const statements: Range[] = [];
-    const twoWay: Range[] = [];
-    const readOnlyWrites = new Set<string>();
-    const compoundWrites = new Set<string>();
+    const scanner = new TemplateScanner(template, policyOf);
+    const result: RefAccessResult = {
+        content: template,
+        readOnlyWrites: new Set<string>(),
+        compoundWrites: new Set<string>(),
+        reported: new Set<string>()
+    };
     const writeEdits: Edit[] = [];
     const readEdits: Edit[] = [];
+    // The end of each access already handled: a ref redeclared in a nested view reaches it twice.
     const seen = new Set<number>();
 
-    collectBindings(rootNodes, statements, twoWay);
+    visitAll(scanner, rootNodes);
 
-    for (const { name, members, writable } of refs) {
-        if (members.length === 0) continue;
+    const rewriteWrites = (expression: TemplateExpression, name: string, policy: RefAccessPolicy) => {
+        const source = template.slice(expression.start, expression.end);
 
-        for (const match of template.matchAll(assignmentPattern(name, members))) {
+        for (const match of source.matchAll(assignmentPattern(name, policy.members))) {
             const [, target, member, operator] = match;
-            const targetEnd = match.index + target.length;
+            const targetEnd = expression.start + match.index + target.length;
 
             if (seen.has(targetEnd)) continue;
 
             seen.add(targetEnd);
 
-            if (!writable.has(member)) {
-                readOnlyWrites.add(member);
+            if (!policy.writable.has(member)) {
+                result.readOnlyWrites.add(member);
                 continue;
             }
 
-            const valueStart = targetEnd + operator.length;
-            const statement = statements.find((range) => within(range, match.index, valueStart));
-
             // Outside a statement an assignment is no valid template to begin with.
-            if (!statement) continue;
+            if (expression.kind !== 'statement') continue;
 
-            const valueEnd = assignedExpressionEnd(template, valueStart, statement.end);
+            const valueStart = targetEnd + operator.length;
+            const valueEnd = assignedExpressionEnd(template, valueStart, expression.end);
 
             if (valueEnd === valueStart) continue;
 
             writeEdits.push({ start: targetEnd, end: valueStart, text: '.set(' });
             writeEdits.push({ start: valueEnd, end: valueEnd, text: ')' });
         }
+    };
 
-        for (const match of template.matchAll(memberAccessPattern(name, members))) {
-            const end = match.index + match[0].length;
+    const rewriteReads = (expression: TemplateExpression, name: string, policy: RefAccessPolicy) => {
+        const source = template.slice(expression.start, expression.end);
+
+        for (const match of source.matchAll(memberAccessPattern(name, policy.members))) {
+            const start = expression.start + match.index;
+            const end = start + match[0].length;
+            const member = match[2];
 
             if (seen.has(end)) continue;
 
             seen.add(end);
 
-            const member = match[2];
-            const statement = statements.find((range) => within(range, match.index, end));
-
             // `(click)="ref.value += 1"`, `ref.value++`, `--ref.value`: a call there is no valid template.
             if (
-                statement &&
-                (COMPOUND_WRITE_AFTER.test(template.slice(end, statement.end)) ||
-                    INCREMENT_BEFORE.test(template.slice(statement.start, match.index)))
+                expression.kind === 'statement' &&
+                (COMPOUND_WRITE_AFTER.test(template.slice(end, expression.end)) ||
+                    INCREMENT_BEFORE.test(template.slice(expression.start, start)))
             ) {
-                (writable.has(member) ? compoundWrites : readOnlyWrites).add(member);
+                (policy.writable.has(member) ? result.compoundWrites : result.readOnlyWrites).add(member);
                 continue;
             }
 
-            const binding = twoWay.find((range) => within(range, match.index, end));
-
             // `[(ngModel)]="ref.value"` writes through the binding: a writable signal fills it as it is.
             if (
-                binding &&
-                !template.slice(binding.start, match.index).trim() &&
-                !template.slice(end, binding.end).trim()
+                expression.kind === 'twoWay' &&
+                !template.slice(expression.start, start).trim() &&
+                !template.slice(end, expression.end).trim()
             ) {
-                if (!writable.has(member)) readOnlyWrites.add(member);
+                if (!policy.writable.has(member)) result.readOnlyWrites.add(member);
 
                 continue;
             }
 
             readEdits.push({ start: end, end, text: '()' });
         }
+    };
+
+    for (const { name, type: policy, ...view } of scanner.unambiguousRefs()) {
+        for (const expression of scanner.expressions) {
+            if (expression.start < view.start || expression.end > view.end) continue;
+
+            if (policy.members.length > 0) {
+                rewriteWrites(expression, name, policy);
+                rewriteReads(expression, name, policy);
+            }
+
+            if (policy.reported?.length) {
+                const source = template.slice(expression.start, expression.end);
+
+                for (const [, member] of source.matchAll(anyAccessPattern(name, policy.reported))) {
+                    result.reported.add(member);
+                }
+            }
+        }
     }
 
     // Applied right to left. The sort is stable, so where a read ends an assigned value, the `)` closing
     // `.set(` goes in first and the read's `()` lands in front of it.
     const edits = [...writeEdits, ...readEdits].sort((a, b) => b.start - a.start || b.end - a.end);
-    let content = template;
 
     for (const { start, end, text } of edits) {
-        content = content.slice(0, start) + text + content.slice(end);
+        result.content = result.content.slice(0, start) + text + result.content.slice(end);
     }
 
-    return { content, readOnlyWrites, compoundWrites };
+    return result;
 }

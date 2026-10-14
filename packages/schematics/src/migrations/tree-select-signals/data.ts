@@ -10,6 +10,7 @@
  *   a `value` input that does not exist, and nothing ever emitted it.
  * - `hiddenItemsText`, `hiddenItemsTextFormatter` — accessor pair / method → signal inputs.
  * - `hiddenItems` → `WritableSignal<number>`, `colorForState` → `Signal<KbqComponentColors>`.
+ * - `hasBackdrop` — accessor pair → signal input.
  * - `options`, `tags`, `overlayDir`, `triggerRect`, `panelDoneAnimatingStream`, `changeDetectorRef` —
  *   public → `protected`.
  * - `KbqTreeSelectChange` is generic and its `value` is no longer `any`.
@@ -76,18 +77,20 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         anchor: TREE_SELECT_TYPE,
-        pattern: '\\.\\s*searchMinOptionsThreshold\\b(?!\\s*[=(])',
+        pattern: '\\.\\s*(?:hasBackdrop|searchMinOptionsThreshold)\\b(?!\\s*[=(])',
         message:
-            'KbqTreeSelect.searchMinOptionsThreshold is a signal now: read it as `searchMinOptionsThreshold()`. It ' +
-            'still reports the resolved number.'
+            'KbqTreeSelect.hasBackdrop and .searchMinOptionsThreshold are signals now: read them as calls, ' +
+            '`hasBackdrop()` and `searchMinOptionsThreshold()`. searchMinOptionsThreshold() still reports the ' +
+            'resolved number.'
     },
     {
         anchor: TREE_SELECT_TYPE,
-        pattern: '\\.\\s*(?:multiple|autoSelect|tabIndex|selectAllHandler|searchMinOptionsThreshold)\\s*=(?!=)',
+        pattern:
+            '\\.\\s*(?:multiple|autoSelect|tabIndex|selectAllHandler|hasBackdrop|searchMinOptionsThreshold)\\s*=(?!=)',
         message:
-            'multiple, autoSelect, tabIndex, selectAllHandler and searchMinOptionsThreshold of KbqTreeSelect are ' +
-            'signal inputs, so an assignment no longer compiles. Bind them in the template. This pattern also ' +
-            'matches a write to an unrelated object in the same file — check before changing it.'
+            'multiple, autoSelect, tabIndex, selectAllHandler, hasBackdrop and searchMinOptionsThreshold of ' +
+            'KbqTreeSelect are signal inputs, so an assignment no longer compiles. Bind them in the template. This ' +
+            'pattern also matches a write to an unrelated object in the same file — check before changing it.'
     }
 ];
 

@@ -1120,6 +1120,77 @@ describe(SCHEMATIC_NAME, () => {
         );
     });
 
+    it('drops inset only on a <kbq-divider>', async () => {
+        const [first] = projects.keys();
+        const { ts, html } = paths(projects.get(first)!);
+        const code = [
+            "import { Component } from '@angular/core';",
+            '',
+            '@Component({',
+            '    template: \'<kbq-divider inset /><mat-divider [inset]="true" />{{ inset ? 8 : 0 }}\'',
+            '})',
+            'export class Dividers {',
+            '    readonly inset = 8;',
+            '}',
+            ''
+        ].join('\n');
+        const markup = '<mat-divider [inset]="true"></mat-divider>\n<p class="inset">{{ inset }}</p>\n';
+
+        appTree.overwrite(ts, code);
+        appTree.overwrite(html, `<kbq-divider class="list" inset="true"></kbq-divider>\n${markup}`);
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(code.replace('<kbq-divider inset />', '<kbq-divider />'));
+        expect(result.readText(html)).toBe(`<kbq-divider class="list"></kbq-divider>\n${markup}`);
+    });
+
+    it('renames AnimationCurves and openPanel() of Koobiq only, not of Angular Material', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const material = ts.replace(/[^/]+$/, 'material.ts');
+        const materialCode = [
+            "import { AnimationCurves } from '@angular/material/core';",
+            "import { MatAutocompleteTrigger } from '@angular/material/autocomplete';",
+            'export const curve = AnimationCurves.STANDARD_CURVE;',
+            'export const open = (trigger: MatAutocompleteTrigger) => trigger.openPanel();',
+            ''
+        ].join('\n');
+
+        appTree.overwrite(
+            ts,
+            [
+                "import { AnimationCurves } from '@koobiq/components/core';",
+                "import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';",
+                'export const curve = AnimationCurves.StandardCurve;',
+                'export const open = (trigger: KbqAutocompleteTrigger) => trigger.openPanel();',
+                ''
+            ].join('\n')
+        );
+        appTree.create(material, materialCode);
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                "import { KbqAnimationCurves } from '@koobiq/components/core';",
+                "import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';",
+                'export const curve = KbqAnimationCurves.StandardCurve;',
+                'export const open = (trigger: KbqAutocompleteTrigger) => trigger.open();',
+                ''
+            ].join('\n')
+        );
+        expect(result.readText(material)).toBe(materialCode);
+    });
+
     it('drops a re-export it empties', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

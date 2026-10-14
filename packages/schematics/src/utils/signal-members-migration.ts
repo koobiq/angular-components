@@ -79,7 +79,7 @@ export interface SignalMembersConfig {
 }
 
 /** A half-open `[start, end)` span of the source being rewritten. */
-interface Range {
+export interface Range {
     start: number;
     end: number;
 }
@@ -110,10 +110,19 @@ export interface Binding {
     scope: ts.Node;
 }
 
-/** A reference variable bound to one of the migrated types, valid only within the view that declares it. */
-interface TemplateRef extends Range {
+/** A reference variable bound to `type`, valid only within the view that declares it. */
+export interface TemplateRef<T = string> extends Range {
     name: string;
-    type: string;
+    type: T;
+}
+
+/** What a `#ref` on `element` is bound to: `value` is the `exportAs` it names, empty for a bare ref. */
+export type TemplateRefResolver<T> = (element: any, value: string) => T | undefined;
+
+/** A template span that holds an Angular expression. */
+export interface TemplateExpression extends Range {
+    /** `statement` for the value of an event binding, where an assignment is legal; `twoWay` for a two-way one. */
+    kind: 'expression' | 'statement' | 'twoWay';
 }
 
 function escapeRegExp(value: string): string {
@@ -626,60 +635,49 @@ function migrateTsExpressions(content: string, fileName: string, config: SignalM
 /** Attribute-name prefixes that mark the value as an Angular expression rather than a literal. */
 const BINDING_PREFIX = /^(?:\[|\(|\*|bind-|bind(?:on)?-|on-)/;
 
+/** `(click)` / `on-click`: the value is a statement list, where an assignment is legal. */
+const EVENT_BINDING = /^(?:\(|on-)/;
+
+/** `[(ngModel)]` / `bindon-ngModel`: the value is a write target, which a signal fills without a call. */
+const TWO_WAY_BINDING = /^(?:\[\(|bindon-)/;
+
+/** The names a structural directive declares: `let row`, `let i = index`, `index as i`. */
+const MICROSYNTAX_NAME = /\b(?:let|as)\s+([A-Za-z_$][\w$]*)/g;
+
 /**
- * Walks a template's HTML AST, collecting what the rewrite needs: the reference variables bound to one of
- * the migrated types, the source ranges that actually hold Angular expressions, and every other name the
+ * Walks a template's HTML AST, collecting what a rewrite through reference variables needs: the refs
+ * `resolveRef` binds, the source ranges that actually hold Angular expressions, and every other name the
  * template introduces (so a `@for` variable sharing a ref's name is not rewritten).
  */
-class TemplateScanner implements Visitor {
-    readonly refs: TemplateRef[] = [];
+export class TemplateScanner<T = string> implements Visitor {
+    readonly refs: TemplateRef<T>[] = [];
     readonly otherNames = new Set<string>();
-    readonly expressions: Range[] = [];
+    readonly expressions: TemplateExpression[] = [];
 
     /** The embedded view currently being walked; a ref declared in it is invisible outside. */
     private view: Range;
 
     constructor(
         private readonly template: string,
-        private readonly config: SignalMembersConfig
+        private readonly resolveRef: TemplateRefResolver<T>
     ) {
         this.view = { start: 0, end: template.length };
     }
 
+    /**
+     * The refs whose name nothing else in the template introduces. Where a `@for`, `let-` or `@let` variable or a
+     * foreign `#ref` shares the name, the reads could belong to either, so neither is rewritten.
+     */
+    unambiguousRefs(): TemplateRef<T>[] {
+        return this.refs.filter((ref) => !this.otherNames.has(ref.name));
+    }
+
     visitElement(element: any): void {
-        const references: Array<{ name: string; value: string }> = [];
+        const attrs: any[] = (element.attrs ?? []).filter((attr: any) => typeof attr.name === 'string');
+        // `*ngIf` / `*ngFor` wrap the element in a template of its own, which also holds the refs on the element.
+        const structural = attrs.some((attr) => attr.name.startsWith('*'));
 
-        for (const attr of element.attrs ?? []) {
-            if (typeof attr.name !== 'string') continue;
-
-            const reference = this.referenceName(attr.name);
-
-            if (reference !== undefined) {
-                references.push({ name: reference, value: String(attr.value ?? '') });
-                continue;
-            }
-
-            // `let-item` on an <ng-template> introduces a name the refs must not collide with.
-            if (attr.name.startsWith('let-')) {
-                this.otherNames.add(attr.name.slice(4));
-                continue;
-            }
-
-            this.collectAttributeExpression(attr);
-        }
-
-        for (const { name, value } of references) {
-            // `#t="kbqDropdownTrigger"` names a directive on the element; a bare `#d` on the element is the
-            // component itself. `#d="cdkOverlayOrigin"` names something else entirely and must be ignored.
-            const type = value
-                ? this.config.exportAsToType[value]
-                : (this.config.elementToType[element.name] ?? this.attributeType(element));
-
-            if (type) this.refs.push({ name, type, ...this.view });
-            else this.otherNames.add(name);
-        }
-
-        this.inView(element.name === 'ng-template' ? element.sourceSpan : undefined, () => this.visitChildren(element));
+        this.inView(structural ? element.sourceSpan : undefined, () => this.scanElement(element, attrs));
     }
 
     visitBlock(block: any): void {
@@ -688,7 +686,7 @@ class TemplateScanner implements Visitor {
 
             if (!span) continue;
 
-            this.expressions.push({ start: span.start.offset, end: span.end.offset });
+            this.expressions.push({ start: span.start.offset, end: span.end.offset, kind: 'expression' });
 
             // `@for (item of rows; track item)` and `@if (x; as y)` introduce names of their own.
             for (const match of String(parameter.expression ?? '').matchAll(
@@ -712,20 +710,41 @@ class TemplateScanner implements Visitor {
 
         const span = decl.valueSpan ?? decl.sourceSpan;
 
-        if (span) this.expressions.push({ start: span.start.offset, end: span.end.offset });
+        if (span) this.expressions.push({ start: span.start.offset, end: span.end.offset, kind: 'expression' });
     }
 
-    /** The type of the component an attribute of `element` selects, whether the attribute is bound or not. */
-    private attributeType(element: any): string | undefined {
-        const types = this.config.attributeToType ?? {};
+    private scanElement(element: any, attrs: any[]): void {
+        const references: Array<{ name: string; value: string }> = [];
 
-        for (const attr of element.attrs ?? []) {
-            const name = typeof attr.name === 'string' ? attr.name.replace(/^\[(.*)\]$/, '$1') : '';
+        for (const attr of attrs) {
+            const reference = this.referenceName(attr.name);
 
-            if (Object.hasOwn(types, name)) return types[name];
+            if (reference !== undefined) {
+                references.push({ name: reference, value: String(attr.value ?? '') });
+                continue;
+            }
+
+            // `let-item` on an <ng-template> introduces a name the refs must not collide with.
+            if (attr.name.startsWith('let-')) {
+                this.otherNames.add(attr.name.slice(4));
+                continue;
+            }
+
+            if (attr.name.startsWith('*')) {
+                for (const [, name] of String(attr.value ?? '').matchAll(MICROSYNTAX_NAME)) this.otherNames.add(name);
+            }
+
+            this.collectAttributeExpression(attr);
         }
 
-        return undefined;
+        for (const { name, value } of references) {
+            const type = this.resolveRef(element, value);
+
+            if (type !== undefined) this.refs.push({ name, type, ...this.view });
+            else this.otherNames.add(name);
+        }
+
+        this.inView(element.name === 'ng-template' ? element.sourceSpan : undefined, () => this.visitChildren(element));
     }
 
     /** Runs `walk` with the embedded view narrowed to `span`, if the node opens one. */
@@ -760,7 +779,9 @@ class TemplateScanner implements Visitor {
         const end = span.end.offset;
 
         // A binding's whole value is an expression; a plain attribute only holds interpolations.
-        if (BINDING_PREFIX.test(attr.name)) this.expressions.push({ start, end });
+        if (TWO_WAY_BINDING.test(attr.name)) this.expressions.push({ start, end, kind: 'twoWay' });
+        else if (EVENT_BINDING.test(attr.name)) this.expressions.push({ start, end, kind: 'statement' });
+        else if (BINDING_PREFIX.test(attr.name)) this.expressions.push({ start, end, kind: 'expression' });
         else this.collectInterpolations(start, end);
     }
 
@@ -768,7 +789,7 @@ class TemplateScanner implements Visitor {
         for (const match of this.template.slice(start, end).matchAll(/\{\{([\s\S]*?)\}\}/g)) {
             const from = start + match.index + 2;
 
-            this.expressions.push({ start: from, end: from + match[1].length });
+            this.expressions.push({ start: from, end: from + match[1].length, kind: 'expression' });
         }
     }
 
@@ -894,6 +915,27 @@ function rendersComponent(template: string, config: SignalMembersConfig): boolea
     );
 }
 
+/**
+ * The migrated type a `#ref` names: `#t="kbqDropdownTrigger"` names a directive on the element, a bare `#d` the
+ * component the element is. `#d="cdkOverlayOrigin"` names something else entirely.
+ */
+function refType(config: SignalMembersConfig, element: any, value: string): string | undefined {
+    if (value) return Object.hasOwn(config.exportAsToType, value) ? config.exportAsToType[value] : undefined;
+
+    if (Object.hasOwn(config.elementToType, element.name)) return config.elementToType[element.name];
+
+    const types = config.attributeToType ?? {};
+
+    // The component an attribute of the element selects, whether the attribute is bound or not.
+    for (const attr of element.attrs ?? []) {
+        const name = typeof attr.name === 'string' ? attr.name.replace(/^\[(.*)\]$/, '$1') : '';
+
+        if (Object.hasOwn(types, name)) return types[name];
+    }
+
+    return undefined;
+}
+
 /** Pass B (core) — parse a template, discover refs, rewrite their signal reads. */
 async function migrateTemplate(template: string, config: SignalMembersConfig): Promise<TemplateResult> {
     if (!rendersComponent(template, config)) return untouched(template);
@@ -902,13 +944,11 @@ async function migrateTemplate(template: string, config: SignalMembersConfig): P
 
     if (!parsed.tree) return { ...untouched(template), unparseable: true };
 
-    const scanner = new TemplateScanner(template, config);
+    const scanner = new TemplateScanner(template, (element, value) => refType(config, element, value));
 
     visitAll(scanner, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
 
-    // A ref whose name is also introduced by a `@for`, an `@let` or a foreign `#ref` is ambiguous: the
-    // reads could belong to either, so neither is rewritten.
-    const refs = scanner.refs.filter((ref) => !scanner.otherNames.has(ref.name));
+    const refs = scanner.unambiguousRefs();
 
     if (refs.length === 0) return untouched(template);
 

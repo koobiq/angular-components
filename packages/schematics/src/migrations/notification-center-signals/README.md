@@ -29,10 +29,11 @@ quiet.
 
 ## What it does _not_ report
 
-`KbqNotificationCenterAnimations` (the panel never used it), the `header` / `footer` fields of the
-trigger (never rendered) and `KbqNotificationItem` no longer extending `Omit<KbqToastData,
-'closeButton'>` (the interface reproduces every member it used to inherit) are all removals nothing
-could depend on.
+The `header` / `footer` fields of the trigger (never rendered) and `KbqNotificationItem` no longer
+extending `Omit<KbqToastData, 'closeButton'>` (the interface reproduces every member it used to
+inherit) are removals nothing could depend on. `KbqNotificationCenterAnimations`, which the panel never
+used, is reported by the [`angular-animations-removal`](../angular-animations-removal/README.md)
+migration.
 
 `KbqReadStateDirective`, which the notification item hosts, is covered by its own
 [`read-state-dwell-handlers`](../read-state-dwell-handlers/README.md) migration.

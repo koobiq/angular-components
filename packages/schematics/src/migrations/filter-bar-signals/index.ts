@@ -1,7 +1,6 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -15,8 +14,8 @@ import {
     Receiver,
     resolveReceiver
 } from '../../utils/signal-members-migration';
-import { rewriteRefAccesses } from '../../utils/template-ref-access';
-import { forEachClass, parseTemplate } from '../../utils/typescript';
+import { RefAccessPolicy, rewriteRefAccesses } from '../../utils/template-ref-access';
+import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     FILTER_BAR_ELEMENT,
     FILTER_BAR_HOST_TYPE,
@@ -142,59 +141,14 @@ function migrateTsExpressions(content: string, fileName: string): string {
     return edits.length > 0 ? applyEdits(content, edits) : content;
 }
 
-/** `#ref` / `ref-ref`, or `undefined` when the attribute is not a reference variable. */
-function referenceName(name: string): string | undefined {
-    if (name.startsWith('#')) return name.slice(1);
-    if (name.startsWith('ref-')) return name.slice(4);
-
-    return undefined;
-}
-
-/**
- * Collects template reference variable names bound to a `<kbq-filter-bar>` element. `KbqFilterBar` has no
- * `exportAs`, so only a bare `#ref` is the filter bar; `#ref="ngModel"` names another directive.
- */
-class FilterBarRefCollector implements Visitor {
-    readonly refs = new Set<string>();
-
-    visitElement(element: any): void {
-        if (element.name === FILTER_BAR_ELEMENT) {
-            for (const attr of element.attrs ?? []) {
-                if (typeof attr.name !== 'string') continue;
-
-                const name = referenceName(attr.name);
-
-                if (name !== undefined && !attr.value) this.refs.add(name);
-            }
-        }
-
-        this.visitChildren(element);
-    }
-
-    visitBlock(block: any): void {
-        this.visitChildren(block);
-    }
-
-    private visitChildren(node: any): void {
-        for (const child of node.children ?? []) {
-            child.visit(this);
-        }
-    }
-
-    visitAttribute(): void {}
-    visitText(): void {}
-    visitComment(): void {}
-    visitExpansion(): void {}
-    visitExpansionCase(): void {}
-    visitBlockParameter(): void {}
-    visitLetDeclaration(): void {}
-}
-
 /** Merges the writes in `from` into `into`. */
 function mergeWrites(into: Writes, from: Writes): void {
     from.readOnlyWrites.forEach((member) => into.readOnlyWrites.add(member));
     from.compoundWrites.forEach((member) => into.compoundWrites.add(member));
 }
+
+/** What a reference variable on `<kbq-filter-bar>` reaches. */
+const REF_POLICY: RefAccessPolicy = { members: SIGNAL_MEMBERS, writable: WRITABLE_MEMBERS };
 
 /** The writes made through a reference variable are the ones a template leaves as they are. */
 interface TemplateResult extends Writes {
@@ -218,53 +172,13 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
     if (!parsed.tree) return untouched;
 
     const { rootNodes } = parsed.tree as { rootNodes: unknown[] };
-    const collector = new FilterBarRefCollector();
-
-    visitAll(collector, rootNodes);
-
-    if (collector.refs.size === 0) return untouched;
-
-    const refs = [...collector.refs].map((name) => ({ name, members: SIGNAL_MEMBERS, writable: WRITABLE_MEMBERS }));
-    const { content, readOnlyWrites, compoundWrites } = rewriteRefAccesses(template, rootNodes, refs);
+    // `KbqFilterBar` has no `exportAs`, so only a bare `#ref` is the filter bar; `#ref="ngModel"` names another
+    // directive.
+    const { content, readOnlyWrites, compoundWrites } = rewriteRefAccesses(template, rootNodes, (element, value) =>
+        element.name === FILTER_BAR_ELEMENT && !value ? REF_POLICY : undefined
+    );
 
     return { content, changed: content !== template, readOnlyWrites, compoundWrites };
-}
-
-/** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
-function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: number; end: number }> {
-    const ranges: Array<{ start: number; end: number }> = [];
-
-    forEachClass(sourceFile, (node) => {
-        const decorator = ts
-            .getDecorators(node)
-            ?.find(
-                (dec) =>
-                    ts.isCallExpression(dec.expression) &&
-                    ts.isIdentifier(dec.expression.expression) &&
-                    dec.expression.expression.text === 'Component'
-            );
-
-        if (!decorator || !ts.isCallExpression(decorator.expression)) return;
-
-        const [arg] = decorator.expression.arguments;
-
-        if (!arg || !ts.isObjectLiteralExpression(arg)) return;
-
-        for (const prop of arg.properties) {
-            if (
-                ts.isPropertyAssignment(prop) &&
-                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
-                prop.name.text === 'template' &&
-                ts.isStringLiteralLike(prop.initializer) &&
-                prop.initializer.text
-            ) {
-                // +1 / -1 to exclude the opening/closing quote characters.
-                ranges.push({ start: prop.initializer.getStart(sourceFile) + 1, end: prop.initializer.getEnd() - 1 });
-            }
-        }
-    });
-
-    return ranges;
 }
 
 /** Pass B (inline) — rewrite filter-bar ref reads inside inline component templates. */

@@ -1,7 +1,6 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -16,7 +15,7 @@ import {
     resolveReceiver
 } from '../../utils/signal-members-migration';
 import { RefAccessPolicy, rewriteRefAccesses } from '../../utils/template-ref-access';
-import { forEachClass, parseTemplate } from '../../utils/typescript';
+import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     attributeRewrites,
     NULLABILITY_CHANGED_MEMBERS,
@@ -24,6 +23,8 @@ import {
     QUERY_LIST_ONLY_API,
     READ_ONLY_INPUT_MEMBERS,
     READ_ONLY_QUERY_MEMBERS,
+    READ_ONLY_STATE_MEMBERS,
+    READ_ONLY_STATE_MESSAGE,
     REMOVED_MEMBERS_MESSAGE,
     styleRewrites,
     Target,
@@ -106,6 +107,7 @@ interface ReceiverWarnings {
     nullability: Set<string>;
     readOnlyInputWrites: Set<string>;
     readOnlyQueryWrites: Set<string>;
+    readOnlyStateWrites: Set<string>;
     /** Writable members written in a form other than a plain `=`, which has no `.set()` translation. */
     writableWrites: Set<string>;
     /** Removed members, reached in any form. */
@@ -117,6 +119,7 @@ const emptyWarnings = (): ReceiverWarnings => ({
     nullability: new Set<string>(),
     readOnlyInputWrites: new Set<string>(),
     readOnlyQueryWrites: new Set<string>(),
+    readOnlyStateWrites: new Set<string>(),
     writableWrites: new Set<string>(),
     removed: new Set<string>()
 });
@@ -146,6 +149,8 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, scop
                     warnings.readOnlyInputWrites.add(name);
                 } else if (READ_ONLY_QUERY_MEMBERS.includes(name)) {
                     warnings.readOnlyQueryWrites.add(name);
+                } else if (READ_ONLY_STATE_MEMBERS.includes(name)) {
+                    warnings.readOnlyStateWrites.add(name);
                 }
             }
 
@@ -186,6 +191,7 @@ function collectFileWarnings(filePath: string, content: string): ReceiverWarning
         warnings.nullability.forEach((value) => merged.nullability.add(value));
         warnings.readOnlyInputWrites.forEach((value) => merged.readOnlyInputWrites.add(value));
         warnings.readOnlyQueryWrites.forEach((value) => merged.readOnlyQueryWrites.add(value));
+        warnings.readOnlyStateWrites.forEach((value) => merged.readOnlyStateWrites.add(value));
         warnings.writableWrites.forEach((value) => merged.writableWrites.add(value));
         warnings.removed.forEach((value) => merged.removed.add(value));
     }
@@ -221,29 +227,13 @@ function addTemplateFindings(warnings: ReceiverWarnings, findings: TemplateFindi
     for (const name of findings.readOnlyWrites) {
         if (READ_ONLY_INPUT_MEMBERS.includes(name)) warnings.readOnlyInputWrites.add(name);
         else if (READ_ONLY_QUERY_MEMBERS.includes(name)) warnings.readOnlyQueryWrites.add(name);
+        else if (READ_ONLY_STATE_MEMBERS.includes(name)) warnings.readOnlyStateWrites.add(name);
     }
 
     findings.compoundWrites.forEach((member) => warnings.writableWrites.add(member));
     findings.removed.forEach((member) => warnings.removed.add(member));
 
     return warnings;
-}
-
-/** The removed members of `target` that `template` reaches through one of `refs`. */
-function collectRefRemovedMembers(template: string, target: Target, refs: Iterable<string>): Set<string> {
-    const found = new Set<string>();
-
-    if (!target.removedMembers?.length) return found;
-
-    const members = target.removedMembers.map(escapeRegExp).join('|');
-
-    for (const ref of refs) {
-        const pattern = new RegExp(`(?<![\\w$.])${escapeRegExp(ref)}\\s*\\??\\.\\s*(${members})\\b`, 'g');
-
-        for (const [, member] of template.matchAll(pattern)) found.add(member);
-    }
-
-    return found;
 }
 
 /** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
@@ -284,6 +274,10 @@ function logReceiverWarnings(context: SchematicContext, filePath: string, merged
         ]);
     }
 
+    if (merged.readOnlyStateWrites.size > 0) {
+        logMessage(context.logger, [`[${MIGRATION}] ${filePath}`, `  ${READ_ONLY_STATE_MESSAGE}`]);
+    }
+
     if (merged.removed.size > 0) {
         logMessage(context.logger, [`[${MIGRATION}] ${filePath}`, `  ${REMOVED_MEMBERS_MESSAGE}`]);
     }
@@ -317,61 +311,6 @@ function migrateTsExpressions(content: string, fileName: string): string {
     return result;
 }
 
-/** `#ref` / `ref-ref`, or `undefined` when the attribute is not a reference variable. */
-function referenceName(name: string): string | undefined {
-    if (name.startsWith('#')) return name.slice(1);
-    if (name.startsWith('ref-')) return name.slice(4);
-
-    return undefined;
-}
-
-/**
- * Collects template reference variable names bound to the target: bare or naming the `exportAs` on one of its
- * elements, or naming one of its directive `exportAs` names on any element.
- */
-class RefCollector implements Visitor {
-    readonly refs = new Set<string>();
-
-    constructor(private readonly target: Target) {}
-
-    visitElement(element: any): void {
-        const { elements, exportAs = [] } = this.target;
-        const elementExportAs = Object.hasOwn(elements, element.name) ? elements[element.name] : undefined;
-
-        for (const attr of element.attrs ?? []) {
-            if (typeof attr.name !== 'string') continue;
-
-            const name = referenceName(attr.name);
-            const value = String(attr.value ?? '');
-
-            if (name === undefined) continue;
-
-            if (elementExportAs !== undefined && (!value || value === elementExportAs)) this.refs.add(name);
-            else if (value && exportAs.includes(value)) this.refs.add(name);
-        }
-
-        this.visitChildren(element);
-    }
-
-    visitBlock(block: any): void {
-        this.visitChildren(block);
-    }
-
-    private visitChildren(node: any): void {
-        for (const child of node.children ?? []) {
-            child.visit(this);
-        }
-    }
-
-    visitAttribute(): void {}
-    visitText(): void {}
-    visitComment(): void {}
-    visitExpansion(): void {}
-    visitExpansionCase(): void {}
-    visitBlockParameter(): void {}
-    visitLetDeclaration(): void {}
-}
-
 /** Rewrites renamed attributes inside the opening tag of the elements that own them. */
 function rewriteAttributes(template: string): string {
     let content = template;
@@ -387,6 +326,16 @@ function rewriteAttributes(template: string): string {
     }
 
     return content;
+}
+
+/**
+ * Whether a `#ref` with `value` on an `element` names `target`: bare or naming the `exportAs` on one of its elements,
+ * or naming one of its directive `exportAs` names on any element.
+ */
+function refersTo({ elements, exportAs = [] }: Target, element: string, value: string): boolean {
+    if (Object.hasOwn(elements, element) && (!value || value === elements[element])) return true;
+
+    return !!value && exportAs.includes(value);
 }
 
 interface TemplateResult extends TemplateFindings {
@@ -413,68 +362,30 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
 
         if (parsed.tree) {
             const { rootNodes } = parsed.tree as { rootNodes: unknown[] };
-            const refs: RefAccessPolicy[] = [];
+            const policies = new Map<Target, RefAccessPolicy>(
+                relevant.map((target) => [
+                    target,
+                    {
+                        members: target.signalMembers,
+                        writable: target.writableMembers,
+                        reported: target.removedMembers
+                    }
+                ])
+            );
+            const result = rewriteRefAccesses(content, rootNodes, (element, value) => {
+                const target = relevant.find((candidate) => refersTo(candidate, element.name, value));
 
-            for (const target of relevant) {
-                const collector = new RefCollector(target);
-
-                visitAll(collector, rootNodes);
-
-                for (const name of collector.refs) {
-                    refs.push({ name, members: target.signalMembers, writable: target.writableMembers });
-                }
-
-                for (const member of collectRefRemovedMembers(content, target, collector.refs)) {
-                    findings.removed.add(member);
-                }
-            }
-
-            const result = rewriteRefAccesses(content, rootNodes, refs);
+                return target && policies.get(target);
+            });
 
             content = result.content;
             result.readOnlyWrites.forEach((member) => findings.readOnlyWrites.add(member));
             result.compoundWrites.forEach((member) => findings.compoundWrites.add(member));
+            result.reported.forEach((member) => findings.removed.add(member));
         }
     }
 
     return { content, changed: content !== template, ...findings };
-}
-
-/** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
-function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: number; end: number }> {
-    const ranges: Array<{ start: number; end: number }> = [];
-
-    forEachClass(sourceFile, (node) => {
-        const decorator = ts
-            .getDecorators(node)
-            ?.find(
-                (dec) =>
-                    ts.isCallExpression(dec.expression) &&
-                    ts.isIdentifier(dec.expression.expression) &&
-                    dec.expression.expression.text === 'Component'
-            );
-
-        if (!decorator || !ts.isCallExpression(decorator.expression)) return;
-
-        const [arg] = decorator.expression.arguments;
-
-        if (!arg || !ts.isObjectLiteralExpression(arg)) return;
-
-        for (const prop of arg.properties) {
-            if (
-                ts.isPropertyAssignment(prop) &&
-                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
-                prop.name.text === 'template' &&
-                ts.isStringLiteralLike(prop.initializer) &&
-                prop.initializer.text
-            ) {
-                // +1 / -1 to exclude the opening/closing quote characters.
-                ranges.push({ start: prop.initializer.getStart(sourceFile) + 1, end: prop.initializer.getEnd() - 1 });
-            }
-        }
-    });
-
-    return ranges;
 }
 
 /** Pass B (inline) — rewrite target ref reads and writes inside inline component templates. */
