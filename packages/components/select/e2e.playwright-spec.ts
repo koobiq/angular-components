@@ -722,6 +722,32 @@ test.describe('KbqSelectModule', () => {
             await expect(page.locator('.cdk-overlay-pane')).toHaveClass(/kbq-connected-overlay_overlap/);
         });
 
+        test('should keep the trigger height when the first tag is added and cleared', async ({ page }) => {
+            await openWithTriggerAt(page, 120);
+
+            const trigger = page.locator('.kbq-select__trigger');
+            const tags = trigger.locator('kbq-tag');
+            const firstOption = page.getByTestId('e2eOption-opt-0');
+
+            for (const value of optionValues) {
+                await page.getByTestId(`e2eOption-${value}`).click();
+            }
+
+            await expect(tags).toHaveCount(0);
+            const empty = await box(trigger);
+
+            await firstOption.click();
+            await expect(tags).toHaveCount(1);
+            const oneTag = await box(trigger);
+
+            await firstOption.click();
+            await expect(tags).toHaveCount(0);
+            const cleared = await box(trigger);
+
+            expect(oneTag.height).toBe(empty.height);
+            expect(cleared.height).toBe(empty.height);
+        });
+
         test('should hold the anchor when the page scrolls under the open panel', async ({ page }) => {
             await openWithTriggerAt(page, 120);
 
