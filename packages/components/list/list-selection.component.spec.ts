@@ -3494,20 +3494,23 @@ describe('KbqListSelection option action', () => {
         let dropdownTrigger: KbqDropdownTrigger;
         let tooltip: KbqTooltipTrigger;
 
-        const closeDropdownWithEscape = () => {
+        const closeDropdownWithEscape = async () => {
             dropdownTrigger.openedBy = 'keyboard';
             dropdownTrigger.open();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             dispatchKeyboardEvent(document.querySelector('.kbq-dropdown__panel')!, 'keydown', ESCAPE);
             fixture.detectChanges();
-            flush();
+            // Past the enter delay, so a tooltip the returning focus scheduled would be open by now.
+            await vi.advanceTimersByTimeAsync(1000);
             fixture.detectChanges();
         };
 
         beforeEach(() => {
-            TestBed.configureTestingModule({ imports: [SelectionListWithActionButtonTooltip, NoopAnimationsModule] });
+            vi.useFakeTimers();
+
+            TestBed.configureTestingModule({ imports: [SelectionListWithActionButtonTooltip] });
 
             fixture = TestBed.createComponent(SelectionListWithActionButtonTooltip);
             fixture.detectChanges();
@@ -3519,21 +3522,25 @@ describe('KbqListSelection option action', () => {
             tooltip = action.injector.get(KbqTooltipTrigger);
         });
 
-        it('should not show the tooltip when keyboard focus returns from the dropdown', fakeAsync(() => {
-            closeDropdownWithEscape();
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('should not show the tooltip when keyboard focus returns from the dropdown', async () => {
+            await closeDropdownWithEscape();
 
             expect(document.activeElement).toBe(actionElement);
             expect(document.querySelector('.kbq-tooltip__content')).toBeNull();
-        }));
+        });
 
-        it('should keep kbqTooltipDisabled after the dropdown closes', fakeAsync(() => {
+        it('should keep kbqTooltipDisabled after the dropdown closes', async () => {
             fixture.componentInstance.tooltipDisabled = true;
             fixture.detectChanges();
 
-            closeDropdownWithEscape();
+            await closeDropdownWithEscape();
 
             expect(tooltip.disabled).toBe(true);
-        }));
+        });
     });
 });
 

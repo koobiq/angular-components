@@ -1,6 +1,6 @@
 # timezone-grouping-utils
 
-Migration schematic invoked automatically by `ng update @koobiq/components@20`
+Migration schematic invoked automatically by `ng update @koobiq/components@21`
 (registered for `21.0.0-0`). Reports the timezone call sites that the review's split of
 `getZonesGroupedByCountry` breaks, and the members whose type or behavior changed under them. It never
 writes to the tree.

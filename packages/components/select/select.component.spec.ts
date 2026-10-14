@@ -5352,6 +5352,37 @@ describe('KbqSelect', () => {
             expect(select.classList).not.toContain('kbq-invalid');
         });
 
+        it('should colour the arrow when the error state changes outside the select', async () => {
+            const arrow = select.querySelector('.kbq-select__arrow')!;
+            const colorForState = vi.spyOn(testComponent.select(), 'colorForState', 'get');
+
+            // Skips the exhaustive check, which reads every binding: a pass that still does not render the trigger
+            // leaves nothing but the error state to repaint the arrow.
+            fixture.detectChanges(false);
+
+            expect(colorForState).not.toHaveBeenCalled();
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
+
+            testComponent.formControl.markAsTouched();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.Error}`);
+
+            testComponent.formControl.markAsUntouched();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
+        });
+
+        it('should report the error colour right after the error state is updated', () => {
+            testComponent.formControl.markAsTouched();
+            testComponent.select().updateErrorState();
+
+            expect(testComponent.select().colorForState).toBe(KbqComponentColors.Error);
+        });
+
         it('should appear as invalid when the parent form group is submitted', async () => {
             expect(select.classList).not.toContain('kbq-invalid');
 
@@ -5410,13 +5441,13 @@ describe('KbqSelect', () => {
             configureKbqSelectTestingModule([SelectWithLegacyValidate]);
         });
 
-        it('should colour the arrow by the control validity from the first render', fakeAsync(() => {
+        it('should colour the arrow by the control validity from the first render', async () => {
             const fixture = TestBed.createComponent(SelectWithLegacyValidate);
 
             // Attached to the application, so that the `afterNextRender` probing the host for the directive's
             // class runs, as it does outside tests.
             fixture.autoDetectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const arrow = fixture.debugElement.query(By.css('.kbq-select__arrow')).nativeElement;
 
@@ -5425,10 +5456,10 @@ describe('KbqSelect', () => {
 
             fixture.componentInstance.control.setValue('steak-0');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
-        }));
+        });
     });
 
     describe('with custom error behavior', () => {
@@ -6858,13 +6889,13 @@ describe('KbqSelect', () => {
             await vi.runOnlyPendingTimersAsync();
         });
 
-        it('should keep kbqTooltipDisabled over an option whose text is clipped', fakeAsync(() => {
+        it('should keep kbqTooltipDisabled over an option whose text is clipped', async () => {
             fixture.componentInstance.tooltipDisabled = true;
             fixture.detectChanges();
 
             trigger.click();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
             const directive = getDebugNode(options[1])!.injector.get(KbqOptionTooltip);
@@ -6873,15 +6904,12 @@ describe('KbqSelect', () => {
             window.dispatchEvent(new Event('resize'));
             dispatchMouseEvent(options[1], 'mouseenter');
             fixture.detectChanges();
-            tick(500);
+            await vi.advanceTimersByTimeAsync(500);
             fixture.detectChanges();
 
             expect(directive.disabled).toBe(true);
             expect(document.querySelectorAll('.kbq-tooltip__content').length).toBe(0);
-
-            discardPeriodicTasks();
-            flush();
-        }));
+        });
 
         /** Forces one line of a two-line option to clip, without overflowing `.kbq-option-text` itself. */
         function mockLineOverflow(option: HTMLElement, textOverflow = 'ellipsis'): void {
@@ -9744,7 +9772,7 @@ describe('KbqSelect', () => {
     });
 
     describe('colour of the tags', () => {
-        it('should follow the error state changed outside the select', fakeAsync(() => {
+        it('should follow the error state changed outside the select', async () => {
             configureKbqSelectTestingModule([MultiSelectWithDefaultTags]);
 
             const fixture = TestBed.createComponent(MultiSelectWithDefaultTags);
@@ -9752,24 +9780,24 @@ describe('KbqSelect', () => {
 
             control.setValue(['steak-0', 'pizza-1']);
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             const tags = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('kbq-tag'));
 
             control.setErrors({ required: true });
             control.markAsTouched();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(tags().length).toBe(2);
             tags().forEach((tag) => expect(tag.classList).toContain(`kbq-${KbqComponentColors.Error}`));
 
             control.markAsUntouched();
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             tags().forEach((tag) => expect(tag.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`));
-        }));
+        });
     });
 
     // The trigger renders every selected value and clips the overflow with `overflow: hidden`, so a tag

@@ -29,10 +29,10 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
     elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
 
-    private readonly labelContentQuery = contentChild<ElementRef>('labelContent');
+    private readonly labelContentQuery = contentChild<ElementRef<HTMLElement>>('labelContent');
 
     /** The element of the label content, measured to tell whether the label overflows. */
-    get labelContent(): ElementRef {
+    get labelContent(): ElementRef<HTMLElement> {
         return this.labelContentQuery()!;
     }
 
@@ -108,8 +108,9 @@ export class KbqTabLabelWrapper implements OnChanges, AfterViewInit {
     }
 
     getInnerText(): string {
-        // `innerText` is not implemented by jsdom, so anything asserting through it reads nothing.
-        return this.labelContent.nativeElement.textContent || '';
+        // `textContent` rather than `innerText`, which jsdom does not implement. Trimmed, because it keeps the
+        // whitespace the template puts around the label text.
+        return this.labelContent.nativeElement.textContent?.trim() || '';
     }
 
     private addClassModifierForIcons(icons: HTMLElement[]) {

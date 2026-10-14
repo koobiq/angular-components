@@ -198,6 +198,7 @@ export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedT
 // @public
 export abstract class KbqFileUploadBase {
     constructor();
+    protected readonly a11yNames: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected announce(...messages: string[]): void;
     protected readonly announcement: WritableSignal<string>;
     protected readonly cdr: ChangeDetectorRef;

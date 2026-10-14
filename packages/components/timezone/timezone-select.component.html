@@ -12,22 +12,25 @@
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
-    <div class="kbq-select__matcher">
-        @if (empty()) {
-            <span class="kbq-select__placeholder">
-                {{ placeholder() || '\u00A0' }}
-            </span>
-        } @else {
-            <span>
-                @if (!!customTrigger()) {
-                    <ng-content select="kbq-timezone-select-trigger" />
-                } @else {
-                    <div class="kbq-select__match-container">
-                        <span class="kbq-select__matcher-text">{{ triggerValue }}</span>
-                    </div>
-                }
-            </span>
-        }
+    @if (!!customMatcher()) {
+        <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
+    } @else {
+        <div class="kbq-select__matcher">
+            @if (empty()) {
+                <span class="kbq-select__placeholder">
+                    {{ placeholder() || '\u00A0' }}
+                </span>
+            } @else {
+                <span>
+                    @if (!!customTrigger()) {
+                        <ng-content select="kbq-timezone-select-trigger" />
+                    } @else {
+                        <div class="kbq-select__match-container">
+                            <span class="kbq-select__matcher-text">{{ triggerValue }}</span>
+                        </div>
+                    }
+                </span>
+            }
 
             @if (canShowCleaner) {
                 <div class="kbq-select__cleaner">
@@ -63,7 +66,6 @@
         #panel
         class="kbq-timezone-select__panel"
         cdkMonitorSubtreeFocus
-        [@.disabled]="animationsDisabled()"
         [class]="getPanelClasses()"
         [style.--kbq-select-panel-size-max-height]="panelMaxHeightToken()"
         [style.font-size.px]="triggerFontSize"

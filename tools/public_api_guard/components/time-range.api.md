@@ -216,21 +216,23 @@ export class KbqTimeRangeTitle {
 }
 
 // @public
-export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
-    protected readonly ariaLabelledby: _angular_core.Signal<string | null>;
+export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRangeRange>, DoCheck {
+    protected readonly ariaLabelledby: Signal<string | null>;
     readonly controlType = "select";
-    readonly disabled: _angular_core.Signal<boolean>;
-    readonly empty: _angular_core.Signal<boolean>;
-    readonly errorState: _angular_core.Signal<boolean>;
-    focus(_options?: FocusOptions): void;
-    readonly focused: _angular_core.Signal<boolean>;
-    readonly id: _angular_core.Signal<string>;
+    readonly disabled: Signal<boolean>;
+    readonly empty: Signal<boolean>;
+    readonly errorState: Signal<boolean>;
+    focus(options?: FocusOptions): void;
+    readonly focused: Signal<boolean>;
+    protected readonly focusedValue: _angular_core.WritableSignal<boolean>;
+    readonly id: Signal<string>;
     readonly isNativeLabelSupported = false;
     readonly ngControl: NgControl | null;
+    ngDoCheck(): void;
     onContainerClick(_event: MouseEvent): void;
-    readonly placeholder: _angular_core.Signal<string | undefined>;
-    readonly required: _angular_core.Signal<boolean>;
-    readonly value: _angular_core.Signal<any>;
+    readonly placeholder: Signal<string | undefined>;
+    readonly required: Signal<boolean>;
+    readonly value: Signal<KbqTimeRangeRange | null>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqTimeRangeTitleAsControl, "kbq-time-range-title-as-control", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)

@@ -15,6 +15,7 @@ import {
     KbqSearchExpandable,
     KbqSearchExpandableModule
 } from '@koobiq/components/search-expandable';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 
 // The modal's own animation timeout, which is internal to its entry point.
@@ -217,6 +218,19 @@ describe('KbqSearchExpandable', () => {
 
         it('should not show input when closed', () => {
             expect(debugElement.query(By.directive(KbqInput))).toBe(null);
+        });
+
+        it('should keep the tooltip of the button disabled when a disabled field collapses', () => {
+            fixture.componentInstance.openedState = true;
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            fixture.componentInstance.openedState = false;
+            fixture.detectChanges();
+
+            const tooltip = debugElement.query(By.directive(KbqTooltipTrigger)).injector.get(KbqTooltipTrigger);
+
+            expect(tooltip.disabled).toBe(true);
         });
     });
 

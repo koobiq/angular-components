@@ -162,10 +162,10 @@ export abstract class KbqPaginatedTabHeader
     /** Tracks which element has focus; used for keyboard navigation */
     get focusIndex(): number {
         // Before `ngAfterContentInit` builds the key manager the selection is where focus would land —
-        // `updateActiveItem(this._selectedIndex)` is the first thing that runs once it exists. Falling
+        // `updateActiveItem(this.selectedIndex)` is the first thing that runs once it exists. Falling
         // back to `0` instead would hand the roving `tabindex="0"` to the first tab on the very first
         // render of any group that does not open on it.
-        return this.keyManager ? this.keyManager.activeItemIndex! : this._selectedIndex;
+        return this.keyManager ? this.keyManager.activeItemIndex! : this.selectedIndex;
     }
 
     /** When the focus index is set, we must manually send focus to the correct label */
@@ -207,7 +207,15 @@ export abstract class KbqPaginatedTabHeader
      * A vertical header never paginates, so `vertical` forces this on without overwriting the value
      * the consumer set — turning `vertical` back off restores it.
      */
-    disablePagination: boolean = false;
+    get disablePagination(): boolean {
+        return this._disablePagination || this._vertical;
+    }
+
+    set disablePagination(value: boolean) {
+        this._disablePagination = value;
+    }
+
+    private _disablePagination = false;
 
     /** Whether the tabs should be displayed vertically. */
     set vertical(value: boolean) {
@@ -300,25 +308,14 @@ export abstract class KbqPaginatedTabHeader
      * Scrollbar mode for the tab strip. Only a vertical header scrolls in a direction the user is meant
      * to see, so a horizontal one asks for `hidden`: the native scrollbar stays suppressed and no custom
      * track is built for a strip that is paginated and dragged instead of scrolled by hand.
+     *
+     * Follows `vertical` itself: the `kbq-tab-group_vertical` class the stylesheet keys `overflow-y: auto`
+     * on is bound to the same value. The class of a nav bar is its own host binding, applied only after
+     * its content hooks, so reading the class from here would miss it on the first check.
      */
     protected get scrollbarMode(): KbqScrollbarMode {
-        return this.verticallyScrolled ? this.scrollbarOptions.mode : 'hidden';
+        return this.vertical ? this.scrollbarOptions.mode : 'hidden';
     }
-
-    /**
-     * Whether the strip is laid out as a vertical scrollport — read off the class rather than the
-     * `vertical` input, because that class is what the stylesheet keys `overflow-y: auto` on and
-     * `KbqVerticalTabsCssStyler` matches on attribute *presence*: `[vertical]="false"` still gets it.
-     * Deriving the mode from the input alone would let the two disagree and leave such a strip
-     * scrollable with no scrollbar of any kind.
-     */
-    private get verticallyScrolled(): boolean {
-        // Read once: `KbqVerticalTabsCssStyler` sets the class as a static host class, so the answer is
-        // fixed from creation, and this getter sits on a change-detection path.
-        return (this.verticallyScrolledState ??= !!this.elementRef.nativeElement.closest('.kbq-tab-group_vertical'));
-    }
-
-    private verticallyScrolledState?: boolean;
 
     constructor() {
         const nativeElement = this.elementRef.nativeElement;
@@ -356,7 +353,6 @@ export abstract class KbqPaginatedTabHeader
             if (selectedIndex !== undefined) this.selectedIndex = selectedIndex;
         }
 
-        // Before `vertical`, which turns pagination off.
         if (changes['disablePaginationInput']) {
             const disablePagination = this.disablePaginationInput();
 
@@ -531,7 +527,7 @@ export abstract class KbqPaginatedTabHeader
             // Deferred to after the render: the viewport builds its track from an effect, and effects
             // flush after this hook, so flashing here directly would push into a subject nothing is
             // listening to yet and the very first reveal — the one that matters — would be dropped.
-            if (gainedTabs && this.verticallyScrolled && this.platform.isBrowser) {
+            if (gainedTabs && this.vertical && this.platform.isBrowser) {
                 afterNextRender(() => this.scrollbarViewport.flashScrollIndicators(), {
                     injector: this.injector
                 });

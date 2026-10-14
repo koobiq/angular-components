@@ -98,8 +98,8 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     /** @docs-private */
     readonly beforeCenteringOutput = outputFromObservable(this.beforeCentering, { alias: 'beforeCentering' });
 
-    /** Event emitted before the centering of the tab begins. */
-    readonly afterLeavingCenter: EventEmitter<boolean> = new EventEmitter<boolean>();
+    /** Event emitted once the tab has finished moving away from the center. Carries no payload. */
+    readonly afterLeavingCenter: EventEmitter<void> = new EventEmitter<void>();
 
     /** @docs-private */
     readonly afterLeavingCenterOutput = outputFromObservable(this.afterLeavingCenter, { alias: 'afterLeavingCenter' });

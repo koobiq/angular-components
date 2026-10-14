@@ -20,6 +20,7 @@ import {
     KbqPanelWidth,
     KbqRepositionScrollStrategy,
     KbqSelectFooter,
+    KbqSelectMatcher,
     KbqSelectSearch,
     LEFT_ARROW,
     RIGHT_ARROW,
@@ -307,6 +308,29 @@ class TimezoneSelectWithFooter {
     `
 })
 class TimezoneSelectWithCustomTrigger {
+    readonly zones = groupedZones[0].zones;
+    selected = groupedZones[0].zones[0].id;
+}
+
+@Component({
+    selector: 'timezone-select-with-custom-matcher',
+    imports: [
+        KbqSelectMatcher,
+        KbqTimezoneModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select [(value)]="selected">
+                <kbq-select-matcher>Custom matcher</kbq-select-matcher>
+
+                @for (zone of zones; track zone) {
+                    <kbq-timezone-option [timezone]="zone" />
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `
+})
+class TimezoneSelectWithCustomMatcher {
     readonly zones = groupedZones[0].zones;
     selected = groupedZones[0].zones[0].id;
 }
@@ -625,7 +649,7 @@ describe('KbqTimezoneSelect', () => {
             expect(formControl.value).toBe(options[0].value);
         });
 
-        it('should select an option by typing the first letters of its city', fakeAsync(() => {
+        it('should select an option by typing the first letters of its city', async () => {
             const formControl = fixture.componentInstance.control;
             const options = fixture.componentInstance.options();
 
@@ -634,11 +658,10 @@ describe('KbqTimezoneSelect', () => {
                 dispatchKeyboardEvent(select, 'keydown', key.toUpperCase().charCodeAt(0), undefined, key);
             }
 
-            tick(200);
-            flush();
+            await vi.advanceTimersByTimeAsync(200);
 
             expect(formControl.value).toBe(options[2].value);
-        }));
+        });
 
         it.each([
             ['DOWN_ARROW', DOWN_ARROW],
@@ -724,6 +747,16 @@ describe('KbqTimezoneSelect', () => {
             fixture.detectChanges();
 
             expect(fixture.componentInstance.select().panelOpen).toBe(false);
+        });
+
+        it('should mark the overlay pane the way kbq-select does', async () => {
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('.cdk-overlay-pane')!.classList).toContain(
+                'kbq-select-overlay'
+            );
         });
 
         it('should be able to set extra classes on the panel', async () => {
@@ -874,6 +907,24 @@ describe('KbqTimezoneSelect', () => {
             const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
 
             expect(options[1].classList).not.toContain('kbq-selected');
+        });
+
+        it('should colour the arrow when the error state changes outside the select', async () => {
+            const { control } = fixture.componentInstance;
+            const arrow = trigger.querySelector('.kbq-select__arrow')!;
+
+            control.setErrors({ required: true });
+            control.markAsTouched();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.Error}`);
+
+            control.markAsUntouched();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
         });
     });
 
@@ -1112,6 +1163,31 @@ describe('KbqTimezoneSelect', () => {
 
             await vi.runOnlyPendingTimersAsync();
         });
+
+        it('should keep kbqTooltipDisabled over an option that wraps beyond the visible rows', async () => {
+            fixture.componentInstance.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            trigger.click();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const tooltipContentEl = fixture.componentInstance.options()[2].tooltipContent().nativeElement;
+            const optionEls = overlayContainerElement.querySelectorAll<HTMLElement>('kbq-timezone-option');
+            const directive = getDebugNode(optionEls[2])!.injector.get(KbqTimezoneOptionTooltip);
+
+            vi.spyOn(tooltipContentEl, 'getClientRects').mockReturnValue(
+                new Array(TOOLTIP_VISIBLE_ROWS_COUNT + 1).fill({}) as unknown as DOMRectList
+            );
+            window.dispatchEvent(new Event('resize'));
+            dispatchMouseEvent(optionEls[2], 'mouseenter');
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(500);
+            fixture.detectChanges();
+
+            expect(directive.disabled).toBe(true);
+            expect(document.querySelectorAll('.kbq-tooltip__content').length).toBe(0);
+        });
     });
 
     // `KbqTimezoneSelect` is exported standalone, so `imports: [KbqTimezoneSelect]` is a legitimate way to
@@ -1204,18 +1280,6 @@ describe('KbqTimezoneSelect', () => {
             expect(() => fixture.detectChanges()).toThrow(getKbqTimezoneSelectMultipleError().message);
         });
 
-        it('should reject a programmatic assignment', () => {
-            configureTestingModule([BasicTimezoneSelect]);
-
-            const fixture = TestBed.createComponent(BasicTimezoneSelect);
-
-            fixture.detectChanges();
-
-            expect(() => (fixture.componentInstance.select().multiple = true)).toThrow(
-                getKbqTimezoneSelectMultipleError().message
-            );
-        });
-
         it('should reject multiline, which turns on multiple selection as well', () => {
             configureTestingModule([MultilineTimezoneSelect]);
 
@@ -1253,25 +1317,40 @@ describe('KbqTimezoneSelect', () => {
     describe('custom trigger', () => {
         beforeEach(() => configureTestingModule([TimezoneSelectWithCustomTrigger]));
 
-        it('should replace the trigger value with the projected content', fakeAsync(() => {
+        it('should replace the trigger value with the projected content', async () => {
             const fixture = TestBed.createComponent(TimezoneSelectWithCustomTrigger);
 
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
             const matcher = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
 
             expect(matcher.textContent).toContain('Custom trigger');
             expect(fixture.debugElement.query(By.css('.kbq-select__matcher-text'))).toBeNull();
-        }));
+        });
+    });
+
+    describe('custom matcher', () => {
+        beforeEach(() => configureTestingModule([TimezoneSelectWithCustomMatcher]));
+
+        it('should replace the whole matcher with the projected one', () => {
+            const fixture = TestBed.createComponent(TimezoneSelectWithCustomMatcher);
+
+            fixture.detectChanges();
+
+            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
+            expect(trigger.querySelector('kbq-select-matcher').textContent).toBe('Custom matcher');
+            expect(trigger.querySelector('.kbq-select__matcher')).toBeNull();
+        });
     });
 
     describe('search placeholder', () => {
         function createWithLocaleService(placeholder?: string) {
             // `KBQ_LOCALE_SERVICE` has no factory, so nothing follows a locale until it is provided.
             TestBed.configureTestingModule({
-                imports: [TimezoneSelectWithLocaleSearch, NoopAnimationsModule],
+                imports: [TimezoneSelectWithLocaleSearch],
                 providers: [{ provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
             });
 
@@ -1292,33 +1371,33 @@ describe('KbqTimezoneSelect', () => {
         const getPlaceholder = () =>
             overlayContainerElement.querySelector('[kbqSelectSearch] input')!.getAttribute('placeholder');
 
-        it('should apply the placeholder of the active locale', fakeAsync(() => {
+        it('should apply the placeholder of the active locale', async () => {
             createWithLocaleService();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPlaceholder()).toBe(ruRULocaleData.timezone.searchPlaceholder);
-        }));
+        });
 
-        it('should follow a locale change instead of latching to the first one', fakeAsync(() => {
+        it('should follow a locale change instead of latching to the first one', async () => {
             const fixture = createWithLocaleService();
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPlaceholder()).toBe(enUSLocaleData.timezone.searchPlaceholder);
-        }));
+        });
 
-        it('should never overwrite a placeholder the consumer supplied', fakeAsync(() => {
+        it('should never overwrite a placeholder the consumer supplied', async () => {
             const fixture = createWithLocaleService('Consumer placeholder');
 
-            flush();
+            await vi.runOnlyPendingTimersAsync();
             TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
             fixture.detectChanges();
-            flush();
+            await vi.runOnlyPendingTimersAsync();
 
             expect(getPlaceholder()).toBe('Consumer placeholder');
-        }));
+        });
     });
 });

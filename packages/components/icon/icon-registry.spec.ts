@@ -1,4 +1,4 @@
-import { provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
@@ -144,18 +144,14 @@ describe('KbqIconRegistry', () => {
         // Symbol ids come from the consumer's sprite, so they are not guaranteed to be valid CSS
         // identifiers. Looking one up as `#${name}` made a leading digit a selector syntax error, and
         // the icon never resolved.
-        it('extracts a symbol whose id is not a valid CSS identifier', (done) => {
+        it('extracts a symbol whose id is not a valid CSS identifier', async () => {
             registry.addSvgIconSet(sanitizer.bypassSecurityTrustResourceUrl('/sprite.svg'));
 
-            registry.getNamedSvgIcon('3d-view_16').subscribe({
-                next: (svg) => {
-                    expect(svg).toBeInstanceOf(SVGElement);
-                    done();
-                },
-                error: (error: Error) => done.fail(error.message)
-            });
+            const icon = firstValueFrom(registry.getNamedSvgIcon('3d-view_16'));
 
             http.expectOne('/sprite.svg').flush(SPRITE_SVG);
+
+            expect(await icon).toBeInstanceOf(SVGElement);
         });
     });
 
@@ -248,24 +244,21 @@ describe('KbqIconRegistry', () => {
 
     // A synchronous throw escapes `getNamedSvgIcon` at the call site, where no `catchError` can reach it
     // and a subscriber's `error` callback never runs. Every failure of this class is an error
-    // notification instead, which is what lets `KbqIcon` fall back to the font class.
+    // notification instead, which is what lets `KbqIcon` fall back to the font class. `HttpClient` is
+    // provided in root, so only an explicit `null` takes it away.
     describe('without an HttpClient', () => {
-        it('reports a URL-backed icon through an error notification', (done) => {
+        it('reports a URL-backed icon through an error notification', async () => {
             TestBed.resetTestingModule();
+            TestBed.configureTestingModule({ providers: [{ provide: HttpClient, useValue: null }] });
 
             const bare = TestBed.inject(KbqIconRegistry);
 
             bare.addSvgIcon('remote_16', TestBed.inject(DomSanitizer).bypassSecurityTrustResourceUrl('/remote.svg'));
 
-            expect(() => {
-                bare.getNamedSvgIcon('remote_16').subscribe({
-                    next: () => done.fail('should not emit'),
-                    error: (error: Error) => {
-                        expect(error.message).toContain('HttpClient is required');
-                        done();
-                    }
-                });
-            }).not.toThrow();
+            let icon: Promise<SVGElement> | undefined;
+
+            expect(() => (icon = firstValueFrom(bare.getNamedSvgIcon('remote_16')))).not.toThrow();
+            await expect(icon).rejects.toThrow('HttpClient is required');
         });
     });
 });

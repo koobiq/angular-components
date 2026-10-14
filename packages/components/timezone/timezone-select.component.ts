@@ -104,22 +104,6 @@ export const kbqTimezoneLocaleConfigurationProvider = (
 export class KbqTimezoneSelect extends KbqSelect {
     readonly customTrigger = contentChild(KbqTimezoneSelectTrigger);
 
-    /**
-     * Not supported: the trigger renders a single value and the panel has no tag list or pseudo-checkboxes
-     * behind it, so a truthy value is rejected instead of half-rendered.
-     */
-    override get multiple(): boolean {
-        return super.multiple;
-    }
-
-    override set multiple(value: boolean) {
-        if (value) {
-            throw getKbqTimezoneSelectMultipleError();
-        }
-
-        super.multiple = value;
-    }
-
     /** Strings currently rendered by the select. */
     readonly timezoneLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(
         'timezone',
@@ -155,12 +139,13 @@ export class KbqTimezoneSelect extends KbqSelect {
     }
 
     /**
-     * Rejects `multiline`, which switches the select to multiple selection as surely as `multiple` does. It is
-     * a signal input, so no setter can intercept it; this is the last point before the selection model is
-     * built from it.
+     * Rejects `multiple` and `multiline`, which switches the select to multiple selection just the same: the
+     * trigger renders a single value and the panel has no tag list or pseudo-checkboxes behind it. This is the
+     * last point before the selection model is built from them, and `KbqSelect` refuses a later change of
+     * `multiple` on its own.
      */
     override ngOnInit(): void {
-        if (this.multiline()) {
+        if (this.multiple || this.multiline()) {
             throw getKbqTimezoneSelectMultipleError();
         }
 

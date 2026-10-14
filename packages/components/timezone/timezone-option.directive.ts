@@ -110,6 +110,6 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
 
         const count: number = this.option.tooltipContent().nativeElement.getClientRects().length;
 
-        this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;
+        this.setDerivedDisabled(count <= TOOLTIP_VISIBLE_ROWS_COUNT);
     };
 }

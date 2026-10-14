@@ -2112,6 +2112,25 @@ describe('KbqTooltip', () => {
             expect(component.enabledTooltip().disabled).toBe(false);
         });
 
+        it('should leave the decision to the wrapped control while [kbqTooltipDisabled] is undefined', () => {
+            expect(component.boundTooltip().disabled).toBe(true);
+
+            component.controlDisabled = true;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(false);
+
+            component.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(true);
+
+            component.tooltipDisabled = undefined;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(false);
+        });
+
         it('should hide an open tooltip once the wrapped control stops being disabled', async () => {
             vi.useFakeTimers();
 

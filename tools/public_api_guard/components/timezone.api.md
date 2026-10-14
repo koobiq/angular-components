@@ -66,9 +66,6 @@ export class KbqTimezoneModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTimezoneModule>;
-    // Warning: (ae-forgotten-export) The symbol "UtcOffsetPipe" needs to be exported by the entry point koobiq-components-timezone.d.ts
-    // Warning: (ae-forgotten-export) The symbol "CitiesByFilterPipe" needs to be exported by the entry point koobiq-components-timezone.d.ts
-    //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, never, [typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger], [typeof UtcOffsetPipe, typeof CitiesByFilterPipe, typeof KbqTimezoneSelect, typeof KbqTimezoneOption, typeof KbqTimezoneOptionTooltip, typeof KbqTimezoneSelectTrigger, typeof i6.KbqOptionModule, typeof i7.KbqFormFieldModule]>;
 }
@@ -79,14 +76,15 @@ export class KbqTimezoneOption extends KbqOption {
     getLabel(): string;
     // (undocumented)
     readonly highlightText: i0.InputSignal<string | readonly string[]>;
+    protected get resolvedOffset(): string;
     get timezone(): KbqTimezoneZone;
     readonly timezoneInput: i0.InputSignal<KbqTimezoneZone>;
     // (undocumented)
     readonly tooltipContent: i0.Signal<ElementRef<HTMLElement>>;
     // (undocumented)
     readonly tooltipContentWrapper: i0.Signal<ElementRef<HTMLElement>>;
+    get tooltipViewValue(): string;
     get value(): string;
-    // (undocumented)
     get viewValue(): string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneOption, "kbq-timezone-option", ["kbqTimezoneOption"], { "highlightText": { "alias": "highlightText"; "required": false; "isSignal": true; }; "foldDiacritics": { "alias": "foldDiacritics"; "required": false; "isSignal": true; }; "timezoneInput": { "alias": "timezone"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
@@ -124,8 +122,6 @@ export class KbqTimezoneSelect extends KbqSelect {
     constructor();
     // (undocumented)
     readonly customTrigger: i0.Signal<KbqTimezoneSelectTrigger | undefined>;
-    get multiple(): boolean;
-    set multiple(value: boolean);
     ngOnInit(): void;
     readonly timezoneLocaleConfiguration: i0.Signal<KbqTimezoneLocaleConfiguration>;
     // (undocumented)

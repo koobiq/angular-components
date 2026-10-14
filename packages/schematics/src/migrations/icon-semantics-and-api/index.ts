@@ -14,10 +14,10 @@ function referencesIcon(content: string): boolean {
 }
 
 /**
- * Reports the icon call sites the review reaches: the removed `KbqIcon.small`, the `KbqIcon` content
- * queries that start resolving icon buttons and items, the icon buttons that now activate themselves
- * from the keyboard, and the retyped `tabindex`. Never writes: whether an icon is decorative, what an
- * icon button is called and whether a widened query still wants every match are all decisions.
+ * Reports the icon call sites the review reaches: the removed `KbqIcon.small`, the icon buttons on a host
+ * that is not a native `<button>` that handle a click but no key, the retyped `tabindex` and the replaced
+ * `name` marker. Never writes: whether an icon is decorative and what an icon button is called are both
+ * decisions.
  */
 export default function iconSemanticsAndApi(options: Schema): Rule {
     return async (tree: Tree, context: SchematicContext) => {
