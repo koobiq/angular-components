@@ -3528,6 +3528,25 @@ describe('KbqSelect', () => {
                 expect(document.activeElement).toBe(getSelectElement(fixture));
             });
 
+            it('should focus the select on a click on the form field container while the panel is open', async () => {
+                trigger.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                const container: HTMLElement = getFormFieldDebugElement(fixture).query(
+                    By.css('.kbq-form-field__container')
+                ).nativeElement;
+
+                // A press on content that takes no focus, such as a prefix icon, moves it to the body; jsdom does not.
+                (document.activeElement as HTMLElement).blur();
+                container.click();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(fixture.componentInstance.select().panelOpen).toBe(false);
+                expect(document.activeElement).toBe(getSelectElement(fixture));
+            });
+
             it('should set the width of the overlay based on the trigger', async () => {
                 const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
 
@@ -3977,6 +3996,16 @@ describe('KbqSelect', () => {
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
 
                 expect(options[1].classList).toContain('kbq-selected');
+            });
+
+            it('should follow the value the form control writes', () => {
+                fixture.componentInstance.control.setValue('pizza-1');
+
+                expect(fixture.componentInstance.select().value()).toBe('pizza-1');
+
+                fixture.componentInstance.control.setValue(null);
+
+                expect(fixture.componentInstance.select().value()).toBeNull();
             });
 
             it('should update the form value when the view changes', async () => {
@@ -5688,6 +5717,28 @@ describe('KbqSelect', () => {
 
             expect(option.classList).toContain('kbq-selected');
             expect(fixture.componentInstance.select().value()).toBe('sandwich-2');
+        });
+
+        it('should select the options of a value set in code', async () => {
+            const fixture = TestBed.createComponent(BasicSelectWithoutForms);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            const select = fixture.componentInstance.select();
+
+            select.value.set('sandwich-2');
+            fixture.detectChanges();
+
+            expect(select.value()).toBe('sandwich-2');
+            expect(fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.textContent).toContain(
+                'Sandwich'
+            );
+
+            select.value.set(null);
+            fixture.detectChanges();
+
+            expect(select.empty()).toBe(true);
         });
 
         it('should reset the label when a null value is set', async () => {

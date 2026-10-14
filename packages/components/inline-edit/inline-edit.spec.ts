@@ -25,7 +25,7 @@ import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field'
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalService } from '@koobiq/components/modal';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -678,6 +678,32 @@ describe('KbqInlineEdit', () => {
             const formField = fixture.debugElement.query(By.directive(KbqFormField)).componentInstance as KbqFormField;
 
             expect(formField.getConnectedOverlayOrigin().nativeElement).not.toBe(inlineEditDebugElement.nativeElement);
+        });
+
+        it('should restore the selection of a select without a form control on cancel', async () => {
+            const fixture = setup(TestWithSelectWithoutForms);
+            const inlineEditDebugElement = getInlineEditDebugElement(fixture.debugElement);
+
+            inlineEditDebugElement.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const select: KbqSelect = fixture.debugElement.query(By.directive(KbqSelect)).componentInstance;
+
+            select.options.get(2)!.selectViaInteraction();
+            fixture.detectChanges();
+
+            expect(select.value()).toBe('Option #2');
+
+            const cancelButton = document
+                .querySelector(`${componentCssClasses.panel} ${componentCssClasses.terminalButtons}`)!
+                .querySelectorAll('button')[1] as HTMLButtonElement;
+
+            cancelButton.click();
+            await fixture.whenStable();
+
+            expect(select.value()).toBe('Option #0');
+            expect(select.triggerValue).toBe('Option #0');
         });
     });
 
@@ -2866,6 +2892,27 @@ export class TestWithSelectAutoCommit {
 export class TestWithMultiSelect {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
     readonly selected = model([this.options[0]]);
+}
+
+@Component({
+    selector: 'name',
+    imports: [KbqInlineEditModule, KbqOptionModule, KbqSelectModule],
+    template: `
+        <kbq-inline-edit [showActions]="true">
+            <div kbqInlineEditViewMode>{{ selected }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <kbq-select placeholder="Placeholder" [(value)]="selected">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithSelectWithoutForms {
+    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    selected = this.options[0];
 }
 
 @Component({

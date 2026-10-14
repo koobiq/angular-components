@@ -8,7 +8,7 @@ import {
     OverlayContainer,
     ScrollStrategy
 } from '@angular/cdk/overlay';
-import { Platform, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
+import { Platform, _getEventTarget, _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -856,13 +856,15 @@ export class KbqSelect
     /** @docs-private */
     readonly valueInput = input<any>(undefined, { alias: 'value' });
 
-    private readonly valueState = signal<any>(undefined);
-
     /**
-     * Value of the select control. Can be a single value or array of values for multiple selection. Set with
-     * `[value]` and by the user's selection.
+     * Value of the select control. Can be a single value or array of values for multiple selection. Follows
+     * `[value]`, the form control and the user's selection. A value set in code selects its options on the next
+     * change detection, without emitting `valueChange`.
      */
-    readonly value = this.valueState.asReadonly();
+    readonly value = linkedSignal(() => this.valueInput());
+
+    /** The value the selection was last made from or reported as. */
+    private selectionValue: any;
 
     /** @docs-private */
     readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
@@ -1224,14 +1226,13 @@ export class KbqSelect
             }
         });
 
-        // A bound value selects its options, as long as it differs from the one the select holds.
+        // A value bound or set in code selects its options, as long as it differs from the one the selection holds.
         effect(() => {
-            const value = this.valueInput();
+            const value = this.value();
 
             untracked(() => {
-                if (value !== this.valueState()) {
-                    this.writeValue(value);
-                    this.valueState.set(value);
+                if (value !== this.selectionValue) {
+                    this.applyValue(value);
                 }
             });
         });
@@ -1605,9 +1606,8 @@ export class KbqSelect
      * @param value New value to be written to the model.
      */
     writeValue(value: any): void {
-        if (this.contentReady) {
-            this.setSelectionByValue(value);
-        }
+        this.applyValue(value);
+        this.value.set(value);
     }
 
     /**
@@ -1765,12 +1765,15 @@ export class KbqSelect
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    onContainerClick() {
+    onContainerClick(event?: MouseEvent) {
         // The click that opened the panel reaches the form field after the select. With zone.js the panel has
-        // rendered and focused its active option by then, and the focus stays in the panel while it is open.
-        if (!this.panelOpen) {
-            this.focus();
-        }
+        // rendered and focused its active option by then, so the focus is left to the panel. Any other click on
+        // the field, such as one on a prefix that blurred the panel to the body, brings the focus back.
+        const target = event && _getEventTarget(event);
+
+        if (this.panelOpen && target instanceof Node && this.elementRef.nativeElement.contains(target)) return;
+
+        this.focus();
     }
 
     /**
@@ -2234,7 +2237,7 @@ export class KbqSelect
         // Defer setting the value in order to avoid the "Expression
         // has changed after it was checked" errors from Angular.
         Promise.resolve().then(() => {
-            this.setSelectionByValue(this.ngControl ? this.ngControl.value : this.valueState());
+            this.setSelectionByValue(this.ngControl ? this.ngControl.value : this.value());
         });
     }
 
@@ -2266,6 +2269,15 @@ export class KbqSelect
 
         if (selectAllOptionAppeared && this.panelOpen) {
             this.highlightCorrectOption();
+        }
+    }
+
+    /** Selects the options of `value` once the options are settled; until then `initializeSelection` does. */
+    private applyValue(value: any): void {
+        this.selectionValue = value;
+
+        if (this.contentReady) {
+            this.setSelectionByValue(value);
         }
     }
 
@@ -2514,7 +2526,8 @@ export class KbqSelect
             valueToEmit = this.selected ? (this.selected as KbqOption).value : fallbackValue;
         }
 
-        this.valueState.set(valueToEmit);
+        this.selectionValue = valueToEmit;
+        this.value.set(valueToEmit);
         this.valueChange.emit(valueToEmit);
         this.onChange(valueToEmit);
         this.selectionChange.emit(new KbqSelectChange(this, valueToEmit));
