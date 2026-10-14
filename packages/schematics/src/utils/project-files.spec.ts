@@ -1,20 +1,10 @@
-import { Path, virtualFs } from '@angular-devkit/core';
 import { HostTree } from '@angular-devkit/schematics';
 import { visitProjectFiles } from './project-files';
+import { listingTree } from './testing';
 
 /** A tree over an in-memory host that records every directory it lists. */
 function trackedTree(files: string[]): { tree: HostTree; listed: string[] } {
-    const host = new virtualFs.SimpleMemoryHost();
-    const listed: string[] = [];
-    const list = host.list.bind(host);
-
-    host.list = (path: Path) => {
-        listed.push(path);
-
-        return list(path);
-    };
-
-    const tree = new HostTree(host);
+    const { tree, listed } = listingTree();
 
     for (const file of files) tree.create(file, `// ${file}\n`);
 
