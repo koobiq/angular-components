@@ -55,7 +55,11 @@
 <div class="layout-row example-row layout-gap-l flex-100">
     <div class="layout-column example-column">
         @if (firstState) {
-            <kbq-alert animate.leave="example-alert_leave" (closed)="firstState = false">
+            <kbq-alert
+                animate.leave="example-alert_leave"
+                [class.kbq-animations-disabled]="animationsDisabled"
+                (closed)="firstState = false"
+            >
                 <i aria-hidden="true" kbq-icon-item="kbq-circle-info_16"></i>
                 The module is configured in the policy
                 <a href="https://koobiq.io" kbq-link>Hypervisors</a>
@@ -70,7 +74,12 @@
     </div>
     <div class="layout-column example-column">
         @if (secondState) {
-            <kbq-alert animate.leave="example-alert_leave" [compact]="true" (closed)="secondState = false">
+            <kbq-alert
+                animate.leave="example-alert_leave"
+                [class.kbq-animations-disabled]="animationsDisabled"
+                [compact]="true"
+                (closed)="secondState = false"
+            >
                 <i aria-hidden="true" kbq-icon="kbq-circle-info_16"></i>
                 The module is configured in the policy
                 <a href="https://koobiq.io" kbq-link>Hypervisors</a>
