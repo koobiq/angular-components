@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/common/tokens' as *;
 @use '../core/styles/common/vendor-prefixes';
 @use '../core/styles/common/input';
@@ -90,6 +91,8 @@
 
     &.cdk-drag-animating {
         transition: transform 300ms cubic-bezier(0, 0, 0.2, 1);
+
+        @include animation.kbq-animations-off();
     }
 }
 

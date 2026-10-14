@@ -4,7 +4,13 @@ import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_A
 import { Component, DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
+import {
+    dispatchKeyboardEvent,
+    KBQ_ANIMATIONS_CONFIG,
+    KBQ_STATE_STORE,
+    KbqStateSavingService,
+    KbqStateStore
+} from '@koobiq/components/core';
 import { axe } from 'jest-axe';
 import { EMPTY } from 'rxjs';
 import {
@@ -1432,6 +1438,27 @@ describe('KbqAccordion', () => {
 
             item.enableAnimation();
             expect(content.style.transition).toBe('height 300ms ease-out');
+        });
+
+        // The content and the trigger icon.
+        const getAnimated = (): HTMLElement[] => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+
+            return [
+                fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement,
+                fixture.nativeElement.querySelector('.kbq-accordion-trigger__icon')
+            ];
+        };
+
+        it('should expand and collapse with motion by default', () => {
+            getAnimated().forEach((element) => expect(element.classList).not.toContain('kbq-animations-disabled'));
+        });
+
+        it('should expand and collapse without motion when animations are disabled', () => {
+            TestBed.overrideProvider(KBQ_ANIMATIONS_CONFIG, { useValue: { animationsDisabled: true } });
+
+            getAnimated().forEach((element) => expect(element.classList).toContain('kbq-animations-disabled'));
         });
     });
 

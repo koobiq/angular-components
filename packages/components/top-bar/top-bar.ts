@@ -6,7 +6,7 @@ import {
     input,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqOverlayLayerExclude } from '@koobiq/components/core';
+import { kbqAnimationsDisabled, KbqOverlayLayerExclude } from '@koobiq/components/core';
 
 /**
  * Separator between the two `[kbqTopBarContainer]` slots of a `kbq-top-bar`. It reserves
@@ -59,6 +59,7 @@ export class KbqTopBarContainer {
     host: {
         class: 'kbq-top-bar',
         '[class.kbq-top-bar_with-shadow]': 'withShadow()',
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
         // `|| null` also strips an empty string: `setElementAttribute` only removes the attribute for
         // `== null`, so `aria-label=""` would otherwise render as an empty attribute, which nulls the
         // banner landmark's accessible name per the accname algorithm.
@@ -78,4 +79,10 @@ export class KbqTopBar {
      * bar, so assistive technology can tell them apart.
      */
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
+
+    /**
+     * Whether the shadow appears without fading in.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 }

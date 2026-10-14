@@ -35,7 +35,7 @@ import {
     type Provider
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, kbqInjectNativeElement } from '@koobiq/components/core';
+import { KBQ_WINDOW, kbqAnimationsDisabled, kbqInjectNativeElement } from '@koobiq/components/core';
 import {
     asyncScheduler,
     audit,
@@ -802,9 +802,15 @@ class KbqScrollbarThumb {
                 animate.leave="kbq-scrollbar-track__bar_leave"
                 class="kbq-scrollbar-track__bar kbq-scrollbar-track__bar_vertical"
                 [class.kbq-scrollbar-track__bar_has-horizontal]="visibility()[1]"
+                [class.kbq-animations-disabled]="animationsDisabled"
                 (mousedown)="onBarPointerDown($event)"
             >
-                <div kbqScrollbarThumb orientation="vertical" class="kbq-scrollbar-track__thumb"></div>
+                <div
+                    kbqScrollbarThumb
+                    orientation="vertical"
+                    class="kbq-scrollbar-track__thumb"
+                    [class.kbq-animations-disabled]="animationsDisabled"
+                ></div>
             </div>
         }
         @if (visibility()[1]) {
@@ -813,9 +819,15 @@ class KbqScrollbarThumb {
                 animate.leave="kbq-scrollbar-track__bar_leave"
                 class="kbq-scrollbar-track__bar kbq-scrollbar-track__bar_horizontal"
                 [class.kbq-scrollbar-track__bar_has-vertical]="visibility()[0]"
+                [class.kbq-animations-disabled]="animationsDisabled"
                 (mousedown)="onBarPointerDown($event)"
             >
-                <div kbqScrollbarThumb orientation="horizontal" class="kbq-scrollbar-track__thumb"></div>
+                <div
+                    kbqScrollbarThumb
+                    orientation="horizontal"
+                    class="kbq-scrollbar-track__thumb"
+                    [class.kbq-animations-disabled]="animationsDisabled"
+                ></div>
             </div>
         }
     `,
@@ -826,7 +838,8 @@ class KbqScrollbarThumb {
     host: {
         class: 'kbq-scrollbar-track',
         '[class.kbq-scrollbar-track_hover]': "mode() === 'hover'",
-        '[class.kbq-scrollbar-track_revealed]': 'revealed()'
+        '[class.kbq-scrollbar-track_revealed]': 'revealed()',
+        '[class.kbq-animations-disabled]': 'animationsDisabled'
     }
 })
 class KbqScrollbarTrack {
@@ -865,6 +878,9 @@ class KbqScrollbarTrack {
         ),
         { requireSync: true }
     );
+
+    /** Whether the bars, the thumbs and the hover-mode track appear and change color without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     readonly mode = input.required<KbqScrollbarMode>();
 

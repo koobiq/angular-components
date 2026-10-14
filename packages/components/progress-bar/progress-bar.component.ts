@@ -102,8 +102,8 @@ export class KbqProgressBar extends KbqColorDirective {
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
     /**
-     * Whether the fill follows a new value without a transition. The indeterminate fill is an activity indicator, like
-     * the spinner, and keeps moving.
+     * Whether the fill follows a new value without a transition, and the indeterminate fill pulses in place instead
+     * of sliding, as under reduced motion.
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();

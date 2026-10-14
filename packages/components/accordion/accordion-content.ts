@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { kbqAnimationsDisabled } from '@koobiq/components/core';
 import { KbqAccordionContentDirective } from './accordion-content.directive';
 
 @Component({
@@ -9,8 +10,15 @@ import { KbqAccordionContentDirective } from './accordion-content.directive';
     template: '<div class="kbq-accordion-content__body"><ng-content /></div>',
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        class: 'kbq-accordion-content'
+        class: 'kbq-accordion-content',
+        '[class.kbq-animations-disabled]': 'animationsDisabled'
     },
     hostDirectives: [KbqAccordionContentDirective]
 })
-export class KbqAccordionContent {}
+export class KbqAccordionContent {
+    /**
+     * Whether the content expands and collapses without motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+}

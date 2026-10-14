@@ -1,3 +1,5 @@
+@use '../core/styles/common/animation';
+
 .kbq-accordion-trigger {
     display: flex;
     flex-direction: row;
@@ -12,9 +14,7 @@
 
         transition: transform 300ms ease-out;
 
-        @media (prefers-reduced-motion: reduce) {
-            transition: none;
-        }
+        @include animation.kbq-animations-off();
     }
 
     & .kbq-accordion-trigger__badge,

@@ -72,9 +72,7 @@
     // the item's own border uncovered. Flush the shimmer to the item's outer edge instead.
     inset: calc(-1 * var(--kbq-size-3xs));
 
-    @media (prefers-reduced-motion: reduce) {
-        animation: none;
-    }
+    @include animation.kbq-animations-off();
 }
 
 .kbq-dropdown__group-header {
