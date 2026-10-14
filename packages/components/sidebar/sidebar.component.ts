@@ -220,8 +220,10 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     constructor() {
         afterNextRender(() => this.registerKeydownListener());
 
-        // The state lives under the new key now, so restore from it.
-        this.stateSaving.keyChanges.subscribe(() => this.restoreState());
+        // The state lives under the new key now, so restore from it and report it as any other change.
+        this.stateSaving.keyChanges.subscribe(() => {
+            if (this.restoreState()) this.waitForStateAnimation();
+        });
     }
 
     ngAfterContentInit(): void {
@@ -246,13 +248,18 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         this.waitForStateAnimation();
     }
 
-    /** Reads the persisted state and applies it. Runs while initializing, and again on a key change. */
-    private restoreState(): void {
-        if (!this.persists) return;
+    /**
+     * Reads the persisted state and applies it. Runs while initializing, and again on a key change.
+     * Returns whether it changed the opened state.
+     */
+    private restoreState(): boolean {
+        if (!this.persists) return false;
 
         const savedState = this.stateSaving.read(normalizeSidebarState);
 
-        if (!savedState) return;
+        if (!savedState) return false;
+
+        const changed = savedState.opened !== this.openedState();
 
         this.stateSaving.applying(() => {
             // Past the setter on purpose: it captures the current `offsetWidth` on the way out, which
@@ -266,6 +273,8 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
                 this.params = { ...this.params, openedStateWidth: savedState.width };
             }
         });
+
+        return changed;
     }
 
     ngOnDestroy(): void {
