@@ -838,6 +838,44 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(item.loading!.observed).toBe(false);
             expect(item.progress!.observed).toBe(false);
         });
+
+        it('should keep the subscriptions of the items that stay listed', () => {
+            const kept = createLoadingItem('kept.txt');
+            const subscribe = vi.spyOn(kept.loading!, 'subscribe');
+
+            fixture.componentInstance.control.setValue([kept]);
+            fixture.detectChanges();
+            fixture.componentInstance.control.setValue([kept, createLoadingItem('added.txt')]);
+            fixture.detectChanges();
+
+            expect(subscribe).toHaveBeenCalledTimes(1);
+        });
+
+        it('should follow the subjects that replace those of a listed item', () => {
+            const item = createLoadingItem();
+            const replaced = item.loading!;
+
+            fixture.componentInstance.control.setValue([item]);
+            fixture.detectChanges();
+
+            item.loading = new BehaviorSubject<boolean>(true);
+            fixture.componentInstance.control.setValue([item]);
+            fixture.detectChanges();
+
+            expect(replaced.observed).toBe(false);
+            expect(getSpinners()).toHaveLength(1);
+        });
+
+        it('should stop following the subjects once destroyed', () => {
+            const item = createLoadingItem();
+
+            fixture.componentInstance.control.setValue([item]);
+            fixture.detectChanges();
+            fixture.destroy();
+
+            expect(item.loading!.observed).toBe(false);
+            expect(item.progress!.observed).toBe(false);
+        });
     });
 
     describe('with async validation', () => {

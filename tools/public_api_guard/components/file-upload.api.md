@@ -47,6 +47,7 @@ import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
 export const KBQ_DROPZONE_DATA: InjectionToken<Partial<{
@@ -198,7 +199,7 @@ export type KbqFileUploadAllowedTypeValues = KbqEnumValues<KbqFileUploadAllowedT
 export abstract class KbqFileUploadBase {
     constructor();
     protected announce(...messages: string[]): void;
-    protected readonly announcement: _angular_core.WritableSignal<string>;
+    protected readonly announcement: WritableSignal<string>;
     protected readonly cdr: ChangeDetectorRef;
     protected readonly defaultErrorStateMatcher: ErrorStateMatcher;
     protected readonly destroyRef: DestroyRef;

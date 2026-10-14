@@ -1,4 +1,14 @@
-import { ChangeDetectorRef, DestroyRef, effect, ElementRef, inject, Renderer2, Signal, signal } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    DestroyRef,
+    effect,
+    ElementRef,
+    inject,
+    Renderer2,
+    Signal,
+    signal,
+    WritableSignal
+} from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     ErrorStateMatcher,
@@ -7,7 +17,7 @@ import {
     kbqInjectA11yLocaleConfiguration,
     KbqLocaleOverridesDirective
 } from '@koobiq/components/core';
-import { BehaviorSubject, combineLatest, of, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, of, Subject, Subscription } from 'rxjs';
 import { KbqFullScreenDropzoneService } from './dropzone';
 import { KBQ_FILE_UPLOAD_LOCALE_CONFIGURATION } from './file-upload.tokens';
 import { KbqFileList, KbqFileUploadContext } from './primitives';
@@ -26,6 +36,12 @@ export interface KbqFileItem {
 
 /** What the `loading` and `progress` subjects of a file item last emitted. */
 type KbqFileItemStatus = { loading: boolean; progress: number };
+
+/** The subscription to the subjects of a listed item, kept while the item stays listed. */
+type KbqFileItemTracker = Pick<KbqFileItem, 'loading' | 'progress'> & {
+    status: WritableSignal<KbqFileItemStatus>;
+    subscription: Subscription;
+};
 
 /** Upload modes enum. */
 export enum KbqFileUploadAllowedType {
@@ -110,34 +126,49 @@ export abstract class KbqFileUploadBase {
     /** Text of the live region that announces changes of the file list. @docs-private */
     protected readonly announcement = signal('');
 
-    private readonly itemStatuses = signal<ReadonlyMap<KbqFileItem, KbqFileItemStatus>>(new Map());
+    /** Replaced once per list change; an emission sets only the status signal of its item. */
+    private readonly itemStatuses = signal<ReadonlyMap<KbqFileItem, KbqFileItemTracker>>(new Map());
 
     constructor() {
+        const trackers = new Map<KbqFileItem, KbqFileItemTracker>();
+
         // The items belong to the application, which drives their subjects: the view renders what they emit.
-        effect((onCleanup) => {
-            const statuses = new Map<KbqFileItem, KbqFileItemStatus>();
-            const subscriptions = this.fileList.list().map((item) =>
-                combineLatest([item.loading ?? of(false), item.progress ?? of(0)]).subscribe(([loading, progress]) => {
-                    statuses.set(item, { loading, progress });
-                    this.itemStatuses.set(new Map(statuses));
-                })
-            );
+        effect(() => {
+            const items = new Set(this.fileList.list());
 
-            // Even when nothing emitted, as for an emptied list: the statuses of removed items must go.
-            this.itemStatuses.set(new Map(statuses));
+            for (const [item, tracker] of trackers) {
+                // An item whose subjects were replaced is followed anew.
+                if (!items.has(item) || tracker.loading !== item.loading || tracker.progress !== item.progress) {
+                    tracker.subscription.unsubscribe();
+                    trackers.delete(item);
+                }
+            }
 
-            onCleanup(() => subscriptions.forEach((subscription) => subscription.unsubscribe()));
+            for (const item of items) {
+                if (trackers.has(item)) continue;
+
+                const status = signal<KbqFileItemStatus>({ loading: false, progress: 0 });
+                const subscription = combineLatest([item.loading ?? of(false), item.progress ?? of(0)]).subscribe(
+                    ([loading, progress]) => status.set({ loading, progress })
+                );
+
+                trackers.set(item, { loading: item.loading, progress: item.progress, status, subscription });
+            }
+
+            this.itemStatuses.set(new Map(trackers));
         });
+
+        this.destroyRef.onDestroy(() => trackers.forEach(({ subscription }) => subscription.unsubscribe()));
     }
 
     /** Whether the item's `loading` subject last emitted `true`. @docs-private */
     protected isLoading(item: KbqFileItem): boolean {
-        return !!this.itemStatuses().get(item)?.loading;
+        return !!this.itemStatuses().get(item)?.status().loading;
     }
 
     /** What the item's `progress` subject last emitted, `0` until it does. @docs-private */
     protected uploadProgress(item: KbqFileItem): number {
-        return this.itemStatuses().get(item)?.progress || 0;
+        return this.itemStatuses().get(item)?.status().progress || 0;
     }
 
     /** @docs-private */
