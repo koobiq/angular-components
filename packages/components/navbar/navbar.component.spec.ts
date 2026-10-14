@@ -11,6 +11,7 @@ import {
     DOWN_ARROW,
     ENTER,
     enUSLocaleData,
+    KBQ_ANIMATIONS_CONFIG,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
     KbqOverlayLayer,
@@ -118,6 +119,7 @@ describe('KbqNavbar', () => {
                 TestTitleApp,
                 TestVerticalApp,
                 TestVerticalItemTitleApp,
+                TestVerticalBentoApp,
                 TestBrandApp,
                 TestBrandLongTitleApp,
                 TestBrandHorizontalApp,
@@ -1721,6 +1723,28 @@ describe('KbqNavbar', () => {
 
             expect(navbar.localeConfiguration()).toEqual(localeService.getParams('navbar'));
         });
+
+        describe('bento title', () => {
+            const getBentoTitle = async (): Promise<HTMLElement> => {
+                const fixture = TestBed.createComponent(TestVerticalBentoApp);
+
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                return fixture.nativeElement.querySelector('.kbq-navbar-bento .kbq-navbar-item__title');
+            };
+
+            it('should slide in by default', async () => {
+                expect((await getBentoTitle()).classList).not.toContain('kbq-animations-disabled');
+            });
+
+            it('should appear without motion when animations are disabled', async () => {
+                TestBed.overrideProvider(KBQ_ANIMATIONS_CONFIG, { useValue: { animationsDisabled: true } });
+
+                expect((await getBentoTitle()).classList).toContain('kbq-animations-disabled');
+            });
+        });
     });
 
     describe('KbqNavbarToggle', () => {
@@ -2624,6 +2648,23 @@ class TestVerticalItemTitleApp {
     titleText = 'User Management and Access Control';
     expanded = false;
 }
+
+@Component({
+    selector: 'test-vertical-bento-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-vertical-navbar [expanded]="true">
+            <kbq-navbar-container>
+                <kbq-navbar-item bento>
+                    <i kbq-icon="kbq-bento-menu_16"></i>
+                    <kbq-navbar-title>Services</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+    `
+})
+class TestVerticalBentoApp {}
 
 @Component({
     selector: 'test-two-vertical-navbars-app',

@@ -1,7 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { KbqOverlayLayer } from '@koobiq/components/core';
+import { KBQ_ANIMATIONS_CONFIG, KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { axe } from 'jest-axe';
 import { KbqTopBar, KbqTopBarContainer, KbqTopBarSpacer } from './top-bar';
@@ -58,6 +58,23 @@ describe(KbqTopBar.name, () => {
         const fixture = createFixture(BareAttributeTestApp);
 
         expect(getTopBar(fixture).classList.contains('kbq-top-bar_with-shadow')).toBeTruthy();
+    });
+
+    describe('motion', () => {
+        it('should fade the shadow in by default', () => {
+            expect(getTopBar(createFixture(BareAttributeTestApp)).classList).not.toContain('kbq-animations-disabled');
+        });
+
+        it('should show the shadow without fading in when animations are disabled', () => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+            });
+
+            const topBarElement = getTopBar(createFixture(BareAttributeTestApp));
+
+            expect(topBarElement.classList).toContain('kbq-top-bar_with-shadow');
+            expect(topBarElement.classList).toContain('kbq-animations-disabled');
+        });
     });
 
     describe('aria-label', () => {

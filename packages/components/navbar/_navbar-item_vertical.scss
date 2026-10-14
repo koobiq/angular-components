@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/common/tokens' as *;
 
 .kbq-navbar-item.kbq-vertical {
@@ -70,6 +71,8 @@
             transition:
                 opacity 150ms ease-out,
                 margin-left 150ms ease-out;
+
+            @include animation.kbq-animations-off();
         }
 
         &.kbq-navbar-bento:hover,

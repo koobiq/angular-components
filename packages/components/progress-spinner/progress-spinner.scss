@@ -1,3 +1,4 @@
+@use '../core/styles/common/animation';
 @use '../core/styles/functions/timing';
 
 @use '../core/styles/common/tokens' as *;
@@ -23,6 +24,8 @@
     stroke-width: 13%;
     transition: stroke-dashoffset 0.3s;
     transform-origin: center center;
+
+    @include animation.kbq-animations-off();
 }
 
 .kbq-progress-spinner__inner {
@@ -65,9 +68,7 @@
 .kbq-progress-spinner_indeterminate .kbq-progress-spinner__inner {
     animation: kbq-progress-spinner-indeterminate 1.5s timing.$ease-in-out-quad infinite;
 
-    @media (prefers-reduced-motion: reduce) {
-        animation: none;
-    }
+    @include animation.kbq-animations-off();
 
     // TODO: rework this place
     .kbq-progress-spinner__circle {

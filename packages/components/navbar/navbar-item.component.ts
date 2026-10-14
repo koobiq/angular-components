@@ -33,6 +33,7 @@ import {
     ENTER,
     IFocusableOption,
     KBQ_WINDOW,
+    kbqAnimationsDisabled,
     kbqInjectNativeElement,
     PopUpPlacements,
     PopUpTriggers,
@@ -596,6 +597,12 @@ export class KbqNavbarItem implements AfterContentInit {
     protected readonly showHorizontalDropDownAngle: Signal<boolean> = computed(
         () => this.hasDropDownTrigger && this.rectangleElement.isHorizontal() && !this.isCollapsed()
     );
+
+    /**
+     * Whether the title of a vertical bento item slides in without motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** @docs-private */
     get hasCroppedText(): boolean {

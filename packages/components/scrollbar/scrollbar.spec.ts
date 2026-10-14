@@ -8,6 +8,7 @@ import {
     createMouseEvent,
     dispatchFakeEvent,
     dispatchMouseEvent,
+    KBQ_ANIMATIONS_CONFIG,
     KbqOverflowShadowContainer
 } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
@@ -668,6 +669,47 @@ describe(KbqScrollbar.name, () => {
             const fixture = createComponent(TestScrollbarTrackVisibility);
 
             expect(getViewportEl(fixture).firstChild).toBe(fixture.nativeElement.querySelector('kbq-scrollbar-track'));
+        });
+
+        describe('motion', () => {
+            // The track, both bars and both thumbs.
+            const getAnimated = async (
+                fixture: ComponentFixture<TestScrollbarTrackVisibility>
+            ): Promise<HTMLElement[]> => {
+                setMetrics(getViewportEl(fixture), {
+                    clientHeight: 100,
+                    scrollHeight: 500,
+                    clientWidth: 100,
+                    scrollWidth: 500
+                });
+
+                await tickFrame();
+                fixture.detectChanges();
+
+                return Array.from(
+                    fixture.nativeElement.querySelectorAll(
+                        'kbq-scrollbar-track, .kbq-scrollbar-track__bar, .kbq-scrollbar-track__thumb'
+                    )
+                );
+            };
+
+            it('animates the track by default', async () => {
+                const animated = await getAnimated(createComponent(TestScrollbarTrackVisibility));
+
+                expect(animated.length).toBe(5);
+                animated.forEach((element) => expect(element.classList).not.toContain('kbq-animations-disabled'));
+            });
+
+            it('shows the bars and the thumbs without motion when animations are disabled', async () => {
+                const animated = await getAnimated(
+                    createComponent(TestScrollbarTrackVisibility, [
+                        { provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }
+                    ])
+                );
+
+                expect(animated.length).toBe(5);
+                animated.forEach((element) => expect(element.classList).toContain('kbq-animations-disabled'));
+            });
         });
     });
 

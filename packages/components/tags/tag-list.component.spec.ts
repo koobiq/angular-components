@@ -40,6 +40,7 @@ import {
     ENTER,
     FocusKeyManager,
     HOME,
+    KBQ_ANIMATIONS_CONFIG,
     LEFT_ARROW,
     RIGHT_ARROW,
     SPACE,
@@ -2035,6 +2036,24 @@ describe(KbqTagList.name, () => {
         // says, so a tag constructed while the list was not draggable used to look draggable and not move.
         expect(getTagElements(debugElement).every((tag) => tag.classList.contains('kbq-tag_draggable'))).toBe(true);
         expect(drags().every((drag) => !drag.disabled)).toBe(true);
+    });
+
+    it('should move the tags into place with a transition by default', () => {
+        const { debugElement } = createStandaloneComponent(TestTagList);
+
+        expect(getTagElements(debugElement).some((tag) => tag.classList.contains('kbq-animations-disabled'))).toBe(
+            false
+        );
+    });
+
+    it('should move the tags into place without a transition when animations are disabled', () => {
+        const { debugElement } = createStandaloneComponent(TestTagList, [
+            { provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }
+        ]);
+        const tags = getTagElements(debugElement);
+
+        expect(tags.length).toBe(3);
+        expect(tags.every((tag) => tag.classList.contains('kbq-animations-disabled'))).toBe(true);
     });
 
     it("should let an unbound tag follow the list's editable, while a bound one keeps its own", () => {

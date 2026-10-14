@@ -229,7 +229,7 @@ describe('KbqProgressBar', () => {
             expect(lineOf(first()).classList).toContain('kbq-animations-disabled');
         });
 
-        it('should keep the indeterminate fill moving when animations are disabled', () => {
+        it('should pulse the indeterminate fill in place when animations are disabled', () => {
             TestBed.overrideProvider(KBQ_ANIMATIONS_CONFIG, { useValue: { animationsDisabled: true } });
 
             const indeterminate = TestBed.createComponent(IndeterminateApp);
@@ -239,7 +239,7 @@ describe('KbqProgressBar', () => {
             const line = indeterminate.nativeElement.querySelector('.kbq-progress-bar__line');
 
             expect(line.classList).toContain('kbq-progress-bar__line_indeterminate');
-            expect(line.classList).not.toContain('kbq-animations-disabled');
+            expect(line.classList).toContain('kbq-animations-disabled');
         });
     });
 

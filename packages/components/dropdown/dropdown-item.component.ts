@@ -19,6 +19,7 @@ import {
     Highlightable,
     IFocusableOption,
     KBQ_TITLE_TEXT_REF,
+    kbqAnimationsDisabled,
     KbqComponentColors,
     KbqTitleTextRef
 } from '@koobiq/components/core';
@@ -124,6 +125,12 @@ export class KbqDropdownItem
 
     /** @docs-private */
     protected readonly componentColors = KbqComponentColors;
+
+    /**
+     * Whether the progress shimmer stands still.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Memoised `getLabel()` result, keyed on the raw text it was derived from. */
     private cachedLabel?: { text: string; label: string };

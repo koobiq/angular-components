@@ -35,6 +35,7 @@ import {
     IFocusableOption,
     isNull,
     KBQ_TITLE_TEXT_REF,
+    kbqAnimationsDisabled,
     KbqColorDirective,
     KbqComponentColors,
     KbqFieldSizingContent,
@@ -239,6 +240,7 @@ export class KbqTagEditInput {
         '[class.kbq-tag_removable]': 'removable()',
         '[class.kbq-tag_selectable]': 'selectable()',
         '[class.kbq-tag_draggable]': 'draggable',
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
         '(dblclick)': 'handleDblClick($event)',
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
@@ -452,6 +454,12 @@ export class KbqTag
     protected get draggable(): boolean {
         return (this.tagList?.draggable ?? false) && !this.disabled;
     }
+
+    /**
+     * Whether the tag moves into place without motion while the list is reordered.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** @docs-private */
     readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });

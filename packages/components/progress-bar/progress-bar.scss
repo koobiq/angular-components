@@ -72,6 +72,11 @@
 
         animation: kbq-progress-bar-indeterminate 2.1s timing.$ease-in-out-quad infinite;
 
+        // Without motion the fill still has to read as running, so it pulses in place instead of sliding.
+        &.kbq-animations-disabled {
+            animation: kbq-progress-bar-indeterminate-pulse 2s ease-in-out infinite;
+        }
+
         @media (prefers-reduced-motion: reduce) {
             animation: kbq-progress-bar-indeterminate-pulse 2s ease-in-out infinite;
         }
