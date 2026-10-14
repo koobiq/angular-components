@@ -324,15 +324,16 @@ Details:
 
 **Core** exports numeric key constants: `ENTER`, `ESCAPE`, `TAB`, `UP_ARROW`, `HOME`, `NUMPAD_ZERO`, and others.
 
-| Predicate                                    | What it checks                                                                   |
-| -------------------------------------------- | -------------------------------------------------------------------------------- |
-| `hasModifierKey(event, ...modifiers)`        | At least one of the listed modifiers is pressed; with no arguments, any modifier |
-| `isControl(event)`                           | Whether a modifier key is pressed: `Shift`, `Ctrl`, `Alt`, or `Cmd`              |
-| `isLetterKey`, `isNumberKey`                 | A letter or a digit from the main keyboard row                                   |
-| `isNumpadKey`, `isFunctionKey`               | A numpad digit or a function key from `F1` to `F12`                              |
-| `isVerticalMovement`, `isHorizontalMovement` | Vertical or horizontal movement                                                  |
-| `isSelectAll(event)`, `isCopy(event)`        | The "select all" and "copy" shortcuts, including macOS behavior                  |
-| `isInput(event)`                             | Whether the event came from an `input` or `textarea`                             |
+| Predicate                                    | What it checks                                                                       |
+| -------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `hasModifierKey(event, ...modifiers)`        | At least one of the listed modifiers is pressed; with no arguments, any modifier     |
+| `isControl(event)`                           | Whether a modifier key is pressed: `Shift`, `Ctrl`, `Alt`, or `Cmd`                  |
+| `isLetterKey`, `isNumberKey`                 | A letter or a digit from the main keyboard row                                       |
+| `isDigit`                                    | A digit from the main keyboard row. Deprecated, removed in 22.0.0: use `isNumberKey` |
+| `isNumpadKey`, `isFunctionKey`               | A numpad digit or a function key from `F1` to `F12`                                  |
+| `isVerticalMovement`, `isHorizontalMovement` | Vertical or horizontal movement                                                      |
+| `isSelectAll(event)`, `isCopy(event)`        | The "select all" and "copy" shortcuts, including macOS behavior                      |
+| `isInput(event)`                             | Whether the event came from an `input` or `textarea`                                 |
 
 #### List navigation
 
@@ -418,20 +419,21 @@ The `KbqPanelWidth`, `KbqPanelMinWidth`, and `KbqPanelMaxWidth` types describe p
 
 ### Utilities
 
-| Utility                                               | Purpose                                                                   |
-| ----------------------------------------------------- | ------------------------------------------------------------------------- |
-| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`      | Recursively merges configurations                                         |
-| `kbqInjectNativeElement<T>()`                         | Gets `nativeElement` from an injected `ElementRef`                        |
-| `isHtmlElement`, `isElement`, `isNull`, `isUndefined` | Checks and narrows types                                                  |
-| `getNodesWithoutComments(nodes)`                      | Gets a list of nodes without comments                                     |
-| `getContentNodes(element)`                            | Child nodes that carry content: comments and whitespace-only text ignored |
-| `supportsNativeDisabled(element)`                     | Whether the host tag accepts the native `disabled` attribute              |
-| `escapeRegExp(value)`                                 | Escapes a string for use in a regular expression                          |
-| `isMac()`                                             | Detects the platform for keyboard shortcut labels                         |
-| `KbqMeasureScrollbarService`                          | Measures the system scrollbar width. Deprecated, removed in 22.0.0        |
-| `kbqInjectAutofilled()`                               | A signal that the browser autofilled a field                              |
-| `KbqNormalizeWhitespace`                              | Replaces a thin space with a regular space when copying                   |
-| `kbqRevealSelection`, `kbqSetSelectionRange`          | Selects text and scrolls a field to the selected fragment                 |
+| Utility                                               | Purpose                                                                                          |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`      | Recursively merges configurations                                                                |
+| `kbqInjectNativeElement<T>()`                         | Gets `nativeElement` from an injected `ElementRef`                                               |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined` | Checks and narrows types                                                                         |
+| `isBoolean`                                           | Checks and narrows to `boolean`. Deprecated, removed in 22.0.0: use `typeof value === 'boolean'` |
+| `getNodesWithoutComments(nodes)`                      | Gets a list of nodes without comments                                                            |
+| `getContentNodes(element)`                            | Child nodes that carry content: comments and whitespace-only text ignored                        |
+| `supportsNativeDisabled(element)`                     | Whether the host tag accepts the native `disabled` attribute                                     |
+| `escapeRegExp(value)`                                 | Escapes a string for use in a regular expression                                                 |
+| `isMac()`                                             | Detects the platform for keyboard shortcut labels                                                |
+| `KbqMeasureScrollbarService`                          | Measures the system scrollbar width. Deprecated, removed in 22.0.0                               |
+| `kbqInjectAutofilled()`                               | A signal that the browser autofilled a field                                                     |
+| `KbqNormalizeWhitespace`                              | Replaces a thin space with a regular space when copying                                          |
+| `kbqRevealSelection`, `kbqSetSelectionRange`          | Selects text and scrolls a field to the selected fragment                                        |
 
 `KbqMeasureScrollbarService` returns `0` during server-side rendering.
 
