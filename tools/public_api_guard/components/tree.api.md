@@ -668,6 +668,7 @@ export class KbqTreeSelection extends KbqTreeBase<any, FlatTreeControl<any>> imp
     // (undocumented)
     get showCheckbox(): boolean;
     protected get showSelectAll(): boolean;
+    get syncingSelection(): boolean;
     get tabIndex(): number;
     readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     protected toggleFocusedOption(): void;

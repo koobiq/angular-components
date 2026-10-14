@@ -72,6 +72,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
 
 // @public (undocumented)
 export class KbqAccordionContent {
+    protected readonly animationsDisabled: boolean;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqAccordionContent, "kbq-accordion-content, [kbq-accordion-content]", never, {}, {}, never, ["*"], true, [{ directive: typeof KbqAccordionContentDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
@@ -180,6 +181,7 @@ export type KbqAccordionState = string[];
 export class KbqAccordionTrigger implements AfterViewInit, OnDestroy {
     constructor();
     protected readonly accordion: KbqAccordion;
+    protected readonly animationsDisabled: boolean;
     // (undocumented)
     disableAnimation(): void;
     // (undocumented)

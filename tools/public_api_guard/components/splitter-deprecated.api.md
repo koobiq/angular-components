@@ -74,7 +74,7 @@ export class KbqGutterGhostDirective {
 }
 
 // @public @deprecated (undocumented)
-export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
+export class KbqSplitterAreaDirective implements OnInit, AfterViewInit, OnDestroy {
     // (undocumented)
     disableFlex(): void;
     // (undocumented)
@@ -89,6 +89,8 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
+    // (undocumented)
+    ngOnInit(): void;
     // (undocumented)
     setOrder(order: number): void;
     // (undocumented)

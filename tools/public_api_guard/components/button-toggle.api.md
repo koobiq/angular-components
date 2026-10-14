@@ -55,7 +55,8 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
     protected readonly tabIndexValue: _angular_core.Signal<number>;
     get type(): ToggleType;
     updateIconType(): void;
-    value: any;
+    get value(): any;
+    set value(value: any);
     readonly valueInput: _angular_core.InputSignal<{} | null | undefined>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqButtonToggle, "kbq-button-toggle", ["kbqButtonToggle"], { "tabIndex": { "alias": "tabIndex"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; "isSignal": true; }; "valueInput": { "alias": "value"; "required": false; "isSignal": true; }; "checkedInput": { "alias": "checked"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, { "change": "change"; }, ["icons"], ["[kbqButtonPrefix]", "*", "[kbqButtonSuffix]"], true, never>;

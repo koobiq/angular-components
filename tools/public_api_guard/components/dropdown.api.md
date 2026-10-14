@@ -158,6 +158,7 @@ export class KbqDropdownFooter {
 export class KbqDropdownItem implements KbqTitleTextRef, KbqDropdownItemActionHost, IFocusableOption, Highlightable, OnDestroy {
     constructor();
     protected readonly active: _angular_core.WritableSignal<boolean>;
+    protected readonly animationsDisabled: boolean;
     checkDisabled(event: Event): void;
     protected readonly componentColors: typeof KbqComponentColors;
     readonly disabled: _angular_core.InputSignalWithTransform<boolean, unknown>;

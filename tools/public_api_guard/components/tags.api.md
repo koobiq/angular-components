@@ -49,6 +49,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnCha
     // @deprecated
     addClassModificatorForIcons(): void;
     addHostClassName(): void;
+    protected readonly animationsDisabled: boolean;
     readonly avatar: _angular_core.Signal<KbqTagAvatar | undefined>;
     blur(): void;
     cancelEditing(reason: string): void;
