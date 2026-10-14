@@ -760,7 +760,7 @@ class TemplateScanner implements Visitor {
  * allows whitespace around the dot, so a binding wrapped over two lines is matched too. The three groups skip
  * an already-migrated read, a signal-API call, and an assignment target that must not gain a `()`.
  */
-function memberAccessPattern(ref: string, members: readonly string[]): RegExp {
+export function memberAccessPattern(ref: string, members: readonly string[]): RegExp {
     const methods = [...SIGNAL_API_METHODS].join('|');
     const names = members.map(escapeRegExp).join('|');
 

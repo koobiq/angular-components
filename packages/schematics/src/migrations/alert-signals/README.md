@@ -29,7 +29,7 @@ files that reference the alert:
 - **Template reference reads.** For a bare `#ref` or `#ref="kbqAlert"` on `<kbq-alert>`, reads of
   `compact`/`alertStyle` through that ref are rewritten in the same template (external `.html` and inline
   `template:` strings): `ref.compact` → `ref.compact()`. A ref naming another directive (`#ref="ngModel"`) is
-  left alone.
+  left alone, and so is a property chain that only ends in the ref's name (`state.alert.compact`).
 
 All rewrites are idempotent — running twice does not double the call. `compact`/`alertStyle` keep the same value,
 so appending `()` is safe.
@@ -42,6 +42,7 @@ These changes can't be rewritten safely and are surfaced as warnings (in both `f
 | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `alert.alertColor` read                                                                  | Now a read-only `InputSignal`: read as `alert.alertColor()`. **Value changed** — the getter used to return the CSS class `kbq-alert_<color>`, it now returns the raw color (`error`). Update any code that expected the class string. |
 | `alert.alertColor = …` write                                                             | The input is read-only. Drive it with the `[alertColor]` binding (or a signal in your own component), not an assignment.                                                                                                              |
+| `alert.compact = …` / `alertStyle` write, in code or through a template ref              | The inputs are read-only. Bind `[compact]` / `[alertStyle]` instead of assigning them.                                                                                                                                                |
 | `alert.icon` / `iconItem` / `button` / `title` / `control` / `closeButton` / `isColored` | Now `protected` — inaccessible from outside. Refactor to avoid reading component internals.                                                                                                                                           |
 | `[alertColor]` / `[alertStyle]` with a custom string                                     | The inputs are narrowed to the enum literals (`'error' \| 'warning' \| 'success' \| 'info'`, `'default' \| 'colored'`). Replace typos/custom strings with a valid value.                                                              |
 | `<kbq-alert compact>` (bare attribute)                                                   | Now applies the `booleanAttribute` transform, so the bare attribute really enables compact (it used to be a silent no-op). Verify this is intended.                                                                                   |

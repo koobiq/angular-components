@@ -111,6 +111,25 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('`alertColor` is now a read-only InputSignal');
     });
 
+    it('leaves an assignment to a read-only signal input and reports it', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqAlert } from '@koobiq/components/alert';\n" +
+                'class Demo {\n' +
+                '    densify(alert: KbqAlert) {\n' +
+                '        alert.compact = true;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('alert.compact = true;');
+        expect(messages.join('\n')).toContain('`compact` can no longer be assigned');
+    });
+
     it('warns about now-protected content-query members read on an alert receiver', async () => {
         const ts = firstTsPath();
 
@@ -193,6 +212,33 @@ describe(SCHEMATIC_NAME, () => {
         const updated = (await run()).readText(html);
 
         expect(updated).toContain('{{ alert.alertStyle() }}');
+    });
+
+    it('leaves a property chain that ends in the name of a ref alone', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-alert #alert></kbq-alert>\n<span>{{ state.alert.compact }} {{ alert.compact }}</span>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('{{ state.alert.compact }} {{ alert.compact() }}');
+    });
+
+    it('leaves a write through a ref to a read-only member and reports it', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-alert #alert></kbq-alert>\n<button (click)="alert.compact = !alert.compact">Toggle</button>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('(click)="alert.compact = !alert.compact()"');
+        expect(messages.join('\n')).toContain('`compact` can no longer be assigned');
     });
 
     it('leaves reads via a template reference variable naming another directive on <kbq-alert> untouched', async () => {

@@ -29,11 +29,13 @@ The schematic walks every `.ts` and `.html` file in the project (skipping
     - `filterBar.filter` → `filterBar.filter()` (incl. optional chain `filterBar.filter?.name` → `filterBar.filter()?.name`)
     - `filterBar.filter = next` → `filterBar.filter.set(next)`
     - `this.filterBar.isChanged` → `this.filterBar.isChanged()`
-- **Template reference reads.** For a bare `#ref` on `<kbq-filter-bar>`, reads
+- **Template references.** For a bare `#ref` on `<kbq-filter-bar>`, reads
   of signal members through that ref are rewritten in the same template
   (external `.html` and inline `template:` strings): `ref.isChanged` →
-  `ref.isChanged()`. `KbqFilterBar` has no `exportAs`, so a ref with a value
-  (`#ref="ngModel"`) names another directive and is left alone.
+  `ref.isChanged()`, and in an event binding `ref.filter = saved` →
+  `ref.filter.set(saved)`. `KbqFilterBar` has no `exportAs`, so a ref with a
+  value (`#ref="ngModel"`) names another directive and is left alone, and so
+  is a property chain that only ends in the ref's name (`page.filterBar.filter`).
 - **Rename.** `KbqFilterBarRefresher` → `KbqFilterRefresher` (the old name
   stayed an alias until 21.0.0).
 
@@ -50,6 +52,7 @@ auto-fixing:
 | `.preparePopover()` (KbqFilters) | Removed; use `openSaveAsNewFilterPopover()` / `openChangeFilterNamePopover()`                      |
 | `viewChild(KbqFilterBar)` query  | Returns the instance, so reads are a double call: `this.filterBar().filter()` — verify manually    |
 | `KBQ_FILTER_BAR_PIPES`           | Now typed `Map<KbqPipeType, Type<KbqBasePipe>>`; wrap direct providers in `new Map([...])`         |
+| `filterBar.pipeTemplates = …`    | Read-only input, also when written through a template ref; bind `[pipeTemplates]` instead          |
 
 ## Running it manually
 

@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { rewriteRefAccesses } from '../../utils/template-ref-access';
 import { forEachClass, parseTemplate } from '../../utils/typescript';
 import {
     FILTER_BAR_ELEMENT,
@@ -32,10 +33,6 @@ interface Receiver {
     text: string;
     start: number;
     end: number;
-}
-
-function escapeRegExp(value: string): string {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /** Applies text-span edits to `content`, right-to-left, so earlier edits don't shift later offsets. */
@@ -154,23 +151,33 @@ function classifyAccess(node: ts.PropertyAccessExpression, sourceFile: ts.Source
     edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
 }
 
+/** Whether `node` accesses a signal member on a filter-bar receiver, within the receiver's scope. */
+function isSignalMemberAccess(
+    node: ts.Node,
+    sourceFile: ts.SourceFile,
+    receivers: Receiver[]
+): node is ts.PropertyAccessExpression {
+    if (
+        !ts.isPropertyAccessExpression(node) ||
+        !ts.isIdentifier(node.name) ||
+        !SIGNAL_MEMBERS.includes(node.name.text)
+    ) {
+        return false;
+    }
+
+    const receiverText = node.expression.getText(sourceFile);
+    const start = node.getStart(sourceFile);
+    const end = node.getEnd();
+
+    return receivers.some((r) => r.text === receiverText && start >= r.start && end <= r.end);
+}
+
 /** Collects edits for every read/write of a signal member on a known filter-bar receiver. */
 function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): Edit[] {
     const edits: Edit[] = [];
 
     const visit = (node: ts.Node): void => {
-        if (
-            ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            SIGNAL_MEMBERS.includes(node.name.text)
-        ) {
-            const receiverText = node.expression.getText(sourceFile);
-            const start = node.getStart(sourceFile);
-            const end = node.getEnd();
-            const inScope = receivers.some((r) => r.text === receiverText && start >= r.start && end <= r.end);
-
-            if (inScope) classifyAccess(node, sourceFile, edits);
-        }
+        if (isSignalMemberAccess(node, sourceFile, receivers)) classifyAccess(node, sourceFile, edits);
 
         node.forEachChild(visit);
     };
@@ -178,6 +185,29 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): E
     visit(sourceFile);
 
     return edits;
+}
+
+/** Signal members assigned on a filter-bar receiver that stay read-only, so the write is left for the consumer. */
+function collectReadOnlyWrites(sourceFile: ts.SourceFile, receivers: Receiver[]): Set<string> {
+    const writes = new Set<string>();
+
+    const visit = (node: ts.Node): void => {
+        if (
+            isSignalMemberAccess(node, sourceFile, receivers) &&
+            !WRITABLE_MEMBERS.has(node.name.text) &&
+            ts.isBinaryExpression(node.parent) &&
+            node.parent.left === node &&
+            node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+        ) {
+            writes.add(node.name.text);
+        }
+
+        node.forEachChild(visit);
+    };
+
+    visit(sourceFile);
+
+    return writes;
 }
 
 /** Pass A — rewrite programmatic reads/writes of filter-bar signal members in TypeScript code. */
@@ -240,41 +270,34 @@ class FilterBarRefCollector implements Visitor {
     visitLetDeclaration(): void {}
 }
 
-/** Rewrites `ref.member` reads to `ref.member()` for the given refs, scoped to those exact identifiers. */
-function rewriteRefReads(template: string, refs: string[]): { content: string; changed: boolean } {
-    const members = SIGNAL_MEMBERS.join('|');
-    let content = template;
-    let changed = false;
-
-    for (const ref of refs) {
-        // `\bref\.(member)\b(?!\s*\()` — skip anything already invoked, so the rewrite is idempotent.
-        const pattern = new RegExp(`\\b(${escapeRegExp(ref)})\\.(${members})\\b(?!\\s*\\()`, 'g');
-        const next = content.replace(pattern, '$1.$2()');
-
-        if (next !== content) {
-            content = next;
-            changed = true;
-        }
-    }
-
-    return { content, changed };
+interface TemplateResult {
+    content: string;
+    changed: boolean;
+    /** Read-only members written through a reference variable, left as they are. */
+    readOnlyWrites: Set<string>;
 }
 
-/** Pass B (core) — parse a template, discover filter-bar refs, rewrite their signal reads. */
-async function migrateTemplate(template: string): Promise<{ content: string; changed: boolean }> {
-    if (!template.includes(FILTER_BAR_ELEMENT)) return { content: template, changed: false };
+/** Pass B (core) — parse a template, discover filter-bar refs, rewrite their signal reads and `filter` writes. */
+async function migrateTemplate(template: string): Promise<TemplateResult> {
+    const untouched = { content: template, changed: false, readOnlyWrites: new Set<string>() };
+
+    if (!template.includes(FILTER_BAR_ELEMENT)) return untouched;
 
     const parsed = await parseTemplate(template);
 
-    if (!parsed.tree) return { content: template, changed: false };
+    if (!parsed.tree) return untouched;
 
+    const { rootNodes } = parsed.tree as { rootNodes: unknown[] };
     const collector = new FilterBarRefCollector();
 
-    visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
+    visitAll(collector, rootNodes);
 
-    if (collector.refs.size === 0) return { content: template, changed: false };
+    if (collector.refs.size === 0) return untouched;
 
-    return rewriteRefReads(template, [...collector.refs]);
+    const refs = [...collector.refs].map((name) => ({ name, members: SIGNAL_MEMBERS, writable: WRITABLE_MEMBERS }));
+    const { content, readOnlyWrites } = rewriteRefAccesses(template, rootNodes, refs);
+
+    return { content, changed: content !== template, readOnlyWrites };
 }
 
 /** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
@@ -315,20 +338,26 @@ function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: 
 }
 
 /** Pass B (inline) — rewrite filter-bar ref reads inside inline component templates. */
-async function migrateInlineTemplates(content: string, fileName: string): Promise<string> {
+async function migrateInlineTemplates(
+    content: string,
+    fileName: string
+): Promise<{ content: string; readOnlyWrites: Set<string> }> {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
+    const readOnlyWrites = new Set<string>();
     let result = content;
 
     for (const { start, end } of ranges) {
-        const { content: rewritten, changed } = await migrateTemplate(result.slice(start, end));
+        const outcome = await migrateTemplate(result.slice(start, end));
 
-        if (changed) {
-            result = result.slice(0, start) + rewritten + result.slice(end);
+        outcome.readOnlyWrites.forEach((member) => readOnlyWrites.add(member));
+
+        if (outcome.changed) {
+            result = result.slice(0, start) + outcome.content + result.slice(end);
         }
     }
 
-    return result;
+    return { content: result, readOnlyWrites };
 }
 
 /** Pass C — safe identifier renames. */
@@ -348,6 +377,17 @@ function logWarnings(context: SchematicContext, filePath: string, content: strin
             logMessage(context.logger, [`[filter-bar-signals] ${filePath}`, `  ${message}`]);
         }
     }
+}
+
+/** Reports writes to signal members that are read-only now, made in code or through a template reference. */
+function warnReadOnlyWrites(context: SchematicContext, filePath: string, members: Set<string>): void {
+    if (members.size === 0) return;
+
+    logMessage(context.logger, [
+        `[filter-bar-signals] ${filePath}`,
+        `  \`${[...members].join('`, `')}\` can no longer be assigned: they are read-only signals now. Bind`,
+        `  \`[pipeTemplates]\` in the template instead; the \`is*\` state follows \`filter\`.`
+    ]);
 }
 
 /** A `.ts` file is a filter-bar consumer if it names the type or imports the package. */
@@ -396,12 +436,13 @@ export default function filterBarSignals(options: Schema): Rule {
 
             logWarnings(context, filePath, original);
 
-            let content = migrateTsExpressions(original, filePath);
+            const sourceFile = ts.createSourceFile(filePath, original, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+            const writes = collectReadOnlyWrites(sourceFile, collectReceivers(sourceFile));
+            const inline = await migrateInlineTemplates(migrateTsExpressions(original, filePath), filePath);
 
-            content = await migrateInlineTemplates(content, filePath);
-            content = applyRenames(content);
-
-            commit(filePath, original, content);
+            inline.readOnlyWrites.forEach((member) => writes.add(member));
+            warnReadOnlyWrites(context, filePath, writes);
+            commit(filePath, original, applyRenames(inline.content));
         }
 
         for (const filePath of htmlPaths) {
@@ -409,7 +450,9 @@ export default function filterBarSignals(options: Schema): Rule {
 
             if (!original) continue;
 
-            const { content, changed } = await migrateTemplate(original);
+            const { content, changed, readOnlyWrites } = await migrateTemplate(original);
+
+            warnReadOnlyWrites(context, filePath, readOnlyWrites);
 
             if (changed) commit(filePath, original, content);
         }
