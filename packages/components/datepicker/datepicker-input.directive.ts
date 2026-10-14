@@ -706,7 +706,7 @@ export class KbqDatepickerInput<D>
             this.updateErrorState();
         }
 
-        // The rendered text changes without notice: through the keyboard handlers, which write the element.
+        // The browser changes the rendered text without notice as the user types; `setViewValue()` covers the rest.
         this.emptyValue.set(this.isEmpty());
     }
 
@@ -790,8 +790,10 @@ export class KbqDatepickerInput<D>
             event.preventDefault();
 
             this.datepicker?.open();
-        } else if (this.isKeyForClose(event) && this.datepicker?.opened) {
+        } else if (this.isKeyForClose(event)) {
             // Consumed only when there is a calendar to close, so a dialog around the input still takes the key.
+            if (!this.datepicker?.opened) return;
+
             event.preventDefault();
 
             this.datepicker.close();
@@ -1094,6 +1096,8 @@ export class KbqDatepickerInput<D>
         const selectionEnd = this.selectionEnd ?? 0;
 
         this.renderer.setProperty(element, 'value', value);
+        // Right away: a form or a `[value]` binding writes after `ngDoCheck()` has run.
+        this.emptyValue.set(this.isEmpty());
 
         if (savePosition) {
             this.setSelection(selectionStart, selectionEnd);

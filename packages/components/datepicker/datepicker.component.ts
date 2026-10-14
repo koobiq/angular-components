@@ -543,8 +543,12 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         );
     }
 
+    /** Whether a close from outside the calendar has to return the focus: unless the press moved it somewhere else. */
     private restoreFocus(): boolean {
-        return this.document.activeElement === this.document.body;
+        const focused = this.document.activeElement;
+
+        // A press that keeps the focus where it was, as on the toggle, leaves it in the calendar about to go away.
+        return focused === this.document.body || !!this.popupComponentRef?.location.nativeElement.contains(focused);
     }
 
     private closingActions() {

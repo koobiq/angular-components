@@ -427,7 +427,7 @@ export class KbqTimepicker<D>
             this.updateErrorState();
         }
 
-        // The rendered text changes without notice: through the keyboard handlers, which write the element.
+        // The browser changes the rendered text without notice as the user types; `setViewValue()` covers the rest.
         this.emptyValue.set(this.isEmpty());
     }
 
@@ -1009,6 +1009,8 @@ export class KbqTimepicker<D>
         const element = this.elementRef.nativeElement;
 
         this.renderer.setProperty(element, 'value', value);
+        // Right away: a form or a `[value]` binding writes after `ngDoCheck()` has run.
+        this.emptyValue.set(this.isEmpty());
 
         // A paste or a model write replaces the whole value, and the offset the previous one was left
         // at has to go with it.
