@@ -460,10 +460,10 @@ The inputs of `KbqTabGroup`, `KbqTab`, `KbqTabNavBar`, `KbqTabLink` and of the h
 - **A bound `undefined`** leaves the member as it is: `[animationDuration]` keeps the duration of `KBQ_TABS_CONFIG`, and a `KbqTabLink` keeps its generated `id`.
 - **`KbqTab.templateLabel` follows the `kbqTabLabel` in the content of the tab**: once that is removed, the tab shows its text label rather than the removed template.
 
-`tabs-signals` reports every subclass and every direct call of `ngOnChanges`:
+`tabs-signals-and-aria` reports every subclass and every direct call of `ngOnChanges`:
 
 ```bash
-ng g @koobiq/components:tabs-signals --project "<your project>"
+ng g @koobiq/components:tabs-signals-and-aria --project "<your project>"
 ```
 
 #### Query lists
@@ -2171,18 +2171,18 @@ Icons were in the accessibility tree and icon buttons were not buttons. `<i kbq-
 <i kbq-icon="kbq-triangle-exclamation_16" role="img" aria-hidden="false" aria-label="Error"></i>
 ```
 
-`kbq-icon-button` is never hidden, and on a host that is not a native `<button>` — which is 129 of the 180 call sites in this repository alone — it supplies the semantics the element does not have: `role="button"`, `aria-disabled` and Enter/Space activation. It stands down when the key event is already `defaultPrevented`, so a handler on the same element that calls `preventDefault()` keeps sole ownership of the key. It also warns in dev mode when it has neither `aria-label` nor `aria-labelledby`, because a glyph gives it no accessible name at all.
+`kbq-icon-button` is not hidden by default, and on a host that is not a native `<button>` — which is 129 of the 180 call sites in this repository alone — it supplies the semantics the element does not have: `role="button"` and `aria-disabled`. It does not activate itself from Enter or Space: bind `(keydown.enter)` and `(keydown.space)` next to `(click)`, calling `preventDefault()` on Space so the page does not scroll, or put the icon button on a `<button>`. It also warns in dev mode when it has neither `aria-label` nor `aria-labelledby`, because a glyph gives it no accessible name at all.
 
 **A `contentChild(KbqIcon)` still resolves only a bare icon.** Host metadata is inherited through `ɵɵInheritDefinitionFeature` and DI tokens are not, so such a query walks past an icon button and an icon item even though both carry the `.kbq-icon` class. Registering the subclasses under the token was tried and reverted: an icon button is an interactive control, and every query of this kind is looking for a decorative icon to position or tint. Answering one with a button made `KbqAlert` lay out an empty icon box for a dismissible alert with no status icon, and re-tint its close button to the alert color; answering one with an icon item collapsed the pair `KbqAlert` compares to report two projected status icons. A host that wants both asks for both, the way `KbqAlert` does.
 
-| Pattern                         | Manual migration                                                         |
-| ------------------------------- | ------------------------------------------------------------------------ |
-| `small` on a plain `[kbq-icon]` | Drop it — nothing ever read it; `KbqIconButton.small` is unaffected      |
-| `(keydown…)` on an icon button  | `preventDefault()` to keep sole ownership of Enter and Space             |
-| `[tabindex]` on an icon button  | `number \| null` instead of `any`; a numeric string is still transformed |
-| `.name` on a `KbqIcon` subclass | Override the protected `appliesMaxHeight` instead                        |
+| Pattern                                                   | Manual migration                                                                      |
+| --------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| `small` on a `[kbq-icon]` or a `[kbq-icon-item]`          | Drop it — nothing ever read it; on an icon button `v21-upgrade` rewrites it to `size` |
+| `(click)` and no `(keydown…)` on a non-button icon button | Bind `(keydown.enter)` and `(keydown.space)`, or use a `<button>`                     |
+| `[tabindex]` on an icon button                            | `number \| null` instead of `any`; a numeric string is still transformed              |
+| `.name` on a `KbqIcon` subclass                           | Override the protected `appliesMaxHeight` instead                                     |
 
-Three fixes with nothing to migrate. The SVG resolution stream no longer terminates on the first name that does not resolve — which the documented font-icon default guarantees on the very first frame — so a stale `<svg>` is removed on the fallback path, the inline `max-height` is cleared as well as set, and an element whose `[kbq-icon]` changes renders the icon it was asked for at the size it was asked for. `autoColor` is reactive, so turning it on after init subscribes and turning it off resets `hasError`. And the `--kbq-icon-*-color` tokens are no longer declared on `.kbq-icon`: they are consumed with their design token as the `var()` fallback, so a container can finally re-theme the icons inside it — reading one back with `getComputedStyle` returns an empty string now.
+Three fixes with nothing to migrate. The SVG resolution stream no longer terminates on the first name that does not resolve — which the documented font-icon default guarantees on the very first frame — so a stale `<svg>` is removed on the fallback path, the inline `max-height` is cleared as well as set, and an element whose `[kbq-icon]` changes renders the icon it was asked for at the size it was asked for. `autoColor` takes effect when it is turned on after init and lets go of the error color when it is turned off. And the `--kbq-icon-*-color` tokens are no longer declared on `.kbq-icon`: they are consumed with their design token as the `var()` fallback, so a container can finally re-theme the icons inside it — reading one back with `getComputedStyle` returns an empty string now.
 
 Reported by `icon-semantics-and-api`.
 
@@ -2592,6 +2592,8 @@ Reported by `table-cell-content`.
 
 #### Tabs
 
+{/* migration-subsection-components(tabs) */}
+
 `KbqTabGroup` shipped no part of the ARIA tabs pattern, while `KbqTabNavBar` in the same package shipped all of it. The group now renders it too: the label strip is a `role="tablist"` (carrying `aria-orientation="vertical"` when `vertical` is set), each label a `role="tab"` with `aria-selected` and `aria-controls`, and each body a `role="tabpanel"` with `aria-labelledby` and a tab stop while it is the active one. Hand-rolled `role` or `aria-*` attributes on those elements are duplicates now, and a label carries `aria-disabled` in place of the bare `disabled` attribute that no assistive technology reads off a `div`.
 
 The roving `tabindex` follows the header's focus position rather than the selection, and a disabled tab gets `-1` rather than no attribute at all. A group whose selected tab was disabled — the default when the first tab is disabled — had no element with `tabindex="0"` and could not be reached with <kbd>Tab</kbd> at all.
@@ -2604,7 +2606,6 @@ The roving `tabindex` follows the header's focus position rather than the select
 | -------------------------- | ------------------------------------------------------------------ |
 | `.resizeStream`            | Drop the call — the shared `ResizeObserver` re-measures on its own |
 | `<kbq-tab-group disabled>` | Disable the tabs: `<kbq-tab [disabled]="true">`                    |
-| `.disabled` on a `KbqTab`  | Signal input: read `tab.disabled()`, bind `[disabled]` to write    |
 | `.getTabIndex(tab, index)` | `getTabIndex(tab, tabHeader, index)`; `null` is now `-1`           |
 | `KbqVerticalTabsCssStyler` | Stop importing it — the class follows the `vertical` binding       |
 | `.kbq-tab-label[disabled]` | Target `.kbq-disabled`, or `[aria-disabled="true"]` in a test      |
@@ -2681,13 +2682,14 @@ The disagreement went further than a wrong value. The form's own validator reads
 
 The rest of the release is the forms contract the component never kept:
 
-| Pattern                                                   | Manual migration                                                                                      |
-| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `.timepickerList` on a `KbqTimeRangeEditor`               | Removed with the subscription that wrote `errorState` by hand; provide an `ErrorStateMatcher` instead |
-| `.errorState = …` on a `KbqTimeRangeTitleAsControl`       | Derived now; drive the state through the bound form control                                           |
-| `.value` / `.empty` / `.required` / `.disabled` on it     | Same — they are getters, and a write throws                                                           |
-| `.id` / `.placeholder` / `.controlType` / `.stateChanges` | Readonly; `id` is generated and `stateChanges` emits on every state move                              |
-| `.kbq-radio-group .kbq-time-range-editor__range`          | The from/to block is a sibling of the radiogroup now, not a descendant                                |
+| Pattern                                               | Manual migration                                                                                      |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `.timepickerList` on a `KbqTimeRangeEditor`           | Removed with the subscription that wrote `errorState` by hand; provide an `ErrorStateMatcher` instead |
+| `.errorState = …` on a `KbqTimeRangeTitleAsControl`   | A read-only signal now; drive the state through the bound form control and read it with a call        |
+| `.value` / `.empty` / `.required` / `.disabled` on it | Same — read-only signals derived from the host and the bound control                                  |
+| `.id` / `.placeholder` / `.focused` / `.controlType`  | Read-only; `id` is generated, `controlType` is a constant                                             |
+| `.stateChanges` on it                                 | Removed; read the signals in a `computed()` or an `effect()`                                          |
+| `.kbq-radio-group .kbq-time-range-editor__range`      | The from/to block is a sibling of the radiogroup now, not a descendant                                |
 
 `setDisabledState` is implemented on both `KbqTimeRange` and `KbqTimeRangeEditor`. A disabled control leaves the tab order, refuses to open the popover, disables the editor's own form and takes a `kbq-disabled` host class — it used to look and behave enabled while Angular silently discarded the value. `KbqTimeRangeTitle` gained a `disabled` input for the built-in trigger.
 
@@ -2695,7 +2697,7 @@ The rest of the release is the forms contract the component never kept:
 
 `valueCorrected` compares the outcome instead of the shape of the input. It used to fire on every write of a value with no `startDateTime`, which the `allTime` preset legitimately produces, so a host that wrote the payload back looped on it. A handler that counted emissions sees fewer of them.
 
-`KbqTimeRangeTitleAsControl` is a real `KbqFormFieldControl` now. Every member was previously declared and never assigned, so a `kbq-form-field` around it rendered once against `undefined` state: it could not float the label, could not show the error state, and clicking it focused nothing. The members are derived from the host and the bound `NgControl`, and `stateChanges` emits when any of them moves.
+`KbqTimeRangeTitleAsControl` is a real `KbqFormFieldControl` now. Every member was previously declared and never assigned, so a `kbq-form-field` around it rendered once against `undefined` state: it could not float the label, could not show the error state, and clicking it focused nothing. The members are read-only signals derived from the host and the bound `NgControl`, and `stateChanges` was removed with the rest of the `KbqFormFieldControl` contract.
 
 Two markup changes: the from/to block moved out of the `role="radiogroup"` element — a radiogroup must not own four date and time fields — and the popover footer dropped its unnamed `role="group"`. The from/to prefixes carry an `id` that all four inputs point at with `aria-labelledby`, replacing an `aria-label` on a bare `<span>`, where it is inert.
 
@@ -2750,7 +2752,7 @@ Two types changed with it. `KbqTimezoneGroup.countryCode` is `string | null` —
 
 `kbq-timezone-select` rejects `multiple` with an error instead of accepting it, and `multiline` with it — that input switches the select to multiple selection just the same, and it had been left as a way around the check. Both guides always said it does not support multiple selection, but nothing enforced it: the input was inherited, `[multiple]="true"` compiled cleanly and put the component into a state its template cannot render — the user selected five zones and the field showed one. Use `kbq-select` for multiple selection.
 
-Four fixes with nothing to migrate. The forked panel template is back in sync with `select.html`: it binds `viewportMargin`, `handleClick` and the `kbq-select-overlay` pane class, drops the deprecated no-op `offsetY`, and projects `kbq-select-footer` and `kbq-select-matcher` — a projected footer used to fall into the trailing catch-all and render _inside_ the scrollable option list. The option's overflow tooltip carries the same filtered city list the option renders, instead of the unfiltered one measured against the filtered box. The search placeholder follows the active locale instead of latching to whichever one was applied first, and a placeholder the consumer binds still wins. And `UtcOffsetPipe` and `CitiesByFilterPipe` are exported, while `KbqTimezoneModule` re-exports `KbqOptionModule`, so the documented usage with `kbq-optgroup` works from the module alone.
+Four fixes with nothing to migrate. The forked panel template is back in sync with `select.html`: it binds `viewportMargin`, `handleClick` and the `kbq-select-overlay` pane class, no longer binds `offsetY`, which is removed (see the select removals above), and projects `kbq-select-footer` and `kbq-select-matcher` — a projected footer used to fall into the trailing catch-all and render _inside_ the scrollable option list. The option's overflow tooltip carries the same filtered city list the option renders, instead of the unfiltered one measured against the filtered box. The search placeholder follows the active locale instead of latching to whichever one was applied first, and a placeholder the consumer binds still wins. And `UtcOffsetPipe` and `CitiesByFilterPipe` are exported, while `KbqTimezoneModule` re-exports `KbqOptionModule`, so the documented usage with `kbq-optgroup` works from the module alone.
 
 Typeahead finds the city. The option reported its whole line as its label, and that line opens with `UTC`, so typing a city's first letters in the field never moved past the first option, and a zone west of UTC — written with U+2212, which no keyboard types — could not be reached by typing at all. The label is the city now. What it costs: typing `utc+03` no longer moves anywhere; offsets are matched by the search.
 

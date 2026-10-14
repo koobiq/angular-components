@@ -12,6 +12,7 @@ import {
     ChangeDetectorRef,
     Component,
     contentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
     forwardRef,
@@ -29,10 +30,11 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_PARENT_ANIMATION_COMPONENT, kbqQueryListFrom, KbqStateSaving } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { merge, Subject, Subscription } from 'rxjs';
-import { debounceTime, filter } from 'rxjs/operators';
+import { merge, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { KbqTabBody } from './tab-body.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
@@ -162,8 +164,6 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
      */
     private readonly stateSaving = inject(KbqStateSaving);
 
-    readonly resizeStream = new Subject<Event>();
-
     private readonly tabsQuery = contentChildren(KbqTab);
     private readonly tabsList = kbqQueryListFrom(this.tabsQuery);
 
@@ -205,12 +205,6 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
     /** @docs-private */
     readonly animationDurationInput = input<string | undefined>(undefined, { alias: 'animationDuration' });
-
-    /** @docs-private */
-    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
-        alias: 'disabled',
-        transform: booleanAttribute
-    });
 
     /** The index of the active tab. */
     get selectedIndex(): number {
@@ -256,18 +250,6 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
     /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
     animationDuration: string;
-
-    get disabled(): boolean {
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        if (value !== this.disabled) {
-            this._disabled = value;
-        }
-    }
-
-    private _disabled: boolean = false;
 
     /** Output to enable support for two-way binding on `[(selectedIndex)]` */
     readonly selectedIndexChange = output<number>();
@@ -348,12 +330,6 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
         if (changes['animationDurationInput']) {
             this.animationDuration = this.animationDurationInput() ?? this.defaultAnimationDuration;
-        }
-
-        if (changes['disabledInput']) {
-            const disabled = this.disabledInput();
-
-            if (disabled !== undefined) this.disabled = disabled;
         }
     }
 
@@ -513,7 +489,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
     /** Handle click events, setting new selected index if appropriate. */
     handleClick(tab: KbqTab, tabHeader: KbqTabHeader, index: number) {
-        if (tab.disabled()) {
+        if (tab.disabled) {
             return;
         }
 
@@ -527,7 +503,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
      * order — a disabled tab is `-1`, never absent, so it stays a roving-tabindex participant.
      */
     getTabIndex(tab: KbqTab, tabHeader: KbqTabHeader, index: number): number {
-        if (tab.disabled()) {
+        if (tab.disabled) {
             return -1;
         }
 
@@ -666,17 +642,33 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
         );
     }
 
-    private subscribeToResize() {
-        // `vertical` is read per resize: called from the constructor, the input is not bound yet.
-        this.resizeSubscription = this.resizeStream
-            .pipe(
-                debounceTime(this.resizeDebounceInterval),
-                filter(() => this.vertical())
-            )
-            .subscribe(() => {
-                this.checkOverflow();
-                this.changeDetectorRef.markForCheck();
-            });
+    /**
+     * Index that owns `tabindex="0"`, falling back to the first enabled tab when focus sits on a
+     * disabled one.
+     *
+     * The template calls this once per tab, so the common path stays allocation-free: `QueryList.get`
+     * indexes the backing array, where `toArray()` would copy it N times per check.
+     */
+    private getRovingTabIndex(tabHeader: KbqTabHeader): number {
+        const { focusIndex } = tabHeader;
+        const focused = this.tabs.get(focusIndex);
+
+        if (focused && !focused.disabled) {
+            return focusIndex;
+        }
+
+        for (let index = 0; index < this.tabs.length; index++) {
+            if (!this.tabs.get(index)!.disabled) {
+                return index;
+            }
+        }
+
+        return -1;
+    }
+
+    /** First tab that can actually be selected, so that a leading disabled tab is not the default. */
+    private getDefaultTab(): KbqTab | null {
+        return this.tabs.find((tab) => !tab.disabled) || this.tabs.get(0) || null;
     }
 
     /** Clamps the given index to the bounds of 0 and the tabs length. */

@@ -140,7 +140,7 @@ function isMigratableFile(filePath: string): boolean {
 /**
  * Removes `title.for` from time-range locale configuration literals and reports everything else the
  * component review breaks: the removed `timepickerList`, the `KbqTimeRangeTitleAsControl` members that
- * stopped being plain fields, the narrowed `valueCorrected` and the editor markup that moved the
+ * became read-only signals, the narrowed `valueCorrected` and the editor markup that moved the
  * from/to block out of the radiogroup. Only the `for` removal is written back — what replaces a write
  * to a derived member is a binding on the host, or nothing at all.
  *

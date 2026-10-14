@@ -17,6 +17,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { SafeHtml } from '@angular/platform-browser';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { Signal } from '@angular/core';
@@ -34,25 +35,23 @@ export const KBQ_ICONS_CONFIG: InjectionToken<KbqIconsConfig[]>;
 // @public
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
     constructor();
-    // (undocumented)
+    protected readonly appliesMaxHeight: boolean;
+    readonly ariaHidden: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     autoColor: boolean;
     protected get autoColorError(): boolean;
-    readonly autoColorInput: _angular_core.InputSignal<boolean | undefined>;
+    readonly autoColorInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly defaultAriaHidden: boolean;
     // (undocumented)
     protected readonly destroyRef: DestroyRef;
-    // (undocumented)
-    readonly elementRef: ElementRef<HTMLElement>;
     protected readonly errorStateContext: _koobiq_components_icon.KbqIconErrorStateContext | null;
     // (undocumented)
     getHostElement(): HTMLElement;
     hasError: boolean;
-    iconName: string;
+    iconName: string | undefined;
     readonly iconNameInput: _angular_core.InputSignal<string | undefined>;
-    // (undocumented)
-    static ngAcceptInputType_autoColor: unknown;
+    readonly iconSize: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -60,13 +59,14 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     // (undocumented)
     protected readonly registry: KbqIconRegistry | null;
     // (undocumented)
-    readonly small: _angular_core.InputSignal<boolean>;
+    protected readonly renderer: Renderer2;
+    protected readonly resolvedAriaHidden: _angular_core.Signal<string | null>;
+    protected setIconName(name: string): void;
     protected readonly svgIcon: _angular_core.WritableSignal<boolean>;
     protected readonly svgIconName: _angular_core.WritableSignal<string | undefined>;
-    // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
-    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "small": { "alias": "small"; "required": false; "isSignal": true; }; "autoColorInput": { "alias": "autoColor"; "required": false; "isSignal": true; }; "iconNameInput": { "alias": "kbq-icon"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "ariaHidden": { "alias": "aria-hidden"; "required": false; "isSignal": true; }; "iconSize": { "alias": "iconSize"; "required": false; "isSignal": true; }; "autoColorInput": { "alias": "autoColor"; "required": false; "isSignal": true; }; "iconNameInput": { "alias": "kbq-icon"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqIcon, never>;
 }
@@ -84,18 +84,15 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     protected readonly focusMonitor: FocusMonitor;
     readonly iconNameInput: _angular_core.InputSignal<string | undefined>;
     // (undocumented)
-    name: string;
-    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
     readonly size: _angular_core.InputSignal<KbqIconButtonSize>;
-    // (undocumented)
-    get tabindex(): any;
-    set tabindex(value: any);
-    readonly tabindexInput: _angular_core.InputSignal<string | number | null | undefined>;
+    get tabindex(): number | null;
+    set tabindex(value: number | null);
+    readonly tabindexInput: _angular_core.InputSignalWithTransform<number | null | undefined, string | number | null | undefined>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "size": { "alias": "size"; "required": false; "isSignal": true; }; "iconNameInput": { "alias": "kbq-icon-button"; "required": false; "isSignal": true; }; "tabindexInput": { "alias": "tabindex"; "required": false; "isSignal": true; }; "disabledInput": { "alias": "disabled"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -115,13 +112,10 @@ export const kbqIconErrorStateContextFactoryProvider: (factory: () => KbqIconErr
 
 // @public
 export class KbqIconItem extends KbqIcon {
-    // (undocumented)
+    protected readonly appliesMaxHeight: boolean;
     readonly big: _angular_core.InputSignal<boolean>;
-    // (undocumented)
     readonly fade: _angular_core.InputSignal<boolean>;
     readonly iconNameInput: _angular_core.InputSignal<string | undefined>;
-    // (undocumented)
-    name: string;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "iconNameInput": { "alias": "kbq-icon-item"; "required": false; "isSignal": true; }; "fade": { "alias": "fade"; "required": false; "isSignal": true; }; "big": { "alias": "big"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)

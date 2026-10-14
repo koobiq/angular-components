@@ -10,6 +10,7 @@ import {
     input,
     numberAttribute,
     OnChanges,
+    Renderer2,
     signal,
     SimpleChanges,
     ViewEncapsulation
@@ -37,7 +38,8 @@ import { KbqIconRegistry } from './icon-registry';
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'svgIcon() ? null : iconName',
-        '[class.kbq-error]': 'color() === "error" || hasError || autoColorError'
+        '[class.kbq-error]': 'color() === "error" || hasError || autoColorError',
+        '[attr.aria-hidden]': 'resolvedAriaHidden()'
     }
 })
 export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnChanges {
@@ -51,8 +53,16 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly destroyRef = inject(DestroyRef);
     protected readonly renderer = inject(Renderer2);
 
-    readonly small = input(false);
-    autoColor = false;
+    /**
+     * Whether the icon is hidden from assistive technology. Left unbound, it falls back to
+     * `defaultAriaHidden`, which is `true` for a decorative icon and `false` for an interactive one.
+     */
+    readonly ariaHidden = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'aria-hidden',
+        // `null` is how a template says "leave it unset" (`cond ? true : null`), so it means the default
+        // rather than `false` — `booleanAttribute(null)` would turn it into an explicit opt-out.
+        transform: (value) => (value == null ? undefined : booleanAttribute(value))
+    });
 
     /** Whether an icon of this kind is decorative when the caller says nothing. Overridden by subclasses. */
     protected readonly defaultAriaHidden: boolean = true;
@@ -73,8 +83,8 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * icon name (`kbq-plus_16` → 16), which is the `@koobiq/icons` convention; a name without one is
      * rendered at whatever size the surrounding styles give it.
      */
-    readonly iconSize = input(undefined, {
-        transform: (value: unknown): number | undefined => {
+    readonly iconSize = input<number | undefined, number | string | null | undefined>(undefined, {
+        transform: (value) => {
             const size = numberAttribute(value);
 
             return Number.isNaN(size) ? undefined : size;
@@ -85,31 +95,12 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * Whether the icon follows the error state of the host it sits in (a form field, for one), painting
      * itself red while that host reports an error.
      */
-    // Kept as an accessor `@Input()` rather than an `input()`: `KbqCleaner` writes it from its own
-    // constructor, and an `input()` has no setter to write. The setter is also where the error-state
-    // subscription is made and torn down, which a signal input cannot intercept.
-    @Input({ transform: booleanAttribute })
-    get autoColor(): boolean {
-        return this.autoColorEnabled;
-    }
+    autoColor = false;
 
-    set autoColor(value: boolean) {
-        if (this.autoColorEnabled === value) return;
-
-        this.autoColorEnabled = value;
-
-        // A subclass may write this from its constructor (`KbqCleaner` does), and the error-state context
-        // is a form field reading a required `contentChild` — touching it that early throws NG0951.
-        if (this.contentInitialized) {
-            this.trackErrorState();
-        }
-    }
-
-    private autoColorEnabled = false;
-    private contentInitialized = false;
-    private errorStateSubscription: Subscription | null = null;
-
-    /** Whether the host this icon follows is currently in an error state. Only ever set with `autoColor`. */
+    /**
+     * Whether the icon takes the error color whatever its `color` is. Set by a host that tints the icons
+     * it holds, such as `KbqEmptyState`.
+     */
     hasError: boolean = false;
 
     /**
@@ -121,10 +112,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     }
 
     /** Name of an icon within a `@koobiq/icons`. Accepts "namespace:name" syntax. */
-    iconName: string;
+    iconName: string | undefined;
 
     /** @docs-private */
-    readonly autoColorInput = input<boolean | undefined>(undefined, { alias: 'autoColor' });
+    readonly autoColorInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'autoColor',
+        transform: booleanAttribute
+    });
 
     /** @docs-private */
     readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon' });
@@ -149,6 +143,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     /** Resolution of the inline SVG, replaced whenever the name changes. */
     private svgIconSubscription = Subscription.EMPTY;
+
+    /** The `<svg>` injected for the resolved name. */
+    private injectedSvg: SVGElement | null = null;
 
     /** Whether the content is initialized, which is when the inline SVG is first resolved. */
     private contentInitialized = false;
@@ -198,6 +195,9 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         // A bound `undefined` turns auto color off and removes the icon, as the decorator inputs did.
         if (changes['autoColorInput']) this.autoColor = this.autoColorInput() ?? false;
 
+        // A name change reaches the size through the resolution; an explicit size resolves nothing.
+        if (changes['iconSize'] && this.contentInitialized) this.applyIconSize();
+
         if (changes['iconNameInput']) this.setIconName(this.iconNameInput() ?? '');
     }
 
@@ -215,44 +215,58 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         this.svgIconSubscription.unsubscribe();
 
         if (!this.registry || !name) {
-            this.svgIcon.set(false);
+            this.renderSvgIcon(null);
 
             return;
         }
 
         const registry = this.registry;
 
-        // Deferred so that a literal the registry fails to parse falls back to the font class as well.
+        // Deferred so that a resolver or a literal that throws falls back to the font class as well, and the
+        // next name is resolved again.
         this.svgIconSubscription = defer(() => registry.getNamedSvgIcon(name)).subscribe({
-            next: (svg) => {
-                this.svgIcon.set(true);
-                const host = this.getHostElement();
-
-                // Remove any previously injected SVG.
-                const existing = host.querySelector('svg');
-
-                if (existing) {
-                    host.removeChild(existing);
-                }
-
-                const size = this.parseIconSize();
-
-                if (size) {
-                    svg.setAttribute('width', `${size}`);
-                    svg.setAttribute('height', `${size}`);
-                }
-
-                host.insertBefore(svg, host.firstChild);
-            },
-            error: () => {
-                // Icon not registered — fall through to font-class path.
-                this.svgIcon.set(false);
-                this.updateMaxHeight();
-            }
+            next: (svg) => this.renderSvgIcon(svg),
+            error: () => this.renderSvgIcon(null)
         });
     }
 
-    private parseIconSize(): number {
+    /** Injects the resolved `<svg>`, or drops back to the font class when the name did not resolve. */
+    private renderSvgIcon(svg: SVGElement | null): void {
+        const host = this.getHostElement();
+
+        // Only the element injected here: an `<svg>` projected into the host is the consumer's content.
+        if (this.injectedSvg) {
+            this.renderer.removeChild(host, this.injectedSvg);
+        }
+
+        this.injectedSvg = svg;
+        this.svgIcon.set(!!svg);
+
+        if (svg) {
+            this.renderer.insertBefore(host, svg, host.firstChild);
+        }
+
+        this.applyIconSize();
+    }
+
+    /** Sizes the injected `<svg>` and the host's `max-height` to the resolved icon size. */
+    private applyIconSize(): void {
+        const size = this.resolveIconSize();
+        const svg = this.injectedSvg;
+
+        if (svg && size !== undefined) {
+            this.renderer.setAttribute(svg, 'width', `${size}`);
+            this.renderer.setAttribute(svg, 'height', `${size}`);
+        }
+
+        this.updateMaxHeight();
+    }
+
+    private resolveIconSize(): number | undefined {
+        return this.iconSize() ?? this.parseIconSize();
+    }
+
+    private parseIconSize(): number | undefined {
         const iconName = this.iconName;
         const baseName = iconName?.includes(':') ? iconName.split(':')[1] : iconName;
         const size = parseInt(baseName?.split('_').pop() ?? '');

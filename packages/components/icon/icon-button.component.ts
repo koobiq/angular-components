@@ -67,7 +67,8 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     /** @docs-private */
     override readonly iconNameInput = input<string | undefined>(undefined, { alias: 'kbq-icon-button' });
 
-    get tabindex() {
+    /** Position of the button in the tab order. A disabled button is taken out of it entirely. */
+    get tabindex(): number | null {
         return this.disabled ? null : this._tabindex;
     }
 
@@ -93,7 +94,18 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
     protected override readonly appliesMaxHeight: boolean = false;
 
     /** @docs-private */
-    readonly tabindexInput = input<number | string | null | undefined>(undefined, { alias: 'tabindex' });
+    readonly tabindexInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabindex',
+        // `numberAttribute` gives NaN for what it cannot parse, and `tabindex="NaN"` is an invalid attribute the
+        // browser ignores, so an unparsable value renders no tabindex at all.
+        transform: (value) => {
+            if (value == null) return undefined;
+
+            const tabindex = numberAttribute(value);
+
+            return Number.isNaN(tabindex) ? null : tabindex;
+        }
+    });
 
     /** @docs-private */
     readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
@@ -105,8 +117,12 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
         super.ngOnChanges(changes);
 
         // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
-        // A bound `undefined` restores the default tabindex instead of dropping the button out of the tab order.
-        if (changes['tabindexInput']) this.tabindex = this.tabindexInput() ?? 0;
+        // A bound `undefined` or `null` restores the default tabindex instead of dropping the button out of the tab order.
+        if (changes['tabindexInput']) {
+            const tabindex = this.tabindexInput();
+
+            this.tabindex = tabindex === undefined ? 0 : tabindex;
+        }
 
         if (changes['disabledInput']) {
             const disabled = this.disabledInput();

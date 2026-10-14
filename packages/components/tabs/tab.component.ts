@@ -89,6 +89,7 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
 
     private _tooltipTitle = '';
 
+    /** Whether the tab is disabled: it cannot be selected and has no interactive states. */
     get disabled(): boolean {
         return this._disabled;
     }

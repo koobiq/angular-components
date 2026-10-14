@@ -54,6 +54,34 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('KbqIcon.small was removed');
     });
 
+    it('reports a small attribute on an icon item', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(ts, 'const template = `<i kbq-icon-item="kbq-plus_16" small></i>`;\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('KbqIcon.small was removed');
+    });
+
+    // v21-upgrade rewrites `small` on an icon button to `size` and reports what it leaves.
+    it('leaves small on an icon button to v21-upgrade', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            'const template = `<i kbq-icon="kbq-plus_16"></i><i kbq-icon-button="kbq-plus_16" [small]="true"></i>`;\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('KbqIcon.small was removed');
+    });
+
     // KbqIconButton and KbqIconItem deliberately do not register under the KbqIcon token, so a consumer
     // query keeps resolving exactly what it resolved before and there is nothing to report.
     it('leaves a KbqIcon content query alone', async () => {
@@ -72,19 +100,33 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).not.toContain('contentChild');
     });
 
-    it('reports a keydown handler sitting on an icon button', async () => {
+    it('reports an icon button on a non-button host that handles a click but no key', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(ts, 'const template = `<i kbq-icon-button="kbq-xmark-s_16" (click)="remove()"></i>`;\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('does not activate itself from Enter or Space');
+    });
+
+    it('leaves an icon button that handles its keys or sits on a native button alone', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
         const messages = collectLogs();
 
         appTree.overwrite(
             ts,
-            'const template = `<i kbq-icon-button="kbq-xmark-s_16" (keydown.enter)="remove()"></i>`;\n'
+            'const template = `' +
+                '<i kbq-icon-button="kbq-xmark-s_16" (click)="remove()" (keydown.enter)="remove()"></i>' +
+                '<button kbq-icon-button="kbq-xmark-s_16" (click)="remove()"></button>`;\n'
         );
 
         await run(first);
 
-        expect(messages.join('\n')).toContain('activates itself from Enter and Space');
+        expect(messages.join('\n')).not.toContain('does not activate itself');
     });
 
     it('reports a tabindex binding on an icon button', async () => {
@@ -97,6 +139,37 @@ describe(SCHEMATIC_NAME, () => {
         await run(first);
 
         expect(messages.join('\n')).toContain('number | null instead of any');
+    });
+
+    it('reports a tabindex written to an icon button in code', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqIconButton } from '@koobiq/components/icon';\n" +
+                "export function park(button: KbqIconButton) { button.tabindex = '-1'; }\n"
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('no longer type-checks');
+    });
+
+    it('leaves a tabindex on another element alone', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            'const template = `<i kbq-icon-button="kbq-xmark-s_16" aria-label="Remove"></i><div tabindex="0"></div>`;\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('number | null instead of any');
     });
 
     it('reports a subclass overriding the removed name marker', async () => {

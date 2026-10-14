@@ -65,11 +65,13 @@ export class KbqTimezoneOption extends KbqOption {
         return this.timezone?.id ?? super.value;
     }
 
-    override get viewValue(): string {
-        const cities: string = [this.timezone.city, this.timezone.cities].filter(Boolean).join(', ');
+    /** Offset the bound zone is on right now, written the way `KbqTimezoneZone.offset` is. */
+    protected get resolvedOffset(): string {
+        return resolveZoneOffset(this.timezone);
+    }
 
     /** The whole zone as one line: the offset, the city and every city the zone covers. */
-    get viewValue(): string {
+    override get viewValue(): string {
         return this.buildViewValue(this.timezone.cities);
     }
 

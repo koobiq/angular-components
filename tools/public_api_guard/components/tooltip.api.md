@@ -146,15 +146,13 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     get customClass(): string;
     set customClass(value: string);
     readonly customClassInput: InputSignal<string | undefined>;
-    protected derivedDisabled: boolean | undefined;
+    protected readonly derivedDisabledWins: boolean;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     readonly disabledInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
     enterDelay: number;
     readonly enterDelayInput: InputSignal<number | undefined>;
-    protected explicitlyDisabled: boolean | undefined;
     protected focusMonitor: FocusMonitor;
-    protected foldDisabled(): boolean;
     readonly forDisabledComponent: InputSignal<Record<"disabledSignal", WritableSignal<boolean>> | undefined>;
     protected getAnchorSize(): {
         width: number;

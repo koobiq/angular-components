@@ -35,8 +35,7 @@ export function kbqIconsResolverProvider(resolver: KbqIconResolver): Provider {
 }
 
 /**
- * Registers a name→URL dictionary as an icon resolver. Values are fetched at runtime, so the
- * application has to provide an `HttpClient` (`provideHttpClient()`).
+ * Registers a name→URL dictionary as an icon resolver. Values are fetched at runtime through `HttpClient`.
  *
  * A value starting with `<` is taken as inline markup and passed through Angular's HTML sanitizer,
  * which drops `<svg>` wholesale — register inline icons with

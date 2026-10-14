@@ -16,7 +16,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     constructor();
     readonly charWidth: _angular_core.InputSignal<number>;
     readonly debounceInterval: _angular_core.InputSignalWithTransform<number, unknown>;
-    protected foldDisabled(): boolean;
+    protected readonly derivedDisabledWins = true;
     readonly ignoreTooltipPointerEvents: _angular_core.InputSignal<boolean>;
     // (undocumented)
     set kbqEllipsisCenter(value: string);

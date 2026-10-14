@@ -13,10 +13,15 @@ import {
     dispatchMouseEvent
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { Observable } from 'rxjs';
+import { axe } from 'jest-axe';
+import { Observable, Subject } from 'rxjs';
 import { KBQ_TABS_CONFIG, KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
+import { KbqTabHeader } from './tab-header.component';
 import { KbqTab } from './tab.component';
 import { KbqTabsModule } from './tabs.module';
+
+/** Debounce the group applies to header resizes. See `RESIZE_DEBOUNCE_INTERVAL`. */
+const RESIZE_DEBOUNCE_INTERVAL = 100;
 
 /** Stands in for the CDK observer, which never emits under jsdom. */
 class MockSharedResizeObserver {
@@ -49,7 +54,7 @@ describe('KbqTabGroup', () => {
                 TabGroupWithIsActiveBinding,
                 TabGroupWithSelectedIndexBinding,
                 TestSelectionByIndexOrTabIdApp,
-                VerticalTabs,
+                TabsWithDisabledFirstTab,
                 TabsWithTooltipTitle
             ]
         }).compileComponents();
@@ -323,13 +328,13 @@ describe('KbqTabGroup', () => {
             const tabs = fixture.componentInstance.tabs();
             let labels = headerList.queryAll(By.css('[aria-disabled="true"]'));
 
-            expect(tabs[2].disabled()).toBe(false);
+            expect(tabs[2].disabled).toBe(false);
             expect(labels.length).toBe(1);
 
             fixture.componentInstance.isDisabled = true;
             fixture.detectChanges();
 
-            expect(tabs[2].disabled()).toBe(true);
+            expect(tabs[2].disabled).toBe(true);
             labels = headerList.queryAll(By.css('[aria-disabled="true"]'));
             expect(labels.length).toBe(2);
         });
@@ -666,31 +671,6 @@ describe('KbqTabGroup', () => {
                 .queryAll(By.css('.kbq-tab-label'))
                 .map((label) => label.injector.get(KbqTooltipTrigger));
 
-        it('re-checks the overflow of the labels of a vertical group on window resize', async () => {
-            vi.useFakeTimers();
-
-            const fixture = TestBed.createComponent(VerticalTabs);
-
-            fixture.detectChanges();
-
-            const [labelTooltip] = labelTooltips(fixture);
-            const labelContent: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-label__content');
-
-            expect(labelTooltip.disabled).toBe(true);
-
-            // jsdom has no layout: the label is made to overflow as the window narrows.
-            Object.defineProperty(labelContent, 'scrollWidth', { configurable: true, value: 200 });
-            Object.defineProperty(labelContent, 'clientWidth', { configurable: true, value: 100 });
-            Object.defineProperty(labelContent, 'innerText', { configurable: true, value: 'Long label' });
-
-            window.dispatchEvent(new Event('resize'));
-            await vi.advanceTimersByTimeAsync(100);
-            fixture.detectChanges();
-
-            expect(labelTooltip.disabled).toBe(false);
-            expect(labelTooltip.content).toBe('Long label\n');
-        });
-
         it('updates the label tooltip when the bound tooltipTitle changes', () => {
             const fixture = TestBed.createComponent(TabsWithTooltipTitle);
 
@@ -758,7 +738,7 @@ describe('KbqTabGroup', () => {
 describe('KbqTabGroup ARIA', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule, SimpleTabsTestApp, VerticalTabsTestApp]
+            imports: [KbqTabsModule, SimpleTabsTestApp, VerticalTabsTestApp]
         }).compileComponents();
     });
 
@@ -850,7 +830,7 @@ describe('KbqTabGroup ARIA', () => {
 describe('KbqTabGroup vertical binding', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule, VerticalTabsTestApp]
+            imports: [KbqTabsModule, VerticalTabsTestApp]
         }).compileComponents();
     });
 
@@ -908,10 +888,15 @@ describe('KbqTabGroup overflow tooltip', () => {
     beforeEach(() => {
         resizeObserver = new MockSharedResizeObserver();
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule, VerticalTabsTestApp],
+            imports: [KbqTabsModule, VerticalTabsTestApp],
             providers: [{ provide: SharedResizeObserver, useValue: resizeObserver }]
         }).compileComponents();
+
+        // `debounceTime` schedules on an interval and then checks the clock.
+        vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval', 'Date'] });
     });
+
+    afterEach(() => vi.useRealTimers());
 
     const overflow = (label: HTMLElement, isOverflown: boolean) => {
         const content = label.querySelector('.kbq-tab-label__content')!;
@@ -920,70 +905,72 @@ describe('KbqTabGroup overflow tooltip', () => {
         Object.defineProperty(content, 'clientWidth', { configurable: true, value: 100 });
     };
 
-    it('should enable and disable the tooltip as the header is resized', fakeAsync(() => {
+    /** Resizes the header and renders once the debounced re-measure is due. */
+    const resize = (fixture: ComponentFixture<unknown>) => {
+        resizeObserver.trigger();
+        vi.advanceTimersByTime(RESIZE_DEBOUNCE_INTERVAL);
+        fixture.detectChanges();
+    };
+
+    it('should enable and disable the tooltip as the header is resized', () => {
         const fixture = TestBed.createComponent(VerticalTabsTestApp);
 
-        fixture.detectChanges();
-        tick();
         fixture.detectChanges();
 
         const group = fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance as KbqTabGroup;
         const tab = group.tabs.first;
-        const label: HTMLElement = fixture.nativeElement.querySelector('.kbq-tab-label');
+        const label = fixture.debugElement.query(By.css('.kbq-tab-label'));
+        const tooltip = label.injector.get(KbqTooltipTrigger);
 
         expect(tab.isOverflown).toBe(false);
+        expect(tooltip.disabled).toBe(true);
 
-        overflow(label, true);
-        resizeObserver.trigger();
-        tick(200);
-        fixture.detectChanges();
+        overflow(label.nativeElement, true);
+        resize(fixture);
 
         expect(tab.isOverflown).toBe(true);
+        expect(tooltip.disabled).toBe(false);
+        expect(tooltip.content).toBe('A very long tab label that can be truncated\n');
 
-        overflow(label, false);
-        resizeObserver.trigger();
-        tick(200);
-        fixture.detectChanges();
+        overflow(label.nativeElement, false);
+        resize(fixture);
 
         expect(tab.isOverflown).toBe(false);
-        flush();
-    }));
+        expect(tooltip.disabled).toBe(true);
+    });
 
-    it('should ignore resizes while the group is horizontal', fakeAsync(() => {
+    it('should ignore resizes while the group is horizontal', () => {
         const fixture = TestBed.createComponent(VerticalTabsTestApp);
 
         fixture.componentInstance.vertical = false;
-        fixture.detectChanges();
-        tick();
         fixture.detectChanges();
 
         const group = fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance as KbqTabGroup;
 
         overflow(fixture.nativeElement.querySelector('.kbq-tab-label'), true);
-        resizeObserver.trigger();
-        tick(200);
-        fixture.detectChanges();
+        resize(fixture);
 
         expect(group.tabs.first.isOverflown).toBe(false);
-        flush();
-    }));
+    });
 });
 
 describe('KbqTabGroup focus management', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule, ClosableTabsTestApp]
+            imports: [KbqTabsModule, ClosableTabsTestApp]
         }).compileComponents();
     });
 
-    it('should move focus to the neighbouring tab when the focused one is removed', fakeAsync(() => {
+    const labelsOf = (fixture: ComponentFixture<unknown>): HTMLElement[] =>
+        Array.from(fixture.nativeElement.querySelectorAll('.kbq-tab-label'));
+
+    it('should move focus to the neighbouring tab when the focused one is removed', () => {
         const fixture = TestBed.createComponent(ClosableTabsTestApp);
 
         fixture.detectChanges();
-        tick();
 
         const header = fixture.debugElement.query(By.directive(KbqTabHeader)).componentInstance as KbqTabHeader;
-        const labels: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.kbq-tab-label'));
+        const labels = labelsOf(fixture);
 
         header.focusIndex = labels.length - 1;
         fixture.detectChanges();
@@ -992,34 +979,28 @@ describe('KbqTabGroup focus management', () => {
 
         fixture.componentInstance.tabs.pop();
         fixture.detectChanges();
-        tick();
 
-        const remaining: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('.kbq-tab-label'));
+        const remaining = labelsOf(fixture);
 
         expect(document.activeElement).toBe(remaining[remaining.length - 1]);
-        expect(document.activeElement).not.toBe(document.body);
-        flush();
-    }));
+    });
 
-    it('should leave focus alone when the strip never had it', fakeAsync(() => {
+    it('should leave focus alone when the strip never had it', () => {
         const fixture = TestBed.createComponent(ClosableTabsTestApp);
 
         fixture.detectChanges();
-        tick();
 
         fixture.componentInstance.tabs.pop();
         fixture.detectChanges();
-        tick();
 
         expect(document.activeElement).toBe(document.body);
-        flush();
-    }));
+    });
 });
 
 describe('KbqTabGroup animation parent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, NoopAnimationsModule, SimpleTabsTestApp]
+            imports: [KbqTabsModule, SimpleTabsTestApp]
         }).compileComponents();
     });
 
@@ -1292,13 +1273,43 @@ class TestSelectionByIndexOrTabIdApp {
 @Component({
     imports: [KbqTabsModule],
     template: `
-        <kbq-tab-group vertical>
-            <kbq-tab label="Long label">One</kbq-tab>
+        <kbq-tab-group>
+            <kbq-tab disabled label="One">Tab one content</kbq-tab>
+            <kbq-tab label="Two">Tab two content</kbq-tab>
+            <kbq-tab label="Three">Tab three content</kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class TabsWithDisabledFirstTab {
+    readonly tabGroup = viewChild.required(KbqTabGroup);
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group [vertical]="vertical">
+            <kbq-tab label="A very long tab label that can be truncated">One</kbq-tab>
             <kbq-tab label="Two">Two</kbq-tab>
         </kbq-tab-group>
     `
 })
-class VerticalTabs {}
+class VerticalTabsTestApp {
+    vertical = true;
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group [useStateSaving]="false">
+            @for (tab of tabs; track tab) {
+                <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
+            }
+        </kbq-tab-group>
+    `
+})
+class ClosableTabsTestApp {
+    tabs = ['One', 'Two', 'Three'];
+}
 
 @Component({
     imports: [KbqTabsModule],

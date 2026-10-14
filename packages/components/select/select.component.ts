@@ -1099,17 +1099,15 @@ export class KbqSelect
      */
     private hasLegacyValidateDirective = false;
 
-    // Mirror of the state the error colour is derived from. That state changes in `ngDoCheck`, while the
-    // parent is checked, and nothing marks this OnPush view for it — the signal is what repaints the trigger.
-    private readonly invalidState = signal(false);
+    // Mirror of `NgControl.invalid` for the legacy directive. The validity changes outside this OnPush view and
+    // is no signal, so nothing else would repaint the trigger when it flips.
+    private readonly legacyInvalid = signal(false);
 
     /** @docs-private */
     get colorForState(): KbqComponentColors {
         if (this.disabled()) return KbqComponentColors.Empty;
 
-        return (this.hasLegacyValidateDirective() && this.ngControl?.invalid) || this.errorState()
-            ? KbqComponentColors.Error
-            : KbqComponentColors.ContrastFade;
+        return this.legacyInvalid() || this.errorState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
     }
 
     /** Whether multiple choice is enabled. True if multiple or multiline mode is active. */
@@ -1279,7 +1277,7 @@ export class KbqSelect
             this.hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
                 'kbq-control_has-validate-directive'
             );
-            this.syncInvalidState();
+            this.syncLegacyInvalid();
 
             this.observeVisibility();
 
@@ -1348,8 +1346,6 @@ export class KbqSelect
     ngDoCheck() {
         if (this.ngControl) {
             this.updateErrorState();
-        } else {
-            this.syncInvalidState();
         }
     }
 
@@ -1417,6 +1413,11 @@ export class KbqSelect
         const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
 
         this.errorStateValue.set(matcher.isErrorState(control, parent));
+        this.syncLegacyInvalid();
+    }
+
+    private syncLegacyInvalid(): void {
+        this.legacyInvalid.set(this.hasLegacyValidateDirective && !!this.ngControl?.invalid);
     }
 
     /**

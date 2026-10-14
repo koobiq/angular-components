@@ -635,9 +635,8 @@ export class KbqTooltipTrigger
         }
 
         if (changes['disabledInput']) {
-            const disabled = this.disabledInput();
-
-            if (disabled !== undefined) this.disabled = disabled;
+            // A bound `undefined` hands the decision back to the state the trigger derives.
+            this.disabled = this.disabledInput();
         }
 
         if (changes['tooltipPlacementPriorityInput']) {
@@ -786,7 +785,9 @@ export class KbqTooltipTrigger
     /** @docs-private */
     readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
         alias: 'kbqTooltipDisabled',
-        transform: booleanAttribute
+        // `booleanAttribute` would read a bound `undefined` as `false`, an explicit request for the tooltip.
+        transform: (value: boolean | string | null | undefined) =>
+            value === undefined ? undefined : booleanAttribute(value)
     });
 
     /** @docs-private */

@@ -636,7 +636,7 @@ describe('KbqTabHeader', () => {
             vi.restoreAllMocks();
         });
 
-        it('should toggle kbq-disabled on the previous/next arrows at each scroll bound without removing them from the DOM', fakeAsync(() => {
+        it('should toggle kbq-disabled on the previous/next arrows at each scroll bound without removing them from the DOM', () => {
             const before = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_before');
             const after = fixture.nativeElement.querySelector('.kbq-tab-header__pagination_after');
 
@@ -648,7 +648,7 @@ describe('KbqTabHeader', () => {
 
             expect(before.classList.contains('kbq-disabled')).toBe(false);
             expect(after.classList.contains('kbq-disabled')).toBe(true);
-        }));
+        });
 
         it('should not start a drag for small movement, allowing a normal click to select a tab', () => {
             const tabListContainer = header.tabListContainer.nativeElement;

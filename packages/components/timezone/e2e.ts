@@ -232,6 +232,20 @@ export class E2eTimezonePanelStates extends BaseTimezoneStates {}
 })
 export class E2eTimezoneWithSearch extends BaseTimezoneStates {
     readonly control = model('');
+
+    /** Narrows the list the way a consumer does, so the option's own city filter and highlight have something to show. */
+    protected readonly filteredData = computed(() => {
+        const query = this.control().trim().toLowerCase();
+
+        if (!query) return this.data;
+
+        return this.data
+            .map((group) => ({
+                ...group,
+                zones: group.zones.filter(({ city, cities }) => `${city}, ${cities}`.toLowerCase().includes(query))
+            }))
+            .filter(({ zones }) => zones.length > 0);
+    });
 }
 
 @Component({

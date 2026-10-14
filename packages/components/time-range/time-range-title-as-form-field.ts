@@ -1,6 +1,17 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, computed, Directive, inject, signal } from '@angular/core';
-import { NgControl } from '@angular/forms';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    Directive,
+    DoCheck,
+    ElementRef,
+    inject,
+    Signal,
+    signal
+} from '@angular/core';
+import { FormGroupDirective, NgControl, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher, KbqErrorStateTracker } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTimeRange } from './time-range';
 import { KbqTimeRangeRange } from './types';
@@ -22,11 +33,12 @@ export class KbqTimeRangeTitlePlaceholder {}
     `,
     styles: `
         :host {
-            &:focus-visible {
-                outline: none;
-            }
             display: flex;
             align-items: center;
+        }
+
+        :host(:focus-visible) {
+            outline: none;
         }
     `,
     providers: [
@@ -37,20 +49,21 @@ export class KbqTimeRangeTitlePlaceholder {}
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
-        '[attr.tabindex]': '0',
+        '[attr.tabindex]': 'disabled() ? null : 0',
         '[attr.id]': 'id()',
         '[attr.aria-labelledby]': 'ariaLabelledby()',
-        class: 'kbq-time-range-title-as-form-field'
+        class: 'kbq-time-range-title-as-form-field',
+        '(focus)': 'focusedValue.set(true)',
+        '(blur)': 'focusedValue.set(false)'
     }
 })
-export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRangeRange>, DoCheck, OnDestroy {
+export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRangeRange>, DoCheck {
     private readonly timeRange = inject(KbqTimeRange);
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true });
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly focusMonitor = inject(FocusMonitor);
-    private readonly stateChangesSubject = new Subject<void>();
-    private readonly errorStateSignal = signal(false);
-    private readonly errorStateTracker: KbqErrorStateTracker;
+    private readonly requiredValue = signal(false);
+    /** @docs-private */
+    protected readonly focusedValue = signal(false);
 
     /** @docs-private */
     readonly controlType = 'select';
@@ -66,26 +79,38 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<KbqTimeRa
     protected readonly ariaLabelledby = computed(() => this.parentFormField?.labelId() ?? null);
     /** @docs-private */
     readonly ngControl: NgControl | null = this.timeRange.ngControl;
+
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        inject(ErrorStateMatcher),
+        this.ngControl,
+        inject(FormGroupDirective, { optional: true }),
+        inject(NgForm, { optional: true })
+    );
+
     /** @docs-private */
-    readonly value = signal<any>(null).asReadonly();
+    readonly value: Signal<KbqTimeRangeRange | null> = this.timeRange.value;
     /** @docs-private */
-    readonly id = signal(inject(_IdGenerator).getId('kbq-time-range-title-')).asReadonly();
+    readonly id = signal(inject(_IdGenerator).getId('kbq-time-range-title-as-control-')).asReadonly();
     /** @docs-private */
     readonly placeholder = signal<string | undefined>(undefined).asReadonly();
     /** @docs-private */
-    readonly focused = signal(false).asReadonly();
+    readonly focused = this.focusedValue.asReadonly();
     /** @docs-private */
-    readonly empty = signal(false).asReadonly();
+    readonly empty = computed(() => this.timeRange.value() === null);
     /** @docs-private */
-    readonly required = signal(false).asReadonly();
+    readonly required = this.requiredValue.asReadonly();
     /** @docs-private */
-    readonly disabled = signal(false).asReadonly();
+    readonly disabled: Signal<boolean> = this.timeRange.disabled;
     /** @docs-private */
-    readonly errorState = signal(false).asReadonly();
-    /** @docs-private */
-    ngOnDestroy(): void {
-        this.focusMonitor.stopMonitoring(this.elementRef);
-        this.stateChangesSubject.complete();
+    readonly errorState = this.errorStateTracker.errorState;
+
+    /**
+     * The validators and the touched state of the bound control notify nothing a signal could follow.
+     * @docs-private
+     */
+    ngDoCheck(): void {
+        this.errorStateTracker.updateErrorState();
+        this.requiredValue.set(!!this.ngControl?.control?.hasValidator(Validators.required));
     }
 
     /** @docs-private */
