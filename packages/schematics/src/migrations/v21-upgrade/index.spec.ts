@@ -210,11 +210,37 @@ describe('v21-upgrade', () => {
         );
     });
 
+    it('keeps the blank line after an import it empties', async () => {
+        const run = await runV21Upgrade({
+            'blank-line.ts': [
+                "import { Component } from '@angular/core';",
+                "import { ThemePalette } from '@koobiq/components/core';",
+                '',
+                'export const color = ThemePalette.Error;',
+                'export const component = Component;',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('blank-line.ts')).toBe(
+            [
+                "import { KbqComponentColors } from '@koobiq/components/core';",
+                "import { Component } from '@angular/core';",
+                '',
+                'export const color = KbqComponentColors.Error;',
+                'export const component = Component;',
+                ''
+            ].join('\n')
+        );
+    });
+
     it('reports instead of writing with fix: false', async () => {
         const source =
             "import { KbqFilterBarRefresher } from '@koobiq/components/filter-bar';\nexport const r = KbqFilterBarRefresher;\n";
         const run = await runV21Upgrade({ 'dry.ts': source }, { fix: false });
 
         expect(run.read('dry.ts')).toBe(source);
+        expect(run.log).toMatch(/\[v21-upgrade\] would update \/\S+\/dry\.ts \(run with --fix to apply\)/);
+        expect(run.log).toMatch(/\[v21-upgrade\] processed tree under "[^"]+", would update 1 file\(s\)\./);
     });
 });

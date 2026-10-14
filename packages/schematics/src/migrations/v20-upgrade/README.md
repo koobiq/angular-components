@@ -15,9 +15,11 @@ from three ordered tables in `data.ts`:
   `risk-level` → `badge`, `components-experimental/form-field` → `components/form-field`),
   class renames (`KbqNavbarIc*` → `Kbq*`, `KbqRiskLevel*` → `KbqBadge*`,
   `KbqWarningTooltipTrigger` / `KbqExtendedTooltipTrigger` → `KbqTooltipTrigger`,
-  `KbqDatepickerToggle` → `KbqDatepickerToggleIconComponent`, etc.), token
-  removals (`KBQ_VALIDATION`, `KBQ_SANITY_CHECKS`, `KBQ_SIDEPANEL_WITH_SHADOW`),
-  function renames (`toBoolean(` → `booleanAttribute(`, `isCorrectExtension(` →
+  `KbqDatepickerToggle` → `KbqDatepickerToggleIconComponent`, etc.; when the file
+  imported the new name as well, one import specifier is kept), removals of the
+  symbols that have no replacement (`KBQ_VALIDATION`, `KbqValidationOptions`,
+  `KBQ_SANITY_CHECKS`, `KBQ_SIDEPANEL_WITH_SHADOW`, `KbqCommonModule`, etc.) from
+  imports and lists such as `imports: []` and `providers: []`, function renames (`toBoolean(` → `booleanAttribute(`, `isCorrectExtension(` →
   `FileValidators.isCorrectExtension(`, `formatDataSize(` → `getFormattedSizeParts(`),
   method renames on instances (`.openPanel(` → `.open(`, `.toggleIsCollapsed(` →
   `.toggle(`, `.focusViaKeyboard(` → `.focus(`), and deprecated type-alias
@@ -52,6 +54,7 @@ without auto-fixing:
 | `scrollableCodeContent` (code-block)              | Use the `scrollTo()` method instead                                                                    |
 | `.canLoad` / `.codeFiles` (code-block, TS access) | Template bindings are auto-migrated; update programmatic access to `.canDownload` / `.files` manually  |
 | alias next to its replacement (code-block)        | Left untouched: merge `canLoad` + `canDownload` and `codeFiles` + `files` into one binding each        |
+| removed symbol used outside an import or a list   | Left untouched (e.g. `@Inject(KBQ_VALIDATION) x: KbqValidationOptions`): remove the uses by hand       |
 | `required` (KbqFilter)                            | Use `cleanable = false` and `removable = false` (best-effort match — verify it is a KbqFilter config)  |
 | `[initialValue]` (filter-search)                  | Seed the bound `[formControl]` / `[(ngModel)]` — the component has no value input                      |
 | `(onSearch)` (filter-search)                      | Read the query from the bound control instead                                                          |

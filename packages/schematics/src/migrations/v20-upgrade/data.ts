@@ -1,37 +1,58 @@
 /**
- * Replacement data for the v20.0.0 deprecated API removal migration.
- *
- * Each entry uses a RegExp source string in `from` and a literal `to`. The
- * RegExp is compiled with the `g` flag inside the migration driver. An entry
- * that deletes an element of a list takes one of its commas with it
- * (`listItemPattern`): nothing tidies the file afterwards.
+ * Replacement data for the v20.0.0 deprecated API removal migration, applied by `replacementMigrationRule`.
  *
  * Three buckets are emitted so the schematic can apply each to the right
  * file kind (.ts, .html / inline-template strings, .scss).
  */
 
 import { listItemPattern } from '../../utils/list-item-pattern';
+import type { Replacement, WarnPattern } from '../../utils/replacement-driver';
+import { codeBlockTagWith, codeBlockTagWithout } from '../../utils/tag-patterns';
 
-export interface Replacement {
-    from: string;
-    to: string;
-    /** Optional human-readable note shown in dry-run / warn mode. */
-    note?: string;
-    /**
-     * When this replacement matches in a .ts file, ensure the listed import
-     * specifier is present. Used for rewrites that introduce a symbol the
-     * user did not previously import (e.g. `toBoolean(` → `booleanAttribute(`
-     * requires `import { booleanAttribute } from '@angular/core'`).
-     */
-    ensureImport?: { symbol: string; from: string };
-    /**
-     * When this replacement matches in a .ts file, strip `symbol` from any
-     * existing `import { … } from 'from'` named-import clause. Used for
-     * rewrites whose source symbol no longer exists in v20.0.0 — leaving the
-     * stale import would otherwise break compilation of the migrated file.
-     */
-    removeImport?: { symbol: string; from: string };
+const CORE = '@koobiq/components/core';
+const FILE_UPLOAD = '@koobiq/components/file-upload';
+
+/** A symbol removed in 20.0.0 with nothing in its place. */
+interface RemovedSymbol {
+    name: string;
+    /** The module it was imported from. */
+    module: string;
+    /** Whether a list holds it called with no arguments, as a provider function. */
+    call?: boolean;
 }
+
+const REMOVED_SYMBOLS: RemovedSymbol[] = [
+    { name: 'KbqInputFileLabel', module: FILE_UPLOAD },
+    { name: 'KbqInputFile', module: FILE_UPLOAD },
+    { name: 'KbqFileValidatorFn', module: FILE_UPLOAD },
+    { name: 'KbqValidationOptions', module: CORE },
+    { name: 'KBQ_VALIDATION', module: CORE },
+    { name: 'KBQ_SANITY_CHECKS', module: CORE },
+    { name: 'KBQ_SIDEPANEL_WITH_SHADOW', module: '@koobiq/components/sidepanel' },
+    { name: 'mcSanityChecksFactory', module: CORE },
+    { name: 'KbqCommonModule', module: CORE },
+    // A no-op shim kept after the KbqValidateDirective removal. Its calls go, which can leave an empty
+    // `providers: []` behind.
+    { name: 'kbqDisableLegacyValidationDirectiveProvider', module: CORE, call: true }
+];
+
+/**
+ * A mention of the symbol outside the elements of `[…]` and `{…}` lists: a type annotation, an `@Inject()` token, a
+ * `provide:`, an aliased import. Deleting it there would leave the code broken.
+ */
+const outsideLists = ({ name, call }: RemovedSymbol): string =>
+    `(?<![\\[{,]\\s*(?:\\btype\\s+)?)\\b${name}\\b|\\b${name}\\b(?!${call ? '(?:\\s*\\(\\s*\\))?' : ''}\\s*[,\\]}])`;
+
+/**
+ * Removes the symbol with one of its commas from the named imports and exports and the arrays of a file that names
+ * it nowhere else. A file that also uses it elsewhere is left untouched and reported.
+ */
+const removeFromLists = (symbol: RemovedSymbol): Replacement => ({
+    from: listItemPattern(symbol.call ? `\\b${symbol.name}\\(\\s*\\)` : `\\b${symbol.name}\\b`),
+    to: '',
+    unless: outsideLists(symbol),
+    removeImport: { symbol: symbol.name, from: symbol.module }
+});
 
 /** TypeScript-source replacements (imports + identifiers + method renames). */
 export const tsReplacements: Replacement[] = [
@@ -85,26 +106,6 @@ export const tsReplacements: Replacement[] = [
     { from: '\\bKbqExtendedTooltipTrigger\\b', to: 'KbqTooltipTrigger' },
     { from: '\\bKbqDatepickerToggle\\b(?!Icon)', to: 'KbqDatepickerToggleIconComponent' },
     { from: '\\bKbqFilterBarSearch\\b', to: 'KbqSearchExpandable' },
-    {
-        from: listItemPattern('\\bKbqInputFileLabel\\b'),
-        to: '',
-        removeImport: { symbol: 'KbqInputFileLabel', from: '@koobiq/components/file-upload' }
-    },
-    {
-        from: listItemPattern('\\bKbqInputFile\\b'),
-        to: '',
-        removeImport: { symbol: 'KbqInputFile', from: '@koobiq/components/file-upload' }
-    },
-    {
-        from: listItemPattern('\\bKbqFileValidatorFn\\b'),
-        to: '',
-        removeImport: { symbol: 'KbqFileValidatorFn', from: '@koobiq/components/file-upload' }
-    },
-    {
-        from: listItemPattern('\\bKbqValidationOptions\\b'),
-        to: '',
-        removeImport: { symbol: 'KbqValidationOptions', from: '@koobiq/components/core' }
-    },
     { from: '\\bKbqFormFieldRef\\b', to: 'KbqFormField' },
 
     // Deprecated dropdown position type aliases → Kbq-prefixed names. The
@@ -113,47 +114,8 @@ export const tsReplacements: Replacement[] = [
     { from: '\\bDropdownPositionX\\b', to: 'KbqDropdownPositionX' },
     { from: '\\bDropdownPositionY\\b', to: 'KbqDropdownPositionY' },
 
-    // ─── Tokens / function renames ────────────────────────────────────────
-    {
-        from: listItemPattern('\\bKBQ_VALIDATION\\b'),
-        to: '',
-        removeImport: { symbol: 'KBQ_VALIDATION', from: '@koobiq/components/core' }
-    },
-    {
-        from: listItemPattern('\\bKBQ_SANITY_CHECKS\\b'),
-        to: '',
-        removeImport: { symbol: 'KBQ_SANITY_CHECKS', from: '@koobiq/components/core' }
-    },
-    {
-        from: listItemPattern('\\bKBQ_SIDEPANEL_WITH_SHADOW\\b'),
-        to: '',
-        removeImport: { symbol: 'KBQ_SIDEPANEL_WITH_SHADOW', from: '@koobiq/components/sidepanel' }
-    },
-    {
-        from: listItemPattern('\\bmcSanityChecksFactory\\b'),
-        to: '',
-        removeImport: { symbol: 'mcSanityChecksFactory', from: '@koobiq/components/core' }
-    },
-    {
-        from: listItemPattern('\\bKbqCommonModule\\b'),
-        to: '',
-        removeImport: { symbol: 'KbqCommonModule', from: '@koobiq/components/core' }
-    },
-    {
-        // No-op shim kept after the KbqValidateDirective removal in v20.0.0 is
-        // gone in this release. Strip the call with one of its commas, and the
-        // import.
-        from: listItemPattern('\\bkbqDisableLegacyValidationDirectiveProvider\\(\\s*\\)'),
-        to: '',
-        note:
-            'kbqDisableLegacyValidationDirectiveProvider was a no-op shim kept after the ' +
-            'KbqValidateDirective removal in v20.0.0; it is removed in this release. ' +
-            'You may also need to remove the (now-empty) `providers: []` key from the affected decorator.',
-        removeImport: {
-            symbol: 'kbqDisableLegacyValidationDirectiveProvider',
-            from: '@koobiq/components/core'
-        }
-    },
+    // ─── Removed symbols / function renames ───────────────────────────────
+    ...REMOVED_SYMBOLS.map(removeFromLists),
     {
         from: '\\btoBoolean\\(',
         to: 'booleanAttribute(',
@@ -187,18 +149,6 @@ export const tsReplacements: Replacement[] = [
             'the caller side.'
     }
 ];
-
-// One step inside an opening tag: a quoted value is taken whole, so neither `>` nor an attribute-like word inside
-// it counts.
-const TAG_BODY = `(?:[^<>"']|"[^"]*"|'[^']*')`;
-
-// The start of an attribute on an opening `<kbq-code-block>` tag that does not bind `name` itself.
-const codeBlockTagWithout = (name: string): string =>
-    String.raw`(<kbq-code-block(?![\w-])(?!${TAG_BODY}*[\s\[]${name}[\]\s=/>])${TAG_BODY}*?\s\[?)`;
-
-// Either attribute of a pair on one `<kbq-code-block>` tag.
-const codeBlockTagWith = (first: string, second: string): string =>
-    String.raw`<kbq-code-block(?![\w-])(?=${TAG_BODY}*[\s\[]${first}[\]\s=/>])(?=${TAG_BODY}*[\s\[]${second}[\]\s=/>])`;
 
 /** Template (HTML / inline-template string) replacements — selectors + attributes. */
 export const templateReplacements: Replacement[] = [
@@ -293,13 +243,8 @@ export const scssReplacements: Replacement[] = [
 
 /**
  * Patterns that we can't safely auto-fix — surface them to the user with file
- * locations so they can migrate manually. Used in `warn` mode only.
+ * locations so they can migrate manually, whether or not the fix is applied.
  */
-export interface WarnPattern {
-    pattern: string;
-    message: string;
-}
-
 export const warnPatterns: WarnPattern[] = [
     {
         pattern: '\\(onSaveAsNew\\)',
@@ -384,5 +329,13 @@ export const warnPatterns: WarnPattern[] = [
         message:
             'KbqFilter.required is deprecated — use cleanable = false and removable = false instead. ' +
             'NOTE: this warning is best-effort and may match unrelated `required:` keys; verify it is a KbqFilter config.'
-    }
+    },
+    ...REMOVED_SYMBOLS.map((symbol): WarnPattern => ({
+        anchor: `\\b(?:import|export)\\s*(?:type\\s*)?\\{[^}]*\\b${symbol.name}\\b[^}]*\\}\\s*from\\s*['"]${symbol.module}['"]`,
+        pattern: outsideLists(symbol),
+        message:
+            `\`${symbol.name}\` was removed in 20.0.0 with nothing in its place. This file uses it outside an ` +
+            'import or a list, e.g. as a type, an `@Inject()` token or a `provide:`, so it was left untouched: ' +
+            'remove those uses, and the code that depends on them, by hand. Manual migration required.'
+    }))
 ];

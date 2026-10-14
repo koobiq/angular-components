@@ -1,5 +1,5 @@
+import { TAG_BODY } from '../../../utils/tag-patterns';
 import type { AreaData, Replacement } from '../data';
-import { TAG_BODY } from './tag-body';
 
 /** The removed unprefixed `KbqPopoverTrigger` inputs and the `kbqPopover…` inputs that replace them. */
 const RENAMED_INPUTS: Record<string, string> = {

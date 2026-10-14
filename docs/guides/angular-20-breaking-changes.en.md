@@ -151,6 +151,6 @@ Removed tokens are stripped from imports: KBQ_VALIDATION, KBQ_SANITY_CHECKS, KBQ
 
 **CSS classes in SCSS**. Updated: `.kbq-risk-level` → `.kbq-badge`, `.kbq-navbar-ic` → `.kbq-navbar`, etc.
 
-**Manual fixes**. The schematic emits warnings for structural changes that cannot be fixed automatically and safely: `(onSaveAsNew)` listeners on `<kbq-filters>` must be moved to `(onSave)` with branching on `$event.status === 'newFilter'`; the `[customValidation]` / `[errors]` attributes on file-upload components must be replaced with `FormControl` validators; the `[apps]` attribute on `<button kbqAppSwitcher>` must be wrapped into a single site `[sites]="[{ id, name, apps }]"`.
+**Manual fixes**. The schematic emits warnings for structural changes that cannot be fixed automatically and safely: `(onSaveAsNew)` listeners on `<kbq-filters>` must be moved to `(onSave)` with branching on `$event.status === 'newFilter'`; the `[customValidation]` / `[errors]` attributes on file-upload components must be replaced with `FormControl` validators; the `[apps]` attribute on `<button kbqAppSwitcher>` must be wrapped into a single site `[sites]="[{ id, name, apps }]"`; a removed token or type that a file also uses outside an import or an array (an `@Inject()` token, a type annotation, a `provide:`) is left in place and reported.
 
 **After the migration**. Review the diff before committing: the migration is regex-based and does not rewrite values in local variables, re-exports, or aliased imports.

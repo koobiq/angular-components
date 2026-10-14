@@ -1,5 +1,5 @@
+import { TAG_BODY } from '../../../utils/tag-patterns';
 import type { AreaData } from '../data';
-import { TAG_BODY } from './tag-body';
 
 // An opening tag that carries the brand directive, as an element or an attribute, wherever it sits in the tag.
 const BRAND_TAG = `<(?=${TAG_BODY}*?\\bkbq-navbar-brand(?![\\w-]))${TAG_BODY}*?`;
