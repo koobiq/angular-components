@@ -1,5 +1,5 @@
+import { TAG_BODY } from '../../../utils/tag-patterns';
 import type { AreaData, Replacement } from '../data';
-import { TAG_BODY } from './tag-body';
 
 /** The first constructor argument (one level of nested calls), followed by a second one. */
 const SECOND_ARGUMENT = '\\((?:[^(),]|\\([^()]*\\))+,\\s*[^\\s)]';

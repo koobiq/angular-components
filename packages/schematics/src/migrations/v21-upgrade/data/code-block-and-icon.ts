@@ -1,13 +1,5 @@
+import { TAG_BODY, codeBlockTagWith, codeBlockTagWithout } from '../../../utils/tag-patterns';
 import type { AreaData } from '../data';
-import { TAG_BODY } from './tag-body';
-
-// The start of an attribute on an opening `<kbq-code-block>` tag that does not bind `name` itself.
-const codeBlockTagWithout = (name: string): string =>
-    String.raw`(<kbq-code-block(?![\w-])(?!${TAG_BODY}*[\s\[]${name}[\]\s=/>])${TAG_BODY}*?\s\[?)`;
-
-// Either attribute of a pair on one `<kbq-code-block>` tag.
-const codeBlockTagWith = (first: string, second: string): string =>
-    String.raw`<kbq-code-block(?![\w-])(?=${TAG_BODY}*[\s\[]${first}[\]\s=/>])(?=${TAG_BODY}*[\s\[]${second}[\]\s=/>])`;
 
 // An opening `<kbq-code-block>` tag that binds `name` twice.
 const codeBlockTagTwice = (name: string): string =>

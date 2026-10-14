@@ -391,13 +391,23 @@ describe(SCHEMATIC_NAME, () => {
         );
     });
 
-    it('drops an import line entirely when the removed symbol was the only specifier', async () => {
+    it('keeps the layout of a multi-line import clause it removes a stale symbol from', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
 
         appTree.overwrite(
             ts,
-            "import { KbqValidationOptions } from '@koobiq/components/core';\nconst x: KbqValidationOptions | null = null;\n"
+            [
+                "import { booleanAttribute } from '@angular/core';",
+                'import {',
+                '    KbqColorDirective,',
+                '    toBoolean,',
+                '    kbqErrorStateMatcherProvider',
+                "} from '@koobiq/components/core';",
+                '',
+                "export const v = [toBoolean('x'), booleanAttribute, KbqColorDirective, kbqErrorStateMatcherProvider];",
+                ''
+            ].join('\n')
         );
 
         const result = await runner.runSchematic(
@@ -406,11 +416,112 @@ describe(SCHEMATIC_NAME, () => {
             appTree
         );
 
-        const updated = result.readText(ts);
+        expect(result.readText(ts)).toBe(
+            [
+                "import { booleanAttribute } from '@angular/core';",
+                'import {',
+                '    KbqColorDirective,',
+                '    kbqErrorStateMatcherProvider',
+                "} from '@koobiq/components/core';",
+                '',
+                "export const v = [booleanAttribute('x'), booleanAttribute, KbqColorDirective, kbqErrorStateMatcherProvider];",
+                ''
+            ].join('\n')
+        );
+    });
 
-        // Neither the symbol nor its (now-empty) import line should remain.
-        expect(updated).not.toMatch(/\bKbqValidationOptions\b/);
-        expect(updated).not.toMatch(/import\s*\{[^}]*\}\s*from\s*['"]@koobiq\/components\/core['"]/);
+    it('drops an import line entirely when the removed symbol was the only specifier', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            "import { KbqCommonModule } from '@koobiq/components/core';\nexport const imports = [KbqCommonModule];\n"
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe('export const imports = [];\n');
+    });
+
+    it('leaves a removed symbol used outside a list untouched and reports it', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages: string[] = [];
+        const legacy = [
+            "import { Inject, NgModule, Optional } from '@angular/core';",
+            "import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';",
+            'export class Legacy {',
+            '    constructor(@Optional() @Inject(KBQ_VALIDATION) private validation: KbqValidationOptions) {}',
+            '}',
+            ''
+        ].join('\n');
+
+        appTree.overwrite(
+            ts,
+            legacy.replace('import { KBQ_VALIDATION, ', 'import { KbqCommonModule, KBQ_VALIDATION, ') +
+                '@NgModule({ imports: [KbqCommonModule] })\nexport class LegacyModule {}\n'
+        );
+        runner.logger.subscribe((entry) => messages.push(entry.message));
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+        const log = messages.join('\n');
+
+        expect(result.readText(ts)).toBe(`${legacy}@NgModule({ imports: [] })\nexport class LegacyModule {}\n`);
+        expect(log).toContain('`KBQ_VALIDATION` was removed in 20.0.0');
+        expect(log).toContain('`KbqValidationOptions` was removed in 20.0.0');
+        expect(log).not.toContain('`KbqCommonModule` was removed in 20.0.0');
+    });
+
+    it('keeps one import specifier when a rename gives two the same name', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            [
+                "import { KbqDatepickerToggle, KbqDatepickerToggleIconComponent } from '@koobiq/components/datepicker';",
+                'import {',
+                '    KbqFormField,',
+                '    KbqFormFieldRef,',
+                '    KbqFormFieldModule',
+                "} from '@koobiq/components/form-field';",
+                "import { type KbqWarningTooltipTrigger, KbqTooltipTrigger } from '@koobiq/components/tooltip';",
+                'export const toggles = [KbqDatepickerToggle, KbqDatepickerToggleIconComponent];',
+                'export const fields = [KbqFormField, KbqFormFieldRef, KbqFormFieldModule];',
+                'export const tooltip: KbqWarningTooltipTrigger = new KbqTooltipTrigger();',
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                "import { KbqDatepickerToggleIconComponent } from '@koobiq/components/datepicker';",
+                'import {',
+                '    KbqFormField,',
+                '    KbqFormFieldModule',
+                "} from '@koobiq/components/form-field';",
+                "import { KbqTooltipTrigger } from '@koobiq/components/tooltip';",
+                'export const toggles = [KbqDatepickerToggleIconComponent, KbqDatepickerToggleIconComponent];',
+                'export const fields = [KbqFormField, KbqFormField, KbqFormFieldModule];',
+                'export const tooltip: KbqTooltipTrigger = new KbqTooltipTrigger();',
+                ''
+            ].join('\n')
+        );
     });
 
     it('rewrites the static-attribute form kbqWarningTooltip="text" to kbqTooltipModifier + kbqTooltip', async () => {
@@ -805,20 +916,25 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.some((m) => m.includes('(onSaveAsNew)'))).toBe(true);
     });
 
-    it('does nothing when fix=false', async () => {
+    it('reports instead of writing with fix: false', async () => {
         const [first] = projects.keys();
         const { html } = paths(projects.get(first)!);
         const original = '<kbq-filter-search></kbq-filter-search>\n';
+        const messages: string[] = [];
 
         appTree.overwrite(html, original);
+        runner.logger.subscribe((entry) => messages.push(entry.message));
 
         const result = await runner.runSchematic(
             SCHEMATIC_NAME,
             { project: first, fix: false } satisfies Schema,
             appTree
         );
+        const log = messages.join('\n');
 
         expect(result.readText(html)).toBe(original);
+        expect(log).toContain(`[v20-upgrade] would update ${html} (run with --fix to apply)`);
+        expect(log).toMatch(/\[v20-upgrade\] processed tree under "[^"]+", would update 1 file\(s\)\./);
     });
 
     it('strips kbqDisableLegacyValidationDirectiveProvider call sites and the stale import', async () => {
