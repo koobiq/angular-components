@@ -3,6 +3,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import {
     DIVIDER_PACKAGE,
     DIVIDER_TYPE,
@@ -249,9 +250,7 @@ export default function dividerSignalsAndAria(options: Schema): Rule {
         let consumers = 0;
         let reported = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             const isTs = filePath.endsWith(TS_EXT);
             const isHtml = filePath.endsWith(HTML_EXT);
 

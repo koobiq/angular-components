@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from './ast';
 import { logMessage } from './messages';
 import { setupOptions } from './package-config';
+import { visitProjectFiles } from './project-files';
 import { collectInlineTemplateRanges, parseTemplate } from './typescript';
 
 /**
@@ -989,9 +990,7 @@ export function signalMembersRule(config: SignalMembersConfig, options: SignalMe
         const tsPaths: string[] = [];
         const htmlPaths: string[] = [];
 
-        rootDir.visit((filePath) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath) => {
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
             else if (filePath.endsWith(HTML_EXT)) htmlPaths.push(filePath);
         });

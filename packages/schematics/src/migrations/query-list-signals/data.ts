@@ -1,3 +1,5 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `query-list-signals` migration.
  *
@@ -6,13 +8,6 @@
  * redeclares one of them, and a write to one, no longer compile. `KbqCodeBlock.tabLinkTemplate`, which is protected,
  * is a signal. Warn-only.
  */
-
-export interface WarnPattern {
-    /** Only files that match it are checked against `pattern`. */
-    anchor: string;
-    pattern: string;
-    message: string;
-}
 
 const OWNERS = [
     'KbqSelect',

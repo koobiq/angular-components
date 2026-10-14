@@ -4,6 +4,7 @@ import { readWorkspace, writeWorkspace } from '@schematics/angular/utility';
 import { listItemPattern } from '../../utils/list-item-pattern';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import {
     Replacement,
     WarnPattern,
@@ -360,9 +361,7 @@ export default function v21Upgrade(options: Schema): Rule {
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
         let touched = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             const replacements = pickReplacements(filePath);
 
             if (!replacements) return;

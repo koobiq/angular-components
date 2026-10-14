@@ -2,6 +2,7 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { replacements } from './data';
 import { Schema } from './schema';
 
@@ -10,7 +11,8 @@ const HTML_EXT = '.html';
 
 const LABEL = '[file-upload-deprecated-outputs]';
 
-const SKIPPED_PATH_SEGMENTS = ['/node_modules/', '/dist/', '/coverage/', '/.angular/', '/out-tsc/'];
+// Build output that `visitProjectFiles` does not prune already.
+const SKIPPED_PATH_SEGMENTS = ['/coverage/', '/out-tsc/'];
 
 // `fileQueueChange` is a prefix of `fileQueueChanged`, so this one substring check
 // is enough to skip every file neither replacement can possibly match.
@@ -48,7 +50,7 @@ export default function fileUploadDeprecatedOutputs(options: Schema): Rule {
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
         let touched = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             if (isSkippedPath(filePath)) return;
             if (!isMigratableFile(filePath)) return;
 

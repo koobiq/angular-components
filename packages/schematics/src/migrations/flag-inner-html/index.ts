@@ -2,6 +2,7 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { FLAG_OPEN_TAG, FLAG_PACKAGE, FLAG_TYPE, INNER_HTML_BINDING, REWRITE_MESSAGE, SUMMARY } from './data';
 import { Schema } from './schema';
 
@@ -34,8 +35,7 @@ export default function flagInnerHtml(options: Schema): Rule {
         let consumers = 0;
         let rewritten = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
             const content = entry?.content.toString();

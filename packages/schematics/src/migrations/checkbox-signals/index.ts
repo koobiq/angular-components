@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { isWriteTarget } from '../../utils/signal-members-migration';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
@@ -803,9 +804,7 @@ export default function checkboxSignals(options: Schema): Rule {
         const tsPaths: string[] = [];
         const htmlPaths: string[] = [];
 
-        rootDir.visit((filePath) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath) => {
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
             else if (filePath.endsWith(HTML_EXT)) htmlPaths.push(filePath);
         });

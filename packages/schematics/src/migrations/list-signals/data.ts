@@ -1,3 +1,5 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `list-signals` migration.
  *
@@ -5,13 +7,6 @@
  * unchanged; a programmatic write no longer compiles, except `KbqListOption.selected`, which stays writable.
  * Warn-only: the write belongs in a binding or a form control.
  */
-
-export interface WarnPattern {
-    /** Only files that match it are checked against `pattern`. */
-    anchor: string;
-    pattern: string;
-    message: string;
-}
 
 const LIST_ANCHOR = '\\bKbqList(?:Selection|Option)\\b';
 

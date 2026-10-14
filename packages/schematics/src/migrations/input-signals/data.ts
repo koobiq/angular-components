@@ -1,16 +1,11 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `input-signals` migration.
  *
  * `KbqNumberInput.value` / `.disabled` and `KbqInput.type` are signal inputs read through a getter now. Reads are
  * unchanged; a programmatic write no longer compiles. Warn-only: the write belongs in a binding or a form control.
  */
-
-export interface WarnPattern {
-    /** Only files that match it are checked against `pattern`. */
-    anchor: string;
-    pattern: string;
-    message: string;
-}
 
 export const warnPatterns: WarnPattern[] = [
     {

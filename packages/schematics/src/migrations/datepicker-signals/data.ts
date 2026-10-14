@@ -1,3 +1,5 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `datepicker-signals` migration.
  *
@@ -6,13 +8,6 @@
  * hand-made `SimpleChanges` are not. Warn-only. The `KbqFormFieldControl` members of the datepicker input are
  * signals, migrated by `form-field-signals`.
  */
-
-export interface WarnPattern {
-    /** Only files that match it are checked against `pattern`. */
-    anchor: string;
-    pattern: string;
-    message: string;
-}
 
 const CLASSES = [
     'KbqDatepicker',
