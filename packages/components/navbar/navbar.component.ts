@@ -121,16 +121,17 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
         });
     }
 
+    /** @docs-private */
+    ngAfterContentChecked(): void {
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
+        this.focusableItemsList();
+    }
+
     /**
      * Monitored with `checkChildren`, because the navbar is one composite widget: the host owns the tab stop
      * but hands focus straight to an item, and without it that hand-off reads as the navbar being blurred.
      * @docs-private
      */
-    ngAfterContentChecked(): void {
-        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
-        this.focusableItemsList();
-    }
-
     ngAfterViewInit(): void {
         this.focusMonitor
             .monitor(this.elementRef, true)

@@ -415,7 +415,7 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
     }
 
     ngAfterViewChecked(): void {
-        // Emits `changes` where a decorator query did: once this view is checked.
+        // Syncs the list here so `changes` emits once this view is checked.
         this.allItemsList();
     }
 

@@ -515,7 +515,7 @@ export class KbqListSelection<T = any>
      * every change detection pass makes the list re-resolve every value against every option each pass.
      */
     readonly compareWith = input<(o1: T, o2: T) => boolean, (o1: T, o2: T) => boolean>((a1, a2) => a1 === a2, {
-        // Mirrors `KbqSelect`, which throws from its setter: a comparator that is not callable would
+        // Mirrors `KbqSelect`, which throws from its transform too: a comparator that is not callable would
         // otherwise surface as an empty selection and a warning per option.
         transform: (fn) => {
             if (typeof fn !== 'function') {
@@ -603,8 +603,7 @@ export class KbqListSelection<T = any>
         // `multiple` attribute reaches the input right after the constructor, before any option exists.
         this.selectionModel = new SelectionModel<KbqListOption<T>>(false);
 
-        // A different comparator means a different set of options can match the model value. `compareWith`
-        // is a signal input, so there is no setter to re-run matching from the way `KbqSelect` does.
+        // A different comparator means a different set of options can match the model value.
         effect(() => {
             this.compareWith();
             this.initializeSelection();
@@ -886,7 +885,7 @@ export class KbqListSelection<T = any>
     }
 
     ngAfterContentChecked(): void {
-        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
         this.optionsList();
     }
 
@@ -2073,7 +2072,7 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
         return { label: (clone.textContent ?? '').trim(), caption: (caption?.textContent ?? '').trim() };
     }
 
-    /** Sets the selected state directly on the list's `SelectionModel`, bypassing the `selected` input setter. */
+    /** Sets the selected state on the list's `SelectionModel`; the `selected` property and input go through it. */
     setSelected(selected: boolean): void {
         const { selectionModel } = this.listSelection;
 
@@ -2153,10 +2152,8 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
             return;
         }
 
-        // When animations are enabled, Angular may end up removing the option from the DOM a little
-        // earlier than usual, causing it to be blurred and throwing off the logic in the list
-        // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until after the next render.
+        // Deferred until the focus has settled: the option it moves to marks itself focused on a microtask, and a
+        // blur reported before that would read as no option being focused and clear the list's active item.
         afterNextRender(
             () => {
                 // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.

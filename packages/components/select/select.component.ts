@@ -368,7 +368,7 @@ export class KbqSelect
     /** Manages keyboard events for options in the panel. */
     keyManager: ActiveDescendantKeyManager<KbqOption>;
 
-    /** The value of the select panel's transform-origin property for animations. */
+    /** The value of the select panel's transform-origin property. */
     transformOrigin: string = 'top';
 
     /** Emits once the panel has rendered (`'showing'`) or has been removed (`'void'`). */
@@ -1297,9 +1297,8 @@ export class KbqSelect
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.emptyValue.set(this.selectionModel.isEmpty()));
 
-        // We need `distinctUntilChanged` here, because some browsers will
-        // fire the animation end event twice for the same animation. See:
-        // https://github.com/angular/angular/issues/24084
+        // Only the latest report of a frame is delivered, so a close and a reopen within one frame repeat the
+        // state delivered before; `distinctUntilChanged` keeps `openedChange` from emitting it twice.
         this.panelDoneAnimatingStream
             .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
@@ -1385,12 +1384,12 @@ export class KbqSelect
     }
 
     ngAfterContentChecked(): void {
-        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
         this.optionsList();
     }
 
     ngAfterViewChecked(): void {
-        // Emits `changes` where a decorator query did: once this view is checked.
+        // Syncs the list here so `changes` emits once this view is checked.
         this.tagsList();
     }
 
@@ -1766,9 +1765,9 @@ export class KbqSelect
      * @docs-private
      */
     onContainerClick(event?: MouseEvent) {
-        // The click that opened the panel reaches the form field after the select. With zone.js the panel has
-        // rendered and focused its active option by then, so the focus is left to the panel. Any other click on
-        // the field, such as one on a prefix that blurred the panel to the body, brings the focus back.
+        // The click that opened the panel reaches the form field after the select. In an application with zone.js
+        // the panel has rendered and focused its active option by then, so the focus is left to the panel. Any
+        // other click on the field, such as one on a prefix that blurred the panel to the body, brings the focus back.
         const target = event && _getEventTarget(event);
 
         if (this.panelOpen && target instanceof Node && this.elementRef.nativeElement.contains(target)) return;

@@ -954,7 +954,7 @@ export class KbqTooltipTrigger
         }
 
         // `isAttached` is checked directly, not just the `mutedBySiblingPopup` latch: `openedChange` can lag
-        // it by a real delay — e.g. select/tree-select only emit it once their open CSS animation finishes,
+        // it by a real delay — e.g. select/tree-select only emit it after the render that shows their panel,
         // and a sibling's own `hide()` can cancel a still-pending `show()` outright so it never emits at all
         // (KbqPopUp.show/hide, pop-up.ts). `isAttached` itself is guaranteed synchronous by the
         // `KbqSiblingPopup` contract, so checking it here closes that gap regardless of the cause. Gated by

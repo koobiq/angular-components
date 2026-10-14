@@ -593,7 +593,7 @@ export class KbqTagList
     }
 
     ngAfterContentChecked(): void {
-        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
         this.tagsList();
     }
 
