@@ -1,7 +1,14 @@
 import { Component, effect, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption, KbqOptionModule } from './index';
+import {
+    KBQ_OPTION_ACTION_PARENT,
+    KBQ_OPTION_PARENT_COMPONENT,
+    KbqOptgroup,
+    KbqOption,
+    KbqOptionActionComponent,
+    KbqOptionModule
+} from './index';
 
 @Component({
     imports: [KbqOptionModule],
@@ -44,6 +51,29 @@ class OptgroupWithLabel {}
 @Component({
     imports: [KbqOptionModule],
     template: `
+        <kbq-optgroup [label]="'Meat'" [disabled]="groupDisabled()">
+            <kbq-option [value]="'steak'">Steak</kbq-option>
+        </kbq-optgroup>
+    `
+})
+class OptionInGroup {
+    readonly groupDisabled = signal(true);
+}
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-option-action [disabled]="disabled()" />
+    `,
+    providers: [{ provide: KBQ_OPTION_ACTION_PARENT, useValue: { focus: () => {} } }]
+})
+class ActionWithDisable {
+    readonly disabled = signal(true);
+}
+
+@Component({
+    imports: [KbqOptionModule],
+    template: `
         <kbq-option [value]="'steak'">Steak</kbq-option>
     `,
     providers: [{ provide: KBQ_OPTION_PARENT_COMPONENT, useValue: { multiSelection: true } }]
@@ -80,9 +110,58 @@ describe('KbqOption component', () => {
                 OptionWithCheckbox,
                 OptionWithOwnRole,
                 OptgroupWithLabel,
+                OptionInGroup,
                 OptionDrivenByEffects
             ]
         }).compileComponents();
+    });
+
+    describe('host state', () => {
+        it('should reflect the selected, active and disabled state', () => {
+            const fixture = TestBed.createComponent(OptionWithDisable);
+
+            fixture.detectChanges();
+
+            const debugElement = fixture.debugElement.query(By.directive(KbqOption));
+            const option: HTMLElement = debugElement.nativeElement;
+
+            expect(option.getAttribute('tabindex')).toBe('0');
+            expect(option.classList).not.toContain('kbq-selected');
+            expect(option.classList).not.toContain('kbq-active');
+            expect(option.classList).not.toContain('kbq-disabled');
+
+            (debugElement.componentInstance as KbqOption).select();
+            (debugElement.componentInstance as KbqOption).setActiveStyles();
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(option.getAttribute('tabindex')).toBe('-1');
+            expect(option.classList).toContain('kbq-selected');
+            expect(option.classList).toContain('kbq-active');
+            expect(option.classList).toContain('kbq-disabled');
+        });
+
+        it('should follow the disabled state of its group', () => {
+            const fixture = TestBed.createComponent(OptionInGroup);
+
+            fixture.detectChanges();
+
+            const debugElement = fixture.debugElement.query(By.directive(KbqOption));
+            const option: HTMLElement = debugElement.nativeElement;
+
+            expect((debugElement.componentInstance as KbqOption).disabled).toBe(true);
+            expect(option.getAttribute('tabindex')).toBe('-1');
+            expect(option.getAttribute('aria-disabled')).toBe('true');
+            expect(option.classList).toContain('kbq-disabled');
+
+            fixture.componentInstance.groupDisabled.set(false);
+            fixture.detectChanges();
+
+            expect((debugElement.componentInstance as KbqOption).disabled).toBe(false);
+            expect(option.getAttribute('tabindex')).toBe('0');
+            expect(option.getAttribute('aria-disabled')).toBe('false');
+            expect(option.classList).not.toContain('kbq-disabled');
+        });
     });
 
     describe('aria', () => {
@@ -307,6 +386,27 @@ describe('KbqOption component', () => {
             expect(componentInstance.option().selected).toBe(true);
             expect(componentInstance.runs.toggle).toBe(1);
         });
+    });
+});
+
+describe('KbqOptionActionComponent', () => {
+    it('should reflect the disabled state on the host', () => {
+        const fixture = TestBed.createComponent(ActionWithDisable);
+
+        fixture.detectChanges();
+
+        const action: HTMLElement = fixture.debugElement.query(By.directive(KbqOptionActionComponent)).nativeElement;
+
+        expect(action.getAttribute('disabled')).toBe('true');
+        expect(action.getAttribute('aria-disabled')).toBe('true');
+        expect(action.classList).toContain('kbq-disabled');
+
+        fixture.componentInstance.disabled.set(false);
+        fixture.detectChanges();
+
+        expect(action.hasAttribute('disabled')).toBe(false);
+        expect(action.hasAttribute('aria-disabled')).toBe(false);
+        expect(action.classList).not.toContain('kbq-disabled');
     });
 });
 

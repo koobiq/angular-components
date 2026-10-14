@@ -210,8 +210,8 @@ describe('KbqIconButton', () => {
 
     // Host metadata is inherited from KbqIcon, the DI token is not — and deliberately stays that way. A
     // `contentChild(KbqIcon)` is looking for a decorative icon to position or tint; answering it with an
-    // interactive control made KbqAlert render an empty icon box for a dismissible alert and re-tint its
-    // close button to the alert color.
+    // interactive control would make KbqAlert render an empty icon box for a dismissible alert and re-tint
+    // its close button to the alert color.
     it('should not be matched by a KbqIcon content query', () => {
         const fixture = TestBed.createComponent(IconQueryTestApp);
 
