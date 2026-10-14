@@ -1,3 +1,4 @@
+import { listItemPattern } from '../../../utils/list-item-pattern';
 import type { AreaData, Replacement } from '../data';
 
 const CORE = '@koobiq/components/core';
@@ -27,8 +28,8 @@ const CLEAR_VALUE =
 const toPanelWidth = (symbol: string, module: string): Replacement[] => [
     {
         // The imported specifier, with one of its commas; an emptied clause is dropped by `removeImport`.
-        from: `(import\\s*(?:type\\s+)?\\{[^}]*?)(?:,\\s*${symbol}\\b(?!\\s+as\\b)|\\b${symbol}\\s*,\\s*|\\b${symbol}\\b(?!\\s+as\\b))(?=[^}]*\\}\\s*from\\s*['"]${module}['"])`,
-        to: '$1',
+        from: `(?<=import\\s*(?:type\\s*)?\\{[^}]*)${listItemPattern(`\\b${symbol}\\b(?!\\s+as\\b)`)}(?=[^}]*\\}\\s*from\\s*['"]${module}['"])`,
+        to: '',
         removeImport: { symbol, from: module },
         ensureImport: { symbol: 'KbqPanelWidth', from: CORE }
     },

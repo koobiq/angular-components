@@ -42,6 +42,19 @@ const THEME_PALETTE: Replacement[] = [
 const MC_LINE: Replacement = { from: '(?<![\\w-])mcLine(?![\\w-])', to: 'kbq-line' };
 const MC_LIST_ICON: Replacement = { from: '(?<![\\w-])mcListIcon(?![\\w-])', to: 'kbq-list-icon' };
 
+/** `name` as the attribute of a selector in a stylesheet, which matches an HTML attribute in any case. */
+const attributeSelector = (name: string): string => {
+    const anyCase = [...name].map((char) => `[${char.toLowerCase()}${char.toUpperCase()}]`).join('');
+
+    return `(?<=\\[\\s*)${anyCase}(?=\\s*[\\]=~|^$*])`;
+};
+
+// In a stylesheet, only an attribute selector: `.mcLine` and `$mcLine` are the app's own.
+const MC_SELECTORS: Replacement[] = [
+    { from: attributeSelector('mcLine'), to: 'kbq-line' },
+    { from: attributeSelector('mcListIcon'), to: 'kbq-list-icon' }
+];
+
 /** Undocumented core exports nothing in the library needed, removed in 21.0.0, with what to do instead. */
 const UNUSED_EXPORTS: { symbols: string[]; message: string }[] = [
     {
@@ -172,6 +185,7 @@ export const core: AreaData = {
         ...THEME_PALETTE
     ],
     templateReplacements: [...DEFAULT_ENUM_MEMBERS, MC_LINE, MC_LIST_ICON],
+    scssReplacements: MC_SELECTORS,
     warnPatterns: [
         ...UNUSED_EXPORTS.map(({ symbols, message }) => ({
             pattern: importedFromCore(`(?:${symbols.join('|')})`),

@@ -44,6 +44,104 @@ describe('v21-upgrade', () => {
         );
     });
 
+    it('imports a symbol it writes as a value past a type-only import or an alias of it', async () => {
+        const core = " from '@koobiq/components/core';";
+        const run = await runV21Upgrade({
+            'type-clause.ts': [
+                `import type { KbqThemeConfig }${core}`,
+                `import { KbqDefaultSizes, ThemePalette }${core}`,
+                'export const color = ThemePalette.Error;',
+                'export type Theme = [KbqThemeConfig, KbqDefaultSizes];',
+                ''
+            ].join('\n'),
+            'type-clause-only.ts': [
+                `import type { KbqThemeConfig }${core}`,
+                `import { ThemePalette }${core}`,
+                'export const color = ThemePalette.Error;',
+                'export type Theme = KbqThemeConfig;',
+                ''
+            ].join('\n'),
+            'type-specifier.ts': [
+                `import { type KbqComponentColors, ThemePalette }${core}`,
+                'export const color: KbqComponentColors = ThemePalette.Error;',
+                ''
+            ].join('\n'),
+            'type-import.ts': [
+                `import type { KbqComponentColors, KbqThemeConfig }${core}`,
+                `import { ThemePalette }${core}`,
+                'export const color: KbqComponentColors = ThemePalette.Error;',
+                'export type Theme = KbqThemeConfig;',
+                ''
+            ].join('\n'),
+            'aliased.ts': [
+                `import { KbqComponentColors as Colors, ThemePalette }${core}`,
+                'export const colors = [Colors.Success, ThemePalette.Error];',
+                ''
+            ].join('\n'),
+            'commented.ts': [
+                'import {',
+                '    KbqDefaultSizes, // sizes',
+                '    KbqComponentColors,',
+                '    ThemePalette',
+                `}${core}`,
+                'export const colors = [KbqDefaultSizes.Normal, KbqComponentColors.Success, ThemePalette.Error];',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('type-clause.ts')).toBe(
+            [
+                `import type { KbqThemeConfig }${core}`,
+                `import { KbqDefaultSizes, KbqComponentColors }${core}`,
+                'export const color = KbqComponentColors.Error;',
+                'export type Theme = [KbqThemeConfig, KbqDefaultSizes];',
+                ''
+            ].join('\n')
+        );
+        expect(run.read('type-clause-only.ts')).toBe(
+            [
+                `import { KbqComponentColors }${core}`,
+                `import type { KbqThemeConfig }${core}`,
+                'export const color = KbqComponentColors.Error;',
+                'export type Theme = KbqThemeConfig;',
+                ''
+            ].join('\n')
+        );
+        expect(run.read('type-specifier.ts')).toBe(
+            [
+                `import { KbqComponentColors }${core}`,
+                'export const color: KbqComponentColors = KbqComponentColors.Error;',
+                ''
+            ].join('\n')
+        );
+        expect(run.read('type-import.ts')).toBe(
+            [
+                `import { KbqComponentColors }${core}`,
+                `import type { KbqThemeConfig }${core}`,
+                'export const color: KbqComponentColors = KbqComponentColors.Error;',
+                'export type Theme = KbqThemeConfig;',
+                ''
+            ].join('\n')
+        );
+        expect(run.read('aliased.ts')).toBe(
+            [
+                `import { KbqComponentColors as Colors, KbqComponentColors }${core}`,
+                'export const colors = [Colors.Success, KbqComponentColors.Error];',
+                ''
+            ].join('\n')
+        );
+        expect(run.read('commented.ts')).toBe(
+            [
+                'import {',
+                '    KbqDefaultSizes, // sizes',
+                '    KbqComponentColors',
+                `}${core}`,
+                'export const colors = [KbqDefaultSizes.Normal, KbqComponentColors.Success, KbqComponentColors.Error];',
+                ''
+            ].join('\n')
+        );
+    });
+
     it('reports instead of writing with fix: false', async () => {
         const source =
             "import { KbqFilterBarRefresher } from '@koobiq/components/filter-bar';\nexport const r = KbqFilterBarRefresher;\n";

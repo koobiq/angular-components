@@ -1,3 +1,4 @@
+import { listItemPattern } from '../../../utils/list-item-pattern';
 import type { AreaData } from '../data';
 
 const FILTER_BAR = '@koobiq/components/filter-bar';
@@ -25,8 +26,8 @@ export const filterBar: AreaData = {
         },
         {
             // The specifier, with one of its commas; an emptied clause is dropped by `removeImport`.
-            from: `((?:import|export)\\s*(?:type\\s+)?\\{[^}]*?)(?:,\\s*KbqPipeMinWidth\\b(?!\\s+as\\b)|\\bKbqPipeMinWidth\\s*,\\s*|\\bKbqPipeMinWidth\\b(?!\\s+as\\b))${FILTER_BAR_CLAUSE_END}`,
-            to: '$1',
+            from: `(?<=(?:import|export)\\s*(?:type\\s*)?\\{[^}]*)${listItemPattern('\\bKbqPipeMinWidth\\b(?!\\s+as\\b)')}${FILTER_BAR_CLAUSE_END}`,
+            to: '',
             removeImport: { symbol: 'KbqPipeMinWidth', from: FILTER_BAR }
         },
         // An element of an `imports` array: the first or a middle one, the last one, the only one.

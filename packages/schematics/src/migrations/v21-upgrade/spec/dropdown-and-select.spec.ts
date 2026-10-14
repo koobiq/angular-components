@@ -281,6 +281,36 @@ describe('v21-upgrade: dropdown-and-select', () => {
         expect(run.log).not.toContain(PANEL_WIDTH);
     });
 
+    it('removes the select panel width specifier with its type modifier from any place in its clause', async () => {
+        const from = " from '@koobiq/components/select';\n";
+        const cases: [string, string][] = [
+            ['import { type KbqSelectPanelWidth, KbqSelectModule }', 'import { KbqSelectModule }'],
+            [
+                'import { KbqSelect, type KbqSelectPanelWidth, KbqSelectModule }',
+                'import { KbqSelect, KbqSelectModule }'
+            ],
+            ['import { KbqSelectModule, type KbqSelectPanelWidth }', 'import { KbqSelectModule }'],
+            ['import type { KbqSelectPanelWidth, KbqSelectChange }', 'import type { KbqSelectChange }'],
+            ['import type { KbqSelectChange, KbqSelectPanelWidth }', 'import type { KbqSelectChange }'],
+            ['import {\n    KbqSelectModule,\n    type KbqSelectPanelWidth,\n}', 'import {\n    KbqSelectModule,\n}']
+        ];
+        const files = Object.fromEntries(
+            cases.map(([clause], i) => [`clause-${i}.ts`, `${clause}${from}export type Width = KbqSelectPanelWidth;\n`])
+        );
+        const run = await runV21Upgrade({
+            ...files,
+            'only.ts': `import { type KbqSelectPanelWidth }${from}export type Width = KbqSelectPanelWidth;\n`,
+            'type-only.ts': `import type { KbqSelectPanelWidth }${from}export type Width = KbqSelectPanelWidth;\n`
+        });
+        const core = "import { KbqPanelWidth } from '@koobiq/components/core';\n";
+
+        cases.forEach(([, clause], i) =>
+            expect(run.read(`clause-${i}.ts`)).toBe(`${core}${clause}${from}export type Width = KbqPanelWidth;\n`)
+        );
+        expect(run.read('only.ts')).toBe(`${core}export type Width = KbqPanelWidth;\n`);
+        expect(run.read('type-only.ts')).toBe(`${core}export type Width = KbqPanelWidth;\n`);
+    });
+
     it('reports an aliased import and a re-export of a select panel width', async () => {
         const aliased = [
             "import { KbqSelectPanelWidth as Width } from '@koobiq/components/select';",

@@ -118,6 +118,26 @@ describe('v21-upgrade: filter-bar', () => {
         expect(run.log).not.toContain(MIN_WIDTH);
     });
 
+    it('removes the KbqPipeMinWidth specifier with its type modifier from any place in its clause', async () => {
+        const from = " from '@koobiq/components/filter-bar';\n";
+        const cases: [string, string][] = [
+            ['import { type KbqPipeMinWidth, KbqPipeState }', 'import { KbqPipeState }'],
+            ['import { KbqBasePipe, type KbqPipeMinWidth, KbqPipeState }', 'import { KbqBasePipe, KbqPipeState }'],
+            ['import { KbqPipeState, type KbqPipeMinWidth }', 'import { KbqPipeState }'],
+            ['import type { KbqPipeMinWidth, KbqPipeState }', 'import type { KbqPipeState }'],
+            ['export { KbqPipeState, type KbqPipeMinWidth }', 'export { KbqPipeState }']
+        ];
+        const files = Object.fromEntries(cases.map(([clause], i) => [`clause-${i}.ts`, `${clause}${from}`]));
+        const run = await runV21Upgrade({
+            ...files,
+            'only.ts': `import { type KbqPipeMinWidth }${from}export class Pipe {}\n`
+        });
+
+        cases.forEach(([, clause], i) => expect(run.read(`clause-${i}.ts`)).toBe(`${clause}${from}`));
+        expect(run.read('only.ts')).toBe('export class Pipe {}\n');
+        expect(run.log).not.toContain(MIN_WIDTH);
+    });
+
     it('drops the kbqPipeMinWidth attribute from external and inline templates', async () => {
         const run = await runV21Upgrade({
             'pipe.html': [
