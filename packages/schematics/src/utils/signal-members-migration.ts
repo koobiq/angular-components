@@ -89,7 +89,7 @@ interface Edit extends Range {
 }
 
 /** A receiver whose static type is one of the migrated types, valid within `scope`. */
-interface Receiver {
+export interface Receiver {
     /** Source text of the receiver expression, e.g. `dropdown` or `this.dropdown`. */
     text: string;
     /** The node whose subtree the receiver name is visible in. */
@@ -103,7 +103,7 @@ interface Receiver {
 }
 
 /** A name introduced by a declaration, together with the scope it is visible in. */
-interface Binding {
+export interface Binding {
     name: string;
     declaration: ts.Node;
     scope: ts.Node;
@@ -189,7 +189,7 @@ const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
 ]);
 
 /** Every value declaration that introduces a plain identifier, with the scope it is visible in. */
-function collectBindings(sourceFile: ts.SourceFile): Binding[] {
+export function collectBindings(sourceFile: ts.SourceFile): Binding[] {
     const bindings: Binding[] = [];
     const add = (name: string, declaration: ts.Node, scope: ts.Node | undefined) =>
         bindings.push({ name, declaration, scope: scope ?? sourceFile });
@@ -338,7 +338,11 @@ function collectReceivers(
 }
 
 /** Every receiver in the file, across every migrated type and every local alias of it. */
-function collectAllReceivers(sourceFile: ts.SourceFile, types: readonly string[], resolved?: Set<ts.Node>): Receiver[] {
+export function collectAllReceivers(
+    sourceFile: ts.SourceFile,
+    types: readonly string[],
+    resolved?: Set<ts.Node>
+): Receiver[] {
     return types.flatMap((type) =>
         localTypeNames(sourceFile, type).flatMap((name) => collectReceivers(sourceFile, name, type, resolved))
     );
@@ -356,7 +360,7 @@ function unwrapReceiver(node: ts.Expression): ts.Expression {
 }
 
 /** The receiver a property access resolves to at this exact position, if any. */
-function resolveReceiver(
+export function resolveReceiver(
     expression: ts.Expression,
     at: ts.Node,
     sourceFile: ts.SourceFile,
@@ -403,6 +407,9 @@ const ASSIGNMENT_OPERATORS = new Set<ts.SyntaxKind>([
     ts.SyntaxKind.QuestionQuestionEqualsToken
 ]);
 
+/** The unary operators that write their operand: `!x.member` and `-x.member` are reads. */
+const INCREMENT_OPERATORS = new Set<ts.SyntaxKind>([ts.SyntaxKind.PlusPlusToken, ts.SyntaxKind.MinusMinusToken]);
+
 /** Whether `node` sits on the left of a destructuring assignment, where it is written rather than read. */
 function isDestructuringTarget(node: ts.Node): boolean {
     let current: ts.Node = node;
@@ -425,8 +432,32 @@ function isDestructuringTarget(node: ts.Node): boolean {
     );
 }
 
+/** Whether `node` is written rather than read: by any assignment, `++` / `--`, `delete` or destructuring. */
+export function isWriteTarget(node: ts.Expression): boolean {
+    const parent = node.parent;
+
+    return (
+        (ts.isBinaryExpression(parent) &&
+            parent.left === node &&
+            ASSIGNMENT_OPERATORS.has(parent.operatorToken.kind)) ||
+        ((ts.isPostfixUnaryExpression(parent) || ts.isPrefixUnaryExpression(parent)) &&
+            INCREMENT_OPERATORS.has(parent.operator)) ||
+        ts.isDeleteExpression(parent) ||
+        isDestructuringTarget(node)
+    );
+}
+
+/** Whether `node` is the target of a plain `=`, the one write that translates to `.set()`. */
+export function isPlainAssignment(node: ts.Expression): boolean {
+    const parent = node.parent;
+
+    return (
+        ts.isBinaryExpression(parent) && parent.left === node && parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+    );
+}
+
 /** Classifies a matched property access and appends the resulting edit(s). */
-function classifyAccess(
+export function classifyAccess(
     node: ts.PropertyAccessExpression,
     sourceFile: ts.SourceFile,
     writableMembers: ReadonlySet<string>,
@@ -444,7 +475,7 @@ function classifyAccess(
     // and becomes a compile error the consumer fixes by hand. Appending `()` would produce unparseable
     // TypeScript instead. Only a plain `=` translates: `x.member += 1` would need to read and write at once.
     if (ts.isBinaryExpression(parent) && parent.left === node && ASSIGNMENT_OPERATORS.has(parent.operatorToken.kind)) {
-        if (parent.operatorToken.kind === ts.SyntaxKind.EqualsToken && writableMembers.has(node.name.text)) {
+        if (isPlainAssignment(node) && writableMembers.has(node.name.text)) {
             const rhs = parent.right;
 
             edits.push({ start: node.getEnd(), end: rhs.getStart(sourceFile), text: '.set(' });
@@ -454,10 +485,9 @@ function classifyAccess(
         return;
     }
 
-    // `x.member++` / `--x.member` and `delete x.member` are writes too, for the same reason.
-    if ((ts.isPostfixUnaryExpression(parent) || ts.isPrefixUnaryExpression(parent)) && parent.operand === node) return;
-    if (ts.isDeleteExpression(parent)) return;
-    if (isDestructuringTarget(node)) return;
+    // `x.member++` / `--x.member`, `delete x.member` and a destructuring target are writes too, for the same
+    // reason.
+    if (isWriteTarget(node)) return;
 
     // Read (incl. optional chain `x?.member`): append `()`.
     edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });

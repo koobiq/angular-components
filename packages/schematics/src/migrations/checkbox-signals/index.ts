@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { isWriteTarget } from '../../utils/signal-members-migration';
 import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     CHECKBOX_ELEMENT,
@@ -326,48 +327,6 @@ function resolveReceiver(
     });
 }
 
-/** Binary operators that make their left operand a write target rather than a read. */
-const ASSIGNMENT_OPERATORS = new Set<ts.SyntaxKind>([
-    ts.SyntaxKind.EqualsToken,
-    ts.SyntaxKind.PlusEqualsToken,
-    ts.SyntaxKind.MinusEqualsToken,
-    ts.SyntaxKind.AsteriskEqualsToken,
-    ts.SyntaxKind.AsteriskAsteriskEqualsToken,
-    ts.SyntaxKind.SlashEqualsToken,
-    ts.SyntaxKind.PercentEqualsToken,
-    ts.SyntaxKind.LessThanLessThanEqualsToken,
-    ts.SyntaxKind.GreaterThanGreaterThanEqualsToken,
-    ts.SyntaxKind.GreaterThanGreaterThanGreaterThanEqualsToken,
-    ts.SyntaxKind.AmpersandEqualsToken,
-    ts.SyntaxKind.BarEqualsToken,
-    ts.SyntaxKind.CaretEqualsToken,
-    ts.SyntaxKind.BarBarEqualsToken,
-    ts.SyntaxKind.AmpersandAmpersandEqualsToken,
-    ts.SyntaxKind.QuestionQuestionEqualsToken
-]);
-
-/** Whether `node` sits on the left of a destructuring assignment, where it is written rather than read. */
-function isDestructuringTarget(node: ts.Node): boolean {
-    let current: ts.Node = node;
-
-    while (
-        ts.isPropertyAssignment(current.parent) ||
-        ts.isShorthandPropertyAssignment(current.parent) ||
-        ts.isSpreadAssignment(current.parent) ||
-        ts.isSpreadElement(current.parent) ||
-        ts.isObjectLiteralExpression(current.parent) ||
-        ts.isArrayLiteralExpression(current.parent)
-    ) {
-        current = current.parent;
-    }
-
-    return (
-        ts.isBinaryExpression(current.parent) &&
-        current.parent.left === current &&
-        ASSIGNMENT_OPERATORS.has(current.parent.operatorToken.kind)
-    );
-}
-
 /** What a matched property access turned out to be. */
 type AccessKind = 'read' | 'write' | 'migrated';
 
@@ -380,17 +339,11 @@ function classifyAccess(node: ts.PropertyAccessExpression, edits: Edit[]): Acces
     if (ts.isPropertyAccessExpression(parent) && parent.expression === node && SIGNAL_API_METHODS.has(parent.name.text))
         return 'migrated';
 
-    // Write target: `x.id = RHS` and every compound form (`+=`, `??=`, …). Every migrated member is an
-    // `input()`, so there is no writable half: the write is left untouched and reported, and appending `()`
-    // would produce unparseable TypeScript instead of the read-only error the consumer should see.
-    if (ts.isBinaryExpression(parent) && parent.left === node && ASSIGNMENT_OPERATORS.has(parent.operatorToken.kind))
-        return 'write';
-
-    // `x.id++` / `--x.id` and `delete x.id` are writes too.
-    if ((ts.isPostfixUnaryExpression(parent) || ts.isPrefixUnaryExpression(parent)) && parent.operand === node)
-        return 'write';
-    if (ts.isDeleteExpression(parent)) return 'write';
-    if (isDestructuringTarget(node)) return 'write';
+    // Write target: `x.id = RHS`, every compound form (`+=`, `??=`, …), `x.id++` / `--x.id`, `delete x.id` and
+    // a destructuring target. Every migrated member is an `input()`, so there is no writable half: the write is
+    // left untouched and reported, and appending `()` would produce unparseable TypeScript instead of the
+    // read-only error the consumer should see.
+    if (isWriteTarget(node)) return 'write';
 
     // Read (incl. optional chain `x?.id`): append `()`.
     edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });

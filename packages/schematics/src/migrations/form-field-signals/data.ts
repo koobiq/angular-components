@@ -83,26 +83,27 @@ const CONTROL_MEMBERS: readonly string[] = [
     'errorState'
 ];
 
-/** Controls whose `disabled` the form control also sets, so it stays writable through `.set()`. */
-export const SELECT_CONTROL_TARGET: Target = {
+/** Controls whose `disabled` and `value` both stay writable through `.set()`: the selects and the tag list. */
+export const WRITABLE_VALUE_CONTROL_TARGET: Target = {
     id: 'KbqSelect',
-    types: ['KbqSelect', 'KbqTreeSelect', 'KbqTimezoneSelect', 'KbqTimepicker', 'KbqDatepickerInput'],
+    types: ['KbqSelect', 'KbqTimezoneSelect', 'KbqTagList'],
     elements: {
         'kbq-select': 'kbqSelect',
-        'kbq-tree-select': 'kbqTreeSelect',
-        'kbq-timezone-select': 'kbqTimezoneSelect'
+        'kbq-timezone-select': 'kbqTimezoneSelect',
+        'kbq-tag-list': 'kbqTagList'
     },
     signalMembers: CONTROL_MEMBERS,
-    writableMembers: new Set<string>(['disabled'])
+    writableMembers: new Set<string>(['disabled', 'value'])
 };
 
-/** `KbqTagList`: `disabled` and `value` are both writable. */
-export const TAG_LIST_CONTROL_TARGET: Target = {
-    id: 'KbqTagList',
-    types: ['KbqTagList'],
-    elements: { 'kbq-tag-list': 'kbqTagList' },
+/** Controls that own their `value`: only `disabled`, which the form control also sets, stays writable. */
+export const READ_ONLY_VALUE_CONTROL_TARGET: Target = {
+    id: 'KbqTreeSelect',
+    types: ['KbqTreeSelect', 'KbqTimepicker', 'KbqDatepickerInput'],
+    elements: { 'kbq-tree-select': 'kbqTreeSelect' },
+    exportAs: ['kbqTimepicker', 'kbqDatepickerInput'],
     signalMembers: CONTROL_MEMBERS,
-    writableMembers: new Set<string>(['disabled', 'value'])
+    writableMembers: new Set<string>(['disabled'])
 };
 
 /** Native-element controls: `value` and `placeholder` stay writable, `disabled` follows the input and the form control. */
@@ -110,6 +111,7 @@ export const INPUT_CONTROL_TARGET: Target = {
     id: 'KbqInput',
     types: ['KbqInput', 'KbqInputPassword', 'KbqTextarea'],
     elements: {},
+    exportAs: ['kbqInput', 'kbqInputPassword', 'kbqTextarea'],
     signalMembers: CONTROL_MEMBERS,
     writableMembers: new Set<string>(['value', 'placeholder'])
 };
@@ -136,8 +138,8 @@ export const TAG_INPUT_TARGET: Target = {
 export const TARGETS: readonly Target[] = [
     FORM_FIELD_TARGET,
     HINT_TARGET,
-    SELECT_CONTROL_TARGET,
-    TAG_LIST_CONTROL_TARGET,
+    WRITABLE_VALUE_CONTROL_TARGET,
+    READ_ONLY_VALUE_CONTROL_TARGET,
     INPUT_CONTROL_TARGET,
     FORM_FIELD_CONTROL_TARGET,
     TAG_INPUT_TARGET

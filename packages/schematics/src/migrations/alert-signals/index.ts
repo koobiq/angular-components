@@ -4,6 +4,15 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import {
+    Binding,
+    classifyAccess,
+    collectAllReceivers,
+    collectBindings,
+    isWriteTarget,
+    Receiver,
+    resolveReceiver
+} from '../../utils/signal-members-migration';
 import { rewriteRefAccesses } from '../../utils/template-ref-access';
 import { forEachClass, parseTemplate } from '../../utils/typescript';
 import {
@@ -28,12 +37,10 @@ interface Edit {
     text: string;
 }
 
-/** A receiver whose static type is an alert, valid within `[start, end]` of the source. */
-interface Receiver {
-    /** Source text of the receiver expression, e.g. `alert` or `this.alert`. */
-    text: string;
-    start: number;
-    end: number;
+/** The alert receivers of a file, and the bindings that decide which of them an access reaches. */
+interface FileReceivers {
+    receivers: Receiver[];
+    bindings: Binding[];
 }
 
 /** Applies text-span edits to `content`, right-to-left, so earlier edits don't shift later offsets. */
@@ -48,117 +55,24 @@ function applyEdits(content: string, edits: Edit[]): string {
     return result;
 }
 
-const isFunctionLike = (node: ts.Node): boolean =>
-    ts.isFunctionDeclaration(node) ||
-    ts.isMethodDeclaration(node) ||
-    ts.isConstructorDeclaration(node) ||
-    ts.isArrowFunction(node) ||
-    ts.isFunctionExpression(node) ||
-    ts.isGetAccessorDeclaration(node) ||
-    ts.isSetAccessorDeclaration(node);
-
-/** Walks up from `node` to the nearest ancestor matching `predicate`. */
-function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.Node | undefined {
-    let current = node.parent;
-
-    while (current) {
-        if (predicate(current)) return current;
-        current = current.parent;
-    }
-
-    return undefined;
+/** The `KbqAlert` receivers of a file, typed by annotation or `inject()`. */
+function collectFileReceivers(sourceFile: ts.SourceFile): FileReceivers {
+    return { receivers: collectAllReceivers(sourceFile, [ALERT_TYPE]), bindings: collectBindings(sourceFile) };
 }
-
-/** Whether a type annotation refers to the alert (`KbqAlert`). */
-function isAlertType(type: ts.TypeNode | undefined): boolean {
-    return (
-        !!type && ts.isTypeReferenceNode(type) && ts.isIdentifier(type.typeName) && type.typeName.text === ALERT_TYPE
-    );
-}
-
-const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
-    ts.SyntaxKind.PrivateKeyword,
-    ts.SyntaxKind.PublicKeyword,
-    ts.SyntaxKind.ProtectedKeyword,
-    ts.SyntaxKind.ReadonlyKeyword
-]);
 
 /**
- * Collects the receivers whose static type is an alert, by explicit annotation only (no cross-package type
- * resolution): method/function params, class fields (incl. `@ViewChild(KbqAlert) x: KbqAlert` and constructor
- * parameter-properties) and typed locals.
+ * Whether a property access reads from an alert receiver. The shared engine resolves the receiver at this
+ * exact position, so a nested declaration that shadows its name or a `function` that rebinds `this` is not
+ * followed. A signal query holds the instance behind a call of its own, which this pass does not reach.
  */
-function collectReceivers(sourceFile: ts.SourceFile): Receiver[] {
-    const receivers: Receiver[] = [];
-    const add = (text: string, scope: ts.Node) =>
-        receivers.push({ text, start: scope.getStart(sourceFile), end: scope.getEnd() });
+function onReceiver(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, scope: FileReceivers): boolean {
+    const receiver = resolveReceiver(node.expression, node, sourceFile, scope.receivers, scope.bindings);
 
-    const visit = (node: ts.Node): void => {
-        if (ts.isParameter(node) && ts.isIdentifier(node.name) && isAlertType(node.type)) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
-
-            // A constructor parameter-property is also a class field, reachable as `this.<name>`.
-            if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
-                const owner = findAncestor(node, ts.isClassDeclaration);
-
-                if (owner) add(`this.${node.name.text}`, owner);
-            }
-        } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name) && isAlertType(node.type)) {
-            const owner = findAncestor(node, ts.isClassDeclaration);
-
-            if (owner) add(`this.${node.name.text}`, owner);
-        } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && isAlertType(node.type)) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
-        }
-
-        node.forEachChild(visit);
-    };
-
-    visit(sourceFile);
-
-    return receivers;
-}
-
-/** Whether a property access on a receiver is within one of the receiver's scopes. */
-function inReceiverScope(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, receivers: Receiver[]): boolean {
-    const receiverText = node.expression.getText(sourceFile);
-    const start = node.getStart(sourceFile);
-    const end = node.getEnd();
-
-    return receivers.some((r) => r.text === receiverText && start >= r.start && end <= r.end);
-}
-
-/** Classifies a matched property access and appends the resulting edit(s). */
-function classifyAccess(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, edits: Edit[]): void {
-    const parent = node.parent;
-
-    // Already migrated: `x.compact()` (call) or `x.compact.set(...)` — leave alone (idempotent).
-    if (ts.isCallExpression(parent) && parent.expression === node) return;
-    if (ts.isPropertyAccessExpression(parent) && parent.expression === node && parent.name.text === 'set') return;
-
-    // Write target: `x.compact = RHS`. `KbqAlert` signal members are `input()` (read-only), so there is no
-    // writable member — leave the write untouched (it becomes a compile error the consumer fixes by hand).
-    if (
-        ts.isBinaryExpression(parent) &&
-        parent.left === node &&
-        parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
-    ) {
-        if (WRITABLE_MEMBERS.has(node.name.text)) {
-            const rhs = parent.right;
-
-            edits.push({ start: node.getEnd(), end: rhs.getStart(sourceFile), text: '.set(' });
-            edits.push({ start: rhs.getEnd(), end: rhs.getEnd(), text: ')' });
-        }
-
-        return;
-    }
-
-    // Read (incl. optional chain `x?.compact`): append `()`.
-    edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
+    return !!receiver && !receiver.signalQuery;
 }
 
 /** Collects edits for every read/write of a value-safe signal member on a known alert receiver. */
-function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): Edit[] {
+function collectAccessEdits(sourceFile: ts.SourceFile, scope: FileReceivers): Edit[] {
     const edits: Edit[] = [];
 
     const visit = (node: ts.Node): void => {
@@ -166,9 +80,10 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): E
             ts.isPropertyAccessExpression(node) &&
             ts.isIdentifier(node.name) &&
             SIGNAL_MEMBERS.includes(node.name.text) &&
-            inReceiverScope(node, sourceFile, receivers)
+            onReceiver(node, sourceFile, scope)
         ) {
-            classifyAccess(node, sourceFile, edits);
+            // `KbqAlert` signal members are `input()`, so every write is left for the consumer and reported.
+            classifyAccess(node, sourceFile, WRITABLE_MEMBERS, edits);
         }
 
         node.forEachChild(visit);
@@ -186,32 +101,22 @@ interface ReceiverWarnings {
     readOnlyWrites: Set<string>;
 }
 
-/** Whether a signal member is assigned rather than read, a write the migration leaves for the consumer. */
+/** Whether a signal member is written rather than read, in any form: the migration leaves it for the consumer. */
 function isReadOnlyWrite(node: ts.PropertyAccessExpression): boolean {
-    return (
-        SIGNAL_MEMBERS.includes(node.name.text) &&
-        !WRITABLE_MEMBERS.has(node.name.text) &&
-        ts.isBinaryExpression(node.parent) &&
-        node.parent.left === node &&
-        node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
-    );
+    return SIGNAL_MEMBERS.includes(node.name.text) && !WRITABLE_MEMBERS.has(node.name.text) && isWriteTarget(node);
 }
 
 /**
  * Collects the manual-migration members (`alertColor`, now-`protected` queries, writes to read-only signal
  * members) accessed on an alert receiver.
  */
-function collectReceiverWarnings(sourceFile: ts.SourceFile, receivers: Receiver[]): ReceiverWarnings {
+function collectReceiverWarnings(sourceFile: ts.SourceFile, scope: FileReceivers): ReceiverWarnings {
     const valueChanged = new Set<string>();
     const protectedAccess = new Set<string>();
     const readOnlyWrites = new Set<string>();
 
     const visit = (node: ts.Node): void => {
-        if (
-            ts.isPropertyAccessExpression(node) &&
-            ts.isIdentifier(node.name) &&
-            inReceiverScope(node, sourceFile, receivers)
-        ) {
+        if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name) && onReceiver(node, sourceFile, scope)) {
             const name = node.name.text;
 
             if (VALUE_CHANGED_MEMBERS.includes(name)) valueChanged.add(name);
@@ -230,11 +135,11 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, receivers: Receiver[
 /** Pass A — rewrite value-safe programmatic reads of alert signal members in TypeScript code. */
 function migrateTsExpressions(content: string, fileName: string): string {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile);
+    const scope = collectFileReceivers(sourceFile);
 
-    if (receivers.length === 0) return content;
+    if (scope.receivers.length === 0) return content;
 
-    const edits = collectAccessEdits(sourceFile, receivers);
+    const edits = collectAccessEdits(sourceFile, scope);
 
     return edits.length > 0 ? applyEdits(content, edits) : content;
 }
@@ -258,8 +163,10 @@ function warnReceiverMembers(
     templateWrites: Set<string>
 ): void {
     const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-    const receivers = collectReceivers(sourceFile);
-    const { valueChanged, protectedAccess, readOnlyWrites } = collectReceiverWarnings(sourceFile, receivers);
+    const { valueChanged, protectedAccess, readOnlyWrites } = collectReceiverWarnings(
+        sourceFile,
+        collectFileReceivers(sourceFile)
+    );
 
     templateWrites.forEach((member) => readOnlyWrites.add(member));
     warnReadOnlyWrites(context, filePath, readOnlyWrites);

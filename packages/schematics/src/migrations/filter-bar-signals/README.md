@@ -23,9 +23,10 @@ The schematic walks every `.ts` and `.html` file in the project (skipping
 
 - **TypeScript reads/writes.** For a receiver whose static type is annotated
   `KbqFilterBar` / `KbqFilterBarHost` (method/function params, class fields —
-  including `@ViewChild(KbqFilterBar) x: KbqFilterBar` and constructor
-  parameter-properties — and typed locals), a read of a signal member becomes a
-  call and a `filter` write becomes `.set(...)`:
+  including `@ViewChild(KbqFilterBar) x: KbqFilterBar`, constructor
+  parameter-properties and `inject(KbqFilterBar)` — and typed locals), a read of
+  a signal member becomes a call and a plain `filter = …` write becomes
+  `.set(...)`:
     - `filterBar.filter` → `filterBar.filter()` (incl. optional chain `filterBar.filter?.name` → `filterBar.filter()?.name`)
     - `filterBar.filter = next` → `filterBar.filter.set(next)`
     - `this.filterBar.isChanged` → `this.filterBar.isChanged()`
@@ -46,13 +47,14 @@ All rewrites are idempotent — running twice does not double the call.
 Some changes require code restructuring and are surfaced as warnings without
 auto-fixing:
 
-| Pattern                          | Manual migration                                                                                   |
-| -------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `.changes` (KbqFilterBar)        | Deprecated no-op; read `filterBar.filter()` inside an `effect(...)`, or listen to `(filterChange)` |
-| `.preparePopover()` (KbqFilters) | Removed; use `openSaveAsNewFilterPopover()` / `openChangeFilterNamePopover()`                      |
-| `viewChild(KbqFilterBar)` query  | Returns the instance, so reads are a double call: `this.filterBar().filter()` — verify manually    |
-| `KBQ_FILTER_BAR_PIPES`           | Now typed `Map<KbqPipeType, Type<KbqBasePipe>>`; wrap direct providers in `new Map([...])`         |
-| `filterBar.pipeTemplates = …`    | Read-only input, also when written through a template ref; bind `[pipeTemplates]` instead          |
+| Pattern                          | Manual migration                                                                                                 |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `.changes` (KbqFilterBar)        | Deprecated no-op; read `filterBar.filter()` inside an `effect(...)`, or listen to `(filterChange)`               |
+| `.preparePopover()` (KbqFilters) | Removed; use `openSaveAsNewFilterPopover()` / `openChangeFilterNamePopover()`                                    |
+| `viewChild(KbqFilterBar)` query  | Returns the instance, so reads are a double call: `this.filterBar().filter()` — verify manually                  |
+| `KBQ_FILTER_BAR_PIPES`           | Now typed `Map<KbqPipeType, Type<KbqBasePipe>>`; wrap direct providers in `new Map([...])`                       |
+| `filterBar.pipeTemplates = …`    | Read-only input, also when written through a template ref; bind `[pipeTemplates]` instead                        |
+| `filterBar.filter ??= …`         | Only a plain `=` becomes `.set()`, in code or through a template ref; write the rest with `.set()` / `.update()` |
 
 ## Running it manually
 
@@ -64,7 +66,8 @@ Pass `--fix=false` to see what would change without writing files.
 
 ## Limitations
 
-Receivers are matched by explicit `KbqFilterBar` type annotation only (no
-cross-package type inference), so aliased/inferred receivers
+Receivers are matched by an explicit `KbqFilterBar` type annotation or an
+`inject()` initializer (no type inference), so inferred receivers
 (`const fb = this.filterBar; fb.filter`) are left untouched and covered by the
-warnings above. After running, **always inspect the diff** before committing.
+warnings above. A nested declaration that reuses the receiver's name, and
+`this.<field>` inside a `function` that rebinds `this`, are left alone too. After running, **always inspect the diff** before committing.

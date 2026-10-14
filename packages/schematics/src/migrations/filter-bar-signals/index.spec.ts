@@ -111,6 +111,97 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('`pipeTemplates` can no longer be assigned');
     });
 
+    it('leaves a compound write in code alone and reports it', async () => {
+        const ts = firstTsPath();
+        const body = '        filterBar.filter ??= next;\n' + '        filterBar.pipeTemplates ||= [];\n';
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFilterBar, KbqFilter } from '@koobiq/components/filter-bar';\n" +
+                'class Demo {\n' +
+                '    apply(filterBar: KbqFilterBar, next: KbqFilter) {\n' +
+                body +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+        const all = messages.join('\n');
+
+        expect(updated).toContain(body);
+        expect(all).toContain('`pipeTemplates` can no longer be assigned');
+        expect(all).toContain('`filter` is a writable signal now');
+    });
+
+    it('leaves a nested declaration that shadows a typed receiver alone', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFilterBar } from '@koobiq/components/filter-bar';\n" +
+                'class Demo {\n' +
+                '    read(filterBar: KbqFilterBar) {\n' +
+                '        const names = [1].map((filterBar: { filter: string; pipeTemplates: string[] }) => {\n' +
+                '            filterBar.pipeTemplates = [];\n' +
+                '            return filterBar.filter;\n' +
+                '        });\n' +
+                '        return [filterBar.isChanged, names];\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('            filterBar.pipeTemplates = [];\n            return filterBar.filter;\n');
+        expect(updated).toContain('return [filterBar.isChanged(), names];');
+        expect(messages.join('\n')).not.toContain('can no longer be assigned');
+    });
+
+    it('leaves this.<field> inside a function that rebinds this alone, and rewrites it inside an arrow', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFilterBar } from '@koobiq/components/filter-bar';\n" +
+                'class Demo {\n' +
+                '    filterBar: KbqFilterBar;\n' +
+                '    read() {\n' +
+                '        [1].forEach(function (this: any) {\n' +
+                '            return this.filterBar.filter;\n' +
+                '        });\n' +
+                '        return [1].map(() => this.filterBar.filter);\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('            return this.filterBar.filter;\n');
+        expect(updated).toContain('return [1].map(() => this.filterBar.filter());');
+    });
+
+    it('rewrites reads and writes on a receiver typed by inject()', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { inject } from '@angular/core';\n" +
+                "import { KbqFilterBar, KbqFilter } from '@koobiq/components/filter-bar';\n" +
+                'class Demo {\n' +
+                '    private readonly filterBar = inject(KbqFilterBar);\n' +
+                '    apply(next: KbqFilter) {\n' +
+                '        this.filterBar.filter = next;\n' +
+                '        return this.filterBar.isChanged;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('this.filterBar.filter.set(next);');
+        expect(updated).toContain('return this.filterBar.isChanged();');
+    });
+
     it('rewrites reads on a @ViewChild field (this.filterBar) and the computed signal getters', async () => {
         const ts = firstTsPath();
 
@@ -215,6 +306,23 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('(click)="filterBar.filter.set(saved)"');
         expect(updated).toContain('(click)="filterBar.pipeTemplates = []"');
         expect(messages.join('\n')).toContain('`pipeTemplates` can no longer be assigned');
+    });
+
+    it('leaves a compound write through a ref alone and reports it', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-filter-bar #filterBar></kbq-filter-bar>\n' +
+            '<button (click)="filterBar.filter ??= saved">Restore</button>\n' +
+            '<button (click)="filterBar.pipeTemplates ||= []">Reset</button>\n';
+
+        appTree.overwrite(html, template);
+
+        const updated = (await run()).readText(html);
+        const all = messages.join('\n');
+
+        expect(updated).toBe(template);
+        expect(all).toContain('`pipeTemplates` can no longer be assigned');
+        expect(all).toContain('`filter` is a writable signal now');
     });
 
     it('leaves reads via a template reference variable naming a directive on <kbq-filter-bar> untouched', async () => {
