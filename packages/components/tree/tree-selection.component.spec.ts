@@ -1,7 +1,18 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, DebugElement, effect, InputSignal, signal, Type, viewChild, viewChildren } from '@angular/core';
+import {
+    Component,
+    DebugElement,
+    Directive,
+    DoCheck,
+    effect,
+    InputSignal,
+    signal,
+    Type,
+    viewChild,
+    viewChildren
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -835,6 +846,24 @@ describe('KbqTreeSelection', () => {
 
                 expect(event.defaultPrevented).toBe(true);
                 expect(option.nativeElement.classList).toContain('kbq-action-button-focused');
+            });
+
+            it('should keep the option focused and active while its action button holds the focus', async () => {
+                const option = options[0];
+                const { keyManager } = fixture.componentInstance.tree();
+
+                // The tree listens to its options a macrotask after they are rendered.
+                await new Promise((resolve) => setTimeout(resolve));
+                keyManager.setFocusOrigin('keyboard');
+                keyManager.setFirstItemActive();
+                await fixture.whenStable();
+
+                dispatchKeyboardEvent(option.nativeElement, 'keydown', TAB);
+                await fixture.whenStable();
+
+                expect(document.activeElement).toBe(option.query(By.directive(KbqOptionActionComponent)).nativeElement);
+                expect(option.nativeElement.classList).toContain('kbq-focused');
+                expect(keyManager.activeItem).toBe(option.componentInstance);
             });
         });
 
@@ -5046,5 +5075,173 @@ describe('KbqTreeSelection called from an effect', () => {
 
         expect(option('rootNode_1').selected).toBe(false);
         expect(fixture.componentInstance.runs).toBe(1);
+    });
+});
+
+/** Counts the change detection passes over the view that declares it. */
+@Directive({ selector: '[testCountChecks]' })
+class CountChecks implements DoCheck {
+    count = 0;
+
+    ngDoCheck(): void {
+        this.count++;
+    }
+}
+
+@Component({
+    imports: [KbqTreeModule, ReactiveFormsModule, CountChecks],
+    template: `
+        <span #declaringView testCountChecks></span>
+
+        <kbq-tree-selection
+            multiple="keyboard"
+            [selectAll]="selectAll"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            [formControl]="control"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+                testCountChecks
+                [selectable]="!unselectableNodes.includes(node.name)"
+            >
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeWithCheckCounters extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+    readonly declaringViewChecks = viewChild.required('declaringView', { read: CountChecks });
+    selectAll = true;
+    unselectableNodes = ['rootNode_1'];
+    readonly control = new FormControl<string[]>(this.namesBut(this.unselectableNodes), { nonNullable: true });
+
+    constructor() {
+        super();
+
+        // One flat node per data node across emissions, so new data can leave the rendered rows as they are.
+        const flatNodes = new WeakMap<FileNode, FileFlatNode>();
+
+        this.treeFlattener = new KbqTreeFlattener<FileNode, FileFlatNode>(
+            (node: FileNode, level: number, parent: any) =>
+                flatNodes.get(node) ?? flatNodes.set(node, this.transformer(node, level, parent)).get(node)!,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
+        );
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = this.treeData;
+    }
+
+    namesBut(excluded: string[]): string[] {
+        return this.treeControl.dataNodes.map(({ name }) => name).filter((name) => !excluded.includes(name));
+    }
+}
+
+describe('KbqTreeSelection rendering a change of the data', () => {
+    let fixture: ComponentFixture<TreeWithCheckCounters>;
+
+    // The rows mark themselves for check a macrotask after the rendered set changes.
+    const settle = async (): Promise<void> => {
+        fixture.detectChanges();
+        await new Promise((resolve) => setTimeout(resolve));
+        await fixture.whenStable();
+    };
+
+    const node = (name: string): FileFlatNode =>
+        fixture.componentInstance.treeControl.dataNodes.find((dataNode) => dataNode.name === name)!;
+
+    const rowChecks = (): CountChecks[] =>
+        fixture.debugElement
+            .queryAll(By.css('kbq-tree-option[testCountChecks]'))
+            .map(({ injector }) => injector.get(CountChecks));
+
+    /** Runs the change and reports how often it checked the view declaring the tree and each row it renders. */
+    const countChecks = (change: () => void): { declaringView: number; rows: number[] } => {
+        const declaringView = fixture.componentInstance.declaringViewChecks();
+        const declaringViewCount = declaringView.count;
+        const rowCounts = new Map(rowChecks().map((row) => [row, row.count]));
+
+        change();
+        TestBed.tick();
+
+        return {
+            declaringView: declaringView.count - declaringViewCount,
+            rows: rowChecks().map((row) => row.count - (rowCounts.get(row) ?? 0))
+        };
+    };
+
+    const selectAllCheckbox = (): HTMLElement =>
+        fixture.nativeElement.querySelector('.kbq-tree-option_select-all kbq-pseudo-checkbox');
+
+    beforeEach(async () => {
+        fixture = TestBed.createComponent(TreeWithCheckCounters);
+        await settle();
+    });
+
+    it('should render new rows once, without the view declaring the tree', async () => {
+        fixture.componentInstance.selectAll = false;
+        await settle();
+
+        const { treeControl } = fixture.componentInstance;
+        const checks = countChecks(() => treeControl.expand(node('Documents')));
+
+        expect(checks.declaringView).toBe(0);
+        expect(checks.rows).toEqual([1, 1, 1, 1, 1, 1, 1, 1]);
+    });
+
+    it('should render a change that leaves the rows as they are once, "select all" row included', () => {
+        const { treeControl } = fixture.componentInstance;
+        const checks = countChecks(() => treeControl.expand(node('rootNode_1')));
+
+        expect(checks.declaringView).toBe(0);
+        expect(checks.rows).toEqual([1, 1, 1, 1, 1]);
+    });
+
+    it('should hand the rows of data that arrives outside change detection to the keyboard', async () => {
+        fixture.componentInstance.selectAll = false;
+        await settle();
+
+        const { dataSource, tree } = fixture.componentInstance;
+
+        dataSource.data = buildFileTree({ docs: 'md', src: 'ts' }, 0);
+        TestBed.tick();
+        tree().keyManager.setLastItemActive();
+
+        expect(tree().keyManager.activeItem!.value).toBe('src');
+    });
+
+    it('should leave a row the user cannot select out of the "select all" state from the first render', () => {
+        expect(selectAllCheckbox().classList).toContain('kbq-checked');
+    });
+
+    it('should render the "select all" state of the rows a change brings in', async () => {
+        const { control, treeControl } = fixture.componentInstance;
+
+        // A collapsed node is a target of "select all" whatever its row would say, so Sun keeps the state mixed.
+        fixture.componentInstance.unselectableNodes = ['rootNode_1', 'Sun'];
+        control.setValue(fixture.componentInstance.namesBut(['rootNode_1', 'Sun']));
+        await settle();
+
+        expect(selectAllCheckbox().classList).toContain('kbq-indeterminate');
+
+        treeControl.expand(node('Pictures'));
+        TestBed.tick();
+
+        expect(selectAllCheckbox().classList).toContain('kbq-checked');
+    });
+
+    it('should render the "select all" state of data nodes new data adds behind the rows', () => {
+        const { dataSource, treeData } = fixture.componentInstance;
+
+        treeData
+            .find(({ name }) => name === 'Pictures')!
+            .children.push(Object.assign(new FileNode(), { name: 'Moon' }));
+        dataSource.data = [...treeData];
+        TestBed.tick();
+
+        expect(selectAllCheckbox().classList).toContain('kbq-indeterminate');
     });
 });

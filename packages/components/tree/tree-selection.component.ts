@@ -1194,15 +1194,26 @@ export class KbqTreeSelection
         // Not `super.renderNodeChanges`: that would run change detection over this very view before
         // `sortedNodes` is refreshed, so the "select all" row — which is rendered off `isEmpty` — would
         // need a second pass to catch up. One pass, after the state its template reads is current.
-        this.applyNodeChanges(data, dataDiffer, viewContainer, parentData);
+        const changed = this.applyNodeChanges(data, dataDiffer, viewContainer, parentData);
 
         this.sortedNodes = this.getSortedNodes(viewContainer);
 
         this.changeDetectorRef.detectChanges();
-        // The options are a content query of the view declaring this tree, refreshed only with that view. This mostly
-        // runs while change detection does, when a `markForCheck` would not bring it back to a view it has passed,
-        // and without zone.js nothing else would: the rendered nodes would never reach `renderedOptions`.
-        afterNextRender(() => this.changeDetectorRef.markForCheck(), { injector: this.injector });
+
+        // The "select all" row is rendered ahead of what its state reads: new rows bind their inputs after it and join
+        // `renderedOptions` only once bound, and `KbqTreeFlatDataSource` assigns `dataNodes` after it emits. Nothing
+        // else in the tree reads that state, so a tree without the row is done in this one pass. Marked for check,
+        // which reaches the views above too: a template reading `allOptionsSelected` by reference reads the same state.
+        if (!this.showSelectAll) return;
+
+        const dataNodes = this.treeControl.dataNodes;
+
+        afterNextRender(
+            () => {
+                if (changed || this.treeControl.dataNodes !== dataNodes) this.changeDetectorRef.markForCheck();
+            },
+            { injector: this.injector }
+        );
     }
 
     /** @docs-private */
