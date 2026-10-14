@@ -191,6 +191,12 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
         // If no input value accessor was explicitly specified, use the element as the input value accessor.
         this.inputValueAccessor = inputValueAccessor || this.elementRef.nativeElement;
 
+        // A static `type` is on the element before any directive runs, while the effect below runs after a reactive
+        // form has written its value from `ngOnChanges`: a number field would sanitize that value away by then.
+        if (this.numberInput && this.elementRef.nativeElement.type === 'number') {
+            this.elementRef.nativeElement.type = 'text';
+        }
+
         this.value = signal(this.inputValueAccessor.value);
         this.syncedValue = this.inputValueAccessor.value;
 
@@ -208,26 +214,31 @@ export class KbqInput implements KbqFormFieldControl<any>, DoCheck, CanUpdateErr
             });
         });
 
-        // A bound value replaces the current one whenever the binding changes.
+        // A bound value replaces the current one whenever the binding changes. The number input takes the same
+        // binding and renders it in the locale format, so it owns the element's value.
         effect(() => {
             const value = this.valueInput();
 
-            if (value !== undefined) {
+            if (value !== undefined && !this.numberInput) {
                 untracked(() => this.value.set(value));
             }
         });
 
-        // A value set in code is written to the element on the next change detection.
+        // A value set in code is written to the element on the next change detection. The one the element last agreed
+        // on is not written back: the element may have changed since, as when the number input renders a bound value.
         effect(() => {
             const value = this.value();
 
             untracked(() => {
-                if (this.inputValueAccessor.value !== value) {
-                    this.inputValueAccessor.value = value;
+                if (value !== this.syncedValue) {
+                    if (this.inputValueAccessor.value !== value) {
+                        this.inputValueAccessor.value = value;
+                    }
+
+                    this.syncedValue = value;
                 }
 
-                this.syncedValue = value;
-                this.emptyValue.set(this.isEmpty());
+                this.dirtyCheckNativeValue();
             });
         });
 

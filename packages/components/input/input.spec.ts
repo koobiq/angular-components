@@ -309,6 +309,17 @@ class InputWithHintsAndError {
     errorStateMatcher: ErrorStateMatcher = new ShowOnControlDirtyErrorStateMatcher();
 }
 
+@Component({
+    imports: [KbqInputModule],
+    template: `
+        <input kbqInput [value]="value" />
+    `
+})
+class InputWithBoundValue {
+    readonly input = viewChild.required(KbqInput);
+    value = 'bound';
+}
+
 describe('KbqInput', () => {
     describe('basic behaviors', () => {
         it('should reflect disabled state on form-field and native input', async () => {
@@ -345,6 +356,18 @@ describe('KbqInput', () => {
             fixture.detectChanges();
 
             expect(inputElement.getAttribute('disabled')).not.toBeNull();
+        });
+
+        it('should write a bound value and a value set in code to the element', async () => {
+            const fixture = createComponent(InputWithBoundValue);
+            const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+            expect(inputElement.value).toBe('bound');
+
+            fixture.componentInstance.input().value.set('set in code');
+            await fixture.whenStable();
+
+            expect(inputElement.value).toBe('set in code');
         });
 
         it('should reflect placeholder input on native element', async () => {
