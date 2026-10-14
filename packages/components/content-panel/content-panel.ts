@@ -545,6 +545,9 @@ export class KbqContentPanelContainer implements OnInit {
      * @docs-private
      */
     protected handleEscapeKeydown(event: KeyboardEvent): void {
+        // A control inside the container consumed the key to close a popup of its own, such as an autocomplete panel.
+        if (event.defaultPrevented) return;
+
         if (!this.openedState() || this.disableClose() || this.disableCloseByEscape()) return;
 
         event.preventDefault();

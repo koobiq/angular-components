@@ -1,6 +1,16 @@
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, model, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
+import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
+import {
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    ESCAPE,
+    KBQ_STATE_STORE,
+    KbqStateSavingService,
+    KbqStateStore
+} from '@koobiq/components/core';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqContentPanelContainer } from './content-panel';
 import { KbqContentPanelModule } from './module';
 
@@ -73,6 +83,29 @@ export class TestContentPanel {
     readonly disableCloseByEscape = signal(false);
 
     readonly paragraphs = Array.from({ length: 100 });
+}
+
+@Component({
+    selector: 'test-content-panel-with-autocomplete',
+    imports: [KbqContentPanelModule, KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-content-panel-container [(opened)]="opened">
+            <kbq-form-field>
+                <input kbqInput placeholder="State" [kbqAutocomplete]="auto" />
+            </kbq-form-field>
+
+            <kbq-autocomplete #auto="kbqAutocomplete">
+                <kbq-option value="Alabama">Alabama</kbq-option>
+            </kbq-autocomplete>
+
+            <kbq-content-panel>
+                <kbq-content-panel-body>body</kbq-content-panel-body>
+            </kbq-content-panel>
+        </kbq-content-panel-container>
+    `
+})
+class ContentPanelWithAutocomplete {
+    readonly opened = model(true);
 }
 
 describe(KbqContentPanelModule.name, () => {
@@ -183,6 +216,32 @@ describe(KbqContentPanelModule.name, () => {
 
         getContentPanelContainerElement(debugElement).dispatchEvent(ESCAPE_KEY_EVENT);
         expect(componentInstance.opened()).toBe(true);
+    });
+
+    it('should close an autocomplete panel in the content on ESCAPE, and the panel once it is closed', async () => {
+        const fixture = createComponent(ContentPanelWithAutocomplete);
+        const { componentInstance, debugElement } = fixture;
+        const overlayContainerElement = TestBed.inject(OverlayContainer).getContainerElement();
+        const input: HTMLInputElement = debugElement.nativeElement.querySelector('input');
+        const pressEscape = async () => {
+            dispatchKeyboardEvent(input, 'keydown', ESCAPE, undefined, 'Escape');
+            await fixture.whenStable();
+        };
+
+        await fixture.whenStable();
+        dispatchFakeEvent(input, 'focusin');
+        await fixture.whenStable();
+
+        expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).not.toBeNull();
+
+        await pressEscape();
+
+        expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).toBeNull();
+        expect(componentInstance.opened()).toBe(true);
+
+        await pressEscape();
+
+        expect(componentInstance.opened()).toBe(false);
     });
 
     it('should setup width/minWidth/maxWidth', async () => {
