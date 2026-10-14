@@ -5935,15 +5935,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsdom@npm:^30":
-  version: 30.0.0
-  resolution: "@types/jsdom@npm:30.0.0"
+"@types/jsdom@npm:^21.1.7":
+  version: 21.1.7
+  resolution: "@types/jsdom@npm:21.1.7"
   dependencies:
     "@types/node": "npm:*"
     "@types/tough-cookie": "npm:*"
-    parse5: "npm:^8.0.0"
-    undici-types: "npm:^8.9.0"
-  checksum: 10c0/5489ff43ccaaaa473c1a0f10f623e6329a57234454203f557d0ff3bff28e51423b20219ff5c1c8f3d3552c862b36576c25340724b6e93d283c759b8db6868422
+    parse5: "npm:^7.0.0"
+  checksum: 10c0/c0c0025adc2b193e85453eeeea168bb909f0ebad08d6552be7474a407e9c163db8f696dcf1e3cbe8cb9c9d970ba45f4386171794509c1a0fe5d1fed72c91679d
   languageName: node
   linkType: hard
 
@@ -10658,7 +10657,7 @@ __metadata:
     "@stackblitz/sdk": "npm:^1.11.1"
     "@stylistic/eslint-plugin": "npm:^5.10.0"
     "@types/express": "npm:^5.0.6"
-    "@types/jsdom": "npm:^30"
+    "@types/jsdom": "npm:^21.1.7"
     "@types/license-checker": "npm:^25.0.6"
     "@types/luxon": "npm:^3.7.5"
     "@types/mdast": "npm:^4.0.4"
@@ -12925,7 +12924,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"parse5@npm:^7.2.1":
+"parse5@npm:^7.0.0, parse5@npm:^7.2.1":
   version: 7.3.0
   resolution: "parse5@npm:7.3.0"
   dependencies:
@@ -15278,13 +15277,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/6f7e53bf0d9702350deeb6f35e08b69cbc8b958c33e0ec77bdc0ad6a6c8e280f3959dcbfde6f5b0848bece57810696489deaaa53d75de3578ff255d168c1efbd
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:^8.9.0":
-  version: 8.11.2
-  resolution: "undici-types@npm:8.11.2"
-  checksum: 10c0/6baaa8cfa2a7862664958293708e386c8c53fb938da9e23b9df35c9943df06569973638b896b62abd6dfafebb65814a11523dc7e735cf9883ae5e855d20331ea
   languageName: node
   linkType: hard
 

@@ -85,7 +85,7 @@
         "@stackblitz/sdk": "^1.11.1",
         "@stylistic/eslint-plugin": "^5.10.0",
         "@types/express": "^5.0.6",
-        "@types/jsdom": "^30",
+        "@types/jsdom": "^21.1.7",
         "@types/license-checker": "^25.0.6",
         "@types/luxon": "^3.7.5",
         "@types/mdast": "^4.0.4",

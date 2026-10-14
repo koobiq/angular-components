@@ -1,14 +1,26 @@
 import angular from '@analogjs/vite-plugin-angular';
-import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import ts from 'typescript';
 import { defineConfig } from 'vitest/config';
 
 const root = import.meta.dirname;
 const isCI = !!process.env['CI'];
 
+// Parsed by TypeScript because a tsconfig is JSONC: a comment or a trailing comma would break `JSON.parse`.
+const tsconfig = ts.readConfigFile(resolve(root, 'tsconfig.json'), ts.sys.readFile);
+
+if (tsconfig.error) {
+    throw new Error(
+        ts.formatDiagnostic(tsconfig.error, {
+            getCanonicalFileName: (fileName: string) => fileName,
+            getCurrentDirectory: () => root,
+            getNewLine: () => '\n'
+        })
+    );
+}
+
 /** The `paths` of the root tsconfig, so specs import entry points by name the way the library does. */
-const tsconfigPaths: Record<string, string[]> = JSON.parse(readFileSync(resolve(root, 'tsconfig.json'), 'utf8'))
-    .compilerOptions.paths;
+const tsconfigPaths: Record<string, string[]> = tsconfig.config.compilerOptions.paths;
 
 // Exact-match aliases: a prefix match would send `@koobiq/components/scrollbar/deprecated` to the
 // `scrollbar` entry point.
@@ -36,7 +48,11 @@ const shared = {
 export default defineConfig({
     resolve: { alias },
     test: {
-        reporters: isCI ? ['dot'] : ['default'],
+        // A configured reporter replaces the `github-actions` one Vitest adds by default, which annotates the pull
+        // request with the failed tests.
+        reporters: isCI
+            ? ['dot', ...(process.env['GITHUB_ACTIONS'] === 'true' ? ['github-actions' as const] : [])]
+            : ['default'],
         projects: [
             {
                 plugins: [angular({ tsconfig: resolve(root, 'tsconfig.spec.json'), workspaceRoot: root })],
