@@ -3314,6 +3314,39 @@ describe('KbqAutocomplete', () => {
         });
     });
 
+    describe('kbqAutocompleteTextMode in a field without a text selection', () => {
+        it('should report the chosen option to the form', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(TextModeEmailAutocomplete);
+
+            fixture.detectChanges();
+            // Lets the initial value of the form land before typing.
+            await vi.advanceTimersByTimeAsync(0);
+
+            const input: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+            typeInElement('jo', input);
+            fixture.detectChanges();
+
+            expect(input.selectionStart).toBeNull();
+
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            overlayContainerElement.querySelector<HTMLElement>('kbq-option')!.click();
+
+            expect(fixture.componentInstance.ctrl.value).toBe('john@x.io');
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(input.value).toBe('john@x.io');
+            expect(fixture.componentInstance.ctrl.value).toBe('john@x.io');
+        });
+    });
+
     describe('in a view checked on push', () => {
         it('should expose the panel state when it is opened and closed from code', () => {
             const fixture = createComponent(InputOnPushHost);
@@ -4163,6 +4196,29 @@ class TextModeAutocomplete {
         this.triggersSeen.push(query?.trigger ?? null);
         this.query.set(query?.text ?? null);
     }
+}
+
+@Component({
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqAutocompleteModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input kbqInput type="email" kbqAutocompleteTextMode [formControl]="ctrl" [kbqAutocomplete]="auto" />
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            <kbq-option value="john@x.io">john@x.io</kbq-option>
+        </kbq-autocomplete>
+    `
+})
+class TextModeEmailAutocomplete {
+    readonly ctrl = new UntypedFormControl('');
+
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
 }
 
 @Component({
