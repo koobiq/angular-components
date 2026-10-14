@@ -80,9 +80,10 @@ export const kbqActionsPanelLocaleConfigurationProvider = (
         './actions-panel-tokens.scss',
         './actions-panel-container.scss'
     ],
-    // Unlike the parent `CdkDialogContainer`, and like the sidepanel container: the attached content is
-    // checked when its own view is marked, not on every application tick.
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    // As the parent `CdkDialogContainer`: component content is attached into this view, so on zone.js, where a tick
+    // checks the whole application, content on the eager strategy is refreshed only if this view is checked as well.
+    // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-actions-panel-container',
