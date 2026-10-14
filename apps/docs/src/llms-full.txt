@@ -19573,8 +19573,12 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     blur(): void;
     // (undocumented)
     readonly button: i0.Signal<KbqButton | undefined>;
+    // @internal
+    decorative: boolean;
     get disabled(): boolean;
     set disabled(value: boolean);
+    // @internal
+    get explicitlyDisabled(): boolean;
     // (undocumented)
     focus(origin?: FocusOrigin): void;
     // (undocumented)
@@ -29511,6 +29515,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     set tooltipPlacementPriority(value: string | string[] | null);
     get tooltipVisible(): boolean;
     set tooltipVisible(value: boolean);
+    protected trackPointerLeave(event: MouseEvent): void;
     get trigger(): string;
     set trigger(value: string);
     protected _trigger: string;
