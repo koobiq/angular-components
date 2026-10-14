@@ -63,6 +63,7 @@ import {
 import {
     ErrorStateMatcher,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KbqComponentColors,
     KbqOption,
     KbqOptionSelectionChange,
     KbqVirtualOption,
@@ -1058,6 +1059,24 @@ class SelectInsideFormGroup {
     submitReactive() {
         this.submitResult = this.formGroup.invalid ? 'invalid' : 'valid';
     }
+}
+
+@Component({
+    imports: [
+        ReactiveFormsModule,
+        KbqSelectModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select [formControl]="control">
+                <kbq-option value="steak-0">Steak</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+class SelectWithLegacyValidate {
+    // Not `required`: the legacy directive holds that one back until the form is submitted.
+    readonly control = new UntypedFormControl('', () => ({ invalid: true }));
 }
 
 @Component({
@@ -2214,6 +2233,36 @@ class MultiSelectWithCleaner {
     `
 })
 class StandaloneSelect {
+    readonly select = viewChild.required(KbqSelect);
+}
+
+@Component({
+    selector: 'multi-select-with-default-tags',
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select multiple [formControl]="control">
+                @for (food of foods; track food) {
+                    <kbq-option [value]="food.value">{{ food.viewValue }}</kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    // The legacy directive colours the tags by validity alone; these tests follow the error state.
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+})
+class MultiSelectWithDefaultTags {
+    foods = [
+        { value: 'steak-0', viewValue: 'Steak' },
+        { value: 'pizza-1', viewValue: 'Pizza' },
+        { value: 'tacos-2', viewValue: 'Tacos' }
+    ];
+    control = new UntypedFormControl();
+
     readonly select = viewChild.required(KbqSelect);
 }
 
@@ -4569,6 +4618,82 @@ describe('KbqSelect', () => {
             expect(errorStateMatcher.isErrorState).toHaveBeenCalled();
             flush();
         }));
+    });
+
+    describe('with the legacy validate directive', () => {
+        beforeEach(() => {
+            configureKbqSelectTestingModule([SelectWithLegacyValidate]);
+        });
+
+        it('should colour the arrow by the control validity, also when it changes outside the select', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SelectWithLegacyValidate);
+            const { control } = fixture.componentInstance;
+
+            // Attached to the application, so that the `afterNextRender` probing the host for the directive's
+            // class runs, as it does outside tests.
+            fixture.autoDetectChanges();
+            flush();
+
+            const arrow = fixture.debugElement.query(By.css('.kbq-select__arrow')).nativeElement;
+
+            expect(control.untouched).toBe(true);
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.Error}`);
+
+            control.clearValidators();
+            control.updateValueAndValidity();
+            fixture.detectChanges();
+            flush();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
+        }));
+    });
+
+    describe('colour of the arrow by the error state', () => {
+        let fixture: ComponentFixture<SelectWithErrorStateMatcher>;
+
+        beforeEach(fakeAsync(() => {
+            configureKbqSelectTestingModule([SelectWithErrorStateMatcher]);
+
+            fixture = TestBed.createComponent(SelectWithErrorStateMatcher);
+            fixture.detectChanges();
+            flush();
+        }));
+
+        it('should colour the arrow when the error state changes outside the select', fakeAsync(() => {
+            const { form, select } = fixture.componentInstance;
+            const arrow = fixture.debugElement.query(By.css('.kbq-select__arrow')).nativeElement;
+            const colorForState = jest.spyOn(select(), 'colorForState', 'get');
+
+            // Initialization leaves the select's view marked; settle it and check that a pass no longer renders
+            // the trigger, so that nothing but the error state can repaint the arrow.
+            fixture.detectChanges();
+            colorForState.mockClear();
+            fixture.detectChanges();
+
+            expect(colorForState).not.toHaveBeenCalled();
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
+
+            form.controls.select.markAsTouched();
+            fixture.detectChanges();
+            flush();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.Error}`);
+
+            form.controls.select.markAsUntouched();
+            fixture.detectChanges();
+            flush();
+
+            expect(arrow.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`);
+        }));
+
+        it('should report the error colour right after the error state is updated', () => {
+            const { form, select } = fixture.componentInstance;
+
+            form.controls.select.markAsTouched();
+            select().updateErrorState();
+
+            expect(select().colorForState).toBe(KbqComponentColors.Error);
+        });
     });
 
     describe('with custom error behavior', () => {
@@ -7715,5 +7840,34 @@ describe('KbqSelect', () => {
 
             expect(fixture.componentInstance.select().scrollStrategy).toBeInstanceOf(CloseScrollStrategy);
         });
+    });
+
+    describe('colour of the tags', () => {
+        it('should follow the error state changed outside the select', fakeAsync(() => {
+            configureKbqSelectTestingModule([MultiSelectWithDefaultTags]);
+
+            const fixture = TestBed.createComponent(MultiSelectWithDefaultTags);
+            const { control } = fixture.componentInstance;
+
+            control.setValue(['steak-0', 'pizza-1']);
+            fixture.detectChanges();
+            flush();
+
+            const tags = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('kbq-tag'));
+
+            control.setErrors({ required: true });
+            control.markAsTouched();
+            fixture.detectChanges();
+            flush();
+
+            expect(tags().length).toBe(2);
+            tags().forEach((tag) => expect(tag.classList).toContain(`kbq-${KbqComponentColors.Error}`));
+
+            control.markAsUntouched();
+            fixture.detectChanges();
+            flush();
+
+            tags().forEach((tag) => expect(tag.classList).toContain(`kbq-${KbqComponentColors.ContrastFade}`));
+        }));
     });
 });
