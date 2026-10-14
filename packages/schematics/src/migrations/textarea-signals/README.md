@@ -5,10 +5,10 @@ Migration schematic invoked automatically by `ng update @koobiq/components@21` (
 
 ## Background
 
-`KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`,
-`required`, `disabled`, `focused`, `empty` and `errorState` as plain members. Those stay plain
-accessors — the interface is the contract the form field reads them through. What moved are the four
-inputs the textarea owns.
+The `KbqFormFieldControl` members of `KbqTextarea` — `value`, `id`, `placeholder`, `required`,
+`disabled`, `focused`, `empty` and `errorState` — are signals, migrated by `form-field-signals`: reads
+become calls, a write to `value` becomes `.set()`, a write to the rest is reported. This schematic
+covers the four inputs the textarea owns.
 
 `canGrow` was the odd one:
 

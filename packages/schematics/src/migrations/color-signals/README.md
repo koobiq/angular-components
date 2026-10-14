@@ -31,7 +31,7 @@ Template bindings such as `[color]="..."` are unchanged.
 | Pattern                           | Action                                                                                                                                           |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | A subclass of a colored component | The `color` accessor can no longer be overridden. Use `setDefaultColor()` for a default, `this.color()` to read, a `linkedSignal` to derive one. |
-| `CanColor`                        | Its `color` is a `Signal` now.                                                                                                                   |
+| `CanColor`                        | Removed. Type the member `Signal<KbqComponentColors \| string>`, or use `KbqColorDirective`.                                                     |
 
 ## Behavior changes with no call site
 

@@ -10,7 +10,8 @@ The inputs of `KbqCheckbox`, `KbqToggleComponent`, `KbqRadioGroup`, `KbqRadioBut
 `KbqSearchExpandable`, and of the pop-up triggers — tooltip, popover, popover confirm, app switcher, notification
 center, password toggle and ellipsis center — and of the tags, file uploads, accordion item, navbar item, notification
 item and sidebar are signal inputs named `<member>Input`, which `ngOnChanges` hands to the unchanged member.
-Reading and writing the members works as before.
+Reading and writing the members works as before. A member another migration moved to a signal, such as `color`
+(`color-signals`) or the `KbqFormFieldControl` members of the tag list (`form-field-signals`), is migrated there.
 
 | Pattern                                  | Manual migration                                                               |
 | ---------------------------------------- | ------------------------------------------------------------------------------ |

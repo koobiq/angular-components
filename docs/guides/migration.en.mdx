@@ -362,7 +362,7 @@ ng g @koobiq/components:angular-animations-removal --project "<your project>"
 
 - **A read is a call, a write is `.set()`**: `icon.color()`, `button.color.set(KbqComponentColors.Theme)`. A color set in code holds until the `[color]` binding or the default color of the component changes — on a button, also the color of its group or its `kbqStyle`.
 - **An unset or falsy `[color]` renders the default color of the component**, `kbq-empty` where it has none, instead of no color class.
-- **A subclass can no longer override the `color` accessor.** Set its default with `setDefaultColor()` instead of assigning `color` in the constructor. `_color` is removed, `defaultColor` and `CanColor.color` are signals, and `KbqColorDirective` takes the type of its color as a parameter: `KbqColorDirective<KbqButtonColor>` for the buttons.
+- **A subclass can no longer override the `color` accessor.** Set its default with `setDefaultColor()` instead of assigning `color` in the constructor. `_color` is removed, `defaultColor` is a signal, and `KbqColorDirective` takes the type of its color as a parameter: `KbqColorDirective<KbqButtonColor>` for the buttons. `CanColor` is removed: type the member `Signal<KbqComponentColors | string>`, or use `KbqColorDirective`.
 
 `color-signals` rewrites the reads and writes, and reports subclasses:
 
@@ -410,7 +410,7 @@ ng g @koobiq/components:list-signals --project "<your project>"
 
 #### Checkbox, toggle, radio, button toggle, buttons, icons, search and pop-ups
 
-Their inputs are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `checkbox.checked`, `button.disabled`, `icon.iconName` or `tooltip.content` works as before. The same goes for the tooltip, popover, popover confirm, app switcher and notification center triggers, the password toggle and the ellipsis center, and for the tags, file uploads, accordion item, navbar item, notification item and sidebar.
+Their inputs are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `checkbox.checked`, `button.disabled`, `icon.iconName` or `tooltip.content` works as before. The same goes for the tooltip, popover, popover confirm, app switcher and notification center triggers, the password toggle and the ellipsis center, and for the tags, file uploads, accordion item, navbar item, notification item and sidebar. The exception is a member another migration moved to a signal, such as `color` (see Color as a signal) or the tag members and the form-field state of the tag list (see Tags).
 
 - **A subclass** that implements `ngOnChanges` calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `iconNameInput`.
 - **A boolean input** accepts `boolean | string | null | undefined` in a template, rather than anything.
@@ -424,7 +424,7 @@ ng g @koobiq/components:signal-inputs-subclasses --project "<your project>"
 
 #### Datepicker
 
-The inputs of `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`, `KbqCalendarHeader` and `KbqMonthView` are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `datepicker.opened`, `datepicker.startAt`, `input.min` or `calendar.minDate` works as before.
+The inputs of `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`, `KbqCalendarHeader` and `KbqMonthView` are signal inputs named `<member>Input`, handed to the unchanged member from `ngOnChanges`: reading and writing `datepicker.opened`, `datepicker.startAt`, `input.min` or `calendar.minDate` works as before. The exception is the form-field state of `KbqDatepickerInput`: `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` and `errorState` are signals, migrated by `form-field-signals` (see Form field review (21.0.0)).
 
 - **A subclass** that implements `ngOnChanges` marks it `override` and calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `minInput`.
 - **A `SimpleChanges` passed to `ngOnChanges` by hand** is keyed by the `<member>Input` names: `minDateInput`, not `minDate`.
@@ -1311,7 +1311,7 @@ export class ColorInput implements KbqFormFieldControl<string> {
 
 **The rest of a control's state is read-only.** Assignments to `placeholder`, `required` and `id` no longer compile, nor do assignments to `disabled` on the native-element controls and to `value` on `KbqSelect`, `KbqTreeSelect`, `KbqTimepicker` and `KbqDatepickerInput`: bind them in the template, or set the value through a form control. Each write is reported with its file.
 
-**The error state helpers changed with it.** `KbqErrorStateTracker` no longer takes a `stateChanges` subject, and its `errorState` — like `CanUpdateErrorState.errorState` — is a `Signal<boolean>`; `CanUpdateErrorState` no longer declares `errorStateMatcher`. The deprecated `mixinErrorState` and `CanUpdateErrorStateCtor` were removed. `KbqTagTextControl` and `KbqIconErrorStateContext` are signal-based too.
+**The error state helpers changed with it.** `KbqErrorStateTracker` no longer takes a `stateChanges` subject, and its `errorState` — like `CanUpdateErrorState.errorState` — is a `Signal<boolean>`; `CanUpdateErrorState` no longer declares `errorStateMatcher`. The deprecated `mixinErrorState` and `CanUpdateErrorStateCtor` were removed. `KbqIconErrorStateContext` is signal-based too, and so are `id`, `placeholder`, `focused` and `empty` of `KbqTagInput`: their reads become calls, a write is reported.
 
 **`KbqDatepicker` is no longer a form field control.** It provided the contract without implementing it; the form field now always finds the `kbqDatepicker` input. The input renders its `id` now, so the form field label is associated with it.
 
@@ -2612,7 +2612,9 @@ Reported by `tabs-signals-and-aria`.
 
 {/* migration-subsection-components(tag, tag-list, tag-input, tag-autocomplete) */}
 
-What stays an accessor stays for a reason the code enforces, not for want of a transform — a backing input carries `booleanAttribute`, and a signal over it reads back as one. `KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, which declare `value`, `id`, `placeholder`, `required` and `disabled` as plain properties. `KbqTag.disabled` stays a plain boolean because the focus key manager skips items by reading it as a value, and a signal — a function — is always truthy. `disabled`, `tabindex` and `value` on the tag and `draggable`, `tabIndex` on the tag list fold in state a signal cannot track: the tag list's form control, whose `disabled` is a plain property, and the projected text. Those keep their read and write syntax.
+What stays an accessor stays for a reason the code enforces, not for want of a transform — a backing input carries `booleanAttribute`, and a signal over it reads back as one. `KbqTag.disabled` stays a plain boolean because the focus key manager skips items by reading it as a value, and a signal — a function — is always truthy. `disabled`, `tabindex` and `value` on the tag, `draggable`, `tabIndex` on the tag list and `disabled` on the tag input keep their setters; `KbqTag.value` falls back to the projected text. Those keep their read and write syntax.
+
+The form-field state moved. `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` and `errorState` of `KbqTagList` are signals: `form-field-signals` rewrites the reads into calls and a write to `disabled` or `value` into `.set()`, and reports a write to the rest (see Form field review (21.0.0)). `id`, `placeholder`, `focused` and `empty` of `KbqTagInput` are read-only signals: `form-field-signals` rewrites their reads into calls too, and reports a write.
 
 Everything else moved:
 
@@ -2635,7 +2637,7 @@ Handled by `tags-signals`: reads of the members that moved are rewritten, includ
 
 #### Textarea
 
-`KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — that interface is how the form field reads them, so they stay plain accessors. What moved are the four inputs the textarea owns.
+The `KbqFormFieldControl` members of `KbqTextarea` — `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` — are signals: `form-field-signals` rewrites the reads in TypeScript into calls and a write to `value` into `.set()`, and reports a write to the rest (see Form field review (21.0.0)). The four inputs the textarea owns moved too.
 
 `canGrow` was the odd one: its getter returned `!maxRowLimitReached && bound`, so it reported `false` once the textarea hit `maxRows` even though the consumer had asked for growth. The folded value is an internal `growing` computed now, and `canGrow()` reports what was bound. At the row limit the element keeps its own scrollbar rather than gaining a native resize handle: `kbq-textarea_max-row-limit-reached` sets `resize: unset`, which follows `kbq-textarea-resizable` in the stylesheet and wins on source order.
 
@@ -2696,7 +2698,7 @@ Handled by `time-range-title-for`: the key is removed from time-range locale lit
 
 #### Timepicker
 
-`KbqTimepicker` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — those stay plain accessors. The four inputs the timepicker owns moved.
+The `KbqFormFieldControl` members of `KbqTimepicker` — `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` and `errorState` — are signals: `form-field-signals` rewrites the reads in TypeScript into calls and a write to `disabled` into `.set()`, and reports a write to the rest (see Form field review (21.0.0)). The four inputs the timepicker owns moved too.
 
 `min` and `max` parsed in their setters and reported the parsed result, so an unparseable bound value read back as `null`. They report what was bound now; the parsed values stay internal and still drive the validators.
 

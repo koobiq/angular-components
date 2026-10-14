@@ -1,9 +1,9 @@
 /**
  * Data for the `textarea-signals` migration.
  *
- * `KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`,
- * `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — so those stay plain
- * accessors. What moved are the inputs that belong to the textarea itself.
+ * The `KbqFormFieldControl` members of `KbqTextarea` (`value`, `id`, `placeholder`, `required`, `disabled`,
+ * `focused`, `empty`, `errorState`) are signals too, but `form-field-signals` migrates them. This migration
+ * covers the inputs that belong to the textarea itself.
  *
  * - `textarea.canGrow` → a signal whose value changed: the getter folded in the row limit (warn)
  * - `textarea.freeRowsHeight` → a signal whose value changed: the textarea used to write the measured

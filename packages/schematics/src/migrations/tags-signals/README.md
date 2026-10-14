@@ -8,15 +8,18 @@ Migration schematic invoked automatically by `ng update @koobiq/components@21` (
 What stays an accessor stays for a reason the code enforces, not for want of a transform - a backing
 input carries `booleanAttribute`, and a `computed` or `linkedSignal` over it reads back as a signal.
 
-- `KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, which
-  declare `value`, `id`, `placeholder`, `required` and `disabled` as plain properties.
 - `KbqTag.disabled` is read by the focus key manager as a value (`item.disabled`), and a signal - a
   function - would always be truthy and skip every tag.
-- `disabled`, `tabindex` and `value` on the tag and `draggable`, `tabIndex` on the tag list fold in
-  state a signal cannot track: the tag list's form control, whose `disabled` is a plain property, and
-  the projected text content.
+- `disabled`, `tabindex` and `value` on the tag, `draggable`, `tabIndex` on the tag list and `disabled`
+  on the tag input keep their setters; `KbqTag.value` falls back to the projected text content.
 
 **Their read and write syntax is unchanged**, and the schematic does not touch them.
+
+The form-field state did move, but not here. `value`, `id`, `placeholder`, `focused`, `empty`,
+`required`, `disabled` and `errorState` of `KbqTagList` are signals, migrated by `form-field-signals`:
+reads become calls, a write to `disabled` or `value` becomes `.set()`, a write to the rest is reported.
+`id`, `placeholder`, `focused` and `empty` of `KbqTagInput` are read-only signals, migrated there
+too: reads become calls, a write is reported.
 
 ## What it rewrites
 
