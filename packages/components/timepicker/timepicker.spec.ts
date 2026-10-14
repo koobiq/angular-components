@@ -857,6 +857,17 @@ describe(KbqTimepicker.name, () => {
 
             expect(testComponent.formControl.value.toString()).toContain('2020-01-01T18:09');
         });
+
+        it('reports a parse error while the browser rejects the input as bad', () => {
+            const input: HTMLInputElement = inputElementDebug.nativeElement;
+
+            // What a native time input reports for text it cannot parse: no value, but bad input.
+            Object.defineProperty(input, 'validity', { value: { badInput: true } });
+            inputElementDebug.injector.get(KbqTimepicker).onInput();
+            testComponent.formControl.updateValueAndValidity();
+
+            expect(testComponent.formControl.hasError('kbqTimepickerParse')).toBe(true);
+        });
     });
 
     @Component({
