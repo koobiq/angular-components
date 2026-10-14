@@ -1,5 +1,5 @@
 import { provideHttpClient } from '@angular/common/http';
-import { importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
+import { importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -9,7 +9,6 @@ import { devAllRoutes } from './routes';
 
 bootstrapApplication(DevAllApp, {
     providers: [
-        provideZonelessChangeDetection(),
         provideRouter(devAllRoutes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),
         // `KbqIconRegistry` optionally injects `HttpClient` and throws a descriptive error without it.
         provideHttpClient(),
