@@ -26,6 +26,7 @@ import * as i4 from '@koobiq/components/core';
 import * as i5 from '@koobiq/components/select';
 import * as i7 from '@koobiq/components/form-field';
 import { InjectionToken } from '@angular/core';
+import { InputSignal } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -67,13 +68,13 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
 // @public (undocumented)
 export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked, AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState, KbqSiblingPopup {
     constructor();
-    readonly ariaLabel: _angular_core.InputSignal<string | null>;
-    readonly ariaLabelledby: _angular_core.InputSignal<string | null>;
+    readonly ariaLabel: InputSignal<string | null>;
+    readonly ariaLabelledby: InputSignal<string | null>;
     protected get ariaLabelText(): string | null;
     get autoSelect(): boolean;
     readonly autoSelectInput: _angular_core.InputSignalWithTransform<boolean, string | boolean | null | undefined>;
     // (undocumented)
-    readonly backdropClass: _angular_core.InputSignal<string>;
+    readonly backdropClass: InputSignal<string>;
     protected calculateHiddenItems: () => void;
     get canClear(): boolean;
     get canShowCleaner(): boolean;
@@ -100,7 +101,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked
     elementRef: ElementRef<HTMLElement>;
     readonly empty: _angular_core.Signal<boolean>;
     readonly errorState: _angular_core.Signal<boolean>;
-    readonly errorStateMatcher: _angular_core.InputSignal<ErrorStateMatcher | undefined>;
+    readonly errorStateMatcher: InputSignal<ErrorStateMatcher | undefined>;
     protected get firstSelected(): any;
     // (undocumented)
     focus(): void;
@@ -111,10 +112,10 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked
     readonly hasBackdrop: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly hiddenItems: _angular_core.WritableSignal<number>;
     protected readonly hiddenItemsLabel: _angular_core.Signal<string>;
-    readonly hiddenItemsText: _angular_core.InputSignal<string | undefined>;
-    readonly hiddenItemsTextFormatter: _angular_core.InputSignal<(hiddenItemsText: string, hiddenItems: number) => string>;
+    readonly hiddenItemsText: InputSignal<string | undefined>;
+    readonly hiddenItemsTextFormatter: InputSignal<(hiddenItemsText: string, hiddenItems: number) => string>;
     readonly id: _angular_core.Signal<string>;
-    readonly idInput: _angular_core.InputSignal<string | undefined>;
+    readonly idInput: InputSignal<string | undefined>;
     get isAttached(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
@@ -163,7 +164,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked
     protected get overlayDir(): CdkConnectedOverlay;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
     readonly panel: _angular_core.Signal<ElementRef<any> | undefined>;
-    readonly panelClass: _angular_core.InputSignal<string | string[] | Set<string> | {
+    readonly panelClass: InputSignal<string | string[] | Set<string> | {
         [key: string]: any;
     }>;
     protected readonly panelClasses: _angular_core.Signal<string>;
@@ -177,12 +178,12 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked
     readonly panelMinWidth: _angular_core.InputSignalWithTransform<KbqPanelMinWidth, unknown>;
     // (undocumented)
     get panelOpen(): boolean;
-    readonly panelWidth: _angular_core.InputSignal<KbqPanelWidth>;
+    readonly panelWidth: InputSignal<KbqPanelWidth>;
     // (undocumented)
     parentForm: NgForm | null;
     // (undocumented)
     parentFormGroup: FormGroupDirective | null;
-    readonly placeholder: _angular_core.InputSignal<string | undefined>;
+    readonly placeholder: InputSignal<string | undefined>;
     positions: ConnectedPosition[];
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => void): void;
@@ -191,7 +192,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked
     // (undocumented)
     readonly search: _angular_core.Signal<KbqSelectSearch | undefined>;
     readonly searchMinOptionsThreshold: _angular_core.Signal<number | undefined>;
-    readonly searchMinOptionsThresholdInput: _angular_core.InputSignal<number | "auto" | undefined>;
+    readonly searchMinOptionsThresholdInput: InputSignal<number | "auto" | undefined>;
     readonly selectAll: _angular_core.InputSignalWithTransform<boolean, unknown>;
     get selectAllHandler(): (event: KeyboardEvent, select: KbqTreeSelect) => void;
     readonly selectAllHandlerInput: _angular_core.InputSignalWithTransform<((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined, ((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined>;
@@ -204,9 +205,9 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterViewChecked
     selectionModel: SelectionModel<any>;
     setDisabledState(isDisabled: boolean): void;
     protected shouldShowSearch(): boolean;
-    readonly sortComparator: _angular_core.InputSignal<(a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number>;
+    readonly sortComparator: InputSignal<KbqTreeSelectSortComparator>;
     get tabIndex(): number | null;
-    readonly tabIndexInput: _angular_core.InputSignal<number | null>;
+    readonly tabIndexInput: InputSignal<number | null>;
     // (undocumented)
     protected get tags(): QueryList<KbqTag>;
     // (undocumented)
@@ -269,6 +270,9 @@ export type KbqTreeSelectOptions = Partial<{
 
 // @public
 export const kbqTreeSelectOptionsProvider: (options: KbqTreeSelectOptions) => Provider;
+
+// @public
+export type KbqTreeSelectSortComparator<T = any> = (a: T, b: T, nodes: T[]) => number;
 
 // @public
 export type KbqTreeSelectTriggerValue = {

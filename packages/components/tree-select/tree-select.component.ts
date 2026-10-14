@@ -16,6 +16,7 @@ import {
     EventEmitter,
     InjectionToken,
     Injector,
+    InputSignal,
     OnDestroy,
     OnInit,
     Provider,
@@ -112,6 +113,12 @@ export type KbqTreeSelectTriggerValue = {
     value: string;
     viewValue: string;
 };
+
+/**
+ * Orders the values of a tree select in multiple mode, as `Array.prototype.sort` does. Receives two selected data
+ * nodes and every data node of the tree in panel order.
+ */
+export type KbqTreeSelectSortComparator<T = any> = (a: T, b: T, nodes: T[]) => number;
 
 /** Options for the `kbq-tree-select` that can be configured using the `KBQ_TREE_SELECT_OPTIONS` injection token. */
 export type KbqTreeSelectOptions = Partial<{
@@ -497,7 +504,7 @@ export class KbqTreeSelect
      * Follows the same logic as `Array.prototype.sort`. Receives two selected data nodes and every data node of the
      * tree in panel order, collapsed branches included — a node in a collapsed branch has no option.
      */
-    readonly sortComparator = input<(a: any, b: any, nodes: any[]) => number>(undefined!);
+    readonly sortComparator: InputSignal<KbqTreeSelectSortComparator> = input<KbqTreeSelectSortComparator>(undefined!);
 
     /**
      * Decides which selected nodes the projected `KbqCleaner` removes: return `true` to clear the node,
