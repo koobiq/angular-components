@@ -18,6 +18,8 @@ import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@ko
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
 
+const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
+
 @Directive({
     selector: `input[kbqInputPassword]`,
     providers: [
@@ -139,8 +141,9 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
 
     private readonly emptyValue = signal(true);
 
-    /** The value the element and `value` last agreed on. */
+    /** The value the element and `value` last agreed on, and the text the element showed then. */
     private syncedValue: unknown;
+    private syncedText: string;
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -155,8 +158,12 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
         // accessor.
         this.inputValueAccessor = inputValueAccessor || this.elementRef.nativeElement;
 
-        this.value = signal(this.inputValueAccessor.value);
-        this.syncedValue = this.inputValueAccessor.value;
+        // Read once: a custom accessor may build a new value on every read.
+        const initialValue = this.inputValueAccessor.value;
+
+        this.value = signal(initialValue);
+        this.syncedValue = initialValue;
+        this.syncedText = this.elementRef.nativeElement.value;
 
         // A bound value replaces the current one whenever the binding changes.
         effect(() => {
@@ -167,16 +174,22 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
             }
         });
 
-        // A value set in code is written to the element on the next change detection.
+        // A value set in code is written to the element on the next change detection. The one the element last agreed
+        // on is not written back: a custom accessor that builds a new value on every read would be written on every
+        // keystroke.
         effect(() => {
             const value = this.value();
 
             untracked(() => {
-                if (this.inputValueAccessor.value !== value) {
-                    this.inputValueAccessor.value = value;
+                if (value !== this.syncedValue) {
+                    if (this.inputValueAccessor.value !== value) {
+                        this.inputValueAccessor.value = value;
+                    }
+
+                    this.syncedValue = value;
+                    this.syncedText = this.elementRef.nativeElement.value;
                 }
 
-                this.syncedValue = value;
                 this.emptyValue.set(this.isEmpty());
             });
         });
@@ -247,10 +260,13 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanU
      */
     dirtyCheckNativeValue() {
         const nativeValue = this.inputValueAccessor.value;
+        const text = this.elementRef.nativeElement.value;
 
-        // Only a change of the element itself: a value set in code and not yet written must not be overwritten.
-        if (nativeValue !== this.syncedValue) {
+        // Only a change of the element itself: a value set in code and not yet written must not be overwritten. An
+        // object counts as changed only with the text, as a custom accessor may build a new one on every read.
+        if (nativeValue !== this.syncedValue && (!isObject(nativeValue) || text !== this.syncedText)) {
             this.syncedValue = nativeValue;
+            this.syncedText = text;
             this.value.set(nativeValue);
         }
 

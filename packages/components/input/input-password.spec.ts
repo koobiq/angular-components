@@ -1,5 +1,5 @@
 ﻿import { F8 } from '@angular/cdk/keycodes';
-import { Component, Provider, Type } from '@angular/core';
+import { Component, Directive, ElementRef, inject, Provider, Type, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -7,7 +7,7 @@ import { dispatchFakeEvent, PasswordValidators } from '@koobiq/components/core';
 import { KbqFormFieldModule, KbqPasswordToggle, KbqReactivePasswordHint } from '@koobiq/components/form-field';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
-import { KbqInputModule, KbqInputPassword } from './index';
+import { KBQ_INPUT_VALUE_ACCESSOR, KbqInputModule, KbqInputPassword } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -130,6 +130,45 @@ class PasswordInputWithLabel {
     readonly control = new FormControl('', [Validators.required, PasswordValidators.minLength(8)]);
 }
 
+/** Caps the reads of a value check that would otherwise loop, so that a regression fails instead of hanging. */
+const FRESH_VALUE_READ_LIMIT = 100;
+
+/** Reads the comma-separated text of its element into a new array every time, as a custom accessor may. */
+@Directive({
+    selector: '[freshValueAccessor]',
+    providers: [{ provide: KBQ_INPUT_VALUE_ACCESSOR, useExisting: FreshValueAccessor }]
+})
+class FreshValueAccessor {
+    private readonly element = inject<ElementRef<HTMLInputElement>>(ElementRef).nativeElement;
+    private reads = 0;
+
+    writes = 0;
+
+    get value(): string[] {
+        if (++this.reads > FRESH_VALUE_READ_LIMIT) throw new Error('The value is read without end.');
+
+        return this.element.value ? this.element.value.split(',') : [];
+    }
+
+    set value(value: string[]) {
+        this.writes++;
+        this.element.value = value.join(',');
+    }
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqInputModule, FreshValueAccessor],
+    template: `
+        <kbq-form-field>
+            <input kbqInputPassword freshValueAccessor />
+        </kbq-form-field>
+    `
+})
+class PasswordInputWithFreshValueAccessor {
+    readonly input = viewChild.required(KbqInputPassword);
+    readonly accessor = viewChild.required(FreshValueAccessor);
+}
+
 describe('KbqPasswordInput', () => {
     afterEach(() => vi.useRealTimers());
 
@@ -233,6 +272,31 @@ describe('KbqPasswordInput', () => {
         fixture.detectChanges();
 
         expect(componentInstance.form.controls.control.hasError('maxlength')).toBeTruthy();
+    });
+
+    it('should settle with a custom accessor that builds a new value on every read', async () => {
+        const fixture = createComponent(PasswordInputWithFreshValueAccessor);
+        const { input, accessor } = fixture.componentInstance;
+        const passwordInput: HTMLInputElement = fixture.debugElement.query(
+            By.directive(KbqInputPassword)
+        ).nativeElement;
+
+        await fixture.whenStable();
+
+        expect(input().value()).toEqual([]);
+
+        passwordInput.value = 'a,b';
+        dispatchFakeEvent(passwordInput, 'input');
+        await fixture.whenStable();
+
+        expect(input().value()).toEqual(['a', 'b']);
+        expect(accessor().writes).toBe(0);
+
+        input().value.set(['c'] as unknown as string);
+        await fixture.whenStable();
+
+        expect(passwordInput.value).toBe('c');
+        expect(accessor().writes).toBe(1);
     });
 
     describe('accessibility', () => {

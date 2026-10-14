@@ -1,4 +1,4 @@
-﻿import { Component, Provider, Type, viewChild } from '@angular/core';
+﻿import { Component, Directive, ElementRef, Provider, Type, inject, viewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -22,7 +22,7 @@ import {
     ShowOnFormSubmitErrorStateMatcher,
     kbqErrorStateMatcherProvider
 } from '../core';
-import { KbqTextarea, KbqTextareaModule } from './index';
+import { KBQ_TEXTAREA_VALUE_ACCESSOR, KbqTextarea, KbqTextareaModule } from './index';
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -264,6 +264,45 @@ class TextareaWithErrorStateMatcher {
     errorStateMatcher: ErrorStateMatcher = new ErrorStateMatcher();
 }
 
+/** Caps the reads of a value check that would otherwise loop, so that a regression fails instead of hanging. */
+const FRESH_VALUE_READ_LIMIT = 100;
+
+/** Reads the lines of its element into a new array every time, as a custom accessor may. */
+@Directive({
+    selector: '[freshValueAccessor]',
+    providers: [{ provide: KBQ_TEXTAREA_VALUE_ACCESSOR, useExisting: FreshValueAccessor }]
+})
+class FreshValueAccessor {
+    private readonly element = inject<ElementRef<HTMLTextAreaElement>>(ElementRef).nativeElement;
+    private reads = 0;
+
+    writes = 0;
+
+    get value(): string[] {
+        if (++this.reads > FRESH_VALUE_READ_LIMIT) throw new Error('The value is read without end.');
+
+        return this.element.value ? this.element.value.split('\n') : [];
+    }
+
+    set value(value: string[]) {
+        this.writes++;
+        this.element.value = value.join('\n');
+    }
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTextareaModule, FreshValueAccessor],
+    template: `
+        <kbq-form-field>
+            <textarea kbqTextarea freshValueAccessor></textarea>
+        </kbq-form-field>
+    `
+})
+class TextareaWithFreshValueAccessor {
+    readonly textarea = viewChild.required(KbqTextarea);
+    readonly accessor = viewChild.required(FreshValueAccessor);
+}
+
 describe('KbqTextarea', () => {
     afterEach(() => vi.useRealTimers());
 
@@ -311,6 +350,31 @@ describe('KbqTextarea', () => {
             fixture.detectChanges();
 
             expect(textareaElement.getAttribute('placeholder')).toBe('');
+        });
+
+        it('should settle with a custom accessor that builds a new value on every read', async () => {
+            const fixture = createComponent(TextareaWithFreshValueAccessor);
+            const { textarea, accessor } = fixture.componentInstance;
+            const textareaElement: HTMLTextAreaElement = fixture.debugElement.query(
+                By.directive(KbqTextarea)
+            ).nativeElement;
+
+            await fixture.whenStable();
+
+            expect(textarea().value()).toEqual([]);
+
+            textareaElement.value = 'a\nb';
+            dispatchFakeEvent(textareaElement, 'input');
+            await fixture.whenStable();
+
+            expect(textarea().value()).toEqual(['a', 'b']);
+            expect(accessor().writes).toBe(0);
+
+            textarea().value.set(['c'] as unknown as string);
+            await fixture.whenStable();
+
+            expect(textareaElement.value).toBe('c');
+            expect(accessor().writes).toBe(1);
         });
     });
 
