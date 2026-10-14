@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -20,6 +20,7 @@ import { KbqToastStyle } from '@koobiq/components/toast';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { timer } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ExampleText, injectExampleText } from '../localized-data';
 
 /** Items per loaded page. */
 const PAGE_SIZE = 20;
@@ -31,6 +32,12 @@ const LOAD_DELAY = 800;
 const BASE_DATE = Date.parse('2025-10-08T12:00:00Z');
 
 const STYLES = [KbqToastStyle.Success, KbqToastStyle.Warning, KbqToastStyle.Error, KbqToastStyle.Contrast];
+
+/** Title and caption of the notification at the 1-based `position` of the list. */
+const itemText = (text: ExampleText, position: number) => ({
+    title: text.pageItemTitle(position),
+    caption: text.pageItemCaption(Math.ceil(position / PAGE_SIZE))
+});
 
 type ExampleAction = {
     id: string;
@@ -75,6 +82,8 @@ enum NavbarIcItems {
 export class NotificationCenterInfiniteScrollExample {
     protected readonly notificationService = inject(KbqNotificationCenterService);
 
+    protected readonly text = injectExampleText();
+
     private readonly destroyRef = inject(DestroyRef);
 
     /** Index of the last loaded page. */
@@ -82,12 +91,12 @@ export class NotificationCenterInfiniteScrollExample {
     /** Used to demonstrate the bottom error state once, then succeed on retry. */
     private hasFailedOnce = false;
 
-    protected readonly actions: ExampleAction[] = [
+    protected readonly actions = computed<ExampleAction[]>(() => [
         {
             id: '1',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Filled,
-            text: 'Primary Action'
+            text: this.text().primaryAction
         },
         {
             id: '2',
@@ -95,7 +104,7 @@ export class NotificationCenterInfiniteScrollExample {
             style: KbqButtonStyles.Transparent,
             icon: 'kbq-ellipsis-horizontal_16'
         }
-    ];
+    ]);
 
     protected items = NavbarIcItems;
     protected selected: NavbarIcItems = NavbarIcItems.Assets;
@@ -107,6 +116,16 @@ export class NotificationCenterInfiniteScrollExample {
         this.notificationService.onNextPage
             .pipe(takeUntilDestroyed())
             .subscribe(() => this.appendPage(this.currentPage + 1));
+
+        // The loaded notifications follow a locale switch; their ids are their positions in the list.
+        effect(() => {
+            const text = this.text();
+            const items = this.notificationService.items;
+
+            if (!items.length) return;
+
+            this.notificationService.items = items.map((item) => ({ ...item, ...itemText(text, Number(item.id)) }));
+        });
     }
 
     private appendPage(page: number): void {
@@ -139,12 +158,14 @@ export class NotificationCenterInfiniteScrollExample {
     }
 
     private createPage(page: number): KbqNotificationItem[] {
+        const text = this.text();
+
         return Array.from({ length: PAGE_SIZE }, (_, index) => {
             const globalIndex = (page - 1) * PAGE_SIZE + index;
 
             return {
-                title: `Notification #${globalIndex + 1}`,
-                caption: `Loaded with page ${page}`,
+                id: String(globalIndex + 1),
+                ...itemText(text, globalIndex + 1),
                 icon: true,
                 style: STYLES[globalIndex % STYLES.length],
                 date: new Date(BASE_DATE - globalIndex * 3600_000).toISOString()

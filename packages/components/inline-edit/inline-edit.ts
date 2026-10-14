@@ -36,6 +36,7 @@ import {
     isElement,
     KBQ_A11Y_LOCALE_CONFIGURATION,
     KBQ_CONNECTED_OVERLAY_ORIGIN,
+    KBQ_OVERLAY_LAYERS,
     KBQ_WINDOW,
     KbqAnimationCurves,
     KbqAnimationDurations,
@@ -208,6 +209,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     );
 
     private readonly overlay = inject(Overlay);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private readonly document = inject(DOCUMENT);
     private readonly window = inject(KBQ_WINDOW);
     private readonly resizeObserver = inject(SharedResizeObserver);
@@ -532,6 +534,9 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
     /** @docs-private */
     protected onAttach(): void {
+        // `cdkConnectedOverlay` creates and attaches the overlay in one go, so this is the first point it exists.
+        this.overlayLayers.adopt(this.overlayDir().overlayRef, this.elementRef.nativeElement);
+
         this.setOverlayWidth();
 
         this.overlayDir()!

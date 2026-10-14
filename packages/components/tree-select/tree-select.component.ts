@@ -51,6 +51,7 @@ import {
     HOME,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
+    KBQ_OVERLAY_LAYERS,
     KBQ_PANEL_DEFAULT_MIN_WIDTH,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_LOCALE_CONFIGURATION,
@@ -239,7 +240,7 @@ export class KbqTreeSelectChange<T = any> {
         '[attr.aria-expanded]': 'panelOpen',
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
         '[attr.aria-label]': 'ariaLabelText',
-        '[attr.aria-labelledby]': 'ariaLabelledby()',
+        '[attr.aria-labelledby]': 'resolvedAriaLabelledby()',
         '[attr.aria-invalid]': 'errorState',
         '[attr.aria-required]': 'required',
         '[attr.aria-disabled]': 'disabled || null',
@@ -277,6 +278,7 @@ export class KbqTreeSelect
     private readonly renderer = inject(Renderer2);
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
     private readonly scrollStrategyFactory = inject(KBQ_SELECT_SCROLL_STRATEGY);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     private readonly parentFormField = inject(KBQ_FORM_FIELD, { host: true, optional: true })!;
@@ -295,6 +297,12 @@ export class KbqTreeSelect
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
+
+    /**
+     * A `kbq-tree-select` is not a native labelable element, so the form-field's `<label for>` cannot
+     * associate with it. The control is named through `aria-labelledby` instead.
+     */
+    readonly isNativeLabelSupported = false;
 
     /** Number of the selected items that do not fit into the trigger. */
     readonly hiddenItems = signal(0);
@@ -472,6 +480,18 @@ export class KbqTreeSelect
      * at whatever visible text names the control.
      */
     readonly ariaLabelledby = input<string | null>(null, { alias: 'aria-labelledby' });
+
+    /**
+     * The `aria-labelledby` the control actually exposes: an explicit input wins, otherwise a wrapping
+     * `kbq-form-field` names the control through its caption.
+     *
+     * The form field renders a `<span>` caption for this control (`isNativeLabelSupported: false`), so
+     * `label for` cannot associate with it — the relationship is expressed from the control to the label.
+     * @docs-private
+     */
+    protected readonly resolvedAriaLabelledby = computed(
+        () => this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null
+    );
 
     /** Object used to control when error messages are shown. */
     // Stays a decorator input: `CanUpdateErrorState` declares it as a plain property.
@@ -887,7 +907,7 @@ export class KbqTreeSelect
      * repository is in. Left off while `aria-labelledby` is set, which outranks `aria-label` anyway.
      */
     protected get ariaLabelText(): string | null {
-        return this.ariaLabelledby() ? null : this.ariaLabel() || this.placeholder || null;
+        return this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder || null;
     }
 
     isEmptySearchResult: boolean;
@@ -1418,6 +1438,9 @@ export class KbqTreeSelect
 
     /** Callback that is invoked when the overlay panel has been attached. */
     onAttached() {
+        // `cdkConnectedOverlay` creates and attaches the overlay in one go, so this is the first point it exists.
+        this.overlayLayers.adopt(this.overlayDir.overlayRef, this.elementRef.nativeElement);
+
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this.changeDetectorRef.detectChanges();
             this.setOverlayPosition();

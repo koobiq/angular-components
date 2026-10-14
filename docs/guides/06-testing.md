@@ -19,8 +19,8 @@ yarn run unit:components-experimental
 yarn run unit:angular-moment-adapter
 yarn run unit:angular-luxon-adapter
 yarn run unit:schematics
+yarn run unit:cli
 yarn run unit:koobiq-docs
-yarn run unit:api-gen
 yarn run unit:tools
 ```
 

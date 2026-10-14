@@ -175,6 +175,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     protected readonly isBrowser: boolean;
     get isEmptySearchResult(): boolean;
     protected isListHeightPinnedToCap(): boolean;
+    readonly isNativeLabelSupported = false;
     protected get isOptionsListBusy(): boolean;
     // (undocumented)
     protected isPanelOpen(): boolean;

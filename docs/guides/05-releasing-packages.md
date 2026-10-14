@@ -19,6 +19,8 @@ The current major is released from `main`. Older supported lines are released fr
     The CLI walks through the release and asks for confirmation at each step that needs it:
 
     - (**needs confirmation**) choose the bump: major, minor or patch
+    - write the new version to `package.json`, then run the `release.hooks["post-version-bump"]` commands:
+      `release:extract-docs-meta` regenerates the sitemap, the prerender routes and `llms.txt` for that version
     - (**needs confirmation**) enter a `release name`
         - you can use [angular-release-name-generator](https://www.npmjs.com/package/angular-release-name-generator)
     - (**needs confirmation**) generate the changelog section

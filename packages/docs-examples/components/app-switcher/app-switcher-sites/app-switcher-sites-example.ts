@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../localized-data';
 
 /** @title app-switcher-sites */
 @Component({
@@ -9,18 +11,20 @@ import { KbqIcon } from '@koobiq/components/icon';
     imports: [
         KbqAppSwitcherModule,
         KbqButtonModule,
-        KbqIcon
+        KbqIcon,
+        KbqToolTipModule
     ],
     template: `
-        App: {{ selectedApp.name }}
+        {{ text().app }} {{ selectedApp.name }}
         <br />
-        Site: {{ selectedSite.name }}
+        {{ text().site }} {{ selectedSite.name }}
         <br />
         <br />
         <button
             kbq-button
-            aria-label="Apps"
             kbqAppSwitcher
+            [attr.aria-label]="text().allApps"
+            [kbqTooltip]="text().allApps"
             [sites]="sites"
             [(selectedSite)]="selectedSite"
             [(selectedApp)]="selectedApp"
@@ -31,6 +35,8 @@ import { KbqIcon } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppSwitcherSitesExample {
+    protected readonly text = injectExampleText();
+
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"

@@ -1,1 +1,18 @@
 Ellipsis Center truncates long single-line text in the middle so that its beginning and end remain visible within the available width.
+
+### Usage
+
+Pass the text to the `kbqEllipsisCenter` input of an element whose width is limited by its container. The directive renders the text itself, so leave the element empty.
+
+```html
+<div [kbqEllipsisCenter]="file.name"></div>
+```
+
+### Behavior
+
+- When the text does not fit, the directive keeps its end visible — a file extension or the digits that tell two reports apart — and puts the ellipsis in the middle.
+- A [tooltip](/en/components/tooltip) with the full text appears only while part of the text is hidden. Set `kbqTooltipDisabled` to turn it off.
+- Text shorter than `minVisibleLength` is not split and is truncated at the end.
+- The split is recalculated when the element is resized, including resizes that leave the window size unchanged, such as dragging a splitter. `debounceInterval` sets the delay in milliseconds, 50 by default.
+
+The directive shows file names in [File upload](/en/components/file-upload) and long items in [Breadcrumbs](/en/components/breadcrumbs).

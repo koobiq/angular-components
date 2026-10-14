@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAppSwitcherApp, KbqAppSwitcherModule, KbqAppSwitcherSite } from '@koobiq/components/app-switcher';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../localized-data';
 
 /**
  * @title app-switcher
@@ -11,19 +13,29 @@ import { KbqIcon } from '@koobiq/components/icon';
     imports: [
         KbqAppSwitcherModule,
         KbqButtonModule,
-        KbqIcon
+        KbqIcon,
+        KbqToolTipModule
     ],
     template: `
-        App: {{ selectedApp.name }}
+        {{ text().app }} {{ selectedApp.name }}
         <br />
         <br />
-        <button kbq-button aria-label="Apps" kbqAppSwitcher [sites]="sites" [(selectedApp)]="selectedApp">
+        <button
+            kbq-button
+            kbqAppSwitcher
+            [attr.aria-label]="text().allApps"
+            [kbqTooltip]="text().allApps"
+            [sites]="sites"
+            [(selectedApp)]="selectedApp"
+        >
             <i kbq-icon="kbq-bento-menu_16"></i>
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppSwitcherOverviewExample {
+    protected readonly text = injectExampleText();
+
     SVGIcon: string = `
         <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg">
             <path clip-rule="evenodd"

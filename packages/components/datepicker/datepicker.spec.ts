@@ -32,6 +32,7 @@ import {
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     kbqErrorStateMatcherProvider,
+    KbqOverlayLayer,
     ONE,
     ShowOnControlDirtyErrorStateMatcher,
     ShowOnFormSubmitErrorStateMatcher,
@@ -1727,7 +1728,51 @@ describe('KbqDatepicker', () => {
             expect(testComponent.datepickerInput().value).toBe(selected);
         }));
     });
+
+    describe('overlay layer', () => {
+        it('should render the popup of an input inside the element into its overlay layer on every open', fakeAsync(() => {
+            const fixture = createComponent(DatepickerInOverlayLayer, [KbqLuxonDateModule]);
+
+            fixture.detectChanges();
+
+            const datepicker = fixture.componentInstance.datepicker();
+            const getLayer = (): HTMLElement =>
+                fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer');
+            const getPopupHost = (): HTMLElement =>
+                document.querySelector('.cdk-overlay-pane.kbq-datepicker__popup')!.parentElement!;
+
+            datepicker.open();
+            fixture.detectChanges();
+
+            expect(getPopupHost().parentElement).toBe(getLayer());
+
+            datepicker.close();
+            fixture.detectChanges();
+            flush();
+            datepicker.open();
+            fixture.detectChanges();
+
+            expect(getPopupHost().parentElement).toBe(getLayer());
+
+            datepicker.close();
+            fixture.detectChanges();
+            flush();
+        }));
+    });
 });
+
+@Component({
+    imports: [KbqDatepickerModule, KbqOverlayLayer],
+    template: `
+        <div kbqOverlayLayer>
+            <input [kbqDatepicker]="d" />
+            <kbq-datepicker #d />
+        </div>
+    `
+})
+class DatepickerInOverlayLayer {
+    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+}
 
 @Component({
     imports: [

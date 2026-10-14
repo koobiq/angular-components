@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
+import { KbqOverlayLayer } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalService } from '@koobiq/components/modal';
@@ -63,7 +64,8 @@ const GITHUB_REPO_TREE_URL = `https://github.com/koobiq/angular-components/tree/
         class: 'docs-component-viewer',
         '[attr.data-docsearch-category]': 'structureCategoryId'
     },
-    hostDirectives: [KbqScrollbarViewport]
+    // Panels of the live examples slide under the site header while the article scrolls.
+    hostDirectives: [KbqScrollbarViewport, KbqOverlayLayer]
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
     protected readonly structureItemTab = DocsStructureItemTab;

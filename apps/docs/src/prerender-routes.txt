@@ -62,6 +62,8 @@
 /en/components/dynamic-translation/overview
 /en/components/dynamic-translation/api
 /en/components/dynamic-translation/examples
+/en/components/ellipsis-center/overview
+/en/components/ellipsis-center/api
 /en/components/empty-state/overview
 /en/components/empty-state/api
 /en/components/file-upload/overview
@@ -258,6 +260,8 @@
 /ru/components/dynamic-translation/overview
 /ru/components/dynamic-translation/api
 /ru/components/dynamic-translation/examples
+/ru/components/ellipsis-center/overview
+/ru/components/ellipsis-center/api
 /ru/components/empty-state/overview
 /ru/components/empty-state/api
 /ru/components/file-upload/overview

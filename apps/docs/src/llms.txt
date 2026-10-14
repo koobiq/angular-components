@@ -48,6 +48,7 @@ Rules for code that uses Koobiq:
 - [Divider](https://koobiq.io/en/components/divider.md): `<kbq-divider>` is a component that allows for koobiq styling of a line separator with various orientation options. Entry point: `@koobiq/components/divider`.
 - [Dropdown](https://koobiq.io/en/components/dropdown.md): Dropdown displays a menu with actions or options next to a trigger and supports disabled, loading, footer, and keyboard interaction states. Entry point: `@koobiq/components/dropdown`.
 - [Dynamic translation](https://koobiq.io/en/components/dynamic-translation.md): `KbqDynamicTranslation` — component for embedding custom components into translatable strings. Entry point: `@koobiq/components/dynamic-translation`.
+- [Ellipsis center](https://koobiq.io/en/components/ellipsis-center.md): Ellipsis Center truncates long single-line text in the middle so that its beginning and end remain visible within the available width. Entry point: `@koobiq/components/ellipsis-center`.
 - [Empty state](https://koobiq.io/en/components/empty-state.md): A placeholder component for empty states or error messages. Entry point: `@koobiq/components/empty-state`.
 - [File upload](https://koobiq.io/en/components/file-upload.md): Allows the user to upload files to the product. Entry point: `@koobiq/components/file-upload`.
 - [Filter Bar](https://koobiq.io/en/components/filter-bar.md): A composite component for filtering data in a table or list. Entry point: `@koobiq/components/filter-bar`.

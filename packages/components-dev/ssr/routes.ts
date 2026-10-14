@@ -12,8 +12,9 @@ import {
 // (#DS-5539)
 const SSR_EXCLUDED_EXAMPLE_IDS = new Set([
     ...EXAMPLE_IDS_WITHOUT_SERVER_RENDERING,
-    // Both examples are a bare `<iframe src="/examples/<id>">`, a URL that only the docs app routes:
+    // These examples are a bare `<iframe src="/examples/<id>">`, a URL that only the docs app routes:
     // here it falls through to `**`. What the frames show is prerendered as the `*-page` examples.
+    'dropdown-scrolling-and-layering',
     'popover-scrolling-and-layering',
     'select-scrolling-and-layering'
 ]);

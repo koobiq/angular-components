@@ -1,12 +1,28 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Provider,
+    ViewEncapsulation,
+    inject
+} from '@angular/core';
+import { Routes } from '@angular/router';
+import {
+    KBQ_LUXON_DATE_ADAPTER_OPTIONS,
+    KBQ_LUXON_DATE_FORMATS,
+    LuxonDateAdapter
+} from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     DateFormatter,
+    KBQ_DATE_FORMATS,
+    KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
     KbqLocaleService,
-    KbqLocaleServiceModule
+    KbqLocaleServiceModule,
+    kbqLocaleServiceProvider
 } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { delay, distinctUntilChanged } from 'rxjs';
@@ -1115,3 +1131,19 @@ export class DevApp {
         );
     }
 }
+
+/**
+ * Shared by `main.ts` and by the `dev-all` shell, which scopes them to the `/date-formatter` route.
+ */
+export const devProviders: Provider[] = [
+    kbqLocaleServiceProvider(),
+    { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
+    {
+        provide: DateAdapter,
+        useClass: LuxonDateAdapter,
+        deps: [KBQ_DATE_LOCALE, KBQ_LUXON_DATE_ADAPTER_OPTIONS, KBQ_LOCALE_SERVICE]
+    }
+];
+
+/** Entry point for the `dev-all` shell, which mounts this app under `/date-formatter`. */
+export const devRoutes: Routes = [{ path: '', component: DevApp, providers: devProviders }];

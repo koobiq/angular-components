@@ -5,13 +5,14 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 
 // @public
 export class KbqTopBar {
     readonly ariaLabel: i0.InputSignal<string | null>;
     readonly withShadow: i0.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTopBar, "kbq-top-bar", never, { "withShadow": { "alias": "withShadow"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTopBar, "kbq-top-bar", never, { "withShadow": { "alias": "withShadow"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, [{ directive: typeof i1.KbqOverlayLayerExclude; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopBar, never>;
 }

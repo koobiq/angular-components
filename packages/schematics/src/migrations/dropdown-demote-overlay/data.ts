@@ -86,6 +86,6 @@ export const BEHAVIOUR_NOTE = [
     'Layering behaviour changed: kbq-dropdown, kbq-select and popover panels now render ABOVE',
     'kbq-navbar / kbq-top-bar instead of sliding under them while open. The shared',
     '.cdk-overlay-container stays at z-index 1000 at all times.',
-    'If your app relied on the old behaviour, lower your sticky chrome below the overlay',
-    'container z-index (the library ships $overlay-container-z-index: 1000).'
+    'To have panels slide under the bars again, mark the content area below them with the',
+    'kbqOverlayLayer directive from @koobiq/components/core.'
 ];

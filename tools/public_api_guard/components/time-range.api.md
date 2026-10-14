@@ -209,6 +209,7 @@ export class KbqTimeRangeTitle {
 
 // @public
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
+    protected readonly ariaLabelledby: _angular_core.Signal<string | null>;
     controlType: string;
     disabled: boolean;
     empty: boolean;
@@ -216,6 +217,7 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     focus(_options?: FocusOptions): void;
     focused: boolean;
     id: string;
+    readonly isNativeLabelSupported = false;
     ngControl: NgControl | null;
     onContainerClick(_event: MouseEvent): void;
     placeholder: string;

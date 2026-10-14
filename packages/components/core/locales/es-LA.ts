@@ -21,7 +21,8 @@ export const esLALocaleData = {
         resizeColumns: 'Redimensionar columnas',
         resizePanels: 'Redimensionar paneles',
         toastRegion: 'Notificaciones',
-        optionActions: 'Acciones'
+        optionActions: 'Acciones',
+        progressBar: 'Progreso'
     },
     select: {
         hiddenItemsText: '+{{ number }}',
@@ -92,12 +93,13 @@ export const esLALocaleData = {
             searchPlaceholder: 'Búsqueda',
             searchEmptyResult: 'No se encontró nada',
             saveAsNewFilter: 'Guardar como filtro nuevo',
-            saveChanges: 'Guardar cambios',
-            saveAsNew: 'Nuevo nombre',
+            saveChangesHeader: 'Nuevo nombre',
+            saveChangesButton: 'Guardar cambios',
+            saveAsNewHeader: 'Nuevo filtro',
+            saveAsNewButton: 'Guardar como nuevo',
             change: 'Renombrar',
             resetChanges: 'Restablecer',
             remove: 'Eliminar',
-            error: 'Ya existe una búsqueda con ese nombre',
             errorHint: 'No se pudo guardar el filtro. Intente de nuevo o comuníquese con el administrador.',
             saveButton: 'Guardar',
             cancelButton: 'Cancelar',
@@ -160,7 +162,6 @@ export const esLALocaleData = {
     },
     timeRange: {
         title: {
-            for: 'para',
             placeholder: 'Seleccione el período'
         },
         editor: {

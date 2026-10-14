@@ -35,6 +35,7 @@ import {
     ENTER,
     ESCAPE,
     HOME,
+    KbqOverlayLayer,
     KbqOverlayOrigin,
     KbqPanelWidth,
     LEFT_ARROW,
@@ -3781,6 +3782,49 @@ describe('KbqDropdown', () => {
             axeTimeout
         );
     });
+
+    describe('overlay layer', () => {
+        let fixture: ComponentFixture<DropdownInOverlayLayer>;
+        let instance: DropdownInOverlayLayer;
+
+        const getLayer = (): HTMLElement =>
+            fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer');
+
+        const getOverlayHost = (itemSelector: string): HTMLElement =>
+            document.querySelector(itemSelector)!.closest('.cdk-overlay-pane')!.parentElement!;
+
+        beforeEach(() => {
+            fixture = createComponent(DropdownInOverlayLayer);
+            fixture.detectChanges();
+            instance = fixture.componentInstance;
+        });
+
+        it('should render the panel of a trigger inside the element into its overlay layer', () => {
+            instance.insideTrigger().open();
+            fixture.detectChanges();
+
+            expect(getOverlayHost('#inside-item').parentElement).toBe(getLayer());
+        });
+
+        it('should render a nested panel into the layer of its parent panel, on top of it', () => {
+            instance.insideTrigger().open();
+            fixture.detectChanges();
+            instance.nestedTrigger().open();
+            fixture.detectChanges();
+
+            const nestedHost = getOverlayHost('#nested-item');
+
+            expect(nestedHost.parentElement).toBe(getLayer());
+            expect(nestedHost.previousElementSibling).toBe(getOverlayHost('#inside-item'));
+        });
+
+        it('should keep the panel of a trigger outside the element in the application-wide container', () => {
+            instance.outsideTrigger().open();
+            fixture.detectChanges();
+
+            expect(getOverlayHost('#outside-item').parentElement).toBe(overlayContainerElement);
+        });
+    });
 });
 
 describe('KbqDropdown default overrides', () => {
@@ -4709,4 +4753,38 @@ class DropdownOrigin {
     readonly trigger = viewChild.required(KbqDropdownTrigger);
     readonly triggerEl = viewChild.required<ElementRef<HTMLElement>>('triggerEl');
     readonly dropdown = viewChild.required(KbqDropdown);
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqOverlayLayer],
+    template: `
+        <div kbqOverlayLayer>
+            <button #insideTrigger="kbqDropdownTrigger" [kbqDropdownTriggerFor]="inside">Inside</button>
+        </div>
+        <button #outsideTrigger="kbqDropdownTrigger" [kbqDropdownTriggerFor]="outside">Outside</button>
+
+        <kbq-dropdown #inside="kbqDropdown">
+            <button
+                #nestedTrigger="kbqDropdownTrigger"
+                id="inside-item"
+                kbq-dropdown-item
+                [kbqDropdownTriggerFor]="nested"
+            >
+                Nested
+            </button>
+        </kbq-dropdown>
+
+        <kbq-dropdown #nested="kbqDropdown">
+            <button id="nested-item" kbq-dropdown-item>Nested item</button>
+        </kbq-dropdown>
+
+        <kbq-dropdown #outside="kbqDropdown">
+            <button id="outside-item" kbq-dropdown-item>Outside item</button>
+        </kbq-dropdown>
+    `
+})
+class DropdownInOverlayLayer {
+    readonly insideTrigger = viewChild.required<KbqDropdownTrigger>('insideTrigger');
+    readonly nestedTrigger = viewChild.required<KbqDropdownTrigger>('nestedTrigger');
+    readonly outsideTrigger = viewChild.required<KbqDropdownTrigger>('outsideTrigger');
 }

@@ -1,6 +1,7 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, DebugElement, ElementRef, viewChild } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -12,6 +13,7 @@ import {
     enUSLocaleData,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
+    KbqOverlayLayer,
     LEFT_ARROW,
     NUMPAD_DIVIDE,
     RIGHT_ARROW,
@@ -109,6 +111,7 @@ describe('KbqNavbar', () => {
                 TestBrandLongTitleApp,
                 TestBrandHorizontalApp,
                 TestNonAnchorBrandApp,
+                TestDisabledBrandApp,
                 TestTwoVerticalNavbarsApp,
                 TestVerticalDropdownApp,
                 TestExternalConfigApp,
@@ -829,6 +832,32 @@ describe('KbqNavbar', () => {
                 .injector.get(KbqNavbarFocusableItem);
 
             expect(focusableItem.disabled).toBe(true);
+        }));
+
+        it('a purely decorative brand is neither announced nor styled as disabled', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestNonAnchorBrandApp);
+
+            fixture.detectChanges();
+            flush();
+
+            const brandEl = fixture.nativeElement.querySelector('.kbq-navbar-brand') as HTMLElement;
+
+            expect(brandEl.classList).not.toContain('kbq-disabled');
+            expect(brandEl.hasAttribute('aria-disabled')).toBe(false);
+        }));
+
+        it('a disabled brand swallows clicks, so its link is not followed', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TestDisabledBrandApp);
+
+            fixture.detectChanges();
+            flush();
+
+            const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+
+            fixture.nativeElement.querySelector('.kbq-navbar-title').dispatchEvent(click);
+
+            expect(click.defaultPrevented).toBe(true);
+            expect(fixture.componentInstance.clicked).toBe(false);
         }));
     });
 
@@ -2100,6 +2129,35 @@ describe('KbqNavbar', () => {
     });
 });
 
+describe('overlay layer', () => {
+    let fixture: ComponentFixture<TestInOverlayLayerApp>;
+
+    const getOpenedPanelContainer = (trigger: KbqDropdownTrigger): Element | null => {
+        trigger.open();
+        fixture.detectChanges();
+
+        return document.querySelector('.cdk-overlay-pane')!.closest('.cdk-overlay-container');
+    };
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [NoopAnimationsModule, TestInOverlayLayerApp] });
+        fixture = TestBed.createComponent(TestInOverlayLayerApp);
+        fixture.detectChanges();
+    });
+
+    it('should keep the panels opened from a horizontal navbar in the application-wide container', () => {
+        expect(getOpenedPanelContainer(fixture.componentInstance.horizontalTrigger())).toBe(
+            TestBed.inject(OverlayContainer).getContainerElement()
+        );
+    });
+
+    it('should keep the panels opened from a vertical navbar in the application-wide container', () => {
+        expect(getOpenedPanelContainer(fixture.componentInstance.verticalTrigger())).toBe(
+            TestBed.inject(OverlayContainer).getContainerElement()
+        );
+    });
+});
+
 /**
  * jsdom performs no layout, so the collapse algorithm has nothing to measure. These stubs stand in for the
  * browser's answer to "how much room is there, how much does every element in a container take, and how much does
@@ -2312,6 +2370,23 @@ class TestNonAnchorBrandApp {
 }
 
 @Component({
+    selector: 'test-disabled-brand-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <a href="#" kbq-navbar-brand disabled (click)="clicked = true">
+                    <div kbq-navbar-title>App Name</div>
+                </a>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestDisabledBrandApp {
+    clicked = false;
+}
+
+@Component({
     selector: 'test-brand-long-title-app',
     imports: [KbqNavbarModule],
     template: `
@@ -2492,3 +2567,42 @@ class TestTooltipApp {}
     `
 })
 class TestTooltipSelectorApp {}
+
+@Component({
+    selector: 'test-in-overlay-layer-app',
+    imports: [KbqNavbarModule, KbqDropdownModule, KbqOverlayLayer],
+    template: `
+        <div kbqOverlayLayer>
+            <kbq-navbar>
+                <kbq-navbar-container>
+                    <kbq-navbar-item
+                        #horizontalTrigger="kbqDropdownTrigger"
+                        [kbqDropdownTriggerFor]="horizontalDropdown"
+                    >
+                        <kbq-navbar-title>Horizontal</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-navbar>
+
+            <kbq-vertical-navbar>
+                <kbq-navbar-container>
+                    <kbq-navbar-item #verticalTrigger="kbqDropdownTrigger" [kbqDropdownTriggerFor]="verticalDropdown">
+                        <kbq-navbar-title>Vertical</kbq-navbar-title>
+                    </kbq-navbar-item>
+                </kbq-navbar-container>
+            </kbq-vertical-navbar>
+
+            <kbq-dropdown #horizontalDropdown="kbqDropdown">
+                <button kbq-dropdown-item>Item</button>
+            </kbq-dropdown>
+
+            <kbq-dropdown #verticalDropdown="kbqDropdown">
+                <button kbq-dropdown-item>Item</button>
+            </kbq-dropdown>
+        </div>
+    `
+})
+class TestInOverlayLayerApp {
+    readonly horizontalTrigger = viewChild.required('horizontalTrigger', { read: KbqDropdownTrigger });
+    readonly verticalTrigger = viewChild.required('verticalTrigger', { read: KbqDropdownTrigger });
+}

@@ -44,6 +44,7 @@ import {
     hasModifierKey,
     KBQ_CONNECTED_OVERLAY_ABOVE_CLASS,
     KBQ_CONNECTED_OVERLAY_BELOW_CLASS,
+    KBQ_OVERLAY_LAYERS,
     KBQ_WINDOW,
     KbqCaretRect,
     kbqCreateCaretOrigin,
@@ -169,6 +170,7 @@ export class KbqAutocompleteTrigger
     private viewContainerRef = inject(ViewContainerRef);
     private changeDetectorRef = inject(ChangeDetectorRef);
     private overlay = inject(Overlay);
+    private readonly overlayLayers = inject(KBQ_OVERLAY_LAYERS);
     private zone = inject(NgZone);
     private dir = inject(Directionality, { optional: true })!;
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true, host: true });
@@ -805,6 +807,7 @@ export class KbqAutocompleteTrigger
             this.portal = new TemplatePortal(autocomplete.template(), this.viewContainerRef);
             overlayRef = this.overlay.create(this.getOverlayConfig());
             this.overlayRef = overlayRef;
+            this.overlayLayers.adopt(overlayRef, this.elementRef.nativeElement);
 
             // Use the `keydownEvents` in order to take advantage of
             // the overlay event targeting provided by the CDK overlay.

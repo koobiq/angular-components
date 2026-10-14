@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-progress-bar-percentage-and-aria",
+    "title": "Koobiq components progress-bar review migration",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project to inspect. If omitted, the migration runs over the whole tree.",
+            "$default": {
+                "$source": "projectName"
+            }
+        }
+    }
+}

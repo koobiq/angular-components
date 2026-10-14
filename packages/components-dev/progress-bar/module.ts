@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressBarModule, ProgressBarMode } from '@koobiq/components/progress-bar';
 import { ProgressBarExamplesModule } from 'packages/docs-examples/components/progress-bar';
+import { interval } from 'rxjs';
 import { DevThemeToggle } from '../theme-toggle';
 
 const INTERVAL: number = 300;
@@ -29,17 +30,13 @@ export class DevDocsExamples {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DevApp implements OnDestroy {
-    themePalette = ThemePalette;
+export class DevApp {
     mode: ProgressBarMode = 'determinate';
-    percent: number = 0;
-    intervalId: number;
+    readonly percent = signal(0);
 
     constructor() {
-        setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);
-    }
-
-    ngOnDestroy() {
-        clearInterval(this.intervalId);
+        interval(INTERVAL)
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.percent.update((percent) => (percent + STEP) % (MAX_PERCENT + STEP)));
     }
 }

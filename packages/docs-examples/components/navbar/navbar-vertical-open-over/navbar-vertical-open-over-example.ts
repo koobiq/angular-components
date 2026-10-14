@@ -5,6 +5,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { injectExampleText } from '../localized-data';
 
 /**
  * @title Navbar vertical open over
@@ -22,5 +23,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalOpenOverExample {
+    protected readonly text = injectExampleText();
+
     popUpPlacements = PopUpPlacements;
 }

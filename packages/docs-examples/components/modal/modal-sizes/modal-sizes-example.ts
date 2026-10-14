@@ -34,23 +34,25 @@ export class ModalSizesExample {
 
     showModal(kbqSize: ModalSize): void {
         this.modalService.confirm({
+            kbqAriaLabel: 'Save changes',
             kbqSize,
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Save'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Save'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 
     showCustomModal(): void {
         this.modalService.confirm({
+            kbqAriaLabel: 'Save changes',
             kbqWidth: '600px',
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Save'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Save'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 }

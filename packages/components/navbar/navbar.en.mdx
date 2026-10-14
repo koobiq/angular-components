@@ -4,7 +4,7 @@ You can place the menu at the top or to the left. Both options have their advant
 
 ### Horizontal menu
 
-The menu uses the top row and allows content to occupy the full screen width. The horizontal menu works better with three or more columns. The main menu is pinned to the top and remains visible when you scroll content.
+The menu uses the top row and allows content to occupy the full screen width. The horizontal menu works better with three or more columns. The main menu is pinned to the top and remains visible when you scroll content: place it outside the scrolling area.
 
 <Example id="navbar-overview" />
 
@@ -29,3 +29,7 @@ When the name does not fit on one line, the header switches to a small two-line 
 The same is available in the horizontal menu.
 
 <Example id="navbar-app-long-name" />
+
+### Layering
+
+The horizontal menu sits at `z-index: 990` (`--kbq-navbar-z-index`), so panels opened from the page content paint above it. To have them slide under it, see [Panels under a sticky header](/en/components/core/overview#panels-under-a-sticky-header).

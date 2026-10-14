@@ -112,9 +112,10 @@ const ngAddInstalls = [
 /**
  * The manual install from docs/guides/installation.en.mdx.
  *
- * The Angular package ranges come from the application. The guide pins `overlayscrollbars` to a
- * specific release and `@koobiq/design-tokens` to the range supported by `@koobiq/components`; the
- * remaining package names stay unpinned so this fixture catches an incompatible registry release.
+ * The Angular packages carry the range the guide tells the reader to take from their own
+ * `@angular/core`; the rest are bare, exactly as they are copied out of the guide. That makes this
+ * fixture sensitive to the registry: a `@koobiq/icons` major outside the declared peer range would
+ * fail it. That is the point — the documented command would break for readers at the same moment.
  */
 const documentedInstalls = [
     `@angular/cdk@${ngNewRange(cdkVersion)}`,
@@ -122,7 +123,8 @@ const documentedInstalls = [
     // The guide pins this one, because the scrollbar relies on a specific build of it.
     `overlayscrollbars@${rootPackageJson.dependencies!.overlayscrollbars}`,
     '@koobiq/icons',
-    '@koobiq/design-tokens@^3.14.0',
+    // The guide holds this one to the major the peer range allows; bare, it takes whatever major is `latest`.
+    '@koobiq/design-tokens@^3',
     '@koobiq/date-adapter',
     '@koobiq/date-formatter',
     '@koobiq/luxon-date-adapter',

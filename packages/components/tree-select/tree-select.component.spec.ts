@@ -41,6 +41,7 @@ import {
     KbqComponentColors,
     KbqLocaleService,
     KbqLocaleServiceModule,
+    KbqOverlayLayer,
     KbqPanelMaxHeight,
     KbqPanelWidth,
     KbqPseudoCheckbox,
@@ -412,6 +413,34 @@ class TreeSelectWithAriaName {
 
     ariaLabel: string | null = null;
     ariaLabelledby: string | null = null;
+
+    constructor() {
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+        this.dataSource.data = buildFileTree(TREE_DATA, 0);
+    }
+}
+
+/** Tree-select named by the caption of its wrapping `kbq-form-field`. */
+@Component({
+    selector: 'tree-select-with-form-field-label',
+    imports: [KbqTreeModule, KbqTreeSelectModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field>
+            <kbq-label>Food</kbq-label>
+            <kbq-tree-select>
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+class TreeSelectWithFormFieldLabel {
+    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -2273,6 +2302,26 @@ describe('KbqTreeSelect', () => {
 
                     expect(namedSelect.getAttribute('aria-labelledby')).toBe('external-label');
                     expect(namedSelect.hasAttribute('aria-label')).toBe(false);
+                }));
+
+                // A tree-select is not a native labelable element, so the form-field renders a `<span>`
+                // caption it `for` cannot point at; the control is named from the label side instead.
+                it('should be named by the form-field caption', fakeAsync(() => {
+                    fixture.destroy();
+
+                    const labeledFixture = TestBed.createComponent(TreeSelectWithFormFieldLabel);
+
+                    labeledFixture.detectChanges();
+                    flush();
+
+                    const labeledSelect = getTreeSelectElement(labeledFixture);
+                    const caption: HTMLElement = labeledFixture.debugElement.query(
+                        By.css('.kbq-form-field__label')
+                    ).nativeElement;
+
+                    expect(caption.tagName).toBe('SPAN');
+                    expect(caption.getAttribute('for')).toBeNull();
+                    expect(labeledSelect.getAttribute('aria-labelledby')).toBe(caption.id);
                 }));
 
                 it('should have no axe violations when named only by the placeholder', async () => {
@@ -6265,6 +6314,58 @@ describe('KbqTreeSelect', () => {
             fixture.detectChanges();
 
             expect(option.classList).toContain('kbq-focused');
+        }));
+    });
+
+    describe('overlay layer', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqTreeModule, KbqTreeSelectModule, KbqOverlayLayer],
+            template: `
+                <div kbqOverlayLayer>
+                    <kbq-form-field>
+                        <kbq-tree-select placeholder="Files">
+                            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                                    {{ treeControl.getViewValue(node) }}
+                                </kbq-tree-option>
+                            </kbq-tree-selection>
+                        </kbq-tree-select>
+                    </kbq-form-field>
+                </div>
+            `
+        })
+        class TreeSelectInOverlayLayer {
+            treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+            treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+            dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+            readonly select = viewChild.required(KbqTreeSelect);
+
+            constructor() {
+                this.dataSource.data = buildFileTree(TREE_DATA, 0);
+            }
+        }
+
+        beforeEach(() => {
+            configureKbqTreeSelectTestingModule([TreeSelectInOverlayLayer]);
+        });
+
+        it('should render the panel of a tree-select inside the element into its overlay layer', fakeAsync(() => {
+            const fixture = TestBed.createComponent(TreeSelectInOverlayLayer);
+
+            fixture.detectChanges();
+
+            const select = fixture.componentInstance.select();
+
+            select.open();
+            fixture.detectChanges();
+            flush();
+
+            const overlayHost = select.panel()!.nativeElement.closest('.cdk-overlay-pane').parentElement;
+
+            expect(overlayHost.parentElement).toBe(
+                fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer')
+            );
         }));
     });
 });

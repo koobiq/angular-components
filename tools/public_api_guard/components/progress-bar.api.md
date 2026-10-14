@@ -4,54 +4,59 @@
 
 ```ts
 
-import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/platform';
+import * as _angular_core from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 
-// @public (undocumented)
+// @public
 export class KbqProgressBar extends KbqColorDirective {
     constructor();
+    readonly ariaLabel: _angular_core.InputSignal<string | null>;
     // (undocumented)
-    readonly id: i0.InputSignal<string>;
+    protected readonly caption: _angular_core.Signal<KbqProgressBarCaption | undefined>;
+    readonly id: _angular_core.InputSignal<string>;
+    protected readonly indeterminate: _angular_core.Signal<boolean>;
+    readonly mode: _angular_core.InputSignal<ProgressBarMode>;
+    protected readonly percentage: _angular_core.Signal<number>;
     // (undocumented)
-    readonly mode: i0.InputSignal<ProgressBarMode>;
+    protected readonly resolvedAriaLabel: _angular_core.Signal<string | null>;
     // (undocumented)
-    get percentage(): number;
+    protected readonly resolvedAriaLabelledby: _angular_core.Signal<string | null>;
+    readonly value: _angular_core.InputSignal<number>;
     // (undocumented)
-    readonly value: i0.InputSignal<number>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "ariaLabel": { "alias": "aria-label"; "required": false; "isSignal": true; }; }, {}, ["text", "caption"], ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], true, never>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; "value": { "alias": "value"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBar, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqProgressBar, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqProgressBarCaption {
+    readonly id: _angular_core.InputSignal<string>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressBarCaption, "[kbq-progress-bar-caption]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqProgressBarCaption, "[kbq-progress-bar-caption]", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarCaption, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqProgressBarCaption, never>;
 }
 
 // @public (undocumented)
 export class KbqProgressBarModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqProgressBarModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressBarModule>;
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqProgressBarModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, never, [typeof i1.PlatformModule, typeof KbqProgressBar, typeof KbqProgressBarText, typeof KbqProgressBarCaption], [typeof KbqProgressBar, typeof KbqProgressBarText, typeof KbqProgressBarCaption]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqProgressBarModule, never, [typeof KbqProgressBar, typeof KbqProgressBarText, typeof KbqProgressBarCaption], [typeof KbqProgressBar, typeof KbqProgressBarText, typeof KbqProgressBarCaption]>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqProgressBarText {
+    readonly id: _angular_core.InputSignal<string>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqProgressBarText, "[kbq-progress-bar-text]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqProgressBarText, "[kbq-progress-bar-text]", never, { "id": { "alias": "id"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarText, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqProgressBarText, never>;
 }
 
-// @public (undocumented)
+// @public
 export type ProgressBarMode = 'determinate' | 'indeterminate';
 
 // (No @packageDocumentation comment for this package)

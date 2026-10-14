@@ -420,8 +420,30 @@
                         "outputPath": {
                             "base": "dist/components-dev/all"
                         },
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/symbol/svg",
+                                "output": "/assets/svg-icons/sprite"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/svg",
+                                "output": "/assets/svg-icons"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/images",
+                                "output": "/assets/images"
+                            },
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/fonts",
+                                "output": "assets/kbq-icons"
+                            }
+                        ],
                         "tsConfig": "packages/components-dev/all/tsconfig.app.json",
-                        "index": "packages/components-dev/index.html",
+                        "index": "packages/components-dev/all/index.html",
                         "styles": ["packages/components-dev/main.scss"],
                         "polyfills": ["zone.js"],
                         "extractLicenses": false,
@@ -1615,7 +1637,7 @@
         "dev-markdown": {
             "projectType": "application",
             "root": "packages/components-dev/markdown",
-            "sourceRoot": "packages/markdown-dev/markdown",
+            "sourceRoot": "packages/components-dev/markdown",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",

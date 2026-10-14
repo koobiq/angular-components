@@ -122,3 +122,9 @@ The defaults come from design tokens, which can be overridden by a theme:
 Nested panels and panels that overlap the trigger vertically are not matched to the trigger — they follow the tokens only.
 
 When the trigger is only a part of a larger control, set `KbqDropdownTrigger.widthOrigin` to the element the panel should match instead. [Split button](en/components/split-button) does this through its `panelAutoWidth` input.
+
+### Layering
+
+By default, the menu appears above the horizontal [Navbar](/en/components/navbar) and [Topbar](/en/components/top-bar). To have a menu opened from the page content slide under them while the page scrolls, mark the content area with `kbqOverlayLayer` — see [Panels under a sticky header](/en/components/core/overview#panels-under-a-sticky-header). A menu opened from the bar itself, like **Actions** in the example, stays above it.
+
+<Example id="dropdown-scrolling-and-layering" />

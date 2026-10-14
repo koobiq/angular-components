@@ -5,10 +5,11 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import * as _angular_core from '@angular/core';
 import { ComponentRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import * as i0 from '@angular/core';
 import * as i1$1 from '@angular/cdk/overlay';
 import * as i1 from '@koobiq/components/core';
 import * as i2$1 from '@angular/cdk/a11y';
@@ -29,13 +30,26 @@ import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
+import { Signal } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
+// @public
+export type AnimationState = 'enter' | 'leave' | null;
+
 // @public (undocumented)
 export type ConfirmType = 'confirm' | 'success' | 'warn';
+
+// @public (undocumented)
+export class CssUnitPipe implements PipeTransform {
+    transform(value: number | string | null | undefined, defaultUnit?: string): string | null;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<CssUnitPipe, never>;
+    // (undocumented)
+    static ɵpipe: _angular_core.ɵɵPipeDeclaration<CssUnitPipe, "toCssUnit", true>;
+}
 
 // @public (undocumented)
 export interface IModalButtonOptions<T = any> {
@@ -43,7 +57,6 @@ export interface IModalButtonOptions<T = any> {
     autoFocus?: boolean;
     // (undocumented)
     autoLoading?: boolean;
-    // (undocumented)
     disabled?: boolean | ((this: IModalButtonOptions<T>, contentComponentInstance?: T) => boolean);
     // (undocumented)
     ghost?: boolean;
@@ -51,13 +64,11 @@ export interface IModalButtonOptions<T = any> {
     kbqModalMainAction?: boolean;
     // (undocumented)
     label: string;
-    // (undocumented)
     loading?: boolean | ((this: IModalButtonOptions<T>, contentComponentInstance?: T) => boolean);
     // (undocumented)
     onClick?(this: IModalButtonOptions<T>, contentComponentInstance?: T): (void | {}) | Promise<void | {}>;
     // (undocumented)
     shape?: string;
-    // (undocumented)
     show?: boolean | ((this: IModalButtonOptions<T>, contentComponentInstance?: T) => boolean);
     // (undocumented)
     size?: string;
@@ -68,60 +79,84 @@ export interface IModalButtonOptions<T = any> {
 // @public (undocumented)
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
     injector?: Injector;
-    // (undocumented)
-    kbqOnCancel?: OnClickCallback<T>;
-    // (undocumented)
-    kbqOnOk?: OnClickCallback<T>;
 }
+
+// @public
+export const KBQ_MODAL: InjectionToken<KbqModal>;
 
 // @public
 export const KBQ_MODAL_DATA: InjectionToken<unknown>;
 
 // @public
+export const KBQ_MODAL_OPTIONS: InjectionToken<ModalOptions<any, any>>;
+
+// @public
+export interface KbqModal {
+    readonly afterOpen: Observable<void>;
+    readonly bodyOverflow: Signal<KbqOverflowShadowState>;
+    readonly captionId: string;
+    readonly componentColors: typeof KbqComponentColors;
+    readonly kbqClosable: boolean;
+    onClickCloseBtn(): void;
+    registerCaption(): void;
+    registerFooter(): void;
+    registerTitle(): void;
+    setBodyOverflow(state: KbqOverflowShadowState): void;
+    readonly titleId: string;
+}
+
+// @public
+export type KbqModalAutoFocus = 'first-tabbable' | 'dialog' | 'first-heading' | false;
+
+// @public
 export class KbqModalBody {
     constructor();
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }, { directive: typeof i3.KbqScrollbarViewport; inputs: {}; outputs: {}; }]>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqModalBody, "[kbq-modal-body], kbq-modal-body, [kbqModalBody]", never, {}, {}, never, never, true, [{ directive: typeof i1.KbqOverflowShadowContainer; inputs: {}; outputs: {}; }, { directive: typeof i3.KbqScrollbarViewport; inputs: {}; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalBody, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalBody, never>;
 }
 
 // @public
 export class KbqModalCaption {
+    constructor();
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalCaption, "[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]", never, {}, {}, never, ["*"], true, [{ directive: typeof i2.KbqTitleDirective; inputs: {}; outputs: {}; }]>;
+    protected readonly modal: KbqModal;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalCaption, never>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqModalCaption, "[kbq-modal-caption], kbq-modal-caption, [kbqModalCaption]", never, {}, {}, never, ["*"], true, [{ directive: typeof i2.KbqTitleDirective; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalCaption, never>;
 }
 
 // @public (undocumented)
-export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions {
-    protected readonly a11yLocaleConfiguration: i0.Signal<i1.KbqA11yLocaleConfiguration>;
+export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+    protected readonly a11yLocaleConfiguration: _angular_core.Signal<i1.KbqA11yLocaleConfiguration>;
     // (undocumented)
     get afterClose(): Observable<R | undefined>;
     // (undocumented)
     get afterOpen(): Observable<void>;
-    // Warning: (ae-forgotten-export) The symbol "AnimationState" needs to be exported by the entry point index.d.ts
     animateMaskTo(state: AnimationState): void;
-    // (undocumented)
-    readonly autoFocusedButtons: i0.Signal<readonly ElementRef<any>[]>;
+    protected get ariaDescribedBy(): string | null;
+    protected get ariaLabel(): string | null;
+    protected get ariaLabelledBy(): string | null;
     get beforeClose(): Observable<R | undefined>;
     // (undocumented)
-    readonly bodyContainer: i0.Signal<ViewContainerRef>;
-    readonly bodyOverflow: i0.WritableSignal<KbqOverflowShadowState>;
-    // (undocumented)
-    get cancelText(): string;
-    // (undocumented)
+    readonly bodyContainer: _angular_core.Signal<ViewContainerRef>;
+    readonly bodyOverflow: _angular_core.WritableSignal<KbqOverflowShadowState>;
+    readonly captionId: string;
+    protected readonly captionKind: _angular_core.Signal<KbqModalSlotKind>;
     close(result?: R): void;
     // (undocumented)
     componentColors: typeof KbqComponentColors;
+    protected readonly containerClasses: _angular_core.Signal<string>;
+    protected readonly contentKind: _angular_core.Signal<KbqModalSlotKind>;
     // (undocumented)
     destroy(result?: R): void;
     // (undocumented)
     protected readonly document: Document;
-    // (undocumented)
-    getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {};
-    protected getContainerClasses(): string;
+    protected readonly footer: _angular_core.Signal<string | TemplateRef<{}> | IModalButtonOptions<T>[] | undefined>;
+    protected readonly footerKind: _angular_core.Signal<KbqModalSlotKind>;
+    protected getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {};
     // (undocumented)
     getContentComponent(): T;
     // (undocumented)
@@ -130,96 +165,55 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     getElement(): HTMLElement;
     // (undocumented)
     getInstance(): KbqModalComponent;
-    // (undocumented)
-    getKbqFooter(): HTMLElement;
-    // (undocumented)
-    handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean): void;
+    protected handleCloseResult(triggerType: 'ok' | 'cancel', canClose: (doClose: boolean | void | {}) => boolean): void;
+    protected get hasFooter(): boolean;
     // (undocumented)
     get hidden(): boolean;
-    // (undocumented)
-    isComponent(value: {}): boolean;
-    // (undocumented)
-    isModalButtons(value: {}): boolean;
-    // (undocumented)
-    isModalType(type: ModalType): boolean;
-    // (undocumented)
-    isNonEmptyString(value: {}): boolean;
-    // (undocumented)
-    isTemplateRef(value: {}): boolean;
+    protected get inert(): boolean;
+    protected isMaskEnabled(): boolean;
+    protected isModalType(type: ModalType): boolean;
     // (undocumented)
     readonly kbqAfterClose: EventEmitter<R | undefined>;
     // (undocumented)
     readonly kbqAfterOpen: EventEmitter<void>;
+    readonly kbqAriaLabel: _angular_core.InputSignal<string | undefined>;
+    readonly kbqAutoFocus: _angular_core.InputSignal<KbqModalAutoFocus>;
     readonly kbqBeforeClose: EventEmitter<R | undefined>;
-    // (undocumented)
-    kbqBodyStyle: object;
-    // (undocumented)
-    get kbqCancelLoading(): boolean;
-    set kbqCancelLoading(value: boolean);
-    // (undocumented)
-    kbqCancelText: string;
-    // (undocumented)
-    kbqCaption: string | TemplateRef<{}>;
-    // (undocumented)
-    kbqClassName: string;
-    // (undocumented)
-    get kbqClosable(): boolean;
-    set kbqClosable(value: boolean);
-    // (undocumented)
-    kbqCloseByESC: boolean;
-    // (undocumented)
-    kbqComponent: Type<T>;
-    // (undocumented)
-    kbqContent: string | TemplateRef<{}> | Type<T>;
-    // (undocumented)
-    kbqFooter: string | TemplateRef<{}> | IModalButtonOptions<T>[];
-    // (undocumented)
-    kbqGetContainer: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef);
-    // (undocumented)
-    get kbqMask(): boolean;
-    set kbqMask(value: boolean);
-    // (undocumented)
-    get kbqMaskClosable(): boolean;
-    set kbqMaskClosable(value: boolean);
-    // (undocumented)
-    kbqMaskStyle: object;
-    // (undocumented)
-    kbqModalType: ModalType;
-    // (undocumented)
-    get kbqOkLoading(): boolean;
-    set kbqOkLoading(value: boolean);
-    // (undocumented)
-    kbqOkText: string;
-    kbqOkType: KbqButtonColor;
-    // (undocumented)
-    readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T>;
-    // (undocumented)
-    readonly kbqOnOk: EventEmitter<T> | OnClickCallback<T>;
-    // (undocumented)
-    kbqRestoreFocus: boolean;
-    // (undocumented)
-    kbqSize: ModalSize;
-    // (undocumented)
-    kbqStyle: object;
-    // (undocumented)
-    kbqTitle: string | TemplateRef<{}>;
-    // (undocumented)
-    get kbqVisible(): boolean;
-    set kbqVisible(value: boolean);
-    // (undocumented)
-    readonly kbqVisibleChange: i0.OutputEmitterRef<boolean>;
-    // (undocumented)
-    kbqWidth: number | string;
-    // (undocumented)
-    kbqWrapClassName: string;
+    readonly kbqBodyStyle: _angular_core.InputSignal<object | undefined>;
+    readonly kbqCancelClick: _angular_core.InputSignal<OnClickCallback<T> | undefined>;
+    readonly kbqCancelLoading: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly kbqCancelText: _angular_core.InputSignal<string | undefined>;
+    readonly kbqCaption: _angular_core.InputSignal<string | TemplateRef<{}> | undefined>;
+    readonly kbqClassName: _angular_core.InputSignal<string | undefined>;
+    readonly kbqClosable: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly kbqCloseByESC: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly kbqComponent: _angular_core.InputSignal<Type<T> | undefined>;
+    readonly kbqContent: _angular_core.InputSignal<string | TemplateRef<{}> | Type<T> | undefined>;
+    readonly kbqFooter: _angular_core.InputSignal<string | TemplateRef<{}> | IModalButtonOptions<T>[] | undefined>;
+    readonly kbqGetContainer: _angular_core.InputSignal<HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null>;
+    readonly kbqMask: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly kbqMaskClosable: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly kbqMaskStyle: _angular_core.InputSignal<object | undefined>;
+    readonly kbqModalType: _angular_core.InputSignal<ModalType>;
+    readonly kbqOkClick: _angular_core.InputSignal<OnClickCallback<T> | undefined>;
+    readonly kbqOkLoading: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly kbqOkText: _angular_core.InputSignal<string | undefined>;
+    readonly kbqOkType: _angular_core.InputSignal<"theme" | "theme-fade" | "contrast" | "contrast-fade">;
+    readonly kbqOnCancel: EventEmitter<T>;
+    readonly kbqOnOk: EventEmitter<T>;
+    readonly kbqRestoreFocus: _angular_core.InputSignalWithTransform<boolean, unknown>;
+    readonly kbqSize: _angular_core.InputSignal<ModalSize>;
+    readonly kbqStyle: _angular_core.InputSignal<object | undefined>;
+    readonly kbqTitle: _angular_core.InputSignal<string | TemplateRef<{}> | undefined>;
+    readonly kbqVisible: _angular_core.ModelSignal<boolean>;
+    readonly kbqWidth: _angular_core.InputSignal<string | number | undefined>;
+    readonly kbqWrapClassName: _angular_core.InputSignal<string | undefined>;
+    protected loading(triggerType: 'ok' | 'cancel'): boolean;
     // (undocumented)
     markForCheck(): void;
+    protected readonly maskAnimationClasses: _angular_core.Signal<string>;
     // (undocumented)
-    maskAnimationClassMap: object | null;
-    // (undocumented)
-    modalAnimationClassMap: object | null;
-    // (undocumented)
-    readonly modalContainer: i0.Signal<ElementRef<any>>;
+    readonly modalContainer: _angular_core.Signal<ElementRef<any>>;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -228,60 +222,59 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
-    get okText(): string;
-    // (undocumented)
-    onButtonClick(button: IModalButtonOptions<T>): void;
+    protected onButtonClick(button: IModalButtonOptions<T>): void;
     // (undocumented)
     onClickCloseBtn(): void;
-    // (undocumented)
-    onClickMask($event: MouseEvent): void;
-    // (undocumented)
-    onClickOkCancel(type: 'ok' | 'cancel'): void;
-    // (undocumented)
-    onKeyDown(event: KeyboardEvent): void;
+    protected onClickMask($event: MouseEvent): void;
+    protected onClickOkCancel(type: 'ok' | 'cancel'): void;
+    protected onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     open(): void;
-    // (undocumented)
-    transformOrigin: string;
+    registerCaption(): void;
+    registerFooter(): void;
+    registerTitle(): void;
+    setBodyOverflow(state: KbqOverflowShadowState): void;
+    setMaskEnabled(enabled: boolean): void;
+    readonly titleId: string;
+    // Warning: (ae-forgotten-export) The symbol "KbqModalSlotKind" needs to be exported by the entry point index.d.ts
+    protected readonly titleKind: _angular_core.Signal<KbqModalSlotKind>;
     // (undocumented)
     triggerCancel(): void;
     // (undocumented)
     triggerOk(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; }; "kbqContent": { "alias": "kbqContent"; "required": false; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; }; "kbqSize": { "alias": "kbqSize"; "required": false; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; }; "kbqCaption": { "alias": "kbqCaption"; "required": false; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; }; "kbqMask": { "alias": "kbqMask"; "required": false; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; }; "kbqOnOk": { "alias": "kbqOnOk"; "required": false; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; }; "kbqOnCancel": { "alias": "kbqOnCancel"; "required": false; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; }; }, { "kbqVisibleChange": "kbqVisibleChange"; "kbqAfterOpen": "kbqAfterOpen"; "kbqAfterClose": "kbqAfterClose"; "kbqBeforeClose": "kbqBeforeClose"; "kbqOnOk": "kbqOnOk"; "kbqOnCancel": "kbqOnCancel"; }, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqModalComponent<any, any>, "kbq-modal", never, { "kbqModalType": { "alias": "kbqModalType"; "required": false; "isSignal": true; }; "kbqComponent": { "alias": "kbqComponent"; "required": false; "isSignal": true; }; "kbqContent": { "alias": "kbqContent"; "required": false; "isSignal": true; }; "kbqFooter": { "alias": "kbqFooter"; "required": false; "isSignal": true; }; "kbqVisible": { "alias": "kbqVisible"; "required": false; "isSignal": true; }; "kbqWidth": { "alias": "kbqWidth"; "required": false; "isSignal": true; }; "kbqSize": { "alias": "kbqSize"; "required": false; "isSignal": true; }; "kbqWrapClassName": { "alias": "kbqWrapClassName"; "required": false; "isSignal": true; }; "kbqClassName": { "alias": "kbqClassName"; "required": false; "isSignal": true; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; "isSignal": true; }; "kbqTitle": { "alias": "kbqTitle"; "required": false; "isSignal": true; }; "kbqCaption": { "alias": "kbqCaption"; "required": false; "isSignal": true; }; "kbqCloseByESC": { "alias": "kbqCloseByESC"; "required": false; "isSignal": true; }; "kbqAutoFocus": { "alias": "kbqAutoFocus"; "required": false; "isSignal": true; }; "kbqAriaLabel": { "alias": "kbqAriaLabel"; "required": false; "isSignal": true; }; "kbqClosable": { "alias": "kbqClosable"; "required": false; "isSignal": true; }; "kbqMask": { "alias": "kbqMask"; "required": false; "isSignal": true; }; "kbqMaskClosable": { "alias": "kbqMaskClosable"; "required": false; "isSignal": true; }; "kbqMaskStyle": { "alias": "kbqMaskStyle"; "required": false; "isSignal": true; }; "kbqBodyStyle": { "alias": "kbqBodyStyle"; "required": false; "isSignal": true; }; "kbqOkText": { "alias": "kbqOkText"; "required": false; "isSignal": true; }; "kbqOkType": { "alias": "kbqOkType"; "required": false; "isSignal": true; }; "kbqRestoreFocus": { "alias": "kbqRestoreFocus"; "required": false; "isSignal": true; }; "kbqOkLoading": { "alias": "kbqOkLoading"; "required": false; "isSignal": true; }; "kbqOkClick": { "alias": "kbqOkClick"; "required": false; "isSignal": true; }; "kbqCancelText": { "alias": "kbqCancelText"; "required": false; "isSignal": true; }; "kbqCancelLoading": { "alias": "kbqCancelLoading"; "required": false; "isSignal": true; }; "kbqCancelClick": { "alias": "kbqCancelClick"; "required": false; "isSignal": true; }; "kbqGetContainer": { "alias": "kbqGetContainer"; "required": false; "isSignal": true; }; }, { "kbqVisible": "kbqVisibleChange"; "kbqAfterOpen": "kbqAfterOpen"; "kbqAfterClose": "kbqAfterClose"; "kbqBeforeClose": "kbqBeforeClose"; "kbqOnOk": "kbqOnOk"; "kbqOnCancel": "kbqOnCancel"; }, never, ["*"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalComponent<any, any>, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalComponent<any, any>, never>;
 }
 
 // @public (undocumented)
 export class KbqModalFooter {
+    constructor();
     // (undocumented)
-    protected modal: KbqModalComponent<any, any>;
+    protected modal: KbqModal;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalFooter, "[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqModalFooter, "[kbq-modal-footer], kbq-modal-footer, [kbqModalFooter]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalFooter, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalFooter, never>;
 }
 
 // @public (undocumented)
 export class KbqModalMainAction {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqModalMainAction, "[kbq-modal-main-action]", never, {}, {}, never, never, true, never>;
+    static ɵdir: _angular_core.ɵɵDirectiveDeclaration<KbqModalMainAction, "[kbq-modal-main-action]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalMainAction, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalMainAction, never>;
 }
 
 // @public (undocumented)
 export class KbqModalModule {
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalModule, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalModule, never>;
     // (undocumented)
-    static ɵinj: i0.ɵɵInjectorDeclaration<KbqModalModule>;
-    // Warning: (ae-forgotten-export) The symbol "CssUnitPipe" needs to be exported by the entry point index.d.ts
-    //
+    static ɵinj: _angular_core.ɵɵInjectorDeclaration<KbqModalModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2$1.A11yModule, typeof i3$1.KbqButtonModule, typeof i4.KbqIconModule, typeof i2.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
+    static ɵmod: _angular_core.ɵɵNgModuleDeclaration<KbqModalModule, never, [typeof i1$1.OverlayModule, typeof i2$1.A11yModule, typeof i3$1.KbqButtonModule, typeof i4.KbqIconModule, typeof i2.KbqTitleModule, typeof i6.NgTemplateOutlet, typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof CssUnitPipe, typeof KbqModalMainAction], [typeof KbqModalComponent, typeof KbqModalTitle, typeof KbqModalCaption, typeof KbqModalBody, typeof KbqModalFooter, typeof KbqModalMainAction]>;
 }
 
 // @public
@@ -302,7 +295,6 @@ export abstract class KbqModalRef<C = any, R = unknown> {
     abstract markForCheck(): any;
     // (undocumented)
     abstract open(): void;
-    // (undocumented)
     abstract triggerCancel(): void;
     abstract triggerOk(): void;
 }
@@ -315,9 +307,7 @@ export class KbqModalService {
     closeAll(): void;
     // (undocumented)
     confirm<C, R = unknown>(options?: IModalOptionsForService<C>, confirmType?: ConfirmType): KbqModalRef<C, R>;
-    // (undocumented)
     create<C, R = unknown>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
-    // (undocumented)
     delete<C, R = unknown>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
     open<C, R = unknown>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
@@ -326,25 +316,27 @@ export class KbqModalService {
     // (undocumented)
     success<C, R = unknown>(options?: IModalOptionsForService<C>): KbqModalRef<C, R>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalService, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalService, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<KbqModalService>;
+    static ɵprov: _angular_core.ɵɵInjectableDeclaration<KbqModalService>;
 }
 
 // @public (undocumented)
 export class KbqModalTitle {
-    protected readonly a11yLocaleConfiguration: i0.Signal<i1.KbqA11yLocaleConfiguration>;
+    constructor();
+    protected readonly a11yLocaleConfiguration: _angular_core.Signal<i1.KbqA11yLocaleConfiguration>;
     // (undocumented)
-    protected readonly modal: KbqModalComponent<any, any>;
+    protected modal: KbqModal;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*", "kbq-modal-caption, [kbq-modal-caption], [kbqModalCaption]"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
+    static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqModalTitle, "[kbq-modal-title], kbq-modal-title, [kbqModalTitle]", never, {}, {}, never, ["*", "kbq-modal-caption, [kbq-modal-caption], [kbqModalCaption]", "[kbqModalTitleActions]"], true, [{ directive: typeof i1.KbqLocaleOverridesDirective; inputs: { "kbqLocaleOverrides": "localeOverrides"; }; outputs: {}; }]>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalTitle, never>;
+    static ɵfac: _angular_core.ɵɵFactoryDeclaration<KbqModalTitle, never>;
 }
 
 // @public
 export class ModalBuilderForService {
-    constructor(overlay: Overlay, options: IModalOptionsForService | undefined, injector: Injector);
+    constructor(overlay: Overlay, options: IModalOptionsForService | undefined, injector: Injector,
+    openerDestroyRef?: DestroyRef | null);
     // (undocumented)
     destroyModal(): void;
     // (undocumented)
@@ -355,64 +347,39 @@ export class ModalBuilderForService {
 
 // @public (undocumented)
 export interface ModalOptions<C = any, R = any> {
-    data?: any;
-    // (undocumented)
+    data?: unknown;
     kbqAfterClose?: EventEmitter<R>;
-    // (undocumented)
     kbqAfterOpen?: EventEmitter<void>;
-    // (undocumented)
+    kbqAriaLabel?: string;
+    kbqAutoFocus?: KbqModalAutoFocus;
     kbqBodyStyle?: object;
-    // (undocumented)
+    kbqCancelClick?: OnClickCallback<C>;
     kbqCancelLoading?: boolean;
-    // (undocumented)
     kbqCancelText?: string;
-    // (undocumented)
     kbqCaption?: string | TemplateRef<{}>;
-    // (undocumented)
     kbqClassName?: string;
-    // (undocumented)
     kbqClosable?: boolean;
-    // (undocumented)
     kbqCloseByESC?: boolean;
-    // (undocumented)
     kbqComponent?: Type<C>;
-    // (undocumented)
     kbqContent?: string | TemplateRef<{}> | Type<C>;
-    // (undocumented)
     kbqFooter?: string | TemplateRef<{}> | IModalButtonOptions<C>[];
-    // (undocumented)
     kbqGetContainer?: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) | null;
-    // (undocumented)
     kbqMask?: boolean;
-    // (undocumented)
     kbqMaskClosable?: boolean;
-    // (undocumented)
     kbqMaskStyle?: object;
-    // (undocumented)
     kbqModalType?: ModalType;
-    // (undocumented)
+    kbqOkClick?: OnClickCallback<C>;
     kbqOkLoading?: boolean;
-    // (undocumented)
     kbqOkText?: string;
-    // (undocumented)
     kbqOkType?: KbqButtonColor;
-    // (undocumented)
-    kbqOnCancel?: EventEmitter<C> | OnClickCallback<C>;
-    // (undocumented)
-    kbqOnOk?: EventEmitter<C> | OnClickCallback<C>;
-    // (undocumented)
+    kbqOnCancel?: EventEmitter<C>;
+    kbqOnOk?: EventEmitter<C>;
     kbqRestoreFocus?: boolean;
-    // (undocumented)
     kbqSize?: ModalSize;
-    // (undocumented)
     kbqStyle?: object;
-    // (undocumented)
     kbqTitle?: string | TemplateRef<{}>;
-    // (undocumented)
     kbqVisible?: boolean;
-    // (undocumented)
     kbqWidth?: number | string;
-    // (undocumented)
     kbqWrapClassName?: string;
 }
 

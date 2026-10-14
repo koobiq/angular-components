@@ -43,7 +43,7 @@ describe(parsePageSource.name, () => {
     });
 
     it('leaves the URL out for a page that structure.ts does not list', () => {
-        expect(parsePageSource('packages/components/ellipsis-center/ellipsis-center.en.mdx').url).toBeNull();
+        expect(parsePageSource('packages/components/unlisted/unlisted.en.mdx').url).toBeNull();
     });
 
     it.each([

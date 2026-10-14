@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { AgGridAndActionsPanelExample } from './ag-grid-and-actions-panel/ag-grid-and-actions-panel-example';
 import { AgGridAndContentPanelExample } from './ag-grid-and-content-panel/ag-grid-and-content-panel-example';
-import { AgGridColumnMenuExample } from './ag-grid-column-menu/ag-grid-column-menu-example';
 import { AgGridColumnStateExample } from './ag-grid-column-state/ag-grid-column-state-example';
 import { AgGridCopySelectedExample } from './ag-grid-copy-selected/ag-grid-copy-selected-example';
 import { AgGridExportExample } from './ag-grid-export/ag-grid-export-example';
@@ -13,17 +12,18 @@ import { AgGridLongCellContentExample } from './ag-grid-long-cell-content/ag-gri
 import { AgGridOverviewExample } from './ag-grid-overview/ag-grid-overview-example';
 import { AgGridQuickFilterStateExample } from './ag-grid-quick-filter-state/ag-grid-quick-filter-state-example';
 import { AgGridRowActionsExample } from './ag-grid-row-actions/ag-grid-row-actions-example';
+import { AgGridRowDetailExample } from './ag-grid-row-detail/ag-grid-row-detail-example';
 import { AgGridRowDraggingExample } from './ag-grid-row-dragging/ag-grid-row-dragging-example';
 import { AgGridRowFocusStateExample } from './ag-grid-row-focus-state/ag-grid-row-focus-state-example';
 import { AgGridRowGroupExample } from './ag-grid-row-group/ag-grid-row-group-example';
 import { AgGridRowSelectionStateExample } from './ag-grid-row-selection-state/ag-grid-row-selection-state-example';
+import { AgGridSettingsMenuExample } from './ag-grid-settings-menu/ag-grid-settings-menu-example';
 import { AgGridSkeletonCellRendererExample } from './ag-grid-skeleton-cell-renderer/ag-grid-skeleton-cell-renderer-example';
 import { AgGridStatusBarExample } from './ag-grid-status-bar/ag-grid-status-bar-example';
 
 export {
     AgGridAndActionsPanelExample,
     AgGridAndContentPanelExample,
-    AgGridColumnMenuExample,
     AgGridColumnStateExample,
     AgGridCopySelectedExample,
     AgGridExportExample,
@@ -35,16 +35,18 @@ export {
     AgGridOverviewExample,
     AgGridQuickFilterStateExample,
     AgGridRowActionsExample,
+    AgGridRowDetailExample,
     AgGridRowDraggingExample,
     AgGridRowFocusStateExample,
     AgGridRowGroupExample,
     AgGridRowSelectionStateExample,
+    AgGridSettingsMenuExample,
     AgGridSkeletonCellRendererExample,
     AgGridStatusBarExample
 };
 
 const EXAMPLES = [
-    AgGridColumnMenuExample,
+    AgGridSettingsMenuExample,
     AgGridOverviewExample,
     AgGridRowDraggingExample,
     AgGridRowGroupExample,
@@ -63,7 +65,8 @@ const EXAMPLES = [
     AgGridInfiniteSelectionExample,
     AgGridAndActionsPanelExample,
     AgGridAndContentPanelExample,
-    AgGridLongCellContentExample
+    AgGridLongCellContentExample,
+    AgGridRowDetailExample
 ];
 
 @NgModule({

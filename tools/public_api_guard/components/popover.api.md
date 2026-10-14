@@ -25,6 +25,7 @@ import { KbqStickToWindowPlacementValues } from '@koobiq/components/core';
 import * as _koobiq_components_core from '@koobiq/components/core';
 import { OnInit } from '@angular/core';
 import { OverlayConfig } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import * as rxjs from 'rxjs';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
@@ -169,6 +170,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set content(value: string | TemplateRef<any>);
     get context(): unknown;
     set context(ctx: unknown);
+    createOverlay(): OverlayRef;
     get customClass(): string;
     set customClass(value: string);
     defaultClosingActions(): rxjs.Observable<MouseEvent>[];

@@ -39,6 +39,7 @@ import {
     KbqLocaleServiceModule,
     KbqOption,
     KbqOptionSelectionChange,
+    KbqOverlayLayer,
     KbqPanelMaxWidth,
     KbqPanelWidth,
     KbqTextQuery,
@@ -3140,6 +3141,25 @@ describe('KbqAutocomplete', () => {
             expect(textarea.getAttribute('aria-activedescendant')).toBe(options[0].id);
         }));
     });
+
+    describe('overlay layer', () => {
+        it('should render the panel of an input inside the element into its overlay layer', () => {
+            const fixture = createComponent(AutocompleteInOverlayLayer);
+
+            fixture.detectChanges();
+            dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focusin');
+            fixture.detectChanges();
+
+            const overlayHost = fixture.componentInstance
+                .autocomplete()
+                .panel()
+                .nativeElement.closest('.cdk-overlay-pane').parentElement;
+
+            expect(overlayHost.parentElement).toBe(
+                fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer')
+            );
+        });
+    });
 });
 
 @Component({
@@ -4057,4 +4077,22 @@ class TextFieldOnPushHost {
 
         return query === undefined ? [] : TEXT_OPTIONS.filter((option) => option.toLocaleLowerCase().includes(query));
     });
+}
+
+@Component({
+    imports: [KbqInputModule, KbqAutocompleteModule, KbqOverlayLayer],
+    template: `
+        <div kbqOverlayLayer>
+            <kbq-form-field>
+                <input kbqInput placeholder="State" [kbqAutocomplete]="auto" />
+            </kbq-form-field>
+
+            <kbq-autocomplete #auto="kbqAutocomplete">
+                <kbq-option value="Alabama">Alabama</kbq-option>
+            </kbq-autocomplete>
+        </div>
+    `
+})
+class AutocompleteInOverlayLayer {
+    readonly autocomplete = viewChild.required(KbqAutocomplete);
 }

@@ -182,7 +182,7 @@ export class DevApp {
             kbqContent: 'Сохранить сделанные изменения в запросе "Все активы с виндой"?',
             kbqOkText: 'Сохранить',
             kbqCancelText: 'Отмена',
-            kbqOnOk: () => console.log('OK')
+            kbqOkClick: () => console.log('OK')
         });
     }
 
@@ -197,8 +197,8 @@ export class DevApp {
             kbqOkText: 'Delete',
             kbqCancelText: 'Cancel',
             kbqWidth: '480px',
-            kbqOnOk: () => console.log('Delete'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Delete'),
+            kbqCancelClick: () => console.log('Cancel')
         });
 
         this.showConfirm();
@@ -211,7 +211,7 @@ export class DevApp {
             kbqContent: tplContent,
             kbqFooter: tplFooter,
             kbqClosable: true,
-            kbqOnOk: () => console.log('Click ok')
+            kbqOkClick: () => console.log('Click ok')
         });
     }
 
@@ -236,7 +236,7 @@ export class DevApp {
             kbqTitle: 'Modal Title Modal Title Modal Title Modal Title Modal Title Modal Title',
             kbqContent: DevModalLongCustomComponent,
             kbqOkText: 'Yes',
-            kbqOnOk: () => ref.close(),
+            kbqOkClick: () => ref.close(),
             kbqCancelText: 'No',
             kbqSize: ModalSize.Small
         });

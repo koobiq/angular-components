@@ -470,6 +470,7 @@ export const enUSLocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -541,12 +542,13 @@ export const enUSLocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -609,7 +611,6 @@ export const enUSLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -753,6 +754,7 @@ export const esLALocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -823,12 +825,13 @@ export const esLALocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -891,7 +894,6 @@ export const esLALocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -1302,6 +1304,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1373,12 +1376,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -1441,7 +1445,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -1560,6 +1563,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1630,12 +1634,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -1698,7 +1703,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -1813,6 +1817,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -1883,12 +1888,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -1951,7 +1957,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -2071,6 +2076,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2142,12 +2148,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -2210,7 +2217,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -2326,6 +2332,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             resizePanels: string;
             toastRegion: string;
             optionActions: string;
+            progressBar: string;
         };
         select: {
             hiddenItemsText: string;
@@ -2397,12 +2404,13 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 searchPlaceholder: string;
                 searchEmptyResult: string;
                 saveAsNewFilter: string;
-                saveChanges: string;
-                saveAsNew: string;
+                saveChangesHeader: string;
+                saveChangesButton: string;
+                saveAsNewHeader: string;
+                saveAsNewButton: string;
                 change: string;
                 resetChanges: string;
                 remove: string;
-                error: string;
                 errorHint: string;
                 saveButton: string;
                 cancelButton: string;
@@ -2465,7 +2473,6 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timeRange: {
             title: {
-                for: string;
                 placeholder: string;
             };
             editor: {
@@ -2580,6 +2587,9 @@ export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponen
 export const KBQ_OVERFLOW_SHADOW_SOURCE: InjectionToken<KbqOverflowShadowSource>;
 
 // @public
+export const KBQ_OVERLAY_LAYERS: InjectionToken<KbqOverlayLayers>;
+
+// @public
 export const KBQ_PANEL_DEFAULT_MIN_WIDTH = 200;
 
 // @public (undocumented)
@@ -2674,6 +2684,7 @@ export type KbqA11yLocaleConfiguration = {
     resizePanels: string;
     toastRegion: string;
     optionActions: string;
+    progressBar: string;
 };
 
 // @public
@@ -3149,12 +3160,13 @@ export type KbqFilterBarLocaleConfiguration = {
         searchPlaceholder: string;
         searchEmptyResult: string;
         saveAsNewFilter: string;
-        saveChanges: string;
-        saveAsNew: string;
+        saveChangesHeader: string;
+        saveChangesButton: string;
+        saveAsNewHeader: string;
+        saveAsNewButton: string;
         change: string;
         resetChanges: string;
         remove: string;
-        error: string;
         errorHint: string;
         saveButton: string;
         cancelButton: string;
@@ -3881,6 +3893,33 @@ export class KbqOverflowShadowTop {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowShadowTop, "[kbqOverflowShadowTop]", ["kbqOverflowShadowTop"], { "ref": { "alias": "kbqOverflowShadowTop"; "required": false; "isSignal": true; }; "shadow": { "alias": "shadow"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowShadowTop, never>;
+}
+
+// @public
+export class KbqOverlayLayer implements OnDestroy {
+    constructor();
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverlayLayer, "[kbqOverlayLayer]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverlayLayer, never>;
+}
+
+// @public
+export class KbqOverlayLayerExclude {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverlayLayerExclude, "[kbqOverlayLayerExclude]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverlayLayerExclude, never>;
+}
+
+// @public
+export type KbqOverlayLayerOrigin = Element | (() => Element | null | undefined);
+
+// @public
+export interface KbqOverlayLayers {
+    adopt(overlayRef: OverlayRef, origin: KbqOverlayLayerOrigin): void;
 }
 
 // @public
@@ -4722,7 +4761,6 @@ export type KbqTimepickerLocaleConfiguration = {
 // @public
 export type KbqTimeRangeLocaleConfiguration = {
     title: {
-        for: string;
         placeholder: string;
     };
     editor: {
@@ -5222,6 +5260,7 @@ export const ptBRLocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5292,12 +5331,13 @@ export const ptBRLocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -5360,7 +5400,6 @@ export const ptBRLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -5699,6 +5738,7 @@ export const ruRULocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -5770,12 +5810,13 @@ export const ruRULocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -5838,7 +5879,6 @@ export const ruRULocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {
@@ -6086,6 +6126,7 @@ export const tkTMLocaleData: {
         resizePanels: string;
         toastRegion: string;
         optionActions: string;
+        progressBar: string;
     };
     select: {
         hiddenItemsText: string;
@@ -6157,12 +6198,13 @@ export const tkTMLocaleData: {
             searchPlaceholder: string;
             searchEmptyResult: string;
             saveAsNewFilter: string;
-            saveChanges: string;
-            saveAsNew: string;
+            saveChangesHeader: string;
+            saveChangesButton: string;
+            saveAsNewHeader: string;
+            saveAsNewButton: string;
             change: string;
             resetChanges: string;
             remove: string;
-            error: string;
             errorHint: string;
             saveButton: string;
             cancelButton: string;
@@ -6225,7 +6267,6 @@ export const tkTMLocaleData: {
     };
     timeRange: {
         title: {
-            for: string;
             placeholder: string;
         };
         editor: {

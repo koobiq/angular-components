@@ -28,6 +28,7 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KBQ_WINDOW,
+    KbqOverlayLayerExclude,
     LEFT_ARROW,
     RIGHT_ARROW,
     TAB
@@ -245,7 +246,8 @@ export class KbqNavbarContainer {}
         '(focus)': 'focus()',
         '(blur)': 'blur()',
         '(keydown)': 'onKeyDown($event)'
-    }
+    },
+    hostDirectives: [KbqOverlayLayerExclude]
 })
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit {
     private readonly platform = inject(Platform);

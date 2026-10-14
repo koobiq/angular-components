@@ -253,18 +253,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-and-content-panel-example.ts",
     "importPath": "components/ag-grid"
   },
-  "ag-grid-column-menu": {
-    "packagePath": "components/ag-grid/ag-grid-column-menu",
-    "title": "AG Grid with column menu",
-    "componentName": "AgGridColumnMenuExample",
-    "files": [
-      "ag-grid-column-menu-example.ts"
-    ],
-    "localImportFiles": [],
-    "selector": "ag-grid-column-menu-example",
-    "primaryFile": "ag-grid-column-menu-example.ts",
-    "importPath": "components/ag-grid"
-  },
   "ag-grid-column-state": {
     "packagePath": "components/ag-grid/ag-grid-column-state",
     "title": "AG Grid with `KbqAgGridColumnState` directive",
@@ -397,6 +385,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-row-actions-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-row-detail": {
+    "packagePath": "components/ag-grid/ag-grid-row-detail",
+    "title": "AG Grid with `KbqAgGridRowDetail` directive",
+    "componentName": "AgGridRowDetailExample",
+    "files": [
+      "ag-grid-row-detail-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-row-detail-example",
+    "primaryFile": "ag-grid-row-detail-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "ag-grid-row-dragging": {
     "packagePath": "components/ag-grid/ag-grid-row-dragging",
     "title": "AG Grid with row dragging",
@@ -443,6 +443,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "ag-grid-row-selection-state-example",
     "primaryFile": "ag-grid-row-selection-state-example.ts",
+    "importPath": "components/ag-grid"
+  },
+  "ag-grid-settings-menu": {
+    "packagePath": "components/ag-grid/ag-grid-settings-menu",
+    "title": "AG Grid with `KbqAgGridSettingsMenu` directive",
+    "componentName": "AgGridSettingsMenuExample",
+    "files": [
+      "ag-grid-settings-menu-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "ag-grid-settings-menu-example",
+    "primaryFile": "ag-grid-settings-menu-example.ts",
     "importPath": "components/ag-grid"
   },
   "ag-grid-skeleton-cell-renderer": {
@@ -555,7 +567,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "app-switcher-overview-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "app-switcher-overview-example",
     "primaryFile": "app-switcher-overview-example.ts",
     "importPath": "components/app-switcher"
@@ -567,7 +581,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "app-switcher-sites-example.ts"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "app-switcher-sites-example",
     "primaryFile": "app-switcher-sites-example.ts",
     "importPath": "components/app-switcher"
@@ -1755,6 +1771,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "localImportFiles": [],
     "selector": "dropdown-safe-area-example",
     "primaryFile": "dropdown-safe-area-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-scrolling-and-layering-page": {
+    "packagePath": "components/dropdown/dropdown-scrolling-and-layering-page",
+    "title": "Dropdown scrolling and layering page",
+    "componentName": "DropdownScrollingAndLayeringPageExample",
+    "files": [
+      "dropdown-scrolling-and-layering-page-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-scrolling-and-layering-page-example",
+    "primaryFile": "dropdown-scrolling-and-layering-page-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-scrolling-and-layering": {
+    "packagePath": "components/dropdown/dropdown-scrolling-and-layering",
+    "title": "Dropdown scrolling and layering",
+    "componentName": "DropdownScrollingAndLayeringExample",
+    "files": [
+      "dropdown-scrolling-and-layering-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "dropdown-scrolling-and-layering-example",
+    "primaryFile": "dropdown-scrolling-and-layering-example.ts",
     "importPath": "components/dropdown"
   },
   "dropdown-slash-menu": {
@@ -4140,7 +4180,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-app-long-name-example.ts",
       "navbar-app-long-name-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "navbar-app-long-name-example",
     "primaryFile": "navbar-app-long-name-example.ts",
     "importPath": "components/navbar"
@@ -4153,7 +4195,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-item-suffix-example.ts",
       "navbar-item-suffix-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "navbar-item-suffix-example",
     "primaryFile": "navbar-item-suffix-example.ts",
     "importPath": "components/navbar"
@@ -4166,7 +4210,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-overview-example.ts",
       "navbar-overview-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "navbar-overview-example",
     "primaryFile": "navbar-overview-example.ts",
     "importPath": "components/navbar"
@@ -4179,7 +4225,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-template-outlet-example.ts",
       "navbar-template-outlet-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "navbar-template-outlet-example",
     "primaryFile": "navbar-template-outlet-example.ts",
     "importPath": "components/navbar"
@@ -4192,7 +4240,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-vertical-app-long-name-example.ts",
       "navbar-vertical-app-long-name-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "navbar-vertical-app-long-name-example",
     "primaryFile": "navbar-vertical-app-long-name-example.ts",
     "importPath": "components/navbar"
@@ -4205,7 +4255,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-vertical-item-suffix-example.ts",
       "navbar-vertical-item-suffix-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "navbar-vertical-item-suffix-example",
     "primaryFile": "navbar-vertical-item-suffix-example.ts",
     "importPath": "components/navbar"
@@ -4218,7 +4270,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-vertical-open-over-example.ts",
       "navbar-vertical-open-over-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "navbar-vertical-open-over-example",
     "primaryFile": "navbar-vertical-open-over-example.ts",
     "importPath": "components/navbar"
@@ -4231,7 +4285,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "navbar-vertical-example.ts",
       "navbar-vertical-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "navbar-vertical-example",
     "primaryFile": "navbar-vertical-example.ts",
     "importPath": "components/navbar"
@@ -4244,7 +4300,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-empty-example.ts",
       "notification-center-empty-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-empty-example",
     "primaryFile": "notification-center-empty-example.ts",
     "importPath": "components/notification-center"
@@ -4257,7 +4315,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-error-example.ts",
       "notification-center-error-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-error-example",
     "primaryFile": "notification-center-error-example.ts",
     "importPath": "components/notification-center"
@@ -4270,7 +4330,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-infinite-scroll-example.ts",
       "notification-center-infinite-scroll-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-infinite-scroll-example",
     "primaryFile": "notification-center-infinite-scroll-example.ts",
     "importPath": "components/notification-center"
@@ -4283,7 +4345,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-overview-example.ts",
       "notification-center-overview-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-overview-example",
     "primaryFile": "notification-center-overview-example.ts",
     "importPath": "components/notification-center"
@@ -4296,7 +4360,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-popover-example.ts",
       "notification-center-popover-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-popover-example",
     "primaryFile": "notification-center-popover-example.ts",
     "importPath": "components/notification-center"
@@ -4309,7 +4375,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "notification-center-push-example.ts",
       "notification-center-push-example.html"
     ],
-    "localImportFiles": [],
+    "localImportFiles": [
+      "../localized-data.ts"
+    ],
     "selector": "notification-center-push-example",
     "primaryFile": "notification-center-push-example.ts",
     "importPath": "components/notification-center"
@@ -7828,7 +7896,6 @@ export type LiveExampleId =
   | 'actions-panel-with-dropdown-and-popover'
   | 'ag-grid-and-actions-panel'
   | 'ag-grid-and-content-panel'
-  | 'ag-grid-column-menu'
   | 'ag-grid-column-state'
   | 'ag-grid-copy-selected'
   | 'ag-grid-export'
@@ -7840,10 +7907,12 @@ export type LiveExampleId =
   | 'ag-grid-overview'
   | 'ag-grid-quick-filter-state'
   | 'ag-grid-row-actions'
+  | 'ag-grid-row-detail'
   | 'ag-grid-row-dragging'
   | 'ag-grid-row-focus-state'
   | 'ag-grid-row-group'
   | 'ag-grid-row-selection-state'
+  | 'ag-grid-settings-menu'
   | 'ag-grid-skeleton-cell-renderer'
   | 'ag-grid-status-bar'
   | 'alert-close'
@@ -7950,6 +8019,8 @@ export type LiveExampleId =
   | 'dropdown-overview'
   | 'dropdown-recursive-template'
   | 'dropdown-safe-area'
+  | 'dropdown-scrolling-and-layering-page'
+  | 'dropdown-scrolling-and-layering'
   | 'dropdown-slash-menu'
   | 'dropdown-with-filter'
   | 'dropdown-with-footer'

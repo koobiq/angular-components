@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
+import { injectExampleText } from '../localized-data';
 
 /**
  * @title Navbar item with an icon after the title
@@ -11,4 +12,6 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
     templateUrl: 'navbar-item-suffix-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarItemSuffixExample {}
+export class NavbarItemSuffixExample {
+    protected readonly text = injectExampleText();
+}

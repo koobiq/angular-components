@@ -31,38 +31,41 @@ export class ModalOverviewExample {
 
     showConfirmModal(): void {
         this.modalService.confirm({
+            kbqAriaLabel: 'Save changes',
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Save'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Save'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 
     showSuccessModal(): void {
         this.modalService.success({
+            kbqAriaLabel: 'Changes saved',
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('OK'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 
     showDeleteModal(): void {
         this.modalService.delete({
+            kbqAriaLabel: 'Delete customer',
             kbqContent:
                 'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?',
             kbqOkText: 'Delete',
             kbqCancelText: 'Cancel',
             kbqWidth: '480px',
             kbqMaskClosable: true,
-            kbqOnOk: () => console.log('Delete'),
-            kbqOnCancel: () => console.log('Cancel')
+            kbqOkClick: () => console.log('Delete'),
+            kbqCancelClick: () => console.log('Cancel')
         });
     }
 }

@@ -382,7 +382,7 @@ describe('KbqPipeAdd', () => {
                 .query(By.css('[aria-live="polite"]'));
 
             // Default (ru-RU) locale message with the added template's name interpolated.
-            expect(liveRegion.nativeElement.textContent.trim()).toBe('Фильтр PipeA добавлен');
+            expect(liveRegion.nativeElement.textContent.trim()).toBe('Фильтр «PipeA» добавлен');
         }));
 
         it('should clear the live region before re-announcing so identical messages re-trigger AT', fakeAsync(() => {
@@ -407,7 +407,7 @@ describe('KbqPipeAdd', () => {
             // text node and is re-announced (a plain same-string signal `set` would be a no-op AT never sees).
             flush();
             fixture.detectChanges();
-            expect(liveText()).toBe('Фильтр PipeA добавлен');
+            expect(liveText()).toBe('Фильтр «PipeA» добавлен');
         }));
 
         it('should call filterBar.openPipe.next when option is already selected', fakeAsync(() => {
