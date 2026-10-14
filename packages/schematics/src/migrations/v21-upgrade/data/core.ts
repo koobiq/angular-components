@@ -30,9 +30,9 @@ const THEME_PALETTE: Replacement[] = [
         ensureImport: { symbol: 'KbqComponentColors', from: CORE }
     },
     {
-        // The specifier, with one of its commas, once nothing else names it; an emptied clause is dropped by
-        // `removeImport`.
-        from: `${listItemPattern('\\bThemePalette\\b(?!\\s+as\\b)')}(?=[^}]*\\}\\s*from\\s*['"]${CORE}['"])(?![\\s\\S]*\\bThemePalette\\b)`,
+        // The import specifier, with one of its commas, once nothing else names it; an emptied clause is dropped by
+        // `removeImport`. A re-export is reported instead.
+        from: `(?<=\\bimport\\s*(?:type\\s*)?\\{[^}]*)${listItemPattern('\\bThemePalette\\b(?!\\s+as\\b)')}(?=[^}]*\\}\\s*from\\s*['"]${CORE}['"])(?![\\s\\S]*\\bThemePalette\\b)`,
         to: '',
         removeImport: { symbol: 'ThemePalette', from: CORE }
     }
@@ -125,6 +125,16 @@ const POP_UP_SUBCLASS =
     '\\bextends\\s+(?:KbqPopUp(?:Trigger)?|Kbq(?:Tooltip|Popover(?:Confirm)?|NotificationCenter|AppSwitcher)' +
     '(?:Component|Trigger)|Kbq(?:Title|EllipsisCenter)Directive|KbqPasswordToggle|KbqNavbar(?:Item|Brand)|' +
     'Kbq(?:Timezone)?OptionTooltip)\\b';
+
+// The 20.x pop-up classes, whose `elementRef` is a getter now; a trigger keeps it as a field.
+const POP_UP_PANEL_SUBCLASS =
+    '\\bextends\\s+(?:KbqPopUp|Kbq(?:Tooltip|Popover(?:Confirm)?|NotificationCenter|AppSwitcher)Component)\\b';
+
+// `elementRef` declared as a field, decorated or not, or as a constructor parameter property.
+const ELEMENT_REF_FIELD =
+    '(?:^|\\n)\\s*(?:@ViewChild\\s*\\([^)]*\\)\\s*)?(?:(?:public|protected|private|override|readonly|declare)\\s+)*' +
+    'elementRef\\s*[!?]?\\s*(?:=(?!=)|:[^;,(){}=]*;)|' +
+    '\\b(?:public|protected|private)\\s+(?:readonly\\s+)?elementRef\\s*\\??\\s*:';
 
 // The unprefixed date pipes and their `ImpurePipe` twins, by pipe name and by class name.
 const LEGACY_DATE_PIPE =
@@ -219,6 +229,16 @@ export const core: AreaData = {
                 'removed `handleBodyInteraction()`: delete them.'
         },
         {
+            anchor: POP_UP_PANEL_SUBCLASS,
+            pattern: ELEMENT_REF_FIELD,
+            message:
+                '`KbqPopUp.elementRef` is a protected getter now, so a pop-up subclass that re-declares it as a ' +
+                "field, such as `@ViewChild('panel') elementRef`, no longer compiles. Override the getter over a " +
+                'signal query instead: ' +
+                "`private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');` and " +
+                '`override get elementRef(): ElementRef<HTMLElement> { return this.panel(); }`.'
+        },
+        {
             anchor: '\\bKbqFormElement\\b|["\']kbqFormElement["\']',
             pattern: '\\.isRow\\b',
             message:
@@ -258,6 +278,13 @@ export const core: AreaData = {
                 'the color, or pick a member of `KbqComponentColors` the component supports. Instead of `Empty`, ' +
                 "leave `color` unset: `KbqComponentColors.Empty` is `'empty'`, not `''`. Type a member " +
                 '`KbqComponentColors`, and hand a template `KbqComponentColors` instead of the enum.'
+        },
+        {
+            pattern: `\\bexport\\s*(?:type\\s*)?\\{[^}]*\\bThemePalette\\b[^}]*\\}\\s*from\\s*['"]${CORE}['"]`,
+            message:
+                'A re-export of `ThemePalette` from `@koobiq/components/core` is left as is: the enum was removed, ' +
+                'and `KbqComponentColors` has other members and values, so it cannot take the name. Re-export ' +
+                '`KbqComponentColors` instead and migrate the files that import `ThemePalette` from here.'
         }
     ]
 };

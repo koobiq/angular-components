@@ -6,6 +6,8 @@ const BRAND_TAG = `<(?=${TAG_BODY}*?\\bkbq-navbar-brand(?![\\w-]))${TAG_BODY}*?`
 // An opening `<kbq-dl>` tag that does not set `verticalBreakpoint` as well, which would end up bound twice.
 const DL_TAG_WITHOUT_BREAKPOINT = `<kbq-dl(?![\\w-])(?!${TAG_BODY}*\\bverticalBreakpoint\\b)${TAG_BODY}*?\\s`;
 const QUOTED_VALUE = '(?:"[^"]*"|\'[^\']*\')';
+const NUMBER = '\\s*[+-]?(?:\\d+(?:\\.\\d*)?|\\.\\d+)(?:[eE][+-]?\\d+)?\\s*';
+const QUOTED_NUMBER = `(?:"${NUMBER}"|'${NUMBER}')`;
 const LOADER_OVERLAY_DEPRECATED =
     '`transparent` and `card` of `<kbq-loader-overlay>` are deprecated and will be removed in 22.0.0: set ' +
     '`surface` instead, `bg` (or `bg-secondary`, `bg-tertiary`) for a transparent overlay, `solid` for an opaque ' +
@@ -63,6 +65,17 @@ export const navbarAndLayout: AreaData = {
             message:
                 '`KbqEllipsisCenterDirective.resizeStream` was removed: nothing read it. Drop the call; the ' +
                 'shared `ResizeObserver` re-measures the host, container-only resizes included.'
+        },
+        {
+            // Reported rather than rewritten to `(value) ?? 400`: under `strictTemplates`, NG8102 flags `??` on a
+            // value that cannot be nullish, which most bound values are.
+            anchor: '<kbq-dl(?![\\w-])',
+            pattern: `${DL_TAG_WITHOUT_BREAKPOINT}(?:\\[minWidth\\]|minWidth)\\s*=\\s*(?!${QUOTED_NUMBER})["']`,
+            message:
+                '`minWidth` of `<kbq-dl>` was renamed to `verticalBreakpoint`. A value that is not a number, such ' +
+                'as `null`, `undefined`, `""` or `700px`, made `minWidth` fall back to the default 400, while ' +
+                '`verticalBreakpoint` reads it as `NaN` and never switches to the vertical layout: make sure the ' +
+                'value is always a number, for example `[verticalBreakpoint]="width ?? 400"`.'
         },
         {
             anchor: '<kbq-dl(?![\\w-])',

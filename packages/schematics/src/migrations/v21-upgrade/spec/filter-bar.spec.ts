@@ -130,11 +130,13 @@ describe('v21-upgrade: filter-bar', () => {
         const files = Object.fromEntries(cases.map(([clause], i) => [`clause-${i}.ts`, `${clause}${from}`]));
         const run = await runV21Upgrade({
             ...files,
-            'only.ts': `import { type KbqPipeMinWidth }${from}export class Pipe {}\n`
+            'only.ts': `import { type KbqPipeMinWidth }${from}export class Pipe {}\n`,
+            'only-export.ts': `export { KbqPipeMinWidth }${from}export type { KbqPipeMinWidth }${from}export class Pipe {}\n`
         });
 
         cases.forEach(([, clause], i) => expect(run.read(`clause-${i}.ts`)).toBe(`${clause}${from}`));
         expect(run.read('only.ts')).toBe('export class Pipe {}\n');
+        expect(run.read('only-export.ts')).toBe('export class Pipe {}\n');
         expect(run.log).not.toContain(MIN_WIDTH);
     });
 
