@@ -115,6 +115,8 @@ describe('KbqNavbar', () => {
                 KbqIconModule,
                 TestApp,
                 TestItemApp,
+                TestNestedButtonApp,
+                TestBoundTabIndexApp,
                 TestItemSuffixApp,
                 TestTitleApp,
                 TestVerticalApp,
@@ -233,7 +235,55 @@ describe('KbqNavbar', () => {
             expect(navbar.nativeElement.getAttribute('tabindex')).toBe('0');
         });
 
-        it('TAB key should set tabIndex to -1 and restore it after setTimeout', async () => {
+        it('TAB key should take the host out of the tab order until the next macrotask', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbarEl: HTMLElement = fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement;
+
+            dispatchKeyboardEvent(navbarEl, 'keydown', TAB, navbarEl);
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('TAB key should restore a bound tabIndex without writing it', async () => {
+            const fixture = TestBed.createComponent(TestBoundTabIndexApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            fixture.componentInstance.tabIndex = 3;
+            fixture.detectChanges();
+
+            const navbarEl: HTMLElement = fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement;
+
+            dispatchKeyboardEvent(navbarEl, 'keydown', TAB, navbarEl);
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+
+            await vi.advanceTimersByTimeAsync(0);
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('3');
+            expect(fixture.componentInstance.tabIndex).toBe(3);
+            expect(fixture.componentInstance.tabIndexChanges).toEqual([]);
+        });
+
+        it('repeated TAB key presses should not register a destroy callback each', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
             fixture.detectChanges();
@@ -241,17 +291,30 @@ describe('KbqNavbar', () => {
             fixture.detectChanges();
 
             const navbarDebugEl = fixture.debugElement.query(By.directive(KbqNavbar));
-            const navbarInstance = navbarDebugEl.componentInstance as KbqNavbar;
+            const onDestroy = vi.spyOn((navbarDebugEl.componentInstance as KbqNavbar)['destroyRef'], 'onDestroy');
 
-            dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', TAB, navbarDebugEl.nativeElement);
+            for (let i = 0; i < 3; i++) {
+                dispatchKeyboardEvent(navbarDebugEl.nativeElement, 'keydown', TAB, navbarDebugEl.nativeElement);
+                await vi.advanceTimersByTimeAsync(0);
+            }
+
+            expect(onDestroy).not.toHaveBeenCalled();
+        });
+
+        it('a pending tab order restore should not touch a destroyed navbar', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
             fixture.detectChanges();
 
-            expect(navbarInstance.tabIndex()).toBe(-1);
+            const navbarEl: HTMLElement = fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement;
 
+            dispatchKeyboardEvent(navbarEl, 'keydown', TAB, navbarEl);
+            fixture.destroy();
             await vi.advanceTimersByTimeAsync(0);
-            fixture.detectChanges();
 
-            expect(navbarInstance.tabIndex()).toBe(0);
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
         });
 
         it('RIGHT_ARROW key should pass event to keyManager', async () => {
@@ -1617,6 +1680,33 @@ describe('KbqNavbar', () => {
 
             expect(document.activeElement).toBe(second);
         });
+
+        it('an item handing focus to its nested button should stay active for the arrow keys', async () => {
+            const fixture = TestBed.createComponent(TestNestedButtonApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+            const [first, withButton, last] = focusableItemElements(fixture);
+            const button = withButton.querySelector('button')!;
+
+            clickWithMouse(first);
+            fixture.detectChanges();
+
+            dispatchKeyboardEvent(first, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(document.activeElement).toBe(button);
+            expect(navbar.keyManager.activeItemIndex).toBe(1);
+
+            dispatchKeyboardEvent(button, 'keydown', RIGHT_ARROW);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(last);
+        });
     });
 
     describe('KbqVerticalNavbar', () => {
@@ -2416,6 +2506,45 @@ class TestItemApp {
     collapsable: boolean = true;
     tooltipDisabled: boolean | undefined = undefined;
     clicks = 0;
+}
+
+@Component({
+    selector: 'test-nested-button-app',
+    imports: [KbqNavbarModule, KbqButtonModule],
+    template: `
+        <kbq-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <kbq-navbar-title>First</kbq-navbar-title>
+                </kbq-navbar-item>
+                <kbq-navbar-item>
+                    <button kbq-button>Action</button>
+                </kbq-navbar-item>
+                <kbq-navbar-item>
+                    <kbq-navbar-title>Last</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestNestedButtonApp {}
+
+@Component({
+    selector: 'test-bound-tab-index-app',
+    imports: [KbqNavbarModule],
+    template: `
+        <kbq-navbar [(tabIndex)]="tabIndex" (tabIndexChange)="tabIndexChanges.push($event)">
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <kbq-navbar-title>Item</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+        </kbq-navbar>
+    `
+})
+class TestBoundTabIndexApp {
+    tabIndex = 0;
+    readonly tabIndexChanges: number[] = [];
 }
 
 @Component({

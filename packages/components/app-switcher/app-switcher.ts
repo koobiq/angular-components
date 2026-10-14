@@ -25,7 +25,6 @@ import {
     inject,
     input,
     model,
-    numberAttribute,
     signal,
     viewChild,
     viewChildren
@@ -57,6 +56,7 @@ import {
     UP_ARROW,
     applyPopupMargins,
     kbqLocaleConfigurationOverrideProvider,
+    kbqOptionalNumberAttribute,
     kbqQueryListFrom,
     kbqSiblingPopupProvider,
     ruRULocaleData
@@ -841,7 +841,7 @@ export class KbqAppSwitcherTrigger
     /** @docs-private */
     readonly offsetInput = input<number | null | undefined, number | string | null | undefined>(undefined, {
         alias: 'offset',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */
@@ -868,9 +868,7 @@ export class KbqAppSwitcherTrigger
         }
 
         if (changes['offsetInput']) {
-            const offset = this.offsetInput();
-
-            if (offset !== undefined) this.offset = offset;
+            this.offset = this.offsetInput() ?? defaultOffsetYWithArrow;
         }
 
         if (changes['sitesInput']) {

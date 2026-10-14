@@ -9,7 +9,6 @@ import {
     ElementRef,
     inject,
     input,
-    numberAttribute,
     OnChanges,
     OnDestroy,
     output,
@@ -18,7 +17,13 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqCheckable, KbqCheckedState, KbqColorDirective, TransitionCheckState } from '@koobiq/components/core';
+import {
+    KbqCheckable,
+    KbqCheckedState,
+    KbqColorDirective,
+    kbqOptionalNumberAttribute,
+    TransitionCheckState
+} from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
 /** Change event object emitted by KbqCheckbox. */
@@ -123,7 +128,7 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterVi
     /** @docs-private */
     readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'tabIndex',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */
@@ -146,11 +151,7 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterVi
             if (disabled !== undefined) this.disabled = disabled;
         }
 
-        if (changes['tabIndexInput']) {
-            const tabIndex = this.tabIndexInput();
-
-            if (tabIndex !== undefined) this.tabIndex = tabIndex;
-        }
+        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
 
         if (changes['indeterminateInput']) {
             const indeterminate = this.indeterminateInput();

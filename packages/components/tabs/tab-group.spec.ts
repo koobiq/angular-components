@@ -67,6 +67,7 @@ describe('KbqTabGroup', () => {
                 TabGroupWithSelectedIndexBinding,
                 TestSelectionByIndexOrTabIdApp,
                 TabsWithDisabledFirstTab,
+                TabsWithDisabledFirstTabAndSelectedIndex,
                 TabsWithTooltipTitle
             ]
         }).compileComponents();
@@ -376,6 +377,19 @@ describe('KbqTabGroup', () => {
         it('should default the selection to the first enabled tab', () => {
             const disabledFirst = TestBed.createComponent(TabsWithDisabledFirstTab);
 
+            disabledFirst.detectChanges();
+
+            expect(disabledFirst.componentInstance.tabGroup().selectedIndex).toBe(1);
+        });
+
+        it.each([undefined, null])('should restore the default selection for a bound %s selectedIndex', (value) => {
+            const disabledFirst = TestBed.createComponent(TabsWithDisabledFirstTabAndSelectedIndex);
+
+            disabledFirst.detectChanges();
+
+            expect(disabledFirst.componentInstance.tabGroup().selectedIndex).toBe(2);
+
+            disabledFirst.componentInstance.selectedIndex = value;
             disabledFirst.detectChanges();
 
             expect(disabledFirst.componentInstance.tabGroup().selectedIndex).toBe(1);
@@ -1294,6 +1308,21 @@ class TestSelectionByIndexOrTabIdApp {
 })
 class TabsWithDisabledFirstTab {
     readonly tabGroup = viewChild.required(KbqTabGroup);
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group [selectedIndex]="selectedIndex">
+            <kbq-tab disabled label="One">Tab one content</kbq-tab>
+            <kbq-tab label="Two">Tab two content</kbq-tab>
+            <kbq-tab label="Three">Tab three content</kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class TabsWithDisabledFirstTabAndSelectedIndex {
+    readonly tabGroup = viewChild.required(KbqTabGroup);
+    selectedIndex: number | null | undefined = 2;
 }
 
 @Component({

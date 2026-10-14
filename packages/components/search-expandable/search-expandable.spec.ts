@@ -235,6 +235,22 @@ describe('KbqSearchExpandable', () => {
         });
     });
 
+    describe('tabIndex', () => {
+        it.each([undefined, null])('should restore the default once the binding changes to %s', (value) => {
+            const component = debugElement.componentInstance as KbqSearchExpandable;
+
+            fixture.componentInstance.tabIndex = 3;
+            fixture.detectChanges();
+
+            expect(component.tabIndex).toBe(3);
+
+            fixture.componentInstance.tabIndex = value;
+            fixture.detectChanges();
+
+            expect(component.tabIndex).toBe(0);
+        });
+    });
+
     describe('placeholder', () => {
         it('should use the locale placeholder by default', () => {
             const component = debugElement.componentInstance as KbqSearchExpandable;
@@ -1108,12 +1124,18 @@ class TestSearchExpandableDrivenByEffect {
     selector: 'test-app',
     imports: [KbqSearchExpandableModule, FormsModule],
     template: `
-        <kbq-search-expandable [isOpened]="openedState" [disabled]="disabled" [(ngModel)]="search" />
+        <kbq-search-expandable
+            [isOpened]="openedState"
+            [disabled]="disabled"
+            [tabIndex]="tabIndex"
+            [(ngModel)]="search"
+        />
     `
 })
 class TestSearchExpandable {
     openedState: boolean = false;
     disabled: boolean = false;
+    tabIndex: number | null | undefined = 0;
     search: string;
 }
 

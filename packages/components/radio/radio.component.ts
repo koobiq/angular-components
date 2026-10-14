@@ -16,7 +16,6 @@ import {
     forwardRef,
     inject,
     input,
-    numberAttribute,
     OnChanges,
     OnDestroy,
     OnInit,
@@ -30,7 +29,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqColorDirective, kbqQueryListFrom } from '@koobiq/components/core';
+import { KbqColorDirective, kbqOptionalNumberAttribute, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 
 // Increasing integer for generating unique ids for radio components.
@@ -59,15 +58,6 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
 
 /**
  * Selection group for `KbqRadioButton`.
- *
- * `name`, `labelPosition` and `required` are `input()`s; the rest of the state lives in signals
- * behind accessor inputs, the split `KbqCheckbox` settled on in its own review. `value`, `selected`
- * and `disabled` stay accessors because they are written from outside the template — `writeValue`
- * and `setDisabledState` for the first and last, the buttons writing their selection back for
- * `selected`. `disabled` could not be a `model()` either, since a `model()` carries no `transform`
- * and it coerces with `booleanAttribute`; `value` could be one, but `writeValue` has to resolve the
- * checked button synchronously before the first render, and a `model()` would also publish a
- * `valueChange` output that duplicates `change`.
  *
  * The host is a `radiogroup`, which is not a name-from-content role, so it reaches assistive
  * technology unnamed unless the consumer names it. Name it with a plain `aria-label` /
@@ -106,6 +96,11 @@ export class KbqRadioGroup
     });
 
     /** Value of the radio button. */
+    // `value`, `selected` and `disabled` are accessors over signals, fed by aliased inputs, because code outside the
+    // template writes them too: `writeValue` and `setDisabledState` the first and last, the buttons their selection
+    // back into `selected`. `disabled` is no `model()` because it coerces with `booleanAttribute`, which a `model()`
+    // cannot carry; `value` is none because `writeValue` has to resolve the checked button synchronously before the
+    // first render, and a `model()` would also publish a `valueChange` output that duplicates `change`.
     get value(): any {
         return this._value();
     }
@@ -548,7 +543,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
     /** @docs-private */
     readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'tabIndex',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** @docs-private */
@@ -582,11 +577,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
             if (disabled !== undefined) this.disabled = disabled;
         }
 
-        if (changes['tabIndexInput']) {
-            const tabIndex = this.tabIndexInput();
-
-            if (tabIndex !== undefined) this.tabIndex = tabIndex;
-        }
+        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
 
         if (changes['requiredInput']) {
             const required = this.requiredInput();

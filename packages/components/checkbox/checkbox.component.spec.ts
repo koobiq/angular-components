@@ -658,6 +658,14 @@ describe('KbqCheckbox', () => {
 
             expect(inputElement.tabIndex).toBe(13);
         });
+
+        it.each([undefined, null])('should restore the default tabIndex for a bound %s', (value) => {
+            testComponent.customTabIndex = value;
+            fixture.detectChanges();
+
+            expect(checkboxDebugElement.componentInstance.tabIndex).toBe(0);
+            expect(inputElement.getAttribute('tabindex')).toBe('0');
+        });
     });
 
     describe('using ViewChild', () => {
@@ -1133,7 +1141,7 @@ class MultipleCheckboxes {}
     `
 })
 class CheckboxWithTabIndex {
-    customTabIndex: number = 7;
+    customTabIndex: number | null | undefined = 7;
     isDisabled: boolean = false;
 }
 

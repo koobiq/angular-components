@@ -111,15 +111,15 @@ export class KbqMultipleFileUploadComponent
     errorStateMatcher: ErrorStateMatcher;
 
     /**
-     * The selected files. Stays an accessor input rather than becoming a `model()`: the store is
-     * `KbqFileList.list`, a model on the host directive that the template iterates and that
-     * `addArray()`, `replace()` and `removeAt()` mutate. A `model()` here would be a second store to
-     * keep in sync with that one, not a replacement for it.
+     * The selected files.
      *
      * Writing it is the model→view direction, same as `writeValue()`: it fills the list and tells
      * nobody. `cvaOnChange` and `(filesChange)` belong to the paths a user drives — see
      * `onFileAdded()` and `deleteFile()` — so a `[files]` binding cannot make the form look edited.
      */
+    // An accessor, not a `model()`: the store is `KbqFileList.list`, a model on the host directive that the template
+    // iterates and that `addArray()`, `replace()` and `removeAt()` mutate. A `model()` here would be a second store to
+    // keep in sync with that one.
     get files(): KbqFileItem[] {
         return this.fileList.list();
     }

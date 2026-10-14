@@ -124,6 +124,21 @@ describe(KbqTabNavBar.name, () => {
         expect(tabLink.tabIndex).toBe(3);
     });
 
+    it.each([undefined, null])('should restore the default tabIndex once the binding changes to %s', (value) => {
+        const fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
+        const component = fixture.componentInstance;
+
+        component.tabIndex = 3;
+        fixture.detectChanges();
+
+        component.tabIndex = value;
+        fixture.detectChanges();
+
+        const tabLink: HTMLElement = fixture.debugElement.query(By.directive(KbqTabLink)).nativeElement;
+
+        expect(tabLink.getAttribute('tabindex')).toBe('0');
+    });
+
     it('should fall back to the generated id when the bound id turns undefined', () => {
         const fixture = TestBed.createComponent(TabLinkWithIdBinding);
         const component = fixture.componentInstance;
@@ -496,7 +511,7 @@ class SimpleTabNavBarTestApp {
     `
 })
 class TabLinkWithTabIndexBinding {
-    tabIndex = 0;
+    tabIndex: number | null | undefined = 0;
 }
 
 @Component({

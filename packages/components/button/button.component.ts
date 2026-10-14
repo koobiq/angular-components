@@ -18,7 +18,6 @@ import {
     Injector,
     input,
     isDevMode,
-    numberAttribute,
     OnChanges,
     OnDestroy,
     Renderer2,
@@ -36,6 +35,7 @@ import {
     KbqColorDirective,
     KbqComponentColors,
     KbqEnumValues,
+    kbqOptionalNumberAttribute,
     KbqTitleTextRef,
     LEFT_ARROW,
     leftIconClassName,
@@ -407,7 +407,7 @@ export class KbqButton
     }
 
     set tabIndex(value: number) {
-        // `numberAttribute` yields NaN for non-numeric input, which would render `tabindex="NaN"`.
+        // Code may write NaN, which would render `tabindex="NaN"`.
         this._tabIndex = Number.isNaN(value) ? 0 : value;
     }
 
@@ -447,7 +447,7 @@ export class KbqButton
     /** @docs-private */
     readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'tabIndex',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -462,11 +462,7 @@ export class KbqButton
             if (disabled !== undefined) this.disabled = disabled;
         }
 
-        if (changes['tabIndexInput']) {
-            const tabIndex = this.tabIndexInput();
-
-            if (tabIndex !== undefined) this.tabIndex = tabIndex;
-        }
+        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
     }
 
     constructor() {

@@ -417,6 +417,22 @@ describe('KbqButton', () => {
             expect(button.componentInstance.tabIndex).toBe(0);
             expect(button.nativeElement.getAttribute('tabindex')).not.toBe('NaN');
         });
+
+        it.each([undefined, null])('a bound %s should restore the default tabIndex', (value) => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+
+            testComponent.tabIndex = 3;
+            fixture.detectChanges();
+
+            testComponent.tabIndex = value;
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            expect(button.componentInstance.tabIndex).toBe(0);
+            expect(button.nativeElement.hasAttribute('tabindex')).toBe(false);
+        });
     });
 
     describe('accessibility', () => {
@@ -1466,7 +1482,7 @@ class TestApp {
     clickCount: number = 0;
     isDisabled: boolean = false;
     buttonColor: KbqButtonColor | null = null;
-    tabIndex: number | string = 0;
+    tabIndex: number | string | null | undefined = 0;
 
     increment() {
         this.clickCount++;
