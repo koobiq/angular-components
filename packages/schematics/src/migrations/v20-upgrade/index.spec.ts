@@ -1004,6 +1004,92 @@ describe(SCHEMATIC_NAME, () => {
         );
     });
 
+    it('drops a re-export it empties', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            [
+                "export { KbqCommonModule } from '@koobiq/components/core';",
+                "export type { KbqValidationOptions } from '@koobiq/components/core';",
+                "export { KbqColorDirective, KBQ_VALIDATION } from '@koobiq/components/core';",
+                'export class App {}',
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            ["export { KbqColorDirective } from '@koobiq/components/core';", 'export class App {}', ''].join('\n')
+        );
+    });
+
+    it('adds a symbol past a line comment that ends an import clause', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const source = (input: string) => [
+                'import {',
+                '    Component,',
+                `    ${input} // the input`,
+                "} from '@angular/core';",
+                "import { toBoolean } from '@koobiq/components/core';",
+                "export const v = toBoolean('x');",
+                ''
+            ].join('\n');
+        const comma = ts.replace(/[^/]+$/, 'comma.ts');
+
+        appTree.overwrite(ts, source('Input'));
+        appTree.create(comma, source('Input,'));
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+        const expected = [
+            'import {',
+            '    Component,',
+            '    Input, // the input',
+            '    booleanAttribute',
+            "} from '@angular/core';",
+            "export const v = booleanAttribute('x');",
+            ''
+        ].join('\n');
+
+        expect(result.readText(ts)).toBe(expected);
+        expect(result.readText(comma)).toBe(expected);
+    });
+
+    it('keeps the line endings of a CRLF file when it adds an import', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            ["import { toBoolean } from '@koobiq/components/core';", "export const v = toBoolean('x');", ''].join(
+                '\r\n'
+            )
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            ["import { booleanAttribute } from '@angular/core';", "export const v = booleanAttribute('x');", ''].join(
+                '\r\n'
+            )
+        );
+    });
+
     it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

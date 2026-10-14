@@ -4,6 +4,7 @@ const KBQ_THEME = '`KbqTheme` was renamed to `KbqThemeConfig`';
 const THEME_SERVICE = '`ThemeService` was removed';
 const OPTION_SCROLL_POSITION = '`getOptionScrollPosition()` was removed';
 const THEME_PALETTE = '`ThemePalette` was removed';
+const THEME_PALETTE_REEXPORT = 'A re-export of `ThemePalette` from `@koobiq/components/core` is left as is';
 const POSITIONS = 'The pop-up position lists';
 const SELECT_SCROLL_PROVIDER = '`KBQ_SELECT_SCROLL_STRATEGY_PROVIDER` was removed';
 const CHECKABLE_ACCESSOR = '`KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR` is no longer exported';
@@ -13,6 +14,7 @@ const ANIMATION_ENUMS = '`KbqAnimationCurves` and `KbqAnimationDurations` were r
 const NO_REPLACEMENT = '`KbqRectangleItem` (left over from the removed navbar-ic)';
 const PRIVATE_MEMBERS = '`KbqPopUp.handleBodyInteraction()` was removed';
 const POP_UP_MEMBERS = '`KbqPopUp.markForCheck()`, `warning` and the protected `closeOnInteraction` were removed';
+const POP_UP_ELEMENT_REF = '`KbqPopUp.elementRef` is a protected getter';
 const FORM_ELEMENT_ROW = '`KbqFormElement.isRow` was removed';
 const LEGACY_DATE_PIPES = 'The unprefixed date pipes';
 const MC_HIGHLIGHT = 'The `mcHighlight` pipe (`KbqHighlightPipe`) is deprecated';
@@ -267,6 +269,43 @@ describe('v21-upgrade: core', () => {
         expect(run.log).toContain(`palette.ts\n  ${THEME_PALETTE}`);
     });
 
+    it('keeps and reports a re-export of ThemePalette', async () => {
+        const from = " from '@koobiq/components/core';\n";
+        const barrels = [
+            `export { ThemePalette }${from}`,
+            `export type { KbqDefaultSizes, ThemePalette }${from}`,
+            `export {\n    ThemePalette as Palette,\n    KbqDefaultSizes\n}${from}`
+        ];
+        const run = await runV21Upgrade(Object.fromEntries(barrels.map((source, i) => [`barrel-${i}.ts`, source])));
+
+        barrels.forEach((source, i) => {
+            expect(run.read(`barrel-${i}.ts`)).toBe(source);
+            expect(run.log).toContain(`barrel-${i}.ts\n  ${THEME_PALETTE_REEXPORT}`);
+        });
+        expect(run.log).not.toContain(THEME_PALETTE);
+    });
+
+    it('drops the import of ThemePalette and keeps its re-export', async () => {
+        const run = await runV21Upgrade({
+            'mixed.ts': [
+                "export { ThemePalette } from '@koobiq/components/core';",
+                "import { ThemePalette } from '@koobiq/components/core';",
+                'export const color = ThemePalette.Error;',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('mixed.ts')).toBe(
+            [
+                "import { KbqComponentColors } from '@koobiq/components/core';",
+                "export { ThemePalette } from '@koobiq/components/core';",
+                'export const color = KbqComponentColors.Error;',
+                ''
+            ].join('\n')
+        );
+        expect(run.log).toContain(`mixed.ts\n  ${THEME_PALETTE_REEXPORT}`);
+    });
+
     it("leaves an app's own ThemePalette alone", async () => {
         const source = [
             "import { KbqComponentColors } from '@koobiq/components/core';",
@@ -370,6 +409,81 @@ describe('v21-upgrade: core', () => {
         });
 
         expect(run.log).not.toContain(POP_UP_MEMBERS);
+    });
+
+    it('reports elementRef re-declared as a field by a subclass of a pop-up', async () => {
+        const files = {
+            'decorator.ts': [
+                "import { ElementRef, ViewChild } from '@angular/core';",
+                "import { KbqPopUp } from '@koobiq/components/core';",
+                'export abstract class Panel extends KbqPopUp {',
+                "    @ViewChild('panel') elementRef: ElementRef;",
+                '}',
+                ''
+            ].join('\n'),
+            'separate-line.ts': [
+                "import { ElementRef, ViewChild } from '@angular/core';",
+                "import { KbqTooltipComponent } from '@koobiq/components/tooltip';",
+                'export class Hint extends KbqTooltipComponent {',
+                "    @ViewChild('tooltip', { static: true })",
+                '    override elementRef!: ElementRef<HTMLElement>;',
+                '}',
+                ''
+            ].join('\n'),
+            'initializer.ts': [
+                "import { ElementRef, inject } from '@angular/core';",
+                "import { KbqPopoverComponent } from '@koobiq/components/popover';",
+                'export class Hint extends KbqPopoverComponent {',
+                '    protected override readonly elementRef = inject(ElementRef);',
+                '}',
+                ''
+            ].join('\n'),
+            'parameter.ts': [
+                "import { ElementRef } from '@angular/core';",
+                "import { KbqNotificationCenterComponent } from '@koobiq/components/notification-center';",
+                'export class Center extends KbqNotificationCenterComponent {',
+                '    constructor(protected elementRef: ElementRef) {',
+                '        super();',
+                '    }',
+                '}',
+                ''
+            ].join('\n')
+        };
+        const run = await runV21Upgrade(files);
+
+        for (const file of Object.keys(files)) {
+            expect(run.log).toContain(`${file}\n  ${POP_UP_ELEMENT_REF}`);
+        }
+    });
+
+    it('leaves elementRef alone when a pop-up subclass reads or overrides the getter, and in a trigger', async () => {
+        const run = await runV21Upgrade({
+            'getter.ts': [
+                "import { ElementRef, viewChild } from '@angular/core';",
+                "import { KbqPopUp } from '@koobiq/components/core';",
+                'export abstract class Panel extends KbqPopUp {',
+                "    private readonly panel = viewChild.required<ElementRef<HTMLElement>>('panel');",
+                '    override get elementRef(): ElementRef<HTMLElement> {',
+                '        return this.panel();',
+                '    }',
+                '    measure(elementRef: ElementRef) {',
+                '        const host = this.elementRef.nativeElement;',
+                '        return elementRef.nativeElement === host;',
+                '    }',
+                '}',
+                ''
+            ].join('\n'),
+            'trigger.ts': [
+                "import { ElementRef, inject } from '@angular/core';",
+                "import { KbqTooltipTrigger } from '@koobiq/components/tooltip';",
+                'export class HintTrigger extends KbqTooltipTrigger {',
+                '    protected override readonly elementRef = inject(ElementRef);',
+                '}',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.log).not.toContain(POP_UP_ELEMENT_REF);
     });
 
     it('reports isRow read from a form element', async () => {

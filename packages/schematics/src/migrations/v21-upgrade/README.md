@@ -51,6 +51,8 @@ Reports:
 - `getOptionScrollPosition` imported from `@koobiq/components/core`: `KbqOption.focus()` or `kbqFocusAndReveal()`;
 - any other use of `ThemePalette`: `Primary`, `Secondary`, `Info` and `Default` styled nothing, `Empty` becomes an
   unset `color`, a type or a template field becomes `KbqComponentColors`;
+- a re-export of `ThemePalette` from `@koobiq/components/core`, left as is: `KbqComponentColors` has other members
+  and values;
 - the undocumented exports nothing in the library used, imported from `@koobiq/components/core`: the pop-up
   position lists, `ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT`, `SELECT_PANEL_VIEWPORT_PADDING`, `NUMBER_FORMAT_REGEXP`,
   `isWithin`, `KBQ_SELECT_SCROLL_STRATEGY_PROVIDER`, `KBQ_CHECKABLE_CONTROL_VALUE_ACCESSOR`, `KbqHover`, `CanColor`,
@@ -62,6 +64,8 @@ Reports:
   `super` or `instance`, or overridden: delete a `markForCheck()` after `updateClassMap()` or a visibility change,
   which re-render the pop-up, and use `changeDetectorRef.markForCheck()` or `instance.detectChanges()` for another
   field;
+- in a subclass of a pop-up, `elementRef` re-declared as a field, decorated or not, or as a constructor parameter
+  property: override the `KbqPopUp.elementRef` getter over a `viewChild()`;
 - `.isRow` in a file that names `KbqFormElement` or `kbqFormElement`: check the `kbq-form__row` class;
 - deprecated for removal in 22.0.0: the unprefixed date pipes and their `ImpurePipe` twins (in templates and as
   imported classes), the `mcHighlight` pipe, `isDigit`, `isBoolean`, `KbqMeasureScrollbarService`,
@@ -147,6 +151,8 @@ Reports:
   names `KbqNavbarTitle`: call `getOuterElementWidth()` on the title;
 - `.resizeStream` in a file that names `KbqEllipsisCenterDirective`: delete it;
 - a `<kbq-dl>` that sets both `minWidth` and `verticalBreakpoint`: `minWidth` took precedence, move its value;
+- a renamed `minWidth` whose value is not a number literal: `minWidth` fell back to 400 on `null`, `''` or `700px`,
+  `verticalBreakpoint` reads them as `NaN` and never switches to the vertical layout;
 - `.minWidth()` and `setInput('minWidth', …)` in a file that names `KbqDlComponent`: use `verticalBreakpoint`.
 - `transparent` and `card` on `<kbq-loader-overlay>`, and their reads and `setInput()` in a file that names
   `KbqLoaderOverlay`: deprecated for removal in 22.0.0, set `surface` instead.

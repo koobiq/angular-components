@@ -105,23 +105,24 @@ function ensureImport(content: string, symbol: string, from: string): string {
     // Under a type-only import, a value use of the symbol does not compile (TS1361).
     if (bindings.length > 0) content = removeTypeOnlyImport(content, symbol, from);
 
+    const eol = content.includes('\r\n') ? '\r\n' : '\n';
+
     // Existing value import line from the same module — extend its clause.
     const sameModule = new RegExp(`(\\bimport\\s*\\{)([^}]*)(\\}\\s*from\\s*['"]${escapeRegExp(from)}['"])`);
 
     if (sameModule.test(content)) {
-        return content.replace(sameModule, (_match, open: string, body: string, close: string) => {
-            const trimmed = body.trim().replace(/,$/, '');
-            const next = trimmed.length === 0 ? ` ${symbol} ` : `${body.replace(/,?\s*$/, '')}, ${symbol} `;
-
-            return `${open}${next}${close}`;
-        });
+        return content.replace(
+            sameModule,
+            (_match, open: string, body: string, close: string) =>
+                `${open}${appendSpecifier(body, symbol, eol)}${close}`
+        );
     }
 
     // Otherwise, prepend a new import. Insert after any leading comment block
     // / shebang. The simple heuristic finds the first non-comment, non-blank
     // line and inserts right before it.
-    const newImport = `import { ${symbol} } from '${from}';\n`;
-    const lines = content.split('\n');
+    const newImport = `import { ${symbol} } from '${from}';`;
+    const lines = content.split(eol);
     let insertAt = 0;
     let inBlockComment = false;
 
@@ -149,9 +150,27 @@ function ensureImport(content: string, symbol: string, from: string): string {
         break;
     }
 
-    lines.splice(insertAt, 0, newImport.replace(/\n$/, ''));
+    lines.splice(insertAt, 0, newImport);
 
-    return lines.join('\n');
+    return lines.join(eol);
+}
+
+/**
+ * Appends `symbol` to `body`, the specifiers of a named import clause. After a line comment that ends the clause, it
+ * goes on a line of its own, ended by `eol`: on the line of the comment it would be commented out.
+ */
+function appendSpecifier(body: string, symbol: string, eol: string): string {
+    const end = body.trimEnd();
+    // Where the last specifier ends, with the comments blanked out.
+    const split = end.replace(COMMENT, (comment: string) => ' '.repeat(comment.length)).trimEnd().length;
+    const [code, comments] = [end.slice(0, split), end.slice(split)];
+    const specifiers = `${code}${code && !code.endsWith(',') ? ',' : ''}${comments}`;
+
+    if (![...comments.matchAll(COMMENT)].pop()?.[0].startsWith('//')) return `${specifiers} ${symbol} `;
+
+    const [indent] = /^[ \t]*/.exec(end.slice(end.lastIndexOf('\n') + 1))!;
+
+    return `${specifiers}${eol}${indent}${symbol}${body.slice(end.length)}`;
 }
 
 function escapeRegExp(s: string): string {
@@ -162,6 +181,7 @@ function escapeRegExp(s: string): string {
  * Idempotently strip `symbol` from any `import { … } from 'from'` clause.
  * - Multi-symbol clause: drop just that symbol, keep the others.
  * - Single-symbol clause: drop the entire import line (including its trailing newline).
+ * - `export { … } from 'from'`: drop it once the rewrites emptied it, otherwise leave it to them.
  * Returns content unchanged if no matching clause is found.
  *
  * Used to clean up dangling references after rewrites that delete or rename a
@@ -170,11 +190,11 @@ function escapeRegExp(s: string): string {
  */
 function removeImport(content: string, symbol: string, from: string): string {
     const moduleRe = new RegExp(
-        `(import\\s*(?:type\\s*)?\\{)([^}]*)(\\}\\s*from\\s*['"]${escapeRegExp(from)}['"];?\\s*\\n?)`,
+        `\\b(import|export)(\\s*(?:type\\s*)?\\{)([^}]*)(\\}\\s*from\\s*['"]${escapeRegExp(from)}['"];?\\s*\\n?)`,
         'g'
     );
 
-    return content.replace(moduleRe, (full, open: string, body: string, close: string) => {
+    return content.replace(moduleRe, (full, keyword: string, open: string, body: string, close: string) => {
         const items = body
             .split(',')
             .map((s) => s.trim())
@@ -186,6 +206,8 @@ function removeImport(content: string, symbol: string, from: string): string {
         // is dead either way — drop it.
         if (items.length === 0) return '';
 
+        if (keyword === 'export') return full;
+
         const kept = items.filter((spec) => {
             // Handle `<name> as <alias>` — match on the source name, not the alias.
             const source = spec.split(/\s+as\s+/)[0].trim();
@@ -196,7 +218,7 @@ function removeImport(content: string, symbol: string, from: string): string {
         if (kept.length === items.length) return full; // no change
         if (kept.length === 0) return ''; // drop whole line
 
-        return `${open} ${kept.join(', ')} ${close}`;
+        return `${keyword}${open} ${kept.join(', ')} ${close}`;
     });
 }
 

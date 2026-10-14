@@ -142,6 +142,74 @@ describe('v21-upgrade', () => {
         );
     });
 
+    it('adds a symbol past a line comment that ends an import clause', async () => {
+        const core = " from '@koobiq/components/core';";
+        const source = (provider: string) => [
+                `import { ThemePalette }${core}`,
+                'import {',
+                '    KbqDefaultSizes,',
+                `    ${provider} // the provider`,
+                `}${core}`,
+                'export const color = ThemePalette.Error;',
+                ''
+            ].join('\n');
+        const run = await runV21Upgrade({
+            'comment.ts': source('kbqThemeProvider'),
+            'comment-comma.ts': source('kbqThemeProvider,')
+        });
+        const expected = [
+            'import {',
+            '    KbqDefaultSizes,',
+            '    kbqThemeProvider, // the provider',
+            '    KbqComponentColors',
+            `}${core}`,
+            'export const color = KbqComponentColors.Error;',
+            ''
+        ].join('\n');
+
+        expect(run.read('comment.ts')).toBe(expected);
+        expect(run.read('comment-comma.ts')).toBe(expected);
+    });
+
+    it('keeps the line endings of a CRLF file when it adds an import', async () => {
+        const core = " from '@koobiq/components/core';";
+        const run = await runV21Upgrade({
+            'crlf.ts': [
+                '// Colors.',
+                `import { ThemePalette }${core}`,
+                'export const color = ThemePalette.Error;',
+                ''
+            ].join('\r\n'),
+            'crlf-comment.ts': [
+                'import {',
+                '    KbqDefaultSizes // sizes',
+                `}${core}`,
+                `import { ThemePalette }${core}`,
+                'export const colors = [KbqDefaultSizes.Normal, ThemePalette.Error];',
+                ''
+            ].join('\r\n')
+        });
+
+        expect(run.read('crlf.ts')).toBe(
+            [
+                '// Colors.',
+                `import { KbqComponentColors }${core}`,
+                'export const color = KbqComponentColors.Error;',
+                ''
+            ].join('\r\n')
+        );
+        expect(run.read('crlf-comment.ts')).toBe(
+            [
+                'import {',
+                '    KbqDefaultSizes, // sizes',
+                '    KbqComponentColors',
+                `}${core}`,
+                'export const colors = [KbqDefaultSizes.Normal, KbqComponentColors.Error];',
+                ''
+            ].join('\r\n')
+        );
+    });
+
     it('reports instead of writing with fix: false', async () => {
         const source =
             "import { KbqFilterBarRefresher } from '@koobiq/components/filter-bar';\nexport const r = KbqFilterBarRefresher;\n";

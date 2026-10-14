@@ -7,6 +7,7 @@ const OUTER_ELEMENT_WIDTH = '`KbqNavbarTitle.outerElementWidth` was removed';
 const RESIZE_STREAM = '`KbqEllipsisCenterDirective.resizeStream` was removed';
 const DL_MIN_WIDTH_WITH_BREAKPOINT = '`minWidth` was removed from `<kbq-dl>`';
 const DL_MIN_WIDTH_ACCESS = '`KbqDlComponent.minWidth` was removed';
+const DL_MIN_WIDTH_VALUE = '`minWidth` of `<kbq-dl>` was renamed to `verticalBreakpoint`';
 const LOADER_OVERLAY = '`transparent` and `card` of `<kbq-loader-overlay>` are deprecated';
 
 describe('v21-upgrade: navbar and layout', () => {
@@ -143,6 +144,31 @@ describe('v21-upgrade: navbar and layout', () => {
             expect(run.log).not.toContain(DL_MIN_WIDTH_WITH_BREAKPOINT);
         });
 
+        it('reports a renamed minWidth whose value may not be a number', async () => {
+            const run = await runV21Upgrade({
+                'dl-bound.html': '<kbq-dl [minWidth]="breakpoint"></kbq-dl>\n',
+                'dl-empty.html': '<kbq-dl minWidth=""></kbq-dl>\n',
+                'dl-interpolated.html': '<kbq-dl minWidth="{{ breakpoint }}"></kbq-dl>\n',
+                'dl-unit.html': "<kbq-dl minWidth='700px'></kbq-dl>\n",
+                'dl-numbers.html': [
+                    '<kbq-dl [minWidth]="700"></kbq-dl>',
+                    '<kbq-dl minWidth=" 1e3 "></kbq-dl>',
+                    "<kbq-dl [minWidth]='.5'></kbq-dl>",
+                    '<kbq-dl dtMinWidth="" [ddMinWidth]="width"></kbq-dl>',
+                    ''
+                ].join('\n')
+            });
+
+            expect(run.read('dl-bound.html')).toBe('<kbq-dl [verticalBreakpoint]="breakpoint"></kbq-dl>\n');
+            expect(run.read('dl-empty.html')).toBe('<kbq-dl verticalBreakpoint=""></kbq-dl>\n');
+
+            for (const file of ['dl-bound.html', 'dl-empty.html', 'dl-interpolated.html', 'dl-unit.html']) {
+                expect(run.log).toContain(`${file}\n  ${DL_MIN_WIDTH_VALUE}`);
+            }
+
+            expect(run.log).not.toContain('dl-numbers.html\n');
+        });
+
         it('keeps and reports minWidth on a kbq-dl that sets verticalBreakpoint too', async () => {
             const template = '<kbq-dl [minWidth]="700" verticalBreakpoint="500"></kbq-dl>\n';
             const run = await runV21Upgrade({ 'dl-both.html': template });
@@ -248,7 +274,8 @@ describe('v21-upgrade: navbar and layout', () => {
             OUTER_ELEMENT_WIDTH,
             RESIZE_STREAM,
             DL_MIN_WIDTH_WITH_BREAKPOINT,
-            DL_MIN_WIDTH_ACCESS
+            DL_MIN_WIDTH_ACCESS,
+            DL_MIN_WIDTH_VALUE
         ]) {
             expect(run.log).not.toContain(message);
         }
