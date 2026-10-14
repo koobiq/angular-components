@@ -1,3 +1,5 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `tabs-signals` migration.
  *
@@ -5,13 +7,6 @@
  * `ngOnChanges`, and their decorator queries are signal queries behind getters. Reads and writes of the members are
  * unchanged; a subclass and a hand-made `SimpleChanges` are not. Warn-only.
  */
-
-export interface WarnPattern {
-    /** Only files that match it are checked against `pattern`. */
-    anchor: string;
-    pattern: string;
-    message: string;
-}
 
 const CLASSES = [
     'KbqTabGroup',

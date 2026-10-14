@@ -1,3 +1,5 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `core-mixins-removal` migration.
  *
@@ -5,11 +7,6 @@
  * on every instance. They are removed from `@koobiq/components/core` with their types. Warn-only: a class built on
  * them declares the members itself.
  */
-
-export interface WarnPattern {
-    pattern: string;
-    message: string;
-}
 
 export const warnPatterns: WarnPattern[] = [
     {

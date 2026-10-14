@@ -1,3 +1,5 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `zoneless-change-detection` migration.
  *
@@ -5,11 +7,6 @@
  * `MockNgZone` testing helper, which existed to fire that event on demand, is removed from
  * `@koobiq/components/core`. Warn-only: what a spec should wait for instead depends on what it was waiting for.
  */
-
-export interface WarnPattern {
-    pattern: string;
-    message: string;
-}
 
 export const warnPatterns: WarnPattern[] = [
     {

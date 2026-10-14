@@ -2,6 +2,7 @@ import { workspaces } from '@angular-devkit/core';
 import { SchematicsException, Tree } from '@angular-devkit/schematics';
 import { readWorkspace } from '@schematics/angular/utility';
 import * as messages from './messages';
+import { visitProjectFiles } from './project-files';
 
 /**
  * Sorts the keys of the given object.
@@ -83,9 +84,7 @@ export async function getParsingInfo(project: string | undefined, tree: Tree) {
     // `ng update` passes no options at all, so without a project the whole workspace is migrated.
     const root = projectDefinition?.root;
 
-    (root ? tree.getDir(root) : tree.root).visit((filePath: string) => {
-        if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+    visitProjectFiles(root ? tree.getDir(root) : tree.root, (filePath: string) => {
         if (filePath.endsWith('.ts')) {
             tsPaths.add(filePath);
         }

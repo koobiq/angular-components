@@ -1,3 +1,5 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `angular-animations-removal` migration.
  *
@@ -5,16 +7,6 @@
  * themselves. The animation triggers they exported and the members that carried an `AnimationEvent` are
  * removed. Warn-only: what replaces a member depends on what the code did with the event.
  */
-
-export interface WarnPattern {
-    /**
-     * Only a file that also matches it is checked against `pattern`. Left out where the pattern names Koobiq alone,
-     * and for Angular's animation providers, which `app.config.ts` and specs declare without naming a component.
-     */
-    anchor?: string;
-    pattern: string;
-    message: string;
-}
 
 /**
  * A file that imports the entry point, names one of its `Kbq…` / `kbq…` symbols or renders its element. The stem
@@ -38,6 +30,10 @@ const POP_UP = [
     owner('notification-center', 'NotificationCenter')
 ].join('|');
 
+/**
+ * The anchor is left out where the pattern names Koobiq alone, and for Angular's animation providers, which
+ * `app.config.ts` and specs declare without naming a component.
+ */
 export const warnPatterns: WarnPattern[] = [
     {
         // kbqSelectAnimations is ours whatever the file imports it from.

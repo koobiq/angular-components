@@ -1,3 +1,5 @@
+import { WarnPattern } from '../../utils/warn-only-migration';
+
 /**
  * Data for the `signal-inputs-subclasses` migration.
  *
@@ -6,13 +8,6 @@
  * Reads and writes of the members are unchanged; a subclass is not. Warn-only. A member another migration moved to
  * a signal, such as `color` or the `KbqFormFieldControl` members of the tag list, is migrated there.
  */
-
-export interface WarnPattern {
-    /** Only files that match it are checked against `pattern`. */
-    anchor: string;
-    pattern: string;
-    message: string;
-}
 
 const COMPONENTS = [
     'KbqCheckbox',

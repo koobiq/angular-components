@@ -2,6 +2,7 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from './messages';
 import { setupOptions } from './package-config';
+import { visitProjectFiles } from './project-files';
 
 /** Options of every `<entry-point>-deprecated-path` migration. */
 export interface DeprecatedPathMigrationOptions {
@@ -45,8 +46,7 @@ export function deprecatedPathMigration(entryPoint: string): (options: Deprecate
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
         let touched = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             if (!filePath.endsWith(TS_EXT)) return;
 
             const originalContent = entry?.content.toString();
