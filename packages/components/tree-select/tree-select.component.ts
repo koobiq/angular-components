@@ -1066,9 +1066,8 @@ export class KbqTreeSelect
         // wrapping form-field (e.g. filter-bar pipes render the tree-select bare).
         tree.inSelect = true;
 
-        if (tree.multipleMode === null) {
-            // Deferred to prevent an "NG0100: ExpressionChangedAfterItHasBeenCheckedError".
-            this.scheduleTimeout(() => (tree.multipleMode = this.multiSelection ? MultipleMode.CHECKBOX : null));
+        if (tree.multipleMode === null && this.multiSelection) {
+            tree.multipleMode = MultipleMode.CHECKBOX;
         }
 
         if (this.multiSelection) {
@@ -1854,7 +1853,7 @@ export class KbqTreeSelect
     /** Mirrors the selection into the `value` and `empty` signals. */
     private syncSelectionState(): void {
         this.emptyValue.set(this.selectionModel.isEmpty());
-        this.valueState.set(this.tree()!.getSelectedValues());
+        this.valueState.set(this.selectedValues);
     }
 
     /**
