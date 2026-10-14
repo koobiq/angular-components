@@ -10,6 +10,7 @@ import { Component, DebugElement, effect, model, Provider, signal, Type, viewChi
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     createKeyboardEvent,
     dispatchEvent,
@@ -20,6 +21,7 @@ import {
     ruRULocaleData,
     TAB
 } from '@koobiq/components/core';
+import { KbqDatepicker, KbqDatepickerInput, KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -28,8 +30,10 @@ import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
+import { KbqTimepicker, KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
+import { DateTime } from 'luxon';
 import { defer, Observable, Subject } from 'rxjs';
 import {
     KBQ_INLINE_EDIT_SAVE_ERROR_HANDLER,
@@ -2410,6 +2414,78 @@ describe('KbqInlineEdit', () => {
         });
     });
 
+    describe('with date and time pickers', () => {
+        const openEditMode = async (fixture: ComponentFixture<unknown>) => {
+            getInlineEditDebugElement(fixture.debugElement).nativeElement.click();
+            await fixture.whenStable();
+        };
+
+        const getActionButton = (index: 0 | 1): HTMLButtonElement =>
+            document.querySelectorAll<HTMLButtonElement>(
+                `${componentCssClasses.panel} ${componentCssClasses.terminalButtons} button`
+            )[index];
+
+        it('should restore the form controls of the pickers on cancel', async () => {
+            const fixture = setup(TestWithPickersInForm);
+            const { form } = fixture.componentInstance;
+            const { date, time } = form.getRawValue();
+
+            await openEditMode(fixture);
+            form.setValue({ date: DateTime.local(2030, 1, 2), time: DateTime.local(2030, 1, 2, 22, 15) });
+            await fixture.whenStable();
+
+            getActionButton(1).click();
+            await fixture.whenStable();
+
+            expect(form.controls.date.value).toBe(date);
+            expect(form.controls.time.value).toBe(time);
+        });
+
+        it('should restore pickers bound with [value] on cancel', async () => {
+            const fixture = setup(TestWithBoundPickers);
+            const host = fixture.componentInstance;
+
+            await openEditMode(fixture);
+
+            const [datepickerElement, timepickerElement] = getOverlayElement()!.querySelectorAll('input');
+            const texts = [datepickerElement.value, timepickerElement.value];
+
+            host.datepicker().select(DateTime.local(2030, 1, 2));
+            timepickerElement.value = '22:15';
+            host.timepicker().onInput();
+            await fixture.whenStable();
+
+            const values = () => [host.datepickerInput().value()?.toISO(), host.timepicker().value()?.toISO()];
+
+            expect(values()).toEqual([DateTime.local(2030, 1, 2).toISO(), expect.stringContaining('T22:15')]);
+
+            getActionButton(1).click();
+            await fixture.whenStable();
+
+            expect(values()).toEqual([host.date.toISO(), host.time.toISO()]);
+            expect([datepickerElement.value, timepickerElement.value]).toEqual(texts);
+        });
+
+        it('should not save a picker whose form control rejects its value before it is touched', async () => {
+            const fixture = setup(TestWithPickersInForm);
+            const { componentInstance } = fixture;
+            // The second field: opening the editor focuses, and so touches, the first one.
+            const { time } = componentInstance.form.controls;
+
+            await openEditMode(fixture);
+            time.setValue(null);
+            await fixture.whenStable();
+
+            expect(time.touched).toBe(false);
+
+            getActionButton(0).click();
+            await fixture.whenStable();
+
+            expect(componentInstance.update).not.toHaveBeenCalled();
+            expect(time.touched).toBe(true);
+        });
+    });
+
     describe('programmatic mode', () => {
         // The resize observer re-measures the offset a frame after the panel is attached, which would
         // mask a missing measurement. Silenced here so the assertions see the attach-time value only.
@@ -3316,6 +3392,66 @@ export class TestWithProgrammaticMode {
 })
 export class TestInOverlayLayer {
     value = 'value';
+}
+
+@Component({
+    selector: 'name',
+    imports: [
+        ReactiveFormsModule,
+        KbqLuxonDateModule,
+        KbqFormFieldModule,
+        KbqInlineEditModule,
+        KbqDatepickerModule,
+        KbqTimepickerModule
+    ],
+    template: `
+        <kbq-inline-edit showActions (saved)="update()">
+            <div kbqInlineEditViewMode>View</div>
+            <form kbqInlineEditEditMode [formGroup]="form">
+                <kbq-form-field>
+                    <input formControlName="date" [kbqDatepicker]="datepicker" />
+                    <kbq-datepicker #datepicker />
+                </kbq-form-field>
+                <kbq-form-field>
+                    <input kbqTimepicker formControlName="time" />
+                </kbq-form-field>
+            </form>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithPickersInForm {
+    readonly form = new FormGroup({
+        date: new FormControl<DateTime | null>(DateTime.local(2024, 5, 17), Validators.required),
+        time: new FormControl<DateTime | null>(DateTime.local(2024, 5, 17, 10, 30), Validators.required)
+    });
+
+    update = vi.fn();
+}
+
+@Component({
+    selector: 'name',
+    imports: [KbqLuxonDateModule, KbqFormFieldModule, KbqInlineEditModule, KbqDatepickerModule, KbqTimepickerModule],
+    template: `
+        <kbq-inline-edit showActions>
+            <div kbqInlineEditViewMode>View</div>
+            <div kbqInlineEditEditMode>
+                <kbq-form-field>
+                    <input [kbqDatepicker]="datepicker" [value]="date" />
+                    <kbq-datepicker #datepicker />
+                </kbq-form-field>
+                <kbq-form-field>
+                    <input kbqTimepicker [value]="time" />
+                </kbq-form-field>
+            </div>
+        </kbq-inline-edit>
+    `
+})
+export class TestWithBoundPickers {
+    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>(KbqDatepicker);
+    readonly datepickerInput = viewChild.required<KbqDatepickerInput<DateTime>>(KbqDatepickerInput);
+    readonly timepicker = viewChild.required<KbqTimepicker<DateTime>>(KbqTimepicker);
+    readonly date = DateTime.local(2024, 5, 17);
+    readonly time = DateTime.local(2024, 5, 17, 10, 30);
 }
 
 @Component({

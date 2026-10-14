@@ -32,7 +32,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { AbstractControl, NgControl } from '@angular/forms';
+import { AbstractControl, ControlValueAccessor, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     isElement,
@@ -78,6 +78,9 @@ export const kbqInlineEditSaveProgressMinimumDuration = 300;
  * instead of driving it through the DOM with a fabricated `KeyboardEvent`.
  */
 const inlineEditRegistry = new WeakMap<HTMLElement, KbqInlineEdit>();
+
+const isValueAccessor = (control: object): control is ControlValueAccessor =>
+    typeof (control as Partial<ControlValueAccessor>).writeValue === 'function';
 
 export type KbqInlineEditMode = 'view' | 'edit';
 
@@ -1141,7 +1144,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
         if (!formFieldRefList.length) return false;
 
-        return formFieldRefList.some((ref) => ref.control().ngControl?.control?.invalid ?? ref.invalid);
+        return formFieldRefList.some((ref) => this.getFormControl(ref)?.invalid ?? ref.invalid);
     }
 
     private getValue() {
@@ -1156,7 +1159,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         return this.formFieldRefList().map((ref) => {
             const control = this.coerceControl(ref);
 
-            return control instanceof AbstractControl ? control.value : control?.value();
+            return control instanceof AbstractControl ? control.value : control.value();
         });
     }
 
@@ -1176,25 +1179,29 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
         value.forEach((controlValue, index) => {
             const control = this.coerceControl(formFieldRefList[index]);
 
-            if (!control) return;
-
             if (control instanceof AbstractControl) {
                 control.setValue(controlValue);
             } else if (isWritableSignal(control.value)) {
                 // A control without a form control can still hold a value code writes, as `kbqInput` does.
                 control.value.set(controlValue);
+            } else if (isValueAccessor(control)) {
+                // One holding its value read-only, as the pickers and the tree select do, takes it as from a form.
+                control.writeValue(controlValue);
             }
         });
     }
 
     private coerceControl(formFieldRef: KbqFormField) {
-        const control = formFieldRef.control();
+        return this.getFormControl(formFieldRef) ?? formFieldRef.control();
+    }
 
-        if (control.ngControl instanceof NgControl) {
-            return control.ngControl.control;
-        }
+    private getFormControl(formFieldRef: KbqFormField): AbstractControl | null {
+        const { ngControl } = formFieldRef.control();
 
-        return control;
+        // The pickers hand over the form control itself: they are value accessors, which cannot inject `NgControl`.
+        if (ngControl instanceof AbstractControl) return ngControl;
+
+        return ngControl instanceof NgControl ? ngControl.control : null;
     }
 
     private setOverlayWidth(): void {
@@ -1237,6 +1244,6 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     }
 
     private markAllAsTouched(): void {
-        this.formFieldRefList().forEach((formField) => formField.control().ngControl?.control?.markAsTouched());
+        this.formFieldRefList().forEach((formField) => this.getFormControl(formField)?.markAsTouched());
     }
 }

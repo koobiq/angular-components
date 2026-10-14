@@ -1,4 +1,14 @@
-import { Component, DebugElement, Type, effect, inject, signal, viewChild, viewChildren } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    Type,
+    effect,
+    inject,
+    signal,
+    viewChild,
+    viewChildren
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -1471,6 +1481,33 @@ describe(KbqTimepicker.name, () => {
         });
     });
 
+    describe('cleaner', () => {
+        it('should follow the value written by a form control and by a binding', async () => {
+            const fixture = createStandaloneComponent(TimepickerWithCleaner);
+            const host = fixture.componentInstance;
+            const state = () => ({
+                empty: host.timepickers().map((timepicker) => timepicker.empty()),
+                cleaners: fixture.debugElement.queryAll(By.css('.kbq-form-field__cleaner')).length
+            });
+
+            await fixture.whenStable();
+
+            expect(state()).toEqual({ empty: [false, false], cleaners: 2 });
+
+            host.control.setValue(null);
+            host.value.set(null);
+            await fixture.whenStable();
+
+            expect(state()).toEqual({ empty: [true, true], cleaners: 0 });
+
+            host.control.setValue(DateTime.fromISO('2024-05-17T11:45:00'));
+            host.value.set(DateTime.fromISO('2024-05-17T11:45:00'));
+            await fixture.whenStable();
+
+            expect(state()).toEqual({ empty: [false, false], cleaners: 2 });
+        });
+    });
+
     describe('called from an effect', () => {
         it('should not make an effect that sets the form control run again', async () => {
             const fixture = createStandaloneComponent(TimepickerWrittenByEffect);
@@ -1488,6 +1525,26 @@ describe(KbqTimepicker.name, () => {
         });
     });
 });
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker [formControl]="control" />
+            <kbq-cleaner />
+        </kbq-form-field>
+        <kbq-form-field>
+            <input kbqTimepicker [value]="value()" />
+            <kbq-cleaner />
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TimepickerWithCleaner {
+    readonly timepickers = viewChildren(KbqTimepicker);
+    readonly control = new FormControl<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
+    readonly value = signal<DateTime | null>(DateTime.fromISO('2024-05-17T10:30:00'));
+}
 
 /** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
 const EFFECT_RUN_LIMIT = 10;

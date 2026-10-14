@@ -12,7 +12,8 @@ import {
     signal,
     Type,
     ValueProvider,
-    viewChild
+    viewChild,
+    viewChildren
 } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
@@ -989,6 +990,33 @@ describe('KbqDatepicker', () => {
 
                 expect(testComponent.formControl.hasError('kbqDatepickerParse')).toBe(true);
             });
+
+            it('should leave ESCAPE, the selection and the form alone while the calendar is closed', async () => {
+                vi.useFakeTimers();
+
+                const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+                const valueChanges = vi.fn();
+
+                testComponent.formControl.setValue(DateTime.local(2024, 5, 17));
+                fixture.detectChanges();
+                testComponent.formControl.valueChanges.subscribe(valueChanges);
+
+                inputEl.focus();
+                inputEl.setSelectionRange(0, 2);
+
+                const escape = dispatchKeyboardEvent(inputEl, 'keydown', ESCAPE);
+
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(escape.defaultPrevented).toBe(false);
+                expect([inputEl.selectionStart, inputEl.selectionEnd]).toEqual([0, 2]);
+
+                inputEl.value = '17.0';
+                dispatchKeyboardEvent(inputEl, 'keydown', ESCAPE);
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(valueChanges).not.toHaveBeenCalled();
+            });
         });
 
         describe('ErrorStateMatcher', () => {
@@ -1357,6 +1385,47 @@ describe('KbqDatepicker', () => {
                 expect(document.activeElement).toBe(testComponent.input().elementRef.nativeElement);
             });
 
+            it('should return the focus to the input when the toggle closes a calendar holding it', async () => {
+                const toggle = getDatepickerToggleIconElement(fixture);
+
+                clickWithMouse(toggle);
+                fixture.detectChanges();
+
+                const nextMonth = document.querySelector<HTMLElement>('.kbq-calendar-header__next-button')!;
+
+                clickWithMouse(nextMonth);
+                fixture.detectChanges();
+
+                expect(document.activeElement).toBe(nextMonth);
+
+                clickWithMouse(toggle);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(testComponent.datepicker().opened).toBe(false);
+                expect(document.querySelector('.kbq-datepicker__content')).toBeNull();
+                expect(document.activeElement).toBe(testComponent.input().elementRef.nativeElement);
+            });
+
+            it('should leave the focus where a press outside the calendar moved it', async () => {
+                const outside = document.createElement('button');
+
+                document.body.appendChild(outside);
+                clickWithMouse(getDatepickerToggleIconElement(fixture));
+                fixture.detectChanges();
+
+                clickWithMouse(document.querySelector<HTMLElement>('.kbq-calendar-header__next-button')!);
+                clickWithMouse(outside);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(testComponent.datepicker().opened).toBe(false);
+                expect(document.activeElement).toBe(outside);
+
+                outside.remove();
+            });
+
             it('should close the month list of the calendar on ESCAPE and keep the calendar open', async () => {
                 clickWithMouse(getDatepickerToggleIconElement(fixture));
                 fixture.detectChanges();
@@ -1428,6 +1497,33 @@ describe('KbqDatepicker', () => {
                 await fixture.whenStable();
 
                 expect(state.textContent.trim()).toBe('closed disabled');
+            });
+        });
+
+        describe('datepicker with kbq-cleaner', () => {
+            it('should follow the value written by a form control and by a binding', async () => {
+                const fixture = createComponent(DatepickerWithCleaner, [KbqLuxonDateModule]);
+                const host = fixture.componentInstance;
+                const state = () => ({
+                    empty: host.inputs().map((input) => input.empty()),
+                    cleaners: fixture.debugElement.queryAll(By.css('.kbq-form-field__cleaner')).length
+                });
+
+                await fixture.whenStable();
+
+                expect(state()).toEqual({ empty: [false, false], cleaners: 2 });
+
+                host.control.setValue(null);
+                host.value.set(null);
+                await fixture.whenStable();
+
+                expect(state()).toEqual({ empty: [true, true], cleaners: 0 });
+
+                host.control.setValue(DateTime.local(2025, 1, 2));
+                host.value.set(DateTime.local(2025, 1, 2));
+                await fixture.whenStable();
+
+                expect(state()).toEqual({ empty: [false, false], cleaners: 2 });
             });
         });
 
@@ -2387,6 +2483,28 @@ class DatepickerInOverlayLayer {
 })
 class DatepickerState {
     readonly datepicker = input.required<KbqDatepicker<DateTime>>();
+}
+
+@Component({
+    imports: [KbqDatepickerModule, KbqFormFieldModule, ReactiveFormsModule],
+    template: `
+        <kbq-form-field>
+            <input [formControl]="control" [kbqDatepicker]="first" />
+            <kbq-cleaner />
+            <kbq-datepicker #first />
+        </kbq-form-field>
+        <kbq-form-field>
+            <input [kbqDatepicker]="second" [value]="value()" />
+            <kbq-cleaner />
+            <kbq-datepicker #second />
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class DatepickerWithCleaner {
+    readonly inputs = viewChildren(KbqDatepickerInput);
+    readonly control = new FormControl<DateTime | null>(DateTime.local(2024, 5, 17));
+    readonly value = signal<DateTime | null>(DateTime.local(2024, 5, 17));
 }
 
 @Component({
