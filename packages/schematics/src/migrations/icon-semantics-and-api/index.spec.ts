@@ -3,7 +3,7 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
-import { createTestApp } from '../../utils/testing';
+import { createTestApp, listingTree } from '../../utils/testing';
 import { Schema } from './schema';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
@@ -216,5 +216,21 @@ describe(SCHEMATIC_NAME, () => {
         await run(first);
 
         expect(messages.join('\n')).not.toContain('[icon-semantics-and-api]');
+    });
+
+    // `ng update` runs over the workspace root, where node_modules holds most of the files.
+    it('never walks into node_modules', async () => {
+        const { tree, listed } = listingTree();
+        const messages = collectLogs();
+        const content = 'const template = `<i kbq-icon="kbq-plus_16" [small]="true"></i>`;\n';
+
+        tree.create('/src/app/app.ts', content);
+        tree.create('/node_modules/pkg/index.ts', content);
+
+        await runner.runSchematic(SCHEMATIC_NAME, {} satisfies Schema, tree);
+
+        expect(messages.join('\n')).toContain('/src/app/app.ts');
+        expect(messages.join('\n')).not.toContain('node_modules');
+        expect(listed.filter((path) => path.includes('node_modules'))).toEqual([]);
     });
 });
