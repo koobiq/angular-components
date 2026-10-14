@@ -1,19 +1,9 @@
 import { ComponentFixture } from '@angular/core/testing';
+import { DOWN_ARROW, ENTER, ESCAPE, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@koobiq/components/core';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
-import {
-    byTestId,
-    click,
-    failOnConsole,
-    focus,
-    focusedElement,
-    Key,
-    overlayContainer,
-    press,
-    settle,
-    stubElementScrollTo,
-    text
-} from './select.helpers';
+import { focusedElement, stubElementScrollTo } from './dom.helpers';
+import { byTestId, click, failOnConsole, focus, overlayContainer, press, settle, text } from './select.helpers';
 import { TreeSelectInitialDataScenario, TreeSelectScenario } from './tree-select';
 
 export function defineTreeSelectSuite(config: CheckConfig): void {
@@ -77,13 +67,13 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
                 expect(text(byTestId(fixture, 'file-summary'))).toBe('open: none');
             });
 
-            it.each<[string, Key, { altKey?: boolean }]>([
-                ['Enter', 'Enter', {}],
-                ['Space', ' ', {}],
-                ['Alt+ArrowDown', 'ArrowDown', { altKey: true }]
-            ])('opens with %s on the focused trigger', async (_, key, modifiers) => {
+            it.each<[string, number, { altKey?: boolean }]>([
+                ['Enter', ENTER, {}],
+                ['Space', SPACE, {}],
+                ['Alt+ArrowDown', DOWN_ARROW, { altKey: true }]
+            ])('opens with %s on the focused trigger', async (_, keyCode, modifiers) => {
                 await focus(fixture, select);
-                const event = await press(fixture, key, modifiers);
+                const event = await press(fixture, keyCode, modifiers);
 
                 expect(event.defaultPrevented).toBe(true);
                 expect(select.getAttribute('aria-expanded')).toBe('true');
@@ -94,8 +84,8 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
 
             it('expands and collapses a node with the arrows and with its toggle, without selecting it', async () => {
                 await focus(fixture, select);
-                await press(fixture, 'Enter');
-                await press(fixture, 'ArrowRight');
+                await press(fixture, ENTER);
+                await press(fixture, RIGHT_ARROW);
 
                 expect(node('Documents').getAttribute('aria-expanded')).toBe('true');
                 expect(nodes().map(text)).toEqual(['Documents', 'Invoice', 'Report', 'Pictures', 'Readme']);
@@ -115,7 +105,7 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
                     'Readme'
                 ]);
 
-                await press(fixture, 'ArrowLeft');
+                await press(fixture, LEFT_ARROW);
 
                 expect(node('Documents').getAttribute('aria-expanded')).toBe('false');
                 expect(nodes().map(text)).toEqual(['Documents', 'Pictures', 'Cat', 'Dog', 'Readme']);
@@ -126,16 +116,16 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
 
             it('selects a leaf with the arrows, closes on Enter and gives focus back', async () => {
                 await focus(fixture, select);
-                await press(fixture, 'Enter');
-                await press(fixture, 'ArrowRight');
-                await press(fixture, 'ArrowDown');
+                await press(fixture, ENTER);
+                await press(fixture, RIGHT_ARROW);
+                await press(fixture, DOWN_ARROW);
 
                 expect(focusedElement()).toBe(node('Invoice'));
                 // `autoSelect` is on by default for a single tree-select: the focused node is the value.
                 expect(scenario.file.value).toBe('invoice');
                 expect(node('Invoice').getAttribute('aria-selected')).toBe('true');
 
-                await press(fixture, 'Enter');
+                await press(fixture, ENTER);
 
                 expect(select.getAttribute('aria-expanded')).toBe('false');
                 expect(panel()).toBeNull();
@@ -165,27 +155,30 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
                 expect(text(byTestId(fixture, 'file-summary'))).toBe('closed: report');
             });
 
-            it.each<[string, Key, { altKey?: boolean }]>([
-                ['Escape', 'Escape', {}],
-                ['Tab', 'Tab', {}],
-                ['Alt+ArrowUp', 'ArrowUp', { altKey: true }]
-            ])('closes on %s, keeps the value, gives focus back and detaches the panel', async (_, key, modifiers) => {
-                await click(fixture, trigger());
-                const openPanel = panel()!;
+            it.each<[string, number, { altKey?: boolean }]>([
+                ['Escape', ESCAPE, {}],
+                ['Tab', TAB, {}],
+                ['Alt+ArrowUp', UP_ARROW, { altKey: true }]
+            ])(
+                'closes on %s, keeps the value, gives focus back and detaches the panel',
+                async (_, keyCode, modifiers) => {
+                    await click(fixture, trigger());
+                    const openPanel = panel()!;
 
-                expect(openPanel.isConnected).toBe(true);
+                    expect(openPanel.isConnected).toBe(true);
 
-                await press(fixture, key, modifiers);
+                    await press(fixture, keyCode, modifiers);
 
-                expect(select.getAttribute('aria-expanded')).toBe('false');
-                expect(select.hasAttribute('aria-controls')).toBe(false);
-                expect(openPanel.isConnected).toBe(false);
-                expect(overlayContainer()?.querySelector('[role="tree"]') ?? null).toBeNull();
-                expect(focusedElement()).toBe(select);
-                expect(scenario.file.value).toBeNull();
-                expect(scenario.openedChanges()).toEqual([true, false]);
-                expect(text(byTestId(fixture, 'file-summary'))).toBe('closed: none');
-            });
+                    expect(select.getAttribute('aria-expanded')).toBe('false');
+                    expect(select.hasAttribute('aria-controls')).toBe(false);
+                    expect(openPanel.isConnected).toBe(false);
+                    expect(overlayContainer()?.querySelector('[role="tree"]') ?? null).toBeNull();
+                    expect(focusedElement()).toBe(select);
+                    expect(scenario.file.value).toBeNull();
+                    expect(scenario.openedChanges()).toEqual([true, false]);
+                    expect(text(byTestId(fixture, 'file-summary'))).toBe('closed: none');
+                }
+            );
 
             it('closes on a click outside and detaches the panel', async () => {
                 await click(fixture, trigger());
@@ -201,12 +194,12 @@ export function defineTreeSelectSuite(config: CheckConfig): void {
 
             it('is not touched while focus moves into the panel, and is once the panel closes', async () => {
                 await focus(fixture, select);
-                await press(fixture, 'Enter');
+                await press(fixture, ENTER);
 
                 expect(focusedElement()).toBe(node('Documents'));
                 expect(scenario.file.touched).toBe(false);
 
-                await press(fixture, 'Escape');
+                await press(fixture, ESCAPE);
 
                 expect(scenario.file.touched).toBe(true);
                 expect(scenario.file.dirty).toBe(false);

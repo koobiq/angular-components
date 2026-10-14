@@ -1,7 +1,8 @@
 import { ComponentFixture } from '@angular/core/testing';
-import { ENTER, ESCAPE, TAB, typeInElement } from '@koobiq/components/core';
+import { dispatchMouseEvent, ENTER, ESCAPE, TAB, typeInElement } from '@koobiq/components/core';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
+import { keydown } from './dom.helpers';
 import { TooltipScenario } from './tooltip';
 
 /** `kbqEnterDelay` of a tooltip that does not bind it. */
@@ -22,21 +23,16 @@ export function defineTooltipSuite(config: CheckConfig): void {
         fixture.detectChanges();
     };
 
-    // Native constructors: the mouse and keyboard helpers of `@koobiq/components/core` pass the global `window` as
-    // the event's view, which in this jsdom environment is Node's global object, and jsdom rejects it.
-    const hover = (element: HTMLElement): void => void element.dispatchEvent(new MouseEvent('mouseenter'));
-    const leave = (element: HTMLElement): void => void element.dispatchEvent(new MouseEvent('mouseleave'));
-
-    const press = (element: Element, key: string, keyCode: number): void =>
-        void element.dispatchEvent(new KeyboardEvent('keydown', { key, keyCode, bubbles: true, cancelable: true }));
+    const hover = (element: HTMLElement): void => void dispatchMouseEvent(element, 'mouseenter');
+    const leave = (element: HTMLElement): void => void dispatchMouseEvent(element, 'mouseleave');
 
     /** What a Tab press onto the element leaves behind: a keyboard focus origin, then the focus itself. */
     const tabTo = (element: HTMLElement): void => {
-        press(document.body, 'Tab', TAB);
+        keydown(TAB, { target: document.body });
         element.focus();
     };
 
-    const pressEscape = (): void => press(document.activeElement ?? document.body, 'Escape', ESCAPE);
+    const pressEscape = (): void => void keydown(ESCAPE);
 
     beforeEach(async () => {
         fixture = await renderScenario(TooltipScenario, config);
@@ -216,7 +212,7 @@ export function defineTooltipSuite(config: CheckConfig): void {
 
         it('opens on Enter and closes on Escape', async () => {
             tabTo(rename);
-            press(rename, 'Enter', ENTER);
+            keydown(ENTER, { target: rename });
             await elapse(TIMER_CHAIN);
 
             expect(isShown()).toBe(true);
@@ -249,7 +245,7 @@ export function defineTooltipSuite(config: CheckConfig): void {
 
         it('moves focus into the panel on open and back to the trigger on close', async () => {
             tabTo(rename);
-            press(rename, 'Enter', ENTER);
+            keydown(ENTER, { target: rename });
             await elapse(TIMER_CHAIN);
 
             const input = nameInput()!;

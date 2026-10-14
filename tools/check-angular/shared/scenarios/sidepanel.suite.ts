@@ -2,6 +2,7 @@ import { ComponentFixture } from '@angular/core/testing';
 import { ESCAPE, typeInElement } from '@koobiq/components/core';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
+import { keydown } from './dom.helpers';
 import { SidepanelScenario } from './sidepanel';
 
 /** How long `KbqModalComponent` animates opening and closing, on a timer. */
@@ -24,12 +25,7 @@ const activate = (opener: HTMLElement): void => {
     opener.click();
 };
 
-// The event constructor rather than `dispatchKeyboardEvent`, which throws in this runner's jsdom environment.
-const pressEscape = (): void => {
-    (document.activeElement ?? document.body).dispatchEvent(
-        new KeyboardEvent('keydown', { key: 'Escape', keyCode: ESCAPE, bubbles: true, cancelable: true })
-    );
-};
+const pressEscape = (): void => void keydown(ESCAPE);
 
 const expectOverlayDetached = (): void => {
     expect(inOverlay('.cdk-overlay-pane')).toBeNull();

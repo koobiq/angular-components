@@ -1,5 +1,6 @@
 import { ComponentFixture } from '@angular/core/testing';
 import {
+    dispatchMouseEvent,
     DOWN_ARROW,
     ENTER,
     ESCAPE,
@@ -13,6 +14,7 @@ import {
 } from '@koobiq/components/core';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
+import { keydown } from './dom.helpers';
 import { NavbarScenario } from './navbar';
 
 type Fixture = ComponentFixture<NavbarScenario>;
@@ -39,39 +41,9 @@ const visibleTooltips = (): HTMLElement[] => Array.from(document.querySelectorAl
 const focusedLabel = (): string | undefined =>
     document.activeElement?.querySelector('kbq-navbar-title')?.textContent?.trim();
 
-const KEYS: Record<number, string> = {
-    [TAB]: 'Tab',
-    [ENTER]: 'Enter',
-    [ESCAPE]: 'Escape',
-    [SPACE]: ' ',
-    [LEFT_ARROW]: 'ArrowLeft',
-    [UP_ARROW]: 'ArrowUp',
-    [RIGHT_ARROW]: 'ArrowRight',
-    [DOWN_ARROW]: 'ArrowDown',
-    [SLASH]: '/'
-};
-
-/** Dispatches a `keydown` the way the browser does; the components read the legacy `keyCode`. */
-function keydown(target: EventTarget, keyCode: number, init: KeyboardEventInit = {}): KeyboardEvent {
-    const event = new KeyboardEvent('keydown', {
-        key: KEYS[keyCode],
-        keyCode,
-        bubbles: true,
-        cancelable: true,
-        ...init
-    });
-
-    // `keyCode` is a legacy member that not every DOM implementation takes from the init dictionary.
-    if (event.keyCode !== keyCode) Object.defineProperty(event, 'keyCode', { get: () => keyCode });
-
-    target.dispatchEvent(event);
-
-    return event;
-}
-
 /** A Tab that lands on the element: the keydown reaches the page first, then the browser moves the focus. */
 function tabInto(element: HTMLElement): void {
-    keydown(document.body, TAB);
+    keydown(TAB, { target: document.body });
     element.focus();
 }
 
@@ -80,7 +52,7 @@ async function press(
     keyCode: number,
     target: Element = document.activeElement!
 ): Promise<KeyboardEvent> {
-    const event = keydown(target, keyCode);
+    const event = keydown(keyCode, { target });
 
     await fixture.whenStable();
 
@@ -168,7 +140,7 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 tabInto(navbar);
                 await fixture.whenStable();
                 await press(fixture, RIGHT_ARROW);
-                keydown(document.activeElement!, TAB);
+                keydown(TAB);
 
                 // Read before anything else runs: the browser moves the focus right after the keydown, and the host
                 // has to be out of the tab order by then, or a Shift+Tab would stop on it instead of leaving.
@@ -386,7 +358,7 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 await press(fixture, SPACE, toggle(fixture));
                 expectExpanded(true);
 
-                keydown(document.body, SLASH, { ctrlKey: true });
+                keydown(SLASH, { target: document.body, ctrlKey: true });
                 await fixture.whenStable();
                 expectExpanded(false);
 
@@ -450,7 +422,7 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 expect(item(navbar, 'dashboards').classList).toContain('cdk-program-focused');
                 expect(document.querySelector('.kbq-tooltip')).toBeNull();
 
-                keydown(document.activeElement!, DOWN_ARROW);
+                keydown(DOWN_ARROW);
                 await elapse(fixture, 0);
 
                 expect(document.activeElement).toBe(item(navbar, 'tasks'));
@@ -477,7 +449,7 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 expect(item(navbar, 'dashboards').getAttribute('aria-label')).toBe('Dashboards');
                 expect(item(navbar, 'dashboards').hasAttribute('aria-describedby')).toBe(false);
 
-                keydown(document.activeElement!, DOWN_ARROW);
+                keydown(DOWN_ARROW);
                 await elapse(fixture, TOOLTIP_ENTER_DELAY);
 
                 tooltips = visibleTooltips();
@@ -491,12 +463,12 @@ export function defineNavbarSuite(config: CheckConfig): void {
 
                 expect(document.querySelector('.kbq-tooltip')).toBeNull();
 
-                item(navbar, 'reports').dispatchEvent(new MouseEvent('mouseenter'));
+                dispatchMouseEvent(item(navbar, 'reports'), 'mouseenter');
                 await elapse(fixture, TOOLTIP_ENTER_DELAY);
 
                 expect(visibleTooltips().map((tooltip) => tooltip.textContent?.trim())).toEqual(['Reports']);
 
-                item(navbar, 'reports').dispatchEvent(new MouseEvent('mouseleave'));
+                dispatchMouseEvent(item(navbar, 'reports'), 'mouseleave');
                 await elapse(fixture, TOOLTIP_ENTER_DELAY);
 
                 expect(document.querySelector('.kbq-tooltip')).toBeNull();
@@ -517,7 +489,7 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 expect(document.activeElement).toBe(item(navbar, 'dashboards'));
                 expect(document.querySelector('.kbq-tooltip')).toBeNull();
 
-                item(navbar, 'tasks').dispatchEvent(new MouseEvent('mouseenter'));
+                dispatchMouseEvent(item(navbar, 'tasks'), 'mouseenter');
                 await elapse(fixture, TOOLTIP_ENTER_DELAY);
 
                 expect(document.querySelector('.kbq-tooltip')).toBeNull();
@@ -525,8 +497,8 @@ export function defineNavbarSuite(config: CheckConfig): void {
                 // Collapsed again, the same hover names the item.
                 toggle(fixture).click();
                 await elapse(fixture, 0);
-                item(navbar, 'tasks').dispatchEvent(new MouseEvent('mouseleave'));
-                item(navbar, 'tasks').dispatchEvent(new MouseEvent('mouseenter'));
+                dispatchMouseEvent(item(navbar, 'tasks'), 'mouseleave');
+                dispatchMouseEvent(item(navbar, 'tasks'), 'mouseenter');
                 await elapse(fixture, TOOLTIP_ENTER_DELAY);
 
                 expect(visibleTooltips().map((tooltip) => tooltip.textContent?.trim())).toEqual(['Tasks']);
