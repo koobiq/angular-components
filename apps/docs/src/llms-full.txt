@@ -13388,7 +13388,9 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     hovered: boolean;
     readonly inOverlay: ModelSignal<boolean | undefined>;
     get invalid(): boolean;
+    protected get isNativeLabelSupported(): boolean;
     readonly labelClass: InputSignal<string | string[] | Set<string> | undefined>;
+    get labelId(): string | null;
     // (undocumented)
     ngAfterContentChecked(): void;
     // (undocumented)
@@ -13425,6 +13427,7 @@ export abstract class KbqFormFieldControl<T> {
     abstract focus(options?: FocusOptions): void;
     readonly focused: boolean;
     readonly id: string;
+    readonly isNativeLabelSupported?: boolean;
     readonly ngControl: NgControl | null;
     abstract onContainerClick(event: MouseEvent): void;
     abstract open?(): void;
@@ -16949,8 +16952,12 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
     blur(): void;
     // (undocumented)
     button: KbqButton;
+    // @internal
+    decorative: boolean;
     get disabled(): boolean;
     set disabled(value: boolean);
+    // @internal
+    get explicitlyDisabled(): boolean;
     // (undocumented)
     focus(origin?: FocusOrigin): void;
     // (undocumented)
@@ -20097,6 +20104,7 @@ export const KBQ_SELECT_OPTIONS: InjectionToken<Partial<{
 // @public (undocumented)
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
+    protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
     // (undocumented)
@@ -20118,6 +20126,7 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
 // @public (undocumented)
 export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<any>, CanUpdateErrorState {
     constructor(_changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone, _renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, elementRef: ElementRef<HTMLElement>, overlayContainer: OverlayContainer, _dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, scrollStrategyFactory: any, localeService?: KbqLocaleService | undefined);
+    protected get ariaLabelledby(): string | null;
     backdropClass: string;
     readonly beforeOpened: OutputEmitterRef<void>;
     calculateHiddenItems: () => void;
@@ -20171,6 +20180,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, On
     // (undocumented)
     protected readonly isBrowser: boolean;
     get isEmptySearchResult(): boolean;
+    readonly isNativeLabelSupported = false;
     isRtl(): boolean;
     keyManager: ActiveDescendantKeyManager<KbqOption>;
     // (undocumented)
@@ -25165,6 +25175,7 @@ export class KbqTimeRangeTitle {
 
 // @public
 export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
+    protected get ariaLabelledby(): string | null;
     controlType: string;
     disabled: boolean;
     empty: boolean;
@@ -25172,6 +25183,7 @@ export class KbqTimeRangeTitleAsControl implements KbqFormFieldControl<any> {
     focus(_options?: FocusOptions): void;
     focused: boolean;
     id: string;
+    readonly isNativeLabelSupported = false;
     ngControl: NgControl | null;
     onContainerClick(_event: MouseEvent): void;
     placeholder: string;
@@ -25731,6 +25743,7 @@ export class KbqTimezoneOption extends KbqOption {
 // @public (undocumented)
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
+    protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
     // (undocumented)
@@ -25901,6 +25914,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     constructor(componentInstance?: KbqTitleTextRef | undefined);
     // (undocumented)
     get child(): HTMLElement;
+    protected readonly derivedDisabledWins = true;
     // (undocumented)
     handleElementEnter(): void;
     // (undocumented)
@@ -26717,6 +26731,7 @@ For special cases, you can change the tooltip dimensions and place more than jus
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { BooleanInput } from '@angular/cdk/coercion';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -26832,9 +26847,9 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     // (undocumented)
     get customClass(): string;
     set customClass(value: string);
-    // (undocumented)
+    protected readonly derivedDisabledWins: boolean;
     get disabled(): boolean;
-    set disabled(value: boolean);
+    set disabled(value: BooleanInput);
     // (undocumented)
     enterDelay: number;
     // (undocumented)
@@ -26874,6 +26889,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected renderer: Renderer2;
     // (undocumented)
     protected scrollStrategy: () => ScrollStrategy;
+    protected setDerivedDisabled(value: boolean): void;
     // (undocumented)
     show(delay?: number): void;
     showForElement(element: HTMLElement): void;
@@ -28363,6 +28379,7 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
 // @public (undocumented)
 export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit, AfterViewInit, OnDestroy, OnInit, DoCheck, ControlValueAccessor, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState {
     constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, scrollStrategyFactory: any, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, localeService?: KbqLocaleService | undefined);
+    protected get ariaLabelledby(): string | null;
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
@@ -28425,6 +28442,7 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     protected readonly isBrowser: boolean;
     // (undocumented)
     isEmptySearchResult: boolean;
+    readonly isNativeLabelSupported = false;
     // (undocumented)
     isRtl(): boolean;
     multiline: boolean;
