@@ -27,11 +27,11 @@ function setPackageVersion(tree: Tree, pkg: string, version: string): boolean {
 /**
  * `@koobiq/components` requires `@koobiq/design-tokens` 4 now.
  *
- * The bump is not optional: v4 removed the component tokens, and the library stopped declaring
- * copies of the three it still ships — code-block, scrollbar and skeleton — so a project left on v3
- * renders those three with no values at all. The rest of the upgrade is a consumer's own
- * stylesheets, which `@koobiq/design-tokens` ships a codemod for; pointing at it beats a second,
- * worse implementation of the same rewrite here.
+ * The bump is not optional: v4 moved several things around. The rest of the upgrade is a
+ * consumer's own stylesheets, which `@koobiq/design-tokens` ships a codemod for; pointing at it
+ * beats a second, worse implementation of the same rewrite here. Code-block, scrollbar and
+ * skeleton need nothing from the consumer — their v4 tokens are baked into
+ * `@koobiq/components`' own `prebuilt-themes/theme.css`, which every project already loads.
  */
 export default function migrate(): Rule {
     return (tree: Tree, context: SchematicContext) => {
@@ -48,17 +48,13 @@ export default function migrate(): Rule {
         context.addTask(new NodePackageInstallTask());
 
         logMessage(context.logger, [
-            `\`${PACKAGE}\` was set to "${VERSIONS.KOOBIQ_DESIGN_TOKENS}". Three things need doing by hand:`,
+            `\`${PACKAGE}\` was set to "${VERSIONS.KOOBIQ_DESIGN_TOKENS}". Two things need doing by hand:`,
             '',
-            '1. Add the component tokens to your styles, next to the `css-tokens*.css` you already',
-            '   load: `component-tokens.css` plus the light and/or dark half. They are opt-in in v4,',
-            '   and the library carries no copies, so code-block, scrollbar and skeleton render',
-            '   unstyled without them.',
-            '2. Run `npx koobiq-tokens-codemod src` over your own styles and templates. It rewrites',
+            '1. Run `npx koobiq-tokens-codemod src` over your own styles and templates. It rewrites',
             '   the import paths that moved (`web/new/**` → `web/css/**`) and the tokens that have a',
             '   one-for-one replacement, and reports the rest — the removed `--kbq-palette-*` scale,',
             '   `--kbq-background-overlay-theme`, and any component token you referenced directly.',
-            '3. Look at your code blocks and scrollbars. Those are the only two places v4 changes',
+            '2. Look at your code blocks and scrollbars. Those are the only two places v4 changes',
             '   pixels without being asked.'
         ]);
     };
