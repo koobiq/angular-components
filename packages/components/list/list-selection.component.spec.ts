@@ -3275,6 +3275,22 @@ class SelectionListWithBoundMultiple {
 }
 
 @Component({
+    imports: [KbqListModule, ReactiveFormsModule],
+    template: `
+        <kbq-list-selection [multiple]="multiple()" [formControl]="formControl()">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+            <kbq-list-option [value]="'opt3'">Option 3</kbq-list-option>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithBoundMultipleAndControl {
+    readonly multiple = signal<KbqMultipleInput>(false);
+    readonly formControl = signal(new UntypedFormControl(null));
+}
+
+@Component({
     imports: [KbqListModule],
     template: `
         <kbq-list-selection multiple="false">
@@ -3482,6 +3498,36 @@ describe('KbqListSelection multiple mode', () => {
             fixture.detectChanges();
 
             expect(getList(fixture).selectionModel.isMultipleSelection()).toBe(false);
+        });
+
+        it('should fall back to single selection when the binding turns undefined', () => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultiple);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.multiple.set(undefined);
+            fixture.detectChanges();
+
+            expect(getList(fixture).multipleMode).toBeNull();
+            expect(getList(fixture).selectionModel.isMultipleSelection()).toBe(false);
+        });
+
+        it('should match a value written along with a widening into the widened model', async () => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundMultipleAndControl);
+
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const control = new UntypedFormControl(['opt1', 'opt2']);
+
+            fixture.componentInstance.multiple.set('checkbox');
+            fixture.componentInstance.formControl.set(control);
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(getList(fixture).getSelectedOptionValues()).toEqual(['opt1', 'opt2']);
+            expect(getOptions(fixture).map((option) => option.selected)).toEqual([true, true, false]);
+            expect(control.value).toEqual(['opt1', 'opt2']);
         });
 
         it('should keep the first selected option when narrowing to single selection', async () => {
