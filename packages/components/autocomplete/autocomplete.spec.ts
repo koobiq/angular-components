@@ -46,12 +46,13 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqModalService } from '@koobiq/components/modal';
+import { KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { axe } from 'jest-axe';
 import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
 import { map, startWith, take } from 'rxjs/operators';
 import type { Mock } from 'vitest';
-import { KbqInputModule } from '../input/index';
+import { KbqInput, KbqInputModule } from '../input/index';
 import {
     KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS,
     KbqAutocomplete,
@@ -1398,6 +1399,35 @@ describe('KbqAutocomplete', () => {
             expect(overlayContainerElement.querySelectorAll('kbq-option')[0].classList).toContain('kbq-active');
         });
 
+        it('should not select the first option of a panel closed before it rendered', async () => {
+            overlayContainer.ngOnDestroy();
+            fixture.destroy();
+            TestBed.resetTestingModule();
+
+            const preselectFixture = createComponent(AutocompleteWithAutoActiveFirstOption);
+            const { trigger } = preselectFixture.componentInstance;
+
+            preselectFixture.detectChanges();
+            await preselectFixture.whenStable();
+
+            const optionSelected = vi.fn();
+
+            trigger().autocomplete().optionSelected.subscribe(optionSelected);
+            trigger().open();
+            trigger().closePanel();
+            preselectFixture.detectChanges();
+            await preselectFixture.whenStable();
+
+            expect(
+                trigger()
+                    .autocomplete()
+                    .options.filter((option) => option.selected)
+                    .map((option) => option.value)
+            ).toEqual([]);
+            expect(optionSelected).not.toHaveBeenCalled();
+            expect(preselectFixture.componentInstance.selectedState).toBeUndefined();
+        });
+
         it('should handle `optionSelections` being accessed too early', () => {
             overlayContainer.ngOnDestroy();
             fixture.destroy();
@@ -1619,6 +1649,27 @@ describe('KbqAutocomplete', () => {
             expect(selections).toEqual([expect.any(KbqOptionSelectionChange)]);
 
             subscription.unsubscribe();
+        });
+    });
+
+    describe('in a tag list', () => {
+        it('should write the option text into its input rather than into the tag list', async () => {
+            const fixture = createComponent(AutocompleteInTagList);
+            const { trigger, tagList, input } = fixture.componentInstance;
+
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const tagListValue = tagList().value();
+
+            trigger().open();
+            fixture.detectChanges();
+            (overlayContainerElement.querySelector('kbq-option') as HTMLElement).click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(tagList().value()).toEqual(tagListValue);
+            expect(input().value()).toBe('Delta');
         });
     });
 
@@ -3875,6 +3926,35 @@ class AutocompleteWithNativeInput {
 class AutocompleteWithoutPanel {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
     control = new UntypedFormControl();
+}
+
+@Component({
+    imports: [
+        KbqAutocompleteModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqTagsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList="kbqTagList">
+                @for (tag of tags; track tag) {
+                    <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
+                }
+                <input kbqInput [kbqTagInputFor]="tagList" [kbqAutocomplete]="autocomplete" />
+            </kbq-tag-list>
+        </kbq-form-field>
+
+        <kbq-autocomplete #autocomplete="kbqAutocomplete">
+            <kbq-option value="Delta">Delta</kbq-option>
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteInTagList {
+    readonly tags = ['Alpha', 'Beta'];
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly input = viewChild.required(KbqInput);
 }
 
 @Component({

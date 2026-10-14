@@ -396,6 +396,27 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
         this.emitValueChange();
     }
 
+    /**
+     * Reports the new value of a selected toggle, which changes the value of the group, as an interaction would.
+     * @internal
+     */
+    followToggleValue(toggle: KbqButtonToggle, previous: unknown): void {
+        if (this.destroyed || !this.selectionModel?.isSelected(toggle)) return;
+
+        this.renamePendingValue(previous, toggle.value);
+
+        // On a microtask, as the removal of a destroyed toggle: a `[value]` binding changes during change detection,
+        // which has already checked the binding `[(value)]` writes the report to.
+        Promise.resolve().then(() => {
+            const value = this.value;
+
+            if (this.destroyed || sameValue(this.reportedValue, value)) return;
+
+            // Not to the form: the user picked nothing, and a report would mark the control dirty.
+            this.emitValueChange();
+        });
+    }
+
     /** Checks whether a button toggle is selected. */
     isSelected(toggle: KbqButtonToggle): boolean {
         return this.selectedToggles().includes(toggle);
@@ -431,6 +452,19 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
             }
         } else if (Array.isArray(assigned) && assigned.includes(value)) {
             this.rawValue.set(assigned.filter((item) => item !== value));
+        }
+    }
+
+    /** Follows a selected toggle whose value changed in the assignment, which would hold the old value otherwise. */
+    private renamePendingValue(previous: unknown, value: unknown): void {
+        const assigned = this.rawValue();
+
+        if (!this.multiple()) {
+            if (assigned === previous) {
+                this.rawValue.set(value);
+            }
+        } else if (Array.isArray(assigned) && assigned.includes(previous)) {
+            this.rawValue.set(assigned.map((item) => (item === previous ? value : item)));
         }
     }
 
@@ -577,8 +611,21 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
         return this._iconType();
     }
 
-    /** KbqButtonToggleGroup reads this to assign its own value. */
-    value: any;
+    /** Value of the toggle. The value of a selected toggle is the value of its group. */
+    get value(): any {
+        return this._value();
+    }
+
+    set value(value: any) {
+        untracked(() => {
+            const previous = this._value();
+
+            if (value === previous) return;
+
+            this._value.set(value);
+            this.buttonToggleGroup?.followToggleValue(this, previous);
+        });
+    }
 
     /** Tabindex for the toggle. `null` leaves the toggle at its default position in the tab order. */
     readonly tabIndex = input<number | null>(null);
@@ -601,6 +648,7 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
     /** Event emitted when the group value changes. */
     readonly change = output<KbqButtonToggleChange>();
 
+    private readonly _value = signal<any>(undefined);
     private readonly _checked = signal(false);
     private readonly _disabled = signal(false);
     private readonly _iconType = signal('');

@@ -16,11 +16,12 @@ import {
     KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
+    KbqSelectSearch,
     kbqSiblingPopupProvider,
     KbqTimezoneLocaleConfiguration,
     ruRULocaleData
 } from '@koobiq/components/core';
-import { kbqCleanerFactoryProvider, KbqFormFieldControl } from '@koobiq/components/form-field';
+import { kbqCleanerFactoryProvider, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbarViewport } from '@koobiq/components/scrollbar';
 import { KbqSelect, KbqSelectHiddenItemsMeasurer } from '@koobiq/components/select';
@@ -110,12 +111,14 @@ export class KbqTimezoneSelect extends KbqSelect {
         KBQ_TIMEZONE_LOCALE_CONFIGURATION
     );
 
+    /** Form field of the search, whose control carries the placeholder. */
+    private readonly searchFormField = contentChild(KbqSelectSearch, { read: KbqFormField });
+
     /**
-     * Whether the placeholder the search carries is the one this component wrote. `setPlaceholder` writes
-     * straight into the input and `hasPlaceholder()` reads it back, so the guard has to remember the write
-     * instead of probing the DOM — otherwise the effect's own string makes it skip every later locale.
+     * Placeholder this component last wrote into the search. Compared by value: the search control reads back
+     * whatever it carries, and a placeholder the consumer binds after the first render replaces this one.
      */
-    private appliedLocalePlaceholder = false;
+    private appliedLocalePlaceholder: string | null = null;
 
     constructor() {
         super();
@@ -129,12 +132,14 @@ export class KbqTimezoneSelect extends KbqSelect {
 
             if (!search) return;
 
+            const current = this.searchFormField()?.control().placeholder();
+
             // A placeholder supplied by the consumer wins and is never overwritten; one this effect wrote
             // is replaced, so the field follows the active locale.
-            if (search.hasPlaceholder() && !this.appliedLocalePlaceholder) return;
+            if (current && current !== this.appliedLocalePlaceholder) return;
 
             search.setPlaceholder(placeholder);
-            this.appliedLocalePlaceholder = true;
+            this.appliedLocalePlaceholder = placeholder;
         });
     }
 

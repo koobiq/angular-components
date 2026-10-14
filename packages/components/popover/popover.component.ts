@@ -303,11 +303,11 @@ export class KbqPopoverTrigger
 
     /**
      * Input (`kbqPopoverHideIfNotInViewPort`) — whether the popover closes once its trigger scrolls out of the
-     * nearest scrollable ancestor.
+     * nearest scrollable ancestor. A bound `null` or `undefined` restores the default, `true`.
      */
-    readonly popoverHideIfNotInViewPort = input(true, {
+    readonly popoverHideIfNotInViewPort = input<boolean, unknown>(true, {
         alias: 'kbqPopoverHideIfNotInViewPort',
-        transform: booleanAttribute
+        transform: (value) => (value == null ? true : booleanAttribute(value))
     });
 
     /** prevents closure by any event */

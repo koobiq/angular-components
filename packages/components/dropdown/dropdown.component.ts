@@ -581,7 +581,11 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
 
         switch (keyCode) {
             case ESCAPE:
-                this.closed.emit('keydown');
+                // Spent by a pop-up inside the panel, such as the tooltip of a truncated item, which closes alone.
+                if (!event.defaultPrevented) {
+                    this.closed.emit('keydown');
+                }
+
                 break;
             case LEFT_ARROW:
                 if (this.parent && this.direction === 'ltr') {

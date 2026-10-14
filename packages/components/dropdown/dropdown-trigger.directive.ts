@@ -92,6 +92,12 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
 /** Tags whose implicit role always allows `aria-expanded`; `a[href]` is checked separately. */
 const NATIVELY_EXPANDABLE_TAGS = new Set(['BUTTON', 'SUMMARY']);
 
+/** The triggers bound to a panel and their one subscription to its `closed`, see `KbqDropdownTrigger.bindToPanel`. */
+const panelBindings = new WeakMap<
+    KbqDropdownPanel,
+    { readonly triggers: Set<KbqDropdownTrigger>; readonly subscription: Subscription }
+>();
+
 const positionMap = {
     /** Maps CDK overlay x-anchor back to a dropdown x-position label. */
     overlayXToPosX: {
@@ -295,25 +301,58 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
             if (!dropdown) return;
 
+            onCleanup(KbqDropdownTrigger.bindToPanel(dropdown, this));
+        });
+    }
+
+    /**
+     * Subscribes the triggers of a panel to its `closed` once, so that an emission closes the triggers that had the
+     * panel open when it began: a trigger that a `dropdownClosed` handler opens on the way stays open.
+     * @returns Teardown that unbinds the trigger.
+     */
+    private static bindToPanel(dropdown: KbqDropdownPanel, trigger: KbqDropdownTrigger): () => void {
+        let binding = panelBindings.get(dropdown);
+
+        if (!binding) {
+            const triggers = new Set<KbqDropdownTrigger>();
             const subscription = outputToObservable(dropdown.closed).subscribe((reason) => {
-                // Only the trigger that has the panel open closes it and its chain.
-                if (!this.openedState()) return;
+                const open = [...triggers].filter((candidate) => candidate.openedState());
 
-                // A click, Tab or an activated item closes the entire chain of nested dropdowns.
-                const closesChain =
-                    reason === 'click' ||
-                    reason === 'tab' ||
-                    (dropdown instanceof KbqDropdown && dropdown.closingChain);
-
-                this.destroy(reason, closesChain);
-
-                if (closesChain && this.parent) {
-                    untracked(() => this.parent.closeChain(reason));
+                for (const candidate of open) {
+                    // Checked again: closing the chain of one trigger can close another one first.
+                    if (candidate.openedState()) candidate.closeFromPanel(dropdown, reason);
                 }
             });
 
-            onCleanup(() => subscription.unsubscribe());
-        });
+            binding = { triggers, subscription };
+            panelBindings.set(dropdown, binding);
+        }
+
+        const { triggers, subscription } = binding;
+
+        triggers.add(trigger);
+
+        return () => {
+            triggers.delete(trigger);
+
+            if (triggers.size) return;
+
+            subscription.unsubscribe();
+            panelBindings.delete(dropdown);
+        };
+    }
+
+    /** Closes the panel this trigger has open on its `closed`, and the chain of panels it is nested in. */
+    private closeFromPanel(dropdown: KbqDropdownPanel, reason: DropdownCloseReason): void {
+        // A click, Tab or an activated item closes the entire chain of nested dropdowns.
+        const closesChain =
+            reason === 'click' || reason === 'tab' || (dropdown instanceof KbqDropdown && dropdown.closingChain);
+
+        this.destroy(reason, closesChain);
+
+        if (closesChain && this.parent) {
+            untracked(() => this.parent.closeChain(reason));
+        }
     }
 
     ngAfterContentInit() {
@@ -583,9 +622,10 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
             dropdown.setOpened(false);
         }
 
-        this.setIsOpened(false);
-
         dropdown.lazyContent?.()?.detach();
+
+        // Last: a `dropdownClosed` handler can open the panel again, with this trigger or another one.
+        this.setIsOpened(false);
     }
 
     /**
@@ -616,14 +656,15 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     private setIsOpened(isOpen: boolean): void {
         this.openedState.set(isOpen);
 
+        if (this.isNested()) {
+            this.dropdownItemInstance.highlighted = isOpen;
+        }
+
+        // Last, for the same reason as in `destroy()`.
         if (isOpen) {
             this.dropdownOpened.emit();
         } else {
             this.dropdownClosed.emit();
-        }
-
-        if (this.isNested()) {
-            this.dropdownItemInstance.highlighted = isOpen;
         }
     }
 
@@ -799,10 +840,14 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /** Returns a stream that emits whenever an action that should close the dropdown occurs. */
     private closingActions() {
         const backdrop = this.overlayRef!.backdropClick();
-        // A press on the trigger is the trigger's own: it toggles a top-level panel and keeps a nested one open. Taken for
-        // an outside press, it closed the nested panel before the click reached the trigger.
+        // A click on the trigger is the trigger's own: it toggles a top-level panel and keeps a nested one open. Taken for
+        // an outside click, it closed the nested panel before the click reached the trigger. The trigger does not handle
+        // `contextmenu` and `auxclick`, so those close the panel as they do anywhere else.
         const outsidePointerEvents = this.overlayRef!.outsidePointerEvents().pipe(
-            filter((event) => !this.elementRef.nativeElement.contains(_getEventTarget<Node>(event)))
+            filter(
+                (event) =>
+                    event.type !== 'click' || !this.elementRef.nativeElement.contains(_getEventTarget<Node>(event))
+            )
         );
         const detachments = this.overlayRef!.detachments();
         const parentClose = this.parent ? outputToObservable(this.parent.closed) : observableOf();
