@@ -457,7 +457,7 @@ The inputs of `KbqTabGroup`, `KbqTab`, `KbqTabNavBar`, `KbqTabLink` and of the h
 - **A subclass** that implements `ngOnChanges` marks it `override` and calls `super.ngOnChanges(changes)`, and one that redeclared an `@Input()` overrides the `<member>Input` signal input instead, e.g. `headerPositionInput`. A query it redeclared with `@ContentChildren` or `@ViewChild` — `tabs`, `items`, `templateLabel` — is overridden as a getter.
 - **A `SimpleChanges` passed to `ngOnChanges` by hand** is keyed by the `<member>Input` names: `disabledInput`, not `disabled`.
 - **A boolean input** — `disabled`, `active`, `vertical`, `disablePagination` — accepts `boolean | string | null | undefined` in a template.
-- **A bound `undefined`** leaves the member as it is: `[animationDuration]` keeps the duration of `KBQ_TABS_CONFIG`, and a `KbqTabLink` keeps its generated `id`.
+- **A bound `undefined`** resets the member to its default rather than leaving it as it was: `headerPosition` becomes `'above'`, `animationDuration` the duration of `KBQ_TABS_CONFIG`, `tooltipTitle` `''` and a boolean input `false`, `selectedIndex` selects the first enabled tab, and a `KbqTabLink` gets `tabIndex` `0` and its generated `id`.
 - **`KbqTab.templateLabel` follows the `kbqTabLabel` in the content of the tab**: once that is removed, the tab shows its text label rather than the removed template.
 
 `tabs-signals-and-aria` reports every subclass and every direct call of `ngOnChanges`:
@@ -2171,7 +2171,7 @@ Fixes with nothing to migrate: the numeric inputs coerce their value, so a stati
 
 Migrated by `input-number-surface`, which rewrites the signal reads and reports the rest. The rewrite is scoped to a receiver the file annotates as `KbqNumberInput` and to a `#ref="kbqNumberInput"` template reference — `min`, `max` and `step` are too common to match on the member name alone, so a receiver whose type is only inferred, an index read and a destructuring are all left for you.
 
-`KbqNumberInput.value` and `disabled` stay accessors deliberately. Both setters do more than store: `value` reformats the field and notifies the `ControlValueAccessor`, `disabled` blurs the element. A `model()` cannot intercept a write, so converting either would drop the side effect an external `[(value)]` depends on.
+`KbqNumberInput.value` and `disabled` are read-only getters rather than `model()`s, because a new value does more than get stored: whether it comes from the `[value]` or `[disabled]` binding or from the form control, the directive reformats the field and emits `valueChange`, and for `disabled` emits `disabledChange` and, when disabling, blurs the element.
 
 #### Icon
 

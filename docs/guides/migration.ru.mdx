@@ -457,7 +457,7 @@ ng g @koobiq/components:datepicker-signals --project "<your project>"
 - **Наследник**, реализующий `ngOnChanges`, помечает его `override` и вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `headerPositionInput`. Запрос, который наследник объявлял заново через `@ContentChildren` или `@ViewChild`, — `tabs`, `items`, `templateLabel` — переопределяется геттером.
 - **`SimpleChanges`, переданный в `ngOnChanges` вручную**, использует ключи `<член>Input`: `disabledInput`, а не `disabled`.
 - **Булев инпут** — `disabled`, `active`, `vertical`, `disablePagination` — принимает в шаблоне `boolean | string | null | undefined`.
-- **Привязанное значение `undefined`** оставляет член как есть: `[animationDuration]` сохраняет длительность из `KBQ_TABS_CONFIG`, а `KbqTabLink` — сгенерированный `id`.
+- **Привязанное значение `undefined`** возвращает члену значение по умолчанию, а не оставляет прежнее: `headerPosition` становится `'above'`, `animationDuration` — длительностью из `KBQ_TABS_CONFIG`, `tooltipTitle` — `''`, булев инпут — `false`, `selectedIndex` выбирает первую доступную вкладку, а `KbqTabLink` получает `tabIndex` `0` и сгенерированный `id`.
 - **`KbqTab.templateLabel` следует за `kbqTabLabel` в содержимом вкладки**: когда его убирают, вкладка показывает текстовую метку, а не удаленный шаблон.
 
 Схематик `tabs-signals-and-aria` сообщает о каждом наследнике и каждом прямом вызове `ngOnChanges`:
@@ -2185,7 +2185,7 @@ readonly wide = input(false);                              // без транс�
 
 Мигрирует `input-number-surface`: переписывает чтения сигналов и сообщает об остальном. Схематика заменяет только у получателя, тип которого в файле указан как `KbqNumberInput`, и по ссылке на шаблон вида `#ref="kbqNumberInput"` — имена `min`, `max` и `step` слишком распространены, чтобы искать их по одному лишь имени свойства. Поэтому получатель с выведенным, а не записанным типом, чтение по индексу и разбор объекта на переменные остаются на вас.
 
-`KbqNumberInput.value` и `disabled` намеренно оставлены парами геттера и сеттера. Оба сеттера делают больше, чем сохраняют значение: `value` переформатирует поле и уведомляет `ControlValueAccessor`, `disabled` снимает фокус с элемента. `model()` не может перехватить запись, поэтому перевод любого из них потерял бы побочный эффект, на который рассчитывает внешняя привязка `[(value)]`.
+`KbqNumberInput.value` и `disabled` — геттеры только для чтения, а не `model()`: новое значение не просто сохраняется. Откуда бы оно ни пришло — из привязки `[value]` или `[disabled]` или от контрола формы, — директива переформатирует поле и отправляет `valueChange`, а для `disabled` отправляет `disabledChange` и при отключении снимает фокус с элемента.
 
 #### Icon
 
