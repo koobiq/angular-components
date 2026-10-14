@@ -331,13 +331,14 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         }
 
         this.leaving.add(componentRef);
-        // Destroyed before its exit ends when the overlay is disposed, e.g. for another position.
-        componentRef.onDestroy(() => this.leaving.delete(componentRef));
-
-        componentRef.instance.leave(() => {
-            this.containerInstance?.remove(componentRef.hostView);
+        // Also destroyed before its exit ends, by whoever holds the ref or with the overlay, which a destroyed
+        // view never reports back from.
+        componentRef.onDestroy(() => {
+            this.leaving.delete(componentRef);
             this.detachOverlay();
         });
+
+        componentRef.instance.leave(() => this.containerInstance?.remove(componentRef.hostView));
     }
 
     /** Detaching destroys the container, so it waits for the stack to empty and the last exit to end. */
