@@ -37,6 +37,7 @@ apps/docs/src/app/seo-descriptions.ts
 /tools/check-angular/dist
 /tools/check-angular/.angular
 /tools/check-angular/.tarballs
+
 # ignore the MCP server's generated indexes and build output
 /packages/mcp/data/
 /packages/mcp/dist/

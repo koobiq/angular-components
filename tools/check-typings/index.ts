@@ -15,7 +15,10 @@ import ts from 'typescript';
 
 const projectRoot = join(__dirname, '..', '..');
 
-const packages: string[] = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8')).release.packages;
+// `mcp` is a Node binary shipped without typings — there is no public TypeScript surface to check.
+const packages: string[] = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8')).release.packages.filter(
+    (name: string) => name !== 'mcp'
+);
 
 const rootNames = packages.flatMap((name) => {
     const packageDir = join(projectRoot, 'dist', name);
