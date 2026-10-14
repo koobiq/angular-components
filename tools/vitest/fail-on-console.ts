@@ -1,5 +1,5 @@
 import { format } from 'node:util';
-import { afterEach, beforeEach, vi } from 'vitest';
+import { afterEach, beforeEach } from 'vitest';
 
 /**
  * Fails a test that writes to `console.error` or `console.warn`: a warning nobody reads is how a broken
@@ -14,28 +14,53 @@ const silenced = (message: string): boolean =>
     // item. Specs replace their inputs with fresh literals all the time, which is exactly what triggers it.
     message.startsWith('NG0956:');
 
+const methods = ['error', 'warn'] as const;
+
+type Method = (typeof methods)[number];
+
+const originals: Record<Method, Console[Method]> = { error: console.error, warn: console.warn };
 const messages: string[] = [];
-const spies: { mockRestore(): void }[] = [];
+let armed = false;
+
+// A plain function rather than `vi.spyOn`: a spec's own `vi.spyOn(console, ...)` would get that spy back, and its
+// `mockRestore()` or `vi.restoreAllMocks()` would put the real console back for the rest of the test and its
+// teardown. A spec's spy wraps this one instead, so restoring the spy re-arms the check; a spy left over from
+// an earlier test and restored between tests only forwards.
+const gate =
+    (method: Method) =>
+    (...args: unknown[]): void => {
+        if (!armed) return originals[method](...args);
+
+        const message = format(...args);
+
+        if (!silenced(message)) messages.push(`console.${method}: ${message}`);
+    };
+
+const gates: Record<Method, Console[Method]> = { error: gate('error'), warn: gate('warn') };
 
 beforeEach(() => {
     messages.length = 0;
+    armed = true;
 
-    for (const method of ['error', 'warn'] as const) {
-        const spy = vi.spyOn(console, method).mockImplementation((...args: unknown[]) => {
-            const message = format(...args);
-
-            if (!silenced(message)) messages.push(`console.${method}: ${message}`);
-        });
-
-        spies.push(spy);
-    }
+    for (const method of methods) console[method] = gates[method];
 });
 
+// The Angular setup registers this before calling `setupTestBed()`, so in stack order it runs after the teardown
+// that destroys the fixtures.
 afterEach(() => {
-    // A spec may have restored every mock already; restoring a spy twice is harmless.
-    spies.splice(0).forEach((spy) => spy.mockRestore());
+    armed = false;
+
+    const unchecked = methods.filter((method) => console[method] === originals[method]);
+
+    for (const method of methods) console[method] = originals[method];
 
     if (messages.length) {
         throw new Error(`Expected the test not to write to the console:\n\n${messages.join('\n\n')}`);
+    }
+
+    if (unchecked.length) {
+        throw new Error(
+            `The test put the real console.${unchecked.join(' and console.')} back, so what it wrote then went unchecked.`
+        );
     }
 });
