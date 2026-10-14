@@ -205,6 +205,18 @@ class TextareaControlWithAsyncValidators {
 class KbqTextareaValuelessFreeRowsHeight {}
 
 @Component({
+    imports: [KbqTextareaModule],
+    template: `
+        @if (shown) {
+            <textarea kbqTextarea></textarea>
+        }
+    `
+})
+class TextareaInIf {
+    shown = true;
+}
+
+@Component({
     imports: [KbqTextareaModule, FormsModule],
     template: `
         <kbq-form-field>
@@ -488,7 +500,7 @@ describe('KbqTextarea', () => {
             expect(growSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('should re-measure once the tab group around it finishes its animation', async () => {
+        it('should re-measure once the tab group around it finishes its animation', () => {
             vi.useFakeTimers();
 
             const fixture = createComponent(TextareaInTabGroup, [KbqTabsModule]);
@@ -501,9 +513,6 @@ describe('KbqTextarea', () => {
                 .removeTabBodyWrapperHeight();
 
             expect(ngOnInitSpy).toHaveBeenCalledTimes(1);
-
-            // The re-measuring grows the textarea on a timer, which has to run while it is attached.
-            await vi.advanceTimersByTimeAsync(0);
         });
 
         it('should defer grow to microtask so lineHeight is initialized before first grow call', async () => {
@@ -529,6 +538,20 @@ describe('KbqTextarea', () => {
             await fixture.whenStable(); // M2 runs → grow()
 
             expect(growSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it('should drop the grows still pending when the textarea is destroyed', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(TextareaInIf);
+
+            fixture.componentInstance.shown = false;
+            fixture.detectChanges();
+
+            // A grow that ran now would measure a textarea that has left the document.
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(fixture.nativeElement.querySelector('textarea')).toBeNull();
         });
     });
 

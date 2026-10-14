@@ -4,6 +4,7 @@ import { Platform } from '@angular/cdk/platform';
 import {
     booleanAttribute,
     computed,
+    DestroyRef,
     Directive,
     DoCheck,
     effect,
@@ -62,6 +63,7 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
     readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
     private readonly parent = inject(KBQ_PARENT_ANIMATION_COMPONENT, { optional: true, host: true });
     private readonly ngZone = inject(NgZone);
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly errorStateValue = signal(false);
 
@@ -306,7 +308,8 @@ export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, DoCheck, C
      * @docs-private
      */
     protected grow(): void {
-        if (!this.isBrowser || !this.canGrow()) return;
+        // Every call is deferred, so it can land once the textarea is destroyed and has no parent to measure in.
+        if (!this.isBrowser || this.destroyRef.destroyed || !this.canGrow()) return;
 
         this.ngZone.runOutsideAngular(() => {
             const textarea = this.elementRef.nativeElement;
