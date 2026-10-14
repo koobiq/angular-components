@@ -5,8 +5,9 @@ import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { By } from '@angular/platform-browser';
 
 import { KbqButton } from '@koobiq/components/button';
-import { ruRULocaleData } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, ESCAPE, ruRULocaleData } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
+import { KbqModalService } from '@koobiq/components/modal';
 import {
     defaultEmitValueTimeout,
     defaultValue,
@@ -15,6 +16,9 @@ import {
     KbqSearchExpandableModule
 } from '@koobiq/components/search-expandable';
 import { axe } from 'jest-axe';
+
+// The modal's own animation timeout, which is internal to its entry point.
+const MODAL_ANIMATE_DURATION = 300;
 
 /** Types into the expanded field the way a user does, through a real DOM event. */
 const typeIntoInput = (fixture: ComponentFixture<unknown>, debugElement: DebugElement, value: string): void => {
@@ -961,19 +965,56 @@ describe('KbqSearchExpandable', () => {
     });
 
     describe('escape key', () => {
-        it('should close on escape keyup', () => {
+        it('should close on Escape keydown', () => {
             fixture.componentInstance.openedState = true;
             fixture.detectChanges();
 
             expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(1);
 
-            const inputEl = debugElement.query(By.css('input')).nativeElement;
+            const inputElement = debugElement.query(By.css('input')).nativeElement;
+            const event = dispatchKeyboardEvent(inputElement, 'keydown', ESCAPE, undefined, 'Escape');
 
-            inputEl.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
             fixture.detectChanges();
 
+            expect(event.defaultPrevented).toBe(true);
             expect(nativeElement.querySelectorAll('.kbq-search-expandable__button').length).toBe(1);
             expect(nativeElement.querySelectorAll('.kbq-search-expandable__search').length).toBe(0);
+        });
+
+        // The modal yields Escape only to a control that consumed it to close something of its own.
+        it('should collapse inside a modal, and leave the next Escape to the modal', async () => {
+            vi.useFakeTimers();
+
+            const modalRef = TestBed.inject(KbqModalService).open({ kbqComponent: TestSearchExpandableInModal });
+            const modalClosing = vi.fn();
+
+            modalRef.beforeClose.subscribe(modalClosing);
+            await vi.advanceTimersByTimeAsync(MODAL_ANIMATE_DURATION);
+
+            const modal = modalRef.getElement();
+
+            dispatchKeyboardEvent(
+                modal.querySelector('.kbq-search-expandable input')!,
+                'keydown',
+                ESCAPE,
+                undefined,
+                'Escape'
+            );
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(modal.querySelector('.kbq-search-expandable__search')).toBeNull();
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            dispatchKeyboardEvent(
+                modal.querySelector('.kbq-search-expandable__button')!,
+                'keydown',
+                ESCAPE,
+                undefined,
+                'Escape'
+            );
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
         });
     });
 });
@@ -1114,4 +1155,15 @@ class TestSearchExpandableWithValidatedFormControl {
 class TestSearchExpandablePair {
     first: string;
     second: string;
+}
+
+@Component({
+    selector: 'test-app-search-expandable-in-modal',
+    imports: [KbqSearchExpandableModule, FormsModule],
+    template: `
+        <kbq-search-expandable [isOpened]="true" [(ngModel)]="search" />
+    `
+})
+class TestSearchExpandableInModal {
+    search: string;
 }

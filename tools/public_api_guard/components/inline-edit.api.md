@@ -62,6 +62,7 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     protected onClick(event: Event): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;
     protected onOverlayOutsideClick($event: Event): void;
+    protected onPanelEscape(event: Event): void;
     protected onPanelTab(event: Event, panel: HTMLElement, backwards: boolean): void;
     protected readonly overlayDir: _angular_core.Signal<CdkConnectedOverlay>;
     protected readonly overlayOffsetY: _angular_core.WritableSignal<number>;

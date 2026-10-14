@@ -1182,6 +1182,10 @@ export class KbqTooltipTrigger
     /**
      * Binds a document-level `Escape` listener, outside the zone and at most once per attach.
      *
+     * An open tooltip is the topmost layer, so `Escape` dismisses it first (WAI-ARIA tooltip pattern, WCAG 1.4.13):
+     * the listener captures the key and marks it spent, and a modal or a panel that closes on `Escape` lets it
+     * pass. The key is not stopped, so a control that closes a popup of its own on it still does.
+     *
      * Deliberately not `overlayRef.keydownEvents()`: CDK hands each key to the last attached overlay that has
      * subscribers and stops there, without re-dispatching. A tooltip is by construction the last overlay
      * attached, so subscribing would make it swallow `Escape` for the modal, sidepanel, dropdown or inline
@@ -1191,13 +1195,21 @@ export class KbqTooltipTrigger
         if (this.unbindEscapeListener) return;
 
         this.ngZone.runOutsideAngular(() => {
-            this.unbindEscapeListener = this.renderer.listen('document', 'keydown', (event: KeyboardEvent) => {
-                // An imperatively driven tooltip (`manual`/`none`) is pinned on purpose — the validation hints
-                // of datepicker, timepicker and inline-edit must survive an unrelated Escape.
-                if (event.keyCode !== ESCAPE || !this.isOpen || !this.hasInteractiveTrigger) return;
+            this.unbindEscapeListener = this.renderer.listen(
+                'document',
+                'keydown',
+                (event: KeyboardEvent) => {
+                    // An imperatively driven tooltip (`manual`/`none`) is pinned on purpose — the validation hints
+                    // of datepicker, timepicker and inline-edit must survive an unrelated Escape.
+                    if (event.keyCode !== ESCAPE || !this.isOpen || !this.hasInteractiveTrigger || this.preventClose) {
+                        return;
+                    }
 
-                this.hideAsInactive();
-            });
+                    event.preventDefault();
+                    this.hideAsInactive();
+                },
+                { capture: true }
+            );
         });
     }
 

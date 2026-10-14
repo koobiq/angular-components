@@ -20,8 +20,10 @@ import {
 } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
+import { KbqModalService } from '@koobiq/components/modal';
 import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KBQ_TOOLTIP_SINGLE_INSTANCE_DEFAULT, KbqTooltipRegistry } from './tooltip-registry';
 import { KBQ_TOOLTIP_INSTANT_SHOW_WINDOW, KbqCaretVerticalAnchor, KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
@@ -29,6 +31,8 @@ import { KbqToolTipModule } from './tooltip.module';
 // KbqPopUpTrigger default enter delay (400ms) plus a buffer for the deferred show.
 const tooltipDefaultEnterDelayWithDefer = 410;
 const defaultLeaveDelay = 100;
+// The modal's own animation timeout, which is internal to its entry point.
+const MODAL_ANIMATE_DURATION = 300;
 // Internal to the core entry point: the 12px arrow times √2, rounded.
 const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT = 17;
 
@@ -2267,6 +2271,106 @@ describe('KbqTooltip', () => {
         });
     });
 });
+
+// The modal yields Escape only to a control that consumed it to close a popup of its own.
+describe('KbqTooltip inside a modal', () => {
+    let content: TooltipInModal;
+    let modalClosing: Mock;
+    let overlayContainer: OverlayContainer;
+
+    const isOpen = () => !!overlayContainer.getContainerElement().querySelector('.kbq-tooltip');
+
+    const pressEscape = async (element: Element) => {
+        dispatchKeyboardEvent(element, 'keydown', ESCAPE, undefined, 'Escape');
+        await vi.advanceTimersByTimeAsync(defaultLeaveDelay);
+    };
+
+    beforeEach(async () => {
+        vi.useFakeTimers();
+        TestBed.configureTestingModule({ imports: [TooltipInModal] });
+
+        const modalRef = TestBed.inject(KbqModalService).open({ kbqComponent: TooltipInModal });
+
+        modalClosing = vi.fn();
+        modalRef.beforeClose.subscribe(modalClosing);
+        await vi.advanceTimersByTimeAsync(MODAL_ANIMATE_DURATION);
+        content = modalRef.getContentComponent();
+        overlayContainer = TestBed.inject(OverlayContainer);
+    });
+
+    afterEach(() => {
+        overlayContainer.ngOnDestroy();
+        vi.useRealTimers();
+    });
+
+    it('should close a tooltip on Escape on its trigger, and the modal on the next one', async () => {
+        const trigger = content.trigger().nativeElement;
+
+        trigger.focus();
+        dispatchMouseEvent(trigger, 'mouseenter');
+        await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
+
+        expect(isOpen()).toBe(true);
+
+        await pressEscape(trigger);
+
+        expect(isOpen()).toBe(false);
+        expect(modalClosing).not.toHaveBeenCalled();
+
+        await pressEscape(trigger);
+
+        expect(modalClosing).toHaveBeenCalledTimes(1);
+    });
+
+    // WCAG 1.4.13: hover content is dismissed without moving the pointer, and before the dialog under it.
+    it('should close a hover tooltip on Escape elsewhere in the modal, and the modal on the next one', async () => {
+        const field = content.field().nativeElement;
+
+        field.focus();
+        dispatchMouseEvent(content.trigger().nativeElement, 'mouseenter');
+        await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
+
+        expect(isOpen()).toBe(true);
+
+        await pressEscape(field);
+
+        expect(isOpen()).toBe(false);
+        expect(modalClosing).not.toHaveBeenCalled();
+
+        await pressEscape(field);
+
+        expect(modalClosing).toHaveBeenCalledTimes(1);
+    });
+
+    it('should leave Escape to the modal for an imperatively driven tooltip', async () => {
+        const field = content.field().nativeElement;
+
+        field.focus();
+        content.manualTooltip().show(0);
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(isOpen()).toBe(true);
+
+        await pressEscape(field);
+
+        expect(modalClosing).toHaveBeenCalledTimes(1);
+    });
+});
+
+@Component({
+    selector: 'tooltip-in-modal',
+    imports: [KbqToolTipModule],
+    template: `
+        <button #trigger kbqTooltip="Hint">Hinted</button>
+        <input #field aria-label="Field" />
+        <span #manual kbqTooltip="Pinned" kbqTrigger="manual">Pinned</span>
+    `
+})
+class TooltipInModal {
+    readonly trigger = viewChild.required<ElementRef<HTMLElement>>('trigger');
+    readonly field = viewChild.required<ElementRef<HTMLInputElement>>('field');
+    readonly manualTooltip = viewChild.required('manual', { read: KbqTooltipTrigger });
+}
 
 @Component({
     selector: 'tooltip-undefined-inputs',

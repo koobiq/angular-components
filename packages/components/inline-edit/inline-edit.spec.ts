@@ -24,6 +24,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -41,6 +42,9 @@ import { KbqInlineEditModule } from './module';
 
 /** `axe()` walks the whole subtree, which takes far longer than the 2s default of the suite. */
 const AXE_TIMEOUT = 15000;
+
+// The modal's own animation timeout, which is internal to its entry point.
+const MODAL_ANIMATE_DURATION = 300;
 
 const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -2418,6 +2422,35 @@ describe('KbqInlineEdit', () => {
             expect(overlayHost.parentElement).toBe(
                 fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer')
             );
+        });
+
+        // The panel is then inside the modal, which yields Escape only to a control that consumed it.
+        it('should cancel on Escape inside a modal, and leave the next Escape to the modal', async () => {
+            vi.useFakeTimers();
+
+            const modalRef = TestBed.inject(KbqModalService).open({ kbqComponent: TestInOverlayLayer });
+            const modalClosing = vi.fn();
+
+            modalRef.beforeClose.subscribe(modalClosing);
+            await vi.advanceTimersByTimeAsync(MODAL_ANIMATE_DURATION);
+
+            const modal = modalRef.getElement();
+
+            modal.querySelector<HTMLElement>('.kbq-inline-edit')!.click();
+            await vi.runOnlyPendingTimersAsync();
+
+            const input = modal.querySelector(`${componentCssClasses.panel} input`)!;
+
+            dispatchKeyboardEvent(input, 'keydown', ESCAPE, undefined, 'Escape');
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(modal.querySelector(componentCssClasses.panel)).toBeNull();
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            dispatchKeyboardEvent(modal.querySelector('.kbq-inline-edit')!, 'keydown', ESCAPE, undefined, 'Escape');
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
         });
     });
 });
