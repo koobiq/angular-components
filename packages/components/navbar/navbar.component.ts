@@ -8,6 +8,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     contentChildren,
     DestroyRef,
     Directive,
@@ -29,6 +30,7 @@ import {
     isHorizontalMovement,
     isVerticalMovement,
     KBQ_WINDOW,
+    kbqLeaveTabOrderOnTabOut,
     KbqOverlayLayerExclude,
     kbqQueryListFrom,
     LEFT_ARROW,
@@ -72,9 +74,18 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
 
     /**
      * Tab index of the navbar host. The navbar owns the single tab stop of the whole widget and moves focus
-     * between its items with the arrow keys.
+     * between its items with the arrow keys. A navbar without a focusable item stays out of the tab order.
      */
     readonly tabIndex = model<number>(0);
+
+    /**
+     * Tab index the host renders: {@link tabIndex}, or `-1` while there is no item to hand the focus to. Derived
+     * rather than written to the model, which a consumer may bind.
+     * @docs-private
+     */
+    protected readonly renderedTabIndex = computed(() =>
+        this.focusableItemsQuery().length === 0 ? -1 : this.tabIndex()
+    );
 
     /**
      * Accessible name of the navigation landmark. Set it whenever a page renders more than one navbar, so
@@ -83,8 +94,6 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
     private lastFocusOrigin: FocusOrigin = null;
-
-    private tabOrderRestore?: ReturnType<typeof setTimeout>;
 
     private cachedOptionFocusChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
     private cachedOptionBlurChanges: Observable<KbqNavbarFocusableItemEvent> | null = null;
@@ -103,15 +112,16 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
 
-        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.leaveTabOrder());
-        this.destroyRef.onDestroy(() => clearTimeout(this.tabOrderRestore));
+        kbqLeaveTabOrderOnTabOut(
+            this.keyManager.tabOut,
+            this.elementRef.nativeElement,
+            () => this.renderedTabIndex(),
+            this.destroyRef
+        );
 
-        this.focusableItems.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.resetOptions();
-
-            // Check to see if we need to update our tab index
-            this.updateTabIndex();
-        });
+        this.focusableItems.changes
+            .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.resetOptions());
     }
 
     /** @docs-private */
@@ -208,28 +218,6 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
         this.optionBlurSubscription = this.optionBlurChanges.subscribe(() => this.blur());
     }
 
-    private updateTabIndex(): void {
-        this.tabIndex.set(this.focusableItems.length === 0 ? -1 : 0);
-    }
-
-    /**
-     * Takes the host out of the tab order while a Tab leaves the navbar, so that Shift+Tab from an item does not land
-     * on the host, which would hand the focus straight back to an item.
-     */
-    private leaveTabOrder(): void {
-        const host = this.elementRef.nativeElement;
-
-        // Written to the DOM only: the browser moves the focus as soon as this Tab is handled, before change
-        // detection could apply a binding, and `tabIndex` is a model the consumer may bind — writing it would
-        // report changes the consumer never made.
-        host.tabIndex = -1;
-
-        // Restored on a macrotask, once the browser has moved the focus. The binding still holds the model's value
-        // and will not write it again, so the restore puts that value back itself.
-        clearTimeout(this.tabOrderRestore);
-        this.tabOrderRestore = setTimeout(() => (host.tabIndex = this.tabIndex()));
-    }
-
     private isValidIndex(index: number): boolean {
         return index >= 0 && index < this.focusableItems.length;
     }
@@ -265,7 +253,7 @@ export class KbqNavbarContainer {}
         class: 'kbq-navbar',
         role: 'navigation',
         '[attr.aria-label]': 'ariaLabel()',
-        '[attr.tabindex]': 'tabIndex()',
+        '[attr.tabindex]': 'renderedTabIndex()',
         '(focus)': 'focus()',
         '(blur)': 'blur()',
         '(keydown)': 'onKeyDown($event)'

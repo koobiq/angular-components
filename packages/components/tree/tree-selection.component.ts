@@ -20,7 +20,6 @@ import {
     input,
     IterableDiffer,
     linkedSignal,
-    numberAttribute,
     OnDestroy,
     output,
     Provider,
@@ -47,12 +46,15 @@ import {
     isVerticalMovement,
     KBQ_SELECT_LOCALE_CONFIGURATION,
     kbqGetElementHeight,
+    kbqLeaveTabOrderOnTabOut,
     KbqLocaleOverridesDirective,
     KbqMultipleInput,
+    kbqOptionalNumberAttribute,
     KbqPseudoCheckbox,
     KbqPseudoCheckboxState,
     kbqQueryListFrom,
     KbqSelectAllAdapter,
+    kbqSelectAllHandlerTransform,
     KbqStateSaving,
     LEFT_ARROW,
     MultipleMode,
@@ -545,7 +547,7 @@ export class KbqTreeSelection
     /** @docs-private */
     readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
         alias: 'tabIndex',
-        transform: numberAttribute
+        transform: kbqOptionalNumberAttribute
     });
 
     /** Tab index of the tree, `-1` while it is disabled. */
@@ -577,9 +579,6 @@ export class KbqTreeSelection
     private optionBlurSubscription: Subscription | null;
 
     private selectionModelSubscription: Subscription | null = null;
-
-    /** Pending restore of the tab index after the key manager tabbed out, see `allowFocusEscape`. */
-    private restoreTabIndexTimeout: ReturnType<typeof setTimeout> | undefined;
 
     /** Whether a value report is queued for the end of the current tick. Cleared by `writeValue` to cancel it. */
     private pendingValueReport = false;
@@ -639,15 +638,20 @@ export class KbqTreeSelection
             untracked(() => this.applyDisabledInput());
         });
 
-        // The input stays `undefined` until a template binds it, so an unbound one does not override what the
-        // roving focus wrote.
+        // Unbound, the input leaves the default, which follows the rendered options; bound back to `undefined` or
+        // `null`, it restores that default.
         effect(() => {
             const tabIndex = this.tabIndexInput();
 
-            if (tabIndex === undefined) return;
-
-            this.tabIndexState.set(tabIndex);
-            this.userTabIndex = tabIndex;
+            untracked(() => {
+                if (tabIndex !== undefined) {
+                    this.userTabIndex = tabIndex;
+                    this.tabIndexState.set(tabIndex);
+                } else if (this.userTabIndex !== null) {
+                    this.userTabIndex = null;
+                    this.updateTabIndex();
+                }
+            });
         });
 
         effect(() => {
@@ -849,7 +853,12 @@ export class KbqTreeSelection
             }
         });
 
-        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.allowFocusEscape());
+        kbqLeaveTabOrderOnTabOut(
+            this.keyManager.tabOut,
+            this.elementRef.nativeElement,
+            () => this.tabIndex,
+            this.destroyRef
+        );
 
         this.bindSelectionModel();
 
@@ -912,8 +921,6 @@ export class KbqTreeSelection
 
     ngOnDestroy(): void {
         super.ngOnDestroy();
-
-        clearTimeout(this.restoreTabIndexTimeout);
 
         this.dropSubscriptions();
 
@@ -1232,13 +1239,7 @@ export class KbqTreeSelection
         ((event: KeyboardEvent, tree: KbqTreeSelection) => void) | undefined
     >(undefined, {
         alias: 'selectAllHandler',
-        transform: (fn) => {
-            if (fn !== undefined && typeof fn !== 'function') {
-                throw Error('`selectAllHandler` must be a function.');
-            }
-
-            return fn;
-        }
+        transform: kbqSelectAllHandlerTransform
     });
 
     /**
@@ -1547,8 +1548,9 @@ export class KbqTreeSelection
         return kbqGetElementHeight(this.elementRef.nativeElement);
     }
 
+    /** A tree with nothing rendered leaves the tab order, unless a tab index other than `0` is bound. */
     private updateTabIndex(): void {
-        this.tabIndexState.set(this.renderedOptions.length === 0 ? -1 : 0);
+        this.tabIndexState.set(this.userTabIndex || (this.renderedOptions.length === 0 ? -1 : 0));
     }
 
     private updateRenderedOptions = () => {
@@ -1591,21 +1593,6 @@ export class KbqTreeSelection
         }
 
         return array;
-    }
-
-    private allowFocusEscape() {
-        if (this.tabIndexState() !== -1) {
-            this.tabIndexState.set(-1);
-            // Written to the DOM right away, as `KbqTagList` does: the browser moves the focus as soon as this Tab is
-            // handled, and the binding is only applied by the change detection that runs after it.
-            this.elementRef.nativeElement.tabIndex = -1;
-
-            clearTimeout(this.restoreTabIndexTimeout);
-
-            this.restoreTabIndexTimeout = setTimeout(() => {
-                this.tabIndexState.set(this.userTabIndex || 0);
-            });
-        }
     }
 
     private resetOptions() {

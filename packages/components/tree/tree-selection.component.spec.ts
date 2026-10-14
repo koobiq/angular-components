@@ -2893,20 +2893,19 @@ describe('KbqTreeSelection', () => {
                 expect(tree['optionBlurSubscription']).toBeNull();
             });
 
-            it('should not restore the tab index after the tree is gone', async () => {
+            it('should not restore the tab index after the tree is gone', () => {
                 vi.useFakeTimers();
 
-                const tree = component.tree();
+                const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout');
 
-                tree.onKeyDown(createKeyboardEvent('keydown', TAB));
-                fixture.detectChanges();
+                component.tree().onKeyDown(createKeyboardEvent('keydown', TAB));
 
-                expect(tree.tabIndex).toBe(-1);
+                const restore = setTimeoutSpy.mock.results.at(-1)!.value;
+                const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
 
                 fixture.destroy();
-                await vi.runOnlyPendingTimersAsync();
 
-                expect(tree.tabIndex).toBe(-1);
+                expect(clearTimeoutSpy).toHaveBeenCalledWith(restore);
             });
 
             it('should stop monitoring the host', () => {
@@ -4485,6 +4484,19 @@ class TreeSelectionWithStaticTabIndex extends TreeParams {
     readonly tree = viewChild.required(KbqTreeSelection);
 }
 
+@Component({
+    imports: [KbqTreeModule],
+    template: `
+        <kbq-tree-selection [tabIndex]="tabIndex" [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeSelectionWithBoundTabIndex extends TreeParams {
+    tabIndex: number | null | undefined = 3;
+    readonly tree = viewChild.required(KbqTreeSelection);
+}
+
 describe('KbqTreeSelection inputs', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({ imports: [KbqTreeModule, ReactiveFormsModule] });
@@ -4553,6 +4565,65 @@ describe('KbqTreeSelection inputs', () => {
         await vi.runOnlyPendingTimersAsync();
 
         expect(tree().tabIndex).toBe(-1);
+    });
+
+    describe('with a bound tabIndex', () => {
+        let fixture: ComponentFixture<TreeSelectionWithBoundTabIndex>;
+        let tree: KbqTreeSelection;
+        let treeElement: HTMLElement;
+
+        beforeEach(async () => {
+            vi.useFakeTimers();
+
+            fixture = TestBed.createComponent(TreeSelectionWithBoundTabIndex);
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            tree = fixture.componentInstance.tree();
+            treeElement = fixture.nativeElement.querySelector('kbq-tree-selection');
+        });
+
+        it('should keep it while the rendered options change', async () => {
+            expect(treeElement.getAttribute('tabindex')).toBe('3');
+
+            fixture.componentInstance.treeControl.expandAll();
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(treeElement.getAttribute('tabindex')).toBe('3');
+        });
+
+        it.each([undefined, null])('should give the tab index back to the default for a bound %s', (value) => {
+            fixture.componentInstance.tabIndex = value;
+            fixture.detectChanges();
+
+            expect(tree.tabIndex).toBe(0);
+            expect(tree.userTabIndex).toBeNull();
+            expect(treeElement.getAttribute('tabindex')).toBe('0');
+        });
+
+        it('should keep it while Tab moves the focus out', async () => {
+            tree.onKeyDown(createKeyboardEvent('keydown', TAB));
+
+            expect(treeElement.getAttribute('tabindex')).toBe('-1');
+            expect(tree.tabIndex).toBe(3);
+
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(treeElement.getAttribute('tabindex')).toBe('3');
+        });
+
+        it('should keep one pending tab order restore across repeated Tab presses', () => {
+            const timers = vi.getTimerCount();
+
+            tree.onKeyDown(createKeyboardEvent('keydown', TAB));
+            tree.onKeyDown(createKeyboardEvent('keydown', TAB));
+            tree.onKeyDown(createKeyboardEvent('keydown', TAB));
+
+            expect(vi.getTimerCount()).toBe(timers + 1);
+        });
     });
 
     // A template binding is checked against the type of the input signal, which `check-spec-types` checks here: a

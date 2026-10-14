@@ -112,6 +112,7 @@ import {
     kbqGetElementHeight,
     kbqQueryListFrom,
     kbqResolvePanelMaxHeightToken,
+    kbqSelectAllHandlerTransform,
     kbqSiblingPopupProvider,
     runClearPredicate,
     runCompareWith,
@@ -796,13 +797,7 @@ export class KbqSelect
         ((event: KeyboardEvent, select: KbqSelect) => void) | undefined
     >(undefined, {
         alias: 'selectAllHandler',
-        transform: (fn) => {
-            if (fn !== undefined && typeof fn !== 'function') {
-                throw Error('`selectAllHandler` must be a function.');
-            }
-
-            return fn;
-        }
+        transform: kbqSelectAllHandlerTransform
     });
 
     /**

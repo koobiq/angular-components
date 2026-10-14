@@ -722,6 +722,74 @@ describe('KbqListSelection without forms', () => {
             expect(list.tabIndex).toBe(3);
             expect(list.userTabIndex).toBe(3);
         });
+
+        it.each([undefined, null])('should give the tab index back to the default for a bound %s', (value) => {
+            const fixture = TestBed.createComponent(SelectionListWithBoundTabindex);
+
+            fixture.detectChanges();
+
+            const listElement = fixture.debugElement.query(By.directive(KbqListSelection));
+            const list: KbqListSelection = listElement.componentInstance;
+
+            fixture.componentInstance.tabIndex = value;
+            fixture.detectChanges();
+
+            expect(list.tabIndex).toBe(0);
+            expect(list.userTabIndex).toBeNull();
+            expect(listElement.nativeElement.getAttribute('tabindex')).toBe('0');
+        });
+
+        describe('while Tab moves the focus out', () => {
+            let fixture: ComponentFixture<SelectionListWithBoundTabindex>;
+            let listElement: HTMLElement;
+            let list: KbqListSelection;
+
+            beforeEach(() => {
+                vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+
+                fixture = TestBed.createComponent(SelectionListWithBoundTabindex);
+                fixture.detectChanges();
+
+                listElement = fixture.debugElement.query(By.directive(KbqListSelection)).nativeElement;
+                list = fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+            });
+
+            afterEach(() => vi.useRealTimers());
+
+            it('should keep a bound tabIndex', async () => {
+                list.onKeyDown(createKeyboardEvent('keydown', TAB));
+
+                expect(listElement.getAttribute('tabindex')).toBe('-1');
+                expect(list.tabIndex).toBe(3);
+
+                await vi.advanceTimersByTimeAsync(0);
+
+                expect(listElement.getAttribute('tabindex')).toBe('3');
+            });
+
+            it('should keep one pending restore across repeated presses', () => {
+                const timers = vi.getTimerCount();
+
+                list.onKeyDown(createKeyboardEvent('keydown', TAB));
+                list.onKeyDown(createKeyboardEvent('keydown', TAB));
+                list.onKeyDown(createKeyboardEvent('keydown', TAB));
+
+                expect(vi.getTimerCount()).toBe(timers + 1);
+            });
+
+            it('should cancel a pending restore when destroyed', () => {
+                const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout');
+
+                list.onKeyDown(createKeyboardEvent('keydown', TAB));
+
+                const restore = setTimeoutSpy.mock.results.at(-1)!.value;
+                const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
+
+                fixture.destroy();
+
+                expect(clearTimeoutSpy).toHaveBeenCalledWith(restore);
+            });
+        });
     });
 
     describe('focus states', () => {
@@ -2720,6 +2788,19 @@ class SelectionListWithTabindexAttr {}
 class SelectionListWithStaticTabindex {}
 
 @Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection [tabIndex]="tabIndex">
+            <kbq-list-option value="inbox">Inbox</kbq-list-option>
+            <kbq-list-option value="starred">Starred</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListWithBoundTabindex {
+    tabIndex: number | null | undefined = 3;
+}
+
+@Component({
     imports: [
         KbqListModule
     ],
@@ -4207,6 +4288,22 @@ describe('KbqListSelection select all row', () => {
             expect(event.options.map(({ value }) => value)).toEqual(['opt1', 'opt2', 'opt4']);
         });
 
+        it('should hand onSelectAll an array the consumer may change', () => {
+            const fixture = setup(SelectionListWithSelectAll);
+            const onSelectAll = vi.spyOn(fixture.componentInstance, 'onSelectAll');
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            onSelectAll.mock.calls[0][0].options.length = 0;
+
+            getRow(fixture)!.click();
+            fixture.detectChanges();
+
+            expect(getCheckboxState(fixture)).toBe('unchecked');
+            expect(onSelectAll.mock.calls[1][0].options.map(({ value }) => value)).toEqual(['opt1', 'opt2', 'opt4']);
+        });
+
         it('should do nothing while the list is disabled', () => {
             const fixture = setup(SelectionListWithSelectAll);
 
@@ -4662,4 +4759,71 @@ describe('KbqListSelection called from an effect', () => {
         expect(fixture.componentInstance.control.value).toEqual(['a', 'b']);
         expect(fixture.componentInstance.runs).toBe(1);
     });
+});
+
+@Component({
+    imports: [KbqListModule, KbqOptionModule],
+    template: `
+        <kbq-list-selection dragCursor="grab" [disabled]="listDisabled()" [draggable]="true">
+            <kbq-optgroup label="Group" [disabled]="groupDisabled()">
+                <kbq-list-option value="grouped" [disabled]="optionDisabled()">Grouped</kbq-list-option>
+            </kbq-optgroup>
+        </kbq-list-selection>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectionListWithDisabledSources {
+    readonly listDisabled = signal(false);
+    readonly groupDisabled = signal(false);
+    readonly optionDisabled = signal(false);
+}
+
+describe('KbqListOption disabled state', () => {
+    beforeEach(() => TestBed.configureTestingModule({ imports: [SelectionListWithDisabledSources] }));
+
+    const hostValues = (option: HTMLElement) => ({
+        disabledClass: option.classList.contains('kbq-disabled'),
+        ariaDisabled: option.getAttribute('aria-disabled'),
+        tabindex: option.getAttribute('tabindex'),
+        draggableClass: option.classList.contains('kbq-list-option_draggable'),
+        grabCursorClass: option.classList.contains('kbq-list-option_grab-cursor')
+    });
+
+    const enabled = {
+        disabledClass: false,
+        ariaDisabled: null,
+        tabindex: '-1',
+        draggableClass: true,
+        grabCursorClass: true
+    };
+    const disabled = {
+        disabledClass: true,
+        ariaDisabled: 'true',
+        tabindex: null,
+        draggableClass: false,
+        grabCursorClass: false
+    };
+
+    it.each(['listDisabled', 'groupDisabled', 'optionDisabled'] as const)(
+        'should follow %s in every host value',
+        (source) => {
+            const fixture = TestBed.createComponent(SelectionListWithDisabledSources);
+
+            fixture.detectChanges();
+
+            const option: HTMLElement = fixture.nativeElement.querySelector('kbq-list-option');
+
+            expect(hostValues(option)).toEqual(enabled);
+
+            fixture.componentInstance[source].set(true);
+            fixture.detectChanges();
+
+            expect(hostValues(option)).toEqual(disabled);
+
+            fixture.componentInstance[source].set(false);
+            fixture.detectChanges();
+
+            expect(hostValues(option)).toEqual(enabled);
+        }
+    );
 });
