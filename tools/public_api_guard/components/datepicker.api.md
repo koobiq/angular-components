@@ -330,7 +330,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set kbqCalendar(value: KbqCalendar<D>);
     readonly kbqCalendarInput: _angular_core.InputSignal<KbqCalendar<D> | undefined>;
     set kbqDatepicker(value: KbqDatepicker<D>);
-    set kbqDatepickerFilter(value: (date: D | null) => boolean);
+    set kbqDatepickerFilter(value: ((date: D | null) => boolean) | undefined);
     readonly kbqDatepickerFilterInput: _angular_core.InputSignal<((date: D | null) => boolean) | undefined>;
     readonly kbqDatepickerInput: _angular_core.InputSignal<KbqDatepicker<D> | undefined>;
     // (undocumented)

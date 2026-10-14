@@ -3932,7 +3932,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     protected clearListeners(): void;
     abstract closingActions(): Observable<any>;
     protected closingActionsSubscription: Subscription;
-    container: HTMLElement;
+    container: HTMLElement | undefined;
     abstract content: string | TemplateRef<unknown>;
     protected _content: string | TemplateRef<unknown>;
     createOverlay(): OverlayRef;
@@ -3993,7 +3993,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     setExternalNativeElement(value: HTMLElement): void;
     protected setHovered(value: boolean): void;
     show(delay?: number): void;
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
     protected strategy: FlexibleConnectedPositionStrategy;
     touchendHandler(): void;
     abstract trigger: string;

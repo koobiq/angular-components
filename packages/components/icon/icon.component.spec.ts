@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomSanitizer } from '@angular/platform-browser';
+import { KBQ_ICON_ERROR_STATE_CONTEXT } from './icon-error-state-context';
 import { KbqIconRegistry } from './icon-registry';
 import { KbqIcon } from './icon.component';
 
@@ -16,7 +17,19 @@ const svgOf = (path: string) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 class TestApp {
-    readonly name = signal('star_16');
+    readonly name = signal<string | undefined>('star_16');
+}
+
+@Component({
+    imports: [KbqIcon],
+    template: `
+        <i kbq-icon="star_16" [autoColor]="autoColor()"></i>
+    `,
+    providers: [{ provide: KBQ_ICON_ERROR_STATE_CONTEXT, useValue: { errorState: signal(true) } }],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class AutoColorIcon {
+    readonly autoColor = signal<boolean | undefined>(true);
 }
 
 describe('KbqIcon', () => {
@@ -82,5 +95,30 @@ describe('KbqIcon', () => {
 
         expect(svgs).toHaveLength(1);
         expect(svgs[0].querySelector('path')?.getAttribute('d')).toBe('M1 8l4 4 8-8');
+    });
+
+    it('should drop the font class once the bound name turns undefined', () => {
+        fixture = TestBed.createComponent(TestApp);
+        fixture.detectChanges();
+
+        fixture.componentInstance.name.set(undefined);
+        fixture.detectChanges();
+
+        expect(host().classList).not.toContain('star_16');
+    });
+
+    it('should stop taking the error color once the bound autoColor turns undefined', () => {
+        const autoColorFixture = TestBed.createComponent(AutoColorIcon);
+
+        autoColorFixture.detectChanges();
+
+        const icon: HTMLElement = autoColorFixture.nativeElement.querySelector('.kbq-icon');
+
+        expect(icon.classList).toContain('kbq-error');
+
+        autoColorFixture.componentInstance.autoColor.set(undefined);
+        autoColorFixture.detectChanges();
+
+        expect(icon.classList).not.toContain('kbq-error');
     });
 });

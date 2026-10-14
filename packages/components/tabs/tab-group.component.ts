@@ -309,11 +309,12 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
     private readonly groupId: number;
 
-    constructor() {
-        const defaultConfig = inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true });
+    private readonly defaultAnimationDuration =
+        inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true })?.animationDuration || '0ms';
 
+    constructor() {
         this.groupId = nextId++;
-        this.animationDuration = defaultConfig?.animationDuration || '0ms';
+        this.animationDuration = this.defaultAnimationDuration;
 
         // The state lives under the new key now, so restore from it.
         this.stateSaving.keyChanges.subscribe(() => this.applySavedState());
@@ -327,7 +328,8 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, except that `undefined` resets a member
+        // typed without it to its default; unbound, it leaves what code wrote.
         if (changes['selectedIndexInput']) {
             const selectedIndex = this.selectedIndexInput();
 
@@ -341,15 +343,11 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
         }
 
         if (changes['headerPositionInput']) {
-            const headerPosition = this.headerPositionInput();
-
-            if (headerPosition !== undefined) this.headerPosition = headerPosition;
+            this.headerPosition = this.headerPositionInput() ?? 'above';
         }
 
         if (changes['animationDurationInput']) {
-            const animationDuration = this.animationDurationInput();
-
-            if (animationDuration !== undefined) this.animationDuration = animationDuration;
+            this.animationDuration = this.animationDurationInput() ?? this.defaultAnimationDuration;
         }
 
         if (changes['disabledInput']) {

@@ -257,7 +257,7 @@ describe('KbqSearchExpandable', () => {
             expect(inputEl.placeholder).toBe('Custom search...');
         });
 
-        it('should fall back to the locale when placeholder is reset to undefined', () => {
+        it('should fall back to the locale when placeholder is reset to null', () => {
             const placeholderFixture = TestBed.createComponent(TestSearchExpandableWithPlaceholder);
 
             placeholderFixture.detectChanges();
@@ -270,6 +270,22 @@ describe('KbqSearchExpandable', () => {
             component.placeholder = null;
 
             expect(component.placeholder).toBe(component.localeConfiguration().placeholder);
+        });
+
+        it('should fall back to the locale when the bound placeholder turns undefined', () => {
+            const placeholderFixture = TestBed.createComponent(TestSearchExpandableWithPlaceholder);
+
+            placeholderFixture.componentInstance.openedState = true;
+            placeholderFixture.detectChanges();
+
+            placeholderFixture.componentInstance.placeholder = undefined;
+            placeholderFixture.detectChanges();
+
+            const placeholderDebug = placeholderFixture.debugElement.query(By.directive(KbqSearchExpandable));
+            const component = placeholderDebug.componentInstance as KbqSearchExpandable;
+            const inputEl: HTMLInputElement = placeholderDebug.query(By.css('input')).nativeElement;
+
+            expect(inputEl.placeholder).toBe(component.localeConfiguration().placeholder);
         });
     });
 
@@ -305,6 +321,21 @@ describe('KbqSearchExpandable', () => {
             component.tooltipText = null;
 
             expect(component.tooltipText).toBe(component.localeConfiguration().tooltip);
+        });
+
+        it('should fall back to the locale when the bound tooltipText turns undefined', () => {
+            const tooltipFixture = TestBed.createComponent(TestSearchExpandableWithTooltip);
+
+            tooltipFixture.detectChanges();
+
+            tooltipFixture.componentInstance.tooltipText = undefined;
+            tooltipFixture.detectChanges();
+
+            const tooltipDebug = tooltipFixture.debugElement.query(By.directive(KbqSearchExpandable));
+            const component = tooltipDebug.componentInstance as KbqSearchExpandable;
+            const button: HTMLElement = tooltipDebug.query(By.css('.kbq-search-expandable__button')).nativeElement;
+
+            expect(button.getAttribute('aria-label')).toBe(component.localeConfiguration().tooltip);
         });
     });
 
@@ -989,11 +1020,12 @@ class TestSearchExpandableWithFormControl {
     selector: 'test-app-search-expandable-with-placeholder',
     imports: [KbqSearchExpandableModule, FormsModule],
     template: `
-        <kbq-search-expandable [isOpened]="openedState" [placeholder]="'Custom search...'" [(ngModel)]="search" />
+        <kbq-search-expandable [isOpened]="openedState" [placeholder]="placeholder" [(ngModel)]="search" />
     `
 })
 class TestSearchExpandableWithPlaceholder {
     openedState: boolean = false;
+    placeholder: string | undefined = 'Custom search...';
     search: string;
 }
 
@@ -1001,11 +1033,12 @@ class TestSearchExpandableWithPlaceholder {
     selector: 'test-app-search-expandable-with-tooltip',
     imports: [KbqSearchExpandableModule, FormsModule],
     template: `
-        <kbq-search-expandable [isOpened]="openedState" [tooltipText]="'Custom tooltip'" [(ngModel)]="search" />
+        <kbq-search-expandable [isOpened]="openedState" [tooltipText]="tooltipText" [(ngModel)]="search" />
     `
 })
 class TestSearchExpandableWithTooltip {
     openedState: boolean = false;
+    tooltipText: string | undefined = 'Custom tooltip';
     search: string;
 }
 

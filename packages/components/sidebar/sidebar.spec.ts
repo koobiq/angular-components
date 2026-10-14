@@ -47,6 +47,18 @@ describe(KbqSidebarModule.name, () => {
             expect(sidebarComponent.opened).toBeTruthy();
         });
 
+        it('should close when the bound state turns undefined', async () => {
+            const host: HTMLElement = fixture.nativeElement.querySelector('kbq-sidebar');
+
+            testComponent.state = undefined;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(sidebarComponent.opened).toBe(false);
+            expect(host.classList).not.toContain('kbq-sidebar_opened');
+            expect(host.style.width).toBe('32px');
+        });
+
         it('should change state by method', () => {
             expect(sidebarComponent.opened).toBeTruthy();
 
@@ -142,7 +154,7 @@ class TestSidebar {
 
     position: SidebarPositions = SidebarPositions.Left;
 
-    state: boolean = true;
+    state: boolean | undefined = true;
 
     readonly sidebar = viewChild.required(KbqSidebar);
 

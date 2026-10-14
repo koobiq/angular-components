@@ -211,11 +211,9 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     readonly openedInput = input<boolean | undefined>(undefined, { alias: 'opened' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member, a bound `undefined` as `false`; unbound, it leaves what code wrote.
         if (changes['openedInput']) {
-            const opened = this.openedInput();
-
-            if (opened !== undefined) this.opened = opened;
+            this.opened = this.openedInput() ?? false;
         }
     }
 

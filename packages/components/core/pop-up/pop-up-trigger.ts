@@ -190,10 +190,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     overlayRef: OverlayRef | null;
     /** Placement used to keep the pop-up stuck within the window bounds.
      * @docs-private */
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
     /** Host container element of the pop-up.
      * @docs-private */
-    container: HTMLElement;
+    container: HTMLElement | undefined;
     /** Whether the pop-up is disabled and therefore never shown; implemented by the subclass.
      * @docs-private */
     abstract disabled: boolean;

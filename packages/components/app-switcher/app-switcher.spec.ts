@@ -10,7 +10,9 @@ import {
     ENTER,
     ESCAPE,
     HOME,
+    KbqPopUpPlacementValues,
     LEFT_ARROW,
+    PopUpPlacements,
     RIGHT_ARROW,
     SPACE,
     TAB,
@@ -28,6 +30,7 @@ import {
     KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_SEARCH,
     KbqAppSwitcherApp,
     KbqAppSwitcherComponent,
+    KbqAppSwitcherGroupBy,
     KbqAppSwitcherSite,
     KbqAppSwitcherTrigger,
     defaultGroupBy,
@@ -367,6 +370,55 @@ describe('KbqAppSwitcher', () => {
                 expect(trigger.disabled).toBe(false);
                 expect(hideSpy).not.toHaveBeenCalled();
             });
+        });
+    });
+
+    describe('KbqAppSwitcherTrigger inputs bound to undefined', () => {
+        let fixture: ComponentFixture<AppSwitcherBoundInputs>;
+        let trigger: KbqAppSwitcherTrigger;
+
+        beforeEach(() => {
+            fixture = createComponent(AppSwitcherBoundInputs);
+            trigger = getTrigger(fixture);
+        });
+
+        it('falls back to the default placement', () => {
+            expect(trigger.placement).toBe(PopUpPlacements.Top);
+
+            fixture.componentInstance.placement = undefined;
+            fixture.detectChanges();
+
+            expect(trigger.placement).toBe(PopUpPlacements.BottomLeft);
+        });
+
+        it('falls back to the transparent backdrop', () => {
+            expect(trigger.backdropClass).toBe('custom-backdrop');
+
+            fixture.componentInstance.backdropClass = undefined;
+            fixture.detectChanges();
+
+            expect(trigger.backdropClass).toBe('cdk-overlay-transparent-backdrop');
+        });
+
+        it('clears the sites', () => {
+            expect(trigger.appsCount).toBe(GROUP_SITE.apps.length);
+
+            fixture.componentInstance.sites = undefined;
+            fixture.detectChanges();
+
+            expect(trigger.sites).toEqual([]);
+            expect(trigger.appsCount).toBe(0);
+        });
+
+        it('falls back to the default grouping', () => {
+            expect(trigger.currentApps).toHaveLength(GROUP_SITE.apps.length);
+
+            fixture.componentInstance.groupBy = undefined;
+            fixture.detectChanges();
+
+            expect(trigger.groupBy).toBe(defaultGroupBy);
+            expect(trigger.currentApps).toHaveLength(2);
+            expect(trigger.currentApps[0].aliases).toHaveLength(GROUP_APPS.length);
         });
     });
 
@@ -2270,6 +2322,28 @@ class AppSwitcherWithSearch {
 })
 class AppSwitcherGrouped {
     site: KbqAppSwitcherSite = { ...GROUP_SITE, apps: [...GROUP_SITE.apps] };
+}
+
+@Component({
+    selector: 'app-switcher-bound-inputs',
+    imports: [KbqAppSwitcherModule],
+    template: `
+        <button
+            kbqAppSwitcher
+            [kbqAppSwitcherPlacement]="placement"
+            [backdropClass]="backdropClass"
+            [sites]="sites"
+            [groupBy]="groupBy"
+        >
+            Trigger
+        </button>
+    `
+})
+class AppSwitcherBoundInputs {
+    placement: KbqPopUpPlacementValues | undefined = PopUpPlacements.Top;
+    backdropClass: string | undefined = 'custom-backdrop';
+    sites: KbqAppSwitcherSite[] | undefined = [{ ...GROUP_SITE, apps: [...GROUP_SITE.apps] }];
+    groupBy: KbqAppSwitcherGroupBy | undefined = (app, _groups, untyped) => untyped.push(app);
 }
 
 @Component({

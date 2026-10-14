@@ -123,10 +123,10 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     constructor();
     readonly confirm: _angular_core.OutputEmitterRef<void>;
     get confirmButtonText(): string;
-    set confirmButtonText(value: string);
+    set confirmButtonText(value: string | undefined);
     readonly confirmButtonTextInput: _angular_core.InputSignal<string | undefined>;
     get confirmText(): string;
-    set confirmText(value: string);
+    set confirmText(value: string | undefined);
     readonly confirmTextInput: _angular_core.InputSignal<string | undefined>;
     getOverlayHandleComponentType(): typeof KbqPopoverConfirmComponent;
     // (undocumented)
@@ -169,7 +169,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set closeOnScroll(value: boolean);
     closingActions(): rxjs.Observable<void | CdkScrollable | MouseEvent>;
     closingActionsForClick(): rxjs.Observable<MouseEvent>[];
-    container: HTMLElement;
+    container: HTMLElement | undefined;
     get content(): string | TemplateRef<any>;
     set content(value: string | TemplateRef<any>);
     readonly contentInput: InputSignal<KbqPopoverTrigger['content'] | undefined>;
@@ -201,7 +201,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     readonly headerInput: InputSignal<KbqPopoverTrigger['header'] | undefined>;
     get instanceDestroyRef(): DestroyRef;
     set kbqLeaveDelay(value: number);
-    readonly kbqLeaveDelayInput: InputSignal<number | undefined>;
+    readonly kbqLeaveDelayInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -221,7 +221,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     readonly popoverBackdropClassInput: InputSignal<string | undefined>;
     set popoverCloseOnScroll(value: boolean);
     readonly popoverCloseOnScrollInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
-    set popoverContainer(value: HTMLElement);
+    set popoverContainer(value: HTMLElement | undefined);
     readonly popoverContainerInput: InputSignal<HTMLElement | undefined>;
     set popoverDefaultPaddings(value: boolean);
     readonly popoverDefaultPaddingsInput: _angular_core.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;
@@ -251,7 +251,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get size(): KbqPopUpSizeValues;
     set size(value: KbqPopUpSizeValues);
     readonly sizeInput: InputSignal<"small" | "medium" | "large" | "custom" | undefined>;
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
     readonly stickToWindowInput: InputSignal<"top" | "right" | "left" | "bottom" | undefined>;
     get trigger(): string;
     set trigger(value: string);

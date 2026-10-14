@@ -23,6 +23,7 @@ import {
 import { By } from '@angular/platform-browser';
 import {
     DELETE,
+    ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
     KbqDefaultSizes,
     KbqPartialLocaleData,
@@ -219,7 +220,9 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 MultipleFileUploadWithAsyncValidator,
                 MultipleFileUploadWithInvalidAsyncValidator,
                 MultipleFileUploadWithHint,
-                TwoWayBindingMultipleFileUpload
+                TwoWayBindingMultipleFileUpload,
+                MultipleFileUploadWithBoundFiles,
+                MultipleFileUploadWithErrorStateMatcher
             ]
         }).compileComponents();
 
@@ -1147,6 +1150,38 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(filesChangeSpy.mock.calls[0][0]).toHaveLength(0);
         });
     });
+
+    describe('with bindings that turn undefined', () => {
+        it('should clear the files', () => {
+            const filesFixture = TestBed.createComponent(MultipleFileUploadWithBoundFiles);
+
+            filesFixture.componentInstance.files = [createLoadingItem()];
+            filesFixture.detectChanges();
+
+            expect(filesFixture.componentInstance.fileUpload().files).toHaveLength(1);
+
+            filesFixture.componentInstance.files = undefined;
+            filesFixture.detectChanges();
+
+            expect(filesFixture.componentInstance.fileUpload().files).toEqual([]);
+            expect(filesFixture.nativeElement.querySelectorAll(`.${fileItemRowCssClass}`)).toHaveLength(0);
+        });
+
+        it('should fall back to the default error state matcher', () => {
+            const matcherFixture = TestBed.createComponent(MultipleFileUploadWithErrorStateMatcher);
+
+            matcherFixture.detectChanges();
+
+            const fileUpload: HTMLElement = matcherFixture.nativeElement.querySelector('.kbq-file-upload');
+
+            expect(fileUpload.classList).toContain('kbq-error');
+
+            matcherFixture.componentInstance.errorStateMatcher = undefined;
+            matcherFixture.detectChanges();
+
+            expect(fileUpload.classList).not.toContain('kbq-error');
+        });
+    });
 });
 
 describe(KbqSingleFileUploadComponent.name, () => {
@@ -1165,7 +1200,8 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 SingleFileUploadWithInvalidAsyncValidator,
                 SingleFileUploadWithFileReaderValidator,
                 SingleFileUploadWithHint,
-                TwoWayBindingSingleFileUpload
+                TwoWayBindingSingleFileUpload,
+                SingleFileUploadWithErrorStateMatcher
             ]
         }).compileComponents();
 
@@ -2027,6 +2063,38 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(fileChangeSpy).toHaveBeenCalledTimes(1);
             expect(fileChangeSpy.mock.calls[0][0]).toBeNull();
         });
+
+        it('should clear the file once the bound file turns undefined', () => {
+            twoWayComponent.file = createLoadingItem();
+            twoWayFixture.detectChanges();
+
+            expect(twoWayComponent.fileUpload().file).not.toBeNull();
+
+            twoWayComponent.file = undefined;
+            twoWayFixture.detectChanges();
+
+            expect(twoWayComponent.fileUpload().file).toBeNull();
+            expect(
+                twoWayComponent.elementRef.nativeElement.querySelector('.kbq-single-file-upload_selected')
+            ).toBeNull();
+        });
+    });
+
+    describe('with errorStateMatcher', () => {
+        it('should fall back to the default matcher once the bound one turns undefined', () => {
+            const matcherFixture = TestBed.createComponent(SingleFileUploadWithErrorStateMatcher);
+
+            matcherFixture.detectChanges();
+
+            const fileUpload: HTMLElement = matcherFixture.nativeElement.querySelector('.kbq-file-upload');
+
+            expect(fileUpload.classList).toContain('kbq-error');
+
+            matcherFixture.componentInstance.errorStateMatcher = undefined;
+            matcherFixture.detectChanges();
+
+            expect(fileUpload.classList).not.toContain('kbq-error');
+        });
     });
 });
 
@@ -2718,7 +2786,45 @@ class TwoWayBindingSingleFileUpload {
     elementRef = inject_1(ElementRef);
 
     readonly fileUpload = viewChild.required<KbqSingleFileUploadComponent>('fileUpload');
-    file: KbqFileItem | null = null;
+    file: KbqFileItem | null | undefined = null;
+}
+
+@Component({
+    selector: 'multiple-file-upload-with-bound-files',
+    imports: [KbqFileUploadModule],
+    template: `
+        <kbq-multiple-file-upload #fileUpload [files]="files" />
+    `
+})
+class MultipleFileUploadWithBoundFiles {
+    readonly fileUpload = viewChild.required<KbqMultipleFileUploadComponent>('fileUpload');
+    files: KbqFileItem[] | undefined = [];
+}
+
+const alwaysErrorStateMatcher: ErrorStateMatcher = { isErrorState: () => true };
+
+@Component({
+    selector: 'multiple-file-upload-with-error-state-matcher',
+    imports: [KbqFileUploadModule, ReactiveFormsModule],
+    template: `
+        <kbq-multiple-file-upload [formControl]="control" [errorStateMatcher]="errorStateMatcher" />
+    `
+})
+class MultipleFileUploadWithErrorStateMatcher {
+    readonly control = new FormControl<KbqFileItem[] | null>(null);
+    errorStateMatcher: ErrorStateMatcher | undefined = alwaysErrorStateMatcher;
+}
+
+@Component({
+    selector: 'single-file-upload-with-error-state-matcher',
+    imports: [KbqFileUploadModule, ReactiveFormsModule],
+    template: `
+        <kbq-single-file-upload [formControl]="control" [errorStateMatcher]="errorStateMatcher" />
+    `
+})
+class SingleFileUploadWithErrorStateMatcher {
+    readonly control = new FormControl<KbqFileItem | null>(null);
+    errorStateMatcher: ErrorStateMatcher | undefined = alwaysErrorStateMatcher;
 }
 
 // Test host component

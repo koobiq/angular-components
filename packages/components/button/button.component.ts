@@ -462,9 +462,7 @@ export class KbqButton
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
         if (changes['kbqStyleInput']) {
-            const kbqStyle = this.kbqStyleInput();
-
-            if (kbqStyle !== undefined) this.kbqStyle = kbqStyle;
+            this.kbqStyle = this.kbqStyleInput();
         }
 
         if (changes['disabledInput']) {

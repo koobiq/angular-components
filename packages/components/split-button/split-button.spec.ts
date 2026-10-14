@@ -158,6 +158,19 @@ describe('KbqSplitButton', () => {
 
             expect(hostEl.classList.contains('kbq-button_filled')).toBe(true);
         });
+
+        it('should fall back to filled when the bound kbqStyle turns undefined', () => {
+            component.style = KbqButtonStyles.Outline;
+            fixture.detectChanges();
+
+            component.style = undefined;
+            fixture.detectChanges();
+
+            expect(hostEl.classList.contains('kbq-button_filled')).toBe(true);
+            buttons.forEach((btn) => {
+                expect(btn.nativeElement.classList.contains('kbq-button_filled')).toBe(true);
+            });
+        });
     });
 
     describe('color input', () => {
@@ -592,7 +605,7 @@ class TestAppEnabled {}
     `
 })
 class TestAppInputs {
-    style: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    style: KbqButtonStyleInput | undefined = KbqButtonStyles.Filled;
     color: KbqButtonColor | null = KbqComponentColors.ContrastFade;
     disabled: boolean = false;
     firstDisabled: boolean = false;

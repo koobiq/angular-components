@@ -2132,7 +2132,184 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain('DERIVED');
         });
     });
+
+    describe('binding changed to undefined', () => {
+        let fixture: ComponentFixture<TooltipUndefinedInputs>;
+        let component: TooltipUndefinedInputs;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipUndefinedInputs);
+            component = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        const cases: {
+            binding: string;
+            field: keyof TooltipUndefinedInputs;
+            value: unknown;
+            read: (trigger: KbqTooltipTrigger) => unknown;
+            reset: unknown;
+        }[] = [
+            { binding: 'kbqTrigger', field: 'triggers', value: 'click', read: (t) => t.trigger, reset: 'hover, focus' },
+            { binding: 'kbqEnterDelay', field: 'enterDelay', value: 0, read: (t) => t.enterDelay, reset: 400 },
+            { binding: 'kbqLeaveDelay', field: 'leaveDelay', value: 300, read: (t) => t.leaveDelay, reset: 0 },
+            {
+                binding: 'kbqRelativeToCaretVertical',
+                field: 'relativeToCaretVertical',
+                value: 'line',
+                read: (t) => t.relativeToCaretVertical,
+                reset: 'auto'
+            },
+            {
+                binding: 'kbqTooltipModifier',
+                field: 'modifier',
+                value: 'warning',
+                read: (t) => t.modifier,
+                reset: 'default'
+            },
+            {
+                binding: 'kbqTooltipContext',
+                field: 'context',
+                value: { a: 1 },
+                read: (t) => t.context,
+                reset: undefined
+            },
+            {
+                binding: 'kbqTooltipClass',
+                field: 'customClass',
+                value: 'custom',
+                read: (t) => t.customClass,
+                reset: ''
+            },
+            { binding: 'kbqTooltipColor', field: 'color', value: 'error', read: (t) => t.color, reset: 'contrast' },
+            {
+                binding: 'kbqPlacementPriority',
+                field: 'placementPriority',
+                value: ['bottom'],
+                read: (t) => t.tooltipPlacementPriority,
+                reset: null
+            },
+            {
+                binding: 'kbqPlacement',
+                field: 'placement',
+                value: 'right',
+                read: (t) => t.tooltipPlacement,
+                reset: 'top'
+            }
+        ];
+
+        for (const { binding, field, value, read, reset } of cases) {
+            it(`should reset ${binding} to its default once the binding changes to undefined`, () => {
+                Object.assign(component, { [field]: value });
+                fixture.detectChanges();
+
+                expect(read(component.tooltipTrigger())).toEqual(value);
+
+                Object.assign(component, { [field]: undefined });
+                fixture.detectChanges();
+
+                expect(read(component.tooltipTrigger())).toEqual(reset);
+            });
+        }
+
+        it('should not show the tooltip once its content binding changes to undefined', async () => {
+            vi.useFakeTimers();
+
+            component.content = 'Invalid';
+            fixture.detectChanges();
+            component.content = undefined;
+            fixture.detectChanges();
+
+            await showByHover(fixture, component.triggerElement().nativeElement);
+
+            expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeNull();
+            expect(overlayContainerElement.textContent).not.toContain('Invalid');
+        });
+
+        it('should drop the header once its binding changes to undefined', async () => {
+            vi.useFakeTimers();
+
+            component.content = 'Content';
+            component.modifier = 'extended';
+            component.header = 'Header';
+            fixture.detectChanges();
+
+            await showByHover(fixture, component.triggerElement().nativeElement);
+
+            expect(overlayContainerElement.querySelector('.kbq-tooltip__header')?.textContent).toContain('Header');
+
+            component.header = undefined;
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(overlayContainerElement.querySelector('.kbq-tooltip__header')).toBeNull();
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should hide the tooltip once its kbqVisible binding changes to undefined', async () => {
+            vi.useFakeTimers();
+
+            component.content = 'Visible';
+            component.visible = true;
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(tooltipDefaultEnterDelayWithDefer);
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).toContain('Visible');
+
+            component.visible = undefined;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(overlayContainerElement.textContent).not.toContain('Visible');
+        });
+    });
 });
+
+@Component({
+    selector: 'tooltip-undefined-inputs',
+    imports: [KbqToolTipModule],
+    template: `
+        <span
+            #trigger
+            [kbqTooltip]="content"
+            [kbqTrigger]="triggers"
+            [kbqEnterDelay]="enterDelay"
+            [kbqLeaveDelay]="leaveDelay"
+            [kbqRelativeToCaretVertical]="relativeToCaretVertical"
+            [kbqTooltipHeader]="header"
+            [kbqTooltipModifier]="modifier"
+            [kbqTooltipContext]="context"
+            [kbqTooltipClass]="customClass"
+            [kbqTooltipColor]="color"
+            [kbqPlacementPriority]="placementPriority"
+            [kbqPlacement]="placement"
+            [kbqVisible]="visible"
+        >
+            Show
+        </span>
+    `
+})
+class TooltipUndefinedInputs {
+    readonly triggerElement = viewChild.required<ElementRef>('trigger');
+    readonly tooltipTrigger = viewChild.required('trigger', { read: KbqTooltipTrigger });
+
+    content: string | undefined;
+    triggers: string | undefined;
+    enterDelay: number | undefined;
+    leaveDelay: number | undefined;
+    relativeToCaretVertical: KbqCaretVerticalAnchor | undefined;
+    header: string | undefined;
+    modifier: 'default' | 'warning' | 'extended' | undefined;
+    context: object | undefined;
+    customClass: string | undefined;
+    color: string | undefined;
+    placementPriority: string[] | undefined;
+    placement: 'top' | 'right' | undefined;
+    visible: boolean | undefined;
+}
 
 /**
  * Stand-in for a popover/dropdown/select sharing the host element with a tooltip. Announcing the close and

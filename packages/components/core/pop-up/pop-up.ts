@@ -238,6 +238,8 @@ export abstract class KbqPopUp implements OnDestroy {
     }
 
     protected setStickPosition() {
+        if (!this.trigger.stickToWindow) return;
+
         const oppositeSide = {
             [PopUpPlacements.Top]: PopUpPlacements.Bottom,
             [PopUpPlacements.Bottom]: PopUpPlacements.Top,
@@ -245,7 +247,7 @@ export abstract class KbqPopUp implements OnDestroy {
             [PopUpPlacements.Left]: PopUpPlacements.Right
         }[this.trigger.stickToWindow];
 
-        if (!this.trigger.stickToWindow || !oppositeSide) return;
+        if (!oppositeSide) return;
 
         this.arrow = false;
 

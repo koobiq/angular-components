@@ -154,17 +154,14 @@ export class KbqRadioGroup
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, a bound `undefined` included;
+        // unbound, it leaves what code wrote.
         if (changes['valueInput']) {
-            const value = this.valueInput();
-
-            if (value !== undefined) this.value = value;
+            this.value = this.valueInput();
         }
 
         if (changes['selectedInput']) {
-            const selected = this.selectedInput();
-
-            if (selected !== undefined) this.selected = selected;
+            this.selected = this.selectedInput() ?? null;
         }
 
         if (changes['disabledInput']) {
@@ -443,7 +440,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
         return this._labelPosition() || this.radioGroup?.labelPosition() || 'after';
     }
     /** @docs-private */
-    set labelPosition(value) {
+    set labelPosition(value: 'before' | 'after' | undefined) {
         this._labelPosition.set(value);
     }
 
@@ -459,7 +456,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
         return this._name() ?? this.radioGroup?.name() ?? this.uniqueId;
     }
 
-    set name(value: string) {
+    set name(value: string | undefined) {
         this._name.set(value);
     }
 
@@ -548,11 +545,10 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
     readonly nameInput = input<string | undefined>(undefined, { alias: 'name' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, a bound `undefined` included;
+        // unbound, it leaves what code wrote.
         if (changes['valueInput']) {
-            const value = this.valueInput();
-
-            if (value !== undefined) this.value = value;
+            this.value = this.valueInput();
         }
 
         if (changes['checkedInput']) {
@@ -580,15 +576,11 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
         }
 
         if (changes['labelPositionInput']) {
-            const labelPosition = this.labelPositionInput();
-
-            if (labelPosition !== undefined) this.labelPosition = labelPosition;
+            this.labelPosition = this.labelPositionInput();
         }
 
         if (changes['nameInput']) {
-            const name = this.nameInput();
-
-            if (name !== undefined) this.name = name;
+            this.name = this.nameInput();
         }
     }
 

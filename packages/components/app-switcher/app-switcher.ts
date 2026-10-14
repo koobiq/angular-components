@@ -191,6 +191,10 @@ export const KBQ_MIN_NUMBER_OF_APPS_TO_ENABLE_GROUPING: number = 3;
  */
 const SCROLL_GEOMETRY_THROTTLE = 16;
 
+const defaultPlacement = PopUpPlacements.BottomLeft;
+
+const defaultBackdropClass = 'cdk-overlay-transparent-backdrop';
+
 /** @docs-private */
 export const KBQ_APP_SWITCHER_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
     'kbq-app-switcher-scroll-strategy'
@@ -680,10 +684,10 @@ export class KbqAppSwitcherTrigger
     readonly selectedApp = model<KbqAppSwitcherApp | undefined>(undefined);
 
     /** Placement of popUp */
-    placement: KbqPopUpPlacementValues = PopUpPlacements.BottomLeft;
+    placement: KbqPopUpPlacementValues = defaultPlacement;
 
     /** Class that will be used in the background */
-    backdropClass: string = 'cdk-overlay-transparent-backdrop';
+    backdropClass: string = defaultBackdropClass;
 
     /** Offset of popUp */
     offset: number | null = defaultOffsetYWithArrow;
@@ -850,17 +854,14 @@ export class KbqAppSwitcherTrigger
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member, a bound `undefined` as the member's default; unbound, it leaves
+        // what code wrote.
         if (changes['placementInput']) {
-            const placement = this.placementInput();
-
-            if (placement !== undefined) this.placement = placement;
+            this.placement = this.placementInput() ?? defaultPlacement;
         }
 
         if (changes['backdropClassInput']) {
-            const backdropClass = this.backdropClassInput();
-
-            if (backdropClass !== undefined) this.backdropClass = backdropClass;
+            this.backdropClass = this.backdropClassInput() ?? defaultBackdropClass;
         }
 
         if (changes['offsetInput']) {
@@ -870,15 +871,11 @@ export class KbqAppSwitcherTrigger
         }
 
         if (changes['sitesInput']) {
-            const sites = this.sitesInput();
-
-            if (sites !== undefined) this.sites = sites;
+            this.sites = this.sitesInput() ?? [];
         }
 
         if (changes['groupByInput']) {
-            const groupBy = this.groupByInput();
-
-            if (groupBy !== undefined) this.groupBy = groupBy;
+            this.groupBy = this.groupByInput() ?? defaultGroupBy;
         }
 
         if (changes['disabledInput']) {

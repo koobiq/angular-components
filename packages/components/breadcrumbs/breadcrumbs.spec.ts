@@ -20,6 +20,8 @@ import {
 } from './breadcrumbs';
 import { KbqBreadcrumbsModule } from './breadcrumbs.module';
 import { RdxRovingFocusGroupDirective } from './roving-focus-group.directive';
+import { RdxRovingFocusItemDirective } from './roving-focus-item.directive';
+import { KbqRovingFocusOrientation } from './utils';
 
 const AXE_TIMEOUT = 15000;
 
@@ -499,6 +501,27 @@ describe(KbqBreadcrumbs.name, () => {
             });
         });
 
+        it('should clear the orientation when the bound orientation turns undefined', () => {
+            const fixture = createComponent(RovingFocusGroupWithOrientation);
+
+            fixture.detectChanges();
+
+            const group = fixture.debugElement
+                .query(By.directive(RdxRovingFocusGroupDirective))
+                .injector.get(RdxRovingFocusGroupDirective);
+            const item: HTMLElement = fixture.debugElement.query(
+                By.directive(RdxRovingFocusItemDirective)
+            ).nativeElement;
+
+            expect(item.getAttribute('data-orientation')).toBe('vertical');
+
+            fixture.componentInstance.orientation = undefined;
+            fixture.detectChanges();
+
+            expect(group.orientation).toBeUndefined();
+            expect(item.hasAttribute('data-orientation')).toBe(false);
+        });
+
         it('should not force a direction onto the host', () => {
             const fixture = createComponent(SimpleBreadcrumbs, [provideRouter([])]);
             const { nativeElement } = getBreadcrumbsDebugElement(fixture.debugElement);
@@ -923,6 +946,19 @@ class ToggleFocusableMultiBreadcrumb {
 })
 class NonLoopingBreadcrumbs {
     items = ['Home', 'Library', 'Data'];
+}
+
+@Component({
+    imports: [RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective],
+    template: `
+        <div rdxRovingFocusGroup [orientation]="orientation">
+            <button rdxRovingFocusItem type="button">First</button>
+            <button rdxRovingFocusItem type="button">Second</button>
+        </div>
+    `
+})
+class RovingFocusGroupWithOrientation {
+    orientation: KbqRovingFocusOrientation | undefined = 'vertical';
 }
 
 @Component({
