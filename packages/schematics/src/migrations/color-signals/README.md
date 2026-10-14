@@ -34,8 +34,6 @@ Template bindings such as `[color]="..."` are unchanged.
 
 ## Behavior changes with no call site
 
-- A color set in code holds until the `[color]` binding or the default color of the component changes. On a
-  button, that includes the color of its group and a change of `kbqStyle`.
 - An unset or falsy `[color]` renders the default color class of the component, `kbq-empty` where it has none,
   instead of no color class.
 - `KbqColorDirective` is generic: `KbqButton`, `KbqButtonGroupRoot` and `KbqSplitButton` narrow their color to

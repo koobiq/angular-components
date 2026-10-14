@@ -33,7 +33,6 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 export class KbqButton extends KbqColorDirective<KbqButtonColor> implements OnChanges, OnDestroy, AfterViewInit, AfterViewChecked, KbqTitleTextRef {
     constructor();
     protected get ariaDisabledAttribute(): true | null;
-    readonly color: i0.WritableSignal<"theme" | "theme-fade" | "contrast" | "contrast-fade">;
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledInput: i0.InputSignalWithTransform<boolean | undefined, string | boolean | null | undefined>;

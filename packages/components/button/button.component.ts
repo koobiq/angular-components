@@ -18,7 +18,6 @@ import {
     Injector,
     input,
     isDevMode,
-    linkedSignal,
     numberAttribute,
     OnChanges,
     OnDestroy,
@@ -375,15 +374,7 @@ export class KbqButton
     private _kbqStyleClassName = `kbq-button_${KbqButtonStyles.Filled}`;
 
     /** Color propagated by a surrounding `KbqButtonGroupRoot`. */
-    private readonly groupColor = signal<KbqButtonColor | null | undefined>(undefined);
-
-    /**
-     * Color of the button. The button's own `color` wins over the one of a surrounding
-     * `KbqButtonGroupRoot`, which wins over the default color of the current `kbqStyle`.
-     */
-    override readonly color = linkedSignal<KbqButtonColor>(
-        () => this.colorInput() || this.groupColor() || this.defaultColor()
-    );
+    private groupColor: KbqButtonColor | null | undefined;
 
     /**
      * Whether the button is disabled. A surrounding `KbqButtonGroupRoot` can disable the button in
@@ -481,7 +472,7 @@ export class KbqButton
     constructor() {
         super();
 
-        this.setDefaultColor(getDefaultColorForStyle(this._kbqStyle));
+        this.applyDefaultColor();
 
         // Native capture-phase listeners instead of host listeners: Angular coalesces listeners
         // for the same event on the same element, so stopImmediatePropagation from a host listener
@@ -500,7 +491,8 @@ export class KbqButton
      * @docs-private
      */
     setColorFromGroup(value: KbqButtonColor | null | undefined): void {
-        this.groupColor.set(value);
+        this.groupColor = value;
+        this.applyDefaultColor();
     }
 
     /**
@@ -628,11 +620,18 @@ export class KbqButton
         this._kbqStyle = kbqStyle;
         this._kbqStyleClassName = `kbq-button_${kbqStyle}`;
 
-        // The design system defines a different neutral color per style, which a button without a
-        // color of its own or of its group keeps following.
-        this.setDefaultColor(getDefaultColorForStyle(kbqStyle));
+        this.applyDefaultColor();
 
         this.changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * The color of a surrounding `KbqButtonGroupRoot` wins over the default color of the current `kbqStyle`:
+     * the design system defines a different neutral color per style, which a button without a color of its own
+     * or of its group keeps following.
+     */
+    private applyDefaultColor(): void {
+        this.setDefaultColor(this.groupColor || getDefaultColorForStyle(this._kbqStyle));
     }
 
     private applyDisabledState(): void {
