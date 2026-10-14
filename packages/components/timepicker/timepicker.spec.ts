@@ -1429,6 +1429,36 @@ describe(KbqTimepicker.name, () => {
             expect(timepicker.required()).toBe(false);
         });
     });
+
+    describe('required attribute', () => {
+        it('should leave the attribute off an input without required', () => {
+            const input = getTimepickerElement(createStandaloneComponent(TimepickerWithoutBindings));
+
+            expect(input.hasAttribute('required')).toBe(false);
+            expect(input.checkValidity()).toBe(true);
+        });
+
+        it('should follow the required input', () => {
+            const fixture = createStandaloneComponent(TimepickerWithRequired);
+            const input = getTimepickerElement(fixture);
+
+            // A boolean attribute is on whatever its value, so `required="false"` would make the input required.
+            expect(input.hasAttribute('required')).toBe(false);
+            expect(input.checkValidity()).toBe(true);
+
+            fixture.componentInstance.required = true;
+            fixture.detectChanges();
+
+            expect(input.hasAttribute('required')).toBe(true);
+            expect(input.checkValidity()).toBe(false);
+
+            fixture.componentInstance.required = false;
+            fixture.detectChanges();
+
+            expect(input.hasAttribute('required')).toBe(false);
+            expect(input.checkValidity()).toBe(true);
+        });
+    });
 });
 
 @Component({
@@ -1441,6 +1471,18 @@ describe(KbqTimepicker.name, () => {
 })
 class TimepickerWithoutBindings {
     readonly timepicker = viewChild.required(KbqTimepicker);
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker [required]="required" />
+        </kbq-form-field>
+    `
+})
+class TimepickerWithRequired {
+    required = false;
 }
 
 @Component({
