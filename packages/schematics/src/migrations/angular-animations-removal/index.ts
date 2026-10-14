@@ -27,7 +27,8 @@ export default function angularAnimationsRemoval(options: Schema): Rule {
 
             if (!content) return;
 
-            for (const { pattern, message } of warnPatterns) {
+            for (const { anchor, pattern, message } of warnPatterns) {
+                if (anchor && !new RegExp(anchor).test(content)) continue;
                 if (!new RegExp(pattern).test(content)) continue;
 
                 reported++;

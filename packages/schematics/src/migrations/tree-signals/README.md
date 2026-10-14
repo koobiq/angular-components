@@ -1,25 +1,33 @@
 # tree-signals
 
 Migration schematic invoked automatically by `ng update @koobiq/components@21`
-(registered for `21.0.0-0`). Reports the six public members of `@koobiq/components/tree` that
-became read-only in the tree review. It never writes to the tree.
+(registered for `21.0.0-0`). Reports the public members of `@koobiq/components/tree` that
+became read-only when the tree moved to signals. It never writes to the tree.
 
 ## Background
 
-The tree moved its inputs and its query members to signals. Six members that used to be writable
+The tree moved its inputs and its query members to signals. Members that used to be writable
 are now getters — over a `computed()`, over an `InputSignal`, or over an `asObservable()` view of a
 `Subject`. Assigning to a getter-only property throws `TypeError: Cannot set property … which has
 only a getter` in strict mode, and an ES module is always strict, so an unmigrated write does not
 merely stop compiling: it throws at runtime in any build that skips type checking.
 
-| Member                                     | Was                            | Is                                     |
-| ------------------------------------------ | ------------------------------ | -------------------------------------- |
-| `KbqTreeNodeToggle.disabled`               | `@Input()` accessor pair       | getter over a `computed()`             |
-| `KbqTreeBase.nodeDefs`                     | `QueryList<KbqTreeNodeDef<T>>` | `Signal<readonly KbqTreeNodeDef<T>[]>` |
-| `KbqTreeNodePadding.indent`                | accessor pair                  | `InputSignal<number \| string>`        |
-| `KbqTreeNodePadding.indentUnits`           | writable field                 | getter derived from `indent`           |
-| `KbqTreeNodeToggleBaseDirective.recursive` | accessor pair                  | `InputSignalWithTransform<boolean, …>` |
-| `KbqTreeOption.onFocus` / `onBlur`         | `Subject<KbqTreeOptionEvent>`  | `Observable<KbqTreeOptionEvent>`       |
+| Member                                                        | Was                            | Is                                             |
+| ------------------------------------------------------------- | ------------------------------ | ---------------------------------------------- |
+| `KbqTreeNodeToggle.disabled`                                  | `@Input()` accessor pair       | getter over a `computed()`                     |
+| `KbqTreeBase.nodeDefs`                                        | `QueryList<KbqTreeNodeDef<T>>` | `Signal<readonly KbqTreeNodeDef<T>[]>`         |
+| `KbqTreeNodePadding.indent`                                   | accessor pair                  | `InputSignal<number \| string>`                |
+| `KbqTreeNodePadding.indentUnits`                              | writable field                 | getter derived from `indent`                   |
+| `KbqTreeNodeToggleBaseDirective.recursive`                    | accessor pair                  | `InputSignalWithTransform<boolean, …>`         |
+| `KbqTreeOption.onFocus` / `onBlur`                            | `Subject<KbqTreeOptionEvent>`  | `Observable<KbqTreeOptionEvent>`               |
+| `KbqTreeBase.treeControl`                                     | field                          | getter over an `InputSignal`                   |
+| `KbqTreeBase.dataSource`                                      | accessor pair                  | getter; the input switches it from an `effect` |
+| `KbqTreeSelection.disabled` / `tabIndex` / `selectAllHandler` | accessor pairs                 | getters over signal inputs                     |
+| `KbqTreeOption.disabled` / `showCheckbox`                     | accessor pairs                 | getters over signal inputs                     |
+
+`KbqTree` and `KbqTreeSelection` inherit `treeControl` and `dataSource`. Every input keeps its alias,
+so template bindings keep working. `KbqTreeSelection.multiple` is not listed: it has never had a
+setter, and `multipleMode` stays writable.
 
 Two of them are silent rather than loud:
 
@@ -36,20 +44,22 @@ Walks every `.ts` and `.html` file under the project root — the whole workspac
 omitted, which is how `ng update` invokes it — skipping `node_modules` and `dist`, and logs the
 files that hold a call site one of the narrowings breaks:
 
-| Reported                                          | Manual migration                                                                   |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `<toggle>.disabled = …`                           | Bind the `disabled` attribute; it still reaches the toggle through `disabledInput` |
-| `<toggle>.recursive`                              | Read `recursive()`; bind `kbqTreeNodeToggleRecursive`                              |
-| `nodeDefs.changes` / `.length` / `.toArray()` / … | Read `nodeDefs()`; replace the subscription with an `effect`                       |
-| `<padding>.indent` / `.indentUnits`               | Read `indent()`; bind `kbqTreeNodePaddingIndent`                                   |
-| `<option>.onFocus.next(…)` / `onBlur.next(…)`     | Subscribe instead — the option emits on both streams itself                        |
-| `<tree>.treeControl / dataSource / disabled = …`  | Bind it; `tabIndex`, `multiple` and `selectAllHandler` too (`multipleMode` writes) |
-| `<option>.disabled / showCheckbox = …`            | Bind it, or disable the node through the tree control's `isDisabled`               |
+| Reported                                                 | Manual migration                                                                   |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `<toggle>.disabled = …`                                  | Bind the `disabled` attribute; it still reaches the toggle through `disabledInput` |
+| `<toggle>.recursive`                                     | Read `recursive()`; bind `kbqTreeNodeToggleRecursive`                              |
+| `nodeDefs.changes` / `.length` / `.toArray()` / …        | Read `nodeDefs()`; replace the subscription with an `effect`                       |
+| `<padding>.indent` / `.indentUnits`                      | Read `indent()`; bind `kbqTreeNodePaddingIndent`                                   |
+| `<option>.onFocus.next(…)` / `onBlur.next(…)`            | Subscribe instead — the option emits on both streams itself                        |
+| `<tree>.treeControl / dataSource = …`                    | Bind it, on `kbq-tree` and `kbq-tree-selection` alike                              |
+| `<selection>.disabled / tabIndex / selectAllHandler = …` | Bind it; disable the tree through its form control                                 |
+| `<option>.disabled / showCheckbox = …`                   | Bind it, or disable the node through the tree control's `isDisabled`               |
 
 Each pattern is scoped to files that also name its owner, so a `.disabled =` write in a file that
 never mentions a tree toggle stays quiet. A project that renders a tree at all also gets a summary
-of all six members, because five of the six are only visible at a call site that writes them — a
-consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
+of every member, because not every narrowing breaks the build: `nodeDefs.length` still compiles and
+returns `0`, and a read of `indent` or `recursive` passed on loosely gets a signal instead of its
+value — through a receiver no pattern recognizes, with no diagnostic at all.
 
 ## What it does _not_ do (manual)
 

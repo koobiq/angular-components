@@ -1,7 +1,7 @@
 /**
  * Data for the `tree-signals` migration.
  *
- * Six public members of `@koobiq/components/tree` became read-only when the tree moved to signals:
+ * These public members of `@koobiq/components/tree` became read-only when the tree moved to signals:
  *
  * - `KbqTreeNodeToggle.disabled`        — accessor pair → getter over a `computed()` (the input is
  *   declared as `disabledInput` and still aliased `disabled`, so templates are unaffected)
@@ -10,6 +10,9 @@
  * - `KbqTreeNodePadding.indentUnits`    — writable field → getter derived from `indent`
  * - `KbqTreeNodeToggleBaseDirective.recursive` — accessor pair → `InputSignalWithTransform`
  * - `KbqTreeOption.onFocus` / `onBlur`  — `Subject` → `Observable` via `asObservable()`
+ * - `KbqTreeBase.treeControl` / `dataSource` (of `KbqTree` and `KbqTreeSelection`), `KbqTreeSelection.disabled` /
+ *   `tabIndex` / `selectAllHandler`, `KbqTreeOption.disabled` / `showCheckbox` — field or accessor pair → getter
+ *   over a signal input that keeps the alias, so templates are unaffected
  *
  * Nothing is rewritten. What replaces a write is a template binding or a different member, and
  * neither can be derived from the assignment; a read of a signal-backed member has to be checked
@@ -76,14 +79,23 @@ export const warnPatterns: WarnPattern[] = [
             'runtime as well as in the types. Subscribe to them; the option emits on them itself.'
     },
     {
-        anchor: '\\bKbqTree(?:Selection|Base)\\b',
-        pattern: '\\.\\s*(?:treeControl|dataSource|disabled|tabIndex|multiple|selectAllHandler)\\s*=[^=]',
+        // KbqTree and KbqTreeSelection inherit both from KbqTreeBase; KbqTreeSelect, KbqTreeOption and the rest do not.
+        anchor: '\\bKbqTree(?:Base|Selection)?\\b',
+        pattern: '\\.\\s*(?:treeControl|dataSource)\\s*=[^=]',
         message:
-            'treeControl, dataSource, disabled, tabIndex, multiple and selectAllHandler of KbqTreeSelection are ' +
-            'signal inputs read through a getter now, so a programmatic write no longer compiles. Bind them, set ' +
-            'the selection mode through multipleMode, and disable the tree through its form control. autoSelect, ' +
-            'noUnselectLast, typeAhead and selectAll stay writable. This pattern also matches a write to an ' +
-            'unrelated object in the same file — check before changing it.'
+            'treeControl and dataSource of KbqTreeBase, so of KbqTree and KbqTreeSelection, are signal inputs ' +
+            'read through a getter now, so a programmatic write no longer compiles. Bind them. This pattern also ' +
+            'matches a write to an unrelated object in the same file — check before changing it.'
+    },
+    {
+        // `multiple` is left out: it has never had a setter, `multipleMode` is what a write changes.
+        anchor: '\\bKbqTreeSelection\\b',
+        pattern: '\\.\\s*(?:disabled|tabIndex|selectAllHandler)\\s*=[^=]',
+        message:
+            'disabled, tabIndex and selectAllHandler of KbqTreeSelection are signal inputs read through a getter ' +
+            'now, so a programmatic write no longer compiles. Bind them, and disable the tree through its form ' +
+            'control. autoSelect, noUnselectLast, typeAhead, selectAll and multipleMode stay writable. This ' +
+            'pattern also matches a write to an unrelated object in the same file — check before changing it.'
     },
     {
         anchor: '\\bKbqTreeOption\\b',
@@ -97,9 +109,10 @@ export const warnPatterns: WarnPattern[] = [
 ];
 
 /**
- * Printed once for every project that renders a tree, because five of the six narrowings are only
- * visible at a call site that writes the member — a consumer that merely reads one gets a value
- * whose type changed under it and no diagnostic at all.
+ * Printed once for every project that renders a tree, because not every narrowing breaks the build:
+ * `nodeDefs.length` still compiles and returns 0, and a read of `indent` or `recursive` passed on
+ * loosely gets a signal instead of its value — through a receiver no pattern recognizes, with no
+ * diagnostic at all.
  */
 export const SUMMARY: string[] = [
     '',
@@ -109,6 +122,6 @@ export const SUMMARY: string[] = [
     '  - KbqTreeNodePadding.indent (InputSignal) and KbqTreeNodePadding.indentUnits (getter)',
     '  - KbqTreeNodeToggleBaseDirective.recursive (InputSignalWithTransform)',
     '  - KbqTreeOption.onFocus and KbqTreeOption.onBlur (Observable, not Subject)',
-    '  - KbqTreeSelection treeControl, dataSource, disabled, tabIndex, multiple, selectAllHandler and',
-    '    KbqTreeOption disabled, showCheckbox (signal inputs read through a getter; bind them instead)'
+    '  - KbqTree and KbqTreeSelection treeControl, dataSource; KbqTreeSelection disabled, tabIndex,',
+    '    selectAllHandler; KbqTreeOption disabled, showCheckbox (signal inputs read through a getter; bind them)'
 ];
