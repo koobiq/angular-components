@@ -582,8 +582,11 @@ export class KbqTreeSelection
     /** Pending restore of the tab index after the key manager tabbed out, see `allowFocusEscape`. */
     private restoreTabIndexTimeout: ReturnType<typeof setTimeout> | undefined;
 
-    /** Whether a value report is already queued for the end of the current tick. */
+    /** Whether a value report is queued for the end of the current tick. Cleared by `writeValue` to cancel it. */
     private pendingValueReport = false;
+
+    /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
+    private appliedMultipleInput: KbqMultipleInput | undefined;
 
     /** Whether the selection is being set to a value the form wrote, which is no change to report back. */
     private writingValue = false;
@@ -606,14 +609,14 @@ export class KbqTreeSelection
         // `multiple` attribute reaches the input right after the constructor, before any node exists.
         this.selectionModel = this.ownSelectionModel = new SelectionModel<SelectionModelOption>(false);
 
-        // The inputs below stay `undefined` until a template binds them, so an unbound one does not override
-        // what `KbqTreeSelect`, the `ControlValueAccessor` or the roving focus wrote.
         effect(() => {
-            const multiple = this.multipleInput();
+            this.multipleInput();
 
-            if (multiple !== undefined) untracked(() => this.setMultipleMode(resolveMultipleMode(multiple)));
+            untracked(() => this.applyMultipleInput());
         });
 
+        // The inputs below stay `undefined` until a template binds them, so an unbound one does not override
+        // what the `ControlValueAccessor` or the roving focus wrote.
         effect(() => {
             const tabIndex = this.tabIndexInput();
 
@@ -650,6 +653,23 @@ export class KbqTreeSelection
     /** Selects every node "select all" can act on, or deselects them all when they are already selected. */
     protected toggleSelectAll(): void {
         this.selectAllOptions(true);
+    }
+
+    /**
+     * Sets the mode from the `multiple` binding, once per bound value: an unbound input leaves what
+     * `KbqTreeSelect` or the {@link multipleMode} setter wrote, and a value bound back to `undefined` means
+     * single selection.
+     *
+     * Called by an effect, and by `writeValue` ahead of it: a forms directive on this element writes the
+     * value from its own `ngOnChanges`, which runs before any effect of the view.
+     */
+    private applyMultipleInput(): void {
+        const multiple = this.multipleInput();
+
+        if (multiple === this.appliedMultipleInput) return;
+
+        this.appliedMultipleInput = multiple;
+        this.setMultipleMode(resolveMultipleMode(multiple));
     }
 
     /**
@@ -722,7 +742,7 @@ export class KbqTreeSelection
      * Reports the value once the current change-detection pass is over: a bound `[multiple]` is written
      * during change detection, and reporting straight back to the form control there would raise
      * "Expression has changed after it was checked". Coalesced so that several mode changes in one tick
-     * produce one notification, and dropped if the tree is gone by the time it runs.
+     * produce one notification, and dropped if the form writes a value or the tree is gone by the time it runs.
      */
     private scheduleValueReport(): void {
         if (this.pendingValueReport) {
@@ -732,6 +752,8 @@ export class KbqTreeSelection
         this.pendingValueReport = true;
 
         Promise.resolve().then(() => {
+            if (!this.pendingValueReport) return;
+
             this.pendingValueReport = false;
 
             if (!this.destroyed) {
@@ -1229,10 +1251,14 @@ export class KbqTreeSelection
     }
 
     writeValue(value: any): void {
+        this.applyMultipleInput();
+
         if (this.multiple && value && !Array.isArray(value)) {
             throw getKbqSelectNonArrayValueError();
         }
 
+        // The form holds the value it writes, so a mode change has nothing left to report.
+        this.pendingValueReport = false;
         this.writingValue = true;
 
         try {
