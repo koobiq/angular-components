@@ -2137,6 +2137,46 @@ describe('KbqDatepicker', () => {
         });
     });
 
+    describe('required attribute', () => {
+        const render = <T>(component: Type<T>): ComponentFixture<T> => {
+            TestBed.configureTestingModule({ imports: [LuxonDateModule, component] });
+
+            const fixture = TestBed.createComponent(component);
+
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        it('should leave the attribute off an input without required', () => {
+            const input = getDatepickerInputElement(render(DatepickerWithDefaultPlaceholder));
+
+            expect(input.hasAttribute('required')).toBe(false);
+            expect(input.checkValidity()).toBe(true);
+        });
+
+        it('should follow the required input', () => {
+            const fixture = render(DatepickerWithRequired);
+            const input = getDatepickerInputElement(fixture);
+
+            // A boolean attribute is on whatever its value, so `required="false"` would make the input required.
+            expect(input.hasAttribute('required')).toBe(false);
+            expect(input.checkValidity()).toBe(true);
+
+            fixture.componentInstance.required = true;
+            fixture.detectChanges();
+
+            expect(input.hasAttribute('required')).toBe(true);
+            expect(input.checkValidity()).toBe(false);
+
+            fixture.componentInstance.required = false;
+            fixture.detectChanges();
+
+            expect(input.hasAttribute('required')).toBe(false);
+            expect(input.checkValidity()).toBe(true);
+        });
+    });
+
     // @koobiq/luxon-date-adapter carries locale data for a fixed set of locales, and its base constructor
     // calls setLocale before the subclass field that would widen it exists. KBQ_DATE_LOCALE: 'de-DE' therefore
     // throws inside the adapter constructor, before any assertion here runs.
@@ -2494,6 +2534,17 @@ class DatepickerWithEvents {
     `
 })
 class DatepickerWithDefaultPlaceholder {}
+
+@Component({
+    imports: [KbqDatepickerModule],
+    template: `
+        <input [kbqDatepicker]="d" [required]="required" />
+        <kbq-datepicker #d />
+    `
+})
+class DatepickerWithRequired {
+    required = false;
+}
 
 @Component({
     imports: [KbqDatepickerModule],
