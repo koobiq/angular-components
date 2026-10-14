@@ -39,6 +39,7 @@ import {
     input,
     numberAttribute,
     output,
+    signal,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -1021,17 +1022,21 @@ export class KbqSelect
         return !this.options.find((option: KbqOption) => option === this.firstSelected);
     }
 
+    /**
+     * Whether the legacy `KbqValidateDirective` marks this control. The class it writes never changes
+     * after the host is created, so it is probed once instead of on every change detection pass.
+     */
+    private hasLegacyValidateDirective = false;
+
+    // Mirror of the state the error colour is derived from. That state changes in `ngDoCheck`, while the
+    // parent is checked, and nothing marks this OnPush view for it — the signal is what repaints the trigger.
+    private readonly invalidState = signal(false);
+
     /** @docs-private */
     get colorForState(): KbqComponentColors {
-        const hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
-            'kbq-control_has-validate-directive'
-        );
-
         if (this.disabled) return KbqComponentColors.Empty;
 
-        return (hasLegacyValidateDirective && this.ngControl?.invalid) || this.errorState
-            ? KbqComponentColors.Error
-            : KbqComponentColors.ContrastFade;
+        return this.invalidState() ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
     }
 
     /** Whether multiple choice is enabled. True if multiple or multiline mode is active. */
@@ -1089,6 +1094,11 @@ export class KbqSelect
         this.id = this.id;
 
         afterNextRender(() => {
+            this.hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
+                'kbq-control_has-validate-directive'
+            );
+            this.syncInvalidState();
+
             if (this.multiple && !this.multiline()) {
                 merge(fromEvent(this.window, 'resize'), this.tags.changes)
                     .pipe(delay(0), debounceTime(50), takeUntilDestroyed(this.destroyRef))
@@ -1148,6 +1158,8 @@ export class KbqSelect
 
         if (this.ngControl) {
             this.updateErrorState();
+        } else {
+            this.syncInvalidState();
         }
     }
 
@@ -1201,6 +1213,12 @@ export class KbqSelect
             this.errorState = newState;
             this.stateChanges.next();
         }
+
+        this.syncInvalidState();
+    }
+
+    private syncInvalidState(): void {
+        this.invalidState.set((this.hasLegacyValidateDirective && !!this.ngControl?.invalid) || this.errorState);
     }
 
     /**
