@@ -149,7 +149,7 @@ ng g @koobiq/components:v20-upgrade --project "<your project>"
 
 **Instance methods:**
 
-- .openPanel() → .open(),
+- KbqAutocompleteTrigger.openPanel() → .open(),
 - .toggleIsCollapsed() → .toggle(),
 - .focusViaKeyboard() → .focus().
 
@@ -345,7 +345,7 @@ ng g @koobiq/components:zoneless-change-detection --project "<your project>"
 Koobiq components no longer use `@angular/animations`, which Angular deprecated: they animate with CSS and wait for the end of an animation themselves. `@angular/animations` is no longer a peer dependency, and the components no longer need `provideAnimations()`: remove it, and the package, unless the components of your application declare `animations: [...]` themselves.
 
 - **The motion is off under `prefers-reduced-motion: reduce`.** To turn it off in the whole application, for example in an end-to-end suite, provide `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` from `@koobiq/components/core`. `provideNoopAnimations()` still turns it off, but it belongs to the deprecated package.
-- **The exported triggers are removed**: `fadeAnimation` and `kbqSelectAnimations` from `core`, `kbqDropdownAnimations`, `fadeInItems` and `transformDropdown` from `dropdown`, `kbqTabsAnimations` from `tabs`. `KbqSidepanelAnimationState` is no longer exported from `sidepanel`.
+- **The exported triggers are removed**: `fadeAnimation` and `kbqSelectAnimations` from `core`, `kbqDropdownAnimations`, `fadeInItems` and `transformDropdown` from `dropdown`, `kbqTabsAnimations` from `tabs`, `kbqPopoverAnimations` from `popover`, `kbqDatepickerAnimations` from `datepicker`, `KbqNotificationCenterAnimations` from `notification-center` and `kbqAppSwitcherAnimations` from `app-switcher`. `KbqSidepanelAnimationState` is no longer exported from `sidepanel`, nor `MODAL_ANIMATE_DURATION` from `modal`: instead of a timer of that length, act on `afterOpen` / `afterClose` of the `KbqModalRef`.
 - **The members that carried an `AnimationEvent` are removed.** `KbqPopUp.animationStart()` and `animationDone()`: a subclass overrides the protected `afterShowAnimation()`. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` and `onAnimationDone()`: a custom trigger calls `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` and `onAnimationDone()`: listen to `stateChanged`. `KbqTabBody.onTranslateTabStarted()` and `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` and `onAnimation()`, the `animationStateChanged` of the sidepanel and actions panel containers, and `animationState`, `animationTransform` and `setAnimationState()` of the sidepanel container: follow a panel through its ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`. The protected `KbqContentPanelContainer.contentAnimationState` fed the removed `@contentAnimation` trigger: a subclass reads `isOpened()`.
 - **The dropdown panel no longer fades out**: it is closed, and its lazy content detached, as soon as the trigger reports it.
 - **In a spec, what waited for an animation callback now waits for the next render**: `fixture.detectChanges()` or `await fixture.whenStable()`. jsdom has no Web Animations API, so nothing animates there.
@@ -1325,6 +1325,8 @@ export class ColorInput implements KbqFormFieldControl<string> {
 ```
 
 **The rest of a control's state is read-only.** Assignments to `placeholder`, `required` and `id` no longer compile, nor do assignments to `disabled` on the native-element controls and to `value` on `KbqTreeSelect`, `KbqTimepicker` and `KbqDatepickerInput`: bind them in the template, or set the value through a form control. Each write is reported with its file.
+
+**`KbqInputPassword.elementType` is a read-only signal.** It was a writable `string`; it is a `Signal<'text' | 'password'>` now, and only `toggleType()` changes it. A read becomes a call — the schematic rewrites `password.elementType` to `password.elementType()`, also through a `#ref="kbqInputPassword"` — and an assignment no longer compiles: call `toggleType()` to show or hide the password. Each write is reported with its file.
 
 **The error state helpers changed with it.** `KbqErrorStateTracker` no longer takes a `stateChanges` subject, and its `errorState` — like `CanUpdateErrorState.errorState` — is a `Signal<boolean>`; `CanUpdateErrorState` no longer declares `errorStateMatcher`. The deprecated `mixinErrorState` and `CanUpdateErrorStateCtor` were removed. `KbqIconErrorStateContext` is signal-based too, and so are `id`, `placeholder`, `focused` and `empty` of `KbqTagInput`: their reads become calls, a write is reported.
 
@@ -2516,6 +2518,8 @@ Two more fixes with nothing to migrate: the locale subscription created in the c
 
 The rest of the select inputs followed. `hasBackdrop`, `compareWith` and `searchMinOptionsThreshold` are signals: read them as calls — `compareWith()(a, b)`; `searchMinOptionsThreshold()` still reports the resolved number. `multiple`, `tabIndex` and `selectAllHandler` are signal inputs read through a getter. None of the six can be assigned any more: bind them in the template. Changing `[multiple]` after the first render still throws.
 
+`KbqTimezoneSelect` extends `KbqSelect`, so everything above applies to it as well, and a file that names only the timezone select is reported too.
+
 Reported by `select-signal-inputs`.
 
 #### Sidepanel
@@ -2540,6 +2544,10 @@ Reported by `select-signal-inputs`.
 The container is a dialog to assistive technology at last: `role="dialog"`, `aria-modal` for a modal panel, and an `aria-labelledby` pointing at the `kbq-sidepanel-header` title, with `ariaLabel` / `ariaLabelledBy` on the config for a panel that has no header. While a modal sidepanel is open the rest of the page is `aria-hidden`, so a screen reader stops walking the page behind it. Any `role` or `aria-*` you were stamping on the container yourself is a duplicate now.
 
 Four smaller fixes with nothing to migrate: a component-provided `KbqSidepanelService` closes the panels it opened when it is destroyed, instead of leaving an orphaned overlay behind; `closeAll()` no longer reverses the live stack in place; the indent strip belongs to the top panel of a stack alone, where a stack three deep used to draw one strip per level and closing a lower panel left the one above exposing a panel that was no longer there; a second `close('B')` before the animation finishes no longer overwrites the `'A'` the first call promised; and a click inside a sidepanel at another edge no longer closes an unrelated panel. `KbqSidepanelService` is `providedIn: 'root'`.
+
+**<kbd>Escape</kbd> closes one layer at a time.** A sidepanel, the actions panel and the notification center no longer close on an Escape that a layer above them or a control inside them already handled — a tooltip, a popover, a confirm dialog opened over the panel, a control closing a popup of its own. The notification center now marks the Escape it closes on as handled (`preventDefault()`), so a sidepanel underneath stays open. A handler of your own that calls `preventDefault()` on Escape keeps these panels open too.
+
+**The sidepanel reports its transitions after the render that applies them.** `beforeClosed()` and `afterOpened()` no longer fire synchronously inside `open()` or `close()`: a subscription made right after `close()` is notified, and a sidepanel opened from `afterOpened()` of a lower one lands on top of the stack. Code that relied on `beforeClosed()` having fired by the time `close()` returned waits for the emission.
 
 Reported by `sidepanel-non-modal-behavior`.
 
@@ -2915,7 +2923,7 @@ The review typed the surface and dropped the members that only existed to feed t
 
 Three fixes with nothing to migrate: the embedded tree is set up through `KbqTreeSelection.initializeForEmbedding()` instead of a second manual `ngAfterContentInit()`, which used to leave duplicate subscriptions on query lists that are never re-created — so every options change was handled several times, on the search-filtering hot path; the dead `{ provide: KbqTree, useExisting: KbqTreeSelect }` provider is gone, since `KbqTreeSelect` never satisfied `KbqTree` structurally and anything injecting `KbqTree` from inside a tree-select was getting an object that only looked right; and the component renders a host `id` and carries combobox ARIA, so the form field label's `[attr.for]` resolves instead of dangling.
 
-`searchMinOptionsThreshold` is a signal like on `KbqSelect`, and `multiple`, `autoSelect`, `tabIndex` and `selectAllHandler` are signal inputs read through a getter. None of them can be assigned any more: bind them in the template.
+`hasBackdrop` and `searchMinOptionsThreshold` are signals like on `KbqSelect`, and `multiple`, `autoSelect`, `tabIndex` and `selectAllHandler` are signal inputs read through a getter. None of them can be assigned any more: bind them in the template.
 
 Reported by `tree-select-signals`.
 
