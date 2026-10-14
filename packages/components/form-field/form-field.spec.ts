@@ -1,4 +1,4 @@
-import { Component, DebugElement, Directive, signal, Type } from '@angular/core';
+import { Component, DebugElement, Directive, DoCheck, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -122,6 +122,29 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
 })
 export class InputFormFieldWithHintAndError {
     readonly control = new FormControl('', [Validators.required]);
+}
+
+/** Counts the change detection passes over the view that declares it. */
+@Directive({ selector: '[testCountChecks]' })
+class CountChecks implements DoCheck {
+    count = 0;
+
+    ngDoCheck(): void {
+        this.count++;
+    }
+}
+
+@Component({
+    selector: 'input-form-field-with-check-counter',
+    imports: [KbqInputModule, ReactiveFormsModule, CountChecks],
+    template: `
+        <kbq-form-field>
+            <input kbqInput testCountChecks [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class InputFormFieldWithCheckCounter {
+    readonly control = new FormControl('');
 }
 
 @Component({
@@ -652,6 +675,23 @@ describe(KbqFormField.name, () => {
         expect(formField.classes['cdk-focused']).toBeFalsy();
         getInputNativeElement(debugElement).focus();
         expect(formField.classes['cdk-focused']).toBeTruthy();
+    });
+
+    it('should not run change detection when the pointer enters or leaves the form field', async () => {
+        const fixture = createComponent(InputFormFieldWithCheckCounter);
+        const { debugElement } = fixture;
+        const counter = debugElement.query(By.directive(CountChecks)).injector.get(CountChecks);
+        const formField = getFormFieldDebugElement(debugElement).nativeElement;
+
+        await fixture.whenStable();
+        const checks = counter.count;
+
+        dispatchFakeEvent(formField, 'mouseenter');
+        await fixture.whenStable();
+        dispatchFakeEvent(formField, 'mouseleave');
+        await fixture.whenStable();
+
+        expect(counter.count).toBe(checks);
     });
 
     it('should add kbq-disabled selector for KbqFormField when form control is disabled', () => {

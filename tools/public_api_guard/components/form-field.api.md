@@ -128,7 +128,6 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly hasSuffix: Signal<boolean>;
     readonly hint: Signal<readonly KbqHint[]>;
     readonly horizontal: i0.InputSignalWithTransform<boolean | undefined, unknown>;
-    hovered: boolean;
     readonly inOverlay: i0.ModelSignal<boolean | undefined>;
     get invalid(): boolean;
     readonly isNativeLabelSupported: Signal<boolean>;
@@ -144,7 +143,6 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     ngOnDestroy(): void;
     readonly noBorders: i0.InputSignalWithTransform<boolean | undefined, unknown>;
     onContainerClick(event: MouseEvent): void;
-    onHoverChanged(isHovered: boolean): void;
     readonly passwordToggle: Signal<KbqPasswordToggle | undefined>;
     readonly prefix: Signal<readonly KbqPrefix[]>;
     runFocusMonitor: () => void;

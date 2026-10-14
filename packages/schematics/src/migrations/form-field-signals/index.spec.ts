@@ -167,6 +167,75 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('`undefined` instead of `null`');
     });
 
+    const HOVER_REMOVED = '`KbqFormField.hovered` and `onHoverChanged()` were removed';
+
+    it('warns once about the removed hovered / onHoverChanged() on a KbqFormField receiver', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFormField } from '@koobiq/components/form-field';\n" +
+                'class Demo {\n' +
+                '    read(formField: KbqFormField) {\n' +
+                '        formField.onHoverChanged(true);\n' +
+                '        return formField?.hovered;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n').split(HOVER_REMOVED)).toHaveLength(2);
+    });
+
+    it('warns about the removed hovered / onHoverChanged() through a bare #ref and one naming kbqFormField', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-form-field #bare (mouseenter)="bare.onHoverChanged(true)"><input kbqInput /></kbq-form-field>\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain(`${html}\n  ${HOVER_REMOVED}`);
+
+        messages = [];
+        appTree.overwrite(
+            html,
+            '<kbq-form-field #field="kbqFormField"><input kbqInput /></kbq-form-field>\n' +
+                '<span>{{ field.hovered }}</span>\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).toContain(`${html}\n  ${HOVER_REMOVED}`);
+    });
+
+    it('does NOT warn about hovered on another receiver or through a ref naming another directive', async () => {
+        const ts = firstTsPath();
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFormField } from '@koobiq/components/form-field';\n" +
+                'class Demo {\n' +
+                '    read(formField: KbqFormField, item: { hovered: boolean }) {\n' +
+                '        return formField.hasHint && item.hovered;\n' +
+                '    }\n' +
+                '}\n'
+        );
+        appTree.overwrite(
+            html,
+            '<kbq-form-field #origin="cdkOverlayOrigin" cdkOverlayOrigin><input kbqInput /></kbq-form-field>\n' +
+                '<span>{{ origin.hovered }}</span>\n'
+        );
+
+        await run();
+
+        expect(messages.join('\n')).not.toContain(HOVER_REMOVED);
+    });
+
     it('warns about an assignment to a now read-only signal input', async () => {
         const ts = firstTsPath();
 
