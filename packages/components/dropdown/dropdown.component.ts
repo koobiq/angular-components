@@ -635,12 +635,16 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnDestro
      * @param origin Action from which the focus originated. Used to set the correct styling.
      */
     focusFirstItem(origin: FocusOrigin = 'program'): void {
-        // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
-        if (this.lazyContent()) {
-            this.applyInitialFocusAfterRender(origin);
-        } else {
-            this.applyInitialFocus(origin);
-        }
+        // Untracked: called from a consumer's `effect()`, the state read on the way — the content and search field
+        // queries, the `disabled` of the items — would make the effect run again whenever it changes.
+        untracked(() => {
+            // When the content is rendered lazily, it takes a bit before the items are inside the DOM.
+            if (this.lazyContent()) {
+                this.applyInitialFocusAfterRender(origin);
+            } else {
+                this.applyInitialFocus(origin);
+            }
+        });
     }
 
     private applyInitialFocusAfterRender(origin: FocusOrigin): void {

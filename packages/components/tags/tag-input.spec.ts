@@ -2,7 +2,7 @@
 import { DASH } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { PlatformModule } from '@angular/cdk/platform';
-import { APP_ID, Component, DebugElement, Provider, signal, Type, viewChild } from '@angular/core';
+import { APP_ID, Component, DebugElement, effect, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -1456,3 +1456,49 @@ class TestTagInputWithInputControl {
         input.value = '';
     });
 }
+
+@Component({
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag-list #tagList>
+            @for (tag of tags(); track tag) {
+                <kbq-tag [value]="tag">{{ tag }}</kbq-tag>
+            }
+            <input distinct [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="add($event)" />
+        </kbq-tag-list>
+    `
+})
+class TagInputDrivenByEffects {
+    readonly tagInput = viewChild.required(KbqTagInput);
+    readonly tags = signal(['existing-tag']);
+    readonly endTag = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (!this.endTag() || this.runs >= 10) return;
+
+            this.runs++;
+            this.tagInput().emitTagEnd();
+        });
+    }
+
+    add({ value, input }: KbqTagInputEvent): void {
+        this.tags.update((tags) => [...tags, value]);
+        input.value = '';
+    }
+}
+
+describe('KbqTagInput called from an effect', () => {
+    it('should not make an effect that ends a tag run again when the tags change', () => {
+        const fixture = createComponent(TagInputDrivenByEffects);
+
+        fixture.detectChanges();
+        getInputElement(fixture).value = 'new-tag';
+        fixture.componentInstance.endTag.set(true);
+        fixture.detectChanges();
+
+        expect(fixture.componentInstance.tags()).toEqual(['existing-tag', 'new-tag']);
+        expect(fixture.componentInstance.runs).toBe(1);
+    });
+});

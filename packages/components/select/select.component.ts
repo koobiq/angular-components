@@ -1452,10 +1452,12 @@ export class KbqSelect
      * @docs-private
      */
     clear(): void {
-        this.selectionModel.deselect(...this.clearTargets);
-        this.keyManager.setActiveItem(-1);
+        untracked(() => {
+            this.selectionModel.deselect(...this.clearTargets);
+            this.keyManager.setActiveItem(-1);
 
-        this.propagateChanges();
+            this.propagateChanges();
+        });
     }
 
     /**
@@ -1472,28 +1474,35 @@ export class KbqSelect
 
     /** Resets the search component if present. */
     resetSearch(): void {
-        const search = this.search();
+        untracked(() => {
+            const search = this.search();
 
-        if (!search) {
-            return;
-        }
+            if (!search) {
+                return;
+            }
 
-        search.reset();
-        /*
-        todo the incorrect behaviour of keyManager is possible here
-        to avoid first item selection (to provide correct options flipping on closed select)
-        we should process options update like it is the first options appearance
-        */
-        search.isSearchChanged = false;
+            search.reset();
+            /*
+            todo the incorrect behaviour of keyManager is possible here
+            to avoid first item selection (to provide correct options flipping on closed select)
+            we should process options update like it is the first options appearance
+            */
+            search.isSearchChanged = false;
+        });
     }
 
     /** Toggles the overlay panel open or closed. */
     toggle(): void {
-        if (this.panelOpen) {
-            this.close();
-        } else {
-            this.open();
-        }
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — `panelOpen`, `disabled`, the options, the inputs — would make the effect run again on every open
+        // and close.
+        untracked(() => {
+            if (this.panelOpen) {
+                this.close();
+            } else {
+                this.open();
+            }
+        });
     }
 
     /**
@@ -1504,24 +1513,30 @@ export class KbqSelect
      * if options exist, it opens immediately.
      */
     open(): void {
-        if (this.disabled() || this.panelOpen) return;
+        untracked(() => {
+            if (this.disabled() || this.panelOpen) return;
 
-        this.beforeOpened.emit();
+            this.beforeOpened.emit();
 
-        if (this.noOptions) {
-            clearTimeout(this.openPanelTimeout);
+            if (this.noOptions) {
+                clearTimeout(this.openPanelTimeout);
 
-            this.openPanelTimeout = setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
-        } else {
-            this.openPanel();
-        }
+                this.openPanelTimeout = setTimeout(() => this.openPanel(), delayBeforeDisplayingResultWithoutOptions);
+            } else {
+                this.openPanel();
+            }
+        });
     }
 
     /**
      * Internal method to open the panel. Handles overlay positioning and sizing.
      * Sets up the overlay dimensions based on trigger size and configured options.
      */
-    openPanel() {
+    openPanel(): void {
+        untracked(() => this.attachPanel());
+    }
+
+    private attachPanel(): void {
         const trigger = this.trigger();
 
         if (!trigger || !this.keyManager) return;
@@ -1571,20 +1586,22 @@ export class KbqSelect
 
     /** Closes the overlay panel. */
     close(): void {
-        if (!this.panelOpen) return;
+        untracked(() => {
+            if (!this.panelOpen) return;
 
-        // the order of calls is important
-        this.resetSearch();
-        this.panelOpen = false;
-        this.unsubscribeFromPanelResize();
-        // Back to the two default sides, so the next open is not resolved against a first row that has since
-        // changed height.
-        this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
-        this.keyManager.withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
+            // the order of calls is important
+            this.resetSearch();
+            this.panelOpen = false;
+            this.unsubscribeFromPanelResize();
+            // Back to the two default sides, so the next open is not resolved against a first row that has since
+            // changed height.
+            this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
+            this.keyManager.withHorizontalOrientation(this.isRtl() ? 'rtl' : 'ltr');
 
-        this._changeDetectorRef.markForCheck();
-        this.onTouched();
-        this.reportPanelRendered('void');
+            this._changeDetectorRef.markForCheck();
+            this.onTouched();
+            this.reportPanelRendered('void');
+        });
     }
 
     /**
@@ -1609,7 +1626,8 @@ export class KbqSelect
      * @param value New value to be written to the model.
      */
     writeValue(value: any): void {
-        this.applyValue(value);
+        // Untracked: a form control set from an `effect()` writes here synchronously.
+        untracked(() => this.applyValue(value));
         this.value.set(value);
     }
 
@@ -1798,7 +1816,9 @@ export class KbqSelect
     }
 
     /** Calculates the number of hidden items in multiple selection mode and updates `hiddenItems`. */
-    calculateHiddenItems = () => {
+    calculateHiddenItems = (): void => untracked(() => this.measureHiddenItems());
+
+    private measureHiddenItems(): void {
         if (
             !this.isBrowser ||
             this.customTrigger() ||
@@ -1834,7 +1854,7 @@ export class KbqSelect
             this.hiddenItemsCount.set(0);
             this.visibleTriggerItems.set(null);
         }
-    };
+    }
 
     /**
      * Gets the height of a single option item.

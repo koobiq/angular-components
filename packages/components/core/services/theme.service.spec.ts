@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { PLATFORM_ID, REQUEST } from '@angular/core';
+import { effect, PLATFORM_ID, REQUEST, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import type { Mocked } from 'vitest';
@@ -399,6 +399,28 @@ describe('KbqThemeService', () => {
         service.toggle();
         TestBed.tick();
         expect(service.currentTheme()?.name).toBe('light');
+    });
+
+    it('should not loop when an effect toggles the theme', () => {
+        const { service } = setup(false);
+        const flip = signal(false);
+        let runs = 0;
+
+        TestBed.runInInjectionContext(() =>
+            effect(() => {
+                // Capped, so that a regression fails instead of hanging.
+                if (!flip() || runs === 10) return;
+
+                runs++;
+                service.toggle();
+            })
+        );
+
+        flip.set(true);
+        TestBed.tick();
+
+        expect(service.currentTheme()?.name).toBe('dark');
+        expect(runs).toBe(1);
     });
 
     it('supports registering a fully custom set of themes, resolved by colorScheme', () => {

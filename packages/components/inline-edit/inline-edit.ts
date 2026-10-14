@@ -471,9 +471,13 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
     /** Manually switch mode. Does nothing while a `saveHandler` request is in flight. */
     toggleMode(): void {
-        if (this.isSaving()) return;
+        // Untracked, as `commit()`, `retrySave()` and `rollback()`: called from a consumer's `effect()`, the state read
+        // on the way — the mode, the save status, the inputs — would make the effect run again whenever it changes.
+        untracked(() => {
+            if (this.isSaving()) return;
 
-        this.mode.update((currentMode) => (currentMode === 'edit' ? 'view' : 'edit'));
+            this.mode.update((currentMode) => (currentMode === 'edit' ? 'view' : 'edit'));
+        });
     }
 
     /**
@@ -488,29 +492,33 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
 
     /** Saves the current value, running the same validation as a normal save. */
     commit(): void {
-        this.save();
+        untracked(() => this.save());
     }
 
     /** Repeats the request for a value the server rejected. Does nothing unless the last save failed. */
     retrySave(): void {
-        const saveHandler = this.saveHandler();
+        untracked(() => {
+            const saveHandler = this.saveHandler();
 
-        if (this.saveStatus() !== 'error' || !saveHandler) return;
+            if (this.saveStatus() !== 'error' || !saveHandler) return;
 
-        this.startSave(saveHandler());
+            this.startSave(saveHandler());
+        });
     }
 
     /** Discards the value the server rejected, restoring the last saved one and closing the editor. */
     rollback(): void {
-        if (this.saveStatus() !== 'error') return;
+        untracked(() => {
+            if (this.saveStatus() !== 'error') return;
 
-        this.setValue(this.lastSavedValue);
-        this.initialValue = this.lastSavedValue;
-        this.saveStatusSource.set('idle');
+            this.setValue(this.lastSavedValue);
+            this.initialValue = this.lastSavedValue;
+            this.saveStatusSource.set('idle');
 
-        if (this.isEditMode()) {
-            this.toggleMode();
-        }
+            if (this.isEditMode()) {
+                this.toggleMode();
+            }
+        });
     }
 
     /** @docs-private */

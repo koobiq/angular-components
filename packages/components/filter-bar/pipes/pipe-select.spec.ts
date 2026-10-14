@@ -1,8 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, inject, TemplateRef, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, effect, inject, TemplateRef, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { dispatchKeyboardEvent, ENTER } from '@koobiq/components/core';
+import { dispatchKeyboardEvent, ENTER, ESCAPE } from '@koobiq/components/core';
 import {
     KbqFilter,
     KbqFilterBar,
@@ -320,6 +320,47 @@ describe('KbqPipeSelectComponent', () => {
             vi.useFakeTimers();
 
             await shouldSelectActiveOptionAndRestoreFocus(true);
+        });
+    });
+
+    describe('opened from an effect', () => {
+        @Component({ template: '' })
+        class EffectHost {
+            pipe: KbqPipeSelectComponent | null = null;
+            runs = 0;
+
+            constructor() {
+                effect(() => {
+                    if (!this.pipe || this.runs >= 10) return;
+
+                    this.runs++;
+                    this.pipe.open();
+                });
+            }
+        }
+
+        it('should not make the effect run again when the user closes it', async () => {
+            vi.useFakeTimers();
+
+            fixture = TestBed.createComponent(TestComponent);
+            fixture.componentInstance.activeFilter = createFilter([createPipe({ name: 'test', value: null })]);
+            fixture.detectChanges();
+
+            const pipe = getPipeComponent();
+            const effectHost = TestBed.createComponent(EffectHost);
+
+            effectHost.componentInstance.pipe = pipe;
+            effectHost.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(pipe.select().panelOpen).toBe(true);
+
+            dispatchKeyboardEvent(fixture.debugElement.query(By.css('kbq-select')).nativeElement, 'keydown', ESCAPE);
+            await vi.runOnlyPendingTimersAsync();
+            effectHost.detectChanges();
+
+            expect(pipe.select().panelOpen).toBe(false);
+            expect(effectHost.componentInstance.runs).toBe(1);
         });
     });
 

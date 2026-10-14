@@ -916,27 +916,31 @@ export class KbqTreeSelection
 
     /** @docs-private */
     highlightSelectedOption(): void {
-        // The selection can hold nodes that are not rendered — collapsed branches, or references left
-        // over from a data replacement. Falling back keeps `focus()` from ending with nothing focused
-        // at all, since it already took the branch that skips `setFirstItemActive`.
-        const target =
-            this.renderedOptions.find((item) => item.data === this.selectionModel.selected[0]) ??
-            this.keyManager.activeItem;
+        untracked(() => {
+            // The selection can hold nodes that are not rendered — collapsed branches, or references left
+            // over from a data replacement. Falling back keeps `focus()` from ending with nothing focused
+            // at all, since it already took the branch that skips `setFirstItemActive`.
+            const target =
+                this.renderedOptions.find((item) => item.data === this.selectionModel.selected[0]) ??
+                this.keyManager.activeItem;
 
-        if (target) {
-            target.focus();
-        } else {
-            this.keyManager.setFirstItemActive();
-        }
+            if (target) {
+                target.focus();
+            } else {
+                this.keyManager.setFirstItemActive();
+            }
+        });
     }
 
     blur() {
-        if (!this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
-            this.keyManager.setActiveItem(-1);
-        }
+        untracked(() => {
+            if (!this.hasFocusedOption() && this.resetFocusedItemOnBlur) {
+                this.keyManager.setActiveItem(-1);
+            }
 
-        this.onTouched();
-        this.changeDetectorRef.markForCheck();
+            this.onTouched();
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     /**
@@ -1218,33 +1222,40 @@ export class KbqTreeSelection
         tree.selectAllOptions();
     }
 
-    selectAllOptions(allowDeselect: boolean = this.selectAll || this.selectAllToggle()): void {
-        // The row's own `(click)` and the Ctrl/Cmd + A shortcut both funnel through here, so this is the
-        // single place to refuse acting while the whole tree is disabled — mirrors the guard every other
-        // row already gets via `KbqTreeOption.selectViaInteraction()`.
-        if (this.disabled) return;
+    selectAllOptions(allowDeselect?: boolean): void {
+        // Untracked, its default included, like the other imperative methods: called from a consumer's `effect()`,
+        // the state read on the way — the options, `disabled`, the mode, the inputs — would make the effect run
+        // again whenever it changes.
+        untracked(() => {
+            // The row's own `(click)` and the Ctrl/Cmd + A shortcut both funnel through here, so this is the
+            // single place to refuse acting while the whole tree is disabled — mirrors the guard every other
+            // row already gets via `KbqTreeOption.selectViaInteraction()`.
+            if (this.disabled) return;
 
-        // Selection is applied at the data-node level (incl. collapsed/non-rendered nodes unless a filter
-        // is active), while the emitted events carry the selectable rendered options.
-        const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
+            // Selection is applied at the data-node level (incl. collapsed/non-rendered nodes unless a filter
+            // is active), while the emitted events carry the selectable rendered options.
+            const selectableOptions = this.renderedOptions.filter((option) => !option.disabled && option.selectable());
 
-        // `toggleSelectAll` returns the data nodes whose selection actually flipped — the source of
-        // truth, unlike the cached `option.selected` which lags until change detection.
-        const changed = toggleSelectAll(this.selectAllAdapter, { allowDeselect });
+            // `toggleSelectAll` returns the data nodes whose selection actually flipped — the source of
+            // truth, unlike the cached `option.selected` which lags until change detection.
+            const changed = toggleSelectAll(this.selectAllAdapter, {
+                allowDeselect: allowDeselect ?? (this.selectAll || this.selectAllToggle())
+            });
 
-        const changedData = new Set(changed);
-        const changedOptions = selectableOptions.filter((option) => changedData.has(option.data));
+            const changedData = new Set(changed);
+            const changedOptions = selectableOptions.filter((option) => changedData.has(option.data));
 
-        // Skip `selectionChange` on a no-op (e.g. Ctrl+A while everything is already selected and
-        // `allowDeselect` is off) so `KbqTreeSelectionChange.option` is never `undefined`.
-        if (changedOptions.length > 0) {
-            this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
-        }
+            // Skip `selectionChange` on a no-op (e.g. Ctrl+A while everything is already selected and
+            // `allowDeselect` is off) so `KbqTreeSelectionChange.option` is never `undefined`.
+            if (changedOptions.length > 0) {
+                this.selectionChange.emit(new KbqTreeSelectionChange(this, changedOptions[0], changedOptions));
+            }
 
-        const selectAllEvent = new KbqTreeSelectAllEvent(this, selectableOptions);
+            const selectAllEvent = new KbqTreeSelectAllEvent(this, selectableOptions);
 
-        this.selectAllChange.emit(selectAllEvent);
-        this.onSelectAll.emit(selectAllEvent);
+            this.selectAllChange.emit(selectAllEvent);
+            this.onSelectAll.emit(selectAllEvent);
+        });
     }
 
     copyActiveOption(event: KeyboardEvent): void {
@@ -1269,29 +1280,31 @@ export class KbqTreeSelection
     }
 
     writeValue(value: any): void {
-        this.applyMultipleInput();
+        untracked(() => {
+            this.applyMultipleInput();
 
-        if (this.multiple && value && !Array.isArray(value)) {
-            throw getKbqSelectNonArrayValueError();
-        }
-
-        // The form holds the value it writes, so a mode change has nothing left to report.
-        this.pendingValueReport = false;
-
-        // Restored rather than cleared: a value written while this one is applied must not end the outer write.
-        const wasWritingValue = this.writingValue;
-
-        this.writingValue = true;
-
-        try {
-            if (value) {
-                this.setOptionsFromValues(this.multiple ? value : [value]);
-            } else {
-                this.selectionModel.clear();
+            if (this.multiple && value && !Array.isArray(value)) {
+                throw getKbqSelectNonArrayValueError();
             }
-        } finally {
-            this.writingValue = wasWritingValue;
-        }
+
+            // The form holds the value it writes, so a mode change has nothing left to report.
+            this.pendingValueReport = false;
+
+            // Restored rather than cleared: a value written while this one is applied must not end the outer write.
+            const wasWritingValue = this.writingValue;
+
+            this.writingValue = true;
+
+            try {
+                if (value) {
+                    this.setOptionsFromValues(this.multiple ? value : [value]);
+                } else {
+                    this.selectionModel.clear();
+                }
+            } finally {
+                this.writingValue = wasWritingValue;
+            }
+        });
     }
 
     /**
@@ -1318,19 +1331,23 @@ export class KbqTreeSelection
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
      */
     setDisabledState(isDisabled: boolean): void {
-        this.applyDisabledInput();
-        this.disabledState.set(isDisabled);
+        untracked(() => {
+            this.applyDisabledInput();
+            this.disabledState.set(isDisabled);
+        });
     }
 
     /** @docs-private */
     setOptionsFromValues(values: any[]): void {
-        this.selectionModel.clear();
+        untracked(() => {
+            this.selectionModel.clear();
 
-        const valuesToSelect = values.reduce((result, value) => {
-            return this.treeControl.hasValue(value) ? [...result, this.treeControl.hasValue(value)] : [...result];
-        }, []);
+            const valuesToSelect = values.reduce((result, value) => {
+                return this.treeControl.hasValue(value) ? [...result, this.treeControl.hasValue(value)] : [...result];
+            }, []);
 
-        this.selectionModel.select(...valuesToSelect);
+            this.selectionModel.select(...valuesToSelect);
+        });
     }
 
     /**
@@ -1386,13 +1403,15 @@ export class KbqTreeSelection
     }
 
     setStateChildren(option: KbqTreeOption, state: boolean) {
-        const valuesToChange = this.treeControl.getDescendants(option.data);
+        untracked(() => {
+            const valuesToChange = this.treeControl.getDescendants(option.data);
 
-        if (state) {
-            this.selectionModel.select(...valuesToChange);
-        } else {
-            this.selectionModel.deselect(...valuesToChange);
-        }
+            if (state) {
+                this.selectionModel.select(...valuesToChange);
+            } else {
+                this.selectionModel.deselect(...valuesToChange);
+            }
+        });
     }
 
     private onCopyDefaultHandler(): void {

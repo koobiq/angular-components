@@ -13,7 +13,8 @@ import {
     OnDestroy,
     OnInit,
     output,
-    SimpleChanges
+    SimpleChanges,
+    untracked
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { KbqAccordion, KbqAccordionOrientation } from './accordion';
@@ -82,6 +83,14 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
     }
 
     set expanded(expanded: boolean) {
+        // Untracked, as `toggle()`, `open()` and `close()`: called from a consumer's `effect()`, the state read on the
+        // way — `expanded`, `disabled`, the siblings and the accordion it reports to — would make the effect run again
+        // on every expand and collapse.
+        untracked(() => this.setExpanded(expanded));
+    }
+
+    /** Body of the `expanded` setter. */
+    private setExpanded(expanded: boolean): void {
         // Only emit events and update the internal value if the value changes.
         if (this.expandedState() !== expanded) {
             this.expandedState.set(expanded);
@@ -237,23 +246,29 @@ export class KbqAccordionItem implements OnChanges, OnInit, OnDestroy {
 
     /** Toggles the expanded state of the accordion item. */
     toggle(): void {
-        if (!this.disabled) {
-            this.expanded = !this.expanded;
-        }
+        untracked(() => {
+            if (!this.disabled) {
+                this.expanded = !this.expanded;
+            }
+        });
     }
 
     /** Sets the expanded state of the accordion item to false. */
     close(): void {
-        if (!this.disabled) {
-            this.expanded = false;
-        }
+        untracked(() => {
+            if (!this.disabled) {
+                this.expanded = false;
+            }
+        });
     }
 
     /** Sets the expanded state of the accordion item to true. */
     open(): void {
-        if (!this.disabled) {
-            this.expanded = true;
-        }
+        untracked(() => {
+            if (!this.disabled) {
+                this.expanded = true;
+            }
+        });
     }
 
     /** Disables the open/close animation of the item's content and chevron. @docs-private */

@@ -1,6 +1,6 @@
 import { ENTER, SPACE } from '@angular/cdk/keycodes';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { ChangeDetectionStrategy, Component, Injectable, signal, Type } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, Injectable, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { dispatchKeyboardEvent } from '@koobiq/components/core';
 import { axe } from 'jest-axe';
@@ -129,6 +129,34 @@ class ClampedTextTest {
 })
 class ClampedTextInitiallyExpanded {
     protected readonly text = text;
+}
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'clamped-text-driven-by-effect',
+    imports: [KbqClampedText],
+    template: `
+        <kbq-clamped-text>{{ text }}</kbq-clamped-text>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ClampedTextDrivenByEffect {
+    protected readonly text = text;
+
+    readonly clampedText = viewChild.required(KbqClampedText);
+    readonly expand = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (!this.expand() || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+            this.clampedText().toggle(new Event('click'));
+        });
+    }
 }
 
 describe('KbqClampedText', () => {
@@ -297,6 +325,22 @@ describe('KbqClampedText', () => {
                 expect(spy).not.toHaveBeenCalled();
                 expect(isCollapsed(fixture)).toBe(false);
             });
+        });
+
+        it('should not make an effect that toggles it re-run when it is collapsed', async () => {
+            const fixture = await createMeasuredComponent(ClampedTextDrivenByEffect);
+
+            vi.spyOn(Element.prototype, 'scrollIntoView').mockImplementation(() => {});
+            fixture.componentInstance.expand.set(true);
+            await fixture.whenStable();
+
+            expect(isCollapsed(fixture)).toBe(false);
+
+            requireToggle(fixture).click();
+            await fixture.whenStable();
+
+            expect(isCollapsed(fixture)).toBe(true);
+            expect(fixture.componentInstance.runs).toBe(1);
         });
 
         describe('scrollOnCollapse', () => {

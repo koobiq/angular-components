@@ -8,6 +8,7 @@ import {
     OnChanges,
     signal,
     SimpleChanges,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, toObservable } from '@angular/core/rxjs-interop';
@@ -109,6 +110,13 @@ export class KbqDatepickerToggleIconComponent<D> implements OnChanges, KbqSiblin
 
     /** Opens the calendar, moving the focus to its input; closes it instead when it was open at the press. */
     open($event: MouseEvent) {
+        // Untracked: called from a consumer's `effect()`, the state read on the way — the inputs, `disabled` — would
+        // make the effect run again whenever it changes.
+        untracked(() => this.toggleCalendar($event));
+    }
+
+    /** Body of `open()`. */
+    private toggleCalendar($event: MouseEvent): void {
         const datepicker = this.datepicker();
         const openedOnPress = this.openedOnPress;
 

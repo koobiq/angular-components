@@ -15,6 +15,7 @@ import {
     Signal,
     TemplateRef,
     Type,
+    effect,
     input,
     output,
     signal,
@@ -4076,6 +4077,154 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
 
             expect(getOverlayHost('#outside-item').parentElement).toBe(overlayContainerElement);
+        });
+    });
+
+    describe('called from an effect', () => {
+        @Component({
+            imports: [KbqDropdownModule],
+            template: `
+                <button [kbqDropdownTriggerFor]="otherPanel() ? other : dropdown">Open</button>
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    <button kbq-dropdown-item [disabled]="itemDisabled()">Item</button>
+                </kbq-dropdown>
+                <kbq-dropdown #other="kbqDropdown">
+                    <button kbq-dropdown-item>Other item</button>
+                </kbq-dropdown>
+            `
+        })
+        class DropdownDrivenByEffects {
+            readonly trigger = viewChild.required(KbqDropdownTrigger);
+            readonly dropdown = viewChild.required('dropdown', { read: KbqDropdown });
+            readonly item = viewChild.required(KbqDropdownItem);
+            readonly otherPanel = signal(false);
+            readonly itemDisabled = signal(false);
+            readonly wantOpen = signal(false);
+            readonly toggles = signal(0);
+            readonly wantClosed = signal(false);
+            readonly reposition = signal(false);
+            readonly focusFirst = signal(false);
+            readonly focusItem = signal(false);
+            readonly runs = { open: 0, toggle: 0, close: 0, reposition: 0, focusFirst: 0, focusItem: 0 };
+
+            constructor() {
+                effect(() => {
+                    if (!this.wantOpen()) return;
+
+                    this.runs.open++;
+                    this.trigger().open();
+                });
+
+                effect(() => {
+                    if (!this.toggles() || this.runs.toggle >= 10) return;
+
+                    this.runs.toggle++;
+                    this.trigger().toggle();
+                });
+
+                effect(() => {
+                    if (!this.wantClosed()) return;
+
+                    this.runs.close++;
+                    this.trigger().close();
+                });
+
+                effect(() => {
+                    if (!this.reposition()) return;
+
+                    this.runs.reposition++;
+                    this.trigger().updatePosition();
+                });
+
+                effect(() => {
+                    if (!this.focusFirst()) return;
+
+                    this.runs.focusFirst++;
+                    this.dropdown().focusFirstItem('keyboard');
+                });
+
+                effect(() => {
+                    if (!this.focusItem()) return;
+
+                    this.runs.focusItem++;
+                    this.item().focus('keyboard');
+                });
+            }
+        }
+
+        let fixture: ComponentFixture<DropdownDrivenByEffects>;
+        let trigger: KbqDropdownTrigger;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await fixture.whenStable();
+        };
+
+        beforeEach(async () => {
+            fixture = createComponent(DropdownDrivenByEffects);
+            await settle();
+            trigger = fixture.componentInstance.trigger();
+        });
+
+        it('should not make an effect that opens it run again when the user closes it', async () => {
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            expect(trigger.opened).toBe(true);
+
+            dispatchKeyboardEvent(overlayContainerElement.querySelector(PANEL_SELECTOR)!, 'keydown', ESCAPE);
+            await settle();
+
+            expect(trigger.opened).toBe(false);
+            expect(fixture.componentInstance.runs.open).toBe(1);
+        });
+
+        it('should not loop when an effect toggles it', async () => {
+            fixture.componentInstance.toggles.set(1);
+            await settle();
+
+            expect(trigger.opened).toBe(true);
+            expect(fixture.componentInstance.runs.toggle).toBe(1);
+        });
+
+        it('should not make an effect that closes it run again when the trigger is bound to another panel', async () => {
+            fixture.componentInstance.wantClosed.set(true);
+            await settle();
+            fixture.componentInstance.otherPanel.set(true);
+            await settle();
+
+            expect(fixture.componentInstance.runs.close).toBe(1);
+        });
+
+        it('should not make an effect that repositions it run again when it opens', async () => {
+            fixture.componentInstance.reposition.set(true);
+            await settle();
+            trigger.open();
+            await settle();
+
+            expect(fixture.componentInstance.runs.reposition).toBe(1);
+        });
+
+        it('should not make an effect that focuses the first item run again when the item is disabled', async () => {
+            trigger.open();
+            await settle();
+            fixture.componentInstance.focusFirst.set(true);
+            await settle();
+            fixture.componentInstance.itemDisabled.set(true);
+            await settle();
+
+            expect(fixture.componentInstance.runs.focusFirst).toBe(1);
+        });
+
+        it('should not make an effect that focuses an item run again when the item is disabled', async () => {
+            trigger.open();
+            await settle();
+            fixture.componentInstance.focusItem.set(true);
+            await settle();
+            fixture.componentInstance.itemDisabled.set(true);
+            await settle();
+
+            expect(fixture.componentInstance.runs.focusItem).toBe(1);
         });
     });
 });

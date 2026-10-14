@@ -5,6 +5,7 @@ import {
     Component,
     ElementRef,
     Provider,
+    effect,
     inject as inject_1,
     signal,
     viewChild
@@ -2150,6 +2151,48 @@ describe(KbqSingleFileUploadComponent.name, () => {
     });
 });
 
+describe('KbqFileUpload called from an effect', () => {
+    beforeEach(() => vi.useFakeTimers());
+
+    afterEach(() => vi.useRealTimers());
+
+    it('should not make an effect that deletes a file of a multiple upload run again', async () => {
+        const fixture = TestBed.createComponent(MultipleFileUploadDrivenByEffect);
+        const host = fixture.componentInstance;
+
+        fixture.detectChanges();
+        host.remove.set(true);
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(host.fileUpload().files.map(({ file }) => file.name)).toEqual(['second.txt', 'third.txt']);
+
+        dispatchEvent(host.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(host.fileUpload().files.map(({ file }) => file.name)).toEqual(['second.txt', 'third.txt', FILE_NAME]);
+        expect(host.runs).toBe(1);
+    });
+
+    it('should not make an effect that deletes the file of a single upload re-run when a file is added', async () => {
+        const fixture = TestBed.createComponent(SingleFileUploadDrivenByEffect);
+        const host = fixture.componentInstance;
+
+        fixture.detectChanges();
+        host.remove.set(true);
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+
+        dispatchEvent(host.fileUpload().input!.nativeElement, getMockedChangeEvent(FILE_NAME));
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+
+        expect(host.fileUpload().file?.file.name).toBe(FILE_NAME);
+        expect(host.runs).toBe(1);
+    });
+});
+
 describe('KbqFullScreenDropzoneService', () => {
     let service: KbqFullScreenDropzoneService;
     let overlay: Overlay;
@@ -2959,3 +3002,50 @@ describe('file upload localization', () => {
         expect(browseLink(fixture)).toBe('Bound');
     });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqFileUploadModule],
+    template: `
+        <kbq-multiple-file-upload [files]="files" />
+    `
+})
+class MultipleFileUploadDrivenByEffect {
+    readonly fileUpload = viewChild.required(KbqMultipleFileUploadComponent);
+    readonly files = [createLoadingItem('first.txt'), createLoadingItem('second.txt'), createLoadingItem('third.txt')];
+    readonly remove = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (!this.remove() || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+            this.fileUpload().deleteFile(0);
+        });
+    }
+}
+
+@Component({
+    imports: [KbqFileUploadModule],
+    template: `
+        <kbq-single-file-upload [file]="file" />
+    `
+})
+class SingleFileUploadDrivenByEffect {
+    readonly fileUpload = viewChild.required(KbqSingleFileUploadComponent);
+    readonly file = createLoadingItem('initial.txt');
+    readonly remove = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (!this.remove() || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+            this.fileUpload().deleteItem();
+        });
+    }
+}

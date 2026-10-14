@@ -1,5 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, Signal, viewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    Signal,
+    untracked,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -90,11 +98,13 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
 
     /** opens select */
     override open() {
-        // Without options the search is hidden and nothing in the panel takes the focus: the trigger has to,
-        // or Escape never reaches the select.
-        if (this.noOptions) this.focusTrigger();
+        untracked(() => {
+            // Without options the search is hidden and nothing in the panel takes the focus: the trigger has to,
+            // or Escape never reaches the select.
+            if (this.noOptions) this.focusTrigger();
 
-        this.select().open();
+            this.select().open();
+        });
     }
 
     private getFilteredOptions(): KbqSelectValue[] {

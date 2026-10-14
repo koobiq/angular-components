@@ -38,6 +38,7 @@ import {
     inject,
     input,
     numberAttribute,
+    untracked,
     viewChild
 } from '@angular/core';
 import { outputFromObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -978,6 +979,13 @@ export class KbqPopoverTrigger
 
     /** @docs-private */
     updateData() {
+        // Untracked: an input written from a consumer's `effect()` lands here, and `isOpen` read on the way would make
+        // the effect run again on every open and close.
+        untracked(() => this.pushData());
+    }
+
+    /** Body of `updateData()`. */
+    private pushData(): void {
         if (!this.instance) return;
 
         this.instance.header = this.header;

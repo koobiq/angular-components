@@ -6,7 +6,7 @@ import {
     OverlayContainer,
     RepositionScrollStrategy
 } from '@angular/cdk/overlay';
-import { Component, DebugElement, model, Provider, signal, Type } from '@angular/core';
+import { Component, DebugElement, effect, model, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -419,6 +419,26 @@ describe('KbqInlineEdit', () => {
 
         expect(spyFn).toHaveBeenCalled();
         expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
+    });
+
+    it('should not make an effect that commits it re-run when edit mode is entered again', () => {
+        const fixture = setup(TestInlineEditDrivenByEffect);
+        const { componentInstance, debugElement } = fixture;
+        const inlineEditDebugElement: DebugElement = getInlineEditDebugElement(debugElement);
+
+        inlineEditDebugElement.nativeElement.click();
+        fixture.detectChanges();
+
+        componentInstance.commit.set(true);
+        fixture.detectChanges();
+
+        expect(inlineEditDebugElement.classes['kbq-inline-edit_view']).toBe(true);
+
+        inlineEditDebugElement.nativeElement.click();
+        fixture.detectChanges();
+
+        expect(inlineEditDebugElement.classes['kbq-inline-edit_edit']).toBe(true);
+        expect(componentInstance.runs).toBe(1);
     });
 
     it('should not save when commit() is called while control is invalid', () => {
@@ -3296,4 +3316,33 @@ export class TestWithProgrammaticMode {
 })
 export class TestInOverlayLayer {
     value = 'value';
+}
+
+@Component({
+    selector: 'name',
+    imports: [FormsModule, KbqInputModule, KbqInlineEditModule],
+    template: `
+        <kbq-inline-edit>
+            <div kbqInlineEditViewMode>{{ value }}</div>
+            <kbq-form-field kbqInlineEditEditMode>
+                <input kbqInput [(ngModel)]="value" />
+            </kbq-form-field>
+        </kbq-inline-edit>
+    `
+})
+export class TestInlineEditDrivenByEffect {
+    readonly inlineEdit = viewChild.required(KbqInlineEdit);
+    readonly commit = signal(false);
+    value = 'Value';
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            // Capped, so that a regression fails instead of hanging.
+            if (!this.commit() || this.runs === 10) return;
+
+            this.runs++;
+            this.inlineEdit().commit();
+        });
+    }
 }

@@ -288,9 +288,13 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
      * wider and reloading without closing it keeps the previous width — the same as before persistence.
      */
     saveState(): void {
-        if (!this.persists) return;
+        // Untracked, as `clearSavedState()`: called from a consumer's `effect()`, the state read on the way — `opened`,
+        // the width, the state saving inputs — would make the effect run again whenever it changes.
+        untracked(() => {
+            if (!this.persists) return;
 
-        this.stateSaving.write(this.snapshot());
+            this.stateSaving.write(this.snapshot());
+        });
     }
 
     /**
@@ -299,7 +303,7 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
      * Persistence itself stays on — the next change is written again. Unset `useStateSaving` to stop it.
      */
     clearSavedState(): void {
-        this.stateSaving.clear();
+        untracked(() => this.stateSaving.clear());
     }
 
     /**

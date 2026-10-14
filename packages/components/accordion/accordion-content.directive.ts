@@ -9,7 +9,8 @@ import {
     OnInit,
     Renderer2,
     RendererStyleFlags2,
-    signal
+    signal,
+    untracked
 } from '@angular/core';
 import { kbqInjectNativeElement } from '@koobiq/components/core';
 import { KbqAccordionItem } from './accordion-item';
@@ -98,11 +99,15 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
     }
 
     toggle() {
-        if (this.rendered) {
-            this.pinHeight();
-        }
+        // Untracked: called from a consumer's `effect()`, the `expanded` of the item read on the way would make the
+        // effect run again on every expand and collapse.
+        untracked(() => {
+            if (this.rendered) {
+                this.pinHeight();
+            }
 
-        this.hidden.set(!this.item.expanded);
+            this.hidden.set(!this.item.expanded);
+        });
     }
 
     /** @docs-private */

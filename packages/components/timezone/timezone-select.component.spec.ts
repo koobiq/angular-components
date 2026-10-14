@@ -1,6 +1,6 @@
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, Type, getDebugNode, viewChild, viewChildren } from '@angular/core';
+import { Component, OnInit, Type, effect, getDebugNode, signal, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -376,6 +376,34 @@ class TimezoneSelectWithLocaleSearch {
     readonly searchControl = new FormControl();
     readonly searchMinOptionsThreshold = undefined;
     placeholder: string = undefined!;
+}
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimezoneModule],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select>
+                @for (zone of zones; track zone.id) {
+                    <kbq-timezone-option [value]="zone.id" [timezone]="zone" />
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `
+})
+class TimezoneSelectOpenedByEffect {
+    readonly zones = groupedZones[0].zones;
+    readonly select = viewChild.required(KbqTimezoneSelect);
+    readonly wantOpen = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (!this.wantOpen()) return;
+
+            this.runs++;
+            this.select().open();
+        });
+    }
 }
 
 describe('KbqTimezoneSelect', () => {
@@ -1398,6 +1426,33 @@ describe('KbqTimezoneSelect', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(getPlaceholder()).toBe('Consumer placeholder');
+        });
+    });
+
+    describe('opened from an effect', () => {
+        beforeEach(() => configureTestingModule([TimezoneSelectOpenedByEffect]));
+
+        it('should not make the effect run again when the user closes it', async () => {
+            const fixture = TestBed.createComponent(TimezoneSelectOpenedByEffect);
+            const settle = async (): Promise<void> => {
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+            };
+
+            await settle();
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            const select = fixture.componentInstance.select();
+
+            expect(select.panelOpen).toBe(true);
+
+            dispatchKeyboardEvent(select.elementRef.nativeElement, 'keydown', ESCAPE);
+            await settle();
+
+            expect(select.panelOpen).toBe(false);
+            expect(fixture.componentInstance.runs).toBe(1);
         });
     });
 });

@@ -1,7 +1,17 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
-import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    effect,
+    model,
+    Provider,
+    signal,
+    Type,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1241,3 +1251,85 @@ class BasicTag {}
     `
 })
 class TagSlotsTest {}
+
+@Component({
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag selectable>Tag</kbq-tag>
+        <button>Outside</button>
+    `
+})
+class TagDrivenByEffects {
+    readonly tag = viewChild.required(KbqTag);
+    readonly wantSelected = signal(false);
+    readonly toggles = signal(0);
+    readonly wantFocus = signal(false);
+    readonly runs = { select: 0, toggle: 0, focus: 0 };
+
+    constructor() {
+        effect(() => {
+            if (!this.wantSelected()) return;
+
+            this.runs.select++;
+            this.tag().select();
+        });
+
+        effect(() => {
+            if (!this.toggles() || this.runs.toggle >= 10) return;
+
+            this.runs.toggle++;
+            this.tag().toggleSelected();
+        });
+
+        effect(() => {
+            if (!this.wantFocus() || this.runs.focus >= 10) return;
+
+            this.runs.focus++;
+            this.tag().focus();
+        });
+    }
+}
+
+describe('KbqTag called from an effect', () => {
+    let fixture: ComponentFixture<TagDrivenByEffects>;
+
+    beforeEach(() => {
+        fixture = createComponent(TagDrivenByEffects);
+        fixture.detectChanges();
+    });
+
+    it('should not make an effect that selects it run again when it is deselected', () => {
+        const { componentInstance } = fixture;
+
+        componentInstance.wantSelected.set(true);
+        fixture.detectChanges();
+        componentInstance.tag().deselect();
+        fixture.detectChanges();
+
+        expect(componentInstance.tag().selected()).toBe(false);
+        expect(componentInstance.runs.select).toBe(1);
+    });
+
+    it('should not loop when an effect toggles it', () => {
+        const { componentInstance } = fixture;
+
+        componentInstance.toggles.set(1);
+        fixture.detectChanges();
+
+        expect(componentInstance.tag().selected()).toBe(true);
+        expect(componentInstance.runs.toggle).toBe(1);
+    });
+
+    it('should not make an effect that focuses it run again when it loses focus', () => {
+        const { componentInstance } = fixture;
+        const outside: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+
+        componentInstance.wantFocus.set(true);
+        fixture.detectChanges();
+        outside.focus();
+        fixture.detectChanges();
+
+        expect(document.activeElement).toBe(outside);
+        expect(componentInstance.runs.focus).toBe(1);
+    });
+});

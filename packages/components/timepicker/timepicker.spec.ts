@@ -1,4 +1,4 @@
-import { Component, DebugElement, Type, inject, viewChild, viewChildren } from '@angular/core';
+import { Component, DebugElement, Type, effect, inject, signal, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AsyncValidatorFn,
@@ -1470,7 +1470,51 @@ describe(KbqTimepicker.name, () => {
             expect(input.checkValidity()).toBe(true);
         });
     });
+
+    describe('called from an effect', () => {
+        it('should not make an effect that sets the form control run again', async () => {
+            const fixture = createStandaloneComponent(TimepickerWrittenByEffect);
+            const host = fixture.componentInstance;
+
+            await fixture.whenStable();
+            host.write.set(true);
+            await fixture.whenStable();
+
+            getTimepickerElement(fixture).focus();
+            await fixture.whenStable();
+
+            expect(host.timepicker().focused()).toBe(true);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqFormFieldModule, KbqTimepickerModule, ReactiveFormsModule, KbqLuxonDateModule],
+    template: `
+        <kbq-form-field>
+            <input kbqTimepicker [formControl]="control" />
+        </kbq-form-field>
+    `
+})
+class TimepickerWrittenByEffect {
+    readonly timepicker = viewChild.required(KbqTimepicker);
+    readonly control = new FormControl<DateTime | null>(null);
+    readonly write = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (!this.write() || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+            this.control.setValue(DateTime.fromISO('2024-01-15T10:30:00'));
+        });
+    }
+}
 
 @Component({
     imports: [KbqFormFieldModule, KbqTimepickerModule, KbqLuxonDateModule],

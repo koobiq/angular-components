@@ -2,7 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, ElementRef, viewChild } from '@angular/core';
+import { Component, DebugElement, effect, ElementRef, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -129,7 +129,8 @@ describe('KbqNavbar', () => {
                 TestCollapseApp,
                 TestTwoContainersApp,
                 TestTooltipApp,
-                TestTooltipSelectorApp
+                TestTooltipSelectorApp,
+                TestVerticalDrivenByEffectApp
             ]
         }).compileComponents();
     });
@@ -1936,6 +1937,40 @@ describe('KbqNavbar', () => {
         });
     });
 
+    describe('called from an effect', () => {
+        const setup = async (): Promise<ComponentFixture<TestVerticalDrivenByEffectApp>> => {
+            const fixture = TestBed.createComponent(TestVerticalDrivenByEffectApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        it('should not loop when an effect toggles the vertical navbar', async () => {
+            const fixture = await setup();
+            const host = fixture.componentInstance;
+
+            host.action.set('navbar');
+            fixture.detectChanges();
+
+            expect(host.navbar().expanded()).toBe(true);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not loop when an effect toggles the navbar through its toggle', async () => {
+            const fixture = await setup();
+            const host = fixture.componentInstance;
+
+            host.action.set('toggle');
+            fixture.detectChanges();
+
+            expect(host.navbar().expanded()).toBe(true);
+            expect(host.runs).toBe(1);
+        });
+    });
+
     describe('responsive collapse', () => {
         it('should collapse just enough items to fit the navbar width', async () => {
             const fixture = TestBed.createComponent(TestCollapseApp);
@@ -2730,4 +2765,45 @@ class TestTooltipSelectorApp {}
 class TestInOverlayLayerApp {
     readonly horizontalTrigger = viewChild.required('horizontalTrigger', { read: KbqDropdownTrigger });
     readonly verticalTrigger = viewChild.required('verticalTrigger', { read: KbqDropdownTrigger });
+}
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'test-vertical-driven-by-effect-app',
+    imports: [KbqNavbarModule, KbqIconModule],
+    template: `
+        <kbq-vertical-navbar>
+            <kbq-navbar-container>
+                <kbq-navbar-item>
+                    <i kbq-icon="kbq-circle-info_16"></i>
+                    <kbq-navbar-title>First item</kbq-navbar-title>
+                </kbq-navbar-item>
+            </kbq-navbar-container>
+            <button kbq-navbar-toggle></button>
+        </kbq-vertical-navbar>
+    `
+})
+class TestVerticalDrivenByEffectApp {
+    readonly navbar = viewChild.required(KbqVerticalNavbar);
+    readonly toggle = viewChild.required(KbqNavbarToggle);
+    readonly action = signal<'navbar' | 'toggle' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'navbar') {
+                this.navbar().toggle();
+            } else {
+                this.toggle().toggle();
+            }
+        });
+    }
 }

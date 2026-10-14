@@ -124,6 +124,14 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     }
 
     set value(newValue: any) {
+        // Untracked, as `emitChangeEvent()`, `syncButtonToggle()` and the toggles' `checked` setter and
+        // `onToggleClick()`: called from a consumer's `effect()`, the selection read on the way would make the effect
+        // run again whenever the user picks another toggle.
+        untracked(() => this.assignValue(newValue));
+    }
+
+    /** Body of the `value` setter. */
+    private assignValue(newValue: any): void {
         this.setSelectionByValue(newValue);
 
         // A write the group answers with the value it was given has nothing to announce: the binding
@@ -333,10 +341,12 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
      * unchecked — there is no "last selected" toggle left to report then.
      */
     emitChangeEvent(source: KbqButtonToggle): void {
-        const event = new KbqButtonToggleChange(source, this.value);
+        untracked(() => {
+            const event = new KbqButtonToggleChange(source, this.value);
 
-        this.controlValueAccessorChangeFn(event.value);
-        this.change.emit(event);
+            this.controlValueAccessorChangeFn(event.value);
+            this.change.emit(event);
+        });
     }
 
     /**
@@ -346,6 +356,11 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
      * @param isUserInput Whether the change was a result of a user interaction.
      */
     syncButtonToggle(toggle: KbqButtonToggle, select: boolean, isUserInput = false) {
+        untracked(() => this.applyToggleSelection(toggle, select, isUserInput));
+    }
+
+    /** Body of `syncButtonToggle()`. */
+    private applyToggleSelection(toggle: KbqButtonToggle, select: boolean, isUserInput: boolean): void {
         // A destroyed toggle drops itself from the selection on a microtask, which still runs when
         // the whole group is torn down: there is nothing left to sync and nobody left to notify.
         if (this.destroyed) {
@@ -529,17 +544,19 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
     }
 
     set checked(value: boolean) {
-        // Against the effective state rather than `_checked`, which a grouped toggle does not own:
-        // its group selects it directly, so the two drift apart the moment a value is assigned.
-        if (value === this.checked) {
-            return;
-        }
+        untracked(() => {
+            // Against the effective state rather than `_checked`, which a grouped toggle does not own:
+            // its group selects it directly, so the two drift apart the moment a value is assigned.
+            if (value === this.checked) {
+                return;
+            }
 
-        this._checked.set(value);
+            this._checked.set(value);
 
-        if (this.buttonToggleGroup) {
-            this.buttonToggleGroup.syncButtonToggle(this, value);
-        }
+            if (this.buttonToggleGroup) {
+                this.buttonToggleGroup.syncButtonToggle(this, value);
+            }
+        });
     }
 
     /**
@@ -742,6 +759,11 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
 
     /** Checks the button toggle due to an interaction with the underlying native button. */
     onToggleClick() {
+        untracked(() => this.toggleByUser());
+    }
+
+    /** Body of `onToggleClick()`. */
+    private toggleByUser(): void {
         if (this.disabled) {
             return;
         }

@@ -13,7 +13,8 @@ import {
     numberAttribute,
     output,
     Renderer2,
-    signal
+    signal,
+    untracked
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import {
@@ -116,7 +117,8 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * @docs-private
      */
     override hide(): void {
-        if (this.alwaysVisible()) return;
+        // Untracked: called from a consumer's `effect()`, `alwaysVisible` would make the effect run again when it changes.
+        if (untracked(this.alwaysVisible)) return;
 
         super.hide();
     }

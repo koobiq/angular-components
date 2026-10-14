@@ -9,6 +9,7 @@ import {
     Injectable,
     NgZone,
     OnDestroy,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -167,8 +168,12 @@ export class KbqNavbarToggle implements OnDestroy {
 
     /** toggles the state of the navbar */
     toggle() {
-        this.navbar.toggle();
-        this.tooltip.hide();
+        // Untracked: called from a consumer's `effect()`, the state read on the way — `expanded`, the tooltip's — would
+        // make the effect run again on every expand and collapse.
+        untracked(() => {
+            this.navbar.toggle();
+            this.tooltip.hide();
+        });
     }
 
     /** @docs-private */

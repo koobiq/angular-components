@@ -25,6 +25,7 @@ import {
     QueryList,
     signal,
     SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -110,13 +111,18 @@ export class KbqRadioGroup
     }
 
     set value(newValue: any) {
-        if (this._value() !== newValue) {
-            // Set this before proceeding to ensure no circular loop occurs with selection.
-            this._value.set(newValue);
+        // Untracked, as the other setters and methods that select: called from a consumer's `effect()`, the selection
+        // read on the way — the group's and its buttons' — would make the effect run again whenever the user picks
+        // another button.
+        untracked(() => {
+            if (this._value() !== newValue) {
+                // Set this before proceeding to ensure no circular loop occurs with selection.
+                this._value.set(newValue);
 
-            this.updateSelectedRadioFromValue();
-            this.checkSelectedRadioButton();
-        }
+                this.updateSelectedRadioFromValue();
+                this.checkSelectedRadioButton();
+            }
+        });
     }
 
     /** Whether the radio button is selected. */
@@ -125,9 +131,11 @@ export class KbqRadioGroup
     }
 
     set selected(selected: KbqRadioButton | null) {
-        this._selected.set(selected);
-        this.value = selected ? selected.value : null;
-        this.checkSelectedRadioButton();
+        untracked(() => {
+            this._selected.set(selected);
+            this.value = selected ? selected.value : null;
+            this.checkSelectedRadioButton();
+        });
     }
 
     /** Whether the radio group is disabled */
@@ -219,11 +227,13 @@ export class KbqRadioGroup
     onTouched: () => any = () => {};
 
     checkSelectedRadioButton() {
-        const selected = this._selected();
+        untracked(() => {
+            const selected = this._selected();
 
-        if (selected && !selected.checked) {
-            selected.checked = true;
-        }
+            if (selected && !selected.checked) {
+                selected.checked = true;
+            }
+        });
     }
 
     /**
@@ -247,9 +257,11 @@ export class KbqRadioGroup
      * the same rule the browser follows when the group is reached with <kbd>Tab</kbd>.
      */
     focus(origin: FocusOrigin = 'program'): void {
-        const target = this._selected() ?? this.radios?.find((radio) => !radio.disabled);
+        untracked(() => {
+            const target = this._selected() ?? this.radios?.find((radio) => !radio.disabled);
 
-        target?.focus(origin);
+            target?.focus(origin);
+        });
     }
 
     /**
@@ -265,7 +277,7 @@ export class KbqRadioGroup
     /** Dispatch change event with current selection and group value. */
     emitChangeEvent(): void {
         if (this.isInitialized) {
-            this.change.emit(new KbqRadioChange(this._selected()!, this._value()));
+            this.change.emit(new KbqRadioChange(untracked(this._selected)!, untracked(this._value)));
         }
     }
 
@@ -361,22 +373,27 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
     }
 
     set checked(value: boolean) {
-        if (this._checked() !== value) {
-            this._checked.set(value);
+        // Untracked, as the `value` setter: called from a consumer's `effect()`, the selection read on the way — the
+        // button's, its group's and its siblings' — would make the effect run again whenever the user picks another
+        // button.
+        untracked(() => {
+            if (this._checked() !== value) {
+                this._checked.set(value);
 
-            if (value && this.radioGroup && this.radioGroup.value !== this.value) {
-                this.radioGroup.selected = this;
-            } else if (!value && this.radioGroup && this.radioGroup.value === this.value) {
-                // When unchecking the selected radio button, update the selected radio
-                // property on the group.
-                this.radioGroup.selected = null;
-            }
+                if (value && this.radioGroup && this.radioGroup.value !== this.value) {
+                    this.radioGroup.selected = this;
+                } else if (!value && this.radioGroup && this.radioGroup.value === this.value) {
+                    // When unchecking the selected radio button, update the selected radio
+                    // property on the group.
+                    this.radioGroup.selected = null;
+                }
 
-            if (value) {
-                // Notify all radio buttons with the same name to un-check.
-                this.radioDispatcher.notify(this.id(), this.name);
+                if (value) {
+                    // Notify all radio buttons with the same name to un-check.
+                    this.radioDispatcher.notify(this.id(), this.name);
+                }
             }
-        }
+        });
     }
 
     /** The value of this radio button. */
@@ -385,20 +402,22 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
     }
 
     set value(value: any) {
-        if (this._value() !== value) {
-            this._value.set(value);
+        untracked(() => {
+            if (this._value() !== value) {
+                this._value.set(value);
 
-            if (this.radioGroup) {
-                if (!this.checked) {
-                    // Update checked when the value changed to match the radio group's value
-                    this.checked = this.radioGroup.value === value;
-                }
+                if (this.radioGroup) {
+                    if (!this.checked) {
+                        // Update checked when the value changed to match the radio group's value
+                        this.checked = this.radioGroup.value === value;
+                    }
 
-                if (this.checked) {
-                    this.radioGroup.selected = this;
+                    if (this.checked) {
+                        this.radioGroup.selected = this;
+                    }
                 }
             }
-        }
+        });
     }
 
     /** Whether the radio button is disabled. A button inside a disabled group is disabled as well. */

@@ -21,6 +21,7 @@ import {
     output,
     QueryList,
     signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -458,42 +459,48 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     };
 
     toggle(): void {
-        this.selected = !this.selected;
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — `selected`, focus, `disabled`, the inputs — would make the effect run again whenever it changes.
+        untracked(() => (this.selected = !this.selected));
     }
 
     setSelected(selected: boolean): void {
-        if (this.selectAllRow() || this.selectedState() === selected || !this.tree.selectionModel) {
-            return;
-        }
+        untracked(() => {
+            if (this.selectAllRow() || this.selectedState() === selected || !this.tree.selectionModel) {
+                return;
+            }
 
-        this.selectedState.set(selected);
+            this.selectedState.set(selected);
 
-        if (selected) {
-            this.tree.selectionModel.select(this.data);
-        } else {
-            this.tree.selectionModel.deselect(this.data);
-        }
+            if (selected) {
+                this.tree.selectionModel.select(this.data);
+            } else {
+                this.tree.selectionModel.deselect(this.data);
+            }
 
-        if (this.showCheckbox) {
-            this.updateCheckboxState();
-        }
+            if (this.showCheckbox) {
+                this.updateCheckboxState();
+            }
+        });
     }
 
     focus(focusOrigin?: FocusOrigin) {
-        if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
+        untracked(() => {
+            if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
 
-        // With the pointer already on this node, revealing it would shift the tree out from under it.
-        kbqFocusAndReveal(this.elementRef.nativeElement, focusOrigin === 'mouse');
+            // With the pointer already on this node, revealing it would shift the tree out from under it.
+            kbqFocusAndReveal(this.elementRef.nativeElement, focusOrigin === 'mouse');
 
-        if (!this.hasFocus) {
-            this.focusEvents.next({ option: this });
+            if (!this.hasFocus) {
+                this.focusEvents.next({ option: this });
 
-            Promise.resolve().then(() => {
-                this.hasFocus = true;
+                Promise.resolve().then(() => {
+                    this.hasFocus = true;
 
-                this.markForCheck();
-            });
-        }
+                    this.markForCheck();
+                });
+            }
+        });
     }
 
     blur(): void {
@@ -541,29 +548,33 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     select(setFocus = true): void {
-        if (this.selectAllRow() || this.selectedState()) {
-            return;
-        }
+        untracked(() => {
+            if (this.selectAllRow() || this.selectedState()) {
+                return;
+            }
 
-        this.selectedState.set(true);
+            this.selectedState.set(true);
 
-        if (setFocus && !this.hasFocus) {
-            this.focus();
-        }
+            if (setFocus && !this.hasFocus) {
+                this.focus();
+            }
 
-        this.updateCheckboxState();
-        this.emitSelectionChangeEvent();
+            this.updateCheckboxState();
+            this.emitSelectionChangeEvent();
+        });
     }
 
     deselect(): void {
-        if (this.selectAllRow() || !this.selectedState()) {
-            return;
-        }
+        untracked(() => {
+            if (this.selectAllRow() || !this.selectedState()) {
+                return;
+            }
 
-        this.selectedState.set(false);
+            this.selectedState.set(false);
 
-        this.updateCheckboxState();
-        this.emitSelectionChangeEvent();
+            this.updateCheckboxState();
+            this.emitSelectionChangeEvent();
+        });
     }
 
     onKeydown($event) {
@@ -571,17 +582,19 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     selectViaInteraction($event?: KeyboardEvent | MouseEvent): void {
-        if (this.disabled || !this.selectable()) {
-            return;
-        }
+        untracked(() => {
+            if (this.disabled || !this.selectable()) {
+                return;
+            }
 
-        this.userInteraction.emit();
+            this.userInteraction.emit();
 
-        const shiftKey = $event ? hasModifierKey($event, 'shiftKey') : false;
-        // ctrlKey is for Windows, metaKey is for MacOS
-        const ctrlKey = $event ? hasModifierKey($event, 'ctrlKey', 'metaKey') : false;
+            const shiftKey = $event ? hasModifierKey($event, 'shiftKey') : false;
+            // ctrlKey is for Windows, metaKey is for MacOS
+            const ctrlKey = $event ? hasModifierKey($event, 'ctrlKey', 'metaKey') : false;
 
-        this.tree.setSelectedOptionsByClick(this, shiftKey, ctrlKey);
+            this.tree.setSelectedOptionsByClick(this, shiftKey, ctrlKey);
+        });
     }
 
     emitSelectionChangeEvent(): void {

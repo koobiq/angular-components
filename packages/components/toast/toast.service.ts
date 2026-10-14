@@ -14,7 +14,8 @@ import {
     TemplateRef,
     Type,
     inject,
-    signal
+    signal,
+    untracked
 } from '@angular/core';
 import {
     BehaviorSubject,
@@ -160,6 +161,14 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         duration: number = this.toastConfig.duration,
         onTop: boolean = this.toastConfig.onTop
     ): { ref: ComponentRef<T>; id: number } {
+        // Untracked, as `showTemplate()`, `hide()` and `hideTemplate()`: called from a consumer's `effect()`, the signals
+        // read on the way — the container's view query, those the focus listeners read when the focus moves on to the
+        // next toast — would become dependencies of the effect.
+        return untracked(() => this.addToast(data, duration, onTop));
+    }
+
+    /** Body of `show()`. */
+    private addToast(data: KbqToastData, duration: number, onTop: boolean): { ref: ComponentRef<T>; id: number } {
         const previouslyFocused = this.document.activeElement as HTMLElement | null;
         const container = this.prepareContainer();
         // The class generic is a hint: the runtime component is whatever `KBQ_TOAST_FACTORY` resolves to.
@@ -190,6 +199,16 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         duration: number = this.toastConfig.duration,
         onTop: boolean = this.toastConfig.onTop
     ): { ref: EmbeddedViewRef<KbqToastTemplateContext>; id: number } {
+        return untracked(() => this.addTemplate(data, template, duration, onTop));
+    }
+
+    /** Body of `showTemplate()`. */
+    private addTemplate(
+        data: KbqToastData,
+        template: TemplateRef<any>,
+        duration: number,
+        onTop: boolean
+    ): { ref: EmbeddedViewRef<KbqToastTemplateContext>; id: number } {
         const container = this.prepareContainer();
         const viewRef = container.createTemplate(data, template, onTop);
         const id = templateId++;
@@ -201,6 +220,11 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     }
 
     hide(id: number) {
+        untracked(() => this.removeToast(id));
+    }
+
+    /** Body of `hide()`. */
+    private removeToast(id: number): void {
         const record = this.toastsDict[id];
 
         if (!record) {
@@ -230,6 +254,11 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     }
 
     hideTemplate(id: number) {
+        untracked(() => this.removeTemplate(id));
+    }
+
+    /** Body of `hideTemplate()`. */
+    private removeTemplate(id: number): void {
         const record = this.templatesDict[id];
 
         if (!record) {

@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, DebugElement, InputSignal, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, effect, InputSignal, signal, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -4815,5 +4815,94 @@ describe('KbqTreeSelection state saving', () => {
 
             expect(expandedNames(fixture.componentInstance)).toEqual([]);
         });
+    });
+});
+
+@Component({
+    imports: [KbqTreeModule, ReactiveFormsModule],
+    template: `
+        <kbq-tree-selection
+            multiple="checkbox"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            [formControl]="control"
+        >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>{{ node.name }}</kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeDrivenByEffects extends TreeParams {
+    readonly tree = viewChild.required(KbqTreeSelection);
+    readonly options = viewChildren(KbqTreeOption);
+    readonly control = new FormControl<string[]>([], { nonNullable: true });
+    readonly command = signal<(() => void) | null>(null);
+    runs = 0;
+
+    constructor() {
+        super();
+
+        effect(() => {
+            const command = this.command();
+
+            if (!command || this.runs >= 10) return;
+
+            this.runs++;
+            command();
+        });
+    }
+}
+
+describe('KbqTreeSelection called from an effect', () => {
+    let fixture: ComponentFixture<TreeDrivenByEffects>;
+
+    const settle = async (): Promise<void> => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        fixture.detectChanges();
+    };
+
+    const callFromEffect = async (command: () => void): Promise<void> => {
+        fixture.componentInstance.command.set(command);
+        await settle();
+    };
+
+    const option = (name: string): KbqTreeOption =>
+        fixture.componentInstance.options().find((item) => item.viewValue === name)!;
+
+    const clickOption = async (name: string): Promise<void> => {
+        option(name).getHostElement().click();
+        await settle();
+    };
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({ imports: [TreeDrivenByEffects] });
+        fixture = TestBed.createComponent(TreeDrivenByEffects);
+        await settle();
+    });
+
+    it('should not loop when an effect toggles an option', async () => {
+        await callFromEffect(() => option('rootNode_1').toggle());
+
+        expect(option('rootNode_1').selected).toBe(true);
+        expect(fixture.componentInstance.runs).toBe(1);
+    });
+
+    it('should not make an effect that selects all run again when the tree is disabled and enabled', async () => {
+        const { control } = fixture.componentInstance;
+
+        await callFromEffect(() => fixture.componentInstance.tree().selectAllOptions());
+        await clickOption('rootNode_1');
+        control.disable();
+        await settle();
+        control.enable();
+        await settle();
+
+        expect(option('rootNode_1').selected).toBe(false);
+        expect(fixture.componentInstance.runs).toBe(1);
     });
 });

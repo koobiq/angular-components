@@ -8,6 +8,8 @@ import {
     OnInit,
     Provider,
     Type,
+    effect,
+    signal,
     viewChild,
     viewChildren
 } from '@angular/core';
@@ -6462,6 +6464,113 @@ describe('KbqTreeSelect', () => {
             expect(overlayHost.parentElement).toBe(
                 fixture.nativeElement.querySelector('[kbqOverlayLayer] > .kbq-overlay-layer')
             );
+        });
+    });
+
+    describe('called from an effect', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqTreeModule, KbqTreeSelectModule, ReactiveFormsModule],
+            template: `
+                <kbq-form-field>
+                    <kbq-tree-select [formControl]="control">
+                        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+                                {{ treeControl.getViewValue(node) }}
+                            </kbq-tree-option>
+                        </kbq-tree-selection>
+                    </kbq-tree-select>
+                </kbq-form-field>
+            `
+        })
+        class TreeSelectDrivenByEffects {
+            treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+            treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
+            dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+            readonly select = viewChild.required(KbqTreeSelect);
+            readonly control = new FormControl<string | null>(null);
+            readonly wantOpen = signal(false);
+            readonly toggles = signal(0);
+            readonly writtenValue = signal<string | null>(null);
+            readonly runs = { open: 0, toggle: 0, write: 0 };
+
+            constructor() {
+                this.dataSource.data = buildFileTree(TREE_DATA, 0);
+
+                effect(() => {
+                    if (!this.wantOpen()) return;
+
+                    this.runs.open++;
+                    this.select().open();
+                });
+
+                effect(() => {
+                    if (!this.toggles() || this.runs.toggle >= 10) return;
+
+                    this.runs.toggle++;
+                    this.select().toggle();
+                });
+
+                effect(() => {
+                    const value = this.writtenValue();
+
+                    if (value === null || this.runs.write >= 10) return;
+
+                    this.runs.write++;
+                    this.control.setValue(value);
+                });
+            }
+        }
+
+        let fixture: ComponentFixture<TreeSelectDrivenByEffects>;
+        let select: KbqTreeSelect;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(async () => {
+            configureKbqTreeSelectTestingModule([TreeSelectDrivenByEffects]);
+            fixture = TestBed.createComponent(TreeSelectDrivenByEffects);
+            await settle();
+            select = fixture.componentInstance.select();
+        });
+
+        it('should not make an effect that opens it run again when the user closes it', async () => {
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            expect(select.panelOpen).toBe(true);
+
+            dispatchKeyboardEvent(select.elementRef.nativeElement, 'keydown', ESCAPE);
+            await settle();
+
+            expect(select.panelOpen).toBe(false);
+            expect(fixture.componentInstance.runs.open).toBe(1);
+        });
+
+        it('should not loop when an effect toggles it', async () => {
+            fixture.componentInstance.toggles.set(1);
+            await settle();
+
+            expect(select.panelOpen).toBe(true);
+            expect(fixture.componentInstance.runs.toggle).toBe(1);
+        });
+
+        it('should not make an effect that writes the form value run again when the user selects', async () => {
+            fixture.componentInstance.writtenValue.set('rootNode_1');
+            await settle();
+
+            select.elementRef.nativeElement.click();
+            await settle();
+            (overlayContainerElement.querySelectorAll('kbq-tree-option')[2] as HTMLElement).click();
+            await settle();
+
+            expect(select.panelOpen).toBe(false);
+            expect(fixture.componentInstance.control.value).toBe('Documents');
+            expect(fixture.componentInstance.runs.write).toBe(1);
         });
     });
 });

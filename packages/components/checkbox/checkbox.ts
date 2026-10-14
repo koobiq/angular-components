@@ -14,6 +14,7 @@ import {
     OnDestroy,
     output,
     SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -200,6 +201,11 @@ export class KbqCheckbox extends KbqColorDirective implements OnChanges, AfterVi
     }
 
     set indeterminate(value: boolean) {
+        // Untracked: an `effect()` that assigns it must not come to depend on the state read on the way.
+        untracked(() => this.setIndeterminate(value));
+    }
+
+    private setIndeterminate(value: boolean): void {
         const changed = value !== this.checkable.indeterminate();
 
         this.checkable.indeterminate.set(value);

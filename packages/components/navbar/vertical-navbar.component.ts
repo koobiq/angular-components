@@ -12,6 +12,7 @@ import {
     input,
     model,
     Provider,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -159,7 +160,9 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
 
     /** Expands a collapsed navbar and collapses an expanded one. */
     toggle(): void {
-        this.expanded.set(!this.expanded());
+        // Untracked: called from a consumer's `effect()`, `expanded` read here would make the effect run again on every
+        // expand and collapse.
+        this.expanded.set(!untracked(this.expanded));
     }
 
     /** @docs-private */

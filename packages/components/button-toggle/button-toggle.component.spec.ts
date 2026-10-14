@@ -1,6 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
-import { Component, DebugElement, viewChild, viewChildren } from '@angular/core';
+import { Component, DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1440,6 +1440,60 @@ describe('KbqButtonToggle keyboard navigation in RTL', () => {
     });
 });
 
+describe('KbqButtonToggle called from an effect', () => {
+    let fixture: ComponentFixture<ButtonToggleGroupsDrivenByEffect>;
+    let host: ButtonToggleGroupsDrivenByEffect;
+
+    const settle = async (): Promise<void> => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+    };
+
+    const clickToggle = async (index: number): Promise<void> => {
+        fixture.debugElement.queryAll(By.css('button'))[index].nativeElement.click();
+        await settle();
+    };
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({ imports: [ButtonToggleGroupsDrivenByEffect] });
+        fixture = TestBed.createComponent(ButtonToggleGroupsDrivenByEffect);
+        host = fixture.componentInstance;
+        await settle();
+    });
+
+    it('should not make an effect that sets the group value re-run when another toggle is picked', async () => {
+        host.action.set('value');
+        await settle();
+
+        expect(host.group().value).toBe('first');
+
+        await clickToggle(1);
+
+        expect(host.group().value).toBe('second');
+        expect(host.runs).toBe(1);
+    });
+
+    it('should not make an effect that checks a toggle re-run when another toggle is picked', async () => {
+        host.action.set('checked');
+        await settle();
+
+        expect(host.toggles()[0].checked).toBe(true);
+
+        await clickToggle(1);
+
+        expect(host.toggles()[0].checked).toBe(false);
+        expect(host.runs).toBe(1);
+    });
+
+    it('should not loop when an effect clicks a toggle of a multiple-selection group', async () => {
+        host.action.set('click');
+        await settle();
+
+        expect(host.toggles()[2].checked).toBe(true);
+        expect(host.runs).toBe(1);
+    });
+});
+
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
@@ -1780,4 +1834,45 @@ class StandaloneButtonToggleWithTabIndex {
 class DestroyableButtonToggleGroup {
     render = true;
     value = 1;
+}
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqButtonToggleModule],
+    template: `
+        <kbq-button-toggle-group #group="kbqButtonToggleGroup">
+            <kbq-button-toggle [value]="'first'">First</kbq-button-toggle>
+            <kbq-button-toggle [value]="'second'">Second</kbq-button-toggle>
+        </kbq-button-toggle-group>
+
+        <kbq-button-toggle-group multiple>
+            <kbq-button-toggle [value]="'third'">Third</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class ButtonToggleGroupsDrivenByEffect {
+    readonly group = viewChild.required<KbqButtonToggleGroup>('group');
+    readonly toggles = viewChildren(KbqButtonToggle);
+    readonly action = signal<'value' | 'checked' | 'click' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'value') {
+                this.group().value = 'first';
+            } else if (action === 'checked') {
+                this.toggles()[0].checked = true;
+            } else {
+                this.toggles()[2].onToggleClick();
+            }
+        });
+    }
 }

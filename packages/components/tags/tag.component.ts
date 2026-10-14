@@ -25,6 +25,7 @@ import {
     output,
     signal,
     SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -560,18 +561,24 @@ export class KbqTag
      * Selects the tag.
      */
     select(): void {
-        if (this.disabled || !this.selectable()) return;
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — `selected`, `disabled`, focus, the inputs — would make the effect run again whenever it changes.
+        untracked(() => {
+            if (this.disabled || !this.selectable()) return;
 
-        this.setSelectedState(true, { emitEvent: true });
+            this.setSelectedState(true, { emitEvent: true });
+        });
     }
 
     /**
      * Deselects the tag.
      */
     deselect(): void {
-        if (this.disabled || !this.selectable()) return;
+        untracked(() => {
+            if (this.disabled || !this.selectable()) return;
 
-        this.setSelectedState(false, { emitEvent: true });
+            this.setSelectedState(false, { emitEvent: true });
+        });
     }
 
     /**
@@ -580,27 +587,34 @@ export class KbqTag
      * @docs-private
      */
     selectViaInteraction(): void {
-        if (this.disabled || !this.selectable()) return;
+        untracked(() => {
+            if (this.disabled || !this.selectable()) return;
 
-        this.setSelectedState(true, { isUserInput: true, emitEvent: true });
+            this.setSelectedState(true, { isUserInput: true, emitEvent: true });
+        });
     }
 
     /**
      * Toggles the current selected state of the tag.
      */
     toggleSelected(isUserInput: boolean = false): boolean {
-        if (this.disabled || !this.selectable()) return this.selected();
+        return untracked(() => {
+            if (this.disabled || !this.selectable()) return this.selected();
 
-        this.setSelectedState(!this.selected(), { isUserInput, emitEvent: true });
+            this.setSelectedState(!this.selected(), { isUserInput, emitEvent: true });
 
-        return this.selected();
+            return this.selected();
+        });
     }
 
     /** Focuses the tag. */
     focus(): void {
-        if (this.disabled) return;
+        // The focus monitor reports the focus synchronously, and its handler reads the focus state.
+        untracked(() => {
+            if (this.disabled) return;
 
-        this.elementRef.nativeElement.focus();
+            this.elementRef.nativeElement.focus();
+        });
     }
 
     /**
@@ -610,7 +624,7 @@ export class KbqTag
      * Informs any listeners of the removal request. Does not remove the tag from the DOM.
      */
     remove(): void {
-        if (this.removable()) {
+        if (untracked(this.removable)) {
             this.removed.emit({ tag: this });
         }
     }
@@ -691,7 +705,7 @@ export class KbqTag
 
     /** @docs-private */
     blur(): void {
-        this.elementRef.nativeElement.blur();
+        untracked(() => this.elementRef.nativeElement.blur());
     }
 
     /** @docs-private */
@@ -724,22 +738,26 @@ export class KbqTag
 
     /** @docs-private */
     cancelEditing(reason: string): void {
-        if (!this.editing()) return;
+        untracked(() => {
+            if (!this.editing()) return;
 
-        this.editing.set(false);
-        this.editChange.emit({ tag: this, type: 'cancel', reason });
+            this.editing.set(false);
+            this.editChange.emit({ tag: this, type: 'cancel', reason });
 
-        this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
+            this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
+        });
     }
 
     /** @docs-private */
     submitEditing(reason: string): void {
-        if (!this.editing() || this.preventEditSubmit()) return;
+        untracked(() => {
+            if (!this.editing() || this.preventEditSubmit()) return;
 
-        this.editing.set(false);
-        this.editChange.emit({ tag: this, type: 'submit', reason });
+            this.editing.set(false);
+            this.editChange.emit({ tag: this, type: 'submit', reason });
 
-        this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
+            this.textElement.nativeElement.scrollTo?.({ left: 0, behavior: 'instant' });
+        });
     }
 
     /**
@@ -750,17 +768,19 @@ export class KbqTag
     setSelectedState(selected: boolean, options: Partial<{ isUserInput: boolean; emitEvent: boolean }> = {}): void {
         const { isUserInput = false, emitEvent = false } = options;
 
-        if (selected !== this.selected()) {
-            this._selected.set(selected);
+        untracked(() => {
+            if (selected !== this.selected()) {
+                this._selected.set(selected);
 
-            if (emitEvent) {
-                this.selectionChange.emit({
-                    source: this,
-                    isUserInput,
-                    selected: this.selected()
-                });
+                if (emitEvent) {
+                    this.selectionChange.emit({
+                        source: this,
+                        isUserInput,
+                        selected: this.selected()
+                    });
+                }
             }
-        }
+        });
     }
 
     private setupDragInitialProperties(): void {

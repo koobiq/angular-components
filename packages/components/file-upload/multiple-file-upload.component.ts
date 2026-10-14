@@ -17,6 +17,7 @@ import {
     PLATFORM_ID,
     SimpleChanges,
     TemplateRef,
+    untracked,
     viewChild,
     viewChildren,
     ViewEncapsulation
@@ -410,6 +411,13 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     deleteFile(index: number, event?: Event, origin?: FocusOrigin): void {
+        // Untracked: called from a consumer's `effect()`, the state read on the way — the list, `disabled` — would make
+        // the effect run again on every change it makes, and remove the next file.
+        untracked(() => this.removeFile(index, event, origin));
+    }
+
+    /** Body of `deleteFile()`. */
+    private removeFile(index: number, event?: Event, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();

@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, DebugElement, model, Provider, signal, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, effect, model, Provider, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import {
@@ -260,7 +260,79 @@ describe(KbqContentPanelModule.name, () => {
         expect(style.width).toBe('333px');
         expect(style.maxWidth).toBe('444px');
     });
+
+    describe('called from an effect', () => {
+        it('should not make an effect that opens it re-run when it closes', async () => {
+            const fixture = createComponent(ContentPanelDrivenByEffect);
+            const host = fixture.componentInstance;
+
+            host.action.set('open');
+            await fixture.whenStable();
+
+            expect(host.container().isOpened()).toBe(true);
+
+            host.container().close();
+            await fixture.whenStable();
+
+            expect(host.container().isOpened()).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that toggles it re-run when it closes', async () => {
+            const fixture = createComponent(ContentPanelDrivenByEffect);
+            const host = fixture.componentInstance;
+
+            host.action.set('toggle');
+            await fixture.whenStable();
+
+            expect(host.container().isOpened()).toBe(true);
+
+            host.container().close();
+            await fixture.whenStable();
+
+            expect(host.container().isOpened()).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'content-panel-driven-by-effect',
+    imports: [KbqContentPanelModule],
+    template: `
+        <kbq-content-panel-container [useStateSaving]="false">
+            <div>test</div>
+
+            <kbq-content-panel>
+                <kbq-content-panel-body>body</kbq-content-panel-body>
+            </kbq-content-panel>
+        </kbq-content-panel-container>
+    `
+})
+class ContentPanelDrivenByEffect {
+    readonly container = viewChild.required(KbqContentPanelContainer);
+    readonly action = signal<'open' | 'toggle' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'open') {
+                this.container().open();
+            } else {
+                this.container().toggle();
+            }
+        });
+    }
+}
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
 class InMemoryStateStore implements KbqStateStore {

@@ -6,6 +6,7 @@ import {
     Injector,
     NgModule,
     TemplateRef,
+    effect,
     inject as injectCore,
     signal,
     viewChild
@@ -1012,6 +1013,44 @@ describe('KbqSidepanelService', () => {
             ).not.toBeNull();
         });
     });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<SidepanelDrivenByEffects>;
+
+        const settle = async () => {
+            fixture.detectChanges();
+            rootComponentFixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            rootComponentFixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+            fixture = TestBed.createComponent(SidepanelDrivenByEffects);
+        });
+
+        it('should not make an effect that opens a sidepanel over another one open more of them', async () => {
+            sidepanelService.open(SimpleSidepanelExample);
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            expect(fixture.componentInstance.runs.open).toBe(1);
+            expect(sidepanelService.openedSidepanels.length).toBe(2);
+        });
+
+        it('should not make an effect that closes a sidepanel run again as the one underneath moves', async () => {
+            sidepanelService.open(SimpleSidepanelExample);
+            const upper = sidepanelService.open(SimpleSidepanelExample);
+
+            await settle();
+            fixture.componentInstance.toClose.set(upper);
+            await settle();
+            await settle();
+
+            expect(sidepanelService.openedSidepanels.length).toBe(1);
+            expect(fixture.componentInstance.runs.close).toBe(1);
+        });
+    });
 });
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */
@@ -1385,6 +1424,36 @@ class ComponentWithTemplateForSidepanel {
 })
 class RootComponent {}
 
+@Component({
+    selector: 'sidepanel-driven-by-effects',
+    template: ''
+})
+class SidepanelDrivenByEffects {
+    readonly wantOpen = signal(false);
+    readonly toClose = signal<KbqSidepanelRef | null>(null);
+    readonly runs = { open: 0, close: 0 };
+
+    private readonly sidepanelService = injectCore(KbqSidepanelService);
+
+    constructor() {
+        effect(() => {
+            if (!this.wantOpen() || this.runs.open >= 5) return;
+
+            this.runs.open++;
+            this.sidepanelService.open(SimpleSidepanelExample);
+        });
+
+        effect(() => {
+            const sidepanelRef = this.toClose();
+
+            if (!sidepanelRef) return;
+
+            this.runs.close++;
+            sidepanelRef.close();
+        });
+    }
+}
+
 // Create a real (non-test) NgModule as a workaround for
 // https://github.com/angular/angular/issues/10760
 const TEST_COMPONENTS = [
@@ -1399,7 +1468,8 @@ const TEST_COMPONENTS = [
     ComponentWithTemplateForSidepanel,
     ComponentWithCloseButtonTemplate,
     RootComponent,
-    SidepanelFromDropdownComponent
+    SidepanelFromDropdownComponent,
+    SidepanelDrivenByEffects
 ];
 
 @NgModule({

@@ -11,6 +11,7 @@ import {
     Type,
     ViewEncapsulation,
     computed,
+    effect,
     inject,
     input,
     output,
@@ -3446,6 +3447,49 @@ describe('KbqAutocomplete', () => {
             expect(modalClosing).toHaveBeenCalledTimes(1);
         });
     });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<AutocompleteDrivenByEffects>;
+        let trigger: KbqAutocompleteTrigger;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(async () => {
+            vi.useFakeTimers();
+
+            fixture = createComponent(AutocompleteDrivenByEffects);
+            await settle();
+            trigger = fixture.componentInstance.trigger();
+        });
+
+        it('should not make an effect that opens it run again when the user closes it', async () => {
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            expect(trigger.panelOpen).toBe(true);
+
+            dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+            await settle();
+
+            expect(trigger.panelOpen).toBe(false);
+            expect(fixture.componentInstance.runs.open).toBe(1);
+        });
+
+        it('should stay openable when an effect closes it on an options change', async () => {
+            fixture.componentInstance.closeOnOptionsChange.set(true);
+            await settle();
+
+            dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focusin');
+            await settle();
+
+            expect(trigger.panelOpen).toBe(true);
+            expect(fixture.componentInstance.runs.close).toBe(1);
+        });
+    });
 });
 
 @Component({
@@ -4481,5 +4525,45 @@ class AutocompleteInModalHost {
 
     open() {
         return this.modalService.open({ kbqComponent: AutocompleteInModalContent });
+    }
+}
+
+@Component({
+    imports: [KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput placeholder="State" [kbqAutocomplete]="auto" />
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            @for (state of states(); track state) {
+                <kbq-option [value]="state">{{ state }}</kbq-option>
+            }
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteDrivenByEffects {
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+    readonly states = signal(['Alabama', 'California']);
+    readonly wantOpen = signal(false);
+    readonly closeOnOptionsChange = signal(false);
+    readonly runs = { open: 0, close: 0 };
+
+    constructor() {
+        effect(() => {
+            if (!this.wantOpen()) return;
+
+            this.runs.open++;
+            this.trigger().open();
+        });
+
+        effect(() => {
+            this.states();
+
+            if (!this.closeOnOptionsChange()) return;
+
+            this.runs.close++;
+            this.trigger().closePanel();
+        });
     }
 }

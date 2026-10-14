@@ -1,5 +1,14 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { ChangeDetectionStrategy, Component, DebugElement, Provider, signal, Type } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    effect,
+    Provider,
+    signal,
+    Type,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFlexWrap, KbqOrientation } from '@koobiq/components/core';
@@ -149,6 +158,31 @@ class TestOverflowItemsDebounce {
 const getOverflowItemsDirective = (debugElement: DebugElement): KbqOverflowItems => {
     return debugElement.query(By.directive(KbqOverflowItems)).injector.get(KbqOverflowItems);
 };
+
+@Component({
+    selector: 'overflow-item-hidden-by-effect',
+    imports: [KbqOverflowItemsModule],
+    template: `
+        <div kbqOverflowItem="item" [alwaysVisible]="alwaysVisible()">item</div>
+    `
+})
+class TestOverflowItemHiddenByEffect {
+    readonly item = viewChild.required(KbqOverflowItem);
+    readonly alwaysVisible = signal(false);
+    readonly wantHidden = signal(false);
+
+    /** How many times the effect below hid the item. */
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (!this.wantHidden()) return;
+
+            this.runs++;
+            this.item().hide();
+        });
+    }
+}
 
 describe('KbqOverflowItems', () => {
     afterEach(() => vi.useRealTimers());
@@ -538,6 +572,17 @@ describe('KbqOverflowItems', () => {
 
             expect(alwaysVisibleItem.hidden()).toBe(false);
             expect(alwaysVisibleItem.element.style.visibility).toBe('');
+        });
+
+        it('KbqOverflowItem.hide() should not make an effect that calls it run again when alwaysVisible changes', async () => {
+            const fixture = createComponent(TestOverflowItemHiddenByEffect);
+
+            fixture.componentInstance.wantHidden.set(true);
+            await fixture.whenStable();
+            fixture.componentInstance.alwaysVisible.set(true);
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.runs).toBe(1);
         });
     });
 

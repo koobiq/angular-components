@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, untracked, viewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
@@ -131,7 +131,7 @@ export class KbqPipeInputComponent extends KbqBasePipe<string | null> implements
 
     /** focuses the input */
     override open(): void {
-        this.input().focus();
+        untracked(() => this.input().focus());
     }
 
     /** Commits a value to `data` and notifies the filter-bar. */

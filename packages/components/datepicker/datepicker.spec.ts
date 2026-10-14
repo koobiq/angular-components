@@ -3,11 +3,13 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     Component,
+    effect,
     FactoryProvider,
     inject as inject_1,
     input,
     LOCALE_ID,
     Provider,
+    signal,
     Type,
     ValueProvider,
     viewChild
@@ -2272,7 +2274,94 @@ describe('KbqDatepicker', () => {
             await vi.runOnlyPendingTimersAsync();
         });
     });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<DatepickerDrivenByEffect>;
+        let host: DatepickerDrivenByEffect;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await fixture.whenStable();
+        };
+
+        beforeEach(async () => {
+            fixture = createComponent(DatepickerDrivenByEffect, [KbqLuxonDateModule]);
+            host = fixture.componentInstance;
+            await settle();
+        });
+
+        it('should not make an effect that opens it re-run when it closes', async () => {
+            host.action.set('open');
+            await settle();
+
+            expect(host.datepicker().opened).toBe(true);
+
+            host.datepicker().close(false);
+            await settle();
+
+            expect(host.datepicker().opened).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not loop when an effect toggles it', async () => {
+            host.action.set('toggle');
+            await settle();
+
+            expect(host.datepicker().opened).toBe(true);
+            expect(host.runs).toBe(1);
+
+            host.datepicker().close(false);
+            await settle();
+        });
+
+        it('should not make an effect that sets the form control run again', async () => {
+            host.action.set('write');
+            await settle();
+
+            getDatepickerInputElement(fixture).focus();
+            await settle();
+
+            expect(host.datepickerInput().focused()).toBe(true);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqDatepickerModule, ReactiveFormsModule],
+    template: `
+        <input [kbqDatepicker]="d" [formControl]="control" />
+        <kbq-datepicker #d />
+    `
+})
+class DatepickerDrivenByEffect {
+    readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
+    readonly datepickerInput = viewChild.required(KbqDatepickerInput);
+    readonly control = new FormControl<DateTime | null>(null);
+    readonly action = signal<'open' | 'toggle' | 'write' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'open') {
+                this.datepicker().open();
+            } else if (action === 'toggle') {
+                this.datepicker().toggle();
+            } else {
+                this.control.setValue(DateTime.fromISO('2024-01-15'));
+            }
+        });
+    }
+}
 
 @Component({
     imports: [KbqDatepickerModule, KbqOverlayLayer],

@@ -45,7 +45,11 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
 import { axe } from 'jest-axe';
 import { Subject, filter } from 'rxjs';
 import type { Mock } from 'vitest';
-import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
+import {
+    KBQ_POPOVER_CONFIRM_BUTTON_TEXT,
+    KBQ_POPOVER_CONFIRM_TEXT,
+    KbqPopoverConfirmTrigger
+} from './popover-confirm.component';
 import { KbqPopoverComponent, KbqPopoverTrigger, defaultHoverLeaveDelay } from './popover.component';
 import { KbqPopoverModule } from './popover.module';
 
@@ -1530,6 +1534,56 @@ describe('KbqPopover', () => {
             expect(overlayContainerElement.querySelector('.kbq-popover')).toBeNull();
             expect(effectFixture.componentInstance.runs).toBe(1);
         });
+
+        it('should not make an effect that sets the content run again when the popover closes', async () => {
+            vi.useFakeTimers();
+
+            const effectFixture = createComponent(PopoverContentFromEffect);
+            const { componentInstance } = effectFixture;
+            const popoverTrigger = componentInstance.popoverTrigger()!;
+
+            readOverlayContainer();
+            popoverTrigger.show(0);
+            await runDueTimers();
+            effectFixture.detectChanges();
+            componentInstance.content.set('Updated');
+            await runDueTimers();
+            effectFixture.detectChanges();
+
+            expect(popoverTrigger.isOpen).toBe(true);
+            expect(componentInstance.runs.popover).toBe(2);
+
+            popoverTrigger.hide(0);
+            await settleClose(effectFixture);
+
+            expect(popoverTrigger.isOpen).toBe(false);
+            expect(componentInstance.runs.popover).toBe(2);
+        });
+
+        it('should not make an effect that sets the content of a confirm run again when the locale changes', async () => {
+            vi.useFakeTimers();
+
+            const effectFixture = createComponent(PopoverContentFromEffect, [
+                { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
+            ]);
+            const { componentInstance } = effectFixture;
+
+            readOverlayContainer();
+            componentInstance.confirmTrigger()!.show(0);
+            await runDueTimers();
+            effectFixture.detectChanges();
+            componentInstance.content.set('Updated');
+            await runDueTimers();
+            effectFixture.detectChanges();
+
+            expect(componentInstance.runs.confirm).toBe(2);
+
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            await runDueTimers();
+            effectFixture.detectChanges();
+
+            expect(componentInstance.runs.confirm).toBe(2);
+        });
     });
 
     describe('with a tooltip on the same element', () => {
@@ -2200,6 +2254,45 @@ class PopoverShownByEffect {
 
             this.runs++;
             trigger.show(0);
+        });
+    }
+}
+
+@Component({
+    selector: 'popover-content-from-effect',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover kbqTrigger="manual">Trigger</button>
+        <button kbqPopoverConfirm kbqTrigger="manual">Confirm</button>
+    `
+})
+class PopoverContentFromEffect {
+    readonly popoverTrigger = viewChild(KbqPopoverTrigger);
+    readonly confirmTrigger = viewChild(KbqPopoverConfirmTrigger);
+    readonly content = signal('Content');
+
+    /** How many times each effect below wrote the content. */
+    readonly runs = { popover: 0, confirm: 0 };
+
+    constructor() {
+        effect(() => {
+            const content = this.content();
+            const trigger = this.popoverTrigger();
+
+            if (!trigger) return;
+
+            this.runs.popover++;
+            trigger.content = content;
+        });
+
+        effect(() => {
+            const content = this.content();
+            const trigger = this.confirmTrigger();
+
+            if (!trigger) return;
+
+            this.runs.confirm++;
+            trigger.content = content;
         });
     }
 }

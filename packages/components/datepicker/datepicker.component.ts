@@ -20,6 +20,7 @@ import {
     output,
     signal,
     SimpleChanges,
+    untracked,
     viewChild,
     ViewContainerRef,
     ViewEncapsulation
@@ -181,9 +182,11 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     set startAt(value: D | null) {
         const deserializedValue = this.dateAdapter.deserialize(value);
 
+        // Untracked, as in the `disabled` setter: an `effect()` that assigns it must not come to depend on the state
+        // read on the way.
         this._startAt =
             deserializedValue !== null
-                ? this.dateAdapter.clampDate(deserializedValue, this.minDate(), this.maxDate())
+                ? this.dateAdapter.clampDate(deserializedValue, untracked(this.minDate), untracked(this.maxDate))
                 : null;
     }
 
@@ -199,7 +202,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
     set disabled(value: boolean) {
         const newValue = coerceBooleanProperty(value);
 
-        if (newValue !== this.disabledState()) {
+        if (newValue !== untracked(this.disabledState)) {
             this.disabledState.set(newValue);
             this.disabledChange.next(newValue);
         }
@@ -369,7 +372,7 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         this.selected = date;
 
         if (!this.dateAdapter.sameDate(oldValue, this.selected)) {
-            this.selectedChanged.next(date);
+            untracked(() => this.selectedChanged.next(date));
         }
     }
 
@@ -407,6 +410,31 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
 
     /** Open the calendar. */
     open(): void {
+        // Untracked, as `close()`, `toggle()` and `select()`: called from a consumer's `effect()`, the state read on
+        // the way — `opened`, `disabled`, the inputs, the value of the input — would make the effect run again on
+        // every open and close.
+        untracked(() => this.openCalendar());
+    }
+
+    /** Close the calendar. */
+    close(restoreFocus: boolean = true): void {
+        untracked(() => this.closeCalendar(restoreFocus));
+    }
+
+    toggle(): void {
+        if (this.datepickerInput.isReadOnly) {
+            return;
+        }
+
+        if (untracked(this.openedState)) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+
+    /** Body of `open()`. */
+    private openCalendar(): void {
         if (this.openedState() || this.disabled) {
             return;
         }
@@ -425,8 +453,8 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         this.openedStream.emit();
     }
 
-    /** Close the calendar. */
-    close(restoreFocus: boolean = true): void {
+    /** Body of `close()`. */
+    private closeCalendar(restoreFocus: boolean): void {
         if (!this.openedState()) {
             return;
         }
@@ -449,18 +477,6 @@ export class KbqDatepicker<D> implements OnChanges, OnDestroy {
         this.openedState.set(false);
         this.closedStream.emit();
         this.focusedElementBeforeOpen = null;
-    }
-
-    toggle(): void {
-        if (this.datepickerInput.isReadOnly) {
-            return;
-        }
-
-        if (this.openedState()) {
-            this.close();
-        } else {
-            this.open();
-        }
     }
 
     /** Destroys the current overlay. */

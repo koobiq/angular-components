@@ -1,7 +1,7 @@
 ﻿import { FocusMonitor } from '@angular/cdk/a11y';
 import { Directionality } from '@angular/cdk/bidi';
 import { DOWN_ARROW, END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@angular/cdk/keycodes';
-import { Component, DebugElement, signal } from '@angular/core';
+import { Component, DebugElement, effect, signal, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { dispatchKeyboardEvent, KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
@@ -74,7 +74,8 @@ describe('KbqAccordion', () => {
                 AccordionInteractiveContent,
                 AccordionNestedInTrigger,
                 AccordionNested,
-                AccordionContentInChild
+                AccordionContentInChild,
+                AccordionDrivenByEffect
             ]
         }).compileComponents();
     });
@@ -2113,6 +2114,63 @@ describe('KbqAccordion', () => {
         });
     });
 
+    describe('called from an effect', () => {
+        let effectFixture: ComponentFixture<AccordionDrivenByEffect>;
+        let host: AccordionDrivenByEffect;
+
+        const settle = async (): Promise<void> => {
+            effectFixture.detectChanges();
+            await effectFixture.whenStable();
+        };
+
+        beforeEach(async () => {
+            effectFixture = TestBed.createComponent(AccordionDrivenByEffect);
+            host = effectFixture.componentInstance;
+            await settle();
+        });
+
+        it('should not make an effect that opens an item re-run when it closes', async () => {
+            const [item] = host.items();
+
+            host.action.set('open');
+            await settle();
+
+            expect(item.expanded).toBe(true);
+
+            item.close();
+            await settle();
+
+            expect(item.expanded).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not loop when an effect toggles an item', async () => {
+            host.action.set('toggle');
+            await settle();
+
+            expect(host.items()[0].expanded).toBe(true);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that opens all items re-run when the accordion is re-enabled', async () => {
+            const [item] = host.items();
+
+            host.action.set('openAll');
+            await settle();
+
+            expect(item.expanded).toBe(true);
+
+            item.close();
+            host.disabled.set(true);
+            await settle();
+            host.disabled.set(false);
+            await settle();
+
+            expect(item.expanded).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+    });
+
     describe('accessibility (axe)', () => {
         afterEach(() => {
             if (fixture?.nativeElement?.parentNode === document.body) {
@@ -2820,3 +2878,49 @@ class SectionBody {}
     `
 })
 class AccordionContentInChild {}
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'accordion-driven-by-effect',
+    imports: [KbqAccordionModule],
+    template: `
+        <kbq-accordion type="multiple" [disabled]="disabled()">
+            @for (value of values; track value) {
+                <kbq-accordion-item [value]="value">
+                    <kbq-accordion-header>
+                        <button kbq-accordion-trigger type="button">{{ value }}</button>
+                    </kbq-accordion-header>
+                    <kbq-accordion-content>{{ value }}</kbq-accordion-content>
+                </kbq-accordion-item>
+            }
+        </kbq-accordion>
+    `
+})
+class AccordionDrivenByEffect {
+    readonly accordion = viewChild.required(KbqAccordion);
+    readonly items = viewChildren(KbqAccordionItem);
+    readonly values = ['item-1', 'item-2'];
+    readonly disabled = signal(false);
+    readonly action = signal<'open' | 'toggle' | 'openAll' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'openAll') {
+                this.accordion().openAll();
+            } else if (action === 'open') {
+                this.items()[0].open();
+            } else {
+                this.items()[0].toggle();
+            }
+        });
+    }
+}

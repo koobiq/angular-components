@@ -7,6 +7,7 @@ import {
     InjectionToken,
     input,
     Provider,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -145,18 +146,22 @@ export class KbqCleaner extends KbqIconButton implements AfterContentInit {
      * @docs-private
      */
     clear(event: Event): void {
-        if (!this.context || !this.canShow) return;
+        // Untracked: called from a consumer's `effect()`, the state of the control read on the way — `disabled`,
+        // `empty` — would make the effect run again as soon as something is typed, and clear it.
+        untracked(() => {
+            if (!this.context || !this.canShow) return;
 
-        event.stopPropagation();
-        event.preventDefault();
+            event.stopPropagation();
+            event.preventDefault();
 
-        if (this.context.clear) {
-            this.context.clear();
-        } else {
-            this.context.control.ngControl?.reset();
-        }
+            if (this.context.clear) {
+                this.context.clear();
+            } else {
+                this.context.control.ngControl?.reset();
+            }
 
-        this.context.control.focus();
+            this.context.control.focus();
+        });
     }
 
     /**
