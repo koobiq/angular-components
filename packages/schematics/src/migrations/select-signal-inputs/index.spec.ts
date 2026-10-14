@@ -77,6 +77,30 @@ describe(SCHEMATIC_NAME, () => {
         expect(log).toContain('are signal inputs, so an assignment no longer compiles');
     });
 
+    it('reports the members a timezone select inherits from the select', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTimezoneSelect } from '@koobiq/components/timezone';\n" +
+                'export class App {\n' +
+                '    set(s: KbqTimezoneSelect) {\n' +
+                '        s.compareWith = (a: unknown, b: unknown) => a === b;\n' +
+                '        return s.hasBackdrop;\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('are signals now: read them as calls');
+        expect(log).toContain('are signal inputs, so an assignment no longer compiles');
+    });
+
     it('reports a read of hiddenItemsText separately from a write', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

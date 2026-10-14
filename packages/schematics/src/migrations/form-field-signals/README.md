@@ -27,6 +27,7 @@ and template-reference reads break.
 | `KbqFormFieldRef.control`                                                                                     | `any`                   | `Signal<KbqFormFieldControlRef>`         | ⚠️ warn                          |
 | `value` / `id` / `placeholder` / `focused` / `empty` / `required` / `disabled` / `errorState` of the controls | property or getter      | `Signal`                                 | ✅ read → call, write → `.set()` |
 | `KbqTagInput.id` / `placeholder` / `focused` / `empty`                                                        | input, field or getter  | read-only `Signal`                       | ✅ read → call                   |
+| `KbqInputPassword.elementType`                                                                                | writable `string`       | read-only `Signal<'text' \| 'password'>` | ✅ read → call, ⚠️ write warned  |
 | `KbqFormFieldControl.stateChanges`                                                                            | `Observable<void>`      | removed                                  | ⚠️ warn                          |
 | `KbqFormField.hovered` / `onHoverChanged()`                                                                   | `boolean` / method      | removed                                  | ⚠️ warn                          |
 
@@ -51,7 +52,8 @@ The schematic walks every `.ts`, `.html`, `.scss` and `.css` file in the project
   list, the timepicker and the datepicker input, `value` on the select, the timezone select, the tag list and the
   native-element controls, `placeholder` on the native-element controls. The tree select, the timepicker and the
   datepicker input own their `value`, so a write to it is reported. The same reads of `id`, `placeholder`,
-  `focused` and `empty` on a receiver typed `KbqTagInput` become calls too.
+  `focused` and `empty` on a receiver typed `KbqTagInput` become calls too, and so do reads of `elementType` on
+  a receiver typed `KbqInputPassword`, whose writes are reported.
 - **Template references.** For a `#ref` bound to `<kbq-form-field>`, `<kbq-hint>`, `<kbq-error>`,
   `<kbq-reactive-password-hint>`, `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` or
   `<kbq-tag-list>`, reads through that ref are rewritten in the same template (external `.html` and inline
@@ -60,7 +62,10 @@ The schematic walks every `.ts`, `.html`, `.scss` and `.css` file in the project
   timepicker, the datepicker input and the tag input are directives on a native element, where a bare ref is the
   element, so only a ref naming their `exportAs` is followed: `#i="kbqInput"`, `kbqInputPassword`,
   `kbqTextarea`, `kbqTimepicker`, `kbqDatepickerInput`, `kbqTagInput` or `kbqTagInputFor`.
-  Only the ref itself is matched — `form.controls.country.value` stays as it is. In an event binding, a write
+  Only the ref itself is matched — `form.controls.country.value` stays as it is. Only the expressions of the view
+  that declares the ref are looked at — prose, comments and plain attributes are not — and a ref whose name a
+  `@for`, `let-`, `*ngFor` or `@let` variable or another `#ref` shares is left alone. In an event binding, a
+  write
   to a writable member becomes `.set()`: `(click)="s.disabled = true"` → `(click)="s.disabled.set(true)"`;
   `[(ngModel)]="tags.value"` keeps working on the signal unchanged.
 - **Cleaner accessible name.** `<kbq-cleaner [attr.aria-label]="…">` → `<kbq-cleaner [aria-label]="…">`. The
@@ -90,6 +95,7 @@ These changes can't be rewritten safely and are surfaced as warnings (in both `f
 | `formField.hovered` / `.onHoverChanged(…)`, also through a `#ref`         | Removed: nothing read them; their pointer listeners ran change detection on every hover. Bind `(mouseenter)` / `(mouseleave)` on `<kbq-form-field>` yourself, or style with `:hover`.              |
 | A write to a read-only control member (`select.placeholder = …`)          | Bind it in the template, or set the value through a form control. Also reported for `+=`, `++`, `delete` and a destructuring target, and through a template ref, in an event or a two-way binding. |
 | `input.value += …` / `++` / `delete` / destructuring on a writable member | Only a plain `=` becomes `.set()`. Write the rest with `.set()` / `.update()`. Also reported for `+=`, `??=`, `++` and the rest through a template ref in an event binding.                        |
+| `password.elementType = …`, also through a `#ref`                         | `KbqInputPassword.elementType` is a read-only signal now. Call `toggleType()` to show or hide the password.                                                                                        |
 | `KbqErrorStateTracker` / `CanUpdateErrorState`                            | The tracker takes no `stateChanges` subject; `errorState` is a `Signal<boolean>`; the interface no longer declares `errorStateMatcher`.                                                            |
 | `mixinErrorState(...)` / `CanUpdateErrorStateCtor`                        | Removed. Track the error state with `KbqErrorStateTracker`.                                                                                                                                        |
 | `KbqIconErrorStateContext`                                                | Its `errorState` is a `Signal<boolean>`, and `stateChanges` was removed.                                                                                                                           |

@@ -1,7 +1,6 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { visitProjectFiles } from '../../utils/project-files';
@@ -14,8 +13,8 @@ import {
     Receiver,
     resolveReceiver
 } from '../../utils/signal-members-migration';
-import { rewriteRefAccesses } from '../../utils/template-ref-access';
-import { forEachClass, parseTemplate } from '../../utils/typescript';
+import { RefAccessPolicy, rewriteRefAccesses } from '../../utils/template-ref-access';
+import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     ALERT_ELEMENT,
     ALERT_EXPORT_AS,
@@ -191,51 +190,8 @@ function warnReceiverMembers(
     }
 }
 
-/** `#ref` / `ref-ref`, or `undefined` when the attribute is not a reference variable. */
-function referenceName(name: string): string | undefined {
-    if (name.startsWith('#')) return name.slice(1);
-    if (name.startsWith('ref-')) return name.slice(4);
-
-    return undefined;
-}
-
-/** Collects template reference variable names bound to a `<kbq-alert>` element. */
-class AlertRefCollector implements Visitor {
-    readonly refs = new Set<string>();
-
-    visitElement(element: any): void {
-        if (element.name === ALERT_ELEMENT) {
-            for (const attr of element.attrs ?? []) {
-                if (typeof attr.name !== 'string') continue;
-
-                const name = referenceName(attr.name);
-                const value = String(attr.value ?? '');
-
-                if (name !== undefined && (!value || value === ALERT_EXPORT_AS)) this.refs.add(name);
-            }
-        }
-
-        this.visitChildren(element);
-    }
-
-    visitBlock(block: any): void {
-        this.visitChildren(block);
-    }
-
-    private visitChildren(node: any): void {
-        for (const child of node.children ?? []) {
-            child.visit(this);
-        }
-    }
-
-    visitAttribute(): void {}
-    visitText(): void {}
-    visitComment(): void {}
-    visitExpansion(): void {}
-    visitExpansionCase(): void {}
-    visitBlockParameter(): void {}
-    visitLetDeclaration(): void {}
-}
+/** What a reference variable on `<kbq-alert>` reaches. */
+const REF_POLICY: RefAccessPolicy = { members: SIGNAL_MEMBERS, writable: WRITABLE_MEMBERS };
 
 interface TemplateResult {
     content: string;
@@ -255,53 +211,12 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
     if (!parsed.tree) return untouched;
 
     const { rootNodes } = parsed.tree as { rootNodes: unknown[] };
-    const collector = new AlertRefCollector();
-
-    visitAll(collector, rootNodes);
-
-    if (collector.refs.size === 0) return untouched;
-
-    const refs = [...collector.refs].map((name) => ({ name, members: SIGNAL_MEMBERS, writable: WRITABLE_MEMBERS }));
-    const { content, readOnlyWrites } = rewriteRefAccesses(template, rootNodes, refs);
+    // A bare `#ref` or one naming the alert; `#ref="ngModel"` names another directive.
+    const { content, readOnlyWrites } = rewriteRefAccesses(template, rootNodes, (element, value) =>
+        element.name === ALERT_ELEMENT && (!value || value === ALERT_EXPORT_AS) ? REF_POLICY : undefined
+    );
 
     return { content, changed: content !== template, readOnlyWrites };
-}
-
-/** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
-function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: number; end: number }> {
-    const ranges: Array<{ start: number; end: number }> = [];
-
-    forEachClass(sourceFile, (node) => {
-        const decorator = ts
-            .getDecorators(node)
-            ?.find(
-                (dec) =>
-                    ts.isCallExpression(dec.expression) &&
-                    ts.isIdentifier(dec.expression.expression) &&
-                    dec.expression.expression.text === 'Component'
-            );
-
-        if (!decorator || !ts.isCallExpression(decorator.expression)) return;
-
-        const [arg] = decorator.expression.arguments;
-
-        if (!arg || !ts.isObjectLiteralExpression(arg)) return;
-
-        for (const prop of arg.properties) {
-            if (
-                ts.isPropertyAssignment(prop) &&
-                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
-                prop.name.text === 'template' &&
-                ts.isStringLiteralLike(prop.initializer) &&
-                prop.initializer.text
-            ) {
-                // +1 / -1 to exclude the opening/closing quote characters.
-                ranges.push({ start: prop.initializer.getStart(sourceFile) + 1, end: prop.initializer.getEnd() - 1 });
-            }
-        }
-    });
-
-    return ranges;
 }
 
 /** Pass B (inline) — rewrite alert ref reads inside inline component templates. */

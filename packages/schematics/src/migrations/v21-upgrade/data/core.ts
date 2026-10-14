@@ -1,4 +1,5 @@
 import { listItemPattern } from '../../../utils/list-item-pattern';
+import { TAG_BODY } from '../../../utils/tag-patterns';
 import type { AreaData, Replacement } from '../data';
 
 const CORE = '@koobiq/components/core';
@@ -38,9 +39,15 @@ const THEME_PALETTE: Replacement[] = [
     }
 ];
 
-// The `mc` aliases of the list item slots, in templates and in selectors written in code.
-const MC_LINE: Replacement = { from: '(?<![\\w-])mcLine(?![\\w-])', to: 'kbq-line' };
-const MC_LIST_ICON: Replacement = { from: '(?<![\\w-])mcListIcon(?![\\w-])', to: 'kbq-list-icon' };
+/**
+ * The `mc` alias `name` of a list item slot: an attribute of an opening tag in a template, or an attribute selector
+ * in a string, such as a `querySelector()` argument. The template replacements run over the whole of a `.ts` file,
+ * where the name anywhere else is the app's own: `mcLine = 1`, `this.mcLine`, a `.mcLine` class in `styles`.
+ */
+const mcAlias = (name: string, to: string): Replacement[] => [
+    { from: `(?<=<[a-zA-Z][\\w-]*\\s${TAG_BODY}*)(?<=\\s)${name}(?=[\\s=/>])`, to },
+    { from: `(?<=['"\`][^'"\`\\n]*\\[\\s*)${name}(?=\\s*[\\]=~|^$*])`, to }
+];
 
 /** `name` as the attribute of a selector in a stylesheet, which matches an HTML attribute in any case. */
 const attributeSelector = (name: string): string => {
@@ -194,7 +201,11 @@ export const core: AreaData = {
         ...rename('KbqTheme', 'KbqThemeConfig'),
         ...THEME_PALETTE
     ],
-    templateReplacements: [...DEFAULT_ENUM_MEMBERS, MC_LINE, MC_LIST_ICON],
+    templateReplacements: [
+        ...DEFAULT_ENUM_MEMBERS,
+        ...mcAlias('mcLine', 'kbq-line'),
+        ...mcAlias('mcListIcon', 'kbq-list-icon')
+    ],
     scssReplacements: MC_SELECTORS,
     warnPatterns: [
         ...UNUSED_EXPORTS.map(({ symbols, message }) => ({

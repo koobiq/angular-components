@@ -21,7 +21,8 @@ from three ordered tables in `data.ts`:
   `KBQ_SANITY_CHECKS`, `KBQ_SIDEPANEL_WITH_SHADOW`, `KbqCommonModule`, etc.) from
   imports and lists such as `imports: []` and `providers: []`, function renames (`toBoolean(` → `booleanAttribute(`, `isCorrectExtension(` →
   `FileValidators.isCorrectExtension(`, `formatDataSize(` → `getFormattedSizeParts(`),
-  method renames on instances (`.openPanel(` → `.open(`, `.toggleIsCollapsed(` →
+  method renames on instances (`.openPanel(` → `.open(` in a file that uses the Koobiq autocomplete,
+  `.toggleIsCollapsed(` →
   `.toggle(`, `.focusViaKeyboard(` → `.focus(`), and deprecated type-alias
   renames (`DropdownPositionX` → `KbqDropdownPositionX`, `DropdownPositionY` →
   `KbqDropdownPositionY`).

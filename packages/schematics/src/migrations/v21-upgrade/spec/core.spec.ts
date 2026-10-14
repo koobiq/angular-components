@@ -530,6 +530,40 @@ describe('v21-upgrade: core', () => {
         );
     });
 
+    it('leaves mcLine and mcListIcon in code and in inline styles alone', async () => {
+        const run = await runV21Upgrade({
+            'line.ts': [
+                "import { Component } from '@angular/core';",
+                '',
+                '@Component({',
+                '    template: \'<span class="title" mcLine>Title</span>\',',
+                "    styles: ['.mcLine { color: red; }', '[mcListIcon] { margin: 0; }']",
+                '})',
+                'export class Line {',
+                '    mcLine = 1;',
+                '    readonly mcListIcon = this.mcLine + 1;',
+                '}',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('line.ts')).toBe(
+            [
+                "import { Component } from '@angular/core';",
+                '',
+                '@Component({',
+                '    template: \'<span class="title" kbq-line>Title</span>\',',
+                "    styles: ['.mcLine { color: red; }', '[kbq-list-icon] { margin: 0; }']",
+                '})',
+                'export class Line {',
+                '    mcLine = 1;',
+                '    readonly mcListIcon = this.mcLine + 1;',
+                '}',
+                ''
+            ].join('\n')
+        );
+    });
+
     it('rewrites the mcLine and mcListIcon attribute selectors in stylesheets', async () => {
         const unrelated = ['$mcLine: 1px;', '.mcLine { margin: $mcLine; }', '[data-mcLine] { margin: 0; }', ''];
         const run = await runV21Upgrade({

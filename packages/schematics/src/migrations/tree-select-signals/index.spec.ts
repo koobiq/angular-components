@@ -69,7 +69,26 @@ describe(SCHEMATIC_NAME, () => {
 
         const log = messages.join('\n');
 
-        expect(log).toContain('searchMinOptionsThreshold is a signal now');
+        expect(log).toContain('hasBackdrop and .searchMinOptionsThreshold are signals now');
+        expect(log).toContain('are signal inputs, so an assignment no longer compiles');
+    });
+
+    it('reports a read of and a write to hasBackdrop', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqTreeSelect } from '@koobiq/components/tree-select';\n" +
+                'export class App { toggle(s: KbqTreeSelect) { s.hasBackdrop = true; return s.hasBackdrop; } }\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('hasBackdrop and .searchMinOptionsThreshold are signals now');
         expect(log).toContain('are signal inputs, so an assignment no longer compiles');
     });
 

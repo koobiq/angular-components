@@ -137,6 +137,38 @@ describe(SCHEMATIC_NAME, () => {
         expect(log).toContain('1 use(s) reported');
     });
 
+    it('reports the removed triggers of the pop-up panels and the modal animation duration', async () => {
+        const [first] = projects.keys();
+        const messages = collectLogs();
+        const panels = filePath(projects.get(first)!, 'panels.ts');
+        const modal = filePath(projects.get(first)!, 'modal.ts');
+        const own = filePath(projects.get(first)!, 'own-modal.ts');
+
+        appTree.create(
+            panels,
+            "import { kbqPopoverAnimations } from '@koobiq/components/popover';\n" +
+                "import { kbqDatepickerAnimations } from '@koobiq/components/datepicker';\n" +
+                "import { KbqNotificationCenterAnimations } from '@koobiq/components/notification-center';\n" +
+                "import { kbqAppSwitcherAnimations } from '@koobiq/components/app-switcher';\n" +
+                'export const animations = [kbqPopoverAnimations.popoverState, KbqNotificationCenterAnimations.state];\n'
+        );
+        appTree.create(
+            modal,
+            "import { KbqModalService, MODAL_ANIMATE_DURATION } from '@koobiq/components/modal';\n" +
+                'export const closed = (modal: KbqModalService) => setTimeout(() => modal.closeAll(), MODAL_ANIMATE_DURATION);\n'
+        );
+        appTree.create(own, 'export const MODAL_ANIMATE_DURATION = 150;\n');
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain(`${panels}\n  kbqPopoverAnimations, kbqDatepickerAnimations`);
+        expect(log).toContain(`${modal}\n  MODAL_ANIMATE_DURATION was removed`);
+        expect(log).not.toContain(own);
+        expect(log).toContain('2 use(s) reported');
+    });
+
     it('suggests KBQ_ANIMATIONS_CONFIG in place of the no-op animations', async () => {
         const [first] = projects.keys();
         const messages = collectLogs();

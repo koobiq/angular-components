@@ -22,11 +22,12 @@
 export const SELECT_PACKAGE = '@koobiq/components/select';
 
 /**
- * Identifier and attribute shapes that mark a consumer without an import. `selectEvents` is in the
- * list because it was exported from `@koobiq/components/core`, so a file importing it need not name
- * the select at all — and that file is exactly the one whose import no longer resolves.
+ * Identifier and attribute shapes that mark a consumer without an import: the select and the timezone select,
+ * which extends it and inherits every member reported here. `selectEvents` is in the list because it was exported
+ * from `@koobiq/components/core`, so a file importing it need not name the select at all — and that file is
+ * exactly the one whose import no longer resolves.
  */
-export const SELECT_TYPE = '\\bKbqSelect\\w*\\b|\\bkbq-select\\b|\\bselectEvents\\b';
+export const SELECT_TYPE = '\\bKbq(?:Timezone)?Select\\w*\\b|\\bkbq-(?:timezone-)?select\\b|\\bselectEvents\\b';
 
 export interface WarnPattern {
     /** Owner of the member. The pattern is only evaluated for files that also name it. */

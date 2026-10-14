@@ -677,6 +677,84 @@ describe(SCHEMATIC_NAME, () => {
         expect(all).toContain('`value`, `placeholder` are writable signals now');
     });
 
+    it.each([
+        {
+            loop: '@for',
+            markup:
+                '@for (country of countries; track country.id) {\n' +
+                '    <kbq-option [value]="country.value">{{ country.value }}</kbq-option>\n' +
+                '}\n'
+        },
+        {
+            loop: 'let-',
+            markup: '<ng-template ngFor let-country [ngForOf]="countries"><i>{{ country.value }}</i></ng-template>\n'
+        },
+        { loop: '*ngFor', markup: '<i *ngFor="let country of countries">{{ country.value }}</i>\n' }
+    ])('leaves the reads of a $loop variable that shares the name of a ref alone', async ({ markup }) => {
+        const html = firstHtmlPath();
+        const template = `<kbq-select #country></kbq-select>\n${markup}`;
+
+        appTree.overwrite(html, template);
+
+        expect((await run()).readText(html)).toBe(template);
+    });
+
+    it('rewrites reads through a ref only in the view that declares it', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '@if (editable) {\n' +
+                '    <kbq-select #country></kbq-select>\n' +
+                '    <i>{{ country.value }}</i>\n' +
+                '} @else {\n' +
+                '    <i>{{ country.value }}</i>\n' +
+                '}\n'
+        );
+
+        expect((await run()).readText(html)).toBe(
+            '@if (editable) {\n' +
+                '    <kbq-select #country></kbq-select>\n' +
+                '    <i>{{ country.value() }}</i>\n' +
+                '} @else {\n' +
+                '    <i>{{ country.value }}</i>\n' +
+                '}\n'
+        );
+    });
+
+    it('leaves a native element that shares the name of a ref in another view alone', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '@if (custom) {\n' +
+            '    <kbq-select #country></kbq-select>\n' +
+            '} @else {\n' +
+            '    <select #country (change)="pick(country.value)"></select>\n' +
+            '}\n';
+
+        appTree.overwrite(html, template);
+
+        expect((await run()).readText(html)).toBe(template);
+    });
+
+    it('neither rewrites nor reports a ref named in prose, a comment or a plain attribute', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-form-field #field><input kbqInput /></kbq-form-field>\n' +
+            '<!-- field.hasHint, field.hovered -->\n' +
+            '<p title="field.hasHint">field.hovered is gone, field.hasHint stays</p>\n' +
+            '<i [title]="field.hasHint">{{ field.hasHint }}</i>\n';
+
+        appTree.overwrite(html, template);
+
+        expect((await run()).readText(html)).toBe(
+            template.replace(
+                '[title]="field.hasHint">{{ field.hasHint }}',
+                '[title]="field.hasHint()">{{ field.hasHint() }}'
+            )
+        );
+        expect(messages.join('\n')).not.toContain(HOVER_REMOVED);
+    });
+
     it('rewrites reads of KbqTagInput state on a typed receiver and reports a write to it', async () => {
         const ts = firstTsPath();
 
@@ -762,6 +840,45 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(updated).toContain('(click)="dp.disabled.set(true); dp.value = null"');
         expect(messages.join('\n')).toContain('`value` can no longer be assigned');
+    });
+
+    const ELEMENT_TYPE_WRITE = '`KbqInputPassword.elementType` can no longer be assigned';
+
+    it('rewrites reads of KbqInputPassword.elementType on a typed receiver and reports a write to it', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqInputPassword } from '@koobiq/components/input';\n" +
+                'class Demo {\n' +
+                '    reveal(password: KbqInputPassword) {\n' +
+                "        if (password.elementType === 'password') password.elementType = 'text';\n" +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain("if (password.elementType() === 'password') password.elementType = 'text';");
+        expect(messages.join('\n')).toContain(ELEMENT_TYPE_WRITE);
+    });
+
+    it('rewrites reads of elementType through a #ref naming kbqInputPassword and reports a write', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<input kbqInputPassword #password="kbqInputPassword" />\n' +
+                '<button [attr.aria-pressed]="password.elementType === \'text\'" ' +
+                '(click)="password.elementType = \'text\'">Show</button>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain(
+            '[attr.aria-pressed]="password.elementType() === \'text\'" (click)="password.elementType = \'text\'"'
+        );
+        expect(messages.join('\n')).toContain(`${html}\n  ${ELEMENT_TYPE_WRITE}`);
     });
 
     it('rewrites reads via a #ref naming kbqInput in an inline template of a component', async () => {

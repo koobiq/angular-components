@@ -152,8 +152,11 @@ describe('v21-upgrade: styles', () => {
         const run = await runV21Upgrade({
             'themes.scss': [
                 "@use '@koobiq/components/prebuilt-themes/light-theme.css';",
-                '.app { display: block; }',
+                "@use '@koobiq/components' as kbq;",
+                '',
+                '// The dark one.',
                 "@use '@koobiq/components/prebuilt-themes/dark-theme.css';",
+                '.app { display: block; }',
                 ''
             ].join('\n'),
             'dark.css': `@import url('${PREBUILT}/dark-theme.css');\n`,
@@ -165,10 +168,45 @@ describe('v21-upgrade: styles', () => {
         });
 
         expect(run.read('themes.scss')).toBe(
-            ["@use '@koobiq/components/prebuilt-themes/theme.css';", '.app { display: block; }', ''].join('\n')
+            [
+                "@use '@koobiq/components/prebuilt-themes/theme.css';",
+                "@use '@koobiq/components' as kbq;",
+                '',
+                '// The dark one.',
+                '.app { display: block; }',
+                ''
+            ].join('\n')
         );
         expect(run.read('dark.css')).toBe(`@import url('${PREBUILT}/theme.css');\n`);
         expect(run.read('themes.html')).toBe(`<link rel="stylesheet" href="${PREBUILT}/theme.css">\n`);
+    });
+
+    it('keeps a load of theme.css that repeats one outside its import block', async () => {
+        const source = [
+            'export function themeUrl(scheme: string): string {',
+            '    switch (scheme) {',
+            "        case 'light':",
+            "            return '@koobiq/components/prebuilt-themes/light-theme.css';",
+            "        case 'dark':",
+            "            return '@koobiq/components/prebuilt-themes/dark-theme.css';",
+            '    }',
+            '}',
+            ''
+        ].join('\n');
+        const styles = [
+            '@media (prefers-color-scheme: light) {',
+            "    @import '@koobiq/components/prebuilt-themes/light-theme.css';",
+            '}',
+            '@media (prefers-color-scheme: dark) {',
+            "    @import '@koobiq/components/prebuilt-themes/dark-theme.css';",
+            '}',
+            ''
+        ].join('\n');
+        const run = await runV21Upgrade({ 'theme-url.ts': source, 'schemes.scss': styles });
+        const single = (text: string) => text.replace(/(?:light|dark)-theme\.css/g, 'theme.css');
+
+        expect(run.read('theme-url.ts')).toBe(single(source));
+        expect(run.read('schemes.scss')).toBe(single(styles));
     });
 
     it('rewrites the themes in the styles of angular.json and drops the duplicate', async () => {

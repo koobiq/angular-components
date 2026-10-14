@@ -40,8 +40,8 @@ move the actions out of the trigger into a `kbq-accordion-header__actions` eleme
   names keeps one);
 - `ThemePalette.Error`, `.Warning` and `.Success` → the `KbqComponentColors` members of the same value, dropping
   the `ThemePalette` import once nothing else names it;
-- the `mcLine` and `mcListIcon` aliases → `kbq-line` and `kbq-list-icon`, in templates, in selectors written in
-  code and in the attribute selectors of stylesheets.
+- the `mcLine` and `mcListIcon` aliases → `kbq-line` and `kbq-list-icon`, as attributes in templates and as
+  attribute selectors in strings and stylesheets; elsewhere in code the names are the app's own.
 
 Reports:
 
@@ -188,7 +188,7 @@ element in a template):
 - the arguments of `koobiq-theme()`, `koobiq-typography()` and `kbq-core-theme()`, dropped unless they hold
   parentheses (a map, a function call);
 - `prebuilt-themes/light-theme.css` and `dark-theme.css` → `theme.css` in style sheets, code, templates and the
-  `styles` of `angular.json`, keeping one load where both themes were loaded;
+  `styles` of `angular.json`, keeping one load where both themes were loaded in the same import block;
 - the unprefixed markdown typography classes (`md-h1`…`md-h6`, `md-body`, `md-body-mono`, `md-caption`,
   `md-table-cell`, `md-table-header`) → `kbq-md-*` in `class` attributes, `[class.…]` bindings and selectors.
 

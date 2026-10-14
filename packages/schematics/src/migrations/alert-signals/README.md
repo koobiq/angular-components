@@ -30,7 +30,9 @@ files that reference the alert:
 - **Template reference reads.** For a bare `#ref` or `#ref="kbqAlert"` on `<kbq-alert>`, reads of
   `compact`/`alertStyle` through that ref are rewritten in the same template (external `.html` and inline
   `template:` strings): `ref.compact` → `ref.compact()`. A ref naming another directive (`#ref="ngModel"`) is
-  left alone, and so is a property chain that only ends in the ref's name (`state.alert.compact`).
+  left alone, and so is a property chain that only ends in the ref's name (`state.alert.compact`). Only the
+  expressions of the view that declares the ref are looked at — prose, comments and plain attributes are not —
+  and a ref whose name a `@for`, `let-`, `*ngFor` or `@let` variable or another `#ref` shares is left alone.
 
 All rewrites are idempotent — running twice does not double the call. `compact`/`alertStyle` keep the same value,
 so appending `()` is safe.

@@ -7,10 +7,23 @@
 
 import { listItemPattern } from '../../utils/list-item-pattern';
 import type { Replacement, WarnPattern } from '../../utils/replacement-driver';
-import { codeBlockTagWith, codeBlockTagWithout } from '../../utils/tag-patterns';
+import { codeBlockTagWith, codeBlockTagWithout, TAG_BODY } from '../../utils/tag-patterns';
 
 const CORE = '@koobiq/components/core';
 const FILE_UPLOAD = '@koobiq/components/file-upload';
+
+/** A named import of `symbol` from `module`. */
+const namedImport = (symbol: string, module: string): string =>
+    `\\bimport\\s*(?:type\\s*)?\\{[^}]*\\b${symbol}\\b[^}]*\\}\\s*from\\s*['"]${module}['"]`;
+
+/** A mention of the Koobiq autocomplete: one of its symbols, its entry point, its `exportAs` or its input. */
+const KBQ_AUTOCOMPLETE = '(?:\\bKbqAutocomplete|@koobiq/components/autocomplete\\b|\\bkbqAutocomplete)';
+
+/** An opening `<kbq-divider>` tag up to one of its attributes, captured as `$1`. */
+const DIVIDER_TAG = `(<kbq-divider(?![\\w-])${TAG_BODY}*?)`;
+
+/** The `="…"` of an attribute. */
+const ATTRIBUTE_VALUE = `(?:\\s*=\\s*(?:"[^"]*"|'[^']*'))`;
 
 /** A symbol removed in 20.0.0 with nothing in its place. */
 interface RemovedSymbol {
@@ -93,7 +106,13 @@ export const tsReplacements: Replacement[] = [
     // ─── Identifier renames (TypeScript imports / type references) ────────
     { from: '\\bRdxAccordionItemState\\b', to: 'KbqAccordionItemState' },
     { from: '\\bKbqCodeFile\\b', to: 'KbqCodeBlockFile' },
-    { from: '\\bAnimationCurves\\b', to: 'KbqAnimationCurves' },
+    // The import specifier and the uses of the core one only: Angular Material exports an `AnimationCurves` too.
+    {
+        from:
+            `\\bAnimationCurves\\b(?:(?=[^{}]*\\}\\s*from\\s*['"]${CORE}['"])|` +
+            `(?<=${namedImport('AnimationCurves', CORE)}[\\s\\S]*))`,
+        to: 'KbqAnimationCurves'
+    },
     { from: '\\bMeasurementSystem\\b', to: 'KbqMeasurementSystem' },
     { from: '\\bSizeUnitsConfig\\b', to: 'KbqSizeUnitsLocaleConfiguration' },
     { from: '\\bKbqNavbarIcModule\\b', to: 'KbqNavbarModule' },
@@ -135,7 +154,12 @@ export const tsReplacements: Replacement[] = [
     },
 
     // ─── Method renames on instances ──────────────────────────────────────
-    { from: '\\.openPanel\\(', to: '.open(' },
+    // `KbqAutocompleteTrigger.openPanel()`, in a file that uses the Koobiq autocomplete: the autocomplete trigger of
+    // Angular Material keeps its `openPanel()`.
+    {
+        from: `\\.openPanel\\((?:(?<=${KBQ_AUTOCOMPLETE}[\\s\\S]*)|(?=[\\s\\S]*${KBQ_AUTOCOMPLETE}))`,
+        to: '.open('
+    },
     { from: '\\.toggleIsCollapsed\\(', to: '.toggle(' },
     { from: '\\.focusViaKeyboard\\(', to: '.focus(' },
 
@@ -228,8 +252,9 @@ export const templateReplacements: Replacement[] = [
     },
 
     // ─── Divider deprecated inset attribute ───────────────────────────────
-    { from: '\\s\\[inset\\]="[^"]*"', to: '' },
-    { from: '\\sinset(\\s|>|/)', to: '$1' }
+    // Only on a `<kbq-divider>`: in code `inset` is any identifier, and other dividers have an input of that name.
+    { from: `${DIVIDER_TAG}\\s\\[inset\\]${ATTRIBUTE_VALUE}`, to: '$1' },
+    { from: `${DIVIDER_TAG}\\sinset${ATTRIBUTE_VALUE}?(?=[\\s/>])`, to: '$1' }
 ];
 
 /** SCSS replacements (CSS class selectors that were renamed at the runtime level). */
