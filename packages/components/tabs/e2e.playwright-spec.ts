@@ -1,5 +1,5 @@
 import { expect, Page, test } from '@playwright/test';
-import { e2eEnableDarkTheme } from 'packages/e2e/utils';
+import { e2eEnableDarkTheme, e2eWaitForFonts } from 'packages/e2e/utils';
 
 /** Scrollport of every paginated tab header on the route — the thing that scrolls itself into position. */
 const TAB_SCROLLPORT_SELECTOR = '.kbq-tab-header__scroll-container';
@@ -48,13 +48,31 @@ const waitForSettledTabScroll = (page: Page, quietMs = 250): Promise<void> =>
         { scrollportSelector: TAB_SCROLLPORT_SELECTOR, quietTime: quietMs }
     );
 
+/**
+ * Enters `path` only once every webfont is in.
+ *
+ * A paginated header scrolls its selected tab into view from label widths measured as the route renders,
+ * and nothing re-measures when a webfont swaps in: against the narrower fallback face the scroll stops
+ * 51px short and leaves the selected tab clipped. The fonts are loaded on the empty root route instead,
+ * and the route is entered client-side, because a reload would race them again.
+ */
+const gotoAfterFonts = async (page: Page, path: string): Promise<void> => {
+    await page.goto('/');
+    await e2eWaitForFonts(page);
+    // A popstate is how the router picks up a URL it did not set itself.
+    await page.evaluate((url) => {
+        history.pushState(null, '', url);
+        dispatchEvent(new PopStateEvent('popstate'));
+    }, path);
+};
+
 test.describe('KbqTabsModule', () => {
     test.describe('E2eTabsStates', () => {
         const getComponent = (page: Page) => page.getByTestId('e2eTabsStates');
         const getTabsUnderlined = (page: Page) => page.getByTestId('e2eTabsUnderlined');
 
         test('states', async ({ page }) => {
-            await page.goto('/E2eTabsStates');
+            await gotoAfterFonts(page, '/E2eTabsStates');
 
             const component = getComponent(page);
 
