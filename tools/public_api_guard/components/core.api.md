@@ -524,6 +524,7 @@ export const enUSLocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+        otherCountriesLabel: string;
     };
     actionsPanel: {
         closeTooltip: string;
@@ -807,6 +808,7 @@ export const esLALocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+        otherCountriesLabel: string;
     };
     actionsPanel: {
         closeTooltip: string;
@@ -1358,6 +1360,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+            otherCountriesLabel: string;
         };
         actionsPanel: {
             closeTooltip: string;
@@ -1616,6 +1619,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+            otherCountriesLabel: string;
         };
         actionsPanel: {
             closeTooltip: string;
@@ -1870,6 +1874,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+            otherCountriesLabel: string;
         };
         actionsPanel: {
             closeTooltip: string;
@@ -2130,6 +2135,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+            otherCountriesLabel: string;
         };
         actionsPanel: {
             closeTooltip: string;
@@ -2386,6 +2392,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+            otherCountriesLabel: string;
         };
         actionsPanel: {
             closeTooltip: string;
@@ -4785,6 +4792,7 @@ export type KbqTimezoneLike = 'system' | 'utc' | number | (string & {});
 // @public
 export type KbqTimezoneLocaleConfiguration = {
     searchPlaceholder: string;
+    otherCountriesLabel: string;
 };
 
 // @public (undocumented)
@@ -5309,6 +5317,7 @@ export const ptBRLocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+        otherCountriesLabel: string;
     };
     actionsPanel: {
         closeTooltip: string;
@@ -5788,6 +5797,7 @@ export const ruRULocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+        otherCountriesLabel: string;
     };
     actionsPanel: {
         closeTooltip: string;
@@ -6176,6 +6186,7 @@ export const tkTMLocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+        otherCountriesLabel: string;
     };
     actionsPanel: {
         closeTooltip: string;

@@ -1,13 +1,19 @@
 import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { Platform } from '@angular/cdk/platform';
-import { AfterViewInit, ChangeDetectorRef, Directive, inject, input, OnDestroy } from '@angular/core';
+import { AfterViewInit, Directive, inject, input, OnDestroy } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { KbqTimezoneOption } from './timezone-option.component';
 
+/**
+ * Rows of the city list an option shows before it clamps. Kept in step with the `-webkit-line-clamp` of
+ * `.kbq-timezone-option__cities`.
+ *
+ * @docs-private
+ */
 export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
 
 @Directive({
@@ -19,7 +25,6 @@ export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
 })
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private readonly option = inject(KbqTimezoneOption);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly contentObserver = inject(ContentObserver);
     private readonly platform = inject(Platform);
@@ -54,8 +59,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
 
         const tooltipContentWrapper = this.option.tooltipContentWrapper();
 
-        this.content = this.option.viewValue;
-        tooltipContentWrapper.nativeElement.style.webkitLineClamp = TOOLTIP_VISIBLE_ROWS_COUNT.toString();
+        this.content = this.option.tooltipViewValue;
         this.checkTooltipDisabled();
 
         this.resizeSubscription = this.resizeObserver
@@ -67,7 +71,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
             .observe(this.option.tooltipContent().nativeElement)
             .pipe(throttleTime(this.debounceInterval))
             .subscribe(() => {
-                this.content = this.option.viewValue;
+                this.content = this.option.tooltipViewValue;
                 this.checkTooltipDisabled();
             });
 
@@ -85,6 +89,9 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     handleElementEnter(): void {
+        // Re-read rather than trust the content observer: it is throttled, so a hover landing right after a
+        // keystroke would otherwise open a hint listing the cities the search has just removed.
+        this.content = this.option.tooltipViewValue;
         this.checkTooltipDisabled();
     }
 
@@ -92,13 +99,17 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
         this.setDerivedDisabled(true);
     }
 
+    /**
+     * Derived rather than assigned: writing `disabled` directly would be read back as the consumer's own
+     * `kbqTooltipDisabled` (see `KbqTooltipTrigger.setDerivedDisabled`), so a later measurement could
+     * silently overwrite an explicit binding and vice versa. `applyDisabled` already no-ops when the folded
+     * value is unchanged, so a resize frame that reports the same line count still costs nothing extra.
+     */
     private checkTooltipDisabled = () => {
         if (!this.platform.isBrowser) return;
 
         const count: number = this.option.tooltipContent().nativeElement.getClientRects().length;
 
         this.setDerivedDisabled(count <= TOOLTIP_VISIBLE_ROWS_COUNT);
-
-        this.changeDetectorRef.detectChanges();
     };
 }

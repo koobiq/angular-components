@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqOptionModule } from '@koobiq/components/core';
 import {
     getZonesGroupedByCountry,
+    kbqResolveHostCountry,
     KbqTimezoneGroup,
     KbqTimezoneModule,
-    KbqTimezoneZone
+    KbqTimezoneZone,
+    promoteCountry
 } from '@koobiq/components/timezone';
 import { timezones } from '../timezone-data';
 
@@ -13,7 +14,7 @@ import { timezones } from '../timezone-data';
  */
 @Component({
     selector: 'timezone-overview-example',
-    imports: [KbqTimezoneModule, KbqOptionModule],
+    imports: [KbqTimezoneModule],
     template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
@@ -45,6 +46,7 @@ export class TimezoneOverviewExample {
                 : ''
         }));
 
-        this.data = getZonesGroupedByCountry(zones, 'Другие страны');
+        // The grouping is pure, so the host's own country is resolved separately and passed in.
+        this.data = promoteCountry(getZonesGroupedByCountry(zones), kbqResolveHostCountry(zones));
     }
 }

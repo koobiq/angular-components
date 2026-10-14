@@ -245,10 +245,12 @@ import {
 } from '../components/textarea/e2e';
 import { E2eTimepickerStates } from '../components/timepicker/e2e';
 import {
+    E2eTimezoneAtViewportEdge,
     E2eTimezonePanelStates,
     E2eTimezoneScrollbar,
     E2eTimezoneScrollbarNoOverflow,
     E2eTimezoneStates,
+    E2eTimezoneWithFooter,
     E2eTimezoneWithSearch
 } from '../components/timezone/e2e';
 import { E2eTitleOverflow } from '../components/title/e2e';
@@ -472,6 +474,8 @@ const components: Record<string, Type<unknown>> = {
     E2eTimezoneStates,
     E2eTimezonePanelStates,
     E2eTimezoneWithSearch,
+    E2eTimezoneWithFooter,
+    E2eTimezoneAtViewportEdge,
     E2eTimezoneScrollbar,
     E2eTimezoneScrollbarNoOverflow,
     E2eSelectStates,

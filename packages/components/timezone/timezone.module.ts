@@ -1,13 +1,6 @@
-import { A11yModule } from '@angular/cdk/a11y';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { KeyValuePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { KbqHighlightModule, KbqOptionModule } from '@koobiq/components/core';
+import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagsModule } from '@koobiq/components/tags';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { CitiesByFilterPipe } from './cities-by-filter.pipe';
 import { KbqTimezoneOption } from './timezone-option.component';
 import { KbqTimezoneOptionTooltip } from './timezone-option.directive';
@@ -16,15 +9,6 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
 
 @NgModule({
     imports: [
-        OverlayModule,
-        KbqOptionModule,
-        KbqSelectModule,
-        KbqIconModule,
-        KbqTagsModule,
-        KbqToolTipModule,
-        KbqHighlightModule,
-        KeyValuePipe,
-        A11yModule,
         UtcOffsetPipe,
         CitiesByFilterPipe,
         KbqTimezoneSelect,
@@ -33,10 +17,15 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqTimezoneSelectTrigger
     ],
     exports: [
+        UtcOffsetPipe,
+        CitiesByFilterPipe,
         KbqTimezoneSelect,
         KbqTimezoneOption,
         KbqTimezoneOptionTooltip,
         KbqTimezoneSelectTrigger,
+        // Re-exported rather than only imported: every documented usage groups the options with
+        // `kbq-optgroup` and renders the select inside a `kbq-form-field`.
+        KbqOptionModule,
         KbqFormFieldModule
     ]
 })

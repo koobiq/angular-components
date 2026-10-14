@@ -232,7 +232,7 @@ describe('reading members from source', () => {
         expect(
             readSourceFile('packages/components/timezone/timezone.models.ts').classes.KbqTimezonesByCountry
                 .indexSignatures
-        ).toEqual(['[countryName: string]: KbqTimezoneZone[];']);
+        ).toEqual(['[countryCode: string]: KbqTimezoneZone[];']);
     });
 
     it('reads the bases a class extends', () => {

@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { filterCitiesBySearchString } from './timezone.utils';
 
+/** Narrows a `', '`-joined city list to the entries matching the search pattern(s). */
 @Pipe({
     name: 'citiesByFilter'
 })

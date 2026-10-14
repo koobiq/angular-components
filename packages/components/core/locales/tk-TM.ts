@@ -75,7 +75,8 @@ export const tkTMLocaleData = {
         openExternalSystemTooltip: 'Daşarky ulgamda açmak'
     },
     timezone: {
-        searchPlaceholder: 'Şäher ýa-da sagat guşagy'
+        searchPlaceholder: 'Şäher ýa-da sagat guşagy',
+        otherCountriesLabel: 'Beýleki ýurtlar'
     },
     actionsPanel: {
         closeTooltip: 'Saýlawy ýatyr'
