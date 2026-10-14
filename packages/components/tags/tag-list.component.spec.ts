@@ -715,29 +715,27 @@ describe(KbqTagList.name, () => {
 
                     tagListInstance.keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
 
-                    expect(tagListInstance.tabIndex).toBe(-1);
+                    expect(tagListNativeElement.getAttribute('tabindex')).toBe('-1');
 
                     await vi.advanceTimersByTimeAsync(0);
 
-                    expect(tagListInstance.tabIndex).toBe(0);
+                    expect(tagListNativeElement.getAttribute('tabindex')).toBe('0');
                 });
 
-                it(`should use user defined tabIndex`, async () => {
+                it('should keep a bound tabIndex while tabbing away', async () => {
                     vi.useFakeTimers();
 
-                    tagListInstance.tabIndex = 4;
-
+                    testComponent.tabIndex = 4;
                     fixture.detectChanges();
-
-                    expect(tagListInstance.tabIndex).toBe(4);
 
                     tagListInstance.keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
 
-                    expect(tagListInstance.tabIndex).toBe(-1);
+                    expect(tagListNativeElement.getAttribute('tabindex')).toBe('-1');
+                    expect(tagListInstance.tabIndex).toBe(4);
 
                     await vi.advanceTimersByTimeAsync(0);
 
-                    expect(tagListInstance.tabIndex).toBe(4);
+                    expect(tagListNativeElement.getAttribute('tabindex')).toBe('4');
                 });
             });
 
@@ -1985,23 +1983,71 @@ describe(KbqTagList.name, () => {
         await vi.advanceTimersByTimeAsync(0);
     });
 
-    it('should restore tabIndex to userTabIndex after tabOut', async () => {
+    it('should put back a tab index set by code after tabOut', async () => {
         vi.useFakeTimers();
 
         const fixture = createStandaloneComponent(TestTagList);
-        const { componentInstance } = fixture;
-        const tagList = componentInstance.tagList();
+        const tagList = fixture.componentInstance.tagList();
+        const tagListEl = getTagListElement(fixture.debugElement);
 
         tagList.tabIndex = 3;
         fixture.detectChanges();
 
         tagList.keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
 
-        expect(tagList.tabIndex).toBe(-1);
+        expect(tagList.tabIndex).toBe(3);
 
         await vi.advanceTimersByTimeAsync(0);
 
-        expect(tagList.tabIndex).toBe(3);
+        expect(tagListEl.getAttribute('tabindex')).toBe('3');
+    });
+
+    it('should keep one pending tab order restore across repeated tabOut', () => {
+        vi.useFakeTimers();
+
+        const fixture = createStandaloneComponent(TestTagList);
+        const keyManager = fixture.componentInstance.tagList().keyManager;
+        const timers = vi.getTimerCount();
+
+        keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+        keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+        keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+
+        expect(vi.getTimerCount()).toBe(timers + 1);
+    });
+
+    it('should cancel a pending tab order restore when destroyed', () => {
+        vi.useFakeTimers();
+
+        const fixture = createStandaloneComponent(TestTagList);
+        const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout');
+
+        fixture.componentInstance.tagList().keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+
+        const restore = setTimeoutSpy.mock.results.at(-1)!.value;
+        const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
+
+        fixture.destroy();
+
+        expect(clearTimeoutSpy).toHaveBeenCalledWith(restore);
+    });
+
+    it('should leave no tab index on a tag list with an input after tabOut', async () => {
+        vi.useFakeTimers();
+
+        const fixture = createStandaloneComponent(TestFormFieldTagList);
+        const tagListEl = getTagListElement(fixture.debugElement);
+
+        expect(tagListEl.hasAttribute('tabindex')).toBe(false);
+
+        fixture.componentInstance.tagList().keyManager.onKeydown(createKeyboardEvent('keydown', TAB));
+
+        expect(tagListEl.getAttribute('tabindex')).toBe('-1');
+
+        await vi.advanceTimersByTimeAsync(0);
+        fixture.detectChanges();
+
+        expect(tagListEl.hasAttribute('tabindex')).toBe(false);
     });
 
     it('should be draggable when draggable is enabled', () => {

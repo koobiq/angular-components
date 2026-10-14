@@ -87,6 +87,7 @@ import {
     isUndefined,
     kbqQueryListFrom,
     kbqResolvePanelMaxHeightToken,
+    kbqSelectAllHandlerTransform,
     kbqSiblingPopupProvider,
     runClearPredicate,
     shouldSelectSearchText
@@ -664,13 +665,7 @@ export class KbqTreeSelect
         ((event: KeyboardEvent, select: KbqTreeSelect) => void) | undefined
     >(undefined, {
         alias: 'selectAllHandler',
-        transform: (fn) => {
-            if (fn !== undefined && typeof fn !== 'function') {
-                throw Error('`selectAllHandler` must be a function.');
-            }
-
-            return fn;
-        }
+        transform: kbqSelectAllHandlerTransform
     });
 
     /**

@@ -85,7 +85,7 @@ export const KBQ_VERTICAL_NAVBAR_CONFIGURATION = KBQ_NAVBAR_LOCALE_CONFIGURATION
         role: 'navigation',
         '[attr.aria-label]': 'ariaLabel()',
         '[class.kbq-vertical-navbar_open-over]': 'openOver()',
-        '[attr.tabindex]': 'tabIndex()',
+        '[attr.tabindex]': 'renderedTabIndex()',
         '[attr.cdkMonitorSubtreeFocus]': 'true',
 
         '(focus)': 'focus()',
@@ -135,8 +135,12 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     /** Whether the navbar is expanded. */
     readonly expanded = model<boolean>(false);
 
+    private buttonIconsRefresh?: ReturnType<typeof setTimeout>;
+
     constructor() {
         super();
+
+        this.destroyRef.onDestroy(() => clearTimeout(this.buttonIconsRefresh));
 
         effect(() => {
             // Re-runs both when the projected elements change and when the navbar is expanded or collapsed.
@@ -200,10 +204,13 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     private refreshButtonIcons(): void {
         const elements = this.rectangleElements();
 
+        // A pending pass is replaced: every element of it that is still projected is among these.
+        clearTimeout(this.buttonIconsRefresh);
+
         if (!elements.length) return;
 
-        const timeoutId = setTimeout(() => elements.forEach((item) => item.button()?.updateClassModifierForIcons()));
-
-        this.destroyRef.onDestroy(() => clearTimeout(timeoutId));
+        this.buttonIconsRefresh = setTimeout(() =>
+            elements.forEach((item) => item.button()?.updateClassModifierForIcons())
+        );
     }
 }

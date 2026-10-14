@@ -39,6 +39,7 @@ import {
     isNull,
     isSelectAll,
     KbqErrorStateTracker,
+    kbqLeaveTabOrderOnTabOut,
     kbqQueryListFrom,
     runClearPredicate
 } from '@koobiq/components/core';
@@ -551,15 +552,12 @@ export class KbqTagList
                 .subscribe((dir) => this.keyManager.withHorizontalOrientation(dir));
         }
 
-        // Prevents the tag list from capturing focus and redirecting
-        // it back to the first tag when the user tabs out.
-        this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this._tabIndex.set(-1);
-            // Direct DOM write since the binding update is deferred with eventCoalescing.
-            this.elementRef.nativeElement.tabIndex = -1;
-
-            setTimeout(() => this._tabIndex.set(this.userTabIndex || 0));
-        });
+        kbqLeaveTabOrderOnTabOut(
+            this.keyManager.tabOut,
+            this.elementRef.nativeElement,
+            () => this.tabIndex,
+            this.destroyRef
+        );
 
         // When the list changes, re-subscribe
         this.tags.changes

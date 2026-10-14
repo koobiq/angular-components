@@ -301,6 +301,46 @@ describe('KbqNavbar', () => {
             expect(onDestroy).not.toHaveBeenCalled();
         });
 
+        it('repeated TAB key presses should keep one pending restore', async () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbar = fixture.debugElement.query(By.directive(KbqNavbar)).componentInstance as KbqNavbar;
+            const timers = vi.getTimerCount();
+
+            navbar.keyManager.tabOut.next();
+            navbar.keyManager.tabOut.next();
+            navbar.keyManager.tabOut.next();
+
+            expect(vi.getTimerCount()).toBe(timers + 1);
+        });
+
+        it('a navbar without items should stay out of the tab order and leave a bound tabIndex alone', async () => {
+            const fixture = TestBed.createComponent(TestBoundTabIndexApp);
+
+            fixture.componentInstance.showItem = false;
+            fixture.componentInstance.tabIndex = 3;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbarEl: HTMLElement = fixture.debugElement.query(By.directive(KbqNavbar)).nativeElement;
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('-1');
+
+            fixture.componentInstance.showItem = true;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(navbarEl.getAttribute('tabindex')).toBe('3');
+            expect(fixture.componentInstance.tabIndex).toBe(3);
+            expect(fixture.componentInstance.tabIndexChanges).toEqual([]);
+        });
+
         it('a pending tab order restore should not touch a destroyed navbar', async () => {
             const fixture = TestBed.createComponent(TestApp);
 
@@ -1710,6 +1750,27 @@ describe('KbqNavbar', () => {
     });
 
     describe('KbqVerticalNavbar', () => {
+        it('repeated toggles should keep one pending refresh of the button icons', async () => {
+            const fixture = TestBed.createComponent(TestVerticalApp);
+
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            const navbar = fixture.debugElement.query(By.directive(KbqVerticalNavbar))
+                .componentInstance as KbqVerticalNavbar;
+            const onDestroy = vi.spyOn(navbar['destroyRef'], 'onDestroy');
+            const timers = vi.getTimerCount();
+
+            for (let i = 0; i < 3; i++) {
+                navbar.toggle();
+                fixture.detectChanges();
+            }
+
+            expect(onDestroy).not.toHaveBeenCalled();
+            expect(vi.getTimerCount()).toBe(timers + 1);
+        });
+
         it('should start collapsed and expand its container on toggle()', async () => {
             const fixture = TestBed.createComponent(TestVerticalApp);
 
@@ -2535,15 +2596,18 @@ class TestNestedButtonApp {}
     template: `
         <kbq-navbar [(tabIndex)]="tabIndex" (tabIndexChange)="tabIndexChanges.push($event)">
             <kbq-navbar-container>
-                <kbq-navbar-item>
-                    <kbq-navbar-title>Item</kbq-navbar-title>
-                </kbq-navbar-item>
+                @if (showItem) {
+                    <kbq-navbar-item>
+                        <kbq-navbar-title>Item</kbq-navbar-title>
+                    </kbq-navbar-item>
+                }
             </kbq-navbar-container>
         </kbq-navbar>
     `
 })
 class TestBoundTabIndexApp {
     tabIndex = 0;
+    showItem = true;
     readonly tabIndexChanges: number[] = [];
 }
 
