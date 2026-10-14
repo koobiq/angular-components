@@ -137,6 +137,9 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     /** The position the last translation went to, see `translateOnRender`. */
     private renderedPosition?: KbqTabBodyPositionState;
 
+    /** The position the body is created at, see `translateOnRender`. */
+    private initialPosition?: KbqTabBodyPositionState;
+
     private translationRender?: AfterRenderRef;
 
     constructor() {
@@ -174,6 +177,8 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
             this.bodyPosition = this.computePositionFromOrigin();
         }
 
+        this.initialPosition = this.bodyPosition;
+
         this.translateOnRender();
     }
 
@@ -207,7 +212,9 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
     /**
      * Starts the translation to the current position once it has rendered, and ends it once its transition
      * has: the content is attached as the body starts centering and detached once it has left the center.
-     * Positions set within one frame translate once, from the last rendered one.
+     * Positions set within one frame translate once, from the last rendered one. The first frame starts from the
+     * position the body was created at when it has moved on from it: the content of a body created centered is
+     * attached at once, rendered or not.
      */
     private translateOnRender(): void {
         if (this.translationRender) return;
@@ -216,8 +223,8 @@ export class KbqTabBody implements OnChanges, OnInit, OnDestroy {
             () => {
                 this.translationRender = undefined;
 
-                const from = this.renderedPosition;
                 const to = this.bodyPosition;
+                const from = this.renderedPosition ?? (to === this.initialPosition ? undefined : this.initialPosition);
 
                 if (from === to) return;
 

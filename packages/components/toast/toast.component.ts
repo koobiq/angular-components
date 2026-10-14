@@ -158,10 +158,34 @@ export class KbqToastComponent implements OnDestroy {
      * @docs-private
      */
     leave(done: () => void): void {
-        // `auto` does not animate, so the collapse starts from the measured height.
-        this.leavingHeight.set(this.elementRef.nativeElement.offsetHeight);
+        const element = this.elementRef.nativeElement;
+        const destroyRef = this.injector.get(DestroyRef);
 
-        kbqAfterAnimations(() => this.elementRef.nativeElement, done, this.injector);
+        // `auto` does not animate, so the collapse starts from the measured height.
+        this.leavingHeight.set(element.offsetHeight);
+
+        // Raising the stack without `moveBefore()` takes it out of the DOM, which cancels the exit animation and
+        // starts it over: the one that runs then is waited for as well.
+        const afterExit = (awaited: Animation[]): void => {
+            const running = (element.getAnimations?.() ?? []).filter(
+                (animation) =>
+                    animation.playState === 'running' &&
+                    !awaited.includes(animation) &&
+                    animation.effect?.getComputedTiming().endTime !== Infinity
+            );
+
+            if (!running.length) return done();
+
+            Promise.allSettled(running.map(({ finished }) => finished)).then(() => {
+                if (!destroyRef.destroyed) afterExit(running);
+            });
+        };
+
+        kbqAfterAnimations(
+            () => element,
+            () => afterExit([]),
+            this.injector
+        );
     }
 
     /** @docs-private */

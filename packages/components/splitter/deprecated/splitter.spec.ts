@@ -135,7 +135,49 @@ class DynamicData {
     readonly areaB = viewChild.required('areaB', { read: KbqSplitterAreaDirective });
 }
 
+/** Binds the sizes of its own host, as a sidebar does. */
+@Component({
+    selector: 'sized-area',
+    template: '',
+    host: {
+        '[style.width]': 'width',
+        '[style.max-width]': 'maxWidth'
+    }
+})
+class SizedArea {
+    readonly width = '170px';
+    readonly maxWidth = '50%';
+}
+
+@Component({
+    imports: [KbqSplitterModule, SizedArea],
+    template: `
+        <kbq-splitter>
+            <sized-area kbq-splitter-area />
+            <div kbq-splitter-area style="width: 300px; max-width: 50%">second</div>
+        </kbq-splitter>
+    `
+})
+class SplitterWithSizedArea {}
+
 describe('KbqSplitter', () => {
+    describe('area sizes', () => {
+        it('should keep the sizes a component binds to the host of an area, and drop those of the markup', () => {
+            const fixture = createTestComponent(SplitterWithSizedArea);
+
+            fixture.detectChanges();
+
+            const [sized, plain]: HTMLElement[] = fixture.debugElement
+                .queryAll(By.directive(KbqSplitterAreaDirective))
+                .map(({ nativeElement }) => nativeElement);
+
+            expect(sized.style.width).toBe('170px');
+            expect(sized.style.maxWidth).toBe('50%');
+            expect(plain.style.width).toBe('');
+            expect(plain.style.maxWidth).toBe('');
+        });
+    });
+
     describe('direction', () => {
         it('should default to horizontal direction', () => {
             const fixture = createTestComponent(KbqSplitterDefaultDirection);

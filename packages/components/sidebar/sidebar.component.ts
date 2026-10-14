@@ -100,6 +100,7 @@ const normalizeSidebarState = (parsed: unknown): KbqSidebarState | null => {
     host: {
         class: 'kbq-sidebar',
         '[class.kbq-sidebar_opened]': 'opened',
+        '[class.kbq-sidebar_toggling]': 'toggling()',
         '[class.kbq-animations-disabled]': 'animationsDisabled',
         '[style.min-width]': 'opened ? params.openedStateMinWidth : params.closedStateWidth',
         '[style.width]': 'opened ? params.openedStateWidth : params.closedStateWidth',
@@ -128,6 +129,13 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
      * @docs-private
      */
     protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /**
+     * Whether the sidebar moves between the opened and closed states: only then is its width transitioned, so
+     * the first render and a width written from outside, such as by a splitter, apply at once.
+     * @docs-private
+     */
+    protected readonly toggling = signal(false);
 
     private stateAnimation?: { destroy(): void };
 
@@ -222,7 +230,7 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
 
         // The state lives under the new key now, so restore from it and report it as any other change.
         this.stateSaving.keyChanges.subscribe(() => {
-            if (this.restoreState()) this.waitForStateAnimation();
+            if (this.restoreState()) this.waitForStateAnimation(true);
         });
     }
 
@@ -243,9 +251,10 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
 
         this.restoreState();
 
-        // The first render shows the content of the initial state; `stateChanged` reports it once rendered.
+        // The first render shows the content and the width of the initial state; `stateChanged` reports it once
+        // rendered.
         this.internalState = this.openedState();
-        this.waitForStateAnimation();
+        this.waitForStateAnimation(false);
     }
 
     /**
@@ -321,7 +330,8 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     private setOpened(value: boolean): void {
         this.openedWritten = true;
 
-        if (this.openedState()) {
+        // While the sidebar still widens, its width is one it passes through, not the opened one.
+        if (this.openedState() && !this.toggling()) {
             this.saveWidth();
         }
 
@@ -335,7 +345,7 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
                 this.internalState = true;
             }
 
-            this.waitForStateAnimation();
+            this.waitForStateAnimation(true);
         }
 
         // The single choke point for `toggle()` and the bracket shortcut alike. Writing is a no-op until
@@ -344,12 +354,17 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
         this.saveState();
     }
 
-    /** Switches the content and reports the state once the width transition has ended. */
-    private waitForStateAnimation(): void {
+    /**
+     * Switches the content and reports the state once rendered, after the width transition when `animated`:
+     * the initial state has none.
+     */
+    private waitForStateAnimation(animated: boolean): void {
         this.stateAnimation?.destroy();
+        this.toggling.set(animated);
         this.stateAnimation = kbqAfterAnimations(
             () => this.elementRef.nativeElement,
             () => {
+                this.toggling.set(false);
                 this.internalState = this.openedState();
                 this.stateChanged.emit(this.openedState());
             },

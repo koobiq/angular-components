@@ -4,7 +4,16 @@ import { PortalModule } from '@angular/cdk/portal';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Component, Injectable, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { END, ENTER, HOME, LEFT_ARROW, RIGHT_ARROW, SPACE, dispatchKeyboardEvent } from '@koobiq/components/core';
+import {
+    END,
+    ENTER,
+    HOME,
+    KBQ_ANIMATIONS_CONFIG,
+    LEFT_ARROW,
+    RIGHT_ARROW,
+    SPACE,
+    dispatchKeyboardEvent
+} from '@koobiq/components/core';
 import { Observable, Subject } from 'rxjs';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabHeader } from './tab-header.component';
@@ -866,6 +875,29 @@ describe('KbqTabHeader', () => {
             tabListContainer.dispatchEvent(new WheelEvent('wheel', { deltaX: 10 }));
 
             expect(pendingFrame).toBeNull();
+        });
+    });
+
+    describe('underline motion', () => {
+        const underlineOf = (): HTMLElement =>
+            fixture.nativeElement.querySelector('.kbq-tab-list__active-tab-underline');
+
+        it('should move the underline with motion by default', () => {
+            fixture = TestBed.createComponent(SimpleTabHeaderApp);
+            fixture.detectChanges();
+
+            expect(underlineOf().classList).not.toContain('kbq-animations-disabled');
+        });
+
+        it('should move the underline without motion when animations are disabled', () => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+            });
+
+            fixture = TestBed.createComponent(SimpleTabHeaderApp);
+            fixture.detectChanges();
+
+            expect(underlineOf().classList).toContain('kbq-animations-disabled');
         });
     });
 

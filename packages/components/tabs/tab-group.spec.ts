@@ -1,6 +1,18 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { AsyncPipe } from '@angular/common';
-import { Component, DebugElement, OnInit, Type, effect, signal, viewChild, viewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    DebugElement,
+    OnInit,
+    Type,
+    effect,
+    inject,
+    signal,
+    viewChild,
+    viewChildren
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -1688,5 +1700,98 @@ describe('KbqTabGroup called from an effect', () => {
 
         expect(componentInstance.group().selectedIndex).toBe(0);
         expect(componentInstance.runs).toBe(1);
+    });
+});
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group [selectedIndex]="selected">
+            <kbq-tab label="First"><button class="first-content">First</button></kbq-tab>
+            <kbq-tab label="Second"><button class="second-content">Second</button></kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class TabsSelectedWithDetectChangesInAfterViewInit implements AfterViewInit {
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    selected = 0;
+
+    ngAfterViewInit(): void {
+        this.selected = 1;
+        this.changeDetectorRef.detectChanges();
+    }
+}
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group [selectedIndex]="selected()">
+            <kbq-tab label="First"><button class="first-content">First</button></kbq-tab>
+            <kbq-tab label="Second"><button class="second-content">Second</button></kbq-tab>
+        </kbq-tab-group>
+    `
+})
+class TabsSelectedBySignalInAfterViewInit implements AfterViewInit {
+    readonly selected = signal(0);
+
+    ngAfterViewInit(): void {
+        this.selected.set(1);
+    }
+}
+
+describe('KbqTabGroup selection moved within the first frame', () => {
+    const cases: [string, Type<unknown>][] = [
+        ['by detectChanges() in ngAfterViewInit', TabsSelectedWithDetectChangesInAfterViewInit],
+        ['by a signal written in ngAfterViewInit', TabsSelectedBySignalInAfterViewInit]
+    ];
+
+    for (const [name, host] of cases) {
+        it(`should detach the content of the tab left before the first render, ${name}`, async () => {
+            const fixture = TestBed.createComponent(host);
+
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.nativeElement.querySelector('.second-content')).not.toBeNull();
+            expect(fixture.nativeElement.querySelector('.first-content')).toBeNull();
+        });
+    }
+});
+
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group [selectedIndex]="selected()">
+            <kbq-tab #first label="First">First</kbq-tab>
+            <kbq-tab #second label="Second">Second</kbq-tab>
+        </kbq-tab-group>
+
+        <div class="active-tab">{{ first.isActive ? 'first' : '' }}{{ second.isActive ? 'second' : '' }}</div>
+    `
+})
+class TabsWithIsActiveText {
+    readonly selected = signal(0);
+}
+
+describe('KbqTab isActive', () => {
+    it('should render the active tab after the application selects another one', async () => {
+        const fixture = TestBed.createComponent(TabsWithIsActiveText);
+        const activeTab = (): string => fixture.nativeElement.querySelector('.active-tab').textContent;
+        // The group sets `isActive` in a microtask after its check, and only the render that follows shows it.
+        const settle = async (): Promise<void> => {
+            await fixture.whenStable();
+            await fixture.whenStable();
+        };
+
+        fixture.autoDetectChanges();
+        await settle();
+
+        expect(activeTab()).toBe('first');
+
+        fixture.componentInstance.selected.set(1);
+        await settle();
+
+        expect(activeTab()).toBe('second');
     });
 });

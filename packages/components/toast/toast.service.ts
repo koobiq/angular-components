@@ -48,6 +48,55 @@ const CHECK_INTERVAL = 500;
 
 let templateId = 0;
 
+/** `ParentNode.moveBefore()`, which TypeScript does not declare yet. */
+type StatePreservingParent = ParentNode & { moveBefore?(node: Node, child: Node | null): void };
+
+/** Where a CSS animation in a subtree had got to. */
+type AnimationProgress = { target: Element | null; name: string; time: CSSNumberish | null };
+
+const cssAnimationsIn = (element: Element): CSSAnimation[] =>
+    (element.getAnimations?.({ subtree: true }) ?? []).filter(
+        (animation): animation is CSSAnimation => 'animationName' in animation
+    );
+
+const targetOf = (animation: Animation): Element | null => (animation.effect as KeyframeEffect | null)?.target ?? null;
+
+/**
+ * Moves `node` right after `reference` without starting the CSS animations inside it over, as taking a node out of
+ * the DOM and putting it back does: the exit animation of a leaving toast would be cancelled, and every visible toast
+ * would slide in again. `moveBefore()` keeps them running; where it is missing, each restarted animation is set back
+ * to the time it had reached, and one that had ended is ended again.
+ */
+const moveAfter = (node: Element, reference: ChildNode): void => {
+    const parent = reference.parentNode as StatePreservingParent | null;
+
+    if (parent?.moveBefore) {
+        parent.moveBefore(node, reference.nextSibling);
+
+        return;
+    }
+
+    const progress: AnimationProgress[] = cssAnimationsIn(node).map((animation) => ({
+        target: targetOf(animation),
+        name: animation.animationName,
+        time: animation.currentTime
+    }));
+
+    reference.after(node);
+
+    for (const animation of cssAnimationsIn(node)) {
+        const reached = progress.find(
+            ({ target, name }) => target === targetOf(animation) && name === animation.animationName
+        );
+
+        if (reached) {
+            if (reached.time !== null) animation.currentTime = reached.time;
+        } else if (animation.effect?.getComputedTiming().endTime !== Infinity) {
+            animation.finish();
+        }
+    }
+};
+
 type KbqToastRecord<T> = {
     readonly componentRef: ComponentRef<T>;
     /** Remaining lifetime in ms. `0` keeps the toast on screen until it is hidden explicitly. */
@@ -514,7 +563,7 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
             return;
         }
 
-        last.after(host);
+        moveAfter(host, last);
     }
 
     private createOverlay(): OverlayRef {

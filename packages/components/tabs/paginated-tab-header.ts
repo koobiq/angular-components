@@ -34,6 +34,7 @@ import {
     END,
     HOME,
     KBQ_WINDOW,
+    kbqAnimationsDisabled,
     kbqGetScrollOverflowTolerance,
     kbqHasScrollOverflow,
     LEFT_ARROW,
@@ -303,6 +304,9 @@ export abstract class KbqPaginatedTabHeader
     private readonly document = inject(DOCUMENT);
     private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
     private readonly injector = inject(Injector);
+
+    /** Whether the underline of the active tab moves without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
 
     /**
      * Scrollbar mode for the tab strip. Only a vertical header scrolls in a direction the user is meant

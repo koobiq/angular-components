@@ -796,6 +796,94 @@ describe('KbqToastService', () => {
             overlayRef.dispose();
         });
 
+        it('moves the stack with moveBefore where the platform has it', () => {
+            showRendered();
+
+            const overlayRef = openOverlay();
+            const moveBefore = vi.fn((node: Node, child: Node | null) =>
+                overlayContainerElement.insertBefore(node, child)
+            );
+
+            Object.defineProperty(overlayContainerElement, 'moveBefore', { configurable: true, value: moveBefore });
+
+            showRendered();
+
+            expect(moveBefore).toHaveBeenCalledExactlyOnceWith(toastHost(), null);
+            expect(overlayContainerElement.lastElementChild).toBe(toastHost());
+
+            delete (overlayContainerElement as { moveBefore?: unknown }).moveBefore;
+            overlayRef.dispose();
+        });
+
+        it('carries the progress of the toast animations over a move without moveBefore', () => {
+            const settled = showRendered();
+            const entering = showRendered();
+            const overlayRef = openOverlay();
+            const host = toastHost();
+
+            const enterAnimation = (target: HTMLElement, currentTime: number): CSSAnimation =>
+                ({
+                    animationName: 'kbq-toast-enter',
+                    currentTime,
+                    effect: { target, getComputedTiming: () => ({ endTime: 150 }) },
+                    finish: vi.fn()
+                }) as unknown as CSSAnimation;
+
+            const before = [enterAnimation(hostOf(entering), 100)];
+            const after = [enterAnimation(hostOf(settled), 0), enterAnimation(hostOf(entering), 0)];
+
+            // Like a browser, the stack put back into the DOM starts the CSS animations of every toast over.
+            host.getAnimations = () => (host.nextSibling ? before : after);
+
+            showRendered();
+
+            expect(overlayContainerElement.lastElementChild).toBe(host);
+            expect(after[0].finish).toHaveBeenCalled();
+            expect(after[1].currentTime).toBe(100);
+            expect(after[1].finish).not.toHaveBeenCalled();
+
+            overlayRef.dispose();
+        });
+
+        it('removes a leaving toast once the exit animation a move of the stack started over has ended', async () => {
+            const toast = showRendered();
+            const element = hostOf(toast);
+            const timing = { getComputedTiming: () => ({ endTime: 300 }) };
+            let cancel!: (reason: unknown) => void;
+            let finish!: () => void;
+            const cancelled = {
+                playState: 'running',
+                effect: timing,
+                finished: new Promise((_resolve, reject) => (cancel = reject))
+            };
+            const restarted = {
+                playState: 'running',
+                effect: timing,
+                finished: new Promise<void>((resolve) => (finish = resolve))
+            };
+            let animations = [cancelled];
+            const flush = () => new Promise((resolve) => setTimeout(resolve));
+
+            element.getAnimations = () => animations as unknown as Animation[];
+
+            service.hide(toast.id);
+            render();
+
+            // The stack taken out of the DOM and put back cancels the exit animation, and starts it over.
+            cancelled.playState = 'idle';
+            animations = [restarted];
+            cancel(new DOMException('The animation was cancelled.', 'AbortError'));
+            await flush();
+
+            expect(element.isConnected).toBe(true);
+
+            restarted.playState = 'finished';
+            finish();
+            await flush();
+
+            expect(element.isConnected).toBe(false);
+        });
+
         describe('shown as popovers', () => {
             // jsdom has no Popover API, and CDK shows an overlay host as a popover only where `showPopover` exists.
             // Like a browser, the stub keeps the top layer in the order the popovers were shown in, and hides a

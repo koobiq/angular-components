@@ -9,6 +9,7 @@ import {
     OnChanges,
     OnDestroy,
     OnInit,
+    signal,
     SimpleChanges,
     TemplateRef,
     viewChild,
@@ -132,10 +133,16 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
      */
     origin: number | null = null;
 
-    /**
-     * Whether the tab is currently active.
-     */
-    isActive = false;
+    /** Whether the tab is currently active. A template that reads it is updated when it changes. */
+    get isActive(): boolean {
+        return this.activeState();
+    }
+
+    set isActive(value: boolean) {
+        this.activeState.set(value);
+    }
+
+    private readonly activeState = signal(false);
 
     get isOverflown(): boolean {
         return !!this._overflowTooltipTitle;
