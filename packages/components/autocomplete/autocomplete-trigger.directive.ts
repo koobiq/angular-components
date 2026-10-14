@@ -519,11 +519,9 @@ export class KbqAutocompleteTrigger
     handleKeydown(event: KeyboardEvent): void {
         const keyCode = event.keyCode;
 
-        // Prevent the default action on all escape key presses. This is here primarily to bring IE
-        // in line with other browsers. By default, pressing escape on IE will cause it to revert
-        // the input value to the one that it had on focus, however it won't dispatch any events
-        // which means that the model value will be out of sync with the view.
-        if (keyCode === ESCAPE) {
+        // The overlay closes the panel once the key reaches `body`. Consumed only when there is a panel
+        // to close, so a dialog around the input still takes the key.
+        if (keyCode === ESCAPE && this.panelOpen) {
             event.preventDefault();
         }
 

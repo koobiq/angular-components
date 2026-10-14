@@ -11,13 +11,14 @@ import {
     Type,
     ViewEncapsulation,
     computed,
+    inject,
     input,
     output,
     signal,
     viewChild,
     viewChildren
 } from '@angular/core';
-import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { ComponentFixture, TestBed, inject as testingInject } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
@@ -43,6 +44,7 @@ import {
     typeInElement
 } from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqModalService } from '@koobiq/components/modal';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { axe } from 'jest-axe';
 import { EMPTY, Observable, Subject, Subscription } from 'rxjs';
@@ -58,6 +60,9 @@ import {
     KbqAutocompleteTrigger,
     getKbqAutocompleteMissingPanelError
 } from './index';
+
+// The modal's own animation timeout, which is internal to its entry point.
+const MODAL_ANIMATE_DURATION = 300;
 
 describe('KbqAutocomplete', () => {
     let overlayContainer: OverlayContainer;
@@ -80,7 +85,7 @@ describe('KbqAutocomplete', () => {
             ]
         }).compileComponents();
 
-        inject([OverlayContainer], (oc: OverlayContainer) => {
+        testingInject([OverlayContainer], (oc: OverlayContainer) => {
             overlayContainer = oc;
             overlayContainerElement = oc.getContainerElement();
         })();
@@ -90,12 +95,14 @@ describe('KbqAutocomplete', () => {
 
     afterEach(() => vi.useRealTimers());
 
-    afterEach(inject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
-        // Since we're resetting the testing module in some of the tests,
-        // we can potentially have multiple overlay containers.
-        currentOverlayContainer.ngOnDestroy();
-        overlayContainer.ngOnDestroy();
-    }));
+    afterEach(
+        testingInject([OverlayContainer], (currentOverlayContainer: OverlayContainer) => {
+            // Since we're resetting the testing module in some of the tests,
+            // we can potentially have multiple overlay containers.
+            currentOverlayContainer.ngOnDestroy();
+            overlayContainer.ngOnDestroy();
+        })
+    );
 
     it('should remove the host box via display: none', () => {
         const fixture = createComponent(SimpleAutocomplete);
@@ -1007,6 +1014,15 @@ describe('KbqAutocomplete', () => {
             await vi.runOnlyPendingTimersAsync();
 
             expect(escapeEvent.defaultPrevented).toBe(true);
+        });
+
+        it('should leave the default action of escape alone when the panel is closed', () => {
+            trigger.closePanel();
+            fixture.detectChanges();
+
+            const escapeEvent = dispatchKeyboardEvent(input, 'keydown', ESCAPE);
+
+            expect(escapeEvent.defaultPrevented).toBe(false);
         });
 
         it('should close the panel when pressing ALT + UP_ARROW', async () => {
@@ -3341,6 +3357,40 @@ describe('KbqAutocomplete', () => {
             );
         });
     });
+
+    // The modal yields Escape only to a control that consumed it to close a popup of its own.
+    describe('inside a modal', () => {
+        it('should close the panel on escape, and the modal once the panel is closed', async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(AutocompleteInModalHost);
+            const modalClosing = vi.fn();
+
+            fixture.detectChanges();
+            fixture.componentInstance.open().beforeClose.subscribe(modalClosing);
+            await vi.advanceTimersByTimeAsync(MODAL_ANIMATE_DURATION);
+
+            const input = overlayContainerElement.querySelector<HTMLInputElement>('input')!;
+            const pressEscape = async () => {
+                dispatchKeyboardEvent(input, 'keydown', ESCAPE);
+                await vi.runOnlyPendingTimersAsync();
+            };
+
+            dispatchFakeEvent(input, 'focusin');
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).not.toBeNull();
+
+            await pressEscape();
+
+            expect(overlayContainerElement.querySelector('.kbq-autocomplete-panel')).toBeNull();
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            await pressEscape();
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
+        });
+    });
 });
 
 @Component({
@@ -4313,4 +4363,27 @@ class InputOnPushHost {
 })
 class AutocompleteInOverlayLayer {
     readonly autocomplete = viewChild.required(KbqAutocomplete);
+}
+
+@Component({
+    imports: [KbqInputModule, KbqAutocompleteModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInput placeholder="State" [kbqAutocomplete]="auto" />
+        </kbq-form-field>
+
+        <kbq-autocomplete #auto="kbqAutocomplete">
+            <kbq-option value="Alabama">Alabama</kbq-option>
+        </kbq-autocomplete>
+    `
+})
+class AutocompleteInModalContent {}
+
+@Component({ template: '' })
+class AutocompleteInModalHost {
+    private readonly modalService = inject(KbqModalService);
+
+    open() {
+        return this.modalService.open({ kbqComponent: AutocompleteInModalContent });
+    }
 }
