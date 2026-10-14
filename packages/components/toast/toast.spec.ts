@@ -694,6 +694,24 @@ describe('KbqToastService', () => {
             expect(containers().length).toBe(0);
         });
 
+        it('detaches the overlay when the ref of a leaving toast is destroyed before its exit ends', async () => {
+            vi.useFakeTimers();
+
+            const toast = showRendered();
+
+            holdExitAnimation(hostOf(toast));
+
+            service.hide(toast.id);
+            render();
+            expect(containers().length).toBe(1);
+
+            // A destroyed view never finishes its exit.
+            toast.ref.destroy();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(containers().length).toBe(0);
+        });
+
         it('waits for every exit to end, not only for the one of the toast that emptied the stack', async () => {
             vi.useFakeTimers();
 
