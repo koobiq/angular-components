@@ -27,6 +27,7 @@ import {
     input,
     isDevMode,
     NgZone,
+    numberAttribute,
     OnDestroy,
     OnInit,
     output,
@@ -479,7 +480,10 @@ export class KbqListSelection<T = any>
     readonly horizontal = input<boolean, unknown>(false, { transform: booleanAttribute });
 
     /** @docs-private */
-    readonly tabIndexInput = input<number | undefined>(undefined, { alias: 'tabIndex' });
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: numberAttribute
+    });
 
     /** Tab index of the list, `-1` while it is disabled. */
     get tabIndex(): number {
@@ -586,6 +590,9 @@ export class KbqListSelection<T = any>
     /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
     private appliedMultipleInput: KbqMultipleInput | undefined;
 
+    /** The `disabled` binding the state was last set from, see `applyDisabledInput`. */
+    private appliedDisabledInput: boolean | undefined;
+
     private destroyed = false;
 
     constructor() {
@@ -620,8 +627,14 @@ export class KbqListSelection<T = any>
             untracked(() => this.applyMultipleInput());
         });
 
-        // The inputs below stay `undefined` until a template binds them, so an unbound one does not override
-        // what the `ControlValueAccessor` or the roving focus wrote.
+        effect(() => {
+            this.disabledInput();
+
+            untracked(() => this.applyDisabledInput());
+        });
+
+        // The input stays `undefined` until a template binds it, so an unbound one does not override what the
+        // roving focus wrote.
         effect(() => {
             const tabIndex = this.tabIndexInput();
 
@@ -629,12 +642,6 @@ export class KbqListSelection<T = any>
 
             this.userTabIndex = tabIndex;
             this.ownTabIndex.set(tabIndex);
-        });
-
-        effect(() => {
-            const disabled = this.disabledInput();
-
-            if (disabled !== undefined) this.disabledState.set(disabled);
         });
 
         effect(() => {
@@ -721,6 +728,22 @@ export class KbqListSelection<T = any>
 
         this.appliedMultipleInput = multiple;
         this.setMultipleMode(resolveMultipleMode(multiple));
+    }
+
+    /**
+     * Sets the disabled state from the `disabled` binding, once per bound value, so that whichever of the binding
+     * and the form control changed last wins. An unbound input leaves what the form control wrote.
+     *
+     * Called by an effect, and by `setDisabledState` ahead of it: a forms directive on this element calls that
+     * from its own `ngOnChanges`, after the binding is set but before any effect of the view runs.
+     */
+    private applyDisabledInput(): void {
+        const disabled = this.disabledInput();
+
+        if (disabled === this.appliedDisabledInput) return;
+
+        this.appliedDisabledInput = disabled;
+        this.disabledState.set(!!disabled);
     }
 
     /**
@@ -1043,6 +1066,8 @@ export class KbqListSelection<T = any>
 
     // Implemented as a part of ControlValueAccessor.
     setDisabledState(isDisabled: boolean): void {
+        this.applyDisabledInput();
+
         // `KbqListOption.disabled` reads the list through its getter, so disabling the list cascades
         // to every option without overwriting their own `disabled` inputs.
         this.disabledState.set(isDisabled);
@@ -2107,8 +2132,9 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
     /** Moves DOM focus to this option, unless it is disabled or already focused. */
     focus(): void {
         // `hasFocus` alone lags behind the DOM until the deferred blur runs: a key pressed in that window would
-        // find the option "focused" and leave the focus where it was.
-        const focused = this.hasFocus && _getFocusedElementPierceShadowDom() === this.elementRef.nativeElement;
+        // find the option "focused" and leave the focus where it was. Focus on an element nested in the option
+        // is the option's own, or the `focusin` it bubbles would pull it back onto the host.
+        const focused = this.hasFocus && this.elementRef.nativeElement.contains(_getFocusedElementPierceShadowDom());
 
         if (this.disabled || focused || this.actionButton()?.hasFocus) {
             return;
