@@ -21,6 +21,11 @@ export interface Target {
      * bare or names that `exportAs`; `#ref="ngModel"` names another directive and is left alone.
      */
     elements: Readonly<Record<string, string>>;
+    /**
+     * `exportAs` names of a directive, which a `#ref` names on whatever element the directive sits. A bare `#ref`
+     * there is the element itself.
+     */
+    exportAs?: readonly string[];
     /** Members whose value is unchanged; a read must become a call. Auto-fixed. */
     signalMembers: readonly string[];
     /** Subset of `signalMembers` that is writable, so `x.m = v` becomes `x.m.set(v)`. Auto-fixed. */
@@ -100,13 +105,13 @@ export const TAG_LIST_CONTROL_TARGET: Target = {
     writableMembers: new Set<string>(['disabled', 'value'])
 };
 
-/** Native-element controls: `value` is written to the element, `disabled` follows the input and the form control. */
+/** Native-element controls: `value` and `placeholder` stay writable, `disabled` follows the input and the form control. */
 export const INPUT_CONTROL_TARGET: Target = {
     id: 'KbqInput',
     types: ['KbqInput', 'KbqInputPassword', 'KbqTextarea'],
     elements: {},
     signalMembers: CONTROL_MEMBERS,
-    writableMembers: new Set<string>(['value'])
+    writableMembers: new Set<string>(['value', 'placeholder'])
 };
 
 /** A receiver typed with the contract itself, which declares every member a read-only signal. */
@@ -118,13 +123,24 @@ export const FORM_FIELD_CONTROL_TARGET: Target = {
     writableMembers: new Set<string>()
 };
 
+/** `KbqTagInput`, the text control of a tag list: its state is a read-only signal, as the tag list reads it. */
+export const TAG_INPUT_TARGET: Target = {
+    id: 'KbqTagInput',
+    types: ['KbqTagInput'],
+    elements: {},
+    exportAs: ['kbqTagInput', 'kbqTagInputFor'],
+    signalMembers: ['id', 'placeholder', 'focused', 'empty'],
+    writableMembers: new Set<string>()
+};
+
 export const TARGETS: readonly Target[] = [
     FORM_FIELD_TARGET,
     HINT_TARGET,
     SELECT_CONTROL_TARGET,
     TAG_LIST_CONTROL_TARGET,
     INPUT_CONTROL_TARGET,
-    FORM_FIELD_CONTROL_TARGET
+    FORM_FIELD_CONTROL_TARGET,
+    TAG_INPUT_TARGET
 ];
 
 /**
@@ -186,7 +202,9 @@ export const warnPatterns: WarnPattern[] = [
     },
     {
         pattern: '\\bCanColorCtor\\b',
-        message: '`CanColorCtor` was removed together with `mixinColor`. The `CanColor` interface is still exported.'
+        message:
+            '`CanColorCtor` was removed together with `mixinColor`, and so was the `CanColor` interface: type the ' +
+            'member `Signal<KbqComponentColors | string>`, or use `KbqColorDirective`.'
     },
     {
         pattern: 'implements[^{]*\\bKbqFormFieldControl\\b',
@@ -218,10 +236,6 @@ export const warnPatterns: WarnPattern[] = [
         message:
             '`CanUpdateErrorState.errorState` is a `Signal<boolean>`, and the interface no longer declares ' +
             '`errorStateMatcher`.'
-    },
-    {
-        pattern: '\\bKbqTagTextControl\\b',
-        message: 'The `id`, `placeholder`, `focused` and `empty` members of `KbqTagTextControl` are signals.'
     },
     {
         pattern: '\\bKbqIconErrorStateContext\\b|\\bkbqIconErrorStateContextFactoryProvider\\b',

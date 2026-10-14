@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { RefAccessPolicy, rewriteRefAccesses } from '../../utils/template-ref-access';
 import { forEachClass, parseTemplate } from '../../utils/typescript';
 import {
     attributeRewrites,
@@ -263,8 +264,8 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, rece
     return warnings;
 }
 
-/** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
-function warnReceiverMembers(context: SchematicContext, filePath: string, content: string): void {
+/** The members of a file's receivers that can't be auto-fixed, across every target. */
+function collectFileWarnings(filePath: string, content: string): ReceiverWarnings {
     const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const merged = emptyWarnings();
 
@@ -281,6 +282,21 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
         warnings.readOnlyQueryWrites.forEach((value) => merged.readOnlyQueryWrites.add(value));
     }
 
+    return merged;
+}
+
+/** Adds the read-only members a template writes through a reference variable to the warnings. */
+function addTemplateWrites(warnings: ReceiverWarnings, members: Iterable<string>): ReceiverWarnings {
+    for (const name of members) {
+        if (READ_ONLY_INPUT_MEMBERS.includes(name)) warnings.readOnlyInputWrites.add(name);
+        else if (READ_ONLY_QUERY_MEMBERS.includes(name)) warnings.readOnlyQueryWrites.add(name);
+    }
+
+    return warnings;
+}
+
+/** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
+function logReceiverWarnings(context: SchematicContext, filePath: string, merged: ReceiverWarnings): void {
     if (merged.queryListApi.size > 0) {
         logMessage(context.logger, [
             `[${MIGRATION}] ${filePath}`,
@@ -345,24 +361,29 @@ function referenceName(name: string): string | undefined {
     return undefined;
 }
 
-/** Collects template reference variable names bound to one of the target's elements. */
+/**
+ * Collects template reference variable names bound to the target: bare or naming the `exportAs` on one of its
+ * elements, or naming one of its directive `exportAs` names on any element.
+ */
 class RefCollector implements Visitor {
     readonly refs = new Set<string>();
 
-    constructor(private readonly elements: Readonly<Record<string, string>>) {}
+    constructor(private readonly target: Target) {}
 
     visitElement(element: any): void {
-        if (Object.hasOwn(this.elements, element.name)) {
-            const exportAs = this.elements[element.name];
+        const { elements, exportAs = [] } = this.target;
+        const elementExportAs = Object.hasOwn(elements, element.name) ? elements[element.name] : undefined;
 
-            for (const attr of element.attrs ?? []) {
-                if (typeof attr.name !== 'string') continue;
+        for (const attr of element.attrs ?? []) {
+            if (typeof attr.name !== 'string') continue;
 
-                const name = referenceName(attr.name);
-                const value = String(attr.value ?? '');
+            const name = referenceName(attr.name);
+            const value = String(attr.value ?? '');
 
-                if (name !== undefined && (!value || value === exportAs)) this.refs.add(name);
-            }
+            if (name === undefined) continue;
+
+            if (elementExportAs !== undefined && (!value || value === elementExportAs)) this.refs.add(name);
+            else if (value && exportAs.includes(value)) this.refs.add(name);
         }
 
         this.visitChildren(element);
@@ -387,21 +408,6 @@ class RefCollector implements Visitor {
     visitLetDeclaration(): void {}
 }
 
-/** Rewrites `ref.member` reads to `ref.member()` for the given refs, scoped to those exact identifiers. */
-function rewriteRefReads(template: string, refs: string[], members: readonly string[]): string {
-    const joined = members.join('|');
-    let content = template;
-
-    for (const ref of refs) {
-        // `\bref\.(member)\b(?!\s*\()` — skip anything already invoked, so the rewrite is idempotent.
-        const pattern = new RegExp(`\\b(${escapeRegExp(ref)})\\.(${joined})\\b(?!\\s*\\()`, 'g');
-
-        content = content.replace(pattern, '$1.$2()');
-    }
-
-    return content;
-}
-
 /** Rewrites renamed attributes inside the opening tag of the elements that own them. */
 function rewriteAttributes(template: string): string {
     let content = template;
@@ -419,31 +425,49 @@ function rewriteAttributes(template: string): string {
     return content;
 }
 
-/** Pass B (core) — parse a template, discover target refs, rewrite their reads and renamed attributes. */
-async function migrateTemplate(template: string): Promise<{ content: string; changed: boolean }> {
-    let content = rewriteAttributes(template);
+interface TemplateResult {
+    content: string;
+    changed: boolean;
+    /** Read-only members written through a reference variable, left as they are. */
+    readOnlyWrites: Set<string>;
+}
 
-    const relevant = TARGETS.filter((target) =>
-        Object.keys(target.elements).some((element) => template.includes(element))
+/** Pass B (core) — parse a template, discover target refs, rewrite their reads, writes and renamed attributes. */
+async function migrateTemplate(template: string): Promise<TemplateResult> {
+    let content = rewriteAttributes(template);
+    const readOnlyWrites = new Set<string>();
+
+    const relevant = TARGETS.filter(
+        (target) =>
+            Object.keys(target.elements).some((element) => template.includes(element)) ||
+            target.exportAs?.some((exportAs) => template.includes(exportAs))
     );
 
     if (relevant.length > 0) {
         const parsed = await parseTemplate(content);
 
         if (parsed.tree) {
+            const { rootNodes } = parsed.tree as { rootNodes: unknown[] };
+            const refs: RefAccessPolicy[] = [];
+
             for (const target of relevant) {
-                const collector = new RefCollector(target.elements);
+                const collector = new RefCollector(target);
 
-                visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
+                visitAll(collector, rootNodes);
 
-                if (collector.refs.size > 0) {
-                    content = rewriteRefReads(content, [...collector.refs], target.signalMembers);
+                for (const name of collector.refs) {
+                    refs.push({ name, members: target.signalMembers, writable: target.writableMembers });
                 }
             }
+
+            const result = rewriteRefAccesses(content, rootNodes, refs);
+
+            content = result.content;
+            result.readOnlyWrites.forEach((member) => readOnlyWrites.add(member));
         }
     }
 
-    return { content, changed: content !== template };
+    return { content, changed: content !== template, readOnlyWrites };
 }
 
 /** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
@@ -483,21 +507,27 @@ function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: 
     return ranges;
 }
 
-/** Pass B (inline) — rewrite target ref reads inside inline component templates. */
-async function migrateInlineTemplates(content: string, fileName: string): Promise<string> {
+/** Pass B (inline) — rewrite target ref reads and writes inside inline component templates. */
+async function migrateInlineTemplates(
+    content: string,
+    fileName: string
+): Promise<{ content: string; readOnlyWrites: Set<string> }> {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
+    const readOnlyWrites = new Set<string>();
     let result = content;
 
     for (const { start, end } of ranges) {
-        const { content: rewritten, changed } = await migrateTemplate(result.slice(start, end));
+        const outcome = await migrateTemplate(result.slice(start, end));
 
-        if (changed) {
-            result = result.slice(0, start) + rewritten + result.slice(end);
+        outcome.readOnlyWrites.forEach((member) => readOnlyWrites.add(member));
+
+        if (outcome.changed) {
+            result = result.slice(0, start) + outcome.content + result.slice(end);
         }
     }
 
-    return result;
+    return { content: result, readOnlyWrites };
 }
 
 /** Pass C — the misspelled `_fiedset-theme.scss` was renamed. */
@@ -526,7 +556,7 @@ function referencesFormField(content: string): boolean {
             content
         ) ||
         /\b(mixinColor|CanColorCtor|KBQ_FORM_FIELD_REF|kbqA11yLocaleConfigurationProvider)\b/.test(content) ||
-        /\bKbq(Select|TreeSelect|TimezoneSelect|TagList|Input|InputPassword|Textarea|Timepicker|DatepickerInput|FormFieldControl|ErrorStateTracker|TagTextControl|IconErrorStateContext)\b/.test(
+        /\bKbq(Select|TreeSelect|TimezoneSelect|TagList|TagInput|Input|InputPassword|Textarea|Timepicker|DatepickerInput|FormFieldControl|ErrorStateTracker|IconErrorStateContext)\b/.test(
             content
         ) ||
         /\b(mixinErrorState|CanUpdateErrorState|CanUpdateErrorStateCtor|kbqIconErrorStateContextFactoryProvider)\b/.test(
@@ -581,13 +611,12 @@ export default function formFieldSignals(options: Schema): Rule {
             if (!original || !referencesFormField(original)) continue;
 
             logWarnings(context, filePath, original);
-            warnReceiverMembers(context, filePath, original);
 
-            let content = migrateTsExpressions(original, filePath);
+            const warnings = collectFileWarnings(filePath, original);
+            const inline = await migrateInlineTemplates(migrateTsExpressions(original, filePath), filePath);
 
-            content = await migrateInlineTemplates(content, filePath);
-
-            commit(filePath, original, content);
+            logReceiverWarnings(context, filePath, addTemplateWrites(warnings, inline.readOnlyWrites));
+            commit(filePath, original, inline.content);
         }
 
         for (const filePath of htmlPaths) {
@@ -597,7 +626,9 @@ export default function formFieldSignals(options: Schema): Rule {
 
             logWarnings(context, filePath, original);
 
-            const { content, changed } = await migrateTemplate(original);
+            const { content, changed, readOnlyWrites } = await migrateTemplate(original);
+
+            logReceiverWarnings(context, filePath, addTemplateWrites(emptyWarnings(), readOnlyWrites));
 
             if (changed) commit(filePath, original, content);
         }

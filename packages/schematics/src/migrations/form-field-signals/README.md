@@ -26,6 +26,7 @@ and template-reference reads break.
 | `KbqA11yLocaleConfiguration`                                                                                  | 8 keys                  | +`clear`, `showPassword`, `hidePassword` | ⚠️ warn                          |
 | `KbqFormFieldRef.control`                                                                                     | `any`                   | `Signal<KbqFormFieldControlRef>`         | ⚠️ warn                          |
 | `value` / `id` / `placeholder` / `focused` / `empty` / `required` / `disabled` / `errorState` of the controls | property or getter      | `Signal`                                 | ✅ read → call, write → `.set()` |
+| `KbqTagInput.id` / `placeholder` / `focused` / `empty`                                                        | input, field or getter  | read-only `Signal`                       | ✅ read → call                   |
 | `KbqFormFieldControl.stateChanges`                                                                            | `Observable<void>`      | removed                                  | ⚠️ warn                          |
 
 `control`, `stepper` and `connectionContainerRef` were already signals before this release and are deliberately
@@ -45,12 +46,18 @@ The schematic walks every `.ts`, `.html`, `.scss` and `.css` file in the project
   `KbqTimepicker`, `KbqDatepickerInput`, `KbqInput`, `KbqInputPassword`, `KbqTextarea` or `KbqFormFieldControl`,
   a read of `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` or `errorState` becomes a
   call. A write becomes `.set()` where the member stays writable — `disabled` on the selects, the tag list, the
-  timepicker and the datepicker input, `value` on the native-element controls and the tag list.
-- **Template reference reads.** For a `#ref` bound to `<kbq-form-field>`, `<kbq-hint>`, `<kbq-error>`,
+  timepicker and the datepicker input, `value` on the native-element controls and the tag list, `placeholder` on
+  the native-element controls. The same reads of `id`, `placeholder`, `focused` and `empty` on a receiver typed
+  `KbqTagInput` become calls too.
+- **Template references.** For a `#ref` bound to `<kbq-form-field>`, `<kbq-hint>`, `<kbq-error>`,
   `<kbq-reactive-password-hint>`, `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` or
   `<kbq-tag-list>`, reads through that ref are rewritten in the same template (external `.html` and inline
   `template:` strings). The ref has to be bare or name the component's own `exportAs` (`#s="kbqSelect"`): one
-  that names another directive (`#s="ngModel"`) is left alone.
+  that names another directive (`#s="ngModel"`) is left alone. The tag input is a directive on a native
+  `<input>`, where a bare ref is the element, so only `#t="kbqTagInput"` or `#t="kbqTagInputFor"` is followed.
+  Only the ref itself is matched — `form.controls.country.value` stays as it is. In an event binding, a write
+  to a writable member becomes `.set()`: `(click)="s.disabled = true"` → `(click)="s.disabled.set(true)"`;
+  `[(ngModel)]="tags.value"` keeps working on the signal unchanged.
 - **Cleaner accessible name.** `<kbq-cleaner [attr.aria-label]="…">` → `<kbq-cleaner [aria-label]="…">`. The
   component now writes `aria-label` from a host binding, so an `attr.` binding is silently overwritten by the
   localized default.
@@ -62,23 +69,23 @@ All rewrites are idempotent — running twice does not double the call.
 
 These changes can't be rewritten safely and are surfaced as warnings (in both `fix` and dry-run mode):
 
-| Change                                                                    | Manual migration                                                                                                                                                           |
-| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `formField.hint.changes` / `.first` / `.last` / `.toArray()` / `.get(i)`  | The content queries are signals over a readonly array. React with `computed()` / `effect()` instead of `.changes`, and index the array instead of the `QueryList` helpers. |
-| `formField.cleaner === null`                                              | `cleaner` / `passwordToggle` now return `undefined` when absent. Use a truthiness check or `== null`.                                                                      |
-| `hint.fillTextOff = …` / `hint.compact = …`                               | Read-only signal inputs now. Drive them with a template binding (`[fillTextOff]="…"`), not an assignment.                                                                  |
-| `formField.cleaner = …` / `hint` / `prefix` / `suffix` / `passwordToggle` | Read-only signal content queries now. Project the content instead — code that assigned a query result (usually a test faking it) has to render the real component.         |
-| `mixinColor(...)` / `CanColorCtor`                                        | Removed. Extend `KbqColorDirective`, which exposes the same `color` input and `colorClassName` getter.                                                                     |
-| A custom `KbqA11yLocaleConfiguration`                                     | Add the three new keys — `clear`, `showPassword`, `hidePassword` — used for the accessible names of the cleaner and the password toggle.                                   |
-| `inject(KBQ_FORM_FIELD_REF)` + `formField.control.<member>`               | `control` is typed now. The read was silently `undefined` and has to become `formField.control().<member>`.                                                                |
-| `KbqTrim.trim(...)`                                                       | Typed `(value: unknown) => unknown`. Narrow or cast the result.                                                                                                            |
-| `<kbq-error role="…">` / `<kbq-cleaner role="button">`                    | `kbq-error` renders `role="alert"` + `aria-atomic` and `kbq-cleaner` renders `role="button"` themselves. Drop the hand-rolled attributes.                                  |
-| `implements KbqFormFieldControl`                                          | Expose the state as signals and drop `stateChanges`: the form field derives its state from the signals.                                                                    |
-| `formField.control().stateChanges`                                        | Removed. Read the state signals in `computed()` / `effect()`, or turn one into a stream with `toObservable()`.                                                             |
-| A write to a read-only control member (`select.placeholder = …`)          | Bind it in the template, or set the value through a form control.                                                                                                          |
-| `KbqErrorStateTracker` / `CanUpdateErrorState`                            | The tracker takes no `stateChanges` subject; `errorState` is a `Signal<boolean>`; the interface no longer declares `errorStateMatcher`.                                    |
-| `mixinErrorState(...)` / `CanUpdateErrorStateCtor`                        | Removed. Track the error state with `KbqErrorStateTracker`.                                                                                                                |
-| `KbqTagTextControl` / `KbqIconErrorStateContext`                          | Their state members are signals; `KbqIconErrorStateContext.stateChanges` was removed.                                                                                      |
+| Change                                                                    | Manual migration                                                                                                                                                                          |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `formField.hint.changes` / `.first` / `.last` / `.toArray()` / `.get(i)`  | The content queries are signals over a readonly array. React with `computed()` / `effect()` instead of `.changes`, and index the array instead of the `QueryList` helpers.                |
+| `formField.cleaner === null`                                              | `cleaner` / `passwordToggle` now return `undefined` when absent. Use a truthiness check or `== null`.                                                                                     |
+| `hint.fillTextOff = …` / `hint.compact = …`                               | Read-only signal inputs now. Drive them with a template binding (`[fillTextOff]="…"`), not an assignment.                                                                                 |
+| `formField.cleaner = …` / `hint` / `prefix` / `suffix` / `passwordToggle` | Read-only signal content queries now. Project the content instead — code that assigned a query result (usually a test faking it) has to render the real component.                        |
+| `mixinColor(...)` / `CanColorCtor`                                        | Removed, and `CanColor` with them. Extend `KbqColorDirective`, which exposes the same `color` input and `colorClassName` getter, or type a member `Signal<KbqComponentColors \| string>`. |
+| A custom `KbqA11yLocaleConfiguration`                                     | Add the three new keys — `clear`, `showPassword`, `hidePassword` — used for the accessible names of the cleaner and the password toggle.                                                  |
+| `inject(KBQ_FORM_FIELD_REF)` + `formField.control.<member>`               | `control` is typed now. The read was silently `undefined` and has to become `formField.control().<member>`.                                                                               |
+| `KbqTrim.trim(...)`                                                       | Typed `(value: unknown) => unknown`. Narrow or cast the result.                                                                                                                           |
+| `<kbq-error role="…">` / `<kbq-cleaner role="button">`                    | `kbq-error` renders `role="alert"` + `aria-atomic` and `kbq-cleaner` renders `role="button"` themselves. Drop the hand-rolled attributes.                                                 |
+| `implements KbqFormFieldControl`                                          | Expose the state as signals and drop `stateChanges`: the form field derives its state from the signals.                                                                                   |
+| `formField.control().stateChanges`                                        | Removed. Read the state signals in `computed()` / `effect()`, or turn one into a stream with `toObservable()`.                                                                            |
+| A write to a read-only control member (`select.placeholder = …`)          | Bind it in the template, or set the value through a form control. Also reported through a template ref, in an event or a two-way binding.                                                 |
+| `KbqErrorStateTracker` / `CanUpdateErrorState`                            | The tracker takes no `stateChanges` subject; `errorState` is a `Signal<boolean>`; the interface no longer declares `errorStateMatcher`.                                                   |
+| `mixinErrorState(...)` / `CanUpdateErrorStateCtor`                        | Removed. Track the error state with `KbqErrorStateTracker`.                                                                                                                               |
+| `KbqIconErrorStateContext`                                                | Its `errorState` is a `Signal<boolean>`, and `stateChanges` was removed.                                                                                                                  |
 
 ## Behaviour changes without a code fix
 

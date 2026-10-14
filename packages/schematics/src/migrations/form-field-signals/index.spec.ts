@@ -245,6 +245,22 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).toContain('`mixinColor` was removed');
     });
 
+    it('warns that CanColor went with CanColorCtor', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { CanColorCtor } from '@koobiq/components/core';\n" + 'export type Ctor = CanColorCtor;\n'
+        );
+
+        await run();
+
+        const all = messages.join('\n');
+
+        expect(all).toContain('so was the `CanColor` interface');
+        expect(all).not.toContain('still exported');
+    });
+
     it('warns about the new required keys of KbqA11yLocaleConfiguration', async () => {
         const ts = firstTsPath();
 
@@ -298,27 +314,32 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('select.disabled.set(true);');
     });
 
-    it('rewrites a KbqInput value write to .set() and warns about a write to its read-only placeholder', async () => {
-        const ts = firstTsPath();
+    it.each(['KbqInput', 'KbqInputPassword', 'KbqTextarea'])(
+        'rewrites %s value and placeholder writes to .set() and warns about a write to its read-only disabled',
+        async (type) => {
+            const ts = firstTsPath();
 
-        appTree.overwrite(
-            ts,
-            "import { KbqInput } from '@koobiq/components/input';\n" +
-                'class Demo {\n' +
-                '    apply(input: KbqInput) {\n' +
-                "        input.value = 'koobiq';\n" +
-                "        input.placeholder = 'Name';\n" +
-                '    }\n' +
-                '}\n'
-        );
+            appTree.overwrite(
+                ts,
+                `import { ${type} } from '@koobiq/components/input';\n` +
+                    'class Demo {\n' +
+                    `    apply(input: ${type}) {\n` +
+                    "        input.value = 'koobiq';\n" +
+                    "        input.placeholder = 'Name';\n" +
+                    '        input.disabled = true;\n' +
+                    '    }\n' +
+                    '}\n'
+            );
 
-        const updated = (await run()).readText(ts);
+            const updated = (await run()).readText(ts);
 
-        expect(updated).toContain("input.value.set('koobiq');");
-        // left untouched — the consumer has to replace it with a binding
-        expect(updated).toContain("input.placeholder = 'Name';");
-        expect(messages.join('\n')).toContain('can no longer be assigned');
-    });
+            expect(updated).toContain("input.value.set('koobiq');");
+            expect(updated).toContain("input.placeholder.set('Name');");
+            // left untouched — the consumer has to replace it with a binding
+            expect(updated).toContain('input.disabled = true;');
+            expect(messages.join('\n')).toContain('`disabled` can no longer be assigned');
+        }
+    );
 
     it('rewrites reads via a template reference variable on <kbq-select>', async () => {
         const html = firstHtmlPath();
@@ -328,6 +349,103 @@ describe(SCHEMATIC_NAME, () => {
         const updated = (await run()).readText(html);
 
         expect(updated).toContain('{{ select.disabled() }}');
+    });
+
+    it('leaves a property chain that ends in the name of a ref alone', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-select #country formControlName="country"></kbq-select>\n' +
+                '<span>{{ form.controls.country.value }} {{ $any(form).country.disabled }} {{ country.value }}</span>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain(
+            '{{ form.controls.country.value }} {{ $any(form).country.disabled }} {{ country.value() }}'
+        );
+    });
+
+    it('turns a write through a ref to a writable member into .set() and leaves a read-only one', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-select #country></kbq-select>\n' +
+                '<button (click)="country.disabled = !country.disabled; log(country.value)">Lock</button>\n' +
+                '<button (click)="country.placeholder = \'Country\'">Rename</button>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('(click)="country.disabled.set(!country.disabled()); log(country.value())"');
+        expect(updated).toContain('(click)="country.placeholder = \'Country\'"');
+        expect(messages.join('\n')).toContain('`placeholder` can no longer be assigned');
+
+        appTree.overwrite(html, updated);
+
+        expect((await run()).readText(html)).toBe(updated);
+    });
+
+    it('keeps a two-way binding to a writable member through a ref and reports a read-only one', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-tag-list #tags></kbq-tag-list>\n' +
+            '<kbq-select #country></kbq-select>\n' +
+            '<input [(ngModel)]="tags.value" />\n' +
+            '<input [(ngModel)]="country.id" />\n';
+
+        appTree.overwrite(html, template);
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toBe(template);
+        expect(messages.join('\n')).toContain('`id` can no longer be assigned');
+    });
+
+    it('rewrites reads of KbqTagInput state on a typed receiver and reports a write to it', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { ViewChild } from '@angular/core';\n" +
+                "import { KbqTagInput } from '@koobiq/components/tags';\n" +
+                'class Demo {\n' +
+                '    @ViewChild(KbqTagInput) input: KbqTagInput;\n' +
+                '    describe() {\n' +
+                '        return [this.input.focused, this.input.empty, this.input.placeholder, this.input.id];\n' +
+                '    }\n' +
+                '    rename() {\n' +
+                "        this.input.placeholder = 'Tags';\n" +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain(
+            'return [this.input.focused(), this.input.empty(), this.input.placeholder(), this.input.id()];'
+        );
+        expect(updated).toContain("this.input.placeholder = 'Tags';");
+        expect(messages.join('\n')).toContain('`placeholder` can no longer be assigned');
+    });
+
+    it('rewrites reads of KbqTagInput state through a ref naming its exportAs, not through a bare ref', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-tag-list #list></kbq-tag-list>\n' +
+                '<input [kbqTagInputFor]="list" #tagInput="kbqTagInput" #native />\n' +
+                '<input [kbqTagInputFor]="list" #other="kbqTagInputFor" />\n' +
+                '<span>{{ tagInput.placeholder }} {{ tagInput.focused }} {{ other.empty }} {{ native.id }}</span>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('{{ tagInput.placeholder() }} {{ tagInput.focused() }} {{ other.empty() }}');
+        expect(updated).toContain('{{ native.id }}');
     });
 
     it('warns about a custom KbqFormFieldControl implementation', async () => {

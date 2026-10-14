@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { rewriteRefAccesses } from '../../utils/template-ref-access';
 import { forEachClass, parseTemplate } from '../../utils/typescript';
 import {
     ALERT_ELEMENT,
@@ -33,10 +34,6 @@ interface Receiver {
     text: string;
     start: number;
     end: number;
-}
-
-function escapeRegExp(value: string): string {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /** Applies text-span edits to `content`, right-to-left, so earlier edits don't shift later offsets. */
@@ -186,12 +183,28 @@ function collectAccessEdits(sourceFile: ts.SourceFile, receivers: Receiver[]): E
 interface ReceiverWarnings {
     valueChanged: Set<string>;
     protectedAccess: Set<string>;
+    readOnlyWrites: Set<string>;
 }
 
-/** Collects the manual-migration members (`alertColor`, now-`protected` queries) read on an alert receiver. */
+/** Whether a signal member is assigned rather than read, a write the migration leaves for the consumer. */
+function isReadOnlyWrite(node: ts.PropertyAccessExpression): boolean {
+    return (
+        SIGNAL_MEMBERS.includes(node.name.text) &&
+        !WRITABLE_MEMBERS.has(node.name.text) &&
+        ts.isBinaryExpression(node.parent) &&
+        node.parent.left === node &&
+        node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
+    );
+}
+
+/**
+ * Collects the manual-migration members (`alertColor`, now-`protected` queries, writes to read-only signal
+ * members) accessed on an alert receiver.
+ */
 function collectReceiverWarnings(sourceFile: ts.SourceFile, receivers: Receiver[]): ReceiverWarnings {
     const valueChanged = new Set<string>();
     const protectedAccess = new Set<string>();
+    const readOnlyWrites = new Set<string>();
 
     const visit = (node: ts.Node): void => {
         if (
@@ -203,6 +216,7 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, receivers: Receiver[
 
             if (VALUE_CHANGED_MEMBERS.includes(name)) valueChanged.add(name);
             else if (PROTECTED_MEMBERS.includes(name)) protectedAccess.add(name);
+            else if (isReadOnlyWrite(node)) readOnlyWrites.add(name);
         }
 
         node.forEachChild(visit);
@@ -210,7 +224,7 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, receivers: Receiver[
 
     visit(sourceFile);
 
-    return { valueChanged, protectedAccess };
+    return { valueChanged, protectedAccess, readOnlyWrites };
 }
 
 /** Pass A — rewrite value-safe programmatic reads of alert signal members in TypeScript code. */
@@ -225,14 +239,30 @@ function migrateTsExpressions(content: string, fileName: string): string {
     return edits.length > 0 ? applyEdits(content, edits) : content;
 }
 
+/** Reports writes to signal members that are read-only now, made in code or through a template reference. */
+function warnReadOnlyWrites(context: SchematicContext, filePath: string, members: Set<string>): void {
+    if (members.size === 0) return;
+
+    logMessage(context.logger, [
+        `[alert-signals] ${filePath}`,
+        `  \`${[...members].join('`, `')}\` can no longer be assigned: they are read-only signal inputs now. Bind`,
+        `  them in the template (e.g. \`[compact]="…"\`) instead of assigning them.`
+    ]);
+}
+
 /** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
-function warnReceiverMembers(context: SchematicContext, filePath: string, content: string): void {
+function warnReceiverMembers(
+    context: SchematicContext,
+    filePath: string,
+    content: string,
+    templateWrites: Set<string>
+): void {
     const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const receivers = collectReceivers(sourceFile);
+    const { valueChanged, protectedAccess, readOnlyWrites } = collectReceiverWarnings(sourceFile, receivers);
 
-    if (receivers.length === 0) return;
-
-    const { valueChanged, protectedAccess } = collectReceiverWarnings(sourceFile, receivers);
+    templateWrites.forEach((member) => readOnlyWrites.add(member));
+    warnReadOnlyWrites(context, filePath, readOnlyWrites);
 
     if (valueChanged.size > 0) {
         logMessage(context.logger, [
@@ -299,41 +329,34 @@ class AlertRefCollector implements Visitor {
     visitLetDeclaration(): void {}
 }
 
-/** Rewrites `ref.member` reads to `ref.member()` for the given refs, scoped to those exact identifiers. */
-function rewriteRefReads(template: string, refs: string[]): { content: string; changed: boolean } {
-    const members = SIGNAL_MEMBERS.join('|');
-    let content = template;
-    let changed = false;
-
-    for (const ref of refs) {
-        // `\bref\.(member)\b(?!\s*\()` — skip anything already invoked, so the rewrite is idempotent.
-        const pattern = new RegExp(`\\b(${escapeRegExp(ref)})\\.(${members})\\b(?!\\s*\\()`, 'g');
-        const next = content.replace(pattern, '$1.$2()');
-
-        if (next !== content) {
-            content = next;
-            changed = true;
-        }
-    }
-
-    return { content, changed };
+interface TemplateResult {
+    content: string;
+    changed: boolean;
+    /** Read-only members written through a reference variable, left as they are. */
+    readOnlyWrites: Set<string>;
 }
 
 /** Pass B (core) — parse a template, discover alert refs, rewrite their value-safe signal reads. */
-async function migrateTemplate(template: string): Promise<{ content: string; changed: boolean }> {
-    if (!template.includes(ALERT_ELEMENT)) return { content: template, changed: false };
+async function migrateTemplate(template: string): Promise<TemplateResult> {
+    const untouched = { content: template, changed: false, readOnlyWrites: new Set<string>() };
+
+    if (!template.includes(ALERT_ELEMENT)) return untouched;
 
     const parsed = await parseTemplate(template);
 
-    if (!parsed.tree) return { content: template, changed: false };
+    if (!parsed.tree) return untouched;
 
+    const { rootNodes } = parsed.tree as { rootNodes: unknown[] };
     const collector = new AlertRefCollector();
 
-    visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
+    visitAll(collector, rootNodes);
 
-    if (collector.refs.size === 0) return { content: template, changed: false };
+    if (collector.refs.size === 0) return untouched;
 
-    return rewriteRefReads(template, [...collector.refs]);
+    const refs = [...collector.refs].map((name) => ({ name, members: SIGNAL_MEMBERS, writable: WRITABLE_MEMBERS }));
+    const { content, readOnlyWrites } = rewriteRefAccesses(template, rootNodes, refs);
+
+    return { content, changed: content !== template, readOnlyWrites };
 }
 
 /** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
@@ -374,20 +397,26 @@ function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: 
 }
 
 /** Pass B (inline) — rewrite alert ref reads inside inline component templates. */
-async function migrateInlineTemplates(content: string, fileName: string): Promise<string> {
+async function migrateInlineTemplates(
+    content: string,
+    fileName: string
+): Promise<{ content: string; readOnlyWrites: Set<string> }> {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
+    const readOnlyWrites = new Set<string>();
     let result = content;
 
     for (const { start, end } of ranges) {
-        const { content: rewritten, changed } = await migrateTemplate(result.slice(start, end));
+        const outcome = await migrateTemplate(result.slice(start, end));
 
-        if (changed) {
-            result = result.slice(0, start) + rewritten + result.slice(end);
+        outcome.readOnlyWrites.forEach((member) => readOnlyWrites.add(member));
+
+        if (outcome.changed) {
+            result = result.slice(0, start) + outcome.content + result.slice(end);
         }
     }
 
-    return result;
+    return { content: result, readOnlyWrites };
 }
 
 function logWarnings(context: SchematicContext, filePath: string, content: string): void {
@@ -443,13 +472,11 @@ export default function alertSignals(options: Schema): Rule {
             if (!original || !referencesAlert(original)) continue;
 
             logWarnings(context, filePath, original);
-            warnReceiverMembers(context, filePath, original);
 
-            let content = migrateTsExpressions(original, filePath);
+            const inline = await migrateInlineTemplates(migrateTsExpressions(original, filePath), filePath);
 
-            content = await migrateInlineTemplates(content, filePath);
-
-            commit(filePath, original, content);
+            warnReceiverMembers(context, filePath, original, inline.readOnlyWrites);
+            commit(filePath, original, inline.content);
         }
 
         for (const filePath of htmlPaths) {
@@ -457,7 +484,9 @@ export default function alertSignals(options: Schema): Rule {
 
             if (!original) continue;
 
-            const { content, changed } = await migrateTemplate(original);
+            const { content, changed, readOnlyWrites } = await migrateTemplate(original);
+
+            warnReadOnlyWrites(context, filePath, readOnlyWrites);
 
             if (changed) commit(filePath, original, content);
         }

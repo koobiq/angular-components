@@ -92,6 +92,25 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('filterBar.filter.set(next);');
     });
 
+    it('leaves an assignment to the read-only pipeTemplates and reports it', async () => {
+        const ts = firstTsPath();
+
+        appTree.overwrite(
+            ts,
+            "import { KbqFilterBar } from '@koobiq/components/filter-bar';\n" +
+                'class Demo {\n' +
+                '    reset(filterBar: KbqFilterBar) {\n' +
+                '        filterBar.pipeTemplates = [];\n' +
+                '    }\n' +
+                '}\n'
+        );
+
+        const updated = (await run()).readText(ts);
+
+        expect(updated).toContain('filterBar.pipeTemplates = [];');
+        expect(messages.join('\n')).toContain('`pipeTemplates` can no longer be assigned');
+    });
+
     it('rewrites reads on a @ViewChild field (this.filterBar) and the computed signal getters', async () => {
         const ts = firstTsPath();
 
@@ -165,6 +184,37 @@ describe(SCHEMATIC_NAME, () => {
         const updated = (await run()).readText(html);
 
         expect(updated).toContain('{{ filterBar.isChanged() }}');
+    });
+
+    it('leaves a property chain that ends in the name of a ref alone', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-filter-bar #filterBar></kbq-filter-bar>\n' +
+                '<span>{{ page.filterBar.isChanged }} {{ filterBar.isChanged }}</span>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('{{ page.filterBar.isChanged }} {{ filterBar.isChanged() }}');
+    });
+
+    it('turns a write through a ref to `filter` into .set() and leaves a read-only member', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(
+            html,
+            '<kbq-filter-bar #filterBar></kbq-filter-bar>\n' +
+                '<button (click)="filterBar.filter = saved">Restore</button>\n' +
+                '<button (click)="filterBar.pipeTemplates = []">Reset</button>\n'
+        );
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('(click)="filterBar.filter.set(saved)"');
+        expect(updated).toContain('(click)="filterBar.pipeTemplates = []"');
+        expect(messages.join('\n')).toContain('`pipeTemplates` can no longer be assigned');
     });
 
     it('leaves reads via a template reference variable naming a directive on <kbq-filter-bar> untouched', async () => {
