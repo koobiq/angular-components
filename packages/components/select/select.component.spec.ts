@@ -4137,6 +4137,22 @@ describe('KbqSelect', () => {
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
                 await vi.runOnlyPendingTimersAsync();
             });
+
+            // Following the written value, the closed select moves its active option onto it, which its
+            // arrow-key handling must not take for a selection of the user.
+            it('should not report a value the form writes as a selection of the user', async () => {
+                const option = fixture.componentInstance.options().at(1)!;
+                const spy = vi.fn();
+                const subscription = option.onSelectionChange.pipe(map((e) => e.isUserInput)).subscribe(spy);
+
+                fixture.componentInstance.control.setValue('pizza-1');
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                subscription.unsubscribe();
+
+                expect(option.selected).toBe(true);
+                expect(spy).not.toHaveBeenCalledWith(true);
+            });
         });
 
         describe('Clear value', () => {
