@@ -91,6 +91,16 @@ export const warnPatterns: WarnPattern[] = [
             'multiple, autoSelect, tabIndex, selectAllHandler, hasBackdrop and searchMinOptionsThreshold of ' +
             'KbqTreeSelect are signal inputs, so an assignment no longer compiles. Bind them in the template. This ' +
             'pattern also matches a write to an unrelated object in the same file — check before changing it.'
+    },
+    {
+        anchor: TREE_SELECT_TYPE,
+        pattern: '\\bsortComparator\\b',
+        message:
+            'The sortComparator of KbqTreeSelect gets the selected data nodes, as it always did, and its third ' +
+            'argument is every data node of the tree in panel order (treeControl.dataNodes) instead of the ' +
+            'rendered KbqTreeOption[]. A comparator that looks its arguments up among the options, or types ' +
+            'them as KbqTreeOption, has to take your node type. Without a comparator a multiple value is ' +
+            'ordered by the panel now; `() => 0` keeps the order the values were written in.'
     }
 ];
 

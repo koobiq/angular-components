@@ -125,6 +125,18 @@ describe(SCHEMATIC_NAME, () => {
         expect(messages.join('\n')).not.toContain('read them as calls');
     });
 
+    it('reports a sortComparator, whose third argument changed', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const messages = collectLogs();
+
+        appTree.overwrite(ts, 'const template = `<kbq-tree-select [sortComparator]="byName" />`;\n');
+
+        await run(first);
+
+        expect(messages.join('\n')).toContain('third argument is every data node of the tree in panel order');
+    });
+
     it('reports a member that became protected', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

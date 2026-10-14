@@ -35,6 +35,7 @@ and a removed member has no replacement expression at all.
 | `.hiddenItemsText = …` and friends                                          | Bind the input — a signal member takes no assignment                  |
 | `.hiddenItemsText` and friends                                              | Read them as calls                                                    |
 | `.options` / `.tags` / `.overlayDir` / …                                    | Protected; use the open/close API, the inputs and `(selectionChange)` |
+| `sortComparator`                                                            | Its third argument is the tree's data nodes in panel order            |
 
 ## Notes with no call site to point at
 
@@ -47,6 +48,9 @@ and a removed member has no replacement expression at all.
 - The dead `{ provide: KbqTree, useExisting: KbqTreeSelect }` provider is gone. `KbqTreeSelect` never
   satisfied `KbqTree` structurally, so anything injecting `KbqTree` from inside a tree-select was
   getting an object that only looked right.
+- A `multiple` value is ordered by the panel, collapsed branches included, instead of the order it
+  was written in. `[sortComparator]` gets two selected data nodes and every data node of the tree in
+  panel order; `() => 0` keeps the write order.
 - The component renders a host `id` and carries combobox ARIA, so the form field label's `[attr.for]`
   resolves instead of dangling.
 
