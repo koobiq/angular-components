@@ -7,14 +7,14 @@ import {
     DestroyRef,
     effect,
     inject,
-    Injector,
     input,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { PristineChangeEvent, TouchedChangeEvent } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { delay } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { KBQ_FORM_FIELD } from './form-field';
 import { KbqHint } from './hint';
 
@@ -43,7 +43,6 @@ import { KbqHint } from './hint';
 export class KbqReactivePasswordHint extends KbqHint {
     private readonly formField = inject(KBQ_FORM_FIELD, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
-    private readonly injector = inject(Injector);
 
     /** Whether the form field control has an error. */
     readonly hasError = input(false, { transform: booleanAttribute });
@@ -71,18 +70,15 @@ export class KbqReactivePasswordHint extends KbqHint {
             this.updateColor();
         });
 
+        // `touched` and `pristine` are not signals and can change on their own (`markAllAsTouched()` on submit,
+        // `reset()` to the same value), so the color follows their events.
         afterNextRender(() => {
-            const control = this.formField?.control();
-
-            if (!control) return;
-
-            // The color follows `touched` and `pristine`, which the forms API updates in the same events that
-            // change the focus and the value, so it is read once those events are over.
-            toObservable(
-                computed(() => [control.focused(), control.value()]),
-                { injector: this.injector }
-            )
-                .pipe(delay(0), takeUntilDestroyed(this.destroyRef))
+            this.formField
+                ?.control()
+                ?.ngControl?.control?.events.pipe(
+                    filter((event) => event instanceof TouchedChangeEvent || event instanceof PristineChangeEvent),
+                    takeUntilDestroyed(this.destroyRef)
+                )
                 .subscribe(() => this.updateColor());
         });
     }

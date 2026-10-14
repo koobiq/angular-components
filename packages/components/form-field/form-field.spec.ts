@@ -13,6 +13,7 @@ import {
 import { By } from '@angular/platform-browser';
 import {
     CrossFieldErrorScope,
+    dispatchFakeEvent,
     ErrorStateMatcher,
     ESCAPE,
     KBQ_FORM_FIELD_REF,
@@ -824,8 +825,8 @@ describe(KbqFormField.name, () => {
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
-        // `hasError` stays true for an already invalid control, so the color is escalated by the `delay(0)`
-        // handler instead of the effect that follows `hasError`.
+        // `hasError` stays true for an already invalid control, so the color is escalated by the control turning dirty
+        // instead of the effect that follows `hasError`.
         await vi.advanceTimersByTimeAsync(0);
         fixture.detectChanges();
 
@@ -846,6 +847,43 @@ describe(KbqFormField.name, () => {
         await fixture.whenStable();
 
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
+    });
+
+    it('should color KbqReactivePasswordHint as error once an empty invalid control is marked as touched', async () => {
+        vi.useFakeTimers();
+        const fixture = createComponent(PasswordFormField);
+        const hint = getReactivePasswordHintDebugElement(fixture.debugElement).nativeElement;
+
+        await vi.runAllTimersAsync();
+        fixture.detectChanges();
+
+        expect(hint.classList).toContain('kbq-contrast-fade');
+
+        fixture.componentInstance.formControl.markAllAsTouched();
+        await vi.runAllTimersAsync();
+        fixture.detectChanges();
+
+        expect(hint.classList).toContain('kbq-error');
+    });
+
+    it('should fade KbqReactivePasswordHint again once the touched control is reset to the same value', async () => {
+        vi.useFakeTimers();
+        const fixture = createComponent(PasswordFormField);
+        const input = getPasswordInputNativeElement(fixture.debugElement);
+        const hint = getReactivePasswordHintDebugElement(fixture.debugElement).nativeElement;
+
+        dispatchFakeEvent(input, 'focus');
+        dispatchFakeEvent(input, 'blur');
+        await vi.runAllTimersAsync();
+        fixture.detectChanges();
+
+        expect(hint.classList).toContain('kbq-error');
+
+        fixture.componentInstance.formControl.reset('');
+        await vi.runAllTimersAsync();
+        fixture.detectChanges();
+
+        expect(hint.classList).toContain('kbq-contrast-fade');
     });
 
     it('should add .kbq-form-field_in-overlay for KbqFormField', () => {
