@@ -748,13 +748,14 @@ export class KbqAutocompleteTrigger
 
         const inputValue = toDisplay != null ? toDisplay : '';
 
-        // Within a form field the value goes through the control, which writes it to the element itself.
+        // Written at once, because the text is read back from the element right after. The form field control is
+        // told as well: it would otherwise pick the change up only at its next check.
+        this.elementRef.nativeElement.value = inputValue;
+
         const controlValue = this.formField?.control().value;
 
         if (isWritableSignal(controlValue)) {
             controlValue.set(inputValue);
-        } else {
-            this.elementRef.nativeElement.value = inputValue;
         }
 
         this.previousValue = inputValue;
