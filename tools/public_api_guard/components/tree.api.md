@@ -428,6 +428,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     set checkboxState(value: KbqPseudoCheckboxState);
     // (undocumented)
     readonly checkboxThirdState: _angular_core.InputSignal<boolean>;
+    protected checkedDisabled: boolean;
     // (undocumented)
     descendantsAllSelected(): boolean;
     // (undocumented)

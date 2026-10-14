@@ -111,13 +111,13 @@ let uniqueIdCounter: number = 0;
         '[class.kbq-tree-option_multiple]': 'tree.multiple',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-focused]': 'hasFocus',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'checkedDisabled',
         '[class.kbq-action-button-focused]': 'actionButton()?.active',
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
-        '[attr.aria-disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'checkedDisabled || null',
         '[attr.aria-expanded]': 'ariaExpanded',
-        '[attr.aria-level]': 'level + 1',
+        // `aria-level` comes from `KbqTreeNode`: a second binding here would read `level` twice.
         '[attr.aria-checked]': 'ariaChecked',
         '[attr.aria-selected]': 'ariaSelected',
         '(focusin)': 'focus()',
@@ -212,8 +212,17 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         return this.disabledInput() || this.tree.disabled || this.tree.treeControl.isDisabled(this.data);
     }
 
-    /** `disabled` as this view last saw it: the tree control's `isDisabled` predicate gives no notice of a change. */
-    private checkedDisabled = false;
+    /**
+     * `disabled` as of the last check, which the host bindings read: the tree control's `isDisabled` predicate gives
+     * no notice of a change and may be costly, so a check asks it once.
+     */
+    protected checkedDisabled = false;
+
+    // Values of the ARIA host bindings as of the last check, resolved by `ngDoCheck`.
+    private checkedAriaExpanded: boolean | null = null;
+    private checkedAriaSelected: boolean | null = null;
+    private checkedSelectAllState: string | null = null;
+    private checkedCheckboxRow = false;
 
     /**
      * Whether the option can be selected by user interaction (click, keyboard, select all).
@@ -322,18 +331,14 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     private readonly checkbox = signal<KbqPseudoCheckboxState>('unchecked');
 
     /**
-     * `aria-expanded` of the row, reported for every branch and omitted on a leaf.
+     * `aria-expanded` of the row as of the last check, reported for every branch and omitted on a leaf.
      *
      * Deliberately not `isExpandable`, which also asks whether the toggle is operable: filtering
      * disables every toggle while leaving the matched branches expanded, and a branch that stops
      * reporting `aria-expanded` is announced as a leaf while its children are on screen.
      */
     protected get ariaExpanded(): boolean | null {
-        if (this.selectAllRow()) {
-            return null;
-        }
-
-        return this.tree.treeControl.isExpandable(this.data) ? this.isExpanded : null;
+        return this.checkedAriaExpanded;
     }
 
     /**
@@ -341,16 +346,14 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
      * row that drives it. `null` for a plain option, which reports `aria-selected` instead.
      */
     protected get ariaChecked(): string | null {
-        if (this.selectAllRow()) {
-            return this.toAriaChecked(this.tree.selectAllState);
-        }
-
-        return this.showCheckbox ? this.toAriaChecked(this.checkboxState) : null;
+        // The checkbox state is read here rather than in `ngDoCheck`: this read is what brings the row back once the
+        // state changes.
+        return this.checkedCheckboxRow ? this.toAriaChecked(this.checkboxState) : this.checkedSelectAllState;
     }
 
-    /** `aria-selected` of the row. Options with a checkbox report `aria-checked` instead. */
+    /** `aria-selected` of the row as of the last check. Options with a checkbox report `aria-checked` instead. */
     protected get ariaSelected(): boolean | null {
-        return this.selectAllRow() || this.showCheckbox ? null : this.selected;
+        return this.checkedAriaSelected;
     }
 
     constructor() {
@@ -367,6 +370,23 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         if (disabled !== this.checkedDisabled) {
             this.checkedDisabled = disabled;
             this.changeDetectorRef.markForCheck();
+        }
+
+        // Resolved here, untracked: a tree checks its rows under the one reactive consumer of its view, where a signal
+        // read again costs a walk over every signal read before it. The host bindings read each signal of the row once
+        // (`selected`, `checkboxState`, the mode through `tree.multiple`), which brings the row back here on a change.
+        if (this.selectAllRow()) {
+            this.checkedAriaExpanded = null;
+            this.checkedAriaSelected = null;
+            this.checkedCheckboxRow = false;
+            this.checkedSelectAllState = this.toAriaChecked(this.tree.selectAllState);
+        } else {
+            const showCheckbox = this.showCheckbox;
+
+            this.checkedAriaExpanded = this.tree.treeControl.isExpandable(this.data) ? this.isExpanded : null;
+            this.checkedAriaSelected = showCheckbox ? null : this.selected;
+            this.checkedCheckboxRow = showCheckbox;
+            this.checkedSelectAllState = null;
         }
     }
 

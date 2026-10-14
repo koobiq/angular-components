@@ -2237,6 +2237,149 @@ describe('KbqTreeSelection', () => {
             });
         });
 
+        describe('options disabled by the tree control', () => {
+            beforeEach(() => configureKbqTreeTestingModule());
+
+            it('should repaint an option once its isDisabled changes', async () => {
+                vi.useFakeTimers();
+
+                const fixture = TestBed.createComponent(KbqTreeAppMultipleCheckbox);
+                const disabledNames: string[] = [];
+
+                fixture.componentInstance.treeControl.isDisabled = (node) => disabledNames.includes(node.name);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                const row = getNodeByText(fixture.nativeElement, 'Documents');
+
+                disabledNames.push('Documents');
+                fixture.detectChanges();
+
+                expect(row.classList).toContain('kbq-disabled');
+                expect(row.getAttribute('aria-disabled')).toBe('true');
+                expect(row.querySelector('kbq-pseudo-checkbox')!.classList).toContain('kbq-disabled');
+
+                disabledNames.pop();
+                fixture.detectChanges();
+
+                expect(row.classList).not.toContain('kbq-disabled');
+                expect(row.hasAttribute('aria-disabled')).toBe(false);
+                expect(row.querySelector('kbq-pseudo-checkbox')!.classList).not.toContain('kbq-disabled');
+            });
+
+            it('should ask isDisabled once per option on a check', () => {
+                const fixture = TestBed.createComponent(TreeSelectionFocusStates);
+                const isDisabled = vi.fn((_node: FileFlatNode) => false);
+
+                fixture.componentInstance.treeControl.isDisabled = isDisabled;
+                fixture.detectChanges();
+                isDisabled.mockClear();
+
+                fixture.detectChanges();
+
+                expect(isDisabled).toHaveBeenCalledTimes(getNodes(fixture.nativeElement).length);
+            });
+        });
+
+        // Changes made in code, followed by no check of the view declaring the options: only what the rows track
+        // brings them back.
+        describe('rows updated without an event', () => {
+            const treeOf = (fixture: ComponentFixture<unknown>): KbqTreeSelection =>
+                fixture.debugElement.query(By.directive(KbqTreeSelection)).componentInstance;
+
+            const optionOf = (fixture: ComponentFixture<unknown>, name: string): KbqTreeOption =>
+                treeOf(fixture).renderedOptions.find((option) => option.viewValue === name)!;
+
+            beforeEach(() => configureKbqTreeTestingModule());
+
+            // Between two multiple modes, so the selection model is kept and nothing but the mode changes.
+            it('should follow the selection mode', async () => {
+                const fixture = TestBed.createComponent(KbqTreeAppMultiple);
+
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const row = getNodeByText(fixture.nativeElement, 'Pictures');
+
+                treeOf(fixture).multipleMode = MultipleMode.CHECKBOX;
+                await fixture.whenStable();
+
+                expect(row.getAttribute('aria-checked')).toBe('false');
+                expect(row.hasAttribute('aria-selected')).toBe(false);
+
+                treeOf(fixture).multipleMode = MultipleMode.KEYBOARD;
+                await fixture.whenStable();
+
+                expect(row.hasAttribute('aria-checked')).toBe(false);
+                expect(row.getAttribute('aria-selected')).toBe('false');
+            });
+
+            it('should follow the selection', async () => {
+                const fixture = TestBed.createComponent(TreeSelectionFocusStates);
+
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                optionOf(fixture, 'Pictures').selected = true;
+                await fixture.whenStable();
+
+                expect(getNodeByText(fixture.nativeElement, 'Pictures').getAttribute('aria-selected')).toBe('true');
+            });
+
+            it('should follow the checkbox state of a branch', async () => {
+                const fixture = TestBed.createComponent(TreeWithThirdStateCheckbox);
+
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const { treeControl } = fixture.componentInstance;
+
+                treeControl.expand(treeControl.dataNodes.find((node) => node.name === 'Pictures')!);
+                await fixture.whenStable();
+
+                optionOf(fixture, 'Sun').selected = true;
+                await fixture.whenStable();
+
+                expect(getNodeByText(fixture.nativeElement, 'Pictures').getAttribute('aria-checked')).toBe('mixed');
+            });
+
+            it('should follow the select-all state', async () => {
+                const fixture = TestBed.createComponent(KbqTreeAppMultiple);
+
+                fixture.componentInstance.selectAllEnabled = true;
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const tree = treeOf(fixture);
+                const row = fixture.nativeElement.querySelector('.kbq-tree-option_select-all');
+
+                tree.selectionModel.select(...tree.treeControl.dataNodes);
+                await fixture.whenStable();
+
+                expect(row.getAttribute('aria-checked')).toBe('true');
+
+                tree.selectionModel.clear();
+                await fixture.whenStable();
+
+                expect(row.getAttribute('aria-checked')).toBe('false');
+            });
+
+            it('should follow the expansion', async () => {
+                const fixture = TestBed.createComponent(TreeSelectionFocusStates);
+
+                fixture.detectChanges();
+                await fixture.whenStable();
+
+                const { treeControl } = fixture.componentInstance;
+
+                treeControl.expand(treeControl.dataNodes.find((node) => node.name === 'Pictures')!);
+                await fixture.whenStable();
+
+                expect(getNodeByText(fixture.nativeElement, 'Pictures').getAttribute('aria-expanded')).toBe('true');
+            });
+        });
+
         describe('noUnselectLast', () => {
             let fixture: ComponentFixture<KbqTreeAppMultiple>;
             let component: KbqTreeAppMultiple;
