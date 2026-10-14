@@ -62,6 +62,10 @@ export abstract class KbqPopUp implements OnDestroy {
 
         this.onHideSubject.complete();
         this.hovered.complete();
+        // Completed here rather than left dangling: the trigger subscribes to it once per show and keeps that
+        // subscription for its own lifetime, so a trigger that outlives many pop-ups would otherwise accumulate
+        // one live subscriber per show.
+        this.visibleChange.complete();
     }
 
     isTemplateRef(value: any): boolean {

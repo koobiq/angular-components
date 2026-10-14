@@ -1,5 +1,6 @@
 import { coerceElement } from '@angular/cdk/coercion';
 import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
+import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
 import { Component, DebugElement, ElementRef, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
@@ -7,6 +8,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
 import { dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT } from '@koobiq/components/core';
+import { Subject } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
@@ -393,6 +395,26 @@ describe('KbqPopover', () => {
             expect(content).toEqual(componentInstance.context.content);
             expect(footer).toEqual(componentInstance.context.footer);
         }));
+    });
+
+    describe('leaks', () => {
+        it('should unsubscribe from the global scroll stream on destroy', () => {
+            TestBed.configureTestingModule({ imports: [PopoverSimple, NoopAnimationsModule] });
+
+            const scrolled = new Subject<CdkScrollable | void>();
+
+            jest.spyOn(TestBed.inject(ScrollDispatcher), 'scrolled').mockReturnValue(scrolled);
+
+            const fixture = TestBed.createComponent(PopoverSimple);
+
+            fixture.detectChanges();
+
+            expect(scrolled.observed).toBe(true);
+
+            fixture.destroy();
+
+            expect(scrolled.observed).toBe(false);
+        });
     });
 });
 
