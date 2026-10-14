@@ -276,7 +276,7 @@ export class KbqListSelection<T = any> implements AfterContentChecked, AfterCont
     get showCheckbox(): boolean;
     protected get showSelectAll(): boolean;
     get tabIndex(): number;
-    readonly tabIndexInput: _angular_core.InputSignal<number | undefined>;
+    readonly tabIndexInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     // (undocumented)
     toggleFocusedOption(): void;
     toggleSelectAll(): void;

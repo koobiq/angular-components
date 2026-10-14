@@ -697,6 +697,30 @@ describe('KbqListSelection without forms', () => {
 
             expect(selectionList.componentInstance.tabIndex).toBe(-1);
         });
+
+        it('should enable the list once the bound disabled turns undefined', () => {
+            const fixture = TestBed.createComponent(SelectionListWithTabindexInDisabledState);
+            const list: KbqListSelection = fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            fixture.componentInstance.disabled = undefined;
+            fixture.detectChanges();
+
+            expect(list.disabled).toBe(false);
+        });
+
+        it('should read a static tabindex as a number', () => {
+            const fixture = TestBed.createComponent(SelectionListWithStaticTabindex);
+
+            fixture.detectChanges();
+
+            const list: KbqListSelection = fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+
+            expect(list.tabIndex).toBe(3);
+            expect(list.userTabIndex).toBe(3);
+        });
     });
 
     describe('focus states', () => {
@@ -759,6 +783,42 @@ describe('KbqListSelection without forms', () => {
             fixture.detectChanges();
 
             expect(options[0].nativeElement.className).not.toContain('kbq-focused');
+        });
+    });
+
+    describe('focusable content of an option', () => {
+        let fixture: ComponentFixture<SelectionListWithFocusableContent>;
+        let option: HTMLElement;
+
+        beforeEach(async () => {
+            TestBed.configureTestingModule({ imports: [KbqListModule] });
+
+            fixture = TestBed.createComponent(SelectionListWithFocusableContent);
+            fixture.detectChanges();
+
+            option = fixture.nativeElement.querySelector('kbq-list-option');
+
+            option.focus();
+            await fixture.whenStable();
+            fixture.detectChanges();
+        });
+
+        it('should leave the focus on an element nested in the focused option', async () => {
+            const input: HTMLInputElement = option.querySelector('input')!;
+
+            input.focus();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(input);
+        });
+
+        it('should take the focus back from outside while the blur of the option is pending', () => {
+            fixture.nativeElement.querySelector('button').focus();
+
+            fixture.debugElement.query(By.directive(KbqListOption)).componentInstance.focus();
+
+            expect(document.activeElement).toBe(option);
         });
     });
 
@@ -1151,6 +1211,38 @@ describe('KbqListSelection with forms', () => {
             expect(listOptions[1].selected).toBe(true);
 
             expect(listOptions[2].selected).toBe(true);
+        });
+    });
+
+    describe('and formControl next to a bound disabled', () => {
+        let fixture: ComponentFixture<SelectionListWithFormControlAndDisabledBinding>;
+        let list: KbqListSelection;
+
+        beforeEach(() => {
+            // Angular warns about `disabled` next to a reactive form directive, which is the combination under test.
+            vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+            fixture = TestBed.createComponent(SelectionListWithFormControlAndDisabledBinding);
+            fixture.detectChanges();
+
+            list = fixture.debugElement.query(By.directive(KbqListSelection)).componentInstance;
+        });
+
+        it('should stay disabled by a control that starts disabled', () => {
+            expect(list.disabled).toBe(true);
+            expect(list.tabIndex).toBe(-1);
+        });
+
+        it('should follow whichever of the two changed last', () => {
+            fixture.componentInstance.control.enable();
+            fixture.detectChanges();
+
+            expect(list.disabled).toBe(false);
+
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(list.disabled).toBe(true);
         });
     });
 
@@ -2619,6 +2711,14 @@ class SelectionListWithActionButtonTooltip {
 class SelectionListWithTabindexAttr {}
 
 @Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection tabIndex="3" />
+    `
+})
+class SelectionListWithStaticTabindex {}
+
+@Component({
     imports: [
         KbqListModule
     ],
@@ -2628,7 +2728,35 @@ class SelectionListWithTabindexAttr {}
 })
 class SelectionListWithTabindexInDisabledState {
     tabIndex: number;
-    disabled: boolean;
+    disabled: boolean | undefined;
+}
+
+@Component({
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection>
+            <kbq-list-option [value]="'opt1'">
+                Option 1
+                <input aria-label="Note" />
+            </kbq-list-option>
+            <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
+        </kbq-list-selection>
+        <button type="button">After</button>
+    `
+})
+class SelectionListWithFocusableContent {}
+
+@Component({
+    imports: [KbqListModule, ReactiveFormsModule],
+    template: `
+        <kbq-list-selection [disabled]="disabled" [formControl]="control">
+            <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
+        </kbq-list-selection>
+    `
+})
+class SelectionListWithFormControlAndDisabledBinding {
+    disabled = false;
+    readonly control = new UntypedFormControl({ value: [], disabled: true });
 }
 
 @Component({
