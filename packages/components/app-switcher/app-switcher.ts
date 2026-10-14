@@ -442,6 +442,9 @@ export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewChecke
         const keyCode = event.keyCode;
 
         if (keyCode === ESCAPE) {
+            // Spent by a control inside, such as a tooltip closing on it: one key closes one layer.
+            if (event.defaultPrevented) return;
+
             // Stop here so Escape closes only this popup instead of bubbling into overlays opened
             // earlier (mirrors KbqDropdown.handleKeydown).
             event.preventDefault();
