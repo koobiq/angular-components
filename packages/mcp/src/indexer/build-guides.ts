@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { compare, isRelease, sortReleases } from '../semver.js';
 import type { Guide } from '../types.js';
-import { dataDir, git, readBlobs, repoRoot, requireTags } from './git.js';
+import { dataDir, git, readBlobs, repoRoot, requireTags, stagedVersion } from './git.js';
 import { parseGuide, titleFromId } from './parse-guide.js';
 
 /**
@@ -120,6 +120,8 @@ export const latestRelease = (repo: string): string | null =>
 export const buildGuides = (repo: string): Guide[] => {
     const tag = latestRelease(repo);
     const guides = new Map<string, Guide>();
+    const { version } = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf-8')) as { version: string };
+    const staged = stagedVersion(repo, '18.0.0', version);
 
     const take = (id: string, named: 'en' | 'ru' | null, since: string, source: string, unreleased?: true): void => {
         const lang = named ?? detectLang(source);
@@ -142,7 +144,10 @@ export const buildGuides = (repo: string): Guide[] => {
         });
     };
 
-    if (tag) {
+    // A release being staged has no tag yet, so "the newest release" is this working tree, not the
+    // previous tag. Reading the previous tag here would ship the last release's guides and flag the
+    // new release's own changes as unreleased.
+    if (tag && !staged) {
         const located = locate(git(repo, ['ls-tree', '-r', '--name-only', tag]).split('\n').filter(Boolean));
 
         for (const [path, source] of readBlobs(
@@ -157,14 +162,13 @@ export const buildGuides = (repo: string): Guide[] => {
     }
 
     // Anything the newest release does not have. `localization` is here today: written, reviewed,
-    // not yet released. `take` is keyed, so this never overwrites a released text.
+    // not yet released. `take` is keyed, so this never overwrites a released text. When a release is
+    // being staged, the working tree *is* that release, so nothing here is unreleased.
     //
     // Untracked files count, as long as they are not ignored. A guide written this morning is not
     // in `git ls-files` yet, and the alternative is a server that silently knows nothing about it
     // until someone remembers to commit. Nothing arbitrary gets in: `locate` only returns ids that
     // `PUBLIC_GUIDES` names, and everything taken here is flagged `unreleased`.
-    const { version } = JSON.parse(readFileSync(join(repo, 'package.json'), 'utf-8')) as { version: string };
-
     const onDisk = [
         ...git(repo, ['ls-files']).split('\n'),
         ...git(repo, ['ls-files', '--others', '--exclude-standard']).split('\n')
@@ -173,7 +177,7 @@ export const buildGuides = (repo: string): Guide[] => {
     for (const { id, lang, path } of locate(onDisk)) {
         const full = join(repo, path);
 
-        if (existsSync(full)) take(id, lang, version, readFileSync(full, 'utf-8'), true);
+        if (existsSync(full)) take(id, lang, version, readFileSync(full, 'utf-8'), staged ? undefined : true);
     }
 
     return [...guides.values()].sort((a, b) => a.id.localeCompare(b.id) || a.lang.localeCompare(b.lang));

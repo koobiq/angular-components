@@ -121,6 +121,7 @@
         "husky": "^9.1.7",
         "inquirer": "^14.2.3",
         "jsdom": "^30.1.3",
+        "json5": "^2.2.3",
         "license-checker": "^25.0.1",
         "lint-staged": "^17.6.0",
         "luxon": "^3.7.2",
@@ -185,7 +186,7 @@
         "build:package-docs-content": "ts-node --project ./tools/package-docs-content/tsconfig.json ./tools/package-docs-content/package-docs-content.ts",
         "styles:build-all": "ts-node --project tools/scss-compiler/tsconfig.json tools/scss-compiler/scss-bundle.ts",
         "build:schematics": "rimraf packages/schematics/dist && rollup --failAfterWarnings -c packages/schematics/rollup.config.js && node ./packages/schematics/scripts/copy-meta-to-dist.js",
-        "build:mcp": "yarn build:mcp:data && tsc -p packages/mcp/tsconfig.json",
+        "build:mcp": "tsc -p packages/mcp/tsconfig.json && node packages/mcp/scripts/copy-to-dist.cjs",
         "build:mcp:data": "tsx packages/mcp/src/indexer/build-index.ts && tsx packages/mcp/src/indexer/build-guides.ts && tsx packages/mcp/src/indexer/build-history.ts",
         "test:mcp": "tsx --test packages/mcp/test/*.test.ts",
         "mcp:probe": "tsx packages/mcp/test/probe-stdio.ts",
@@ -337,11 +338,13 @@
             "components-experimental",
             "angular-luxon-adapter",
             "angular-moment-adapter",
-            "cli"
+            "cli",
+            "mcp"
         ],
         "hooks": {
             "post-version-bump": [
-                "yarn run release:extract-docs-meta"
+                "yarn run release:extract-docs-meta",
+                "yarn run build:mcp:data"
             ]
         }
     }

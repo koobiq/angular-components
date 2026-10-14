@@ -9,7 +9,7 @@ import type { PackageRef } from './project.js';
  * The compiled CSS is the source, not the `properties/*.json5` behind it: the CSS carries the
  * final custom-property names, the resolved values and the `DEPRECATED` marker, so nothing has to
  * reproduce the token build's naming transform. The json5 sources would add the reference chain
- * (`{plt.slate.1}`) and nothing else — see TODO.md.
+ * (`{plt.slate.1}`) and nothing else.
  */
 
 export type TokenTheme = 'light' | 'dark' | 'font';

@@ -24,3 +24,6 @@ runs:
     - name: Build @koobiq/schematics
       shell: bash
       run: yarn run build:schematics
+    - name: Build @koobiq/mcp
+      shell: bash
+      run: yarn run build:mcp

@@ -1,6 +1,7 @@
 import { execFileSync } from 'node:child_process';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { compare, isRelease, sortReleases } from '../semver.js';
 
 /** Reading a checkout's history. Shared so the byte/character trap below is solved once. */
 
@@ -28,6 +29,29 @@ export const git = (repo: string, args: string[], input?: string): string => {
     } catch {
         return '';
     }
+};
+
+/** Newest release tag at or above `lowest`, or null when the checkout has none. */
+export const newestRelease = (repo: string, lowest: string): string | null =>
+    sortReleases(
+        git(repo, ['tag', '--list'])
+            .split('\n')
+            .map((line) => line.trim())
+            .filter((tag) => isRelease(tag) && compare(tag, lowest) >= 0)
+    ).at(-1) ?? null;
+
+/**
+ * The release this working tree is being staged as, or null when it is not one.
+ *
+ * `build:mcp:data` runs in the release pipeline after the version bump but before the release tag
+ * exists. A version ahead of the newest tag is how the builders tell "the working tree *is* the
+ * release being staged" apart from the ordinary mid-development state, where the version equals the
+ * newest tag and the working tree must not be mistaken for a release.
+ */
+export const stagedVersion = (repo: string, lowest: string, version: string): string | null => {
+    const newest = newestRelease(repo, lowest);
+
+    return newest && compare(version, newest) > 0 ? version : null;
 };
 
 /**

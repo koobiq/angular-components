@@ -172,8 +172,10 @@ const register = (server: McpServer, catalog: Catalog): void => {
 
 const main = async (): Promise<void> => {
     const catalog = loadCatalog();
+    // `{{VERSION}}` is substituted with the root manifest's version by `scripts/copy-to-dist.js`
+    // when the package is assembled for release; source runs report the placeholder.
     const server = new McpServer(
-        { name: 'koobiq', version: '0.0.0' },
+        { name: 'koobiq', version: '{{VERSION}}' },
         { instructions: 'Koobiq design system reference. Resolve names here instead of guessing them.' }
     );
 

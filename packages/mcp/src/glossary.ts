@@ -8,8 +8,7 @@
  *
  * Icon tags are different: they are authored, bilingual, and incomplete. Nothing in 11.7.1 is
  * tagged «корзина», though that is what a Russian speaker calls the trash icon — its tags are
- * `удалить`, `убрать`, `мусор`. Entries here paper over that, but the real fix is upstream, in the
- * tags themselves; see TODO.md.
+ * `удалить`, `убрать`, `мусор`. Entries here paper over that; the real fix is upstream, in the tags.
  *
  * Deliberately short. Every entry is a guess about what someone meant, and a long list of guesses
  * is how a search starts confidently answering the wrong question.
