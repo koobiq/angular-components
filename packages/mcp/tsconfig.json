@@ -1,0 +1,23 @@
+{
+    // Standalone rather than extending the repository's Angular configs: this package is a Node
+    // process, not a library compiled by `ng`. `NodeNext` is what lets the emitted ESM resolve its
+    // own relative imports at runtime, which `bundler` resolution would leave unresolvable.
+    "compilerOptions": {
+        "target": "ES2023",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "lib": ["ES2023"],
+        "types": ["node"],
+        "outDir": "dist",
+        "rootDir": "src",
+        "strict": true,
+        // The reason the `.d.ts` reader can trust `match[1]`: every indexed access is checked.
+        "noUncheckedIndexedAccess": true,
+        "declaration": false,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true
+    },
+    "include": ["src/**/*.ts"]
+}

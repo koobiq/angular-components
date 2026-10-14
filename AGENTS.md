@@ -35,7 +35,8 @@ packages/
 ├── angular-luxon-adapter/     # Luxon date adapter
 ├── angular-moment-adapter/    # Moment date adapter
 ├── schematics/                # ng-add and ng-update migrations, shipped inside @koobiq/components
-└── cli/                       # Release management CLI (@koobiq/cli)
+├── cli/                       # Release management CLI (@koobiq/cli)
+└── mcp/                       # MCP server (@koobiq/mcp) — serves this repository's API, guides and examples to a coding agent
 apps/docs/                     # Documentation site (koobiq.io): Angular SSR + prerender
 tools/                         # Build, lint, docs and release tooling; tools/public_api_guard holds the API golden files
 docs/guides/                   # Contributor guides (testing, releasing) and the guide pages of the docs site
@@ -78,6 +79,8 @@ yarn run build:angular-luxon-adapter   # Build Luxon date adapter
 yarn run build:angular-moment-adapter  # Build Moment date adapter
 yarn run build:cli                     # Build release management CLI
 yarn run build:schematics              # Build Angular CLI schematics
+yarn run build:mcp                     # Build the MCP server: compile src → dist and assemble dist/mcp with the committed data/
+yarn run build:mcp:data                # Regenerate the committed packages/mcp/data/ (run by the release pipeline, not in CI)
 yarn run styles:build-all              # Compile all SCSS into dist/scss-compiled and the prebuilt themes into dist/components/prebuilt-themes
 yarn run docs                          # Build every package, generate docs content and examples, then serve the docs site
 yarn run docs:build                    # Build docs app for production (prerendered)
@@ -118,6 +121,7 @@ yarn run unit:schematics # Run schematics tests
 yarn run unit:cli
 yarn run unit:koobiq-docs      # Docs app specs
 yarn run unit:tools            # Specs under tools/
+yarn run test:mcp              # MCP server; node:test, not Jest, so it is not part of unit:all
 npx jest "<TEST_PATH_PATTERN>" # Run specific Jest tests (e.g., npx jest packages/components/button/button.component.spec.ts)
 npx jest "<TEST_PATH_PATTERN>" -t "<test name pattern>"
 
@@ -193,15 +197,15 @@ The guard reads `dist/components/<name>/index.d.ts`, so build the package first;
 
 Every pull request runs these workflows:
 
-| Workflow                          | What it runs                                                                                                                             |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-tokens-data` |
-| Unit tests                        | `styles:build-all`, then every `unit:*` script except `unit:all`                                                                         |
-| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                         |
-| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`         |
-| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`          |
-| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                   |
-| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                               |
+| Workflow                          | What it runs                                                                                                                                 |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-tokens-data`     |
+| Unit tests                        | `styles:build-all`, then every `unit:*` script except `unit:all`                                                                             |
+| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                             |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs`, `check-llms` and `test:mcp` |
+| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`              |
+| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                       |
+| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                   |
 
 A docs preview is deployed to Firebase for pull requests opened from this repository.
 
@@ -245,7 +249,7 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 - A live example is `<Example id="alert-overview" />`, with the key from `example-module.ts`. The build fails, with the position in the file, on what `tools/docs-pages/compile-page.ts` cannot turn into Angular: an unknown example, imports and `{expressions}`, HTML outside its short list of elements (write the rest in Markdown). MDX syntax applies: comments are `{/* */}`, `<br />` needs the slash, a literal `{` or `<` is escaped with a backslash. The JSDoc of the public API goes through the same compiler in `docs:api-gen`, whose errors name the declaration: the same rules apply there, `{@link Name}` becomes inline code, a block of code has to stand on its own rather than inside a list or a quote, and an `@example` without a fence of its own is taken as TypeScript. Every overview or examples tab that `structure.ts` routes to needs a page. `docs:start:dev` rebuilds the pages on save.
 - `apps/docs/src/app/structure.ts` is the single source of the navigation (`hasApi`, `hasExamples`, `isNew` with an expiry date); the routes, the sitemap, the prerender route list and `llms.txt` are all derived from it.
 - Examples live in `packages/docs-examples/components/<name>/<example-name>/<example-name>-example.ts` with a `/** @title ... */` JSDoc, selector `<example-name>-example` and class `<ExampleName>Example`, registered in that folder's `index.ts` NgModule. After adding or renaming one, run `yarn run build:docs-examples-module` to regenerate the committed `packages/docs-examples/example-module.ts` and `packages/docs-examples/loader/index.ts` (the `@koobiq/docs-examples/loader` entry point, kept apart so the pages that show examples do not load it).
-- Committed generated files — never hand-edit: `packages/docs-examples/example-module.ts`, `packages/docs-examples/loader/index.ts`, `tools/public_api_guard/**`, `tools/check-public-api-any/baseline.json`, `tools/check-api-docs/baseline.json`, `apps/docs/src/llms.txt`, `apps/docs/src/sitemap.xml`, `apps/docs/src/prerender-routes.txt`, `apps/docs/src/app/seo-descriptions.ts`, `apps/docs/src/assets/versions.json`, `apps/docs/src/app/components/design-tokens-viewers/data/*.ts`. The docs metadata files are kept current in the branch that changes their source, because CI compares them: after a route is added, removed or renamed in `structure.ts`, run `yarn run docs:generate-sitemap`, `yarn run docs:generate-prerender-routes` and `yarn run docs:generate-llms` and commit the result (`apps/docs/src/app/page-paths.spec.ts` checks the first two, `check-llms` the last); `seo-descriptions.ts` follows the first paragraph of every overview, `unit:tools` checks it, and `yarn run docs:generate-seo-descriptions` regenerates it. the release CLI reruns the first three through `release:extract-docs-meta` after bumping the version; `versions.json` is left to the release.
+- Committed generated files — never hand-edit: `packages/docs-examples/example-module.ts`, `packages/docs-examples/loader/index.ts`, `tools/public_api_guard/**`, `tools/check-public-api-any/baseline.json`, `tools/check-api-docs/baseline.json`, `packages/mcp/data/**`, `apps/docs/src/llms.txt`, `apps/docs/src/sitemap.xml`, `apps/docs/src/prerender-routes.txt`, `apps/docs/src/app/seo-descriptions.ts`, `apps/docs/src/assets/versions.json`, `apps/docs/src/app/components/design-tokens-viewers/data/*.ts`. The docs metadata files are kept current in the branch that changes their source, because CI compares them: after a route is added, removed or renamed in `structure.ts`, run `yarn run docs:generate-sitemap`, `yarn run docs:generate-prerender-routes` and `yarn run docs:generate-llms` and commit the result (`apps/docs/src/app/page-paths.spec.ts` checks the first two, `check-llms` the last); `seo-descriptions.ts` follows the first paragraph of every overview, `unit:tools` checks it, and `yarn run docs:generate-seo-descriptions` regenerates it. the release CLI reruns the first three through `release:extract-docs-meta` after bumping the version; `versions.json` is left to the release.
 
 ### Schematics
 

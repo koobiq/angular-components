@@ -32,3 +32,7 @@ apps/docs/src/app/seo-descriptions.ts
 
 # ignore CODEOWNERS to keep its column alignment
 /.github/CODEOWNERS
+
+# ignore the MCP server's generated indexes and build output
+/packages/mcp/data/
+/packages/mcp/dist/
