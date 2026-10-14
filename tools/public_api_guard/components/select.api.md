@@ -199,7 +199,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     onAttached(): void;
     onBlur(): void;
     onChange: (value: any) => void;
-    onContainerClick(): void;
+    onContainerClick(event?: MouseEvent): void;
     onFocus(): void;
     onRemoveMatcherItem(option: KbqOptionBase, $event: Event): void;
     readonly onSelectAll: _angular_core.OutputEmitterRef<KbqSelectAllEvent<KbqOption, KbqSelect>>;
@@ -279,7 +279,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterViewChecked, Af
     get triggerValues(): KbqOptionBase[];
     readonly triggerValuesLimit: _angular_core.InputSignal<number>;
     updateErrorState(): void;
-    readonly value: _angular_core.Signal<any>;
+    readonly value: _angular_core.WritableSignal<any>;
     readonly valueChange: _angular_core.OutputEmitterRef<any>;
     readonly valueInput: _angular_core.InputSignal<any>;
     protected readonly viewportMargin: number;
