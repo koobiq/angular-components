@@ -18,6 +18,7 @@ import {
     inject,
     InjectionToken,
     input,
+    linkedSignal,
     output,
     QueryList,
     signal,
@@ -88,6 +89,16 @@ export class KbqTreeOptionChange {
 }
 
 let uniqueIdCounter: number = 0;
+
+/** What the tree control's predicates say about a row, as its host bindings show it. */
+interface TreeOptionPredicates {
+    disabled: boolean;
+    /** `aria-expanded`: whether a branch is expanded, `null` on a leaf. */
+    expanded: boolean | null;
+}
+
+const samePredicates = (a: TreeOptionPredicates, b: TreeOptionPredicates): boolean =>
+    a.disabled === b.disabled && a.expanded === b.expanded;
 
 @Component({
     selector: 'kbq-tree-option',
@@ -219,8 +230,14 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
      */
     protected checkedDisabled = false;
 
+    /**
+     * What the tree control's `isDisabled` and `isExpandable` say about the row. Derived, so a predicate reading a
+     * signal brings the row back once that signal changes; `ngDoCheck` sets it on every check for one reading plain
+     * state. Read by a single host binding, see `ariaExpanded`.
+     */
+    private readonly predicates = linkedSignal(() => this.resolvePredicates(), { equal: samePredicates });
+
     // Values of the ARIA host bindings as of the last check, resolved by `ngDoCheck`.
-    private checkedAriaExpanded: boolean | null = null;
     private checkedAriaSelected: boolean | null = null;
     private checkedSelectAllState: string | null = null;
     private checkedCheckboxRow = false;
@@ -339,7 +356,10 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
      * reporting `aria-expanded` is announced as a leaf while its children are on screen.
      */
     protected get ariaExpanded(): boolean | null {
-        return this.checkedAriaExpanded;
+        // The one tracked read of `predicates`, which subscribes the row to the signals the predicates read: the
+        // other bindings read the snapshot `ngDoCheck` takes along with it, as a second read of this row's own signal
+        // would walk the producers of every row checked before it.
+        return this.predicates().expanded;
     }
 
     /**
@@ -366,25 +386,27 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     ngDoCheck(): void {
-        const disabled = this.disabled;
+        // Asked once per check, for a predicate reading plain state; a set to an equal value does nothing.
+        const predicates = this.resolvePredicates();
 
-        if (disabled !== this.checkedDisabled) {
-            this.checkedDisabled = disabled;
+        this.predicates.set(predicates);
+
+        if (predicates.disabled !== this.checkedDisabled) {
+            this.checkedDisabled = predicates.disabled;
             this.changeDetectorRef.markForCheck();
         }
 
         // Resolved here, untracked: a tree checks its rows under the one reactive consumer of its view, where a signal
         // read again costs a walk over every signal read before it. The host bindings read each signal of the row once
-        // (`selected`, `checkboxState`, the mode through `tree.multiple`), which brings the row back here on a change.
+        // (`selected`, `checkboxState`, `predicates`, the mode through `tree.multiple`), which brings the row back here
+        // on a change.
         if (this.selectAllRow()) {
-            this.checkedAriaExpanded = null;
             this.checkedAriaSelected = null;
             this.checkedCheckboxRow = false;
             this.checkedSelectAllState = this.toAriaChecked(this.tree.selectAllState);
         } else {
             const showCheckbox = this.showCheckbox;
 
-            this.checkedAriaExpanded = this.tree.treeControl.isExpandable(this.data) ? this.isExpanded : null;
             this.checkedAriaSelected = showCheckbox ? null : this.selected;
             this.checkedCheckboxRow = showCheckbox;
             this.checkedSelectAllState = null;
@@ -628,5 +650,11 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     private toAriaChecked(state: KbqPseudoCheckboxState): string {
         return state === 'indeterminate' ? 'mixed' : `${state === 'checked'}`;
+    }
+
+    private resolvePredicates(): TreeOptionPredicates {
+        const branch = !this.selectAllRow() && this.tree.treeControl.isExpandable(this.data);
+
+        return { disabled: this.disabled, expanded: branch ? this.isExpanded : null };
     }
 }

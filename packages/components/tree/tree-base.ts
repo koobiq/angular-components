@@ -176,15 +176,16 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
         return this._dataSource;
     }
 
-    private _dataSource: DataSource<T> | Observable<T[]> | T[] | null;
+    private _dataSource: DataSource<T> | Observable<T[]> | T[] | null = null;
 
     constructor() {
-        // Switching the source drops the rendered nodes and resubscribes, which a bound value alone does not do.
+        // Switching the source drops the rendered nodes and resubscribes, which a bound value alone does not do. A
+        // binding back to `undefined` clears the tree as `null` does; an unbound input equals the initial `null`.
         effect(() => {
-            const dataSource = this.dataSourceInput();
+            const dataSource = this.dataSourceInput() ?? null;
 
             untracked(() => {
-                if (dataSource !== undefined && dataSource !== this._dataSource) this.switchDataSource(dataSource);
+                if (dataSource !== this._dataSource) this.switchDataSource(dataSource);
             });
         });
     }

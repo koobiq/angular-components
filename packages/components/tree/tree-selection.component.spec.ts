@@ -1541,6 +1541,27 @@ describe('KbqTreeSelection', () => {
                 expect(getNodes(treeElement).length).toBe(0);
                 expect(levelsOf(component.tree()).size).toBe(0);
             });
+
+            it('should clear the outlet and drop the source when the data source is set back to undefined', async () => {
+                vi.useFakeTimers();
+
+                await vi.advanceTimersByTimeAsync(0);
+
+                const previousDataSource = component.dataSource;
+
+                (component as { dataSource: unknown }).dataSource = undefined;
+                fixture.detectChanges();
+
+                expect(getNodes(treeElement).length).toBe(0);
+                expect(component.tree().dataSource).toBeNull();
+
+                previousDataSource.data = buildFileTree(DATA_OBJECT, 0);
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+
+                expect(getNodes(treeElement).length).toBe(0);
+            });
         });
 
         describe('with a trackBy function', () => {
@@ -2280,6 +2301,59 @@ describe('KbqTreeSelection', () => {
 
                 expect(isDisabled).toHaveBeenCalledTimes(getNodes(fixture.nativeElement).length);
             });
+
+            // Nothing but the signal changes: no check of the host, as with a lock list held by a service.
+            describe('with predicates reading a signal', () => {
+                const modes: [string, Type<{ treeControl: FlatTreeControl<FileFlatNode> }>][] = [
+                    ['single', SimpleKbqTreeApp],
+                    ['multiple="keyboard"', TreeSelectionFocusStates],
+                    ['multiple="checkbox"', KbqTreeAppMultipleCheckbox]
+                ];
+
+                for (const [mode, fixtureType] of modes) {
+                    it(`should repaint an option once a signal read by isDisabled changes (${mode})`, async () => {
+                        const fixture = TestBed.createComponent(fixtureType);
+                        const locked = signal<string[]>([]);
+
+                        fixture.componentInstance.treeControl.isDisabled = (node) => locked().includes(node.name);
+                        fixture.detectChanges();
+                        await fixture.whenStable();
+
+                        const row = getNodeByText(fixture.nativeElement, 'Documents');
+
+                        locked.set(['Documents']);
+                        await fixture.whenStable();
+
+                        expect(row.classList).toContain('kbq-disabled');
+                        expect(row.getAttribute('aria-disabled')).toBe('true');
+
+                        locked.set([]);
+                        await fixture.whenStable();
+
+                        expect(row.classList).not.toContain('kbq-disabled');
+                        expect(row.hasAttribute('aria-disabled')).toBe(false);
+                    });
+                }
+
+                it('should report a branch once a signal read by isExpandable changes', async () => {
+                    const fixture = TestBed.createComponent(TreeSelectionFocusStates);
+                    const lazyBranches = signal<string[]>([]);
+                    const { treeControl } = fixture.componentInstance;
+
+                    treeControl.isExpandable = (node) => node.expandable || lazyBranches().includes(node.name);
+                    fixture.detectChanges();
+                    await fixture.whenStable();
+
+                    const row = getNodeByText(fixture.nativeElement, 'rootNode_1');
+
+                    expect(row.hasAttribute('aria-expanded')).toBe(false);
+
+                    lazyBranches.set(['rootNode_1']);
+                    await fixture.whenStable();
+
+                    expect(row.getAttribute('aria-expanded')).toBe('false');
+                });
+            });
         });
 
         // Changes made in code, followed by no check of the view declaring the options: only what the rows track
@@ -2675,6 +2749,74 @@ describe('KbqTreeSelection', () => {
                 expect(component.control.value).toBe('Pictures');
                 expect(component.control.dirty).toBe(true);
                 expect(component.onSelectionChange).toHaveBeenCalledTimes(1);
+            });
+
+            it('should stay pristine when the data is replaced with equal nodes', async () => {
+                const values: unknown[] = [];
+
+                component.control.setValue('Pictures');
+                await settle();
+                component.control.valueChanges.subscribe((value) => values.push(value));
+
+                component.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+                await settle();
+
+                expect(component.tree().selectionModel.selected[0]).toBe(
+                    component.treeControl.dataNodes.find(({ name }) => name === 'Pictures')
+                );
+                expect(values).toEqual([]);
+                expect(component.control.pristine).toBe(true);
+                expect(component.onSelectionChange).not.toHaveBeenCalled();
+            });
+
+            it('should apply a value written before the data arrives', async () => {
+                component.dataSource.data = [];
+                await settle();
+
+                component.control.setValue('Pictures');
+                await settle();
+
+                expect(component.tree().getSelectedValues()).toBeUndefined();
+
+                component.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+                await settle();
+
+                expect(component.tree().getSelectedValues()).toBe('Pictures');
+                expect(getNodeByText(treeElement, 'Pictures').getAttribute('aria-selected')).toBe('true');
+                expect(component.control.pristine).toBe(true);
+            });
+
+            it('should not apply a written value over a selection of the user', async () => {
+                component.dataSource.data = buildFileTree({ rootNode_1: 'app' }, 0);
+                await settle();
+
+                component.control.setValue('Pictures');
+                await settle();
+
+                getNodeByText(treeElement, 'rootNode_1').click();
+                await settle();
+
+                component.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+                await settle();
+
+                expect(component.tree().getSelectedValues()).toBe('rootNode_1');
+                expect(component.control.value).toBe('rootNode_1');
+            });
+
+            it('should select a node whose value is 0', async () => {
+                const zeroFixture = TestBed.createComponent(TreeSelectionWithFormControl);
+                const { control, tree, treeControl } = zeroFixture.componentInstance;
+
+                treeControl.getValue = (node) => (node.name === 'rootNode_1' ? 0 : node.name);
+                zeroFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                (control as FormControl<unknown>).setValue(0);
+                zeroFixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(tree().getSelectedValues()).toBe(0);
+                expect((tree().selectionModel.selected[0] as unknown as FileFlatNode).name).toBe('rootNode_1');
             });
         });
 
