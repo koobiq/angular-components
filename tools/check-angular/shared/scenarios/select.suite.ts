@@ -1,20 +1,10 @@
 import { ComponentFixture } from '@angular/core/testing';
+import { DOWN_ARROW, ENTER, ESCAPE, SPACE, TAB, UP_ARROW } from '@koobiq/components/core';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
+import { focusedElement, stubElementScrollTo } from './dom.helpers';
 import { SelectScenario } from './select';
-import {
-    byTestId,
-    click,
-    failOnConsole,
-    focus,
-    focusedElement,
-    Key,
-    overlayContainer,
-    press,
-    settle,
-    stubElementScrollTo,
-    text
-} from './select.helpers';
+import { byTestId, click, failOnConsole, focus, overlayContainer, press, settle, text } from './select.helpers';
 
 export function defineSelectSuite(config: CheckConfig): void {
     describe(`select (${config.name})`, () => {
@@ -74,13 +64,13 @@ export function defineSelectSuite(config: CheckConfig): void {
                 expect(focusedElement()).toBe(options()[0]);
             });
 
-            it.each<[string, Key, { altKey?: boolean }]>([
-                ['Enter', 'Enter', {}],
-                ['Space', ' ', {}],
-                ['Alt+ArrowDown', 'ArrowDown', { altKey: true }]
-            ])('opens with %s on the focused trigger', async (_, key, modifiers) => {
+            it.each<[string, number, { altKey?: boolean }]>([
+                ['Enter', ENTER, {}],
+                ['Space', SPACE, {}],
+                ['Alt+ArrowDown', DOWN_ARROW, { altKey: true }]
+            ])('opens with %s on the focused trigger', async (_, keyCode, modifiers) => {
                 await focus(fixture, select);
-                const event = await press(fixture, key, modifiers);
+                const event = await press(fixture, keyCode, modifiers);
 
                 expect(event.defaultPrevented).toBe(true);
                 expect(select.getAttribute('aria-expanded')).toBe('true');
@@ -92,13 +82,13 @@ export function defineSelectSuite(config: CheckConfig): void {
             it('changes the value with arrows while closed, like a native select', async () => {
                 await focus(fixture, select);
 
-                await press(fixture, 'ArrowDown');
+                await press(fixture, DOWN_ARROW);
                 expect(scenario.city.value).toBe('Amsterdam');
 
-                await press(fixture, 'ArrowDown');
+                await press(fixture, DOWN_ARROW);
                 expect(scenario.city.value).toBe('Berlin');
 
-                await press(fixture, 'ArrowUp');
+                await press(fixture, UP_ARROW);
                 expect(scenario.city.value).toBe('Amsterdam');
 
                 expect(select.getAttribute('aria-expanded')).toBe('false');
@@ -112,19 +102,19 @@ export function defineSelectSuite(config: CheckConfig): void {
 
             it('moves the active option with arrows, selects it with Enter and gives focus back', async () => {
                 await focus(fixture, select);
-                await press(fixture, 'Enter');
+                await press(fixture, ENTER);
 
-                await press(fixture, 'ArrowDown');
-                await press(fixture, 'ArrowDown');
+                await press(fixture, DOWN_ARROW);
+                await press(fixture, DOWN_ARROW);
                 expect(focusedElement()).toBe(option('Lisbon'));
 
-                await press(fixture, 'ArrowUp');
+                await press(fixture, UP_ARROW);
                 expect(focusedElement()).toBe(option('Berlin'));
                 expect(option('Berlin').classList).toContain('kbq-active');
                 expect(options().filter((element) => element.classList.contains('kbq-active'))).toHaveLength(1);
                 expect(scenario.city.value).toBeNull();
 
-                await press(fixture, 'Enter');
+                await press(fixture, ENTER);
 
                 expect(scenario.city.value).toBe('Berlin');
                 expect(scenario.city.dirty).toBe(true);
@@ -148,27 +138,30 @@ export function defineSelectSuite(config: CheckConfig): void {
                 expect(text(byTestId(fixture, 'city-summary'))).toBe('closed: Madrid');
             });
 
-            it.each<[string, Key, { altKey?: boolean }]>([
-                ['Escape', 'Escape', {}],
-                ['Tab', 'Tab', {}],
-                ['Alt+ArrowUp', 'ArrowUp', { altKey: true }]
-            ])('closes on %s, keeps the value, gives focus back and detaches the panel', async (_, key, modifiers) => {
-                await click(fixture, trigger(select));
-                const openPanel = panel()!;
+            it.each<[string, number, { altKey?: boolean }]>([
+                ['Escape', ESCAPE, {}],
+                ['Tab', TAB, {}],
+                ['Alt+ArrowUp', UP_ARROW, { altKey: true }]
+            ])(
+                'closes on %s, keeps the value, gives focus back and detaches the panel',
+                async (_, keyCode, modifiers) => {
+                    await click(fixture, trigger(select));
+                    const openPanel = panel()!;
 
-                expect(openPanel.isConnected).toBe(true);
+                    expect(openPanel.isConnected).toBe(true);
 
-                await press(fixture, key, modifiers);
+                    await press(fixture, keyCode, modifiers);
 
-                expect(select.getAttribute('aria-expanded')).toBe('false');
-                expect(select.hasAttribute('aria-controls')).toBe(false);
-                expect(openPanel.isConnected).toBe(false);
-                expect(overlayContainer()?.querySelector('[role="listbox"]') ?? null).toBeNull();
-                expect(focusedElement()).toBe(select);
-                expect(scenario.city.value).toBeNull();
-                expect(scenario.cityOpenedChanges()).toEqual([true, false]);
-                expect(text(byTestId(fixture, 'city-summary'))).toBe('closed: none');
-            });
+                    expect(select.getAttribute('aria-expanded')).toBe('false');
+                    expect(select.hasAttribute('aria-controls')).toBe(false);
+                    expect(openPanel.isConnected).toBe(false);
+                    expect(overlayContainer()?.querySelector('[role="listbox"]') ?? null).toBeNull();
+                    expect(focusedElement()).toBe(select);
+                    expect(scenario.city.value).toBeNull();
+                    expect(scenario.cityOpenedChanges()).toEqual([true, false]);
+                    expect(text(byTestId(fixture, 'city-summary'))).toBe('closed: none');
+                }
+            );
 
             it('closes on a click outside and detaches the panel', async () => {
                 await click(fixture, trigger(select));
@@ -184,12 +177,12 @@ export function defineSelectSuite(config: CheckConfig): void {
 
             it('is not touched while focus moves into the panel, and is once the panel closes', async () => {
                 await focus(fixture, select);
-                await press(fixture, 'Enter');
+                await press(fixture, ENTER);
 
                 expect(focusedElement()).toBe(options()[0]);
                 expect(scenario.city.touched).toBe(false);
 
-                await press(fixture, 'Escape');
+                await press(fixture, ESCAPE);
 
                 expect(scenario.city.touched).toBe(true);
                 expect(scenario.city.dirty).toBe(false);
@@ -251,16 +244,16 @@ export function defineSelectSuite(config: CheckConfig): void {
 
             it('opens with ArrowDown and toggles options with Enter and clicks, keeping the panel open', async () => {
                 await focus(fixture, select);
-                await press(fixture, 'ArrowDown');
+                await press(fixture, DOWN_ARROW);
 
                 expect(select.getAttribute('aria-expanded')).toBe('true');
                 expect(listbox()!.getAttribute('aria-multiselectable')).toBe('true');
                 expect(focusedElement()).toBe(option('Angular'));
 
-                await press(fixture, 'Enter');
-                await press(fixture, 'ArrowDown');
-                await press(fixture, 'ArrowDown');
-                await press(fixture, 'Enter');
+                await press(fixture, ENTER);
+                await press(fixture, DOWN_ARROW);
+                await press(fixture, DOWN_ARROW);
+                await press(fixture, ENTER);
                 await click(fixture, option('CDK'));
 
                 expect(scenario.topics.value).toEqual(['Angular', 'CDK', 'RxJS']);
@@ -278,10 +271,10 @@ export function defineSelectSuite(config: CheckConfig): void {
                 expect(text(byTestId(fixture, 'topics-summary'))).toBe('Angular, CDK, RxJS');
                 expect(scenario.topicsOpenedChanges()).toEqual([true]);
 
-                await press(fixture, 'Enter');
+                await press(fixture, ENTER);
                 expect(scenario.topics.value).toEqual(['Angular', 'RxJS']);
 
-                await press(fixture, 'Escape');
+                await press(fixture, ESCAPE);
 
                 expect(select.getAttribute('aria-expanded')).toBe('false');
                 expect(panel()).toBeNull();

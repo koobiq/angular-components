@@ -59,6 +59,9 @@ npx ng serve zone
   `shared/scenarios/<name>.suite.ts` and renders it through `renderScenario` with the configuration's providers.
 - Test-only code that more than one suite shares goes into `shared/scenarios/<name>.helpers.ts`: the applications
   build `shared/` without `*.suite.ts` and `*.helpers.ts`.
+- Press keys with `keydown` from `shared/scenarios/dom.helpers.ts`, which builds the event with the testing helpers of
+  `@koobiq/components/core` and adds the modifiers they do not set. A mouse press is built natively: the core
+  `createMouseEvent` neither bubbles nor can be cancelled.
 - A test that fails because of the library stays as the right expectation, wrapped in `it.fails` in the applications
   where it fails, with a `// Library bug:` comment naming the mechanism. Once the library is fixed the `it.fails`
   itself fails, which is the cue to unwrap it.

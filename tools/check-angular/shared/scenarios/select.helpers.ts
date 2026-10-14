@@ -1,37 +1,5 @@
 import { ComponentFixture } from '@angular/core/testing';
-import { DOWN_ARROW, ENTER, ESCAPE, LEFT_ARROW, RIGHT_ARROW, SPACE, TAB, UP_ARROW } from '@koobiq/components/core';
-
-const KEY_CODES = {
-    Enter: ENTER,
-    ' ': SPACE,
-    Escape: ESCAPE,
-    Tab: TAB,
-    ArrowDown: DOWN_ARROW,
-    ArrowUp: UP_ARROW,
-    ArrowLeft: LEFT_ARROW,
-    ArrowRight: RIGHT_ARROW
-};
-
-export type Key = keyof typeof KEY_CODES;
-
-/**
- * jsdom implements no scrolling, and the panels scroll their option list through `CdkScrollable`, which
- * calls `Element.scrollTo`. Registers the missing method for the enclosing `describe`.
- */
-export function stubElementScrollTo(): void {
-    let stubbed = false;
-
-    beforeAll(() => {
-        if ('scrollTo' in Element.prototype) return;
-
-        Object.defineProperty(Element.prototype, 'scrollTo', { configurable: true, writable: true, value: () => {} });
-        stubbed = true;
-    });
-
-    afterAll(() => {
-        if (stubbed) delete (Element.prototype as Partial<Element>).scrollTo;
-    });
-}
+import { keydown } from './dom.helpers';
 
 /**
  * Waits for the render, one macrotask and the render after it: the selects close on an outside click and
@@ -46,18 +14,11 @@ export async function settle(fixture: ComponentFixture<unknown>): Promise<void> 
 /** Presses a key on the focused element, the way a keyboard does, and waits for the result. */
 export async function press(
     fixture: ComponentFixture<unknown>,
-    key: Key,
+    keyCode: number,
     modifiers: { altKey?: boolean } = {}
 ): Promise<KeyboardEvent> {
-    const event = new KeyboardEvent('keydown', {
-        key,
-        keyCode: KEY_CODES[key],
-        bubbles: true,
-        cancelable: true,
-        ...modifiers
-    });
+    const event = keydown(keyCode, modifiers);
 
-    focusedElement().dispatchEvent(event);
     await settle(fixture);
 
     return event;
@@ -73,10 +34,6 @@ export async function click(fixture: ComponentFixture<unknown>, element: Element
 export async function focus(fixture: ComponentFixture<unknown>, element: Element): Promise<void> {
     (element as HTMLElement).focus();
     await settle(fixture);
-}
-
-export function focusedElement(): Element {
-    return document.activeElement ?? document.body;
 }
 
 export function byTestId(fixture: ComponentFixture<unknown>, testId: string): HTMLElement {

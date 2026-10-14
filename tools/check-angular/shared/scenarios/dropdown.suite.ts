@@ -12,8 +12,9 @@ import {
 } from '@koobiq/components/core';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
+import { keydown as press, stubElementScrollTo } from './dom.helpers';
 import { DropdownScenario } from './dropdown';
-import { clickWithMouse, pressKey as press, pressEnterOnButton, stubElementScrollTo } from './dropdown.helpers';
+import { clickWithMouse, pressEnterOnButton } from './dropdown.helpers';
 
 const PANEL = '.kbq-dropdown__panel';
 const ITEM = '.kbq-dropdown-item';
@@ -51,7 +52,7 @@ export function defineDropdownSuite(config: CheckConfig): void {
 
         async function openWithKeyboard(): Promise<void> {
             trigger.focus();
-            press(DOWN_ARROW, trigger);
+            press(DOWN_ARROW, { target: trigger });
             await fixture.whenStable();
         }
 
@@ -60,10 +61,7 @@ export function defineDropdownSuite(config: CheckConfig): void {
             await fixture.whenStable();
         }
 
-        let restoreScrollTo: () => void;
-
-        beforeAll(() => (restoreScrollTo = stubElementScrollTo()));
-        afterAll(() => restoreScrollTo());
+        stubElementScrollTo();
 
         beforeEach(async () => {
             fixture = await renderScenario(DropdownScenario, config);
@@ -100,7 +98,7 @@ export function defineDropdownSuite(config: CheckConfig): void {
         ])('opens with %s on the focused trigger and focuses the first item', async (_, keyCode) => {
             trigger.focus();
 
-            const keydown = press(keyCode, trigger);
+            const keydown = press(keyCode, { target: trigger });
 
             // A prevented ENTER is not turned into a click, which would toggle the menu shut again.
             expect(keydown.defaultPrevented).toBe(true);
@@ -146,7 +144,7 @@ export function defineDropdownSuite(config: CheckConfig): void {
 
             expect(exportItem.getAttribute('aria-expanded')).toBe('false');
 
-            press(RIGHT_ARROW, exportItem);
+            press(RIGHT_ARROW, { target: exportItem });
             await fixture.whenStable();
 
             const [, nested] = getPanels();
@@ -336,7 +334,7 @@ export function defineDropdownSuite(config: CheckConfig): void {
             const [panel] = getPanels();
             const rename = getItem('Rename');
 
-            press(ESCAPE, panel);
+            press(ESCAPE, { target: panel });
             await fixture.whenStable();
 
             expect(panel.isConnected).toBe(false);

@@ -3,17 +3,8 @@ import { DOWN_ARROW, END, ENTER, HOME, SPACE, TAB, UP_ARROW } from '@koobiq/comp
 import { KbqListOption } from '@koobiq/components/list';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
+import { keydown, KeydownInit } from './dom.helpers';
 import { LIST_SCENARIO_FRUITS, ListScenario } from './list';
-
-const KEYS: Record<number, string> = {
-    [DOWN_ARROW]: 'ArrowDown',
-    [UP_ARROW]: 'ArrowUp',
-    [HOME]: 'Home',
-    [END]: 'End',
-    [SPACE]: ' ',
-    [ENTER]: 'Enter',
-    [TAB]: 'Tab'
-};
 
 const label = (option: Element): string => option.querySelector('.kbq-list-text')?.textContent?.trim() ?? '';
 
@@ -58,23 +49,8 @@ async function renderList(config: CheckConfig) {
             return `<${active?.getAttribute('data-testid') ?? active?.tagName.toLowerCase()}>`;
         },
 
-        /** A keydown on the focused element, without waiting for the page to settle. */
-        keydown(keyCode: number, init: KeyboardEventInit = {}): KeyboardEvent {
-            const event = new KeyboardEvent('keydown', {
-                key: KEYS[keyCode],
-                keyCode,
-                bubbles: true,
-                cancelable: true,
-                ...init
-            });
-
-            (document.activeElement ?? document.body).dispatchEvent(event);
-
-            return event;
-        },
-
-        async press(keyCode: number, init: KeyboardEventInit = {}): Promise<KeyboardEvent> {
-            const event = this.keydown(keyCode, init);
+        async press(keyCode: number, init: KeydownInit = {}): Promise<KeyboardEvent> {
+            const event = keydown(keyCode, init);
 
             await stable();
 
@@ -89,7 +65,7 @@ async function renderList(config: CheckConfig) {
 
         /** Tab out of the list: the keydown the list handles, then the focus moving on to the next tab stop. */
         async tabOut(): Promise<void> {
-            this.keydown(TAB);
+            keydown(TAB);
             after.focus();
             await stable();
         },
@@ -149,7 +125,7 @@ export function defineListSuite(config: CheckConfig): void {
                 await page.press(SPACE);
 
                 // The list leaves the tab order for the Tab that leaves it, so the focus does not land on its host.
-                page.keydown(TAB);
+                keydown(TAB);
                 expect(page.list.tabIndex).toBe(-1);
 
                 page.after.focus();

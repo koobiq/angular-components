@@ -3,13 +3,7 @@ import { dispatchKeyboardEvent, DOWN_ARROW, ENTER, ESCAPE, typeInElement, UP_ARR
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
 import { AUTOCOMPLETE_COUNTRIES, AutocompleteScenario } from './autocomplete';
-
-const KEYS: Record<number, string> = {
-    [DOWN_ARROW]: 'ArrowDown',
-    [UP_ARROW]: 'ArrowUp',
-    [ENTER]: 'Enter',
-    [ESCAPE]: 'Escape'
-};
+import { keydown } from './dom.helpers';
 
 export function defineAutocompleteSuite(config: CheckConfig): void {
     describe(`autocomplete (${config.name})`, () => {
@@ -36,11 +30,8 @@ export function defineAutocompleteSuite(config: CheckConfig): void {
             await fixture.whenStable();
         }
 
-        // Built natively, so the scenario does not depend on the helpers; the test below covers `dispatchKeyboardEvent`.
         async function press(keyCode: number): Promise<void> {
-            input.dispatchEvent(
-                new KeyboardEvent('keydown', { keyCode, key: KEYS[keyCode], bubbles: true, cancelable: true })
-            );
+            keydown(keyCode, { target: input });
             await settle();
         }
 

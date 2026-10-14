@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import { CheckConfig } from '../config';
 import { renderScenario } from '../testing';
 import { DatepickerScenario } from './datepicker';
+import { keydown } from './dom.helpers';
 
 const PANEL = '.cdk-overlay-container .kbq-datepicker__popup';
 const FOCUSABLE = '[tabindex], a[href], button:not([disabled]), input:not([disabled]), select, textarea';
@@ -58,11 +59,7 @@ function clickWithMouse(element: HTMLElement): void {
 
 /** A keydown on the focused element, where the browser delivers it. */
 function press(keyCode: number, key?: string, altKey = false): KeyboardEvent {
-    const event = new KeyboardEvent('keydown', { key, keyCode, altKey, bubbles: true, cancelable: true });
-
-    document.activeElement!.dispatchEvent(event);
-
-    return event;
+    return keydown(keyCode, { key, altKey });
 }
 
 export function defineDatepickerSuite(config: CheckConfig): void {
