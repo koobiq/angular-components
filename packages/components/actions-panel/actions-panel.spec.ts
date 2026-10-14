@@ -3,6 +3,7 @@ import { OverlayContainer, ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
 import {
+    ApplicationRef,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -12,7 +13,8 @@ import {
     signal,
     TemplateRef,
     Type,
-    viewChild
+    viewChild,
+    ɵZONELESS_ENABLED
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { enUSLocaleData, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
@@ -141,6 +143,35 @@ class ActionsPanelLiveContent {
 
     open(): void {
         this.actionsPanel.open(this.template());
+    }
+}
+
+type ActionsPanelSelection = { selected: number[] };
+
+@Component({
+    selector: 'actions-panel-selection-counter',
+    template: `
+        <div id="actionsPanel-counter">{{ data.selected.length }}</div>
+    `,
+    changeDetection: ChangeDetectionStrategy.Eager
+})
+class ActionsPanelSelectionCounter {
+    readonly data = inject<ActionsPanelSelection>(KBQ_ACTIONS_PANEL_DATA);
+}
+
+@Component({
+    selector: 'actions-panel-selection-host',
+    template: '',
+    providers: [KbqActionsPanel],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ActionsPanelSelectionHost {
+    readonly selection: ActionsPanelSelection = { selected: [] };
+
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
+    open(): void {
+        this.actionsPanel.open(ActionsPanelSelectionCounter, { data: this.selection });
     }
 }
 
@@ -554,6 +585,24 @@ describe(KbqActionsPanelModule.name, () => {
         componentInstance.counter.set(1);
         await fixture.whenStable();
         expect(getActionsPanelContainerElement().querySelector('#actionsPanel-counter')!.textContent).toBe('1');
+    });
+
+    it('should refresh component content on the eager strategy on a tick that checks the whole application', () => {
+        // The tick of an application on zone.js, which checks every root view, the panel's included.
+        const fixture = createComponent(ActionsPanelSelectionHost, [{ provide: ɵZONELESS_ENABLED, useValue: false }]);
+        const applicationRef = TestBed.inject(ApplicationRef);
+
+        fixture.componentInstance.open();
+        applicationRef.tick();
+
+        const counter = getActionsPanelContainerElement().querySelector('#actionsPanel-counter')!;
+
+        expect(counter.textContent).toBe('0');
+
+        fixture.componentInstance.selection.selected.push(0);
+        applicationRef.tick();
+
+        expect(counter.textContent).toBe('1');
     });
 
     it('should name the close button after the active locale', async () => {
