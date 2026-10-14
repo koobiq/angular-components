@@ -957,6 +957,53 @@ describe(SCHEMATIC_NAME, () => {
         expect(result.readText(html)).toBe(`<kbq-divider></kbq-divider>\n${markup}`);
     });
 
+    it('imports a symbol it writes as a value past a type-only import or an alias of it', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+        const typeClause = ts.replace(/[^/]+$/, 'type-clause.ts');
+
+        appTree.overwrite(
+            ts,
+            [
+                "import { booleanAttribute as toBool } from '@angular/core';",
+                "import { toBoolean } from '@koobiq/components/core';",
+                'export const flags = (value: unknown) => [toBool(value), toBoolean(value)];',
+                ''
+            ].join('\n')
+        );
+        appTree.create(
+            typeClause,
+            [
+                "import type { Signal } from '@angular/core';",
+                "import { toBoolean } from '@koobiq/components/core';",
+                'export const flag = (value: Signal<unknown>) => toBoolean(value());',
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                "import { booleanAttribute as toBool, booleanAttribute } from '@angular/core';",
+                'export const flags = (value: unknown) => [toBool(value), booleanAttribute(value)];',
+                ''
+            ].join('\n')
+        );
+        expect(result.readText(typeClause)).toBe(
+            [
+                "import { booleanAttribute } from '@angular/core';",
+                "import type { Signal } from '@angular/core';",
+                'export const flag = (value: Signal<unknown>) => booleanAttribute(value());',
+                ''
+            ].join('\n')
+        );
+    });
+
     it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);

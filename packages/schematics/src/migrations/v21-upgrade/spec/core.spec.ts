@@ -416,6 +416,27 @@ describe('v21-upgrade: core', () => {
         );
     });
 
+    it('rewrites the mcLine and mcListIcon attribute selectors in stylesheets', async () => {
+        const unrelated = ['$mcLine: 1px;', '.mcLine { margin: $mcLine; }', '[data-mcLine] { margin: 0; }', ''];
+        const run = await runV21Upgrade({
+            'list.scss': [
+                '.my-list [mcLine] { color: red; }',
+                '.my-list [ mcListIcon ], [mcline]:first-child { margin: 0; }',
+                ...unrelated
+            ].join('\n'),
+            'list.css': '.my-list [mcLine=""] + [MCLISTICON] { color: red; }\n'
+        });
+
+        expect(run.read('list.scss')).toBe(
+            [
+                '.my-list [kbq-line] { color: red; }',
+                '.my-list [ kbq-list-icon ], [kbq-line]:first-child { margin: 0; }',
+                ...unrelated
+            ].join('\n')
+        );
+        expect(run.read('list.css')).toBe('.my-list [kbq-line=""] + [kbq-list-icon] { color: red; }\n');
+    });
+
     it('reports KbqLineSetter and the line count classes of a list item', async () => {
         const run = await runV21Upgrade({
             'setter.ts': "import { KbqLine, KbqLineSetter } from '@koobiq/components/core';\n",

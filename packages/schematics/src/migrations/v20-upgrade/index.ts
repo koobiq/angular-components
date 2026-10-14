@@ -1,5 +1,6 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { listItemPattern } from '../../utils/list-item-pattern';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { Replacement, WarnPattern, scssReplacements, templateReplacements, tsReplacements, warnPatterns } from './data';
@@ -46,25 +47,66 @@ function applyReplacements(
     return { content: result, changed: result !== content, importsToEnsure, importsToRemove };
 }
 
+/** A named import declaration: the `type` of a type-only one, its specifiers, its module. */
+const NAMED_IMPORT = /\bimport\s*(type\s*)?\{([^}]*)\}\s*from\s*['"]([^'"]+)['"]/g;
+
+/** An import specifier: an inline `type`, the imported name, its alias. */
+const IMPORT_SPECIFIER = /^\s*(type\s+)?([\w$]+)(?:\s+as\s+([\w$]+))?\s*$/;
+
+const COMMENT = /\/\/[^\n]*|\/\*[\s\S]*?\*\//g;
+
+/** The import specifiers that bind the name `local`: whether each is type-only, the name it imports, its module. */
+function importBindings(content: string, local: string): { typeOnly: boolean; name: string; from: string }[] {
+    return [...content.matchAll(NAMED_IMPORT)].flatMap(([, typeClause, specifiers, from]) =>
+        specifiers
+            .replace(COMMENT, '')
+            .split(',')
+            .flatMap((specifier) => {
+                const [, typeSpecifier, name, alias] = IMPORT_SPECIFIER.exec(specifier) ?? [];
+
+                return name && (alias ?? name) === local
+                    ? [{ typeOnly: !!(typeClause || typeSpecifier), name, from }]
+                    : [];
+            })
+    );
+}
+
+/** Removes the type-only specifier of `symbol` from the named imports of `from`, and an import it empties. */
+function removeTypeOnlyImport(content: string, symbol: string, from: string): string {
+    const declaration = new RegExp(
+        `(\\bimport\\s*(?:type\\s*)?)(\\{[^}]*\\})(\\s*from\\s*['"]${escapeRegExp(from)}['"];?[ \\t]*\\r?\\n?)`,
+        'g'
+    );
+    const specifier = new RegExp(listItemPattern(`\\b${symbol}\\b(?!\\s+as\\b)`));
+
+    return content.replace(declaration, (statement, open: string, clause: string, close: string) => {
+        const rest = clause.replace(specifier, '');
+
+        if (rest === clause) return statement;
+
+        return /^\{\s*\}$/.test(rest) ? '' : `${open}${rest}${close}`;
+    });
+}
+
 /**
- * Idempotently add `import { symbol } from 'module'` to a TypeScript source
- * string. If the module is already imported, the symbol is added to the
- * existing import clause. If the symbol is already imported (from any
- * module), this is a no-op. Otherwise a new import line is inserted at the
- * top of the file (after any leading block / leading comments).
+ * Idempotently makes `symbol` of `from` a value import of a TypeScript source string, as the rewrites use it as a
+ * value. A value import of the name from any module, or an import of another symbol under the name, is left alone.
+ * A type-only import of it gives way to a value one: the symbol is added to the value import clause of `from`, or
+ * in a new import line at the top of the file (after any leading block / leading comments).
  */
 function ensureImport(content: string, symbol: string, from: string): string {
-    // Already imported (anywhere) — leave alone. The regex looks for the
-    // identifier inside an `import { ... }` clause; deliberately permissive
-    // so re-exports and renamed imports still skip the injection.
-    const alreadyImported = new RegExp(
-        `import\\s*(?:type\\s*)?\\{[^}]*\\b${symbol}\\b[^}]*\\}\\s*from\\s*['"][^'"]+['"]`
-    );
+    const bindings = importBindings(content, symbol);
 
-    if (alreadyImported.test(content)) return content;
+    // A second binding of the name would clash with it.
+    if (bindings.some((binding) => !binding.typeOnly || binding.name !== symbol || binding.from !== from)) {
+        return content;
+    }
 
-    // Existing import line from the same module — extend its clause.
-    const sameModule = new RegExp(`(import\\s*(?:type\\s*)?\\{)([^}]*)(\\}\\s*from\\s*['"]${escapeRegExp(from)}['"])`);
+    // Under a type-only import, a value use of the symbol does not compile (TS1361).
+    if (bindings.length > 0) content = removeTypeOnlyImport(content, symbol, from);
+
+    // Existing value import line from the same module — extend its clause.
+    const sameModule = new RegExp(`(\\bimport\\s*\\{)([^}]*)(\\}\\s*from\\s*['"]${escapeRegExp(from)}['"])`);
 
     if (sameModule.test(content)) {
         return content.replace(sameModule, (_match, open: string, body: string, close: string) => {

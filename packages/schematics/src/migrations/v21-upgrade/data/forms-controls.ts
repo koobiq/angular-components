@@ -1,3 +1,4 @@
+import { listItemPattern } from '../../../utils/list-item-pattern';
 import type { AreaData } from '../data';
 
 const CHECKBOX = '@koobiq/components/checkbox';
@@ -17,8 +18,8 @@ export const formsControls: AreaData = {
     tsReplacements: [
         {
             // The specifier, with one of its commas; an emptied clause is dropped by `removeImport`.
-            from: `(import\\s*(?:type\\s+)?\\{[^}]*?)(?:,\\s*TransitionCheckState\\b(?!\\s+as\\b)|\\bTransitionCheckState\\s*,\\s*|\\bTransitionCheckState\\b(?!\\s+as\\b))${CHECKBOX_CLAUSE_END}`,
-            to: '$1',
+            from: `(?<=import\\s*(?:type\\s*)?\\{[^}]*)${listItemPattern('\\bTransitionCheckState\\b(?!\\s+as\\b)')}${CHECKBOX_CLAUSE_END}`,
+            to: '',
             removeImport: { symbol: 'TransitionCheckState', from: CHECKBOX },
             ensureImport: { symbol: 'TransitionCheckState', from: '@koobiq/components/core' }
         }

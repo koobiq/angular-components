@@ -40,8 +40,8 @@ move the actions out of the trigger into a `kbq-accordion-header__actions` eleme
   names keeps one);
 - `ThemePalette.Error`, `.Warning` and `.Success` → the `KbqComponentColors` members of the same value, dropping
   the `ThemePalette` import once nothing else names it;
-- the `mcLine` and `mcListIcon` aliases → `kbq-line` and `kbq-list-icon`, in templates and in selectors written in
-  code.
+- the `mcLine` and `mcListIcon` aliases → `kbq-line` and `kbq-list-icon`, in templates, in selectors written in
+  code and in the attribute selectors of stylesheets.
 
 Reports:
 

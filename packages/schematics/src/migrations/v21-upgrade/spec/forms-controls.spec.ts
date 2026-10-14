@@ -165,6 +165,33 @@ describe('v21-upgrade: forms-controls', () => {
         expect(run.log).not.toContain(LABEL_TEXT_CHANGE);
     });
 
+    it('removes the TransitionCheckState specifier with its type modifier from any place in its clause', async () => {
+        const from = " from '@koobiq/components/checkbox';\n";
+        const cases: [string, string][] = [
+            ['import { type TransitionCheckState, KbqCheckbox }', 'import { KbqCheckbox }'],
+            [
+                'import { KbqCheckbox, type TransitionCheckState, KbqCheckboxModule }',
+                'import { KbqCheckbox, KbqCheckboxModule }'
+            ],
+            ['import { KbqCheckbox, type TransitionCheckState }', 'import { KbqCheckbox }'],
+            ['import type { TransitionCheckState, KbqCheckboxChange }', 'import type { KbqCheckboxChange }'],
+            ['import type { KbqCheckboxChange, TransitionCheckState }', 'import type { KbqCheckboxChange }']
+        ];
+        const files = Object.fromEntries(
+            cases.map(([clause], i) => [`clause-${i}.ts`, `${clause}${from}export let state: TransitionCheckState;\n`])
+        );
+        const run = await runV21Upgrade({
+            ...files,
+            'only.ts': `import { type TransitionCheckState }${from}export let state: TransitionCheckState;\n`
+        });
+        const core = "import { TransitionCheckState } from '@koobiq/components/core';\n";
+
+        cases.forEach(([, clause], i) =>
+            expect(run.read(`clause-${i}.ts`)).toBe(`${core}${clause}${from}export let state: TransitionCheckState;\n`)
+        );
+        expect(run.read('only.ts')).toBe(`${core}export let state: TransitionCheckState;\n`);
+    });
+
     it('moves the TransitionCheckState import from the checkbox entry point to core', async () => {
         const run = await runV21Upgrade({
             'only.ts': [
