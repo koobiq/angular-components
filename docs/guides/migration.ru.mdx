@@ -149,7 +149,7 @@ ng g @koobiq/components:v20-upgrade --project "<your project>"
 
 **Методы инстансов:**
 
-- .openPanel() → .open(),
+- KbqAutocompleteTrigger.openPanel() → .open(),
 - .toggleIsCollapsed() → .toggle(),
 - .focusViaKeyboard() → .focus().
 
@@ -345,7 +345,7 @@ ng g @koobiq/components:zoneless-change-detection --project "<your project>"
 Компоненты Koobiq больше не используют `@angular/animations`, который Angular объявил устаревшим: их анимации работают на CSS, а окончания анимации компоненты дожидаются сами. `@angular/animations` больше не входит в peer-зависимости, и компонентам больше не нужен `provideAnimations()`: удалите его вместе с пакетом, если компоненты вашего приложения сами не объявляют `animations: [...]`.
 
 - **Движение отключается при `prefers-reduced-motion: reduce`.** Чтобы отключить его во всем приложении, например в end-to-end тестах, предоставьте `{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }` из `@koobiq/components/core`. `provideNoopAnimations()` по-прежнему его отключает, но относится к устаревшему пакету.
-- **Экспортируемые триггеры удалены**: `fadeAnimation` и `kbqSelectAnimations` из `core`, `kbqDropdownAnimations`, `fadeInItems` и `transformDropdown` из `dropdown`, `kbqTabsAnimations` из `tabs`. `KbqSidepanelAnimationState` больше не экспортируется из `sidepanel`.
+- **Экспортируемые триггеры удалены**: `fadeAnimation` и `kbqSelectAnimations` из `core`, `kbqDropdownAnimations`, `fadeInItems` и `transformDropdown` из `dropdown`, `kbqTabsAnimations` из `tabs`, `kbqPopoverAnimations` из `popover`, `kbqDatepickerAnimations` из `datepicker`, `KbqNotificationCenterAnimations` из `notification-center` и `kbqAppSwitcherAnimations` из `app-switcher`. `KbqSidepanelAnimationState` больше не экспортируется из `sidepanel`, а `MODAL_ANIMATE_DURATION` — из `modal`: вместо таймера такой длительности реагируйте на `afterOpen` / `afterClose` у `KbqModalRef`.
 - **Члены, принимавшие или отдававшие `AnimationEvent`, удалены.** `KbqPopUp.animationStart()` и `animationDone()`: наследник переопределяет защищенный `afterShowAnimation()`. `KbqDropdown.animationDone`, `isAnimating`, `panelAnimationState`, `startAnimation()`, `resetAnimation()`, `onAnimationStart()` и `onAnimationDone()`: собственный триггер вызывает `setOpened()`. `KbqSidebar.animationState`, `onAnimationStart()` и `onAnimationDone()`: подпишитесь на `stateChanged`. `KbqTabBody.onTranslateTabStarted()` и `onTranslateTabComplete()`, `KbqToastService.animation`, `KbqToastComponent.animationState` и `onAnimation()`, `animationStateChanged` контейнеров sidepanel и панели действий, а также `animationState`, `animationTransform` и `setAnimationState()` контейнера sidepanel: следите за панелью через ее ref — `afterOpened()`, `beforeClosed()`, `afterClosed()`. Защищенное `KbqContentPanelContainer.contentAnimationState` питало удаленный триггер `@contentAnimation`: наследник читает `isOpened()`.
 - **Панель dropdown больше не угасает при закрытии**: она закрывается, а ее ленивое содержимое открепляется, как только об этом сообщает триггер.
 - **В тесте то, что ждало обработчика анимации, теперь ждет следующей отрисовки**: `fixture.detectChanges()` или `await fixture.whenStable()`. В jsdom нет Web Animations API, поэтому анимаций там нет.
@@ -1325,6 +1325,8 @@ export class ColorInput implements KbqFormFieldControl<string> {
 ```
 
 **Остальное состояние контрола доступно только для чтения.** Не компилируются присваивания в `placeholder`, `required` и `id`, а также в `disabled` у контролов на нативном элементе и в `value` у `KbqTreeSelect`, `KbqTimepicker` и `KbqDatepickerInput`: задавайте их привязкой в шаблоне, а значение — через контрол формы. Каждое присваивание выводится с именем файла.
+
+**`KbqInputPassword.elementType` стал сигналом только для чтения.** Раньше это была записываемая строка, теперь — `Signal<'text' | 'password'>`, и меняет его только `toggleType()`. Чтение становится вызовом — схематик переписывает `password.elementType` в `password.elementType()`, в том числе через `#ref="kbqInputPassword"`, — а присваивание больше не компилируется: чтобы показать или скрыть пароль, вызывайте `toggleType()`. Каждое присваивание выводится с именем файла.
 
 **Вместе с этим изменились помощники состояния ошибки.** `KbqErrorStateTracker` больше не принимает субъект `stateChanges`, а его `errorState` — как и `CanUpdateErrorState.errorState` — стал `Signal<boolean>`; `CanUpdateErrorState` больше не объявляет `errorStateMatcher`. Устаревшие `mixinErrorState` и `CanUpdateErrorStateCtor` удалены. `KbqIconErrorStateContext` тоже перешёл на сигналы, как и `id`, `placeholder`, `focused` и `empty` у `KbqTagInput`: их чтения становятся вызовами, о записи сообщается.
 
@@ -2529,6 +2531,8 @@ bootstrapApplication(App, {
 
 Следом на сигналы перешли остальные инпуты селекта. `hasBackdrop`, `compareWith` и `searchMinOptionsThreshold` — сигналы, читайте их вызовом: `compareWith()(a, b)`; `searchMinOptionsThreshold()` по-прежнему возвращает вычисленное число. `multiple`, `tabIndex` и `selectAllHandler` — сигналы `input()` с геттером для чтения. Присвоить ни один из шести больше нельзя: задавайте их привязкой в шаблоне. Смена `[multiple]` после первой отрисовки по-прежнему бросает ошибку.
 
+`KbqTimezoneSelect` наследует `KbqSelect`, поэтому всё сказанное относится и к нему; о файле, где упоминается только селект часовых поясов, схематик тоже сообщает.
+
 Сообщает `select-signal-inputs`.
 
 #### Sidepanel
@@ -2553,6 +2557,10 @@ bootstrapApplication(App, {
 Контейнер наконец стал диалогом для вспомогательных технологий: `role="dialog"`, `aria-modal` у модальной панели и `aria-labelledby` на заголовок `kbq-sidepanel-header`, а для панели без шапки в конфиге есть `ariaLabel` и `ariaLabelledBy`. Пока открыта модальная сайдпанель, остальная страница помечается `aria-hidden`, и скринридер перестаёт по ней ходить. Написанные вручную `role` и `aria-*` на контейнере стали дубликатами.
 
 Ещё четыре исправления, для которых мигрировать нечего: `KbqSidepanelService`, объявленный на уровне компонента, закрывает открытые им панели при уничтожении, а не оставляет висящий оверлей; `closeAll()` больше не разворачивает живой стек на месте; отступ принадлежит только верхней панели стека — при трёх открытых панелях рисовалась полоска на каждом уровне, а закрытие нижней оставляло полоску над панелью, которой уже нет; повторный `close('B')` до конца анимации не перетирает обещанный первым вызовом `'A'`; клик внутри сайдпанели у другого края больше не закрывает чужую панель. `KbqSidepanelService` объявлен с `providedIn: 'root'`.
+
+**<kbd>Escape</kbd> закрывает по одному слою.** Сайдпанель, панель действий и центр уведомлений больше не закрываются по Escape, который уже обработал слой над ними или элемент внутри — подсказка, поповер, диалог подтверждения поверх панели, элемент, закрывший собственное всплывающее окно. Центр уведомлений теперь помечает Escape, по которому закрылся, обработанным (`preventDefault()`), и сайдпанель под ним остаётся открытой. Собственный обработчик, вызывающий `preventDefault()` на Escape, тоже оставляет эти панели открытыми.
+
+**Сайдпанель сообщает о переходах после отрисовки, которая их применяет.** `beforeClosed()` и `afterOpened()` больше не срабатывают синхронно внутри `open()` и `close()`: подписка, сделанная сразу после `close()`, получает уведомление, а сайдпанель, открытая из `afterOpened()` нижней, встаёт на вершину стопки. Код, рассчитывавший, что `beforeClosed()` уже сработал к возврату из `close()`, должен дождаться события.
 
 Сообщает `sidepanel-non-modal-behavior`.
 
@@ -2928,7 +2936,7 @@ class MyToast extends KbqToastComponent {
 
 Три исправления, для которых мигрировать нечего: встроенное дерево настраивается через `KbqTreeSelection.initializeForEmbedding()` вместо второго ручного `ngAfterContentInit()`, который оставлял дублирующиеся подписки на списки запросов, никогда не пересоздаваемые заново, — из-за чего каждое изменение набора опций обрабатывалось по несколько раз, причём на горячем пути фильтрации поиском; мёртвый провайдер `{ provide: KbqTree, useExisting: KbqTreeSelect }` удалён, поскольку `KbqTreeSelect` никогда структурно не соответствовал `KbqTree`, и всё, что внедряло `KbqTree` изнутри tree-select, получало объект, только похожий на нужный; и компонент отрисовывает `id` на хосте и несёт ARIA combobox, поэтому `[attr.for]` подписи поля формы теперь указывает на существующий элемент.
 
-`searchMinOptionsThreshold` — сигнал, как у `KbqSelect`, а `multiple`, `autoSelect`, `tabIndex` и `selectAllHandler` — сигналы `input()` с геттером для чтения. Присвоить их больше нельзя: задавайте привязкой в шаблоне.
+`hasBackdrop` и `searchMinOptionsThreshold` — сигналы, как у `KbqSelect`, а `multiple`, `autoSelect`, `tabIndex` и `selectAllHandler` — сигналы `input()` с геттером для чтения. Присвоить их больше нельзя: задавайте привязкой в шаблоне.
 
 Сообщает `tree-select-signals`.
 
