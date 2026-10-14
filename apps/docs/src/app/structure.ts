@@ -166,7 +166,9 @@ const makeStructure = (structure: DocsStructure): DocsStructure => {
  */
 const isNewExpiryDates: string[] = [];
 
-const expiresAt = (expiresAt: string): boolean => {
+// Exported so it compiles and lints while no badge calls it; the name is what `docs:prune-is-new-badges` matches.
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const expiresAt = (expiresAt: string): boolean => {
     isNewExpiryDates.push(expiresAt);
 
     const createdDate = DateTime.fromISO(expiresAt);
@@ -644,8 +646,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: '',
                     hasApi: true,
                     apiId: 'flag',
-                    hasExamples: false,
-                    isNew: expiresAt('2026-10-07')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.FormField,
