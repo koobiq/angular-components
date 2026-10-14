@@ -358,6 +358,9 @@ export class KbqSelect
     /** Previously selected options before the current selection was made. */
     previousSelectionModelSelected: KbqOptionBase[] = [];
 
+    /** Whether the selection is being set to a written value, which is no selection of the user. */
+    private writingValue = false;
+
     /**
      * Detached copies of the selected options, captured while the option was still rendered.
      * `cdk-virtual-scroll` recycles option views, so a `KbqOption` kept in `selectionModel` can
@@ -2286,29 +2289,38 @@ export class KbqSelect
      * @param value The value to select. Can be a single value or array for multiple selection.
      */
     private setSelectionByValue(value: any | any[]): void {
-        this.previousSelectionModelSelected = this.selectionModel.selected;
+        // Restored rather than cleared: a value written while this one is applied must not end the outer write.
+        const wasWritingValue = this.writingValue;
 
-        if (this.multiSelection && value) {
-            if (!Array.isArray(value)) {
-                throw getKbqSelectNonArrayValueError();
+        this.writingValue = true;
+
+        try {
+            this.previousSelectionModelSelected = this.selectionModel.selected;
+
+            if (this.multiSelection && value) {
+                if (!Array.isArray(value)) {
+                    throw getKbqSelectNonArrayValueError();
+                }
+
+                this.selectionModel.clear();
+                value.forEach((currentValue: any) => this.selectValue(currentValue));
+                this.sortValues();
+            } else {
+                this.selectionModel.clear();
+                const correspondingOption = this.selectValue(value);
+
+                // Shift focus to the active item. Note that we shouldn't do this in multiple
+                // mode, because we don't know what option the user interacted with last.
+                // While the panel is open and the user is already navigating a still-present
+                // active item, keep it as is: `options.changes` re-runs this method on every
+                // appended chunk (e.g. paging), and re-activating the selected option would
+                // focus it and scroll the list back to it.
+                if (correspondingOption && !this.withVirtualScroll && (!this.panelOpen || this.isActiveItemStale())) {
+                    this.keyManager.setActiveItem(correspondingOption);
+                }
             }
-
-            this.selectionModel.clear();
-            value.forEach((currentValue: any) => this.selectValue(currentValue));
-            this.sortValues();
-        } else {
-            this.selectionModel.clear();
-            const correspondingOption = this.selectValue(value);
-
-            // Shift focus to the active item. Note that we shouldn't do this in multiple
-            // mode, because we don't know what option the user interacted with last.
-            // While the panel is open and the user is already navigating a still-present
-            // active item, keep it as is: `options.changes` re-runs this method on every
-            // appended chunk (e.g. paging), and re-activating the selected option would
-            // focus it and scroll the list back to it.
-            if (correspondingOption && !this.withVirtualScroll && (!this.panelOpen || this.isActiveItemStale())) {
-                this.keyManager.setActiveItem(correspondingOption);
-            }
+        } finally {
+            this.writingValue = wasWritingValue;
         }
 
         this._changeDetectorRef.markForCheck();
@@ -2426,7 +2438,13 @@ export class KbqSelect
                 this.scrollActiveOptionIntoView();
 
                 this.search()?.focus();
-            } else if (!this.panelOpen && !this.multiSelection && this.keyManager.activeItem) {
+            } else if (
+                !this.panelOpen &&
+                !this.multiSelection &&
+                this.keyManager.activeItem &&
+                // The active option follows a written value; selecting it again would report it as the user's.
+                !this.writingValue
+            ) {
                 this.keyManager.activeItem.selectViaInteraction();
             }
         });
