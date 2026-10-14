@@ -40,13 +40,17 @@ base package on its own, Yarn and pnpm do not, so install it explicitly. Install
 The components do not need zone.js. They render in a zoneless application, the default since
 Angular 21, and keep working in an application that loads zone.js and provides
 `provideZoneChangeDetection()`. Nothing has to be configured for them. To make an existing
-application zoneless, provide `provideZonelessChangeDetection()` and remove `zone.js` from its
-`polyfills`:
+application zoneless, remove `provideZoneChangeDetection()` from its providers (`ng update` to
+Angular 21 adds it to a bootstrap that has no change detection provider) and `zone.js` from its
+`polyfills`. `provideZonelessChangeDetection()` only states the default: next to
+`provideZoneChangeDetection()` it logs the NG0408 warning, and the order of the providers decides
+which one applies.
 
 ```typescript
 import { provideZonelessChangeDetection } from '@angular/core';
 
 bootstrapApplication(AppComponent, {
+    // No provideZoneChangeDetection(); this provider is optional.
     providers: [provideZonelessChangeDetection()]
 });
 ```

@@ -40,13 +40,17 @@ npm install @koobiq/components overlayscrollbars@2.7.3 @koobiq/icons @koobiq/des
 Компонентам не нужен zone.js. Они работают в приложении без zone.js, как принято по умолчанию с
 Angular 21, и продолжают работать в приложении, которое загружает zone.js и предоставляет
 `provideZoneChangeDetection()`. Настраивать для них ничего не нужно. Чтобы перевести существующее
-приложение на работу без zone.js, предоставьте `provideZonelessChangeDetection()` и уберите `zone.js`
-из его `polyfills`:
+приложение на работу без zone.js, уберите `provideZoneChangeDetection()` из его провайдеров
+(`ng update` до Angular 21 добавляет его в запуск, где нет провайдера обнаружения изменений) и
+`zone.js` из его `polyfills`. `provideZonelessChangeDetection()` лишь явно задает поведение по
+умолчанию: рядом с `provideZoneChangeDetection()` он выводит предупреждение NG0408, а какой из них
+применится, решает порядок провайдеров.
 
 ```typescript
 import { provideZonelessChangeDetection } from '@angular/core';
 
 bootstrapApplication(AppComponent, {
+    // Без provideZoneChangeDetection(); этот провайдер необязателен.
     providers: [provideZonelessChangeDetection()]
 });
 ```
