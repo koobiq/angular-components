@@ -118,10 +118,7 @@ export class KbqDatepickerContent<D> implements OnDestroy {
     /** Reference to the internal calendar component. */
     readonly calendar = viewChild.required(KbqCalendar);
 
-    private subscriptions = new Subscription();
-
     ngOnDestroy() {
-        this.subscriptions.unsubscribe();
         this.animationDone.complete();
     }
 
