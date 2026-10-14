@@ -195,7 +195,7 @@ yarn run check-llms                      # Fail on a stale llms.txt or on Markdo
 yarn run check-typings                   # Type-check the typings of every published package in dist/ with skipLibCheck off (CI)
 ```
 
-The guard reads `dist/components/<name>/index.d.ts`, so build the package first; a stale `dist/` produces a wrong golden file. Only the entry points listed in `tools/api-extractor/config.json` are guarded. Adding a JSDoc comment to a public member also changes its golden file (the `(undocumented)` marker goes away).
+The guard reads the flattened typings ng-packagr writes to `dist/components/types/koobiq-components-<name>.d.ts` (a nested entry point such as `scrollbar/deprecated` becomes `koobiq-components-scrollbar-deprecated.d.ts`), so build the package first; a stale `dist/` produces a wrong golden file. Only the entry points listed in `tools/api-extractor/config.json` are guarded. Adding a JSDoc comment to a public member also changes its golden file (the `(undocumented)` marker goes away).
 
 ## CI Gates
 
@@ -204,7 +204,7 @@ Every pull request runs these workflows:
 | Workflow                          | What it runs                                                                                                                                                 |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data` |
-| Unit tests                        | `styles:build-all`, then every `unit:*` script except `unit:all`                                                                                             |
+| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects)                                                                    |
 | E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
 | API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`                             |
 | Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`                              |
