@@ -187,8 +187,8 @@ const npm = (args: string[], cwd: string): NpmResult => {
 
 const packageNames = rootPackageJson.release?.packages || [];
 
-// `cli` has no peerDependencies and nothing depends on it; packing it adds nothing to resolve.
-const packagesToCheck = packageNames.filter((name) => name !== 'cli');
+// `cli` and `mcp` have no peerDependencies and nothing depends on them; packing them adds nothing to resolve.
+const packagesToCheck = packageNames.filter((name) => name !== 'cli' && name !== 'mcp');
 
 const missing = packagesToCheck.filter((name) => !existsSync(join(distDir, name, 'package.json')));
 
