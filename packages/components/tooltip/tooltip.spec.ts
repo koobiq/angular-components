@@ -7,7 +7,6 @@ import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import {
-    ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     dispatchMouseEvent,
@@ -30,6 +29,8 @@ import { KbqToolTipModule } from './tooltip.module';
 // KbqPopUpTrigger default enter delay (400ms) plus a buffer for the deferred show.
 const tooltipDefaultEnterDelayWithDefer = 410;
 const defaultLeaveDelay = 100;
+// Internal to the core entry point: the 12px arrow times √2, rounded.
+const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT = 17;
 
 async function openAndAssertTooltip<T>(componentFixture: ComponentFixture<T>, triggerElement: ElementRef) {
     dispatchMouseEvent(coerceElement(triggerElement), 'mouseenter');

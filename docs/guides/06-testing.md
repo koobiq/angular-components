@@ -25,6 +25,12 @@ yarn run unit:koobiq-docs
 yarn run unit:tools
 ```
 
+Vitest compiles the specs without type-checking them. Run the type check with:
+
+```bash
+yarn run check-spec-types
+```
+
 ## E2E tests
 
 E2E (end-to-end) tests check the application as a whole, simulating user interactions. They are run using

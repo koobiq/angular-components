@@ -2,6 +2,7 @@
 import { coerceElement } from '@angular/cdk/coercion';
 import {
     ConnectedOverlayPositionChange,
+    ConnectionPositionPair,
     FlexibleConnectedPositionStrategy,
     OverlayContainer,
     OverlayPositionBuilder
@@ -11,7 +12,6 @@ import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, effec
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
-    ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT,
     ENTER,
     ESCAPE,
     KBQ_LOCALE_SERVICE,
@@ -20,7 +20,6 @@ import {
     KbqOverlayOrigin,
     KbqPopUpPlacementValues,
     KbqStickToWindowPlacementValues,
-    POSITION_MAP,
     POSITION_TO_CSS_MAP,
     SPACE,
     createKeyboardEvent,
@@ -43,6 +42,21 @@ const tooltipEnterDelay = 410;
 
 /** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
 const axeTimeout = 15000;
+
+// Values internal to the core entry point: the 12px arrow times √2, rounded, and two of its position pairs.
+const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT = 17;
+const RIGHT_TOP_POSITION: ConnectionPositionPair = {
+    originX: 'end',
+    originY: 'top',
+    overlayX: 'start',
+    overlayY: 'top'
+};
+const BOTTOM_POSITION: ConnectionPositionPair = {
+    originX: 'center',
+    originY: 'bottom',
+    overlayX: 'center',
+    overlayY: 'top'
+};
 
 /**
  * Fires the timers that are due, and the zero-delay ones they schedule in turn — a closing action runs
@@ -1340,7 +1354,7 @@ describe('KbqPopover', () => {
             // jsdom has no layout, so the strategy never flips on its own — feed it the connection pair the
             // browser would have resolved instead.
             placementInstance.popoverTrigger().onPositionChange({
-                connectionPair: POSITION_MAP.rightTop
+                connectionPair: RIGHT_TOP_POSITION
             } as ConnectedOverlayPositionChange);
             placementFixture.detectChanges();
 
@@ -1357,7 +1371,7 @@ describe('KbqPopover', () => {
             await open();
 
             expect(positions()).toHaveLength(2);
-            expect(positions()[0]).toMatchObject(POSITION_MAP.bottom);
+            expect(positions()[0]).toMatchObject(BOTTOM_POSITION);
         });
 
         it('should not offset the positions when the arrow is hidden', async () => {

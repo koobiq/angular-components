@@ -58,7 +58,7 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqModalModule, KbqModalService, MODAL_ANIMATE_DURATION } from '@koobiq/components/modal';
+import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { DateTime } from 'luxon';
 import { map, Observable, timer } from 'rxjs';
 import type { MockInstance } from 'vitest';
@@ -72,6 +72,9 @@ import {
 import { KbqDatepickerToggleIconComponent } from './datepicker-toggle.component';
 import { KbqDatepicker } from './datepicker.component';
 import { KbqDatepickerModule } from './index';
+
+// The modal's own animation timeout, which is internal to its entry point.
+const MODAL_ANIMATE_DURATION = 300;
 
 const getDatepickerInputElement = (fixture: ComponentFixture<unknown>): HTMLInputElement =>
     fixture.debugElement.query(By.directive(KbqDatepickerInput)).nativeElement;
@@ -403,7 +406,7 @@ describe('KbqDatepicker', () => {
                 const calendarBodyEl = document.querySelector('.kbq-calendar__body') as HTMLElement;
 
                 expect(calendarBodyEl).not.toBeNull();
-                expect(testComponent.datepickerInput().value?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
+                expect(testComponent.datepickerInput().value()?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
 
                 dispatchKeyboardEvent(calendarBodyEl, 'keydown', ENTER);
                 fixture.detectChanges();
@@ -411,7 +414,7 @@ describe('KbqDatepicker', () => {
 
                 expect(testComponent.datepicker().opened).toBe(false);
                 expect(nextSpyFn).toHaveBeenCalledTimes(0);
-                expect(testComponent.datepickerInput().value?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
+                expect(testComponent.datepickerInput().value()?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
             });
 
             it('startAt should fallback to input value', () => {
@@ -1832,7 +1835,7 @@ describe('KbqDatepicker', () => {
                 await vi.runOnlyPendingTimersAsync();
                 fixture.detectChanges();
 
-                expect(testComponent.datepickerInput().value?.toISO()).toEqual(DateTime.local(2017, 6, 1).toISO());
+                expect(testComponent.datepickerInput().value()?.toISO()).toEqual(DateTime.local(2017, 6, 1).toISO());
             });
         });
 

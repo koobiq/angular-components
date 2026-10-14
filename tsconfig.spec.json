@@ -3,6 +3,6 @@
     "compilerOptions": {
         "types": ["node", "vitest/globals"]
     },
-    "include": ["**/*.spec.ts", "**/*.d.ts"],
-    "exclude": ["node_modules", "dist", ".claude"]
+    "include": ["**/*.spec.ts", "**/*.d.ts", "tools/vitest/*.ts"],
+    "exclude": ["node_modules", "**/dist", ".claude", "tools/check-angular"]
 }

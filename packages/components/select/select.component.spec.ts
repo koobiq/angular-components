@@ -7274,7 +7274,7 @@ describe('KbqSelect', () => {
                 // A comparator that only handles the values it considers equal, like a consumer
                 // reading a field that is absent on some of the items.
                 instance.compareWith = (a: CityOption | null, b: CityOption | null) => {
-                    if (a.id !== b.id) {
+                    if (a?.id !== b?.id) {
                         throw new Error('unsupported pair');
                     }
 
