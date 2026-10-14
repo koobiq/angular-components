@@ -183,6 +183,7 @@ export interface KbqNavbarFocusableItemEvent {
 // @public (undocumented)
 export class KbqNavbarItem implements AfterContentInit {
     constructor();
+    protected readonly animationsDisabled: boolean;
     readonly ariaLabel: i0.InputSignal<string | null>;
     readonly collapsable: i0.InputSignalWithTransform<boolean, unknown>;
     set collapsed(value: boolean);

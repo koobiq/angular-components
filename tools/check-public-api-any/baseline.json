@@ -6,7 +6,7 @@
     "autocomplete": 12,
     "badge": 2,
     "breadcrumbs": 14,
-    "button-toggle": 12,
+    "button-toggle": 13,
     "checkbox": 2,
     "clamped-text": 5,
     "code-block": 14,
@@ -53,6 +53,6 @@
     "tooltip": 6,
     "top-bar": 1,
     "tree": 38,
-    "tree-select": 27,
+    "tree-select": 28,
     "username": 7
 }

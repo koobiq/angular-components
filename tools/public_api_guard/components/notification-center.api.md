@@ -57,7 +57,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
     constructor();
     protected readonly a11yLocaleConfiguration: Signal<_koobiq_components_core.KbqA11yLocaleConfiguration>;
     protected readonly dateAdapter: DateAdapter<any>;
-    escapeHandler(): void;
+    escapeHandler(event?: KeyboardEvent): void;
     isTrapFocus: boolean;
     readonly localeConfiguration: Signal<_koobiq_components_core.KbqNotificationCenterLocaleConfiguration>;
     // (undocumented)

@@ -42,6 +42,7 @@ export class KbqSidebar implements OnChanges, OnDestroy, AfterContentInit {
     readonly stateChanged: _angular_core.OutputEmitterRef<boolean>;
     // (undocumented)
     toggle(): void;
+    protected readonly toggling: _angular_core.WritableSignal<boolean>;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "position": { "alias": "position"; "required": false; "isSignal": true; }; "openedInput": { "alias": "opened"; "required": false; "isSignal": true; }; }, { "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened]", "[kbq-sidebar-closed]"], true, [{ directive: typeof i1.KbqStateSaving; inputs: { "useStateSaving": "useStateSaving"; "stateSavingKey": "stateSavingKey"; }; outputs: {}; }]>;
     // (undocumented)

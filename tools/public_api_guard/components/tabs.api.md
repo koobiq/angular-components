@@ -60,6 +60,7 @@ export class KbqAlignTabsEndCssStyler {
 // @public
 export abstract class KbqPaginatedTabHeader implements OnChanges, AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     constructor();
+    protected readonly animationsDisabled: boolean;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     checkPaginationEnabled(): void;
@@ -148,7 +149,8 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     readonly explicitContent: _angular_core.Signal<TemplateRef<any> | undefined>;
     get iconOnlyLabel(): boolean;
     readonly implicitContent: _angular_core.Signal<TemplateRef<any>>;
-    isActive: boolean;
+    get isActive(): boolean;
+    set isActive(value: boolean);
     // (undocumented)
     get isOverflown(): boolean;
     // (undocumented)
