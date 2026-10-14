@@ -1952,6 +1952,13 @@ describe('KbqPopover', () => {
                 value: 'right',
                 read: (t) => t.popoverPlacement,
                 reset: 'top'
+            },
+            {
+                binding: 'kbqPopoverHideIfNotInViewPort',
+                field: 'hideIfNotInViewPort',
+                value: false,
+                read: (t) => t.popoverHideIfNotInViewPort(),
+                reset: true
             }
         ];
 
@@ -1968,6 +1975,15 @@ describe('KbqPopover', () => {
                 expect(read(undefinedInstance.popoverTrigger())).toEqual(reset);
             });
         }
+
+        it('should reset kbqPopoverHideIfNotInViewPort to its default once the binding changes to null', () => {
+            undefinedInstance.hideIfNotInViewPort = false;
+            undefinedFixture.detectChanges();
+            undefinedInstance.hideIfNotInViewPort = null;
+            undefinedFixture.detectChanges();
+
+            expect(undefinedInstance.popoverTrigger().popoverHideIfNotInViewPort()).toBe(true);
+        });
 
         it('should drop the header once its binding changes to undefined', async () => {
             undefinedInstance.content = 'Content';
@@ -2163,6 +2179,7 @@ describe('KbqPopover', () => {
             [kbqPopoverPlacementPriority]="placementPriority"
             [kbqPopoverPlacement]="placement"
             [kbqPopoverVisible]="visible"
+            [kbqPopoverHideIfNotInViewPort]="hideIfNotInViewPort"
         >
             Trigger
         </button>
@@ -2187,6 +2204,7 @@ class PopoverUndefinedInputs {
     placementPriority: KbqPopUpPlacementValues[] | undefined;
     placement: KbqPopUpPlacementValues | undefined;
     visible: boolean | undefined;
+    hideIfNotInViewPort: boolean | null | undefined;
 }
 
 @Component({

@@ -105,6 +105,71 @@ describe('KbqButtonToggle with forms', () => {
         });
     });
 
+    describe('with the value of a toggle changed', () => {
+        const create = (multiple: boolean, value: unknown) => {
+            const fixture = TestBed.createComponent(ButtonToggleGroupWithChangingToggleValue);
+
+            fixture.componentInstance.multiple = multiple;
+            fixture.componentInstance.control.setValue(value);
+            fixture.detectChanges();
+
+            return fixture;
+        };
+
+        it('should report the new value of the selected toggle as the value of the group', async () => {
+            const fixture = create(false, 'red');
+            const { control, group, valueChange } = fixture.componentInstance;
+
+            fixture.componentInstance.first = 'crimson';
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(group().value).toBe('crimson');
+            expect(valueChange).toHaveBeenLastCalledWith('crimson');
+            // Nothing the user did: the form keeps its value and stays pristine.
+            expect(control.value).toBe('red');
+            expect(control.dirty).toBe(false);
+        });
+
+        it('should report the new value of a selected toggle in a multiple-selection group', async () => {
+            const fixture = create(true, ['red', 'green']);
+            const { control, group } = fixture.componentInstance;
+
+            fixture.componentInstance.first = 'crimson';
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(group().value).toEqual(['crimson', 'green']);
+            expect(control.dirty).toBe(false);
+        });
+
+        it('should leave the value of the group alone when a toggle that is not selected changes', async () => {
+            const fixture = create(false, 'green');
+            const { control, group, valueChange } = fixture.componentInstance;
+
+            fixture.componentInstance.first = 'crimson';
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(group().value).toBe('green');
+            expect(control.value).toBe('green');
+            expect(control.dirty).toBe(false);
+            expect(valueChange).not.toHaveBeenCalled();
+        });
+
+        it('should write the new value of the selected toggle back through [(value)]', async () => {
+            const fixture = TestBed.createComponent(TwoWayButtonToggleGroupWithChangingToggleValue);
+
+            fixture.detectChanges();
+            fixture.componentInstance.first = 'crimson';
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(fixture.componentInstance.value).toBe('crimson');
+            expect(fixture.componentInstance.toggles().map((toggle) => toggle.checked)).toEqual([true, false]);
+        });
+    });
+
     describe('button toggle group with ngModel and change event', () => {
         let fixture: ComponentFixture<ButtonToggleGroupWithNgModel>;
         let groupDebugElement: DebugElement;
@@ -1669,6 +1734,38 @@ class ButtonToggleGroupWithPrecheckedToggle {
 })
 class ButtonToggleGroupWithFormControl {
     control = new UntypedFormControl();
+}
+
+@Component({
+    imports: [KbqButtonToggleModule, ReactiveFormsModule],
+    template: `
+        <kbq-button-toggle-group [formControl]="control" [multiple]="multiple" (valueChange)="valueChange($event)">
+            <kbq-button-toggle [value]="first">First</kbq-button-toggle>
+            <kbq-button-toggle [value]="'green'">Green</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class ButtonToggleGroupWithChangingToggleValue {
+    readonly group = viewChild.required(KbqButtonToggleGroup);
+    readonly control = new UntypedFormControl();
+    readonly valueChange = vi.fn();
+    multiple = false;
+    first = 'red';
+}
+
+@Component({
+    imports: [KbqButtonToggleModule],
+    template: `
+        <kbq-button-toggle-group [(value)]="value">
+            <kbq-button-toggle [value]="first">First</kbq-button-toggle>
+            <kbq-button-toggle [value]="'green'">Green</kbq-button-toggle>
+        </kbq-button-toggle-group>
+    `
+})
+class TwoWayButtonToggleGroupWithChangingToggleValue {
+    readonly toggles = viewChildren(KbqButtonToggle);
+    value: unknown = 'red';
+    first = 'red';
 }
 
 // A form model is written to, never written back from, so nothing re-assigns the group when the

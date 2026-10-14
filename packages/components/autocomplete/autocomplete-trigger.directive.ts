@@ -72,7 +72,7 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/components/core';
-import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
+import { KBQ_FORM_FIELD, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { EMPTY, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
 import { delay, filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
@@ -754,11 +754,13 @@ export class KbqAutocompleteTrigger
 
         const inputValue = toDisplay != null ? toDisplay : '';
 
-        // Written at once, because the text is read back from the element right after. The form field control is
-        // told as well: it would otherwise pick the change up only at its next check.
+        // Written at once, because the text is read back from the element right after. The control on the element is
+        // told as well: it would otherwise pick the change up only at its next check. Not the control of the form
+        // field, which is the tag list when the input adds tags. Looked up here: `KbqInput` injects the `NgControl`
+        // that injects this directive.
         this.elementRef.nativeElement.value = inputValue;
 
-        const controlValue = this.formField?.control().value;
+        const controlValue = this.injector.get(KbqFormFieldControl, null, { self: true })?.value;
 
         if (isWritableSignal(controlValue)) {
             controlValue.set(inputValue);
@@ -861,6 +863,9 @@ export class KbqAutocompleteTrigger
 
         afterNextRender(
             () => {
+                // Closed before the render: the key manager selects an option made active on a closed panel.
+                if (!this.overlayAttached()) return;
+
                 this.resetActiveItem();
 
                 // Overlay width may not be final on first open, so re-measure once the panel is rendered.

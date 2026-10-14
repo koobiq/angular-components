@@ -54,7 +54,11 @@ import { KbqFormField, KbqFormFieldModule, kbqFormFieldDefaultOptionsProvider } 
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleDirective } from '@koobiq/components/title';
-import { KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER, KbqToolTipModule } from '@koobiq/components/tooltip';
+import {
+    KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
+    KbqToolTipModule,
+    KbqTooltipTrigger
+} from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Subject } from 'rxjs';
 import type { MockInstance } from 'vitest';
@@ -424,6 +428,60 @@ describe('KbqDropdown', () => {
 
         expect(overlayContainerElement.textContent).toBe('');
     });
+
+    it('should leave the dropdown open on an ESCAPE that a tooltip inside it has spent', async () => {
+        vi.useFakeTimers();
+
+        const fixture = createComponent(DropdownWithItemTooltip, [KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER]);
+        const instance = fixture.componentInstance;
+
+        fixture.detectChanges();
+        instance.trigger().open();
+        fixture.detectChanges();
+        dispatchMouseEvent(overlayContainerElement.querySelector(ITEM_SELECTOR)!, 'mouseenter');
+        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(410);
+        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(0);
+        fixture.detectChanges();
+
+        expect(overlayContainerElement.querySelector('.kbq-tooltip')).toBeTruthy();
+
+        dispatchKeyboardEvent(overlayContainerElement.querySelector(ITEM_SELECTOR)!, 'keydown', ESCAPE);
+        fixture.detectChanges();
+        await vi.runOnlyPendingTimersAsync();
+        fixture.detectChanges();
+
+        expect(instance.tooltip().isOpen).toBe(false);
+        expect(instance.trigger().opened).toBe(true);
+
+        dispatchKeyboardEvent(overlayContainerElement.querySelector(ITEM_SELECTOR)!, 'keydown', ESCAPE);
+        fixture.detectChanges();
+
+        expect(instance.trigger().opened).toBe(false);
+    });
+
+    for (const type of ['contextmenu', 'auxclick']) {
+        it(`should close the dropdown when the trigger receives ${type}`, async () => {
+            vi.useFakeTimers();
+
+            const fixture = createComponent(SimpleDropdown);
+
+            fixture.componentInstance.hasBackdrop = false;
+            fixture.detectChanges();
+            fixture.componentInstance.trigger().open();
+            fixture.detectChanges();
+
+            const triggerEl = fixture.componentInstance.triggerEl().nativeElement;
+
+            dispatchMouseEvent(triggerEl, 'pointerdown');
+            dispatchMouseEvent(triggerEl, type);
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(fixture.componentInstance.trigger().opened).toBe(false);
+        });
+    }
 
     it('should open a custom dropdown', () => {
         const fixture = createComponent(CustomDropdown, [], [CustomDropdownPanel]);
@@ -887,6 +945,36 @@ describe('KbqDropdown', () => {
 
             expect(item.textContent!.trim()).toBe('two');
         });
+
+        // `first` subscribes to the panel before `second`, so both orders of the two subscribers are covered.
+        for (const [closing, opening] of [
+            ['first', 'first'],
+            ['first', 'second'],
+            ['second', 'first']
+        ] as const) {
+            it(`should render the panel that the dropdownClosed of the ${closing} trigger opens with the ${opening} one`, async () => {
+                vi.useFakeTimers();
+
+                const fixture = createComponent(LazyDropdownReopenedOnClose);
+                const instance = fixture.componentInstance;
+
+                fixture.detectChanges();
+                instance[closing]().open();
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+
+                instance.openOnClose = opening;
+                instance[closing]().close();
+                fixture.detectChanges();
+                await vi.advanceTimersByTimeAsync(0);
+                fixture.detectChanges();
+
+                expect(instance[opening]().opened).toBe(true);
+                expect(overlayContainerElement.querySelector(`${PANEL_SELECTOR} ${ITEM_SELECTOR}`)?.textContent).toBe(
+                    opening
+                );
+            });
+        }
     });
 
     describe('positions', () => {
@@ -1687,6 +1775,29 @@ describe('KbqDropdown', () => {
             expect(instance.rootDropdown().direction).toBe('rtl');
             expect(instance.levelOneDropdown().direction).toBe('rtl');
             expect(instance.levelTwoDropdown().direction).toBe('rtl');
+        });
+
+        it('should keep the trigger item highlighted when its dropdownClosed opens the panel again', () => {
+            compileTestComponent();
+            instance.rootTrigger().open();
+            fixture.detectChanges();
+            instance.levelOneTrigger().open();
+            fixture.detectChanges();
+
+            let reopen = true;
+
+            instance.levelOneTrigger().dropdownClosed.subscribe(() => {
+                if (!reopen) return;
+
+                reopen = false;
+                instance.levelOneTrigger().open();
+            });
+
+            instance.levelOneTrigger().close();
+            fixture.detectChanges();
+
+            expect(instance.levelOneTrigger().opened).toBe(true);
+            expect(overlay.querySelector('#level-one-trigger')!.classList).toContain('kbq-dropdown-item_highlighted');
         });
 
         it('should emit an event when the hover state of the dropdown items changes', () => {
@@ -4900,6 +5011,61 @@ class SimpleLazyDropdown {
 class LazyDropdownWithContext {
     readonly triggerOne = viewChild.required<KbqDropdownTrigger>('triggerOne');
     readonly triggerTwo = viewChild.required<KbqDropdownTrigger>('triggerTwo');
+}
+
+@Component({
+    imports: [KbqDropdownModule, KbqToolTipModule],
+    template: `
+        <button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <button kbq-dropdown-item kbqTooltip="Full text of the item">Item</button>
+        </kbq-dropdown>
+    `
+})
+class DropdownWithItemTooltip {
+    readonly trigger = viewChild.required(KbqDropdownTrigger);
+    readonly tooltip = viewChild.required(KbqTooltipTrigger);
+}
+
+@Component({
+    imports: [KbqDropdownModule],
+    template: `
+        <button
+            #first="kbqDropdownTrigger"
+            [kbqDropdownTriggerFor]="dropdown"
+            [kbqDropdownTriggerData]="{ label: 'first' }"
+            (dropdownClosed)="reopen()"
+        >
+            First
+        </button>
+        <button
+            #second="kbqDropdownTrigger"
+            [kbqDropdownTriggerFor]="dropdown"
+            [kbqDropdownTriggerData]="{ label: 'second' }"
+            (dropdownClosed)="reopen()"
+        >
+            Second
+        </button>
+        <kbq-dropdown #dropdown="kbqDropdown">
+            <ng-template let-label="label" kbqDropdownContent>
+                <button kbq-dropdown-item>{{ label }}</button>
+            </ng-template>
+        </kbq-dropdown>
+    `
+})
+class LazyDropdownReopenedOnClose {
+    readonly first = viewChild.required('first', { read: KbqDropdownTrigger });
+    readonly second = viewChild.required('second', { read: KbqDropdownTrigger });
+    /** Trigger the next `dropdownClosed` opens the panel with. */
+    openOnClose: 'first' | 'second' | null = null;
+
+    reopen(): void {
+        const trigger = this.openOnClose;
+
+        this.openOnClose = null;
+
+        if (trigger) this[trigger]().open();
+    }
 }
 
 @Component({

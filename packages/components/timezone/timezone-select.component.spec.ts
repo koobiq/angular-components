@@ -1427,6 +1427,36 @@ describe('KbqTimezoneSelect', () => {
 
             expect(getPlaceholder()).toBe('Consumer placeholder');
         });
+
+        it('should keep a placeholder the consumer supplies after the first render', async () => {
+            const fixture = createWithLocaleService();
+
+            await vi.runOnlyPendingTimersAsync();
+            fixture.componentInstance.placeholder = 'Consumer placeholder';
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getPlaceholder()).toBe('Consumer placeholder');
+
+            TestBed.inject(KBQ_LOCALE_SERVICE).setLocale('en-US');
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+
+            expect(getPlaceholder()).toBe('Consumer placeholder');
+        });
+
+        it('should apply the placeholder of the active locale once the consumer drops its own', async () => {
+            const fixture = createWithLocaleService('Consumer placeholder');
+
+            await vi.runOnlyPendingTimersAsync();
+            fixture.componentInstance.placeholder = undefined!;
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(getPlaceholder()).toBe(ruRULocaleData.timezone.searchPlaceholder);
+        });
     });
 
     describe('opened from an effect', () => {
