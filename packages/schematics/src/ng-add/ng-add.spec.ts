@@ -98,9 +98,6 @@ describe(`ng add '@koobiq/components'`, () => {
                 'node_modules/@koobiq/design-tokens/web/css-tokens.css',
                 'node_modules/@koobiq/design-tokens/web/css-tokens-light.css',
                 'node_modules/@koobiq/design-tokens/web/css-tokens-dark.css',
-                'node_modules/@koobiq/design-tokens/web/component-tokens.css',
-                'node_modules/@koobiq/design-tokens/web/component-tokens-light.css',
-                'node_modules/@koobiq/design-tokens/web/component-tokens-dark.css',
                 'node_modules/@koobiq/components/prebuilt-themes/theme.css',
                 'projects/app/src/styles.css'
             ]);
@@ -115,8 +112,6 @@ describe(`ng add '@koobiq/components'`, () => {
                 'node_modules/@koobiq/icons/fonts/kbq-icons.css',
                 'node_modules/@koobiq/design-tokens/web/css-tokens.css',
                 'node_modules/@koobiq/design-tokens/web/css-tokens-light.css',
-                'node_modules/@koobiq/design-tokens/web/component-tokens.css',
-                'node_modules/@koobiq/design-tokens/web/component-tokens-light.css',
                 'node_modules/@koobiq/components/prebuilt-themes/theme.css',
                 'projects/app/src/styles.css'
             ]);
@@ -138,12 +133,6 @@ describe(`ng add '@koobiq/components'`, () => {
 
             expect(getStyles(tree, 'app')).toContain('node_modules/@koobiq/design-tokens/web/css-tokens-dark.css');
             expect(getStyles(tree, 'app')).not.toContain('node_modules/@koobiq/design-tokens/web/css-tokens-light.css');
-            expect(getStyles(tree, 'app')).toContain(
-                'node_modules/@koobiq/design-tokens/web/component-tokens-dark.css'
-            );
-            expect(getStyles(tree, 'app')).not.toContain(
-                'node_modules/@koobiq/design-tokens/web/component-tokens-light.css'
-            );
             expect(getIndexHtml(tree, 'app')).toContain('<body class="kbq-app-background kbq-dark">');
 
             const bootstrapSource = getBootstrapSource(tree, 'app');

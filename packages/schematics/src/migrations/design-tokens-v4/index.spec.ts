@@ -72,7 +72,6 @@ describe(SCHEMATIC_NAME, () => {
 
         const logged = warnings.join('\n');
 
-        expect(logged).toContain('component-tokens.css');
         expect(logged).toContain('koobiq-tokens-codemod');
         expect(logged).toContain('scrollbars');
     });

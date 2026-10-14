@@ -16,8 +16,7 @@
 
 - [Установите пакет Koobiq](/ru/main/installation).
 - Подключите файлы `css-tokens.css`, `css-tokens-light.css` и `css-tokens-dark.css` — в них лежат глобальные значения.
-- Подключите файлы `component-tokens.css`, `component-tokens-light.css` и `component-tokens-dark.css` — в них лежат значения трёх компонентов, токены которых пакет всё ещё поставляет: [code-block](/ru/components/code-block), [scrollbar](/ru/components/scrollbar) и [skeleton](/ru/components/skeleton). Без них эти три компонента останутся без оформления.
-- Подключите файл готовых стилей в свой основной файл. Без него компоненты и всплывающие элементы (окна, выпадающие списки) отобразятся неправильно:
+- Подключите файл готовых стилей в свой основной файл. Без него компоненты и всплывающие элементы (окна, выпадающие списки) отобразятся неправильно — в нём же лежат и значения трёх компонентов, токены которых пакет поставляет отдельными файлами по выбору — [code-block](/ru/components/code-block), [scrollbar](/ru/components/scrollbar) и [skeleton](/ru/components/skeleton) — вшитые на этапе сборки самого `@koobiq/components`, поэтому `component-tokens*.css` нужен только для переопределения этих значений:
 
 ```sass
 @use '@koobiq/components/prebuilt-themes/theme.css';
@@ -233,7 +232,7 @@ export class MyCard {}
 <div class="kbq-callout__header">Обратите внимание</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Версия 4.0.0 пакета `@koobiq/design-tokens` удалила токены компонентов — кроме code-block, scrollbar и skeleton, которые теперь поставляются отдельными файлами по вашему выбору: `component-tokens.css` и его светлая и тёмная половины. Остальные значения компоненты везут сами. Если копии удалённых токенов остались в ваших `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` или `css-tokens-font.css` — удалите их, а затем запустите `npx koobiq-tokens-codemod src`, чтобы найти остальное, что затронуло обновление.
+Версия 4.0.0 пакета `@koobiq/design-tokens` удалила токены компонентов — кроме code-block, scrollbar и skeleton, которые теперь поставляются отдельными файлами по вашему выбору: `component-tokens.css` и его светлая и тёмная половины, вшитыми в собственный `prebuilt-themes/theme.css` пакета `@koobiq/components`, поэтому подключать их самостоятельно не нужно. Остальные значения компоненты везут сами. Если копии удалённых токенов остались в ваших `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` или `css-tokens-font.css` — удалите их, а затем запустите `npx koobiq-tokens-codemod src`, чтобы найти остальное, что затронуло обновление.
 
 </div>
 </div>

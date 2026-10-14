@@ -3426,7 +3426,7 @@ removed is printed for every file, because a handler may have done more than cle
 
 ### Design tokens v4 (21.0.0)
 
-`@koobiq/components` now requires `@koobiq/design-tokens` 4, which moved its sources to DTCG format, changed several import paths, and replaced the `--kbq-palette-*` scale with `--kbq-plt-*` and `--kbq-semantic-*` on a 1–20 scale instead of 0–100. Component tokens are gone from the package, except for code-block, scrollbars and skeleton, which v4 ships as opt-in files — the library no longer carries copies of them, so a project left on v3 renders those three with no values at all. See `@koobiq/design-tokens`'s own `README.md#breaking-changes-in-v4` for the full list.
+`@koobiq/components` now requires `@koobiq/design-tokens` 4, which moved its sources to DTCG format, changed several import paths, and replaced the `--kbq-palette-*` scale with `--kbq-plt-*` and `--kbq-semantic-*` on a 1–20 scale instead of 0–100. Component tokens are gone from the package, except for code-block, scrollbars and skeleton, which v4 ships as opt-in files; nothing to do for those three, since `@koobiq/components`' own `prebuilt-themes/theme.css` already bakes their values in. See `@koobiq/design-tokens`'s own `README.md#breaking-changes-in-v4` for the full list.
 
 #### Running the migration
 
@@ -3454,7 +3454,6 @@ The rest of the upgrade is in your project's own stylesheets. `@koobiq/design-to
 npx koobiq-tokens-codemod src
 ```
 
-- **Add the component token files to your styles**, the same way as [the installation guide](/en/main/installation) — `component-tokens.css` plus the light or dark half — or code blocks, scrollbars and skeletons render unstyled.
 - **Review code blocks and scrollbars.** These are the only two places v4 changes pixels without being asked; the codemod does not touch them because nothing about their custom properties changed, only the values behind them.
 - **A `--kbq-palette-*` reference the codemod flags but cannot rewrite automatically** has to be replaced by eye — the 0–100 scale has no mechanical mapping onto v4's 1–20 one.
 
