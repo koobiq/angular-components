@@ -81,7 +81,6 @@ import { DevSkeletonTableExample } from './examples/skeleton-table-example';
         <hr />
 
         <skeleton-in-sidepanel-example />
-        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
