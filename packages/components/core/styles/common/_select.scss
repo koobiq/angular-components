@@ -19,7 +19,10 @@
 
         min-height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
 
-        &:not(.kbq-select__trigger_multiline) {
+        // An empty multiline trigger has no tags to grow for, so it keeps the single-line height:
+        // otherwise the placeholder's padding makes it 2px taller than the first row of tags.
+        &:not(.kbq-select__trigger_multiline),
+        &.kbq-select__trigger_empty {
             height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
 
             & .kbq-select__matcher {

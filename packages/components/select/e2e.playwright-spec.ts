@@ -100,6 +100,33 @@ test.describe('KbqSelectModule', () => {
             await e2eEnableDarkTheme(page);
             await expect(getComponent(page)).toHaveScreenshot('03-dark.png');
         });
+
+        test('should keep the trigger height when the first tag is added and cleared', async ({ page }) => {
+            await page.goto('/E2eMultilineSelectStates');
+            await getSelect(getComponent(page)).click();
+
+            const trigger = getComponent(page).locator('.kbq-select__trigger');
+            const tags = trigger.locator('kbq-tag');
+            const option = (name: string) => page.locator('.kbq-select__panel').getByText(name, { exact: true });
+
+            for (const name of ['default', 'default1 long name long name long name', 'selected']) {
+                await option(name).click();
+            }
+
+            await expect(tags).toHaveCount(0);
+            const empty = await box(trigger);
+
+            await option('default').click();
+            await expect(tags).toHaveCount(1);
+            const oneTag = await box(trigger);
+
+            await option('default').click();
+            await expect(tags).toHaveCount(0);
+            const cleared = await box(trigger);
+
+            expect(oneTag.height).toBe(empty.height);
+            expect(cleared.height).toBe(empty.height);
+        });
     });
 
     test.describe('E2eSelectSelectionState', () => {
