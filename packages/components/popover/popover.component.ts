@@ -116,7 +116,7 @@ export const KBQ_POPOVER_FOCUS_TRAP_PROVIDERS: Provider[] = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        '(keydown.esc)': 'onEscape()'
+        '(keydown.esc)': 'onEscape($event)'
     },
     preserveWhitespaces: false
 })
@@ -209,7 +209,12 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
         this.isTrapFocus = isTrapFocus;
     }
 
-    onEscape() {
+    /** Closes the panel on `Escape` inside it, unless a control there spent the key closing a popup of its own. */
+    onEscape(event?: Event) {
+        if (event?.defaultPrevented || this.trigger?.preventClose) return;
+
+        // Spent, so that a container closing on Escape, such as a modal around an overlay layer, stays open.
+        event?.preventDefault();
         this.requestClose();
     }
 

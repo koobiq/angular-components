@@ -831,12 +831,22 @@ export class KbqInlineEdit implements KbqConnectedOverlayOriginProvider, KbqInli
     }
 
     /** @docs-private */
+    protected onPanelEscape(event: Event): void {
+        // Also bound on the panel: the overlay dispatches its keys from `<body>`, after a container around an
+        // overlay layer, such as a modal, has handled them. A key spent in the panel cancels nothing more.
+        if (event.defaultPrevented) return;
+
+        event.preventDefault();
+        this.cancel();
+    }
+
+    /** @docs-private */
     protected onOverlayKeydown(event: KeyboardEvent): void {
         const canSaveOnEnter = this.canSaveOnEnter();
 
         switch (event.key) {
             case 'Escape': {
-                this.cancel();
+                this.onPanelEscape(event);
                 break;
             }
             case 'Enter': {

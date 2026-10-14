@@ -481,6 +481,18 @@ export class KbqSearchExpandable
         this.emitValue(this.control.value);
     }
 
+    /**
+     * Collapses the field on `Escape`. On `keydown` and spent, so that a container closing on the key, such as a
+     * modal, stays open.
+     * @internal
+     */
+    protected onEscape(event: Event): void {
+        if (this.disabled || !this.isOpened) return;
+
+        event.preventDefault();
+        this.toggle();
+    }
+
     private setOpened(open: boolean): void {
         if (this.disabled || this.isOpened === open) return;
 

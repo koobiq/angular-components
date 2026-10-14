@@ -8,7 +8,17 @@ import {
     OverlayPositionBuilder
 } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
-import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, effect, viewChild } from '@angular/core';
+import {
+    Component,
+    DebugElement,
+    ElementRef,
+    Provider,
+    TemplateRef,
+    Type,
+    effect,
+    signal,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -30,15 +40,20 @@ import {
     enUSLocaleData,
     ruRULocaleData
 } from '@koobiq/components/core';
+import { KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Subject, filter } from 'rxjs';
+import type { Mock } from 'vitest';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
 import { KbqPopoverComponent, KbqPopoverTrigger, defaultHoverLeaveDelay } from './popover.component';
 import { KbqPopoverModule } from './popover.module';
 
 /** `KbqTooltipTrigger` default enter delay (400 ms) plus a buffer for the deferred show. */
 const tooltipEnterDelay = 410;
+
+// The modal's own animation timeout, which is internal to its entry point.
+const MODAL_ANIMATE_DURATION = 300;
 
 /** An axe audit walks the whole overlay and needs more than the repo-wide 2s default. */
 const axeTimeout = 15000;
@@ -1988,6 +2003,88 @@ describe('KbqPopover', () => {
             expect(leaveDelayFixture.componentInstance.popoverTrigger().leaveDelay).toBe(0);
         });
     });
+
+    // The modal yields Escape only to a control that consumed it to close a popup of its own.
+    describe('inside a modal', () => {
+        let content: PopoverInModal;
+        let modalClosing: Mock;
+
+        const isOpen = () => !!overlayContainerElement.querySelector('.kbq-popover');
+
+        const pressEscape = async (element: Element) => {
+            dispatchKeyboardEvent(element, 'keydown', ESCAPE, undefined, 'Escape');
+            await vi.advanceTimersByTimeAsync(defaultHoverLeaveDelay);
+        };
+
+        const focusTrigger = async () => {
+            const trigger = content.focusTrigger().nativeElement;
+
+            trigger.focus();
+            dispatchFakeEvent(trigger, 'focus');
+            await runDueTimers();
+
+            return trigger;
+        };
+
+        beforeEach(async () => {
+            vi.useFakeTimers();
+            TestBed.configureTestingModule({ imports: [PopoverInModal] });
+
+            const modalRef = TestBed.inject(KbqModalService).open({ kbqComponent: PopoverInModal });
+
+            modalClosing = vi.fn();
+            modalRef.beforeClose.subscribe(modalClosing);
+            await vi.advanceTimersByTimeAsync(MODAL_ANIMATE_DURATION);
+            content = modalRef.getContentComponent();
+            readOverlayContainer();
+        });
+
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        it('should close a popover that keeps focus on its trigger, and the modal on the next Escape', async () => {
+            const trigger = await focusTrigger();
+
+            expect(isOpen()).toBe(true);
+
+            await pressEscape(trigger);
+
+            expect(isOpen()).toBe(false);
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            await pressEscape(trigger);
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
+        });
+
+        it('should leave Escape to the modal while kbqPopoverPreventClose keeps the popover open', async () => {
+            content.preventClose.set(true);
+            await runDueTimers();
+
+            const trigger = await focusTrigger();
+
+            expect(isOpen()).toBe(true);
+
+            await pressEscape(trigger);
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
+        });
+
+        it('should close a panel in an overlay layer of the modal, and the modal on the next Escape', async () => {
+            const trigger = content.layerTrigger().nativeElement;
+
+            dispatchMouseEvent(trigger, 'click');
+            await runDueTimers();
+
+            await pressEscape(overlayContainerElement.querySelector('.kbq-popover')!);
+
+            expect(isOpen()).toBe(false);
+            expect(modalClosing).not.toHaveBeenCalled();
+
+            await pressEscape(trigger);
+
+            expect(modalClosing).toHaveBeenCalledTimes(1);
+        });
+    });
 });
 
 @Component({
@@ -2437,6 +2534,31 @@ class PopoverOrigin {
 
     readonly trigger = viewChild.required<ElementRef>('trigger');
     readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+}
+
+@Component({
+    selector: 'popover-in-modal',
+    imports: [KbqPopoverModule, KbqOverlayLayer],
+    template: `
+        <button
+            #focusTrigger
+            kbqPopover
+            kbqTrigger="focus"
+            [kbqPopoverContent]="'Focus'"
+            [kbqPopoverPreventClose]="preventClose()"
+        >
+            Focus
+        </button>
+        <div kbqOverlayLayer>
+            <button #layerTrigger kbqPopover [kbqPopoverContent]="'Layer'">Layer</button>
+        </div>
+    `
+})
+class PopoverInModal {
+    readonly preventClose = signal(false);
+
+    readonly focusTrigger = viewChild.required<ElementRef<HTMLElement>>('focusTrigger');
+    readonly layerTrigger = viewChild.required<ElementRef<HTMLElement>>('layerTrigger');
 }
 
 @Component({

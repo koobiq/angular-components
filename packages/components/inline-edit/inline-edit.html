@@ -64,6 +64,7 @@
                 cdkTrapFocusAutoCapture
                 [class.kbq-inline-edit__panel_select]="isSingleSelect()"
                 [cdkTrapFocus]="false"
+                (keydown.escape)="onPanelEscape($event)"
                 (keydown.tab)="onPanelTab($event, panel, false)"
                 (keydown.shift.tab)="onPanelTab($event, panel, true)"
             >

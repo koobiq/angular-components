@@ -370,9 +370,13 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     /** Closes the pop-up when `Escape` is pressed while it is open. Bound to the host `keydown` event.
      * @docs-private */
     keydownHandler(event: KeyboardEvent) {
-        if (this.isOpen && event.keyCode === ESCAPE) {
-            this.hide();
-        }
+        // An Escape already spent, by an open tooltip or by a control on the host closing a popup of its own, closes
+        // nothing more.
+        if (event.keyCode !== ESCAPE || event.defaultPrevented || !this.isOpen || !this.canHide()) return;
+
+        // Spent only when the pop-up closes, so that a container closing on Escape, such as a modal, stays open.
+        event.preventDefault();
+        this.hide();
     }
 
     /** Hides the pop-up. Bound to the host `touchend` event.
@@ -460,15 +464,20 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy, KbqSiblin
     /** Hides the pop-up after `delay` ms, honoring `preventClose` and the hover state on mouseleave.
      * @docs-private */
     hide(delay: number = this.leaveDelay) {
-        if (this.preventClose) return;
-
-        if (
-            (this.instance && this.triggerName !== 'mouseleave') ||
-            // Untracked for the same reason as in `show()`.
-            (this.triggerName === 'mouseleave' && !untracked(() => this.instance?.hovered()))
-        ) {
+        if (this.canHide()) {
             this.ngZone.run(() => this.instance?.hide(delay));
         }
+    }
+
+    /**
+     * Whether `hide()` hides the pop-up: not under `preventClose`, nor while the pointer that left the trigger rests
+     * on the pop-up.
+     */
+    private canHide(): boolean {
+        if (this.preventClose || !this.instance) return false;
+
+        // Untracked for the same reason as in `show()`.
+        return this.triggerName !== 'mouseleave' || !untracked(() => this.instance!.hovered());
     }
 
     /**

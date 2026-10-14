@@ -28,7 +28,7 @@
             [formControl]="control"
             [errorStateMatcher]="errorStateMatcher"
             (blur)="onTouch()"
-            (keyup.escape)="toggle()"
+            (keydown.escape)="onEscape($event)"
             (keydown.enter)="onEnter($event)"
         />
 
