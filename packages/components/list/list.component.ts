@@ -2,11 +2,15 @@ import {
     AfterContentChecked,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     ElementRef,
+    Injector,
     QueryList,
     ViewEncapsulation,
     contentChildren,
-    inject
+    inject,
+    runInInjectionContext,
+    untracked
 } from '@angular/core';
 import { KbqLine, kbqQueryListFrom } from '@koobiq/components/core';
 
@@ -42,17 +46,22 @@ export class KbqList {}
 })
 export class KbqListItem implements AfterContentChecked {
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
+    private readonly destroyRef = inject(DestroyRef);
 
     private readonly linesQuery = contentChildren(KbqLine);
-    private readonly linesList = kbqQueryListFrom(this.linesQuery);
+    // Built on the first read of `lines`: the list costs a root effect, and most items are never asked for it.
+    private linesList: (() => QueryList<KbqLine>) | undefined;
 
     get lines(): QueryList<KbqLine> {
+        this.linesList ??= this.createLinesList();
+
         return this.linesList();
     }
 
     ngAfterContentChecked(): void {
         // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
-        this.linesList();
+        this.linesList?.();
     }
 
     getHostElement(): HTMLElement {
@@ -65,5 +74,19 @@ export class KbqListItem implements AfterContentChecked {
 
     protected handleBlur(): void {
         this.elementRef.nativeElement.classList.remove('kbq-focused');
+    }
+
+    private createLinesList(): () => QueryList<KbqLine> {
+        if (this.destroyRef.destroyed) {
+            // Nothing is left to sync, and a destroyed view takes no destroy hook.
+            const list = new QueryList<KbqLine>(true);
+
+            list.reset([...untracked(this.linesQuery)]);
+
+            return () => list;
+        }
+
+        // Untracked: an effect cannot be created inside a reactive context, such as a template reading `lines`.
+        return untracked(() => runInInjectionContext(this.injector, () => kbqQueryListFrom(this.linesQuery)));
     }
 }
