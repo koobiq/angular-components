@@ -47,6 +47,7 @@ import {
     KbqPseudoCheckboxModule,
     KbqPseudoCheckboxState,
     LEFT_ARROW,
+    MultipleMode,
     RIGHT_ARROW,
     SPACE,
     ShowOnControlDirtyErrorStateMatcher,
@@ -5279,6 +5280,26 @@ describe('KbqTreeSelect', () => {
 
             expect(onSelectAll).toHaveBeenCalledTimes(2);
             expect(onSelectAll.mock.calls[1][0].selected).toBe(true);
+        });
+    });
+
+    describe('with multiple selection and a value written before the options', () => {
+        it('should expose the value as an array', async () => {
+            configureKbqTreeSelectTestingModule([MultiSelect]);
+
+            const fixture = TestBed.createComponent(MultiSelect);
+            const select = fixture.componentInstance.select;
+
+            fixture.componentInstance.control.setValue(['rootNode_1', 'Documents']);
+            fixture.detectChanges();
+
+            expect(select().value()).toEqual(['rootNode_1', 'Documents']);
+            expect(select().tree()!.multipleMode).toBe(MultipleMode.CHECKBOX);
+
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+
+            expect(select().value()).toEqual(['rootNode_1', 'Documents']);
         });
     });
 
