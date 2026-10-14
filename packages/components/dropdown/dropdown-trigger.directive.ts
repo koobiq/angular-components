@@ -260,9 +260,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     /**
      * Whether the dropdown overlay is currently attached. Part of the `KbqSiblingPopup` contract.
      *
-     * `opened` is set synchronously right after the overlay is attached and, on close, only once the exit
-     * animation is done — i.e. it stays `true` for the whole time the trigger is busy with its panel,
-     * including the moment `destroy()` restores focus to the trigger.
+     * Set right after the overlay is attached and cleared right after it is detached, once `destroy()` has
+     * restored focus to the trigger, so a tooltip on the trigger stays muted for that focus.
      */
     get isAttached(): boolean {
         return this.openedState();
@@ -688,9 +687,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
     }
 
     /**
-     * Listens to changes in the position of the overlay and sets the correct classes
-     * on the dropdown based on the new position. This ensures the animation origin is always
-     * correct, even if a fallback position is used for the overlay.
+     * Listens to changes in the position of the overlay and sets the matching position classes on the dropdown,
+     * so they follow a fallback position too.
      */
     private subscribeToPositions(position: FlexibleConnectedPositionStrategy): void {
         if (this.dropdown().setPositionClasses) {
@@ -803,8 +801,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
                   // While a safe area protects this dropdown, closing is driven by the safe area
                   // itself instead: either it resolves on its own (see `handleMouseLeave()`), or a
                   // forced switch to a different nested trigger closes this one via `onExit` — always
-                  // before the new trigger opens, so the two don't race over animation state shared by
-                  // triggers pointing at the same dropdown (see `KbqDropdown.activateSafeArea()`).
+                  // before the new trigger opens, so the two don't race over the state of a dropdown shared by
+                  // both triggers (see `KbqDropdown.activateSafeArea()`).
                   filter(() => !this.parent.isSafeAreaActive())
               )
             : observableOf();
@@ -897,9 +895,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
         // An explicit or `'auto'` panelWidth already fixes the pane; only pin content-sized panels.
         if (this.getOverlaySize().width !== '') return;
 
-        // Measure the pane, not `.kbq-dropdown__panel`: the panel scales in via `@transformDropdown`,
-        // so its `getBoundingClientRect()` can read a mid-animation (scaled) width. The pane is
-        // transform-immune and the panel fills it.
         const width = this.overlayRef.overlayElement.getBoundingClientRect().width;
 
         if (width) {

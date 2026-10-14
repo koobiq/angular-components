@@ -233,7 +233,7 @@ export class KbqTreeSelectChange<T = any> {
         '[attr.aria-expanded]': 'panelOpen',
         '[attr.aria-controls]': 'panelOpen ? panelId : null',
         '[attr.aria-label]': 'ariaLabelText',
-        '[attr.aria-labelledby]': 'resolvedAriaLabelledby',
+        '[attr.aria-labelledby]': 'resolvedAriaLabelledby()',
         '[attr.aria-invalid]': 'errorState()',
         '[attr.aria-required]': 'required()',
         '[attr.aria-disabled]': 'disabled() || null',
@@ -484,9 +484,9 @@ export class KbqTreeSelect
      * Id of the element that names the control: its own `aria-labelledby`, or else the form-field label.
      * @internal
      */
-    protected get resolvedAriaLabelledby(): string | null {
-        return this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null;
-    }
+    protected readonly resolvedAriaLabelledby = computed(
+        () => this.ariaLabelledby() ?? this.parentFormField?.labelId() ?? null
+    );
 
     /** Object used to control when error messages are shown. */
     readonly errorStateMatcher = input<ErrorStateMatcher>();
@@ -840,7 +840,7 @@ export class KbqTreeSelect
      * repository is in. Left off while `aria-labelledby` is set, which outranks `aria-label` anyway.
      */
     protected get ariaLabelText(): string | null {
-        return this.resolvedAriaLabelledby ? null : this.ariaLabel() || this.placeholder() || null;
+        return this.resolvedAriaLabelledby() ? null : this.ariaLabel() || this.placeholder() || null;
     }
 
     isEmptySearchResult: boolean;
@@ -960,9 +960,8 @@ export class KbqTreeSelect
     }
 
     ngOnInit() {
-        // We need `distinctUntilChanged` here, because some browsers will
-        // fire the animation end event twice for the same animation. See:
-        // https://github.com/angular/angular/issues/24084
+        // Only the latest report of a frame is delivered, so a close and a reopen within one frame repeat the
+        // state delivered before; `distinctUntilChanged` keeps `openedChange` from emitting it twice.
         this.panelDoneAnimatingStream
             .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
@@ -1127,7 +1126,7 @@ export class KbqTreeSelect
     }
 
     ngAfterViewChecked(): void {
-        // Emits `changes` where a decorator query did: once this view is checked.
+        // Syncs the list here so `changes` emits once this view is checked.
         this.tagsList();
     }
 

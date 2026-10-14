@@ -64,7 +64,6 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
     ngAfterContentChecked(): void;
     ngAfterContentInit(): void;
-    // (undocumented)
     ngAfterViewInit(): void;
     ngOnDestroy(): void;
     get optionBlurChanges(): Observable<KbqNavbarFocusableItemEvent>;

@@ -494,7 +494,7 @@ export class KbqTreeSelection
     // pre-dating this feature (`KbqTreeBase<any>`, `SelectionModel<any>`), so `unknown`
     // here would only relocate the unsafety into a cast at every call site, not remove it.
     private get selectAllTargets(): any[] {
-        // `treeControl` is an `@Input`, so it is still unset on the change-detection pass that sets it:
+        // `treeControl` is an input, so it is still unset on the change-detection pass that sets it:
         // a consumer reading `allOptionsSelected`/`selectAllState` off a template reference — which is
         // exactly how the docs suggest swapping the trigger label — would otherwise get a TypeError
         // before the tree is wired up. Nothing is selectable yet at that point, so an empty set is right.
@@ -871,7 +871,7 @@ export class KbqTreeSelection
     }
 
     override ngAfterContentChecked(): void {
-        // Emits `changes` where a decorator query did: after the projected items are bound, before the host bindings.
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
         this.unorderedOptionsList();
 
         super.ngAfterContentChecked();

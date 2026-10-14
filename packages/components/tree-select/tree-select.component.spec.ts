@@ -2333,6 +2333,33 @@ describe('KbqTreeSelect', () => {
                     expect(labelledSelect.getAttribute('aria-label')).toBe('Pick a dish');
                 });
 
+                it('should follow a form-field label added and removed after the first render', async () => {
+                    fixture.destroy();
+
+                    const labelledFixture = TestBed.createComponent(TreeSelectWithAriaName);
+
+                    labelledFixture.detectChanges();
+                    await vi.runOnlyPendingTimersAsync();
+
+                    const labelledSelect = getTreeSelectElement(labelledFixture);
+
+                    expect(labelledSelect.hasAttribute('aria-labelledby')).toBe(false);
+
+                    labelledFixture.componentInstance.label = 'Dish';
+                    labelledFixture.detectChanges();
+
+                    const label = labelledFixture.debugElement.query(By.css('.kbq-form-field__label')).nativeElement;
+
+                    expect(labelledSelect.getAttribute('aria-labelledby')).toBe(label.id);
+                    expect(labelledSelect.hasAttribute('aria-label')).toBe(false);
+
+                    labelledFixture.componentInstance.label = null;
+                    labelledFixture.detectChanges();
+
+                    expect(labelledSelect.hasAttribute('aria-labelledby')).toBe(false);
+                    expect(labelledSelect.getAttribute('aria-label')).toBe('Food');
+                });
+
                 it('should have no axe violations when named only by the placeholder', async () => {
                     // axe-core schedules its work on timers.
                     vi.useRealTimers();
