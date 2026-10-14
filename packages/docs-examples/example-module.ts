@@ -3420,6 +3420,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "input-password-overview-example.ts",
     "importPath": "components/input"
   },
+  "input-password-template-driven": {
+    "packagePath": "components/input/input-password-template-driven",
+    "title": "Input password with template-driven forms",
+    "componentName": "InputPasswordTemplateDrivenExample",
+    "files": [
+      "input-password-template-driven-example.ts"
+    ],
+    "localImportFiles": [],
+    "selector": "input-password-template-driven-example",
+    "primaryFile": "input-password-template-driven-example.ts",
+    "importPath": "components/input"
+  },
   "input-with-mask": {
     "packagePath": "components/input/input-with-mask",
     "title": "Input with mask",
@@ -8165,6 +8177,7 @@ export type LiveExampleId =
   | 'input-number-overview'
   | 'input-overview'
   | 'input-password-overview'
+  | 'input-password-template-driven'
   | 'input-with-mask'
   | 'layout-flex-alignment'
   | 'layout-flex-behaviour-modifiers'

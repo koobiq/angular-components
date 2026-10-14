@@ -1,7 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';

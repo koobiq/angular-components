@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 
 /**
