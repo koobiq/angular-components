@@ -1335,6 +1335,8 @@ export class ColorInput implements KbqFormFieldControl<string> {
 
 **Вместе с этим изменились помощники состояния ошибки.** `KbqErrorStateTracker` больше не принимает субъект `stateChanges`, а его `errorState` — как и `CanUpdateErrorState.errorState` — стал `Signal<boolean>`; `CanUpdateErrorState` больше не объявляет `errorStateMatcher`. Устаревшие `mixinErrorState` и `CanUpdateErrorStateCtor` удалены. `KbqIconErrorStateContext` тоже перешёл на сигналы, как и `id`, `placeholder`, `focused` и `empty` у `KbqTagInput`: их чтения становятся вызовами, о записи сообщается.
 
+`KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqSelect`, `KbqTreeSelect` и `KbqTagList` вычисляют состояние ошибки этим трекером, который получает `defaultErrorStateMatcher`, `parentForm` и `parentFormGroup` при создании контрола: присваивание этих полей позже ни на что не влияет, поэтому предоставьте `ErrorStateMatcher` или привяжите `errorStateMatcher`. Матчер, вернувший `null` или `undefined`, даёт `false`.
+
 **`KbqDatepicker` больше не контрол поля формы.** Он предоставлял контракт, не реализуя его; теперь поле формы всегда находит поле ввода `kbqDatepicker`. Поле ввода теперь рендерит свой `id`, поэтому метка поля формы связана с ним.
 
 **Кастомным данным локали нужны ещё три ключа в `a11y`** — `clear`, `showPassword` и `hidePassword` — для доступных имён «крестика» и переключателя пароля. Литерал локали без них перестанет проходить проверку типов; данные, зарегистрированные через `KBQ_LOCALE_DATA`, откатятся на строки ru-RU.

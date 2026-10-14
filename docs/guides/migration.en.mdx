@@ -1335,6 +1335,8 @@ export class ColorInput implements KbqFormFieldControl<string> {
 
 **The error state helpers changed with it.** `KbqErrorStateTracker` no longer takes a `stateChanges` subject, and its `errorState` — like `CanUpdateErrorState.errorState` — is a `Signal<boolean>`; `CanUpdateErrorState` no longer declares `errorStateMatcher`. The deprecated `mixinErrorState` and `CanUpdateErrorStateCtor` were removed. `KbqIconErrorStateContext` is signal-based too, and so are `id`, `placeholder`, `focused` and `empty` of `KbqTagInput`: their reads become calls, a write is reported.
 
+`KbqInput`, `KbqInputPassword`, `KbqTextarea`, `KbqSelect`, `KbqTreeSelect` and `KbqTagList` compute their error state with that tracker, which takes `defaultErrorStateMatcher`, `parentForm` and `parentFormGroup` when the control is created: assigning one of those fields afterwards has no effect, so provide an `ErrorStateMatcher` or bind `errorStateMatcher` instead. A matcher that returns `null` or `undefined` reports `false`.
+
 **`KbqDatepicker` is no longer a form field control.** It provided the contract without implementing it; the form field now always finds the `kbqDatepicker` input. The input renders its `id` now, so the form field label is associated with it.
 
 **Custom locale data needs three more `a11y` keys** — `clear`, `showPassword` and `hidePassword` — for the accessible names of the cleaner and the password toggle. A locale object literal without them stops type-checking; data registered through `KBQ_LOCALE_DATA` falls back to the ru-RU strings.
