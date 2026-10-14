@@ -334,6 +334,29 @@ class NumberInputWithNativeNumberType {
 @Component({
     imports: [
         KbqInputModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <input kbqNumberInput type="number" [formControl]="formControl" />
+    `
+})
+class NumberInputWithNativeNumberTypeAndFormControl {
+    readonly formControl = new UntypedFormControl(12345.5);
+}
+
+@Component({
+    imports: [KbqInputModule],
+    template: `
+        <input kbqNumberInput [value]="$any(value)" />
+    `
+})
+class NumberInputWithBoundValue {
+    value: number | undefined = 12345.5;
+}
+
+@Component({
+    imports: [
+        KbqInputModule,
         FormsModule
     ],
     template: `
@@ -2111,6 +2134,59 @@ describe('KbqNumberInput', () => {
             } finally {
                 warn.mockRestore();
             }
+        });
+
+        it('should render the value a reactive form writes on creation', async () => {
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+            try {
+                const fixture = createComponent(NumberInputWithNativeNumberTypeAndFormControl);
+
+                await fixture.whenStable();
+
+                const inputElement: HTMLInputElement = fixture.debugElement.query(By.directive(KbqInput)).nativeElement;
+
+                expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345,5`);
+            } finally {
+                warn.mockRestore();
+            }
+        });
+    });
+
+    describe('bound value', () => {
+        let fixture: ComponentFixture<NumberInputWithBoundValue>;
+        let inputElement: HTMLInputElement;
+        let numberInput: KbqNumberInput;
+
+        beforeEach(async () => {
+            fixture = createComponent(NumberInputWithBoundValue);
+            await fixture.whenStable();
+
+            const inputDebugElement = fixture.debugElement.query(By.directive(KbqNumberInput));
+
+            inputElement = inputDebugElement.nativeElement;
+            numberInput = inputDebugElement.injector.get(KbqNumberInput);
+        });
+
+        it('should render the bound number in the locale format', () => {
+            const input = fixture.debugElement.query(By.directive(KbqInput)).injector.get(KbqInput);
+
+            expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345,5`);
+            expect(input.value()).toBe(inputElement.value);
+        });
+
+        it('should clear the field when the bound value becomes undefined', async () => {
+            const valueChange = vi.fn();
+
+            numberInput.valueChange.subscribe(valueChange);
+
+            fixture.componentInstance.value = undefined;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            expect(inputElement.value).toBe('');
+            expect(numberInput.value).toBeNull();
+            expect(valueChange).toHaveBeenCalledWith(null);
         });
     });
 

@@ -327,11 +327,17 @@ export class KbqNumberInput implements ControlValueAccessor, OnDestroy {
 
     constructor() {
         // The inputs stay `undefined` until a template binds them, so an unbound one does not override what a
-        // form control wrote through `writeValue` / `setDisabledState`.
+        // form control wrote through `writeValue` / `setDisabledState`. Once bound, `undefined` clears the value.
+        let bound = false;
+
         effect(() => {
             const value = this.valueInput();
 
-            if (value !== undefined) untracked(() => this.setValue(value));
+            if (!bound && value === undefined) return;
+
+            bound = true;
+
+            untracked(() => this.setValue(value ?? null));
         });
 
         effect(() => {
