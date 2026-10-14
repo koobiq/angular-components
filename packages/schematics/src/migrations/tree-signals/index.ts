@@ -14,7 +14,7 @@ function referencesTree(content: string): boolean {
 }
 
 /**
- * Reports the six members of `@koobiq/components/tree` that became read-only, with the files that
+ * Reports the members of `@koobiq/components/tree` that became read-only, with the files that
  * write or read them. Never writes: see `data.ts` for why none of them can be rewritten mechanically.
  */
 export default function treeSignals(options: Schema): Rule {

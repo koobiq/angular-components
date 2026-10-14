@@ -7,12 +7,41 @@
  */
 
 export interface WarnPattern {
+    /**
+     * Only a file that also matches it is checked against `pattern`. Left out where the pattern names Koobiq alone,
+     * and for Angular's animation providers, which `app.config.ts` and specs declare without naming a component.
+     */
+    anchor?: string;
     pattern: string;
     message: string;
 }
 
+/**
+ * A file that imports the entry point, names one of its `Kbq…` / `kbq…` symbols or renders its element. The stem
+ * ends at a capital or at the end of the word, so `Tab` does not take `KbqTable`.
+ */
+const owner = (entryPoint: string, stem: string, element = entryPoint): string =>
+    String.raw`@koobiq/components/${entryPoint}\b|\b[Kk]bq${stem}(?:[A-Z]\w*)?\b|<kbq-${element}\b`;
+
+const DROPDOWN = owner('dropdown', 'Dropdown');
+const SIDEBAR = owner('sidebar', 'Sidebar');
+const TABS = owner('tabs', 'Tabs?', 'tab');
+const TOAST = owner('toast', 'Toast');
+const SIDEPANEL = owner('sidepanel', 'Sidepanel');
+const ACTIONS_PANEL = owner('actions-panel', 'ActionsPanel');
+const CONTENT_PANEL = owner('content-panel', 'ContentPanel');
+const POP_UP = [
+    String.raw`\bKbqPopUp\w*`,
+    owner('tooltip', 'Tooltip'),
+    owner('popover', 'Popover'),
+    owner('app-switcher', 'AppSwitcher'),
+    owner('notification-center', 'NotificationCenter')
+].join('|');
+
 export const warnPatterns: WarnPattern[] = [
     {
+        // kbqSelectAnimations is ours whatever the file imports it from.
+        anchor: String.raw`@koobiq/components/core\b|\bkbqSelectAnimations\b`,
         pattern: '\\b(fadeAnimation|kbqSelectAnimations)\\b',
         message:
             'fadeAnimation and kbqSelectAnimations were removed from @koobiq/components/core: the components no ' +
@@ -20,6 +49,7 @@ export const warnPatterns: WarnPattern[] = [
             '`animate.enter` / `animate.leave` in the template.'
     },
     {
+        anchor: DROPDOWN,
         pattern: '\\b(kbqDropdownAnimations|fadeInItems|transformDropdown)\\b',
         message:
             'kbqDropdownAnimations, fadeInItems and transformDropdown were removed from @koobiq/components/dropdown: ' +
@@ -38,12 +68,14 @@ export const warnPatterns: WarnPattern[] = [
             'through KbqSidepanelRef: afterOpened(), beforeClosed() and afterClosed().'
     },
     {
+        anchor: POP_UP,
         pattern: '\\.(animationStart|animationDone)\\s*\\(',
         message:
             'KbqPopUp.animationStart() and animationDone() were removed: a pop-up animates in with CSS. A subclass ' +
             'acting once it has appeared overrides the protected afterShowAnimation() instead.'
     },
     {
+        anchor: DROPDOWN,
         pattern: '\\b(isAnimating|panelAnimationState|startAnimation|resetAnimation)\\b',
         message:
             'KbqDropdown lost isAnimating, panelAnimationState, startAnimation() and resetAnimation() along with ' +
@@ -51,6 +83,16 @@ export const warnPatterns: WarnPattern[] = [
             'custom trigger tells it about an attached panel with setOpened().'
     },
     {
+        anchor: DROPDOWN,
+        pattern: '\\.animationDone\\s*\\.\\s*(pipe|subscribe)\\b',
+        message:
+            'KbqDropdown.animationDone was removed: the panel no longer animates, so the trigger attaches and ' +
+            'detaches it at once. Listen to the dropdownOpened / dropdownClosed outputs of KbqDropdownTrigger, or ' +
+            'its openedChange, which emit right after. The animationDone of KbqTabGroup and of the actions panel ' +
+            'container stays: ignore this for them.'
+    },
+    {
+        anchor: [DROPDOWN, SIDEBAR, TABS, TOAST, SIDEPANEL, ACTIONS_PANEL].join('|'),
         pattern: '\\b(onAnimationStart|onAnimationDone|onAnimation|onTranslateTabStarted|onTranslateTabComplete)\\b',
         message:
             'The animation callbacks taking an AnimationEvent were removed (KbqDropdown, KbqSidebar, KbqTabBody, ' +
@@ -58,6 +100,7 @@ export const warnPatterns: WarnPattern[] = [
             'KbqSidebar.stateChanged, KbqTabGroup.animationDone, and the afterOpened() / afterClosed() of a ref.'
     },
     {
+        anchor: [SIDEPANEL, ACTIONS_PANEL].join('|'),
         pattern: '\\banimationStateChanged\\b',
         message:
             'animationStateChanged no longer emits an AnimationEvent: the actions panel container emits the state ' +
@@ -65,6 +108,7 @@ export const warnPatterns: WarnPattern[] = [
             'through their ref: afterOpened(), beforeClosed() and afterClosed().'
     },
     {
+        anchor: [SIDEPANEL, SIDEBAR, TOAST].join('|'),
         pattern: '\\b(setAnimationState|animationTransform)\\b|\\.animationState\\b',
         message:
             'The animation state of KbqSidepanelContainerComponent (animationState, animationTransform, ' +
@@ -73,6 +117,7 @@ export const warnPatterns: WarnPattern[] = [
             'Ignore this if animationState is a member of your own component.'
     },
     {
+        anchor: CONTENT_PANEL,
         pattern: '\\bcontentAnimationState\\b',
         message:
             'KbqContentPanelContainer.contentAnimationState was removed with the @contentAnimation trigger it fed: ' +
@@ -80,6 +125,7 @@ export const warnPatterns: WarnPattern[] = [
             'the panel.'
     },
     {
+        anchor: TOAST,
         pattern: '\\.animation\\s*\\.\\s*(pipe|subscribe|next)\\b',
         message:
             'KbqToastService.animation (and KbqToastStack.animation) were removed: a toast plays its exit animation ' +

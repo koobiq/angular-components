@@ -61,8 +61,36 @@ describe(SCHEMATIC_NAME, () => {
 
         expect(log).toContain('kbqDropdownAnimations, fadeInItems and transformDropdown were removed');
         expect(log).toContain('KbqDropdown lost isAnimating');
+        expect(log).toContain('KbqDropdown.animationDone was removed');
         expect(log).toContain('KbqPopUp.animationStart() and animationDone() were removed');
-        expect(log).toContain('3 use(s) reported');
+        expect(log).toContain('4 use(s) reported');
+    });
+
+    it('reports a subscription to the animationDone of a dropdown, not of a tab group', async () => {
+        const [first] = projects.keys();
+        const messages = collectLogs();
+        const dropdownFile = filePath(projects.get(first)!, 'dropdown-closed.ts');
+        const tabsFile = filePath(projects.get(first)!, 'tabs-done.ts');
+
+        appTree.create(
+            dropdownFile,
+            "import { KbqDropdown } from '@koobiq/components/dropdown';\n" +
+                'export const closed = (dropdown: KbqDropdown) => dropdown.animationDone.pipe(take(1));\n'
+        );
+        appTree.create(
+            tabsFile,
+            "import { KbqTabGroup } from '@koobiq/components/tabs';\n" +
+                'export const done = (tabs: KbqTabGroup) => tabs.animationDone.subscribe();\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain(`[angular-animations-removal] ${dropdownFile}`);
+        expect(log).toContain('KbqDropdown.animationDone was removed');
+        expect(log).not.toContain(tabsFile);
+        expect(log).toContain('1 use(s) reported');
     });
 
     it('reports the removed animation state of the sidepanel container, sidebar and toast', async () => {
@@ -71,7 +99,10 @@ describe(SCHEMATIC_NAME, () => {
 
         appTree.create(
             filePath(projects.get(first)!, 'sidepanel.ts'),
-            'ref.containerInstance.setAnimationState(state);\nexport const opened = sidebar.animationState;\n'
+            "import { KbqSidebar } from '@koobiq/components/sidebar';\n" +
+                "import { KbqSidepanelRef } from '@koobiq/components/sidepanel';\n" +
+                "export const hide = (ref: KbqSidepanelRef) => ref.containerInstance.setAnimationState('hidden');\n" +
+                'export const opened = (sidebar: KbqSidebar) => sidebar.animationState;\n'
         );
 
         await run(first);
@@ -128,6 +159,65 @@ describe(SCHEMATIC_NAME, () => {
         await run(first);
 
         expect(messages.join('\n')).not.toContain('[angular-animations-removal]');
+    });
+
+    it('stays silent for a component that animates itself with the same member names', async () => {
+        const [first] = projects.keys();
+        const messages = collectLogs();
+
+        appTree.create(
+            filePath(projects.get(first)!, 'slide.ts'),
+            "import { AnimationEvent, trigger } from '@angular/animations';\n" +
+                "import { KbqButtonModule } from '@koobiq/components/button';\n" +
+                "const fadeAnimation = trigger('fade', []);\n" +
+                '@Component({\n' +
+                '    template: \'<div [@slide]="animationState" (@slide.done)="onAnimationDone($event)"></div>\',\n' +
+                '    imports: [KbqButtonModule],\n' +
+                "    animations: [fadeAnimation, trigger('slide', [])]\n" +
+                '})\n' +
+                'export class Slide {\n' +
+                '    readonly animationStateChanged = new EventEmitter<AnimationEvent>();\n' +
+                '    readonly animation = new Subject<AnimationEvent>();\n' +
+                '    isAnimating = false;\n' +
+                "    animationState = 'open';\n" +
+                '    onAnimationStart() { this.isAnimating = true; }\n' +
+                '    onAnimationDone(event: AnimationEvent) {\n' +
+                '        this.isAnimating = false;\n' +
+                '        this.animationStateChanged.emit(event);\n' +
+                '        this.animation.next(event);\n' +
+                '        this.player.animationDone(event);\n' +
+                '    }\n' +
+                '    onAnimation(event: AnimationEvent) { this.setAnimationState(event.toState); }\n' +
+                '}\n'
+        );
+
+        await run(first);
+
+        expect(messages.join('\n')).not.toContain('[angular-animations-removal]');
+    });
+
+    it('reports the callbacks and streams in a file that names the component owning them', async () => {
+        const [first] = projects.keys();
+        const messages = collectLogs();
+
+        appTree.create(
+            filePath(projects.get(first)!, 'sidebar.ts'),
+            "import { KbqSidebar } from '@koobiq/components/sidebar';\n" +
+                'export const done = (sidebar: KbqSidebar) => sidebar.onAnimationDone();\n'
+        );
+        appTree.create(
+            filePath(projects.get(first)!, 'toast.ts'),
+            "import { KbqToastService } from '@koobiq/components/toast';\n" +
+                'export const watch = (toasts: KbqToastService) => toasts.animation.subscribe();\n'
+        );
+
+        await run(first);
+
+        const log = messages.join('\n');
+
+        expect(log).toContain('The animation callbacks taking an AnimationEvent were removed');
+        expect(log).toContain('KbqToastService.animation (and KbqToastStack.animation) were removed');
+        expect(log).toContain('2 use(s) reported');
     });
 
     it('leaves every file untouched', async () => {
