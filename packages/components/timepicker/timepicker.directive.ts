@@ -141,7 +141,7 @@ const timeFormatAttribute = (value: TimeFormats | null | undefined): TimeFormats
         '[attr.id]': 'id()',
         '[attr.placeholder]': 'placeholder()',
         '[attr.disabled]': 'disabled() || null',
-        '[attr.required]': 'required()',
+        '[attr.required]': 'required() || null',
         '[attr.size]': 'getSize()',
         '[attr.autocomplete]': '"off"',
         '(blur)': 'onBlur()',
