@@ -115,7 +115,9 @@ export class KbqSidepanelRef<T = any, R = any> {
                 filter((event) => event.keyCode === ESCAPE)
             )
             .subscribe((event) => {
-                if (this.config.disableClose) return;
+                // CDK hands the key to this overlay after the layers above it, such as a tooltip, a popover or a
+                // confirm dialog, have handled it: one that closed spent it, and the sidepanel stays open.
+                if (event.defaultPrevented || this.config.disableClose) return;
 
                 event.preventDefault();
                 this.close();

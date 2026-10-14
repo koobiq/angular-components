@@ -17,7 +17,15 @@ import {
     ɵZONELESS_ENABLED
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { enUSLocaleData, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import {
+    createKeyboardEvent,
+    enUSLocaleData,
+    ESCAPE,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    ruRULocaleData
+} from '@koobiq/components/core';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { lastValueFrom } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig, kbqActionsPanelDefaultConfigProvider } from './actions-panel-config';
@@ -92,6 +100,18 @@ const holdAnimation = (element: HTMLElement): (() => void) => {
 export class ActionsPanelComponent {
     readonly data = inject(KBQ_ACTIONS_PANEL_DATA);
     readonly actionsPanelRef = inject(KbqActionsPanelRef);
+}
+
+@Component({
+    selector: 'actions-panel-with-tooltip',
+    imports: [KbqToolTipModule],
+    template: `
+        <button id="actionsPanel-hint" kbqTooltip="Hint">Action</button>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ActionsPanelWithTooltip {
+    readonly tooltip = viewChild.required(KbqTooltipTrigger);
 }
 
 @Component({
@@ -290,6 +310,52 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelContainerElement().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
+    });
+
+    it('should not close on ESCAPE already spent by a control inside it', async () => {
+        const fixture = createComponent(ActionsPanelController);
+
+        fixture.componentInstance.openFromTemplate();
+        await fixture.whenStable();
+
+        const control = getActionsPanelAction2Element();
+
+        control.addEventListener('keydown', (event) => event.preventDefault());
+        control.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        await fixture.whenStable();
+
+        expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
+    });
+
+    it('should close only the tooltip open inside it on the first ESCAPE, and itself on the next', async () => {
+        const fixture = createComponent(ActionsPanelController);
+
+        fixture.componentInstance.actionsPanel.open(ActionsPanelWithTooltip);
+        await fixture.whenStable();
+
+        const tooltip = (TestBed.inject(Dialog).openDialogs[0].componentInstance as ActionsPanelWithTooltip).tooltip();
+        const pressEscape = () =>
+            getActionsPanelContainerElement()
+                .querySelector('#actionsPanel-hint')!
+                .dispatchEvent(createKeyboardEvent('keydown', ESCAPE, undefined, 'Escape'));
+
+        tooltip.show(0);
+        await new Promise((resolve) => setTimeout(resolve));
+        await fixture.whenStable();
+
+        expect(tooltip.isOpen).toBe(true);
+
+        pressEscape();
+        await new Promise((resolve) => setTimeout(resolve));
+        await fixture.whenStable();
+
+        expect(tooltip.isOpen).toBe(false);
+        expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
+
+        pressEscape();
+        await fixture.whenStable();
+
+        expect(getActionsPanelContainerElement()).toBeNull();
     });
 
     it('should close on close button click', async () => {

@@ -1271,6 +1271,28 @@ describe('KbqModal', () => {
         });
     });
 
+    describe('with animations disabled below the root injector', () => {
+        it('should hand the layer over to a covering dialog at once', async () => {
+            vi.useFakeTimers();
+            TestBed.configureTestingModule({ imports: [ModalOpenerWithoutMotion] });
+
+            const fixture = TestBed.createComponent(ModalOpenerWithoutMotion);
+
+            fixture.componentInstance.open();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(1);
+
+            fixture.componentInstance.open();
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(1);
+            fixture.detectChanges();
+
+            expect(document.querySelectorAll('.kbq-modal-mask').length).toBe(1);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+    });
+
     describe('KbqModalService providedIn root', () => {
         beforeEach(() => {
             vi.useFakeTimers();
@@ -1818,6 +1840,14 @@ class ModalOpenerComponent {
         return this.modalService.create({ injector: this.injector, kbqContent: 'content' });
     }
 }
+
+/** Turns motion off for its own subtree only, as a feature module or a lazy route would. */
+@Component({
+    selector: 'modal-opener-without-motion',
+    template: ``,
+    providers: [{ provide: KBQ_ANIMATIONS_CONFIG, useValue: { animationsDisabled: true } }]
+})
+class ModalOpenerWithoutMotion extends ModalOpenerComponent {}
 
 @Component({
     selector: 'modal-opener-host',

@@ -193,10 +193,11 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      * @docs-private
      */
     protected handleEscape(event: KeyboardEvent): void {
-        if (!this.config.disableClose) {
-            event.preventDefault();
-            this.close();
-        }
+        // A control inside the panel spent the key closing a popup of its own, such as a tooltip.
+        if (event.defaultPrevented || this.config.disableClose) return;
+
+        event.preventDefault();
+        this.close();
     }
 
     /**

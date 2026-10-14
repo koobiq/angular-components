@@ -160,7 +160,7 @@ export function kbqNotificationCenterScrollStrategyFactory(overlay: Overlay): ()
         '[attr.id]': 'panelId',
         '[attr.aria-labelledby]': 'titleId',
         '[class.kbq-notification-center_popover]': 'popoverMode',
-        '(keydown.escape)': 'escapeHandler()'
+        '(keydown.escape)': 'escapeHandler($any($event))'
     },
     // Carrier only: the panel is created through the overlay, so there is no element for a consumer to bind
     // on. It re-merges the carriers above the trigger and lets the panel read its strings through `read()`.
@@ -538,8 +538,13 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
         this.isTrapFocus = isTrapFocus;
     }
 
-    /** @docs-private */
-    escapeHandler() {
+    /** Closes the panel on `Escape` inside it, unless a control there spent the key closing a popup of its own.
+     * @docs-private */
+    escapeHandler(event?: KeyboardEvent) {
+        if (event?.defaultPrevented) return;
+
+        // Spent, so that a container closing on Escape underneath, such as a sidepanel, stays open.
+        event?.preventDefault();
         this.hide(0);
     }
 }

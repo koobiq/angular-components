@@ -134,7 +134,13 @@ export class KbqModalComponent<T = any, R = any>
     private focusMonitor = inject(FocusMonitor);
     private readonly inputModalityDetector = inject(InputModalityDetector);
     private readonly injector = inject(Injector);
-    private readonly animationsDisabled = kbqAnimationsDisabled();
+
+    /**
+     * Whether the dialog and its dim layer move without motion. Read from the dialog's own injector, under
+     * `options.injector` when the service opened it.
+     * @internal
+     */
+    readonly animationsDisabled = kbqAnimationsDisabled();
 
     /** Accessible name for the icon-only close button. */
     protected readonly a11yLocaleConfiguration = inject(KbqLocaleOverridesDirective, { self: true }).read(

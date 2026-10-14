@@ -1,6 +1,8 @@
 import { CdkTrapFocus, ConfigurableFocusTrapFactory, FocusTrapFactory } from '@angular/cdk/a11y';
 import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal, TemplatePortal } from '@angular/cdk/portal';
 import {
+    afterNextRender,
+    AfterRenderRef,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -112,6 +114,12 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     /** The transition in progress, ended early by the next one. */
     private pendingTransition?: { state: KbqSidepanelAnimationState; wait: { destroy(): void } };
+
+    /** Transition events held until the render that applies the state, in the order they happened. */
+    private readonly unreportedEvents: KbqSidepanelAnimationEvent[] = [];
+
+    /** Reports the held events once the next render is over. */
+    private reportAfterRender?: AfterRenderRef;
 
     /** @docs-private */
     get size(): string {
@@ -252,31 +260,50 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         this.ariaLabelledBy = id;
     }
 
-    /** Reports the transition to `state` starting, and ending once its CSS transition has. */
+    /**
+     * Reports the transition to `state` starting, and ending once its CSS transition has.
+     *
+     * Both are reported after the render that applies the state, as the animation engine did, and never inside
+     * `open()` or `close()`: a subscriber that opens another sidepanel would otherwise do so before the stack the
+     * call is changing is complete, and one that subscribes right after the call would miss the start.
+     */
     private startTransition(state: KbqSidepanelAnimationState): void {
         const pending = this.pendingTransition;
 
         if (pending) {
             pending.wait.destroy();
-            this.pendingTransition = undefined;
-            this.animationStateChanged.next({ phaseName: 'done', toState: pending.state });
+            this.holdEvent({ phaseName: 'done', toState: pending.state });
         }
 
-        this.animationStateChanged.next({ phaseName: 'start', toState: state });
-
-        // A subscriber may have closed and disposed of the sidepanel by now.
-        if (this.destroyed) return;
+        this.holdEvent({ phaseName: 'start', toState: state });
 
         const wait = kbqAfterAnimations(
             () => this.elementRef.nativeElement,
             () => {
                 this.pendingTransition = undefined;
-                this.animationStateChanged.next({ phaseName: 'done', toState: state });
+                this.unreportedEvents.push({ phaseName: 'done', toState: state });
+                this.reportEvents();
             },
             this.injector
         );
 
         this.pendingTransition = { state, wait };
+    }
+
+    private holdEvent(event: KbqSidepanelAnimationEvent): void {
+        this.unreportedEvents.push(event);
+        this.reportAfterRender ??= afterNextRender(() => this.reportEvents(), { injector: this.injector });
+    }
+
+    private reportEvents(): void {
+        this.reportAfterRender?.destroy();
+
+        // One at a time: a subscriber that moves the panel again holds more events, which follow in order.
+        for (let event = this.unreportedEvents.shift(); event; event = this.unreportedEvents.shift()) {
+            this.animationStateChanged.next(event);
+        }
+
+        this.reportAfterRender = undefined;
     }
 
     private setPanelClass() {
