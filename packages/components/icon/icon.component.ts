@@ -267,9 +267,12 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
         this.setHasError(context.errorState);
     }
 
+    // Writes unconditionally, with no `value === this.hasError` guard: `markForCheck()` here is the only
+    // thing that wakes an `OnPush` ancestor whose own state changed but whose icon-button children read it
+    // through a plain (non-signal) property — `kbq-stepper`'s arrows disable through `control().disabled`
+    // this way, with no signal of their own to trigger a recheck. Skipping the call when `hasError` does
+    // not change would silently strand them at whatever `disabled` they had on creation.
     private setHasError(value: boolean): void {
-        if (this.hasError === value) return;
-
         this.hasError = value;
         this.changeDetectorRef.markForCheck();
     }
