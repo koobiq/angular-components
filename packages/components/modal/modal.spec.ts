@@ -390,6 +390,55 @@ describe('KbqModal', () => {
             expect(spyOk).toHaveBeenCalled();
         });
 
+        it('should mark only the footer buttons whose kbqModalMainAction is true for ctrl+enter', async () => {
+            const secondary = vi.fn();
+            const main = vi.fn();
+            const modalRef = modalService.create({
+                kbqFooter: [
+                    { label: 'Secondary', type: 'primary', kbqModalMainAction: false, onClick: secondary },
+                    { label: 'Main', type: 'primary', kbqModalMainAction: true, onClick: main }
+                ]
+            });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const [secondaryButton, mainButton] = modalRef.getElement().querySelectorAll('.kbq-modal-footer button');
+            const event = createKeyboardEvent('keydown', ENTER);
+
+            Object.defineProperty(event, 'ctrlKey', { get: () => true });
+            dispatchEvent(modalRef.getElement(), event);
+            fixture.detectChanges();
+
+            expect(main).toHaveBeenCalledTimes(1);
+            expect(secondary).not.toHaveBeenCalled();
+            expect(secondaryButton.hasAttribute('kbq-modal-main-action')).toBe(false);
+            expect(mainButton.hasAttribute('kbq-modal-main-action')).toBe(true);
+
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+            await vi.runOnlyPendingTimersAsync();
+        });
+
+        it('should mark only the footer buttons whose autoFocus is true for the initial focus', async () => {
+            const modalRef = modalService.create({
+                kbqFooter: [
+                    { label: 'First', type: 'primary', autoFocus: false },
+                    { label: 'Second', type: 'primary', autoFocus: true }
+                ]
+            });
+
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+
+            const [first, second] = modalRef.getElement().querySelectorAll('.kbq-modal-footer button');
+
+            expect(document.activeElement).toBe(second);
+            expect(first.hasAttribute('autofocus')).toBe(false);
+            expect(second.hasAttribute('autofocus')).toBe(true);
+
+            await vi.runOnlyPendingTimersAsync();
+        });
+
         // The input and the output used to be one property, so binding both silently lost the
         // output: Angular subscribed to the default emitter and the input then replaced it.
         it('should let kbqOkClick decide the close and report that kbqOnOk cannot also be bound', () => {
