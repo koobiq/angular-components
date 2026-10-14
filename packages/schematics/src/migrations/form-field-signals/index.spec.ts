@@ -395,6 +395,54 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('{{ field.hasHint() }}');
     });
 
+    const REF_ELEMENTS = [
+        { element: 'kbq-form-field', exportAs: 'kbqFormField', member: 'hasHint' },
+        { element: 'kbq-hint', exportAs: 'kbqHint', member: 'compact' },
+        { element: 'kbq-error', exportAs: 'kbqError', member: 'compact' },
+        { element: 'kbq-reactive-password-hint', exportAs: 'kbqReactivePasswordHint', member: 'compact' },
+        { element: 'kbq-select', exportAs: 'kbqSelect', member: 'disabled' },
+        { element: 'kbq-tree-select', exportAs: 'kbqTreeSelect', member: 'disabled' },
+        { element: 'kbq-timezone-select', exportAs: 'kbqTimezoneSelect', member: 'disabled' },
+        { element: 'kbq-tag-list', exportAs: 'kbqTagList', member: 'disabled' }
+    ];
+
+    it.each(REF_ELEMENTS)(
+        'rewrites reads via a bare #ref and a #ref naming $exportAs on <$element>',
+        async ({ element, exportAs, member }) => {
+            const html = firstHtmlPath();
+
+            appTree.overwrite(
+                html,
+                `<${element} #bare></${element}>\n` +
+                    `<${element} #own="${exportAs}"></${element}>\n` +
+                    `<span>{{ bare.${member} }} {{ own.${member} }}</span>\n`
+            );
+
+            const updated = (await run()).readText(html);
+
+            expect(updated).toContain(`{{ bare.${member}() }} {{ own.${member}() }}`);
+        }
+    );
+
+    it.each(REF_ELEMENTS)(
+        'leaves reads via a #ref naming another directive on <$element> untouched',
+        async ({ element, member }) => {
+            const html = firstHtmlPath();
+            const template =
+                `<${element} #model="ngModel" [(ngModel)]="value" cdkOverlayOrigin #origin="cdkOverlayOrigin">` +
+                `</${element}>\n` +
+                `@if (model.value && !model.disabled) {\n` +
+                `    <span>{{ model.${member} }} {{ origin.${member} }}</span>\n` +
+                '}\n';
+
+            appTree.overwrite(html, template);
+
+            const updated = (await run()).readText(html);
+
+            expect(updated).toBe(template);
+        }
+    );
+
     it('moves [attr.aria-label] on <kbq-cleaner> to the [aria-label] input', async () => {
         const html = firstHtmlPath();
 

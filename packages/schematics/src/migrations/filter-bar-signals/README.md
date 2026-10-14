@@ -29,10 +29,11 @@ The schematic walks every `.ts` and `.html` file in the project (skipping
     - `filterBar.filter` → `filterBar.filter()` (incl. optional chain `filterBar.filter?.name` → `filterBar.filter()?.name`)
     - `filterBar.filter = next` → `filterBar.filter.set(next)`
     - `this.filterBar.isChanged` → `this.filterBar.isChanged()`
-- **Template reference reads.** For a `#ref` bound to `<kbq-filter-bar>`, reads
+- **Template reference reads.** For a bare `#ref` on `<kbq-filter-bar>`, reads
   of signal members through that ref are rewritten in the same template
   (external `.html` and inline `template:` strings): `ref.isChanged` →
-  `ref.isChanged()`.
+  `ref.isChanged()`. `KbqFilterBar` has no `exportAs`, so a ref with a value
+  (`#ref="ngModel"`) names another directive and is left alone.
 - **Rename.** `KbqFilterBarRefresher` → `KbqFilterRefresher` (the old name
   stayed an alias until 21.0.0).
 

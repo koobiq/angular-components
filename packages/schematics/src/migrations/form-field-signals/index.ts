@@ -337,19 +337,31 @@ function migrateTsExpressions(content: string, fileName: string): string {
     return result;
 }
 
+/** `#ref` / `ref-ref`, or `undefined` when the attribute is not a reference variable. */
+function referenceName(name: string): string | undefined {
+    if (name.startsWith('#')) return name.slice(1);
+    if (name.startsWith('ref-')) return name.slice(4);
+
+    return undefined;
+}
+
 /** Collects template reference variable names bound to one of the target's elements. */
 class RefCollector implements Visitor {
     readonly refs = new Set<string>();
 
-    constructor(private readonly elements: readonly string[]) {}
+    constructor(private readonly elements: Readonly<Record<string, string>>) {}
 
     visitElement(element: any): void {
-        if (this.elements.includes(element.name)) {
+        if (Object.hasOwn(this.elements, element.name)) {
+            const exportAs = this.elements[element.name];
+
             for (const attr of element.attrs ?? []) {
                 if (typeof attr.name !== 'string') continue;
 
-                if (attr.name.startsWith('#')) this.refs.add(attr.name.slice(1));
-                else if (attr.name.startsWith('ref-')) this.refs.add(attr.name.slice(4));
+                const name = referenceName(attr.name);
+                const value = String(attr.value ?? '');
+
+                if (name !== undefined && (!value || value === exportAs)) this.refs.add(name);
             }
         }
 
@@ -411,7 +423,9 @@ function rewriteAttributes(template: string): string {
 async function migrateTemplate(template: string): Promise<{ content: string; changed: boolean }> {
     let content = rewriteAttributes(template);
 
-    const relevant = TARGETS.filter((target) => target.elements.some((element) => template.includes(element)));
+    const relevant = TARGETS.filter((target) =>
+        Object.keys(target.elements).some((element) => template.includes(element))
+    );
 
     if (relevant.length > 0) {
         const parsed = await parseTemplate(content);

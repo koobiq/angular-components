@@ -30,6 +30,9 @@ export const ALERT_TYPE = 'KbqAlert';
 /** Element selector whose template reference variables (`#ref`) point at an alert. */
 export const ALERT_ELEMENT = 'kbq-alert';
 
+/** The only `#ref` value on `<kbq-alert>` that names the alert; `#ref="ngModel"` names another directive. */
+export const ALERT_EXPORT_AS = 'kbqAlert';
+
 /**
  * `alertColor` became a read-only `InputSignal` AND changed its value: the getter used to return the CSS class
  * `kbq-alert_<color>`, it now returns the raw color (e.g. `error`). Because a mechanical `()` append would

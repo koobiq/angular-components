@@ -49,7 +49,8 @@ The schematic walks every `.ts`, `.html`, `.scss` and `.css` file in the project
 - **Template reference reads.** For a `#ref` bound to `<kbq-form-field>`, `<kbq-hint>`, `<kbq-error>`,
   `<kbq-reactive-password-hint>`, `<kbq-select>`, `<kbq-tree-select>`, `<kbq-timezone-select>` or
   `<kbq-tag-list>`, reads through that ref are rewritten in the same template (external `.html` and inline
-  `template:` strings).
+  `template:` strings). The ref has to be bare or name the component's own `exportAs` (`#s="kbqSelect"`): one
+  that names another directive (`#s="ngModel"`) is left alone.
 - **Cleaner accessible name.** `<kbq-cleaner [attr.aria-label]="…">` → `<kbq-cleaner [aria-label]="…">`. The
   component now writes `aria-label` from a host binding, so an `attr.` binding is silently overwritten by the
   localized default.
