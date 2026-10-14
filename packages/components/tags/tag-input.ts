@@ -12,7 +12,8 @@ import {
     output,
     Provider,
     signal,
-    SimpleChanges
+    SimpleChanges,
+    untracked
 } from '@angular/core';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import {
@@ -312,7 +313,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
      * @docs-private
      */
     emitTagEnd(): void {
-        this.addTag(this.trimValue(this.inputElement.value), this.existingTagValues());
+        // Untracked: called from a consumer's `effect()`, the tags read here would make it run again on every change.
+        untracked(() => this.addTag(this.trimValue(this.inputElement.value), this.existingTagValues()));
     }
 
     /**

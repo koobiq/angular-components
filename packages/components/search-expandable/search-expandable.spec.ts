@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, DebugElement } from '@angular/core';
+import { Component, DebugElement, effect, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -59,7 +59,8 @@ describe('KbqSearchExpandable', () => {
                 TestSearchExpandableWithEmitValueTimeout,
                 TestSearchExpandableWithDisabledFormControl,
                 TestSearchExpandableWithValidatedFormControl,
-                TestSearchExpandablePair
+                TestSearchExpandablePair,
+                TestSearchExpandableDrivenByEffect
             ]
         }).compileComponents();
     });
@@ -1031,7 +1032,77 @@ describe('KbqSearchExpandable', () => {
             expect(modalClosing).toHaveBeenCalledTimes(1);
         });
     });
+
+    describe('called from an effect', () => {
+        let host: TestSearchExpandableDrivenByEffect;
+        let effectFixture: ComponentFixture<TestSearchExpandableDrivenByEffect>;
+
+        const settle = async (): Promise<void> => {
+            effectFixture.detectChanges();
+            await effectFixture.whenStable();
+        };
+
+        beforeEach(async () => {
+            effectFixture = TestBed.createComponent(TestSearchExpandableDrivenByEffect);
+            host = effectFixture.componentInstance;
+            await settle();
+        });
+
+        it('should not loop when an effect toggles it', async () => {
+            host.action.set('toggle');
+            await settle();
+
+            expect(host.search().isOpened).toBe(true);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that sets the form control re-run when it closes', async () => {
+            host.action.set('write');
+            await settle();
+
+            expect(host.search().isOpened).toBe(true);
+
+            host.search().toggle();
+            await settle();
+
+            expect(host.search().isOpened).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'test-app-search-expandable-driven-by-effect',
+    imports: [KbqSearchExpandableModule, ReactiveFormsModule],
+    template: `
+        <kbq-search-expandable [formControl]="searchControl" />
+    `
+})
+class TestSearchExpandableDrivenByEffect {
+    readonly search = viewChild.required(KbqSearchExpandable);
+    readonly searchControl = new FormControl<string>('');
+    readonly action = signal<'toggle' | 'write' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'toggle') {
+                this.search().toggle();
+            } else {
+                this.searchControl.setValue('query');
+            }
+        });
+    }
+}
 
 @Component({
     selector: 'test-app',

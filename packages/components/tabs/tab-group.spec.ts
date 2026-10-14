@@ -1,6 +1,6 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { AsyncPipe } from '@angular/common';
-import { Component, DebugElement, OnInit, Type, viewChild, viewChildren } from '@angular/core';
+import { Component, DebugElement, OnInit, Type, effect, signal, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {
@@ -1631,5 +1631,62 @@ describe('KbqTabGroup state saving', () => {
         expect(warn).not.toHaveBeenCalled();
 
         warn.mockRestore();
+    });
+});
+
+/** A group that an effect selects a tab of, persisting the selection as a user's choice. */
+@Component({
+    imports: [KbqTabsModule],
+    template: `
+        <kbq-tab-group stateSavingKey="effect-key">
+            @for (tab of tabs(); track tab) {
+                <kbq-tab [label]="tab" [tabId]="tab">{{ tab }}</kbq-tab>
+            }
+        </kbq-tab-group>
+    `
+})
+class TabGroupDrivenByEffect {
+    readonly group = viewChild.required(KbqTabGroup);
+    readonly tabs = signal(['first', 'second']);
+    readonly select = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            // Capped, so that a regression fails instead of hanging.
+            if (!this.select() || this.runs === 10) return;
+
+            this.runs++;
+            this.group().onSelectFocusedIndex(1);
+        });
+    }
+}
+
+describe('KbqTabGroup called from an effect', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [TabGroupDrivenByEffect] });
+        TestBed.overrideProvider(KBQ_STATE_STORE, { useValue: new InMemoryStateStore() });
+    });
+
+    it('should not make an effect that selects a tab re-run when a tab is added', async () => {
+        const fixture = TestBed.createComponent(TabGroupDrivenByEffect);
+        const { componentInstance } = fixture;
+
+        fixture.detectChanges();
+        componentInstance.select.set(true);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(componentInstance.group().selectedIndex).toBe(1);
+
+        dispatchMouseEvent(fixture.nativeElement.querySelectorAll('.kbq-tab-label')[0], 'click');
+        fixture.detectChanges();
+        await fixture.whenStable();
+        componentInstance.tabs.set(['first', 'second', 'third']);
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(componentInstance.group().selectedIndex).toBe(0);
+        expect(componentInstance.runs).toBe(1);
     });
 });

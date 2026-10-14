@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { Component, DebugElement, Type, viewChild } from '@angular/core';
+import { Component, DebugElement, effect, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -838,7 +838,77 @@ describe('KbqToggle', () => {
             animated.forEach((element) => expect(element.classList).toContain('kbq-animations-disabled'));
         });
     });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<ToggleDrivenByEffect>;
+        let host: ToggleDrivenByEffect;
+        let input: HTMLInputElement;
+
+        beforeEach(async () => {
+            fixture = createComponent(ToggleDrivenByEffect);
+            host = fixture.componentInstance;
+            await fixture.whenStable();
+            input = fixture.nativeElement.querySelector('input');
+        });
+
+        it('should not make an effect that checks it re-run when it is clicked', async () => {
+            host.action.set('checked');
+            await fixture.whenStable();
+
+            expect(host.toggle().checked).toBe(true);
+
+            input.click();
+            await fixture.whenStable();
+
+            expect(host.toggle().checked).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that sets indeterminate re-run when it is clicked', async () => {
+            host.action.set('indeterminate');
+            await fixture.whenStable();
+
+            expect(host.toggle().indeterminate).toBe(true);
+
+            input.click();
+            await fixture.whenStable();
+
+            expect(host.toggle().indeterminate).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqToggleModule],
+    template: `
+        <kbq-toggle>Driven by an effect</kbq-toggle>
+    `
+})
+class ToggleDrivenByEffect {
+    readonly toggle = viewChild.required(KbqToggleComponent);
+    readonly action = signal<'checked' | 'indeterminate' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'checked') {
+                this.toggle().checked = true;
+            } else {
+                this.toggle().indeterminate = true;
+            }
+        });
+    }
+}
 
 @Component({
     imports: [

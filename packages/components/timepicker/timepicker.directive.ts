@@ -579,7 +579,9 @@ export class KbqTimepicker<D>
     validate(control: AbstractControl): ValidationErrors | null {
         this.setControl(control);
 
-        return this.validator ? this.validator(control) : null;
+        // Untracked, as `writeValue()`: a form control set from a consumer's `effect()` writes and validates on the
+        // spot, and the state read on the way — `focused`, the value, the inputs — would make the effect run again.
+        return this.validator ? untracked(() => this.validator!(control)) : null;
     }
 
     registerOnValidatorChange(fn: () => void): void {
@@ -587,7 +589,7 @@ export class KbqTimepicker<D>
     }
 
     writeValue(value: D | null): void {
-        this.setValue(value);
+        untracked(() => this.setValue(value));
     }
 
     registerOnChange(fn: (value: D) => void): void {

@@ -18,6 +18,7 @@ import {
     output,
     PLATFORM_ID,
     SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -370,6 +371,13 @@ export class KbqSingleFileUploadComponent
 
     /** @docs-private */
     deleteItem(event?: Event, origin?: FocusOrigin): void {
+        // Untracked: called from a consumer's `effect()`, the state read on the way — the file, `disabled` — would make
+        // the effect run again whenever a file is added, and remove it.
+        untracked(() => this.removeFile(event, origin));
+    }
+
+    /** Body of `deleteItem()`. */
+    private removeFile(event?: Event, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();

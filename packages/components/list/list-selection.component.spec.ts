@@ -7,6 +7,7 @@ import {
     ChangeDetectorRef,
     Component,
     DebugElement,
+    effect,
     inject,
     isSignal,
     Provider,
@@ -16,7 +17,7 @@ import {
     viewChildren
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { FormControl, FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import {
     A,
@@ -4578,3 +4579,87 @@ class SelectionListWithSelectAll {
 class SelectionListWithSelectAllInVirtualScroll {
     readonly items = Array.from({ length: 20 }, (_, i) => `Item ${i}`);
 }
+
+@Component({
+    imports: [KbqListModule, ReactiveFormsModule],
+    template: `
+        <kbq-list-selection multiple="checkbox" selectAll [formControl]="control">
+            @for (item of items(); track item) {
+                <kbq-list-option [value]="item">{{ item }}</kbq-list-option>
+            }
+        </kbq-list-selection>
+    `
+})
+class SelectionListDrivenByEffects {
+    readonly list = viewChild.required(KbqListSelection);
+    readonly options = viewChildren(KbqListOption);
+    readonly items = signal(['a', 'b']);
+    readonly control = new FormControl<string[]>([], { nonNullable: true });
+    readonly command = signal<(() => void) | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const command = this.command();
+
+            if (!command || this.runs >= 10) return;
+
+            this.runs++;
+            command();
+        });
+    }
+}
+
+describe('KbqListSelection called from an effect', () => {
+    let fixture: ComponentFixture<SelectionListDrivenByEffects>;
+
+    const callFromEffect = async (command: () => void): Promise<void> => {
+        fixture.componentInstance.command.set(command);
+        fixture.detectChanges();
+        await fixture.whenStable();
+    };
+
+    const addOption = async (): Promise<void> => {
+        fixture.componentInstance.items.update((items) => [...items, 'c']);
+        fixture.detectChanges();
+        await fixture.whenStable();
+    };
+
+    const clickOption = async (index: number): Promise<void> => {
+        fixture.componentInstance.options()[index].getHostElement().click();
+        fixture.detectChanges();
+        await fixture.whenStable();
+    };
+
+    beforeEach(async () => {
+        fixture = setup(SelectionListDrivenByEffects);
+        await fixture.whenStable();
+    });
+
+    it('should not make an effect that toggles an option run again when the options change', async () => {
+        const [first] = fixture.componentInstance.options();
+
+        await callFromEffect(() => first.toggle());
+        await addOption();
+
+        expect(fixture.componentInstance.runs).toBe(1);
+    });
+
+    it('should not make an effect that selects all run again when the options change', async () => {
+        await callFromEffect(() => fixture.componentInstance.list().selectAll());
+        await clickOption(0);
+        await addOption();
+
+        expect(fixture.componentInstance.options()[0].selected).toBe(false);
+        expect(fixture.componentInstance.runs).toBe(1);
+    });
+
+    it('should not make an effect that writes the form value run again when the options change', async () => {
+        await callFromEffect(() => fixture.componentInstance.control.setValue(['a']));
+        await clickOption(1);
+        await addOption();
+
+        expect(fixture.componentInstance.control.value).toEqual(['a', 'b']);
+        expect(fixture.componentInstance.runs).toBe(1);
+    });
+});

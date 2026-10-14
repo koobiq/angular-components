@@ -1,4 +1,4 @@
-import { Component, DebugElement, signal, viewChild } from '@angular/core';
+import { Component, DebugElement, effect, signal, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -976,7 +976,81 @@ describe('KbqCheckbox', () => {
             expect(controlFixture.componentInstance.formControl.touched).toBe(true);
         });
     });
+
+    describe('called from an effect', () => {
+        let host: CheckboxDrivenByEffect;
+        let input: HTMLInputElement;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await fixture.whenStable();
+        };
+
+        beforeEach(async () => {
+            fixture = TestBed.createComponent(CheckboxDrivenByEffect);
+            host = fixture.componentInstance;
+            await settle();
+            input = fixture.nativeElement.querySelector('input');
+        });
+
+        it('should not make an effect that toggles it re-run when it is clicked', async () => {
+            host.action.set('toggle');
+            await settle();
+
+            expect(host.checkbox().checked).toBe(true);
+
+            input.click();
+            await settle();
+
+            expect(host.checkbox().checked).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that sets indeterminate re-run when it is clicked', async () => {
+            host.action.set('indeterminate');
+            await settle();
+
+            expect(host.checkbox().indeterminate).toBe(true);
+
+            input.click();
+            await settle();
+
+            expect(host.checkbox().indeterminate).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqCheckboxModule],
+    template: `
+        <kbq-checkbox>Driven by an effect</kbq-checkbox>
+    `
+})
+class CheckboxDrivenByEffect {
+    readonly checkbox = viewChild.required(KbqCheckbox);
+    readonly action = signal<'toggle' | 'indeterminate' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'toggle') {
+                this.checkbox().toggle();
+            } else {
+                this.checkbox().indeterminate = true;
+            }
+        });
+    }
+}
 
 /** Simple component for testing a single checkbox. */
 @Component({

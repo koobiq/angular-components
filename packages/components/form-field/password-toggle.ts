@@ -14,6 +14,7 @@ import {
     OnDestroy,
     Signal,
     TemplateRef,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -130,7 +131,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     set content(content: string | TemplateRef<any>) {
         this._content = content;
 
-        this.updateData();
+        untracked(() => this.updateData());
     }
 
     /** Tooltip shown while the password is hidden. */
@@ -207,15 +208,19 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private
      */
     toggle(event: Event): void {
-        if (this.control.disabled()) return;
+        // Untracked, as the `content` setter: called from a consumer's `effect()`, the state read on the way — the
+        // control's `disabled` and type, the tooltip's inputs — would make the effect run again on every toggle.
+        untracked(() => {
+            if (this.control.disabled()) return;
 
-        this.hide();
+            this.hide();
 
-        this.control.toggleType();
+            this.control.toggleType();
 
-        this.updateData();
+            this.updateData();
 
-        event.preventDefault();
+            event.preventDefault();
+        });
     }
 
     /**

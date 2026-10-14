@@ -677,6 +677,12 @@ export class KbqTagList
      * Focuses the tag list. If there is a tag input, focuses that instead.
      */
     focus(): void {
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — `disabled`, the tags and their state — would make the effect run again whenever it changes.
+        untracked(() => this.focusFirstTag());
+    }
+
+    private focusFirstTag(): void {
         if (this.disabled()) return;
 
         if (this.tagInput) {
@@ -802,26 +808,28 @@ export class KbqTagList
 
     /** When blurred, mark the field as touched when focus moved outside the tag list. */
     blur() {
-        if (!this.hasFocusedTag()) {
-            this.keyManager.setActiveItem(-1);
-        }
-
-        if (!this.disabled()) {
-            if (this.tagInput) {
-                // If there's a tag input, we should check whether the focus moved to tag input.
-                // If the focus is not moved to tag input, mark the field as touched. If the focus moved
-                // to tag input, do nothing.
-                // Timeout is needed to wait for the focus() event trigger on tag input.
-                setTimeout(() => {
-                    if (!this.focused()) {
-                        this.markAsTouched();
-                    }
-                });
-            } else {
-                // If there's no tag input, then mark the field as touched.
-                this.markAsTouched();
+        untracked(() => {
+            if (!this.hasFocusedTag()) {
+                this.keyManager.setActiveItem(-1);
             }
-        }
+
+            if (!this.disabled()) {
+                if (this.tagInput) {
+                    // If there's a tag input, we should check whether the focus moved to tag input.
+                    // If the focus is not moved to tag input, mark the field as touched. If the focus moved
+                    // to tag input, do nothing.
+                    // Timeout is needed to wait for the focus() event trigger on tag input.
+                    setTimeout(() => {
+                        if (!this.focused()) {
+                            this.markAsTouched();
+                        }
+                    });
+                } else {
+                    // If there's no tag input, then mark the field as touched.
+                    this.markAsTouched();
+                }
+            }
+        });
     }
 
     /** Mark the field as touched */
@@ -902,7 +910,7 @@ export class KbqTagList
      * @docs-private
      */
     unselectAll(): void {
-        this.tags.forEach((tag) => tag.setSelectedState(false));
+        untracked(() => this.tags.forEach((tag) => tag.setSelectedState(false)));
         this.rangeSelection = null;
     }
 
@@ -912,7 +920,7 @@ export class KbqTagList
      * @docs-private
      */
     removeSelected(): void {
-        this.selected.filter((tag) => tag.canRemove).forEach((tag) => tag.remove());
+        untracked(() => this.selected.filter((tag) => tag.canRemove).forEach((tag) => tag.remove()));
     }
 
     /**
@@ -925,7 +933,7 @@ export class KbqTagList
      * @docs-private
      */
     clear(): void {
-        const targets = this.clearTargets;
+        const targets = untracked(() => this.clearTargets);
 
         targets.forEach((tag) => this.pendingRemoval.add(tag));
 

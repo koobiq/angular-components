@@ -750,12 +750,14 @@ export class KbqDatepickerInput<D>
     validate(control: AbstractControl): ValidationErrors | null {
         this.setControl(control);
 
-        return this.validator ? this.validator(control) : null;
+        // Untracked, as `writeValue()`: a form control set from a consumer's `effect()` writes and validates on the
+        // spot, and the state read on the way — `focused`, the value — would make the effect run again.
+        return this.validator ? untracked(() => this.validator!(control)) : null;
     }
 
     // Implemented as part of ControlValueAccessor.
     writeValue(value: D): void {
-        this.setValue(value);
+        untracked(() => this.setValue(value));
     }
 
     // Implemented as part of ControlValueAccessor.

@@ -1,4 +1,12 @@
-﻿import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation, viewChild } from '@angular/core';
+﻿import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    untracked,
+    viewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -97,6 +105,6 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
 
     /** opens popover */
     override open() {
-        this.popover().show();
+        untracked(() => this.popover().show());
     }
 }

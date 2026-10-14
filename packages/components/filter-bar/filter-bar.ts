@@ -11,6 +11,7 @@ import {
     input,
     model,
     output,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -258,7 +259,7 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
      * Unrelated to `restoreFilterState()`, which reverts to an in-memory snapshot within one session.
      */
     clearSavedState(): void {
-        this.stateSaving.clear();
+        untracked(() => this.stateSaving.clear());
     }
 
     /**
@@ -271,7 +272,9 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
 
     /** Remove pipe from current filter and emit event */
     removePipe(pipe: KbqPipe) {
-        const current = this.filter();
+        // Untracked, as in the other imperative methods: called from a consumer's `effect()`, the filter read
+        // here would make the effect run again on every change the user makes to it.
+        const current = untracked(this.filter);
 
         if (!current?.pipes.includes(pipe)) return;
 
@@ -292,7 +295,7 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
      * `structuredClone` throws `DataCloneError`. All built-in pipes produce cloneable values.
      */
     saveFilterState(filter?: KbqFilter) {
-        this.savedFilter = structuredClone(filter ?? this.filter());
+        this.savedFilter = structuredClone(filter ?? untracked(this.filter));
     }
 
     /**
@@ -311,7 +314,7 @@ export class KbqFilterBar implements KbqFilterBarHost, AfterContentInit {
 
     /** Set the filter state "changed" to false */
     resetFilterChangedState() {
-        const current = this.filter();
+        const current = untracked(this.filter);
 
         if (!current) return;
 

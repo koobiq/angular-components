@@ -1,4 +1,4 @@
-import { AfterViewInit, Directive, inject, signal, viewChild } from '@angular/core';
+import { AfterViewInit, Directive, inject, signal, untracked, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
@@ -409,7 +409,7 @@ export abstract class KbqPipeDateBaseComponent<D> extends KbqBasePipe<KbqDateTim
 
     /** opens popover */
     override open() {
-        this.popover().show();
+        untracked(() => this.popover().show());
     }
 
     onSelectStartDate(value: D) {

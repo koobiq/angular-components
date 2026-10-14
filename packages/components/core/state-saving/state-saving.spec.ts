@@ -1,5 +1,14 @@
 import { Platform } from '@angular/cdk/platform';
-import { ChangeDetectionStrategy, Component, inject, Type, viewChild, viewChildren } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    effect,
+    inject,
+    signal,
+    Type,
+    viewChild,
+    viewChildren
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_WINDOW } from '../tokens';
 import { KBQ_STATE_SAVING_ENABLED, KbqStateSaving } from './state-saving';
@@ -403,6 +412,34 @@ describe('KbqStateSaving', () => {
         initialized({ key: '' }).write(['a']);
 
         expect(store.getState('resolved-key')).toEqual(['a']);
+    });
+
+    it('does not make an effect that writes or clears run again when useStateSaving changes', () => {
+        const stateSaving = initialized();
+        const value = signal(['a']);
+        let writes = 0;
+        let clears = 0;
+
+        TestBed.runInInjectionContext(() => {
+            effect(() => {
+                writes++;
+                stateSaving.write(value());
+            });
+            effect(() => {
+                value();
+                clears++;
+                stateSaving.clear();
+            });
+        });
+        TestBed.tick();
+
+        setEnabled(false);
+        TestBed.tick();
+        setEnabled(true);
+        TestBed.tick();
+
+        expect(writes).toBe(1);
+        expect(clears).toBe(1);
     });
 
     // `write()` asks for the key on every change, and resolving walks the document. A host that moved

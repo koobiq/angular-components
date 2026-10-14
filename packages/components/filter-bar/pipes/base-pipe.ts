@@ -321,6 +321,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         }
     }
 
+    // Every pipe opens untracked: called from a consumer's `effect()`, the state read on the way would make the
+    // effect run again on every open and close.
     /** @docs-private */
     abstract open(): void;
 }

@@ -1,4 +1,4 @@
-import { Component, Type, viewChild } from '@angular/core';
+import { Component, effect, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { KBQ_STATE_STORE, KbqStateSavingService, KbqStateStore } from '@koobiq/components/core';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
@@ -401,6 +401,37 @@ describe(`${KbqSidebarModule.name} state saving`, () => {
         fixture.destroy();
 
         expect(service.components()).toEqual([]);
+    });
+
+    it('should not make an effect that clears the saved state re-run when saving is turned back on', () => {
+        const fixture = create(UncontrolledSidebar);
+        const sidebar = fixture.componentInstance.sidebar();
+        const clear = signal(false);
+        let runs = 0;
+
+        TestBed.runInInjectionContext(() =>
+            effect(() => {
+                // Capped, so that a regression fails instead of hanging.
+                if (!clear() || runs === 10) return;
+
+                runs++;
+                sidebar.clearSavedState();
+            })
+        );
+
+        clear.set(true);
+        TestBed.tick();
+        sidebar.toggle();
+
+        fixture.componentInstance.useStateSaving = false;
+        fixture.detectChanges();
+        TestBed.tick();
+        fixture.componentInstance.useStateSaving = true;
+        fixture.detectChanges();
+        TestBed.tick();
+
+        expect(store.getState('sidebar-key')).not.toBeNull();
+        expect(runs).toBe(1);
     });
 
     it('persists nothing when the sidebar is not in the document as it initializes', () => {

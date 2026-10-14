@@ -1,5 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ApplicationRef, ChangeDetectionStrategy, Component, DebugElement } from '@angular/core';
+import {
+    ApplicationRef,
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    effect,
+    signal,
+    viewChild,
+    viewChildren
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -800,7 +809,87 @@ describe('KbqRadio', () => {
             expect(inputs.every((input) => (input.nativeElement as HTMLInputElement).disabled)).toBe(true);
         });
     });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<RadioGroupDrivenByEffect>;
+        let host: RadioGroupDrivenByEffect;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await fixture.whenStable();
+        };
+
+        const pickWater = async (): Promise<void> => {
+            fixture.debugElement.queryAll(By.css('label'))[1].nativeElement.click();
+            await settle();
+        };
+
+        beforeEach(async () => {
+            fixture = TestBed.createComponent(RadioGroupDrivenByEffect);
+            host = fixture.componentInstance;
+            await settle();
+        });
+
+        it('should not make an effect that sets the group value re-run when another radio is picked', async () => {
+            host.action.set('value');
+            await settle();
+
+            expect(host.group().value).toBe('fire');
+
+            await pickWater();
+
+            expect(host.group().value).toBe('water');
+            expect(host.runs).toBe(1);
+        });
+
+        it('should not make an effect that checks a radio re-run when another radio is picked', async () => {
+            host.action.set('checked');
+            await settle();
+
+            expect(host.radios()[0].checked).toBe(true);
+
+            await pickWater();
+
+            expect(host.radios()[0].checked).toBe(false);
+            expect(host.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    imports: [KbqRadioModule],
+    template: `
+        <kbq-radio-group aria-label="Pokemon">
+            <kbq-radio-button [value]="'fire'">Charmander</kbq-radio-button>
+            <kbq-radio-button [value]="'water'">Squirtle</kbq-radio-button>
+        </kbq-radio-group>
+    `
+})
+class RadioGroupDrivenByEffect {
+    readonly group = viewChild.required(KbqRadioGroup);
+    readonly radios = viewChildren(KbqRadioButton);
+    readonly action = signal<'value' | 'checked' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'value') {
+                this.group().value = 'fire';
+            } else {
+                this.radios()[0].checked = true;
+            }
+        });
+    }
+}
 
 @Component({
     imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],

@@ -1,5 +1,5 @@
 ﻿import { OverlayRef } from '@angular/cdk/overlay';
-import { signal } from '@angular/core';
+import { signal, untracked } from '@angular/core';
 import { ESCAPE, isHtmlElement, KbqOverflowShadowState } from '@koobiq/components/core';
 import { merge, Observable, Subject } from 'rxjs';
 import { filter, take, tap } from 'rxjs/operators';
@@ -133,6 +133,13 @@ export class KbqSidepanelRef<T = any, R = any> {
     }
 
     close(result?: R): void {
+        // Untracked, as `KbqSidepanelService.open()`: called from a consumer's `effect()`, the state of the sidepanels
+        // stacked under this one, read and written on the way, would make the effect run again as they move.
+        untracked(() => this.startClosing(result));
+    }
+
+    /** Body of `close()`. */
+    private startClosing(result: R | undefined): void {
         if (this.closing) return;
 
         this.closing = true;

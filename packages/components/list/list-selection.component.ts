@@ -687,21 +687,25 @@ export class KbqListSelection<T = any>
      * once for the whole batch instead of once per option.
      */
     toggleSelectAll(): void {
-        // The row's own `(click)` and the shortcut both funnel through here, so this is the single place
-        // to refuse acting on a disabled list — the guard every option already gets in `handleClick`.
-        if (this.disabled) return;
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — the options, `disabled`, the mode, the inputs — would make the effect run again on every change.
+        untracked(() => {
+            // The row's own `(click)` and the shortcut both funnel through here, so this is the single place
+            // to refuse acting on a disabled list — the guard every option already gets in `handleClick`.
+            if (this.disabled) return;
 
-        const targets = this.selectAllTargets;
+            const targets = this.selectAllTargets;
 
-        toggleSelectAll(this.selectAllAdapter(targets), { allowDeselect: this.allowSelectAllDeselect });
+            toggleSelectAll(this.selectAllAdapter(targets), { allowDeselect: this.allowSelectAllDeselect });
 
-        // Reported unconditionally, as the shortcut has always done: a repeat that flips nothing still
-        // re-reports the value, which is what normalizes a form value holding entries no option matches.
-        this.reportValueChange();
+            // Reported unconditionally, as the shortcut has always done: a repeat that flips nothing still
+            // re-reports the value, which is what normalizes a form value holding entries no option matches.
+            this.reportValueChange();
 
-        // Deliberately no `selectionChange`: that event carries a single option, and a batch is
-        // reported through `onSelectAll` instead — the contract Ctrl/Cmd + A has always had.
-        this.onSelectAll.emit(new KbqListSelectAllEvent(this, targets));
+            // Deliberately no `selectionChange`: that event carries a single option, and a batch is
+            // reported through `onSelectAll` instead — the contract Ctrl/Cmd + A has always had.
+            this.onSelectAll.emit(new KbqListSelectAllEvent(this, targets));
+        });
     }
 
     /**
@@ -905,25 +909,29 @@ export class KbqListSelection<T = any>
     }
 
     focus(): void {
-        if (this.options.length === 0) {
-            return;
-        }
+        untracked(() => {
+            if (this.options.length === 0) {
+                return;
+            }
 
-        if (this.selectionModel.selected.length) {
-            this.options.find((option) => option.selected)?.focus();
-        } else {
-            this.keyManager.setFirstItemActive();
-        }
+            if (this.selectionModel.selected.length) {
+                this.options.find((option) => option.selected)?.focus();
+            } else {
+                this.keyManager.setFirstItemActive();
+            }
+        });
     }
 
     /** Clears the active key-manager item (unless an option is still focused) and marks the list as touched. */
     blur(): void {
-        if (!this.hasFocusedOption()) {
-            this.keyManager.setActiveItem(-1);
-        }
+        untracked(() => {
+            if (!this.hasFocusedOption()) {
+                this.keyManager.setActiveItem(-1);
+            }
 
-        this.onTouched();
-        this.changeDetectorRef.markForCheck();
+            this.onTouched();
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     /**
@@ -934,16 +942,20 @@ export class KbqListSelection<T = any>
      * behaviour the master checkbox has.
      */
     selectAll(): void {
-        this.options.forEach((option) => option.setSelected(true));
+        untracked(() => {
+            this.options.forEach((option) => option.setSelected(true));
 
-        this.reportValueChange();
+            this.reportValueChange();
+        });
     }
 
     /** Deselects every option, disabled ones included, and reports the new value. See {@link selectAll}. */
     deselectAll(): void {
-        this.options.forEach((option) => option.setSelected(false));
+        untracked(() => {
+            this.options.forEach((option) => option.setSelected(false));
 
-        this.reportValueChange();
+            this.reportValueChange();
+        });
     }
 
     updateScrollSize(): void {
@@ -1041,16 +1053,18 @@ export class KbqListSelection<T = any>
 
     // Implemented as part of ControlValueAccessor.
     writeValue(values: T[] | T | null): void {
-        this.applyMultipleInput();
-        this.hasWrittenValue = true;
+        untracked(() => {
+            this.applyMultipleInput();
+            this.hasWrittenValue = true;
 
-        // A form control may push a bare value instead of an array; normalize it here so that
-        // `_value` always matches its declared type and stays safe to iterate over.
-        this._value = values == null ? null : Array.isArray(values) ? values : [values];
+            // A form control may push a bare value instead of an array; normalize it here so that
+            // `_value` always matches its declared type and stays safe to iterate over.
+            this._value = values == null ? null : Array.isArray(values) ? values : [values];
 
-        if (this.contentReady) {
-            this.setOptionsFromValues(this._value ?? []);
-        }
+            if (this.contentReady) {
+                this.setOptionsFromValues(this._value ?? []);
+            }
+        });
     }
 
     // Implemented as part of ControlValueAccessor.
@@ -1065,11 +1079,13 @@ export class KbqListSelection<T = any>
 
     // Implemented as a part of ControlValueAccessor.
     setDisabledState(isDisabled: boolean): void {
-        this.applyDisabledInput();
+        untracked(() => {
+            this.applyDisabledInput();
 
-        // `KbqListOption.disabled` reads the list through its getter, so disabling the list cascades
-        // to every option without overwriting their own `disabled` inputs.
-        this.disabledState.set(isDisabled);
+            // `KbqListOption.disabled` reads the list through its getter, so disabling the list cascades
+            // to every option without overwriting their own `disabled` inputs.
+            this.disabledState.set(isDisabled);
+        });
     }
 
     /** Values of the currently selected options. */
@@ -1079,27 +1095,29 @@ export class KbqListSelection<T = any>
 
     // Toggles the selected state of the currently focused option.
     toggleFocusedOption(): void {
-        const focusedIndex = this.keyManager.activeItemIndex;
+        untracked(() => {
+            const focusedIndex = this.keyManager.activeItemIndex;
 
-        if (focusedIndex != null && this.isValidIndex(focusedIndex)) {
-            const focusedOption: KbqListOption<T> = this.navigableOptions.toArray()[focusedIndex];
+            if (focusedIndex != null && this.isValidIndex(focusedIndex)) {
+                const focusedOption: KbqListOption<T> = this.navigableOptions.toArray()[focusedIndex];
 
-            // The row holds no selection of its own, so `toggle()` would be a no-op on it. Space and
-            // Enter have to reach the batch toggle instead, exactly as a click on the row does.
-            if (this.isSelectAllRow(focusedOption)) {
-                this.toggleSelectAll();
+                // The row holds no selection of its own, so `toggle()` would be a no-op on it. Space and
+                // Enter have to reach the batch toggle instead, exactly as a click on the row does.
+                if (this.isSelectAllRow(focusedOption)) {
+                    this.toggleSelectAll();
 
-                return;
+                    return;
+                }
+
+                if (focusedOption && !focusedOption.disabled && this.canDeselectLast(focusedOption)) {
+                    focusedOption.toggle();
+
+                    // Emit a change event because the focused option changed its state through user interaction.
+                    this.emitChangeEvent(focusedOption);
+                    this.reportValueChange();
+                }
             }
-
-            if (focusedOption && !focusedOption.disabled && this.canDeselectLast(focusedOption)) {
-                focusedOption.toggle();
-
-                // Emit a change event because the focused option changed its state through user interaction.
-                this.emitChangeEvent(focusedOption);
-                this.reportValueChange();
-            }
-        }
+        });
     }
 
     /** Whether `listOption` is allowed to be deselected, given {@link noUnselectLast}. */
@@ -1123,18 +1141,20 @@ export class KbqListSelection<T = any>
 
     // Removes an option from the selection list and updates the active item.
     removeOptionFromList(option: KbqListOption<T>): void {
-        if (!option.hasFocus) {
-            return;
-        }
+        untracked(() => {
+            if (!option.hasFocus) {
+                return;
+            }
 
-        const optionIndex = this.navigableOptions.toArray().indexOf(option);
+            const optionIndex = this.navigableOptions.toArray().indexOf(option);
 
-        // Check whether the option is the last item
-        if (optionIndex === this.navigableOptions.length - 1) {
-            this.keyManager.setPreviousItemActive();
-        } else {
-            this.keyManager.setNextItemActive();
-        }
+            // Check whether the option is the last item
+            if (optionIndex === this.navigableOptions.length - 1) {
+                this.keyManager.setPreviousItemActive();
+            } else {
+                this.keyManager.setNextItemActive();
+            }
+        });
     }
 
     /** Handles keydown events on the list. */
@@ -1207,12 +1227,14 @@ export class KbqListSelection<T = any>
 
     // Reports a value change to the ControlValueAccessor
     reportValueChange(): void {
-        if (this.contentReady) {
-            const value = this.getSelectedOptionValues();
+        untracked(() => {
+            if (this.contentReady) {
+                const value = this.getSelectedOptionValues();
 
-            this.onChange(value);
-            this._value = value;
-        }
+                this.onChange(value);
+                this._value = value;
+            }
+        });
     }
 
     // Emits a change event if the selected state of an option changed.
@@ -2033,7 +2055,9 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     /** Toggles the selected state of this option. */
     toggle(): void {
-        this.setSelected(!this.selected);
+        // Untracked, as in `setSelected()` and `focus()`: called from a consumer's `effect()`, the state read on the
+        // way — the list's options, mode and inputs — would make the effect run again whenever it changes.
+        untracked(() => this.setSelected(!this.selected));
     }
 
     getLabel(): string {
@@ -2074,29 +2098,31 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     /** Sets the selected state on the list's `SelectionModel`; the `selected` property and input go through it. */
     setSelected(selected: boolean): void {
-        const { selectionModel } = this.listSelection;
+        untracked(() => {
+            const { selectionModel } = this.listSelection;
 
-        // The row has no place in the selection model — its look is driven by `selectAllState`.
-        if (!selectionModel || this.selectAllRow()) {
-            return;
-        }
+            // The row has no place in the selection model — its look is driven by `selectAllState`.
+            if (!selectionModel || this.selectAllRow()) {
+                return;
+            }
 
-        // The model is consulted alongside the mirror so that an option the model dropped behind the
-        // mirror's back — single-selection mode does that whenever another option is selected — can still
-        // be re-applied instead of being early-returned away.
-        if (this._selected === selected && selectionModel.isSelected(this) === selected) {
-            return;
-        }
+            // The model is consulted alongside the mirror so that an option the model dropped behind the
+            // mirror's back — single-selection mode does that whenever another option is selected — can still
+            // be re-applied instead of being early-returned away.
+            if (this._selected === selected && selectionModel.isSelected(this) === selected) {
+                return;
+            }
 
-        this._selected = selected;
+            this._selected = selected;
 
-        if (selected) {
-            this.listSelection.selectionModel.select(this);
-        } else {
-            this.listSelection.selectionModel.deselect(this);
-        }
+            if (selected) {
+                this.listSelection.selectionModel.select(this);
+            } else {
+                this.listSelection.selectionModel.deselect(this);
+            }
 
-        this.changeDetector.markForCheck();
+            this.changeDetector.markForCheck();
+        });
     }
 
     /**
@@ -2130,20 +2156,23 @@ export class KbqListOption<T = any> implements OnDestroy, OnInit, IFocusableOpti
 
     /** Moves DOM focus to this option, unless it is disabled or already focused. */
     focus(): void {
-        // `hasFocus` alone lags behind the DOM until the deferred blur runs: a key pressed in that window would
-        // find the option "focused" and leave the focus where it was. Focus on an element nested in the option
-        // is the option's own, or the `focusin` it bubbles would pull it back onto the host.
-        const focused = this.hasFocus && this.elementRef.nativeElement.contains(_getFocusedElementPierceShadowDom());
+        untracked(() => {
+            // `hasFocus` alone lags behind the DOM until the deferred blur runs: a key pressed in that window would
+            // find the option "focused" and leave the focus where it was. Focus on an element nested in the option
+            // is the option's own, or the `focusin` it bubbles would pull it back onto the host.
+            const focused =
+                this.hasFocus && this.elementRef.nativeElement.contains(_getFocusedElementPierceShadowDom());
 
-        if (this.disabled || focused || this.actionButton()?.hasFocus) {
-            return;
-        }
+            if (this.disabled || focused || this.actionButton()?.hasFocus) {
+                return;
+            }
 
-        this.elementRef.nativeElement.focus();
+            this.elementRef.nativeElement.focus();
 
-        this.onFocus.next({ option: this });
+            this.onFocus.next({ option: this });
 
-        Promise.resolve().then(() => (this.hasFocus = true));
+            Promise.resolve().then(() => (this.hasFocus = true));
+        });
     }
 
     /** Marks this option as blurred after the next render, unless {@link preventBlur} is set. */

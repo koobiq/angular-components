@@ -433,29 +433,34 @@ export class KbqAutocompleteTrigger
 
     /** Opens the autocomplete suggestion panel. */
     open(): void {
-        this.attachOverlay();
+        // Untracked, like `closePanel()` and `updatePosition()`: called from a consumer's `effect()`, the state read
+        // on the way — whether the overlay is attached, the panel's options, the inputs — would make the effect run
+        // again on every open and close.
+        untracked(() => this.attachOverlay());
     }
 
     closePanel(): void {
-        if (!this.overlayAttached()) {
-            return;
-        }
+        untracked(() => {
+            if (!this.overlayAttached()) {
+                return;
+            }
 
-        if (this.panelOpen) {
-            this.autocomplete().closed.emit();
-        }
+            if (this.panelOpen) {
+                this.autocomplete().closed.emit();
+            }
 
-        this.stopFollowingCaret();
-        this.inlineHintText = '';
-        this.textMirror?.hide();
+            this.stopFollowingCaret();
+            this.inlineHintText = '';
+            this.textMirror?.hide();
 
-        this.overlayAttached.set(false);
-        this.autocomplete().attached.set(false);
+            this.overlayAttached.set(false);
+            this.autocomplete().attached.set(false);
 
-        if (this.overlayRef && this.overlayRef.hasAttached()) {
-            this.overlayRef.detach();
-            this.closingActionsSubscription.unsubscribe();
-        }
+            if (this.overlayRef && this.overlayRef.hasAttached()) {
+                this.overlayRef.detach();
+                this.closingActionsSubscription.unsubscribe();
+            }
+        });
     }
 
     /**
@@ -463,9 +468,11 @@ export class KbqAutocompleteTrigger
      * within the viewport.
      */
     updatePosition(): void {
-        if (this.overlayAttached()) {
-            this.overlayRef!.updatePosition();
-        }
+        untracked(() => {
+            if (this.overlayAttached()) {
+                this.overlayRef!.updatePosition();
+            }
+        });
     }
 
     /**

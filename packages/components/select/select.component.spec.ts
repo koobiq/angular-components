@@ -9,6 +9,7 @@ import {
     OnInit,
     TemplateRef,
     Type,
+    effect,
     getDebugNode,
     inject as inject_1,
     signal,
@@ -10605,6 +10606,127 @@ describe('KbqSelect', () => {
             expect(select.panelOpen).toBe(true);
 
             modalOverlay.remove();
+        });
+    });
+
+    describe('called from an effect', () => {
+        @Component({
+            imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+            template: `
+                <kbq-form-field>
+                    <kbq-select [formControl]="control">
+                        @for (option of options(); track option) {
+                            <kbq-option [value]="option">{{ option }}</kbq-option>
+                        }
+                    </kbq-select>
+                </kbq-form-field>
+            `
+        })
+        class SelectDrivenByEffects {
+            readonly select = viewChild.required(KbqSelect);
+            readonly options = signal(['steak', 'pizza']);
+            readonly control = new FormControl<string | null>(null);
+            readonly wantOpen = signal(false);
+            readonly toggles = signal(0);
+            readonly closeOnOptionsChange = signal(false);
+            readonly writtenValue = signal<string | null>(null);
+            readonly runs = { open: 0, toggle: 0, close: 0, write: 0 };
+
+            constructor() {
+                effect(() => {
+                    if (!this.wantOpen()) return;
+
+                    this.runs.open++;
+                    this.select().open();
+                });
+
+                effect(() => {
+                    if (!this.toggles() || this.runs.toggle >= 10) return;
+
+                    this.runs.toggle++;
+                    this.select().toggle();
+                });
+
+                effect(() => {
+                    this.options();
+
+                    if (!this.closeOnOptionsChange()) return;
+
+                    this.runs.close++;
+                    this.select().close();
+                });
+
+                effect(() => {
+                    const value = this.writtenValue();
+
+                    if (value === null || this.runs.write >= 10) return;
+
+                    this.runs.write++;
+                    this.control.setValue(value);
+                });
+            }
+        }
+
+        let fixture: ComponentFixture<SelectDrivenByEffects>;
+        let select: KbqSelect;
+
+        const settle = async (): Promise<void> => {
+            fixture.detectChanges();
+            await vi.runOnlyPendingTimersAsync();
+            fixture.detectChanges();
+        };
+
+        beforeEach(async () => {
+            configureKbqSelectTestingModule([SelectDrivenByEffects]);
+            fixture = TestBed.createComponent(SelectDrivenByEffects);
+            await settle();
+            select = fixture.componentInstance.select();
+        });
+
+        it('should not make an effect that opens it run again when the user closes it', async () => {
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            expect(select.panelOpen).toBe(true);
+
+            dispatchKeyboardEvent(select.elementRef.nativeElement, 'keydown', ESCAPE);
+            await settle();
+
+            expect(select.panelOpen).toBe(false);
+            expect(fixture.componentInstance.runs.open).toBe(1);
+        });
+
+        it('should not loop when an effect toggles it', async () => {
+            fixture.componentInstance.toggles.set(1);
+            await settle();
+
+            expect(select.panelOpen).toBe(true);
+            expect(fixture.componentInstance.runs.toggle).toBe(1);
+        });
+
+        it('should stay openable when an effect closes it on an options change', async () => {
+            fixture.componentInstance.closeOnOptionsChange.set(true);
+            await settle();
+
+            select.elementRef.nativeElement.click();
+            await settle();
+
+            expect(select.panelOpen).toBe(true);
+            expect(fixture.componentInstance.runs.close).toBe(1);
+        });
+
+        it('should not make an effect that writes the form value run again when the user selects', async () => {
+            fixture.componentInstance.writtenValue.set('steak');
+            await settle();
+
+            select.elementRef.nativeElement.click();
+            await settle();
+            (overlayContainerElement.querySelectorAll('kbq-option')[1] as HTMLElement).click();
+            await settle();
+
+            expect(select.panelOpen).toBe(false);
+            expect(fixture.componentInstance.control.value).toBe('pizza');
+            expect(fixture.componentInstance.runs.write).toBe(1);
         });
     });
 });

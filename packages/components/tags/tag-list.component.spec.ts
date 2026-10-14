@@ -6,6 +6,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     DebugElement,
+    effect,
     model,
     Provider,
     QueryList,
@@ -3176,3 +3177,71 @@ class StandardTagListWithAnimations {
         }
     }
 }
+
+@Component({
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag-list>
+            @for (tag of tags(); track tag) {
+                <kbq-tag>{{ tag }}</kbq-tag>
+            }
+        </kbq-tag-list>
+    `
+})
+class TagListDrivenByEffects {
+    readonly tagList = viewChild.required(KbqTagList);
+    readonly tags = signal(['Tag 0', 'Tag 1']);
+    readonly wantUnselected = signal(false);
+    readonly wantFocus = signal(false);
+    readonly runs = { unselect: 0, focus: 0 };
+
+    constructor() {
+        effect(() => {
+            if (!this.wantUnselected()) return;
+
+            this.runs.unselect++;
+            this.tagList().unselectAll();
+        });
+
+        effect(() => {
+            if (!this.wantFocus() || this.runs.focus >= 10) return;
+
+            this.runs.focus++;
+            this.tagList().focus();
+        });
+    }
+}
+
+describe('KbqTagList called from an effect', () => {
+    let fixture: ComponentFixture<TagListDrivenByEffects>;
+
+    beforeEach(() => {
+        fixture = createStandaloneComponent(TagListDrivenByEffects);
+        fixture.detectChanges();
+    });
+
+    it('should not make an effect that unselects all run again when the tags change', () => {
+        const { componentInstance } = fixture;
+        const tag = componentInstance.tagList().tags.first;
+
+        componentInstance.wantUnselected.set(true);
+        fixture.detectChanges();
+        tag.select();
+        componentInstance.tags.update((tags) => [...tags, 'Tag 2']);
+        fixture.detectChanges();
+
+        expect(tag.selected()).toBe(true);
+        expect(componentInstance.runs.unselect).toBe(1);
+    });
+
+    it('should not make an effect that focuses it run again when a tag is added', () => {
+        const { componentInstance } = fixture;
+
+        componentInstance.wantFocus.set(true);
+        fixture.detectChanges();
+        componentInstance.tags.update((tags) => [...tags, 'Tag 2']);
+        fixture.detectChanges();
+
+        expect(componentInstance.runs.focus).toBe(1);
+    });
+});

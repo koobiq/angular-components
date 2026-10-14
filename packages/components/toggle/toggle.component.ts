@@ -15,6 +15,7 @@ import {
     output,
     Signal,
     SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -111,10 +112,14 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     }
 
     set checked(value: boolean) {
-        if (value !== this.checkable.checked()) {
-            this.checkable.checked.set(value);
-            this.setTransitionCheckState();
-        }
+        // Untracked, as the `indeterminate` setter: an `effect()` that assigns it must not come to depend on `checked`
+        // and `indeterminate`, read on the way.
+        untracked(() => {
+            if (value !== this.checkable.checked()) {
+                this.checkable.checked.set(value);
+                this.setTransitionCheckState();
+            }
+        });
     }
 
     /**
@@ -128,14 +133,16 @@ export class KbqToggleComponent extends KbqColorDirective implements OnChanges, 
     }
 
     set indeterminate(value: boolean) {
-        const changed = value !== this.checkable.indeterminate();
+        untracked(() => {
+            const changed = value !== this.checkable.indeterminate();
 
-        this.checkable.indeterminate.set(value);
+            this.checkable.indeterminate.set(value);
 
-        if (changed) {
-            this.setTransitionCheckState();
-            this.indeterminateChange.emit(value);
-        }
+            if (changed) {
+                this.setTransitionCheckState();
+                this.indeterminateChange.emit(value);
+            }
+        });
     }
 
     /**

@@ -34,6 +34,7 @@ import {
     numberAttribute,
     output,
     signal,
+    untracked,
     viewChild,
     viewChildren,
     type AfterRenderRef
@@ -1153,14 +1154,16 @@ export class KbqTreeSelect
      * @docs-private
      */
     clear(): void {
-        const targets = this.clearTargets;
+        untracked(() => {
+            const targets = this.clearTargets;
 
-        this.selectionModel.deselect(...targets);
-        this.tree()!.keyManager.setActiveItem(-1);
-        this.changeDetectorRef.detectChanges();
+            this.selectionModel.deselect(...targets);
+            this.tree()!.keyManager.setActiveItem(-1);
+            this.changeDetectorRef.detectChanges();
 
-        this.onChange(this.selectedValues);
-        this.selectionChange.emit(new KbqTreeSelectChange(this, null, false, targets));
+            this.onChange(this.selectedValues);
+            this.selectionChange.emit(new KbqTreeSelectChange(this, null, false, targets));
+        });
     }
 
     /**
@@ -1185,14 +1188,23 @@ export class KbqTreeSelect
     }
 
     toggle(): void {
-        if (this.panelOpen) {
-            this.close();
-        } else {
-            this.open();
-        }
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — `panelOpen`, `disabled`, the options, the inputs — would make the effect run again on every open
+        // and close.
+        untracked(() => {
+            if (this.panelOpen) {
+                this.close();
+            } else {
+                this.open();
+            }
+        });
     }
 
     open(): void {
+        untracked(() => this.attachPanel());
+    }
+
+    private attachPanel(): void {
         if (this.disabled() || !this.options || this.panelOpenValue()) return;
 
         if (!this.options.length && !this.noOptionsMessage()) return;
@@ -1238,26 +1250,28 @@ export class KbqTreeSelect
 
     /** Closes the overlay panel and focuses the host element. */
     close(): void {
-        if (!this.panelOpenValue()) {
-            return;
-        }
+        untracked(() => {
+            if (!this.panelOpenValue()) {
+                return;
+            }
 
-        this.panelOpenValue.set(false);
-        this.unsubscribeFromPanelResize();
-        // Back to the two default sides, so the next open is not resolved against a first row that has since
-        // changed height.
-        this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
+            this.panelOpenValue.set(false);
+            this.unsubscribeFromPanelResize();
+            // Back to the two default sides, so the next open is not resolved against a first row that has since
+            // changed height.
+            this.positions = this.withOverlapPosition(this.positions, null) ?? this.positions;
 
-        this.changeDetectorRef.markForCheck();
-        this.onTouched();
+            this.changeDetectorRef.markForCheck();
+            this.onTouched();
 
-        const search = this.search();
+            const search = this.search();
 
-        if (search) {
-            search.reset();
-        }
+            if (search) {
+                search.reset();
+            }
 
-        this.reportPanelRendered('void');
+            this.reportPanelRendered('void');
+        });
     }
 
     /**
@@ -1282,11 +1296,14 @@ export class KbqTreeSelect
      * @param value New value to be written to the model.
      */
     writeValue(value: any): void {
-        if (this.tree()?.treeControl) {
-            this.setSelectionByValue(value);
-        } else {
-            this.tempValues = value;
-        }
+        // Untracked: a form control set from an `effect()` writes here synchronously.
+        untracked(() => {
+            if (this.tree()?.treeControl) {
+                this.setSelectionByValue(value);
+            } else {
+                this.tempValues = value;
+            }
+        });
     }
 
     /**

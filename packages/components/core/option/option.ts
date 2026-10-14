@@ -11,6 +11,7 @@ import {
     input,
     OnDestroy,
     signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -304,19 +305,25 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     select(emitEvent: boolean = true): void {
-        if (!this.selected) {
-            this.selectedState.set(true);
+        // Untracked, as in `deselect()` and `selectViaInteraction()`: called from a consumer's `effect()`, the
+        // selected state read on the way would make the effect run again whenever the user changes it.
+        untracked(() => {
+            if (!this.selected) {
+                this.selectedState.set(true);
 
-            if (emitEvent) this.emitSelectionChangeEvent();
-        }
+                if (emitEvent) this.emitSelectionChangeEvent();
+            }
+        });
     }
 
     deselect(emitEvent: boolean = true): void {
-        if (this.selected) {
-            this.selectedState.set(false);
+        untracked(() => {
+            if (this.selected) {
+                this.selectedState.set(false);
 
-            if (emitEvent) this.emitSelectionChangeEvent();
-        }
+                if (emitEvent) this.emitSelectionChangeEvent();
+            }
+        });
     }
 
     /** Moves keyboard focus to this option and reveals it — see {@link kbqFocusAndReveal}. */
@@ -376,13 +383,15 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * determine if the select's view -> model callback should be invoked.
      */
     selectViaInteraction(): void {
-        if (this.userSelect()) return;
+        untracked(() => {
+            if (this.userSelect()) return;
 
-        if (!this.disabled && this.selectable()) {
-            this.selectedState.set(this.multiple ? !this.selected : true);
+            if (!this.disabled && this.selectable()) {
+                this.selectedState.set(this.multiple ? !this.selected : true);
 
-            this.emitSelectionChangeEvent(true);
-        }
+                this.emitSelectionChangeEvent(true);
+            }
+        });
     }
 
     getTabIndex(): string {

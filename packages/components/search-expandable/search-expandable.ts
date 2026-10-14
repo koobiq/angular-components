@@ -236,7 +236,7 @@ export class KbqSearchExpandable
             this.stopFocusMonitor();
         } else {
             this.control.enable({ emitEvent: false });
-            this.runFocusMonitor();
+            untracked(() => this.runFocusMonitor());
         }
     }
 
@@ -429,6 +429,11 @@ export class KbqSearchExpandable
 
     /** Implemented as part of ControlValueAccessor. */
     writeValue(value: string): void {
+        untracked(() => this.applyValue(value));
+    }
+
+    /** Body of `writeValue()`. */
+    private applyValue(value: string): void {
         const nextValue = value || defaultValue;
 
         // The model supersedes whatever the user was typing: without this, an emission scheduled by the
@@ -458,11 +463,15 @@ export class KbqSearchExpandable
     }
 
     toggle(): void {
-        if (this.disabled) return;
+        // Untracked, as `writeValue()` and the `disabled` setter: called from a consumer's `effect()`, the state read
+        // on the way — `isOpened`, `disabled`, the tooltip — would make the effect run again on every open and close.
+        untracked(() => {
+            if (this.disabled) return;
 
-        this.tooltip()?.hide();
+            this.tooltip()?.hide();
 
-        this.setOpened(!this.isOpened);
+            this.setOpened(!this.isOpened);
+        });
     }
 
     /**

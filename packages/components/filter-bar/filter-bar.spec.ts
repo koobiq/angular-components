@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, DebugElement, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, computed, DebugElement, effect, inject, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -80,6 +80,22 @@ class TestComponent {
             disabled: false
         }
     ];
+}
+
+/** Calls `command` from an effect of its own view, at most ten times. */
+@Component({ template: '' })
+class EffectHost {
+    command: () => void = () => {};
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (this.runs >= 10) return;
+
+            this.runs++;
+            this.command();
+        });
+    }
 }
 
 describe('KbqFilterBar', () => {
@@ -497,6 +513,68 @@ describe('KbqFilterBar', () => {
             filterBar.resetFilterChangedState();
 
             expect(filterBar.filter()!.changed).toBe(false);
+        });
+    });
+
+    describe('called from an effect', () => {
+        // Renders no pipes, which need the providers of a full application.
+        @Component({
+            imports: [KbqFilterBarModule],
+            template: '<kbq-filter-bar />'
+        })
+        class BareFilterBar {
+            readonly filterBar = viewChild.required(KbqFilterBar);
+        }
+
+        let filterBar: KbqFilterBar;
+
+        let effectHost: ComponentFixture<EffectHost>;
+
+        const callFromEffect = (command: () => void): void => {
+            effectHost = TestBed.createComponent(EffectHost);
+            effectHost.componentInstance.command = command;
+            effectHost.detectChanges();
+        };
+
+        beforeEach(() => {
+            const bareFixture = TestBed.createComponent(BareFilterBar);
+
+            bareFixture.detectChanges();
+            filterBar = bareFixture.componentInstance.filterBar();
+        });
+
+        it('should not make an effect that removes a pipe run again when the filter changes', () => {
+            const pipe = createPipe({ name: 'removable' });
+
+            filterBar.filter.set(createFilter([pipe]));
+
+            callFromEffect(() => filterBar.removePipe(pipe));
+            filterBar.filter.set(createFilter([pipe]));
+            effectHost.detectChanges();
+
+            expect(filterBar.filter()!.pipes).toEqual([pipe]);
+            expect(effectHost.componentInstance.runs).toBe(1);
+        });
+
+        it('should not make an effect that saves the state run again when the filter changes', () => {
+            filterBar.filter.set(createFilter([], { name: 'original' }));
+            callFromEffect(() => filterBar.saveFilterState());
+            filterBar.filter.set(createFilter([], { name: 'changed' }));
+            effectHost.detectChanges();
+            filterBar.restoreFilterState();
+
+            expect(filterBar.filter()!.name).toBe('original');
+            expect(effectHost.componentInstance.runs).toBe(1);
+        });
+
+        it('should not make an effect that resets the changed state run again when the filter changes', () => {
+            filterBar.filter.set(createFilter([], { changed: true }));
+            callFromEffect(() => filterBar.resetFilterChangedState());
+            filterBar.filter.set(createFilter([], { changed: true }));
+            effectHost.detectChanges();
+
+            expect(filterBar.isChanged()).toBe(true);
+            expect(effectHost.componentInstance.runs).toBe(1);
         });
     });
 

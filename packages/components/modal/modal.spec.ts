@@ -2,6 +2,7 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import {
     Component,
+    effect,
     ElementRef,
     ErrorHandler,
     EventEmitter,
@@ -10,6 +11,7 @@ import {
     Injector,
     NgModule,
     Provider,
+    signal,
     Type,
     viewChild
 } from '@angular/core';
@@ -1476,6 +1478,84 @@ describe('KbqModal', () => {
             expect(control.hasRegistered(modal)).toBe(false);
         });
     });
+
+    describe('called from an effect', () => {
+        let fixture: ComponentFixture<ModalDrivenByEffectsComponent>;
+        let modal: KbqModalComponent;
+        let overlayContainer: OverlayContainer;
+
+        const settle = async () => {
+            fixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(ANIMATION_DURATION);
+            fixture.detectChanges();
+        };
+
+        beforeEach(async () => {
+            vi.useFakeTimers();
+            TestBed.configureTestingModule({ imports: [ModalDrivenByEffectsComponent] });
+            overlayContainer = TestBed.inject(OverlayContainer);
+            fixture = TestBed.createComponent(ModalDrivenByEffectsComponent);
+            await settle();
+            modal = fixture.componentInstance.modal();
+        });
+
+        afterEach(async () => {
+            TestBed.inject(KbqModalService).closeAll();
+            await settle();
+            overlayContainer.ngOnDestroy();
+        });
+
+        it('should not make an effect that creates a dialog create another one', async () => {
+            fixture.componentInstance.wantCreated.set(true);
+            await settle();
+
+            expect(fixture.componentInstance.runs.create).toBe(1);
+
+            fixture.componentInstance.created!.close();
+            await settle();
+
+            expect(fixture.componentInstance.runs.create).toBe(1);
+        });
+
+        it('should not make an effect that opens a dialog run again when the user closes it', async () => {
+            fixture.componentInstance.wantOpen.set(true);
+            await settle();
+
+            expect(modal.kbqVisible()).toBe(true);
+
+            dispatchKeyboardEvent(
+                overlayContainer.getContainerElement().querySelector('.kbq-modal-container')!,
+                'keydown',
+                ESCAPE
+            );
+            await settle();
+
+            expect(modal.kbqVisible()).toBe(false);
+            expect(fixture.componentInstance.runs.open).toBe(1);
+        });
+
+        it('should stay openable when an effect closes it', async () => {
+            fixture.componentInstance.wantClosed.set(true);
+            await settle();
+
+            modal.open();
+            await settle();
+
+            expect(modal.kbqVisible()).toBe(true);
+            expect(fixture.componentInstance.runs.close).toBe(1);
+        });
+
+        it('should stay openable when an effect cancels it', async () => {
+            fixture.componentInstance.wantCancelled.set(true);
+            await settle();
+
+            modal.open();
+            await settle();
+
+            expect(modal.kbqVisible()).toBe(true);
+            expect(fixture.componentInstance.runs.cancel).toBe(1);
+        });
+    });
 });
 
 @Injectable()
@@ -1643,6 +1723,57 @@ class ModalByServiceFromDropdownComponent {
 })
 class ModalWithoutModuleComponent {
     readonly modal = inject(KbqModalService);
+}
+
+@Component({
+    selector: 'modal-driven-by-effects',
+    imports: [KbqModalModule],
+    template: `
+        <kbq-modal [kbqTitle]="'Declarative title'" [(kbqVisible)]="visible">Declarative content</kbq-modal>
+    `
+})
+class ModalDrivenByEffectsComponent {
+    readonly modal = viewChild.required(KbqModalComponent);
+    readonly wantCreated = signal(false);
+    readonly wantOpen = signal(false);
+    readonly wantClosed = signal(false);
+    readonly wantCancelled = signal(false);
+    readonly runs = { create: 0, open: 0, close: 0, cancel: 0 };
+
+    visible = false;
+    created?: KbqModalRef;
+
+    private readonly modalService = inject(KbqModalService);
+
+    constructor() {
+        effect(() => {
+            if (!this.wantCreated() || this.runs.create >= 5) return;
+
+            this.runs.create++;
+            this.created = this.modalService.create({ kbqContent: 'Created content' });
+        });
+
+        effect(() => {
+            if (!this.wantOpen()) return;
+
+            this.runs.open++;
+            this.modal().open();
+        });
+
+        effect(() => {
+            if (!this.wantClosed()) return;
+
+            this.runs.close++;
+            this.modal().close();
+        });
+
+        effect(() => {
+            if (!this.wantCancelled()) return;
+
+            this.runs.cancel++;
+            this.modal().triggerCancel();
+        });
+    }
 }
 
 @Component({

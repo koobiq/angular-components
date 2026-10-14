@@ -27,6 +27,7 @@ import {
     QueryList,
     signal,
     SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -489,12 +490,17 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
 
     /** Handle click events, setting new selected index if appropriate. */
     handleClick(tab: KbqTab, tabHeader: KbqTabHeader, index: number) {
-        if (tab.disabled) {
-            return;
-        }
+        // Untracked, as `onSelectFocusedIndex()`, `saveState()` and `clearSavedState()`: called from a consumer's
+        // `effect()`, the state read on the way — the tabs and their inputs, the selection, the state saving inputs —
+        // would make the effect run again whenever it changes.
+        untracked(() => {
+            if (tab.disabled) {
+                return;
+            }
 
-        this.onSelectFocusedIndex(index);
-        tabHeader.focusIndex = index;
+            this.onSelectFocusedIndex(index);
+            tabHeader.focusIndex = index;
+        });
     }
 
     /**
@@ -511,13 +517,15 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
     }
 
     onSelectFocusedIndex($event: number): void {
-        if (typeof this.attributeToSelectBy === 'string') {
-            this.activeTab = this.tabs.get($event)?.tabId() || null;
-        } else {
-            this.activeTab = $event;
-        }
+        untracked(() => {
+            if (typeof this.attributeToSelectBy === 'string') {
+                this.activeTab = this.tabs.get($event)?.tabId() || null;
+            } else {
+                this.activeTab = $event;
+            }
 
-        this.saveState();
+            this.saveState();
+        });
     }
 
     /**
@@ -528,9 +536,11 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
      * when the tabs carry none.
      */
     saveState(): void {
-        if (!this.persists) return;
+        untracked(() => {
+            if (!this.persists) return;
 
-        this.stateSaving.write(this.snapshot());
+            this.stateSaving.write(this.snapshot());
+        });
     }
 
     /**
@@ -540,7 +550,7 @@ export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, 
      * it.
      */
     clearSavedState(): void {
-        this.stateSaving.clear();
+        untracked(() => this.stateSaving.clear());
     }
 
     /**

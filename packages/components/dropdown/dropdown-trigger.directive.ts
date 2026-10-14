@@ -343,19 +343,29 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Toggles the dropdown between the open and closed states. */
     toggle(): void {
-        return this.openedState() ? this.close() : this.open();
+        return untracked(this.openedState) ? this.close() : this.open();
     }
 
     /** Moves an open panel to the current origin and re-applies its position. */
     updatePosition(): void {
-        if (!this.openedState() || !this.overlayRef) return;
+        untracked(() => {
+            if (!this.openedState() || !this.overlayRef) return;
 
-        this.setPosition(this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
-        this.overlayRef.updatePosition();
+            this.setPosition(this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy);
+            this.overlayRef.updatePosition();
+        });
     }
 
     /** Opens the dropdown. */
     open(): void {
+        // Untracked, as `close()`, `toggle()`, `updatePosition()` and `focus()`: called from a consumer's `effect()`,
+        // the state read on the way — `opened`, the inputs of the trigger and of the panel — would make the effect run
+        // again on every open and close.
+        untracked(() => this.openPanel());
+    }
+
+    /** Body of `open()`. */
+    private openPanel(): void {
         if (this.openedState()) {
             return;
         }
@@ -406,19 +416,21 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy, KbqSibli
 
     /** Closes the dropdown. */
     close(): void {
-        this.dropdown().closed.emit();
+        untracked(() => this.dropdown().closed.emit());
     }
 
     /**
      * Focuses the dropdown trigger.
      */
     focus(origin?: FocusOrigin, options?: FocusOptions) {
-        // The trigger of a nested panel is an item of a search panel: the caret belongs to the query,
-        // not to the item, so hand it back to the field instead of focusing this element.
-        if (this.isNested() && this.parent.restoreFocus?.()) return;
+        untracked(() => {
+            // The trigger of a nested panel is an item of a search panel: the caret belongs to the query,
+            // not to the item, so hand it back to the field instead of focusing this element.
+            if (this.isNested() && this.parent.restoreFocus?.()) return;
 
-        // A programmatic open leaves `openedBy` unset; the host still gets `cdk-program-focused`.
-        this.focusMonitor.focusVia(this.elementRef.nativeElement, origin ?? 'program', options);
+            // A programmatic open leaves `openedBy` unset; the host still gets `cdk-program-focused`.
+            this.focusMonitor.focusVia(this.elementRef.nativeElement, origin ?? 'program', options);
+        });
     }
 
     /** Whether focus is still the overlay's to give back, i.e. an outside click hasn't moved it elsewhere. */

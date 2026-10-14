@@ -330,14 +330,18 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
 
     /** Opens all enabled accordion items in an accordion where `type` is `multiple`. */
     openAll(): void {
-        if (this.isMultiple) {
-            this.openCloseAllActions.next(true);
-        }
+        // Untracked, as `closeAll()`, `saveState()` and `clearSavedState()`: called from a consumer's `effect()`, the
+        // state read on the way — the inputs, the items' `disabled` — would make the effect run again.
+        untracked(() => {
+            if (this.isMultiple) {
+                this.openCloseAllActions.next(true);
+            }
+        });
     }
 
     /** Closes all enabled accordion items. */
     closeAll(): void {
-        this.openCloseAllActions.next(false);
+        untracked(() => this.openCloseAllActions.next(false));
     }
 
     /** @docs-private */
@@ -367,11 +371,13 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
      * @docs-private
      */
     saveState(): void {
-        // Checked before the snapshot is built: `expandedValues()` walks the content query on every
-        // toggle. A controlled `[value]` belongs to the application, so persisting it is pointless.
-        if (!this.stateSaving.useStateSaving() || this.valueInput() != null) return;
+        untracked(() => {
+            // Checked before the snapshot is built: `expandedValues()` walks the content query on every
+            // toggle. A controlled `[value]` belongs to the application, so persisting it is pointless.
+            if (!this.stateSaving.useStateSaving() || this.valueInput() != null) return;
 
-        this.stateSaving.write(this.expandedValues());
+            this.stateSaving.write(this.expandedValues());
+        });
     }
 
     /**
@@ -380,7 +386,7 @@ export class KbqAccordion implements OnDestroy, AfterViewInit, AfterContentInit,
      * Persistence itself stays on — the next change is written again. Unset `useStateSaving` to stop it.
      */
     clearSavedState(): void {
-        this.stateSaving.clear();
+        untracked(() => this.stateSaving.clear());
     }
 
     /**

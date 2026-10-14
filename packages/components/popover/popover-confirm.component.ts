@@ -10,6 +10,7 @@ import {
     output,
     signal,
     SimpleChanges,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -181,9 +182,12 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
             return;
         }
 
-        // Before `super.updateData()`, which renders the panel.
-        this.instance.confirmButtonText = this.confirmButtonText;
-        this.instance.confirmText = this.confirmText;
+        // Before `super.updateData()`, which renders the panel. Untracked as there: the texts follow the inputs and the
+        // locale.
+        untracked(() => {
+            this.instance.confirmButtonText = this.confirmButtonText;
+            this.instance.confirmText = this.confirmText;
+        });
 
         super.updateData();
 

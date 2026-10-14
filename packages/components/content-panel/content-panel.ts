@@ -15,6 +15,7 @@ import {
     OnInit,
     output,
     signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -451,9 +452,11 @@ export class KbqContentPanelContainer implements OnInit {
      * Called whenever the panel is opened, closed or resized.
      */
     saveState(): void {
-        if (!this.persists) return;
+        untracked(() => {
+            if (!this.persists) return;
 
-        this.stateSaving.write({ opened: this.openedState(), width: this.widthState() });
+            this.stateSaving.write({ opened: this.openedState(), width: this.widthState() });
+        });
     }
 
     /**
@@ -462,7 +465,7 @@ export class KbqContentPanelContainer implements OnInit {
      * Persistence itself stays on — the next change is written again. Unset `useStateSaving` to stop it.
      */
     clearSavedState(): void {
-        this.stateSaving.clear();
+        untracked(() => this.stateSaving.clear());
     }
 
     /**
@@ -477,30 +480,33 @@ export class KbqContentPanelContainer implements OnInit {
      * Toggles the content panel opened state.
      */
     toggle(): void {
-        this.openedState.update((state) => !state);
-        this.openedChange.emit(this.openedState());
-        this.saveState();
+        // Untracked, as `open()`, `close()`, `saveState()` and `clearSavedState()`: called from a consumer's
+        // `effect()`, the state read on the way — `opened`, the width, the state saving inputs — would make the
+        // effect run again on every open and close.
+        untracked(() => this.setOpened(!this.openedState()));
     }
 
     /**
      * Opens the content panel.
      */
     open(): void {
-        if (this.openedState()) return;
-
-        this.openedState.set(true);
-        this.openedChange.emit(this.openedState());
-        this.saveState();
+        untracked(() => {
+            if (!this.openedState()) this.setOpened(true);
+        });
     }
 
     /**
      * Closes the content panel.
      */
     close(): void {
-        if (!this.openedState()) return;
+        untracked(() => {
+            if (this.openedState()) this.setOpened(false);
+        });
+    }
 
-        this.openedState.set(false);
-        this.openedChange.emit(this.openedState());
+    private setOpened(opened: boolean): void {
+        this.openedState.set(opened);
+        this.openedChange.emit(opened);
         this.saveState();
     }
 

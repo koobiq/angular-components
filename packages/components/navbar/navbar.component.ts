@@ -20,6 +20,7 @@ import {
     NgZone,
     OnDestroy,
     QueryList,
+    untracked,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -352,6 +353,13 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
      * `KbqNavbarItem.measureWidths()`.
      * @docs-private */
     updateExpandedStateForItems = () => {
+        // Untracked: called from a consumer's `effect()`, the items and their collapsed state read here would make the
+        // effect run again on every collapse it makes.
+        untracked(() => this.fitItems());
+    };
+
+    /** Body of `updateExpandedStateForItems()`. */
+    private fitItems(): void {
         const availableWidth = this.width;
 
         // A navbar that is not rendered, e.g. hidden in an inactive tab, has nothing to measure yet.
@@ -369,7 +377,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         } else {
             this.expandItems(items, collapseDelta);
         }
-    };
+    }
 
     /** @docs-private */
     protected onKeyDown(event: KeyboardEvent) {

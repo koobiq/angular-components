@@ -1,5 +1,14 @@
 import { TitleCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DebugElement, inject, Provider, signal, Type } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    effect,
+    inject,
+    Provider,
+    signal,
+    Type
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -1264,6 +1273,22 @@ describe('KbqTimeRange', () => {
         });
     });
 
+    describe('called from an effect', () => {
+        it('should not make an effect that sets the form control run again when an input changes', () => {
+            const fixture = setup(TestComponentWrittenByEffect);
+            const host = fixture.componentInstance;
+
+            host.write.set(true);
+            fixture.detectChanges();
+
+            host.availableTimeRangeTypes.set(['lastHour', 'last24Hours', 'last3Days', 'range']);
+            fixture.detectChanges();
+
+            expect(host.control.value).toEqual({ type: 'lastHour' });
+            expect(host.runs).toBe(1);
+        });
+    });
+
     describe('valueCorrected', () => {
         it('should stay silent when the same allTime value is written twice', () => {
             const fixture = setup(TestComponentWithValueCorrection);
@@ -1618,3 +1643,26 @@ export class TestComponentAsFormField {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestComponentWithLabeledTitles {}
+
+@Component({
+    imports: [KbqTimeRange, ReactiveFormsModule],
+    template: `
+        <kbq-time-range [availableTimeRangeTypes]="availableTimeRangeTypes()" [formControl]="control" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWrittenByEffect {
+    readonly availableTimeRangeTypes = signal<KbqTimeRangeType[]>(['lastHour', 'last24Hours', 'range']);
+    readonly control = new FormControl<KbqTimeRangeRange>({ type: 'last24Hours' }, { nonNullable: true });
+    readonly write = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (!this.write()) return;
+
+            this.runs++;
+            this.control.setValue({ type: 'lastHour' });
+        });
+    }
+}

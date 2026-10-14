@@ -267,9 +267,13 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
      * A no-op while a filter is active: what is expanded then is the result set, not a chosen state.
      */
     saveState(): void {
-        if (!this.persists || this.treeControl.filterValue.value?.length) return;
+        // Untracked, as in `clearSavedState()`: called from a consumer's `effect()`, the inputs read on the way would
+        // make the effect run again whenever they change.
+        untracked(() => {
+            if (!this.persists || this.treeControl.filterValue.value?.length) return;
 
-        this.stateSaving!.write(this.expandedValues());
+            this.stateSaving!.write(this.expandedValues());
+        });
     }
 
     /**
@@ -278,7 +282,7 @@ export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
      * Persistence itself stays on — the next expansion is written again.
      */
     clearSavedState(): void {
-        this.stateSaving?.clear();
+        untracked(() => this.stateSaving?.clear());
     }
 
     /**

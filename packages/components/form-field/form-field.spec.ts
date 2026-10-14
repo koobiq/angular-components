@@ -1,4 +1,4 @@
-import { Component, DebugElement, Directive, DoCheck, signal, Type } from '@angular/core';
+import { Component, DebugElement, Directive, DoCheck, effect, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
     AbstractControl,
@@ -1284,4 +1284,86 @@ describe(KbqFormField.name, () => {
             expect(getErrorDebugElement(debugElement)).toBeFalsy();
         });
     });
+
+    describe('called from an effect', () => {
+        it('should not make an effect that shows the password re-run when the control is re-enabled', async () => {
+            const fixture = createComponent(FormFieldDrivenByEffect);
+            const { componentInstance, debugElement } = fixture;
+
+            componentInstance.action.set('toggle');
+            await fixture.whenStable();
+
+            expect(getPasswordInputNativeElement(debugElement).type).toBe('text');
+
+            getPasswordToggleDebugElement(debugElement).nativeElement.click();
+            componentInstance.password.disable();
+            await fixture.whenStable();
+            componentInstance.password.enable();
+            await fixture.whenStable();
+
+            expect(getPasswordInputNativeElement(debugElement).type).toBe('password');
+            expect(componentInstance.runs).toBe(1);
+        });
+
+        it('should not make an effect that clears the control re-run when something is typed', async () => {
+            const fixture = createComponent(FormFieldDrivenByEffect);
+            const { componentInstance } = fixture;
+            const input: HTMLInputElement = fixture.nativeElement.querySelector('.cleanable');
+
+            componentInstance.action.set('clear');
+            await fixture.whenStable();
+
+            expect(componentInstance.control.value).toBeNull();
+
+            input.value = 'typed';
+            input.dispatchEvent(new Event('input'));
+            await fixture.whenStable();
+
+            expect(componentInstance.control.value).toBe('typed');
+            expect(componentInstance.runs).toBe(1);
+        });
+    });
 });
+
+/** Caps the runs of an effect that would otherwise loop, so that a regression fails instead of hanging. */
+const EFFECT_RUN_LIMIT = 10;
+
+@Component({
+    selector: 'form-field-driven-by-effect',
+    imports: [ReactiveFormsModule, KbqInputModule],
+    template: `
+        <kbq-form-field>
+            <input kbqInputPassword [formControl]="password" />
+            <kbq-password-toggle />
+        </kbq-form-field>
+
+        <kbq-form-field>
+            <input class="cleanable" kbqInput [formControl]="control" />
+            <kbq-cleaner />
+        </kbq-form-field>
+    `
+})
+class FormFieldDrivenByEffect {
+    readonly passwordToggle = viewChild.required(KbqPasswordToggle);
+    readonly cleaner = viewChild.required(KbqCleaner);
+    readonly password = new FormControl('secret');
+    readonly control = new FormControl<string | null>('initial');
+    readonly action = signal<'toggle' | 'clear' | null>(null);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            const action = this.action();
+
+            if (!action || this.runs === EFFECT_RUN_LIMIT) return;
+
+            this.runs++;
+
+            if (action === 'toggle') {
+                this.passwordToggle().toggle(new Event('click'));
+            } else {
+                this.cleaner().clear(new Event('click'));
+            }
+        });
+    }
+}

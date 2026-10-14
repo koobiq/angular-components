@@ -11,7 +11,8 @@ import {
     Renderer2,
     RendererFactory2,
     REQUEST,
-    signal
+    signal,
+    untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EMPTY, Observable } from 'rxjs';
@@ -404,7 +405,9 @@ export class KbqThemeService<T extends KbqThemeConfig = KbqThemeConfig> {
 
     /** Switches between `'light'`/`'dark'`, based on `colorScheme()` — the current theme's actual polarity. */
     toggle() {
-        this.setMode(this.colorScheme() === 'dark' ? 'light' : 'dark');
+        // Untracked: called from a consumer's `effect()`, `colorScheme` read here would make the effect toggle again on
+        // every change it makes.
+        this.setMode(untracked(this.colorScheme) === 'dark' ? 'light' : 'dark');
     }
 
     /** The persisted mode, or `config.mode` when nothing valid is stored. Also used to re-read the store. */

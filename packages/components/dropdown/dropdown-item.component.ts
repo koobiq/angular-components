@@ -11,6 +11,7 @@ import {
     input,
     OnDestroy,
     signal,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -171,6 +172,13 @@ export class KbqDropdownItem
      * the meantime. `preventScroll` is therefore always forced on, overriding `options`.
      */
     focus(origin?: FocusOrigin, options?: FocusOptions): void {
+        // Untracked: called from a consumer's `effect()`, `disabled` and what the focus listeners read on the way would
+        // make the effect run again whenever they change.
+        untracked(() => this.focusItem(origin, options));
+    }
+
+    /** Body of `focus()`. */
+    private focusItem(origin: FocusOrigin | undefined, options: FocusOptions | undefined): void {
         if (this.disabled()) return;
 
         const element = this.getHostElement();

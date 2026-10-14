@@ -29,6 +29,7 @@ import {
     SimpleChanges,
     TemplateRef,
     Type,
+    untracked,
     viewChild,
     viewChildren,
     ViewContainerRef,
@@ -543,7 +544,10 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     open() {
-        this.changeVisibleFromInside(true);
+        // Untracked, as `close()`, `triggerOk()` and `triggerCancel()`: called from a consumer's `effect()`, the state
+        // read and written on the way — `kbqVisible`, the dialogs shown, the inputs — would make the effect run again on
+        // every open and close, and an effect that creates a dialog would create another one at once.
+        untracked(() => this.changeVisibleFromInside(true));
     }
 
     /**
@@ -552,7 +556,7 @@ export class KbqModalComponent<T = any, R = any>
      * Closing an already closed dialog is a no-op: `afterClose` emits once per actual transition.
      */
     close(result?: R) {
-        this.changeVisibleFromInside(false, result);
+        untracked(() => this.changeVisibleFromInside(false, result));
     }
 
     // Destroy equals Close
@@ -565,11 +569,11 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     triggerOk() {
-        this.onClickOkCancel('ok');
+        untracked(() => this.onClickOkCancel('ok'));
     }
 
     triggerCancel() {
-        this.onClickOkCancel('cancel');
+        untracked(() => this.onClickOkCancel('cancel'));
     }
 
     getInstance(): KbqModalComponent {

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, effect, signal, viewChild } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqOptgroup, KbqOption, KbqOptionModule } from './index';
+import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption, KbqOptionModule } from './index';
 
 @Component({
     imports: [KbqOptionModule],
@@ -41,10 +41,47 @@ class OptionWithOwnRole {}
 })
 class OptgroupWithLabel {}
 
+@Component({
+    imports: [KbqOptionModule],
+    template: `
+        <kbq-option [value]="'steak'">Steak</kbq-option>
+    `,
+    providers: [{ provide: KBQ_OPTION_PARENT_COMPONENT, useValue: { multiSelection: true } }]
+})
+class OptionDrivenByEffects {
+    readonly option = viewChild.required(KbqOption);
+    readonly wantSelected = signal(false);
+    readonly toggles = signal(0);
+    readonly runs = { select: 0, toggle: 0 };
+
+    constructor() {
+        effect(() => {
+            if (!this.wantSelected()) return;
+
+            this.runs.select++;
+            this.option().select();
+        });
+
+        effect(() => {
+            if (!this.toggles() || this.runs.toggle >= 10) return;
+
+            this.runs.toggle++;
+            this.option().selectViaInteraction();
+        });
+    }
+}
+
 describe('KbqOption component', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqOptionModule, OptionWithDisable, OptionWithCheckbox, OptionWithOwnRole, OptgroupWithLabel]
+            imports: [
+                KbqOptionModule,
+                OptionWithDisable,
+                OptionWithCheckbox,
+                OptionWithOwnRole,
+                OptgroupWithLabel,
+                OptionDrivenByEffects
+            ]
         }).compileComponents();
     });
 
@@ -241,6 +278,35 @@ describe('KbqOption component', () => {
         expect(spy).not.toHaveBeenCalled();
 
         subscription.unsubscribe();
+    });
+
+    describe('called from an effect', () => {
+        it('should not make an effect that selects it run again when it is deselected', () => {
+            const fixture = TestBed.createComponent(OptionDrivenByEffects);
+            const { componentInstance } = fixture;
+
+            fixture.detectChanges();
+            componentInstance.wantSelected.set(true);
+            fixture.detectChanges();
+
+            componentInstance.option().deselect();
+            fixture.detectChanges();
+
+            expect(componentInstance.option().selected).toBe(false);
+            expect(componentInstance.runs.select).toBe(1);
+        });
+
+        it('should not loop when an effect toggles it through `selectViaInteraction`', () => {
+            const fixture = TestBed.createComponent(OptionDrivenByEffects);
+            const { componentInstance } = fixture;
+
+            fixture.detectChanges();
+            componentInstance.toggles.set(1);
+            fixture.detectChanges();
+
+            expect(componentInstance.option().selected).toBe(true);
+            expect(componentInstance.runs.toggle).toBe(1);
+        });
     });
 });
 

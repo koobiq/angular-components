@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, DebugElement, ElementRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, DebugElement, effect, ElementRef, inject, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqButton } from '@koobiq/components/button';
@@ -86,6 +86,22 @@ class TestComponent {
     onSaveSpy = vi.fn();
     onRemoveFilterSpy = vi.fn();
     onResetFilterChangesSpy = vi.fn();
+}
+
+/** Calls `command` from an effect of its own view, at most ten times. */
+@Component({ template: '' })
+class EffectHost {
+    command: () => void = () => {};
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            if (this.runs >= 10) return;
+
+            this.runs++;
+            this.command();
+        });
+    }
 }
 
 describe('KbqFilters', () => {
@@ -659,6 +675,50 @@ describe('KbqFilters', () => {
             expect(fixture.componentInstance.onRemoveFilterSpy).toHaveBeenCalledWith(
                 expect.objectContaining({ name: 'ToRemove' })
             );
+        });
+    });
+
+    describe('called from an effect', () => {
+        let effectHost: ComponentFixture<EffectHost>;
+
+        const callFromEffect = (command: () => void): void => {
+            effectHost = TestBed.createComponent(EffectHost);
+            effectHost.componentInstance.command = command;
+            effectHost.detectChanges();
+        };
+
+        /** Changes the filter the way editing a pipe does. */
+        const changeFilter = (): void => {
+            getFilterBar().filter.set(createFilter([], { saved: true, changed: true }));
+            effectHost.detectChanges();
+        };
+
+        beforeEach(() => initFixture(createFilter([], { saved: true, changed: true })));
+
+        it('should not make an effect that saves the changes run again when the filter changes', () => {
+            callFromEffect(() => getFiltersComponent().saveChanges());
+            changeFilter();
+
+            expect(getFilterBar().isChanged()).toBe(true);
+            expect(fixture.componentInstance.onSaveSpy).toHaveBeenCalledTimes(1);
+            expect(effectHost.componentInstance.runs).toBe(1);
+        });
+
+        it('should not make an effect that resets the changes run again when the filter changes', () => {
+            callFromEffect(() => getFiltersComponent().resetFilterChanges());
+            changeFilter();
+
+            expect(getFilterBar().isChanged()).toBe(true);
+            expect(fixture.componentInstance.onResetFilterChangesSpy).toHaveBeenCalledTimes(1);
+            expect(effectHost.componentInstance.runs).toBe(1);
+        });
+
+        it('should not make an effect that removes the filter run again when the filter changes', () => {
+            callFromEffect(() => getFiltersComponent().removeFilter());
+            changeFilter();
+
+            expect(fixture.componentInstance.onRemoveFilterSpy).toHaveBeenCalledTimes(1);
+            expect(effectHost.componentInstance.runs).toBe(1);
         });
     });
 
