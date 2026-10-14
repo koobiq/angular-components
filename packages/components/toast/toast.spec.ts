@@ -19,7 +19,7 @@ import { dispatchKeyboardEvent, dispatchMouseEvent, kbqShadowDomOverlayProvider 
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import { Subject, Subscription } from 'rxjs';
-import type { Mock } from 'vitest';
+import type { Mock, MockInstance } from 'vitest';
 import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import { KbqToastModule } from './toast.module';
@@ -752,6 +752,112 @@ describe('KbqToastService', () => {
             service.ngOnDestroy();
 
             expect(overlayContainerElement.querySelectorAll('.kbq-toast-overlay').length).toBe(0);
+        });
+    });
+
+    describe('stacking above other overlays', () => {
+        const toastHost = () => overlayContainerElement.querySelector<HTMLElement>('.kbq-toast-overlay')!;
+
+        const openOverlay = (): OverlayRef => {
+            const overlayRef = TestBed.inject(Overlay).create();
+
+            overlayRef.attach(new ComponentPortal(ToastOverlayContent));
+
+            return overlayRef;
+        };
+
+        it('moves the stack after an overlay opened after it', () => {
+            showRendered();
+
+            const overlayRef = openOverlay();
+
+            showRendered();
+
+            expect(overlayContainerElement.lastElementChild).toBe(toastHost());
+
+            overlayRef.dispose();
+        });
+
+        describe('shown as popovers', () => {
+            // jsdom has no Popover API, and CDK shows an overlay host as a popover only where `showPopover` exists.
+            // Like a browser, the stub keeps the top layer in the order the popovers were shown in, and hides a
+            // popover taken out of the DOM.
+            let topLayer: HTMLElement[];
+            let removals: MutationObserver;
+            let matches: MockInstance<Element['matches']>;
+
+            const hideRemoved = (records: MutationRecord[]) => {
+                for (const { removedNodes } of records) {
+                    removedNodes.forEach((node) => (topLayer = topLayer.filter((element) => !node.contains(element))));
+                }
+            };
+
+            const shown = (): HTMLElement[] => {
+                hideRemoved(removals.takeRecords());
+
+                return topLayer;
+            };
+
+            beforeEach(() => {
+                topLayer = [];
+                removals = new MutationObserver(hideRemoved);
+                removals.observe(document, { childList: true, subtree: true });
+
+                Object.defineProperty(HTMLElement.prototype, 'showPopover', {
+                    configurable: true,
+                    value(this: HTMLElement) {
+                        if (!shown().includes(this)) topLayer.push(this);
+                    }
+                });
+                Object.defineProperty(HTMLElement.prototype, 'hidePopover', {
+                    configurable: true,
+                    value(this: HTMLElement) {
+                        topLayer = shown().filter((element) => element !== this);
+                    }
+                });
+
+                const nativeMatches = Element.prototype.matches;
+                const matchesPopoverOpen = function (this: Element, selectors: string): boolean {
+                    return selectors === ':popover-open'
+                        ? shown().includes(this as HTMLElement)
+                        : nativeMatches.call(this, selectors);
+                };
+
+                matches = vi.spyOn(Element.prototype, 'matches').mockImplementation(matchesPopoverOpen);
+            });
+
+            afterEach(() => {
+                matches.mockRestore();
+                removals.disconnect();
+                delete (HTMLElement.prototype as Partial<HTMLElement>).showPopover;
+                delete (HTMLElement.prototype as Partial<HTMLElement>).hidePopover;
+            });
+
+            it('keeps the stack in the top layer and raises it above an overlay opened after it', () => {
+                showRendered();
+
+                const overlayRef = openOverlay();
+
+                expect(shown()).toEqual([toastHost(), overlayRef.hostElement]);
+
+                showRendered();
+
+                expect(shown()).toEqual([overlayRef.hostElement, toastHost()]);
+
+                overlayRef.dispose();
+            });
+
+            it('keeps the focus inside the stack while raising it', () => {
+                const toast = showRendered();
+                const overlayRef = openOverlay();
+
+                closeButtonOf(toast).focus();
+                showRendered();
+
+                expect(document.activeElement).toBe(closeButtonOf(toast));
+
+                overlayRef.dispose();
+            });
         });
     });
 
