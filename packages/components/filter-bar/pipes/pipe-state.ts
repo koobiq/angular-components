@@ -27,6 +27,8 @@ export class KbqPipeState<T> {
     readonly state = input<T | null>(null, { alias: 'kbqPipeState' });
 
     constructor() {
+        this.button.color.set(KbqComponentColors.ContrastFade);
+
         // The trigger and the remove button are two buttons that have to carry one style. A pipe changes
         // its emptiness by writing `data.value` in place, which no signal observes — `stateChanges` is the
         // bus it fires on such a write.
@@ -47,9 +49,5 @@ export class KbqPipeState<T> {
         if (!this.pipe.isEmpty) {
             this.button.kbqStyle = KbqButtonStyles.Filled;
         }
-
-        // Both styles resolve to the same default color, so it is written once, outside the branch, and
-        // after the style: a style change resets the color of the button to the style's default.
-        this.button.color.set(KbqComponentColors.ContrastFade);
     };
 }

@@ -18,6 +18,8 @@ export class KbqFilterBarButton {
     private readonly filters = inject(KBQ_FILTERS);
 
     constructor() {
+        this.button.color.set(KbqComponentColors.ContrastFade);
+
         // Reflect the current filter's saved/changed state in the button style. Reading `filterBar.filter`
         // (a signal-backed accessor) subscribes this effect, replacing the retired `changes` bus.
         effect(() => {
@@ -28,12 +30,9 @@ export class KbqFilterBarButton {
             if (filter?.changed || filter?.saved) {
                 // `changed-filter` is a style of this package, not of the button, so it is not
                 // covered by `kbq-button-theme()` and paints its own colors regardless of which
-                // color class the button carries — the color set below is simply left in place.
+                // color class the button carries — the color set above is simply left in place.
                 this.button.kbqStyle = 'changed-filter';
             }
-
-            // Set after the style: a style change resets the color of the button to the style's default.
-            this.button.color.set(KbqComponentColors.ContrastFade);
         });
     }
 

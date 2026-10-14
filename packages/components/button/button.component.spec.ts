@@ -331,6 +331,21 @@ describe('KbqButton', () => {
             expect(element.classList.contains('kbq-contrast')).toBe(false);
         });
 
+        it('should keep a color set in code when the style changes', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const button: KbqButton = fixture.debugElement.query(By.directive(KbqButton)).componentInstance;
+
+            button.color.set(KbqComponentColors.Theme);
+
+            const element = setStyle(fixture, KbqButtonStyles.Transparent);
+
+            expect(button.color()).toBe(KbqComponentColors.Theme);
+            expect(element.classList.contains('kbq-theme')).toBe(true);
+        });
+
         it('should fall back to the style default when the color is cleared', () => {
             const fixture = TestBed.createComponent(TestApp);
 
@@ -1200,6 +1215,23 @@ describe(KbqButtonGroupRoot.name, () => {
         Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('[kbq-button]')).forEach((btn) =>
             expect(btn.classList.contains('kbq-theme')).toBe(true)
         );
+    });
+
+    it('should keep a color set in code on a child when the group color changes', () => {
+        const fixture = createComponent(UnboundColorGroupTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.color = KbqComponentColors.Theme;
+        fixture.detectChanges();
+
+        const button: KbqButton = fixture.debugElement.query(By.directive(KbqButton)).componentInstance;
+
+        button.color.set(KbqComponentColors.Contrast);
+        componentInstance.color = KbqComponentColors.ThemeFade;
+        fixture.detectChanges();
+
+        expect(button.color()).toBe(KbqComponentColors.Contrast);
+        expect(fixture.nativeElement.querySelector('[kbq-button]').classList).toContain('kbq-contrast');
     });
 
     it('should revert to its own default color when the group color is unbound at runtime', () => {

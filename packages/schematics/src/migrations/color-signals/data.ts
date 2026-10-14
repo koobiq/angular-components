@@ -117,8 +117,6 @@ export const SUMMARY: readonly string[] = [
     '  `color` of every component built on KbqColorDirective is a writable signal: a read is a call ' +
         '(icon.color()), a write is .set(). A read left un-called is silent in a template: ' +
         '{{ icon.color }} prints the function source.',
-    '  A color set in code holds until the [color] binding or the default color of the component changes. ' +
-        'On a button that includes the color of its group and a change of kbqStyle. Prefer binding [color].',
     '  An unset or falsy [color] renders the default color class of the component, kbq-empty where it ' +
         'has none, instead of no color class.'
 ];
