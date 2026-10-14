@@ -93,8 +93,6 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         this.option.dropdownTrigger.restoreFocus = false;
 
         this.option.dropdownTrigger.dropdownClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.preventShowingTooltip();
-
             const lastDestroyReason = this.option.dropdownTrigger.lastDestroyReason;
 
             if (lastDestroyReason) {
@@ -138,16 +136,6 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
 
         $event.preventDefault();
         $event.stopPropagation();
-    }
-
-    private preventShowingTooltip() {
-        if (!this.option.tooltipTrigger) {
-            return;
-        }
-
-        this.option.tooltipTrigger.disabled = true;
-
-        setTimeout(() => (this.option.tooltipTrigger.disabled = false));
     }
 }
 

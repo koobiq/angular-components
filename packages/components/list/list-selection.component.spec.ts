@@ -30,6 +30,7 @@ import {
     DOWN_ARROW,
     END,
     ENTER,
+    ESCAPE,
     FocusKeyManager,
     HOME,
     KBQ_LOCALE_SERVICE,
@@ -46,7 +47,8 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
 import {
     KbqListCopyEvent,
@@ -3803,3 +3805,81 @@ class SelectionListWithSelectAllInKeyboardMode {
     `
 })
 class SelectionListWithSelectAllInSingleSelection {}
+
+@Component({
+    imports: [
+        KbqListModule,
+        KbqOptionModule,
+        KbqDropdownModule,
+        KbqToolTipModule
+    ],
+    template: `
+        <kbq-list-selection>
+            <kbq-list-option [value]="'option_1'">
+                Option 1
+                <kbq-option-action
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [kbqTooltip]="'Tooltip text'"
+                    [kbqTooltipDisabled]="tooltipDisabled"
+                />
+            </kbq-list-option>
+        </kbq-list-selection>
+
+        <kbq-dropdown #dropdown>
+            <button kbq-dropdown-item>action</button>
+        </kbq-dropdown>
+    `
+})
+class SelectionListWithActionButtonTooltip {
+    tooltipDisabled: boolean | undefined;
+}
+
+describe('KbqListSelection option action', () => {
+    describe('with a tooltip on the action', () => {
+        let fixture: ComponentFixture<SelectionListWithActionButtonTooltip>;
+        let actionElement: HTMLElement;
+        let dropdownTrigger: KbqDropdownTrigger;
+        let tooltip: KbqTooltipTrigger;
+
+        const closeDropdownWithEscape = () => {
+            dropdownTrigger.openedBy = 'keyboard';
+            dropdownTrigger.open();
+            fixture.detectChanges();
+            flush();
+
+            dispatchKeyboardEvent(document.querySelector('.kbq-dropdown__panel')!, 'keydown', ESCAPE);
+            fixture.detectChanges();
+            flush();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({ imports: [SelectionListWithActionButtonTooltip, NoopAnimationsModule] });
+
+            fixture = TestBed.createComponent(SelectionListWithActionButtonTooltip);
+            fixture.detectChanges();
+
+            const action = fixture.debugElement.query(By.directive(KbqOptionActionComponent));
+
+            actionElement = action.nativeElement;
+            dropdownTrigger = action.injector.get(KbqDropdownTrigger);
+            tooltip = action.injector.get(KbqTooltipTrigger);
+        });
+
+        it('should not show the tooltip when keyboard focus returns from the dropdown', fakeAsync(() => {
+            closeDropdownWithEscape();
+
+            expect(document.activeElement).toBe(actionElement);
+            expect(document.querySelector('.kbq-tooltip__content')).toBeNull();
+        }));
+
+        it('should keep kbqTooltipDisabled after the dropdown closes', fakeAsync(() => {
+            fixture.componentInstance.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            closeDropdownWithEscape();
+
+            expect(tooltip.disabled).toBe(true);
+        }));
+    });
+});

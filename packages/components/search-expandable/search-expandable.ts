@@ -211,7 +211,8 @@ export class KbqSearchExpandable implements ControlValueAccessor, AfterViewInit,
                 this.focusMonitor.focusVia(button.elementRef.nativeElement, this.lastFocusOrigin);
 
                 if (tooltip) {
-                    tooltip.disabled = false;
+                    // Back to what the template binds, not `false`.
+                    tooltip.disabled = this.disabled;
                 }
             });
 
