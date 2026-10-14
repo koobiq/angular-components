@@ -428,7 +428,7 @@ export class KbqTimepicker<D>
         }
 
         // The rendered text changes without notice: through the keyboard handlers, which write the element.
-        this.emptyValue.set(!this.viewValue && !this.isBadInput());
+        this.emptyValue.set(this.isEmpty());
     }
 
     ngAfterContentInit() {
@@ -680,6 +680,11 @@ export class KbqTimepicker<D>
         const validity = (<HTMLInputElement>this.elementRef.nativeElement).validity;
 
         return validity && validity.badInput;
+    }
+
+    /** Whether the input renders no text, read from the element rather than from the last change detection. */
+    private isEmpty(): boolean {
+        return !this.viewValue && !this.isBadInput();
     }
 
     private spaceKeyHandler(event: KeyboardEvent) {
@@ -969,7 +974,7 @@ export class KbqTimepicker<D>
     }
 
     private parseValidator: ValidatorFn = (): ValidationErrors | null => {
-        return this.focused() || !this.viewValue || this.isBadInput() || this.lastValueValid
+        return this.focused() || this.isEmpty() || this.lastValueValid
             ? null
             : { kbqTimepickerParse: { text: this.viewValue } };
     };
