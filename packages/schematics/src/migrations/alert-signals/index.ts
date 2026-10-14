@@ -7,6 +7,7 @@ import { setupOptions } from '../../utils/package-config';
 import { forEachClass, parseTemplate } from '../../utils/typescript';
 import {
     ALERT_ELEMENT,
+    ALERT_EXPORT_AS,
     ALERT_TYPE,
     PROTECTED_MEMBERS,
     SIGNAL_MEMBERS,
@@ -252,6 +253,14 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
     }
 }
 
+/** `#ref` / `ref-ref`, or `undefined` when the attribute is not a reference variable. */
+function referenceName(name: string): string | undefined {
+    if (name.startsWith('#')) return name.slice(1);
+    if (name.startsWith('ref-')) return name.slice(4);
+
+    return undefined;
+}
+
 /** Collects template reference variable names bound to a `<kbq-alert>` element. */
 class AlertRefCollector implements Visitor {
     readonly refs = new Set<string>();
@@ -261,8 +270,10 @@ class AlertRefCollector implements Visitor {
             for (const attr of element.attrs ?? []) {
                 if (typeof attr.name !== 'string') continue;
 
-                if (attr.name.startsWith('#')) this.refs.add(attr.name.slice(1));
-                else if (attr.name.startsWith('ref-')) this.refs.add(attr.name.slice(4));
+                const name = referenceName(attr.name);
+                const value = String(attr.value ?? '');
+
+                if (name !== undefined && (!value || value === ALERT_EXPORT_AS)) this.refs.add(name);
             }
         }
 

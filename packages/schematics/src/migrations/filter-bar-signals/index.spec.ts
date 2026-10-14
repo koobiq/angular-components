@@ -167,6 +167,19 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('{{ filterBar.isChanged() }}');
     });
 
+    it('leaves reads via a template reference variable naming a directive on <kbq-filter-bar> untouched', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-filter-bar #model="ngModel" cdkOverlayOrigin #origin="cdkOverlayOrigin"></kbq-filter-bar>\n' +
+            '<span>{{ model.filter }} {{ origin.isChanged }}</span>\n';
+
+        appTree.overwrite(html, template);
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toBe(template);
+    });
+
     it('renames KbqFilterBarRefresher to KbqFilterRefresher', async () => {
         const ts = firstTsPath();
 

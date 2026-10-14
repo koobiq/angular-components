@@ -185,6 +185,29 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toContain('{{ alert.compact() }}');
     });
 
+    it('rewrites reads via a template reference variable naming kbqAlert', async () => {
+        const html = firstHtmlPath();
+
+        appTree.overwrite(html, '<kbq-alert #alert="kbqAlert"></kbq-alert>\n<span>{{ alert.alertStyle }}</span>\n');
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toContain('{{ alert.alertStyle() }}');
+    });
+
+    it('leaves reads via a template reference variable naming another directive on <kbq-alert> untouched', async () => {
+        const html = firstHtmlPath();
+        const template =
+            '<kbq-alert #model="ngModel" cdkOverlayOrigin #origin="cdkOverlayOrigin"></kbq-alert>\n' +
+            '<span>{{ model.compact }} {{ origin.alertStyle }}</span>\n';
+
+        appTree.overwrite(html, template);
+
+        const updated = (await run()).readText(html);
+
+        expect(updated).toBe(template);
+    });
+
     it('warns that KbqAlertModule no longer re-exports A11yModule / PlatformModule', async () => {
         const ts = firstTsPath();
 

@@ -192,7 +192,18 @@ function migrateTsExpressions(content: string, fileName: string): string {
     return edits.length > 0 ? applyEdits(content, edits) : content;
 }
 
-/** Collects template reference variable names bound to a `<kbq-filter-bar>` element. */
+/** `#ref` / `ref-ref`, or `undefined` when the attribute is not a reference variable. */
+function referenceName(name: string): string | undefined {
+    if (name.startsWith('#')) return name.slice(1);
+    if (name.startsWith('ref-')) return name.slice(4);
+
+    return undefined;
+}
+
+/**
+ * Collects template reference variable names bound to a `<kbq-filter-bar>` element. `KbqFilterBar` has no
+ * `exportAs`, so only a bare `#ref` is the filter bar; `#ref="ngModel"` names another directive.
+ */
 class FilterBarRefCollector implements Visitor {
     readonly refs = new Set<string>();
 
@@ -201,8 +212,9 @@ class FilterBarRefCollector implements Visitor {
             for (const attr of element.attrs ?? []) {
                 if (typeof attr.name !== 'string') continue;
 
-                if (attr.name.startsWith('#')) this.refs.add(attr.name.slice(1));
-                else if (attr.name.startsWith('ref-')) this.refs.add(attr.name.slice(4));
+                const name = referenceName(attr.name);
+
+                if (name !== undefined && !attr.value) this.refs.add(name);
             }
         }
 

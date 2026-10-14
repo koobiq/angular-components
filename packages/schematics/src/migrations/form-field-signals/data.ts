@@ -16,8 +16,11 @@ export interface Target {
     id: string;
     /** TypeScript type annotations that mark a receiver as this target. */
     types: readonly string[];
-    /** Element selectors whose template reference variables (`#ref`) point at this target. */
-    elements: readonly string[];
+    /**
+     * Element selector → the component's `exportAs`. A `#ref` on the element points at this target when it is
+     * bare or names that `exportAs`; `#ref="ngModel"` names another directive and is left alone.
+     */
+    elements: Readonly<Record<string, string>>;
     /** Members whose value is unchanged; a read must become a call. Auto-fixed. */
     signalMembers: readonly string[];
     /** Subset of `signalMembers` that is writable, so `x.m = v` becomes `x.m.set(v)`. Auto-fixed. */
@@ -33,7 +36,7 @@ export interface Target {
 export const FORM_FIELD_TARGET: Target = {
     id: 'KbqFormField',
     types: ['KbqFormField'],
-    elements: ['kbq-form-field'],
+    elements: { 'kbq-form-field': 'kbqFormField' },
     signalMembers: [
         'cleaner',
         'passwordToggle',
@@ -54,7 +57,11 @@ export const FORM_FIELD_TARGET: Target = {
 export const HINT_TARGET: Target = {
     id: 'KbqHint',
     types: ['KbqHint', 'KbqError', 'KbqReactivePasswordHint'],
-    elements: ['kbq-hint', 'kbq-error', 'kbq-reactive-password-hint'],
+    elements: {
+        'kbq-hint': 'kbqHint',
+        'kbq-error': 'kbqError',
+        'kbq-reactive-password-hint': 'kbqReactivePasswordHint'
+    },
     signalMembers: ['fillTextOff', 'compact'],
     writableMembers: new Set<string>()
 };
@@ -75,7 +82,11 @@ const CONTROL_MEMBERS: readonly string[] = [
 export const SELECT_CONTROL_TARGET: Target = {
     id: 'KbqSelect',
     types: ['KbqSelect', 'KbqTreeSelect', 'KbqTimezoneSelect', 'KbqTimepicker', 'KbqDatepickerInput'],
-    elements: ['kbq-select', 'kbq-tree-select', 'kbq-timezone-select'],
+    elements: {
+        'kbq-select': 'kbqSelect',
+        'kbq-tree-select': 'kbqTreeSelect',
+        'kbq-timezone-select': 'kbqTimezoneSelect'
+    },
     signalMembers: CONTROL_MEMBERS,
     writableMembers: new Set<string>(['disabled'])
 };
@@ -84,7 +95,7 @@ export const SELECT_CONTROL_TARGET: Target = {
 export const TAG_LIST_CONTROL_TARGET: Target = {
     id: 'KbqTagList',
     types: ['KbqTagList'],
-    elements: ['kbq-tag-list'],
+    elements: { 'kbq-tag-list': 'kbqTagList' },
     signalMembers: CONTROL_MEMBERS,
     writableMembers: new Set<string>(['disabled', 'value'])
 };
@@ -93,7 +104,7 @@ export const TAG_LIST_CONTROL_TARGET: Target = {
 export const INPUT_CONTROL_TARGET: Target = {
     id: 'KbqInput',
     types: ['KbqInput', 'KbqInputPassword', 'KbqTextarea'],
-    elements: [],
+    elements: {},
     signalMembers: CONTROL_MEMBERS,
     writableMembers: new Set<string>(['value'])
 };
@@ -102,7 +113,7 @@ export const INPUT_CONTROL_TARGET: Target = {
 export const FORM_FIELD_CONTROL_TARGET: Target = {
     id: 'KbqFormFieldControl',
     types: ['KbqFormFieldControl'],
-    elements: [],
+    elements: {},
     signalMembers: CONTROL_MEMBERS,
     writableMembers: new Set<string>()
 };
