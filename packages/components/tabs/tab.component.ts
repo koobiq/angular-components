@@ -158,11 +158,10 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     private contentPortal: TemplatePortal | null = null;
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, except that `undefined` resets a member
+        // typed without it to its default; unbound, it leaves what code wrote.
         if (changes['tooltipTitleInput']) {
-            const tooltipTitle = this.tooltipTitleInput();
-
-            if (tooltipTitle !== undefined) this.tooltipTitle = tooltipTitle;
+            this.tooltipTitle = this.tooltipTitleInput() ?? '';
         }
 
         if (changes['disabledInput']) {

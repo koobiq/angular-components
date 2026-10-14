@@ -290,6 +290,20 @@ describe('KbqButtonToggle without forms', () => {
             expect(testComponent.groupValue).toBe('test1');
         });
 
+        it('should clear the selection once the bound value is reset to undefined', () => {
+            testComponent.groupValue = 'test2';
+            fixture.detectChanges();
+
+            expect(buttonToggleInstances[1].checked).toBe(true);
+
+            testComponent.groupValue = undefined;
+            fixture.detectChanges();
+
+            expect(buttonToggleInstances[1].checked).toBe(false);
+            expect(groupInstance.selected).toBeNull();
+            expect(groupInstance.value).toBeUndefined();
+        });
+
         it('should update the group and toggles when one of the button toggles is clicked', () => {
             expect(groupInstance.value).toBeFalsy();
             innerButtons[0].click();
@@ -707,6 +721,15 @@ describe('KbqButtonToggle without forms', () => {
             innerButton = fixture.debugElement.query(By.css('button')).nativeElement;
 
             buttonToggleInstance = buttonToggleDebugElement.componentInstance;
+        });
+
+        it('should apply a value binding that changes to undefined', () => {
+            expect(buttonToggleInstance.value).toBe('yes');
+
+            fixture.componentInstance.value = undefined;
+            fixture.detectChanges();
+
+            expect(buttonToggleInstance.value).toBeUndefined();
         });
 
         it('should toggle when clicked', async () => {
@@ -1432,7 +1455,7 @@ describe('KbqButtonToggle keyboard navigation in RTL', () => {
 class ButtonTogglesInsideButtonToggleGroup {
     isGroupDisabled: boolean = false;
     isVertical: boolean = false;
-    groupValue: string;
+    groupValue: string | undefined;
     renderFirstToggle = true;
 }
 
@@ -1494,11 +1517,12 @@ class FalsyButtonTogglesInsideButtonToggleGroupMultiple {
 @Component({
     imports: [KbqButtonModule, KbqButtonToggleModule],
     template: `
-        <kbq-button-toggle [disabled]="isDisabled">Yes</kbq-button-toggle>
+        <kbq-button-toggle [disabled]="isDisabled" [value]="value">Yes</kbq-button-toggle>
     `
 })
 class StandaloneButtonToggle {
     isDisabled = false;
+    value: string | undefined = 'yes';
 }
 
 @Component({

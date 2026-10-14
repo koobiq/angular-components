@@ -272,11 +272,10 @@ export class KbqButtonToggleGroup implements OnChanges, ControlValueAccessor, On
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, a bound `undefined` included;
+        // unbound, it leaves what code wrote.
         if (changes['valueInput']) {
-            const value = this.valueInput();
-
-            if (value !== undefined) this.value = value;
+            this.value = this.valueInput();
         }
 
         if (changes['disabledInput']) {
@@ -647,11 +646,10 @@ export class KbqButtonToggle implements OnChanges, OnInit, AfterContentInit, Aft
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, a bound `undefined` included;
+        // unbound, it leaves what code wrote.
         if (changes['valueInput']) {
-            const value = this.valueInput();
-
-            if (value !== undefined) this.value = value;
+            this.value = this.valueInput();
         }
 
         if (changes['checkedInput']) {

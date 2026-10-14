@@ -41,11 +41,11 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
     readonly inputId: _angular_core.Signal<string>;
     protected readonly labelId: _angular_core.Signal<string>;
     get labelPosition(): 'before' | 'after';
-    set labelPosition(value: "before" | "after");
+    set labelPosition(value: 'before' | 'after' | undefined);
     readonly labelPositionInput: _angular_core.InputSignal<"before" | "after" | undefined>;
     markForCheck(): void;
     get name(): string;
-    set name(value: string);
+    set name(value: string | undefined);
     readonly nameInput: _angular_core.InputSignal<string | undefined>;
     protected get nativeValue(): string | null;
     // (undocumented)

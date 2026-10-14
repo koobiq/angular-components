@@ -239,17 +239,12 @@ export class KbqSingleFileUploadComponent
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound `undefined` falls back to the default matcher and clears the file.
         if (changes['errorStateMatcherInput']) {
-            const errorStateMatcher = this.errorStateMatcherInput();
-
-            if (errorStateMatcher !== undefined) this.errorStateMatcher = errorStateMatcher;
+            this.errorStateMatcher = this.errorStateMatcherInput() ?? this.defaultErrorStateMatcher;
         }
 
-        if (changes['fileInput']) {
-            const file = this.fileInput();
-
-            if (file !== undefined) this.file = file;
-        }
+        if (changes['fileInput']) this.file = this.fileInput() ?? null;
     }
 
     constructor() {

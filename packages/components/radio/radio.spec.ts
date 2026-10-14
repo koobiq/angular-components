@@ -654,6 +654,84 @@ describe('KbqRadio', () => {
         });
     });
 
+    describe('binding changed to undefined', () => {
+        let fixture: ComponentFixture<RadioUndefinedBindings>;
+        let host: RadioUndefinedBindings;
+        let group: KbqRadioGroup;
+        let radios: KbqRadioButton[];
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(RadioUndefinedBindings);
+            fixture.detectChanges();
+
+            host = fixture.componentInstance;
+            group = fixture.debugElement.query(By.directive(KbqRadioGroup)).injector.get(KbqRadioGroup);
+            radios = fixture.debugElement
+                .queryAll(By.directive(KbqRadioButton))
+                .map((debugElement) => debugElement.componentInstance);
+        });
+
+        it('should clear the selection once the group value binding changes to undefined', () => {
+            host.groupValue = 'fire';
+            fixture.detectChanges();
+
+            expect(radios[0].checked).toBe(true);
+
+            host.groupValue = undefined;
+            fixture.detectChanges();
+
+            expect(radios[0].checked).toBe(false);
+            expect(group.value).toBeUndefined();
+        });
+
+        it('should clear the selection once the group selected binding changes to undefined', () => {
+            host.selected = radios[1];
+            fixture.detectChanges();
+
+            expect(group.selected).toBe(radios[1]);
+            expect(radios[1].checked).toBe(true);
+
+            host.selected = undefined;
+            fixture.detectChanges();
+
+            expect(group.selected).toBeNull();
+            expect(radios[1].checked).toBe(false);
+        });
+
+        it('should apply a button value binding that changes to undefined', () => {
+            expect(radios[1].value).toBe('water');
+
+            host.secondValue = undefined;
+            fixture.detectChanges();
+
+            expect(radios[1].value).toBeUndefined();
+        });
+
+        it('should fall back to the group label position once the button binding changes to undefined', () => {
+            host.labelPosition = 'before';
+            fixture.detectChanges();
+
+            expect(radios[0].labelPosition).toBe('before');
+
+            host.labelPosition = undefined;
+            fixture.detectChanges();
+
+            expect(radios[0].labelPosition).toBe('after');
+        });
+
+        it('should fall back to the group name once the button name binding changes to undefined', () => {
+            host.name = 'custom';
+            fixture.detectChanges();
+
+            expect(radios[0].name).toBe('custom');
+
+            host.name = undefined;
+            fixture.detectChanges();
+
+            expect(radios[0].name).toBe(group.name());
+        });
+    });
+
     describe('ControlValueAccessor', () => {
         it('should check the radio matching the ngModel value', async () => {
             const fixture = TestBed.createComponent(RadioGroupWithNgModel);
@@ -752,6 +830,25 @@ class RadiosInsideRadioGroup {
     groupValue: string | null = null;
     groupColor: string = '';
     color: KbqComponentColors;
+}
+
+@Component({
+    imports: [KbqRadioModule],
+    template: `
+        <kbq-radio-group [value]="groupValue" [selected]="selected">
+            <kbq-radio-button [value]="'fire'" [labelPosition]="labelPosition" [name]="name">
+                Charmander
+            </kbq-radio-button>
+            <kbq-radio-button [value]="secondValue">Squirtle</kbq-radio-button>
+        </kbq-radio-group>
+    `
+})
+class RadioUndefinedBindings {
+    groupValue: string | undefined;
+    selected: KbqRadioButton | undefined;
+    labelPosition: 'before' | 'after' | undefined;
+    name: string | undefined;
+    secondValue: string | undefined = 'water';
 }
 
 @Component({

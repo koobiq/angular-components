@@ -34,7 +34,7 @@ const getEllipsisDirectiveDebugElement = (debugElement: DebugElement): DebugElem
 class SimpleTestComponent {
     readonly ellipsisCenterDirective = viewChild.required(KbqEllipsisCenterDirective);
 
-    text = 'This is a long sample string used to test ellipsis center logic.';
+    text: string | undefined = 'This is a long sample string used to test ellipsis center logic.';
     charWidth = 7;
     minLength = 50;
     tooltipDisabled = false;
@@ -93,6 +93,17 @@ describe(KbqEllipsisCenterDirective.name, () => {
         fixture.detectChanges();
 
         expect(componentInstance.ellipsisCenterDirective()['content']).toBe('Updated string for testing.');
+    });
+
+    it('should clear the text once the binding turns undefined', async () => {
+        const fixture = createComponent(SimpleTestComponent);
+        const host: HTMLElement = getEllipsisDirectiveDebugElement(fixture.debugElement).nativeElement;
+
+        fixture.componentInstance.text = undefined;
+        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(0);
+
+        expect(host.textContent).toBe('');
     });
 
     it('should properly split content on refresh', async () => {

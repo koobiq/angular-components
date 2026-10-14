@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { KBQ_CHECKBOX_CLICK_ACTION } from '@koobiq/components/checkbox';
 import { KBQ_ANIMATIONS_CONFIG, KBQ_CHECKABLE_CLICK_ACTION, KbqCheckedState } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqToggleComponent, KbqToggleModule } from './index';
+import { KbqToggleClickAction, KbqToggleComponent, KbqToggleModule } from './index';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
@@ -129,6 +129,14 @@ describe('KbqToggle', () => {
             expect(toggleInstance.inputId).toMatch(/kbq-toggle-\d+-input/);
             expect(inputElement.id).toBe(toggleInstance.inputId);
             expect(toggleNativeElement.id).toBe(toggleInstance.inputId.replace(/-input$/, ''));
+        });
+
+        it('should fall back to the generated id when the bound id turns undefined', () => {
+            testComponent.toggleId = undefined;
+            fixture.detectChanges();
+
+            expect(toggleNativeElement.id).toMatch(/^kbq-toggle-\d+$/);
+            expect(inputElement.id).toBe(`${toggleNativeElement.id}-input`);
         });
 
         it('should add a css class when big is set', () => {
@@ -617,7 +625,7 @@ describe('KbqToggle', () => {
     });
 
     describe('with click action tokens', () => {
-        const clickLabel = (fixture: ComponentFixture<SingleToggle>): void => {
+        const clickLabel = (fixture: ComponentFixture<unknown>): void => {
             fixture.nativeElement.querySelector('label').click();
             fixture.detectChanges();
         };
@@ -678,6 +686,35 @@ describe('KbqToggle', () => {
 
             expect(toggleInstance.checked).toBe(false);
             expect(toggleInstance.indeterminate).toBe(false);
+        });
+
+        it('should fall back to the default action when the bound clickAction turns undefined', () => {
+            const fixture = createComponent(ToggleWithClickAction);
+
+            fixture.detectChanges();
+
+            fixture.componentInstance.clickAction = undefined;
+            fixture.detectChanges();
+
+            clickLabel(fixture);
+
+            expect(fixture.componentInstance.toggle().checked).toBe(true);
+        });
+
+        it('should not restore the token action when the bound clickAction turns undefined', () => {
+            const fixture = createComponent(ToggleWithClickAction, [
+                { provide: KBQ_CHECKABLE_CLICK_ACTION, useValue: 'noop' }
+            ]);
+
+            fixture.componentInstance.clickAction = 'check';
+            fixture.detectChanges();
+
+            fixture.componentInstance.clickAction = undefined;
+            fixture.detectChanges();
+
+            clickLabel(fixture);
+
+            expect(fixture.componentInstance.toggle().checked).toBe(true);
         });
     });
 
@@ -856,7 +893,7 @@ class SingleToggle {
     isDisabled: boolean = false;
     big: boolean = false;
     parentElementClickCount: number = 0;
-    toggleId: string = 'simple-check';
+    toggleId: string | undefined = 'simple-check';
     toggleColor: string = 'primary';
     indeterminate = false;
 
@@ -864,6 +901,20 @@ class SingleToggle {
 
     onToggleClick: (event?: Event) => void = () => {};
     onToggleChange: (event?: any) => void = () => {};
+}
+
+@Component({
+    imports: [
+        KbqToggleModule
+    ],
+    template: `
+        <kbq-toggle [clickAction]="clickAction">Toggle</kbq-toggle>
+    `
+})
+class ToggleWithClickAction {
+    clickAction: KbqToggleClickAction = 'noop';
+
+    readonly toggle = viewChild.required(KbqToggleComponent);
 }
 
 @Component({

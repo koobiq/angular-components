@@ -1679,6 +1679,20 @@ describe('KbqDatepicker', () => {
                 expect(fixture.debugElement.query(By.css('input')).nativeElement.classList).not.toContain('ng-invalid');
             });
 
+            it('should stop filtering once the bound filter turns undefined', async () => {
+                testComponent.date = DateTime.local(2017, 1, 1);
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+                fixture.detectChanges();
+
+                expect(getDatepickerInputElement(fixture).classList).toContain('ng-invalid');
+
+                testComponent.filter = undefined;
+                fixture.detectChanges();
+
+                expect(getDatepickerInputElement(fixture).classList).not.toContain('ng-invalid');
+            });
+
             it('should disable filtered calendar cells', () => {
                 fixture.detectChanges();
 
@@ -2447,7 +2461,7 @@ class DatepickerWithMinAndMaxValidation {
 class DatepickerWithFilterAndValidation {
     readonly datepicker = viewChild.required<KbqDatepicker<DateTime>>('d');
     date: DateTime;
-    filter = (date: DateTime) => date.get('day') !== 1;
+    filter: ((date: DateTime) => boolean) | undefined = (date: DateTime) => date.get('day') !== 1;
 }
 
 @Component({

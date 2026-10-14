@@ -151,7 +151,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     arrow: boolean;
     readonly backdropClass: _angular_core.InputSignal<string>;
     closingActions(): Observable<void | CdkScrollable | MouseEvent>;
-    container: HTMLElement;
+    container: HTMLElement | undefined;
     readonly containerInput: _angular_core.InputSignal<HTMLElement | undefined>;
     content: string | TemplateRef<unknown>;
     customClass: string;
@@ -182,7 +182,7 @@ export class KbqNotificationCenterTrigger extends KbqPopUpTrigger<KbqNotificatio
     readonly scrolledToBottomOffset: _angular_core.InputSignalWithTransform<number, unknown>;
     protected scrollStrategy: () => ScrollStrategy;
     protected readonly service: KbqNotificationCenterService;
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
     readonly stickToWindowInput: _angular_core.InputSignal<"top" | "right" | "left" | "bottom" | undefined>;
     trigger: string;
     get unreadItemsCounter(): Signal<string>;

@@ -284,7 +284,8 @@ export class KbqSearchExpandable
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member, a bound `undefined` as the member's default; unbound, it leaves
+        // what code wrote.
         if (changes['isOpenedInput']) {
             const isOpened = this.isOpenedInput();
 
@@ -297,15 +298,11 @@ export class KbqSearchExpandable
         }
 
         if (changes['tooltipTextInput']) {
-            const tooltipText = this.tooltipTextInput();
-
-            if (tooltipText !== undefined) this.tooltipText = tooltipText;
+            this.tooltipText = this.tooltipTextInput() ?? null;
         }
 
         if (changes['placeholderInput']) {
-            const placeholder = this.placeholderInput();
-
-            if (placeholder !== undefined) this.placeholder = placeholder;
+            this.placeholder = this.placeholderInput() ?? null;
         }
 
         if (changes['disabledInput']) {

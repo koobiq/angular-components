@@ -11,6 +11,9 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
     KbqLocaleService,
+    KbqPopUpPlacementValues,
+    KbqStickToWindowPlacementValues,
+    PopUpPlacements,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
     enUSLocaleData,
@@ -1949,6 +1952,77 @@ describe('KbqNotificationCenter', () => {
         });
     });
 
+    describe('inputs bound to undefined', () => {
+        let boundFixture: ComponentFixture<NotificationCenterWithBoundInputs>;
+        let host: NotificationCenterWithBoundInputs;
+
+        beforeEach(() => {
+            boundFixture = createComponent(NotificationCenterWithBoundInputs);
+            host = boundFixture.componentInstance;
+            overlayContainer = TestBed.inject(OverlayContainer);
+        });
+
+        const getOverlayPane = (): HTMLElement =>
+            overlayContainer.getContainerElement().querySelector('.cdk-overlay-pane') as HTMLElement;
+
+        const open = async () => {
+            host.trigger().show();
+            boundFixture.detectChanges();
+            await vi.advanceTimersByTimeAsync(0);
+        };
+
+        it('falls back to the default placement', () => {
+            expect(host.trigger().placement).toBe(PopUpPlacements.Left);
+
+            host.placement = undefined;
+            boundFixture.detectChanges();
+
+            expect(host.trigger().placement).toBe(PopUpPlacements.Right);
+        });
+
+        it('clears the popover height', async () => {
+            vi.useFakeTimers();
+
+            await open();
+
+            expect(getPanel()!.style.getPropertyValue('--kbq-notification-center-popover-height')).toBe('500px');
+
+            host.popoverHeight = undefined;
+            boundFixture.detectChanges();
+
+            expect(getPanel()!.style.getPropertyValue('--kbq-notification-center-popover-height')).toBe('');
+        });
+
+        it('stops sticking to the window', async () => {
+            vi.useFakeTimers();
+
+            host.stickToWindow = undefined;
+            boundFixture.detectChanges();
+
+            await open();
+
+            expect(host.trigger().stickToWindow).toBeUndefined();
+            expect(getOverlayPane().style.left).not.toBe('unset');
+        });
+
+        it('sticks relative to the window once the container is gone', async () => {
+            vi.useFakeTimers();
+
+            host.withContainer = true;
+            boundFixture.detectChanges();
+
+            host.withContainer = false;
+            boundFixture.detectChanges();
+
+            await open();
+
+            const pane = getOverlayPane();
+
+            expect(pane.style.right).toMatch(/^0(px)?$/);
+            expect(pane.style.left).toBe('unset');
+        });
+    });
+
     describe('locale', () => {
         let localeFixture: ComponentFixture<SimpleNotificationCenter>;
         let localeService: KbqLocaleService;
@@ -2155,4 +2229,30 @@ class NotificationCenterWithStick {
 class NotificationCenterWithStickContainer {
     readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
     readonly container = viewChild.required<ElementRef<HTMLElement>>('containerRef');
+}
+
+@Component({
+    selector: 'notification-center-with-bound-inputs',
+    imports: [KbqNotificationCenterModule],
+    template: `
+        <div #containerRef>
+            <button
+                kbqNotificationCenterTrigger
+                [kbqNotificationCenterPlacement]="placement"
+                [popoverHeight]="popoverHeight"
+                [stickToWindow]="stickToWindow"
+                [container]="withContainer ? containerRef : undefined"
+            >
+                notification-center Trigger
+            </button>
+        </div>
+    `
+})
+class NotificationCenterWithBoundInputs {
+    readonly trigger = viewChild.required(KbqNotificationCenterTrigger);
+
+    placement: KbqPopUpPlacementValues | undefined = PopUpPlacements.Left;
+    popoverHeight: string | undefined = '500px';
+    stickToWindow: KbqStickToWindowPlacementValues | undefined = PopUpPlacements.Right;
+    withContainer = false;
 }

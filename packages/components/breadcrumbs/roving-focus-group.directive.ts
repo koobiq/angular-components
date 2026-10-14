@@ -44,9 +44,7 @@ export class RdxRovingFocusGroupDirective implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes['orientationInput']) {
-            const orientation = this.orientationInput();
-
-            if (orientation !== undefined) this.orientation = orientation;
+            this.orientation = this.orientationInput();
         }
     }
     /**

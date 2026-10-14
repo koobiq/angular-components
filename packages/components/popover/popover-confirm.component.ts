@@ -102,13 +102,14 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     /**
      * Input (`kbqPopoverConfirmText`) — question rendered in the panel. Falls back to
-     * {@link KBQ_POPOVER_CONFIRM_TEXT} and then to the `popoverConfirm` section of the active locale.
+     * {@link KBQ_POPOVER_CONFIRM_TEXT} and then to the `popoverConfirm` section of the active locale while
+     * unset or `undefined`.
      */
     get confirmText(): string {
         return this._confirmText() ?? this.externalConfirmText ?? this.localeConfiguration().confirmText;
     }
 
-    set confirmText(value: string) {
+    set confirmText(value: string | undefined) {
         this._confirmText.set(value);
 
         this.updateData();
@@ -118,7 +119,8 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
 
     /**
      * Input (`kbqPopoverConfirmButtonText`) — caption of the confirm button. Falls back to
-     * {@link KBQ_POPOVER_CONFIRM_BUTTON_TEXT} and then to the `popoverConfirm` section of the active locale.
+     * {@link KBQ_POPOVER_CONFIRM_BUTTON_TEXT} and then to the `popoverConfirm` section of the active locale
+     * while unset or `undefined`.
      */
     get confirmButtonText(): string {
         return (
@@ -126,7 +128,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
         );
     }
 
-    set confirmButtonText(value: string) {
+    set confirmButtonText(value: string | undefined) {
         this._confirmButtonText.set(value);
 
         this.updateData();
@@ -146,17 +148,14 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
     override ngOnChanges(changes: SimpleChanges): void {
         super.ngOnChanges(changes);
 
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, a bound `undefined` restoring the
+        // fallback; unbound, it leaves what code wrote.
         if (changes['confirmTextInput']) {
-            const confirmText = this.confirmTextInput();
-
-            if (confirmText !== undefined) this.confirmText = confirmText;
+            this.confirmText = this.confirmTextInput();
         }
 
         if (changes['confirmButtonTextInput']) {
-            const confirmButtonText = this.confirmButtonTextInput();
-
-            if (confirmButtonText !== undefined) this.confirmButtonText = confirmButtonText;
+            this.confirmButtonText = this.confirmButtonTextInput();
         }
     }
 

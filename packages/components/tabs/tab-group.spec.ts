@@ -14,8 +14,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
-import { KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
-import { KbqTabHeader } from './tab-header.component';
+import { KBQ_TABS_CONFIG, KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
 import { KbqTab } from './tab.component';
 import { KbqTabsModule } from './tabs.module';
 
@@ -72,6 +71,22 @@ describe('KbqTabGroup', () => {
         it('will properly load content on first change detection pass', () => {
             fixture.detectChanges();
             expect(element.querySelectorAll('.kbq-tab-body')[1].querySelectorAll('span').length).toBe(3);
+        });
+
+        it('should put the header above when the bound headerPosition turns undefined', () => {
+            fixture.componentInstance.headerPosition = 'below';
+            fixture.detectChanges();
+
+            const tabGroup: KbqTabGroup = fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance;
+            const tabGroupNode: HTMLElement = element.querySelector('kbq-tab-group')!;
+
+            expect(tabGroupNode.classList).toContain('kbq-tab-group_inverted-header');
+
+            fixture.componentInstance.headerPosition = undefined;
+            fixture.detectChanges();
+
+            expect(tabGroup.headerPosition).toBe('above');
+            expect(tabGroupNode.classList).not.toContain('kbq-tab-group_inverted-header');
         });
 
         it('should change selected index on click', async () => {
@@ -261,6 +276,28 @@ describe('KbqTabGroup', () => {
 
             expect(handleFocusSpyFn).toHaveBeenCalledTimes(2);
             expect(handleFocusSpyFn).toHaveBeenCalledWith(expect.objectContaining({ index: 1 }));
+        });
+    });
+
+    describe('animation duration', () => {
+        it('should fall back to the configured duration when the bound animationDuration turns undefined', () => {
+            TestBed.configureTestingModule({
+                providers: [{ provide: KBQ_TABS_CONFIG, useValue: { animationDuration: '300ms' } }]
+            });
+
+            const fixture = TestBed.createComponent(SimpleTabsTestApp);
+
+            fixture.componentInstance.animationDuration = '500ms';
+            fixture.detectChanges();
+
+            const tabGroup: KbqTabGroup = fixture.debugElement.query(By.directive(KbqTabGroup)).componentInstance;
+
+            expect(tabGroup.animationDuration).toBe('500ms');
+
+            fixture.componentInstance.animationDuration = undefined;
+            fixture.detectChanges();
+
+            expect(tabGroup.animationDuration).toBe('300ms');
         });
     });
 
@@ -668,6 +705,21 @@ describe('KbqTabGroup', () => {
 
             expect(labelTooltip.content).toBe('Second hint');
         });
+
+        it('clears the label tooltip when the bound tooltipTitle turns undefined', () => {
+            const fixture = TestBed.createComponent(TabsWithTooltipTitle);
+
+            fixture.detectChanges();
+
+            const [labelTooltip] = labelTooltips(fixture);
+            const [tab] = fixture.componentInstance.tabs();
+
+            fixture.componentInstance.tooltipTitle = undefined;
+            fixture.detectChanges();
+
+            expect(tab.tooltipTitle).toBe('');
+            expect(labelTooltip.content).toBe('');
+        });
     });
 
     /**
@@ -1008,6 +1060,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
     template: `
         <kbq-tab-group
             class="tab-group"
+            [animationDuration]="animationDuration"
             [headerPosition]="headerPosition"
             [(selectedIndex)]="selectedIndex"
             (animationDone)="animationDone()"
@@ -1035,7 +1088,8 @@ class SimpleTabsTestApp {
     readonly tabs = viewChildren(KbqTab);
     selectedIndex: number = 1;
     selectEvent: any;
-    headerPosition: KbqTabHeaderPosition = 'above';
+    headerPosition: KbqTabHeaderPosition | undefined = 'above';
+    animationDuration: string | undefined;
 
     handleFocus(_event: any) {}
 
@@ -1256,7 +1310,9 @@ class VerticalTabs {}
     `
 })
 class TabsWithTooltipTitle {
-    tooltipTitle = 'First hint';
+    readonly tabs = viewChildren(KbqTab);
+
+    tooltipTitle: string | undefined = 'First hint';
 }
 
 /** In-memory `KbqStateStore` used to make state-saving tests deterministic. */

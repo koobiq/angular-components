@@ -78,6 +78,8 @@ import { KbqNotificationItemComponent } from './notification-item';
 
 const defaultOffsetX = 8;
 
+const defaultPlacement = PopUpPlacements.Right;
+
 /** Rate-limit window (ms) for the scroll-to-bottom check that drives infinite scroll. */
 const SCROLLED_TO_BOTTOM_AUDIT_TIME = 100;
 
@@ -580,7 +582,7 @@ export class KbqNotificationCenterTrigger
     }
 
     /** Placement of popUp */
-    placement: KbqPopUpPlacementValues = PopUpPlacements.Right;
+    placement: KbqPopUpPlacementValues = defaultPlacement;
 
     /** Class that will be used in the background */
     readonly backdropClass = input<string>('cdk-overlay-transparent-backdrop');
@@ -664,10 +666,10 @@ export class KbqNotificationCenterTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
 
     /** Container for additional positioning, used with stickToWindow */
-    container: HTMLElement;
+    container: HTMLElement | undefined;
 
     /** @docs-private */
     get hasClickTrigger(): boolean {
@@ -733,11 +735,10 @@ export class KbqNotificationCenterTrigger
     });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member, a bound `undefined` as the member's default; unbound, it leaves
+        // what code wrote.
         if (changes['placementInput']) {
-            const placement = this.placementInput();
-
-            if (placement !== undefined) this.placement = placement;
+            this.placement = this.placementInput() ?? defaultPlacement;
         }
 
         if (changes['popoverModeInput']) {
@@ -747,21 +748,15 @@ export class KbqNotificationCenterTrigger
         }
 
         if (changes['popoverHeightInput']) {
-            const popoverHeight = this.popoverHeightInput();
-
-            if (popoverHeight !== undefined) this.popoverHeight = popoverHeight;
+            this.popoverHeight = this.popoverHeightInput() ?? '';
         }
 
         if (changes['stickToWindowInput']) {
-            const stickToWindow = this.stickToWindowInput();
-
-            if (stickToWindow !== undefined) this.stickToWindow = stickToWindow;
+            this.stickToWindow = this.stickToWindowInput();
         }
 
         if (changes['containerInput']) {
-            const container = this.containerInput();
-
-            if (container !== undefined) this.container = container;
+            this.container = this.containerInput();
         }
 
         if (changes['disabledInput']) {

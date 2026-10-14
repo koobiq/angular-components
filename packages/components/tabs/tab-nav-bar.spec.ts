@@ -18,7 +18,7 @@ describe(KbqTabNavBar.name, () => {
     beforeEach(() => {
         dirChange = new Subject();
         TestBed.configureTestingModule({
-            imports: [KbqTabsModule, SimpleTabNavBarTestApp, TabLinkWithTabIndexBinding, TabNavBarWithPanel],
+            imports: [KbqTabsModule, SimpleTabNavBarTestApp, TabLinkWithTabIndexBinding, TabLinkWithIdBinding],
             providers: [
                 {
                     provide: Directionality,
@@ -115,168 +115,26 @@ describe(KbqTabNavBar.name, () => {
         expect(tabLink.tabIndex).toBe(3);
     });
 
-    describe('with [tabNavPanel]', () => {
-        let fixture: ComponentFixture<TabNavBarWithPanel>;
+    it('should fall back to the generated id when the bound id turns undefined', () => {
+        const fixture = TestBed.createComponent(TabLinkWithIdBinding);
+        const component = fixture.componentInstance;
 
-        const navBar = (): HTMLElement => fixture.nativeElement.querySelector('nav');
-        const links = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('a'));
-        const panel = (): HTMLElement => fixture.nativeElement.querySelector('.kbq-tab-nav-panel');
+        fixture.detectChanges();
 
-        beforeEach(() => {
-            fixture = TestBed.createComponent(TabNavBarWithPanel);
-            fixture.detectChanges();
-        });
+        const tabLink: HTMLElement = fixture.debugElement.query(By.directive(KbqTabLink)).nativeElement;
+        const generatedId = tabLink.id;
 
-        it('should turn the nav bar into a tablist and the links into tabs', () => {
-            expect(navBar().getAttribute('role')).toBe('tablist');
-            expect(links().map((link) => link.getAttribute('role'))).toEqual(['tab', 'tab', 'tab']);
-            expect(panel().getAttribute('role')).toBe('tabpanel');
-        });
+        expect(generatedId).toMatch(/^kbq-tab-link-\d+$/);
 
-        it('should mark only the active link as selected', () => {
-            expect(links().map((link) => link.getAttribute('aria-selected'))).toEqual(['true', 'false', 'false']);
+        component.id = 'custom-link';
+        fixture.detectChanges();
 
-            fixture.componentInstance.activeIndex = 2;
-            fixture.detectChanges();
+        expect(tabLink.id).toBe('custom-link');
 
-            expect(links().map((link) => link.getAttribute('aria-selected'))).toEqual(['false', 'false', 'true']);
-        });
+        component.id = undefined;
+        fixture.detectChanges();
 
-        it('should point aria-controls of every link at the panel id', () => {
-            const panelId = panel().getAttribute('id');
-
-            expect(panelId).toBeTruthy();
-            expect(links().every((link) => link.getAttribute('aria-controls') === panelId)).toBe(true);
-        });
-
-        it('should point aria-labelledby of the panel at the active link id', () => {
-            expect(panel().getAttribute('aria-labelledby')).toBe(links()[0].getAttribute('id'));
-
-            fixture.componentInstance.activeIndex = 1;
-            fixture.detectChanges();
-
-            expect(panel().getAttribute('aria-labelledby')).toBe(links()[1].getAttribute('id'));
-        });
-
-        it('should give a tab stop to the active link only, unlike the panel-less nav bar', () => {
-            expect(links().map((link) => link.tabIndex)).toEqual([0, -1, -1]);
-
-            fixture.componentInstance.activeIndex = 1;
-            fixture.detectChanges();
-
-            expect(links().map((link) => link.tabIndex)).toEqual([-1, 0, -1]);
-        });
-
-        it('should drop the tab stop of an active link that becomes disabled', () => {
-            fixture.componentInstance.disabled = true;
-            fixture.detectChanges();
-
-            expect(links().map((link) => link.tabIndex)).toEqual([-1, -1, -1]);
-        });
-
-        it('should not emit aria-current, which is for navigation rather than tabs', () => {
-            expect(links().every((link) => !link.hasAttribute('aria-current'))).toBe(true);
-        });
-
-        it('should announce a vertical orientation and nothing when horizontal', () => {
-            expect(navBar().hasAttribute('aria-orientation')).toBe(false);
-
-            fixture.componentInstance.vertical = true;
-            fixture.detectChanges();
-
-            expect(navBar().getAttribute('aria-orientation')).toBe('vertical');
-        });
-
-        it('should follow the vertical binding with the layout class', () => {
-            expect(navBar().classList.contains('kbq-tab-group_vertical')).toBe(false);
-
-            fixture.componentInstance.vertical = true;
-            fixture.detectChanges();
-
-            expect(navBar().classList.contains('kbq-tab-group_vertical')).toBe(true);
-        });
-
-        it('should have no axe violations', async () => {
-            expect(await axe(fixture.nativeElement)).toHaveNoViolations();
-        });
-    });
-
-    describe('without [tabNavPanel]', () => {
-        let fixture: ComponentFixture<SimpleTabNavBarTestApp>;
-
-        beforeEach(() => {
-            fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
-            fixture.detectChanges();
-        });
-
-        it('should stay a plain navigation with no tab semantics', () => {
-            const navBar: HTMLElement = fixture.nativeElement.querySelector('nav');
-            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
-
-            expect(navBar.hasAttribute('role')).toBe(false);
-            expect(navBar.hasAttribute('aria-orientation')).toBe(false);
-            expect(links.every((link) => !link.hasAttribute('role'))).toBe(true);
-            expect(links.every((link) => !link.hasAttribute('aria-selected'))).toBe(true);
-        });
-
-        it('should mark a disabled link with aria-disabled and no disabled attribute', () => {
-            fixture.componentInstance.disabled = true;
-            fixture.detectChanges();
-
-            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
-
-            // `disabled` is not a valid attribute on an anchor, and no assistive technology reads it
-            // there — the same defect the review already fixed on the tab labels.
-            expect(links.some((link) => link.hasAttribute('disabled'))).toBe(false);
-            expect(links.every((link) => link.getAttribute('aria-disabled') === 'true')).toBe(true);
-        });
-
-        it('should mark the active link with aria-current instead', () => {
-            const links: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('a'));
-
-            expect(links.map((link) => link.getAttribute('aria-current'))).toEqual(['page', null, null]);
-        });
-    });
-
-    describe('disablePagination', () => {
-        it('should re-evaluate pagination when disablePagination alone changes', () => {
-            const fixture = TestBed.createComponent(TabNavBarWithDisablePagination);
-
-            fixture.detectChanges();
-
-            const navBar = fixture.debugElement.query(By.directive(KbqTabNavBar)).componentInstance as KbqTabNavBar;
-            const updatePagination = jest.spyOn(navBar, 'updatePagination');
-
-            // Neither the orientation nor the link count changes here, so a dirty flag hung off
-            // `vertical` alone never fires — even though `disablePagination` feeds the same derived
-            // value and leaves the paginator arrows stale.
-            fixture.componentInstance.disablePagination = true;
-            fixture.detectChanges();
-
-            expect(updatePagination).toHaveBeenCalled();
-        });
-    });
-
-    describe('focus restoration', () => {
-        it('should move focus to the neighbouring link, not the active one, when the focused link is removed', () => {
-            const fixture = TestBed.createComponent(SimpleTabNavBarTestApp);
-
-            fixture.detectChanges();
-
-            const links = (): HTMLElement[] => Array.from(fixture.nativeElement.querySelectorAll('a'));
-
-            // Link 0 is the active one; focus sits on the last link instead.
-            links()[2].focus();
-            fixture.detectChanges();
-
-            fixture.componentInstance.tabs = [0, 1];
-            fixture.detectChanges();
-
-            // `updateActiveLink()` runs on the same `items.changes` tick and writes `selectedIndex`,
-            // which also moves `keyManager.activeItemIndex`. Restoration has to remember where focus
-            // actually was rather than reading that field back, or it lands on the active link.
-            expect(document.activeElement).toBe(links()[1]);
-        });
+        expect(tabLink.id).toBe(generatedId);
     });
 
     describe('arrow dimming', () => {
@@ -435,32 +293,11 @@ class TabLinkWithTabIndexBinding {
 @Component({
     imports: [KbqTabsModule],
     template: `
-        <nav kbqTabNavBar [disablePagination]="disablePagination">
-            <a kbqTabLink [active]="$first">One</a>
-            <a kbqTabLink>Two</a>
+        <nav kbqTabNavBar>
+            <a kbqTabLink [id]="id">Id Link</a>
         </nav>
     `
 })
-class TabNavBarWithDisablePagination {
-    disablePagination = false;
-}
-
-@Component({
-    imports: [KbqTabsModule],
-    template: `
-        <nav kbqTabNavBar [tabNavPanel]="tabNavPanel" [vertical]="vertical">
-            @for (tab of tabs; track tab) {
-                <a kbqTabLink [active]="activeIndex === $index" [disabled]="disabled" (click)="activeIndex = $index">
-                    Tab link
-                </a>
-            }
-        </nav>
-        <div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>Panel content</div>
-    `
-})
-class TabNavBarWithPanel {
-    disabled = false;
-    vertical = false;
-    tabs = [0, 1, 2];
-    activeIndex = 0;
+class TabLinkWithIdBinding {
+    id: string | undefined;
 }

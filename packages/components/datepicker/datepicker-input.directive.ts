@@ -423,9 +423,10 @@ export class KbqDatepickerInput<D>
     /** @docs-private */
     readonly kbqCalendarInput = input<KbqCalendar<D> | undefined>(undefined, { alias: 'kbqCalendar' });
 
-    /** Function that can be used to filter out dates within the datepicker. */
-    set kbqDatepickerFilter(value: (date: D | null) => boolean) {
-        this.dateFilter = value;
+    /** Function that can be used to filter out dates within the datepicker. `undefined` removes the filter. */
+    set kbqDatepickerFilter(value: ((date: D | null) => boolean) | undefined) {
+        // `dateFilter` is unset until a filter is given; `undefined` returns it there.
+        this.dateFilter = value!;
         this.validatorOnChange();
     }
 
@@ -683,13 +684,9 @@ export class KbqDatepickerInput<D>
             if (calendar !== undefined) this.kbqCalendar = calendar;
         }
 
-        if (changes['kbqDatepickerFilterInput']) {
-            const filter = this.kbqDatepickerFilterInput();
+        // A bound `undefined` is handed over too: it removes the filter.
+        if (changes['kbqDatepickerFilterInput']) this.kbqDatepickerFilter = this.kbqDatepickerFilterInput();
 
-            if (filter !== undefined) this.kbqDatepickerFilter = filter;
-        }
-
-        // A bound `undefined` is handed over too, as an unset bound: it lifts the restriction.
         if (changes['minInput']) this.min = this.minInput() ?? null;
 
         if (changes['maxInput']) this.max = this.maxInput() ?? null;

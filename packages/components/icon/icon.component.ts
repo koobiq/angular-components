@@ -195,22 +195,10 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
 
     ngOnChanges(changes: SimpleChanges): void {
         // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
-        if (changes['autoColorInput']) {
-            const autoColor = this.autoColorInput();
+        // A bound `undefined` turns auto color off and removes the icon, as the decorator inputs did.
+        if (changes['autoColorInput']) this.autoColor = this.autoColorInput() ?? false;
 
-            if (autoColor !== undefined) this.autoColor = autoColor;
-        }
-
-        if (changes['iconNameInput']) {
-            const iconName = this.iconNameInput();
-
-            if (iconName !== undefined) this.setIconName(iconName);
-        }
-
-        // A name change reaches `updateMaxHeight` through the resolution stream; an explicit size does not.
-        if (changes.iconSize && this.contentInitialized) {
-            this.updateMaxHeight();
-        }
+        if (changes['iconNameInput']) this.setIconName(this.iconNameInput() ?? '');
     }
 
     ngAfterContentInit(): void {

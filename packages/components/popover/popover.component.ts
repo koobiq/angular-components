@@ -56,6 +56,7 @@ import {
     KbqPopUpTrigger,
     KbqStickToWindowPlacementValues,
     POSITION_TO_CSS_MAP,
+    PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
     applyPopupMargins,
@@ -71,6 +72,9 @@ export const defaultOffsetYWithArrow = 8;
 
 /** Leave delay applied to a hover-triggered popover when `kbqLeaveDelay` is not bound. */
 export const defaultHoverLeaveDelay = 500;
+
+/** Default `kbqPopoverBackdropClass`. */
+const defaultBackdropClass = 'cdk-overlay-transparent-backdrop';
 
 /** Debounce of the content-mutation observer that drives the scroll shadows, in milliseconds. */
 const contentObserverDebounce = 15;
@@ -342,13 +346,13 @@ export class KbqPopoverTrigger
      * Additionally positions the element relative to the window side (Top, Right, Bottom and Left).
      * If container is specified, the positioning will be relative to it.
      * */
-    stickToWindow: KbqStickToWindowPlacementValues;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
 
     /** Container for additional positioning, used with `kbqPopoverStickToWindow`. Bound with `kbqPopoverContainer`. */
-    container: HTMLElement;
+    container: HTMLElement | undefined;
 
     /** Input (`kbqPopoverContainer`) — sets {@link container}. */
-    set popoverContainer(value: HTMLElement) {
+    set popoverContainer(value: HTMLElement | undefined) {
         this.container = value;
     }
 
@@ -585,7 +589,7 @@ export class KbqPopoverTrigger
         this.invalidateOverlay();
     }
 
-    private _backdropClass: string = 'cdk-overlay-transparent-backdrop';
+    private _backdropClass: string = defaultBackdropClass;
 
     /** Input (`kbqPopoverBackdropClass`) — sets {@link backdropClass}. */
     set popoverBackdropClass(value: string) {
@@ -687,7 +691,10 @@ export class KbqPopoverTrigger
     readonly triggerInput = input<string | undefined>(undefined, { alias: 'kbqTrigger' });
 
     /** @docs-private */
-    readonly kbqLeaveDelayInput = input<number | undefined>(undefined, { alias: 'kbqLeaveDelay' });
+    readonly kbqLeaveDelayInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'kbqLeaveDelay',
+        transform: numberAttribute
+    });
 
     /** @docs-private */
     readonly enterDelayInput = input<number | undefined, number | string | null | undefined>(undefined, {
@@ -810,11 +817,10 @@ export class KbqPopoverTrigger
     readonly popoverVisibleInput = input<boolean | undefined>(undefined, { alias: 'kbqPopoverVisible' });
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, a bound `undefined` restoring the
+        // member's default; unbound, it leaves what code wrote.
         if (changes['triggerInput']) {
-            const trigger = this.triggerInput();
-
-            if (trigger !== undefined) this.trigger = trigger;
+            this.trigger = this.triggerInput() ?? '';
         }
 
         if (changes['kbqLeaveDelayInput']) {
@@ -836,15 +842,11 @@ export class KbqPopoverTrigger
         }
 
         if (changes['stickToWindowInput']) {
-            const stickToWindow = this.stickToWindowInput();
-
-            if (stickToWindow !== undefined) this.stickToWindow = stickToWindow;
+            this.stickToWindow = this.stickToWindowInput();
         }
 
         if (changes['popoverContainerInput']) {
-            const popoverContainer = this.popoverContainerInput();
-
-            if (popoverContainer !== undefined) this.popoverContainer = popoverContainer;
+            this.popoverContainer = this.popoverContainerInput();
         }
 
         if (changes['popoverHasBackdropInput']) {
@@ -854,9 +856,7 @@ export class KbqPopoverTrigger
         }
 
         if (changes['popoverBackdropClassInput']) {
-            const popoverBackdropClass = this.popoverBackdropClassInput();
-
-            if (popoverBackdropClass !== undefined) this.popoverBackdropClass = popoverBackdropClass;
+            this.popoverBackdropClass = this.popoverBackdropClassInput() ?? defaultBackdropClass;
         }
 
         if (changes['popoverDefaultPaddingsInput']) {
@@ -866,45 +866,31 @@ export class KbqPopoverTrigger
         }
 
         if (changes['sizeInput']) {
-            const size = this.sizeInput();
-
-            if (size !== undefined) this.size = size;
+            this.size = this.sizeInput() ?? PopUpSizes.Medium;
         }
 
         if (changes['customClassInput']) {
-            const customClass = this.customClassInput();
-
-            if (customClass !== undefined) this.customClass = customClass;
+            this.customClass = this.customClassInput() ?? '';
         }
 
         if (changes['headerInput']) {
-            const header = this.headerInput();
-
-            if (header !== undefined) this.header = header;
+            this.header = this.headerInput() ?? '';
         }
 
         if (changes['contentInput']) {
-            const content = this.contentInput();
-
-            if (content !== undefined) this.content = content;
+            this.content = this.contentInput() ?? '';
         }
 
         if (changes['footerInput']) {
-            const footer = this.footerInput();
-
-            if (footer !== undefined) this.footer = footer;
+            this.footer = this.footerInput() ?? '';
         }
 
         if (changes['contextInput']) {
-            const context = this.contextInput();
-
-            if (context !== undefined) this.context = context;
+            this.context = this.contextInput();
         }
 
         if (changes['ariaLabelInput']) {
-            const ariaLabel = this.ariaLabelInput();
-
-            if (ariaLabel !== undefined) this.ariaLabel = ariaLabel;
+            this.ariaLabel = this.ariaLabelInput();
         }
 
         if (changes['popoverHasCloseButtonInput']) {
@@ -938,9 +924,7 @@ export class KbqPopoverTrigger
         }
 
         if (changes['popoverOriginInput']) {
-            const popoverOrigin = this.popoverOriginInput();
-
-            if (popoverOrigin !== undefined) this.popoverOrigin = popoverOrigin;
+            this.popoverOrigin = this.popoverOriginInput() ?? null;
         }
 
         if (changes['disabledInput']) {
@@ -950,21 +934,15 @@ export class KbqPopoverTrigger
         }
 
         if (changes['popoverPlacementPriorityInput']) {
-            const popoverPlacementPriority = this.popoverPlacementPriorityInput();
-
-            if (popoverPlacementPriority !== undefined) this.popoverPlacementPriority = popoverPlacementPriority;
+            this.popoverPlacementPriority = this.popoverPlacementPriorityInput() ?? null;
         }
 
         if (changes['popoverPlacementInput']) {
-            const popoverPlacement = this.popoverPlacementInput();
-
-            if (popoverPlacement !== undefined) this.popoverPlacement = popoverPlacement;
+            this.popoverPlacement = this.popoverPlacementInput() ?? PopUpPlacements.Top;
         }
 
         if (changes['popoverVisibleInput']) {
-            const popoverVisible = this.popoverVisibleInput();
-
-            if (popoverVisible !== undefined) this.popoverVisible = popoverVisible;
+            this.popoverVisible = this.popoverVisibleInput() ?? false;
         }
     }
 

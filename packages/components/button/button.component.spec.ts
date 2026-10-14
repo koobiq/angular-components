@@ -36,7 +36,8 @@ describe('KbqButton', () => {
                 TestApp,
                 AnchorWithoutHrefTestApp,
                 DynamicHrefTestApp,
-                ButtonDropdownTrigger
+                ButtonDropdownTrigger,
+                BoundStyleTestApp
             ]
         }).compileComponents();
     });
@@ -250,6 +251,22 @@ describe('KbqButton', () => {
             button.componentInstance.kbqStyle = '';
             fixture.detectChanges();
             expect(button.nativeElement.classList.contains('kbq-button_filled')).toBe(true);
+        });
+
+        it('should fall back to the filled style when the bound style turns undefined', () => {
+            const fixture = TestBed.createComponent(BoundStyleTestApp);
+
+            fixture.detectChanges();
+
+            const button: HTMLElement = fixture.nativeElement.querySelector('button');
+
+            expect(button.classList).toContain('kbq-button_outline');
+
+            fixture.componentInstance.style = undefined;
+            fixture.detectChanges();
+
+            expect(button.classList).toContain('kbq-button_filled');
+            expect(button.classList).not.toContain('kbq-button_outline');
         });
     });
 
@@ -1132,6 +1149,22 @@ describe(KbqButtonGroupRoot.name, () => {
         expect(componentInstance.groupRoot().kbqStyle).toBe(`kbq-button-group-root_${KbqButtonStyles.Filled}`);
     });
 
+    it('should fall back to Filled when the bound style turns undefined', () => {
+        const fixture = createComponent(BasicButtonGroupRootTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.style = KbqButtonStyles.Outline;
+        fixture.detectChanges();
+
+        componentInstance.style = undefined;
+        fixture.detectChanges();
+
+        const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        expect(componentInstance.groupRoot().kbqStyle).toBe(`kbq-button-group-root_${KbqButtonStyles.Filled}`);
+        buttons.forEach((btn) => expect(btn.classList).toContain(`kbq-button_${KbqButtonStyles.Filled}`));
+    });
+
     it('should propagate color to all child buttons', () => {
         const fixture = createComponent(BasicButtonGroupRootTestComponent);
         const { componentInstance } = fixture;
@@ -1299,6 +1332,23 @@ describe(KbqButtonGroupRoot.name, () => {
         expect(inherited.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Outline}`);
     });
 
+    it('should style a button again once the style bound on the button turns undefined', () => {
+        const fixture = createComponent(OverriddenChildTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.ownStyle = undefined;
+        fixture.detectChanges();
+
+        const [released] = componentInstance.buttons();
+
+        expect(released.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Filled}`);
+
+        componentInstance.groupStyle = KbqButtonStyles.Outline;
+        fixture.detectChanges();
+
+        expect(released.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Outline}`);
+    });
+
     it("should preserve an individual button's color when the group color changes", () => {
         const fixture = createComponent(OverriddenChildTestComponent);
         const { componentInstance } = fixture;
@@ -1389,6 +1439,16 @@ class TestApp {
     increment() {
         this.clickCount++;
     }
+}
+
+@Component({
+    imports: [KbqButtonModule],
+    template: `
+        <button kbq-button [kbqStyle]="style">Button</button>
+    `
+})
+class BoundStyleTestApp {
+    style: KbqButtonStyleInput | undefined = KbqButtonStyles.Outline;
 }
 
 @Component({
@@ -1668,7 +1728,7 @@ class DisabledButtonDropdownTrigger {
 class BasicButtonGroupRootTestComponent {
     readonly groupRoot = viewChild.required(KbqButtonGroupRoot);
 
-    style: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    style: KbqButtonStyleInput | undefined = KbqButtonStyles.Filled;
     color: KbqButtonColor = KbqComponentColors.ContrastFade;
     disabled = false;
 }
@@ -1806,7 +1866,7 @@ class OverriddenChildTestComponent {
     groupColor: KbqButtonColor = KbqComponentColors.ContrastFade;
     groupDisabled = false;
 
-    readonly ownStyle = KbqButtonStyles.Transparent;
+    ownStyle: KbqButtonStyleInput | undefined = KbqButtonStyles.Transparent;
     readonly ownColor = KbqComponentColors.Theme;
 
     showExtra = false;

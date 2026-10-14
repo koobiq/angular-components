@@ -1800,7 +1800,275 @@ describe('KbqPopover', () => {
             expect(layerInstance.tooltipTrigger().overlayRef!.hostElement.parentElement).toBe(overlayContainerElement);
         });
     });
+
+    describe('binding changed to undefined', () => {
+        let undefinedFixture: ComponentFixture<PopoverUndefinedInputs>;
+        let undefinedInstance: PopoverUndefinedInputs;
+
+        beforeEach(() => {
+            vi.useFakeTimers();
+
+            undefinedFixture = createComponent(PopoverUndefinedInputs);
+            undefinedInstance = undefinedFixture.componentInstance;
+
+            readOverlayContainer();
+        });
+
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        const element = document.createElement('div');
+        const cases: {
+            binding: string;
+            field: keyof PopoverUndefinedInputs;
+            value: unknown;
+            read: (trigger: KbqPopoverTrigger) => unknown;
+            reset: unknown;
+        }[] = [
+            {
+                binding: 'kbqTrigger',
+                field: 'triggers',
+                value: 'hover',
+                read: (t) => t.trigger,
+                reset: 'click, keydown'
+            },
+            {
+                binding: 'kbqPopoverStickToWindow',
+                field: 'stickToWindow',
+                value: 'right',
+                read: (t) => t.stickToWindow,
+                reset: undefined
+            },
+            {
+                binding: 'kbqPopoverContainer',
+                field: 'container',
+                value: element,
+                read: (t) => t.container,
+                reset: undefined
+            },
+            {
+                binding: 'kbqPopoverBackdropClass',
+                field: 'backdropClass',
+                value: 'custom-backdrop',
+                read: (t) => t.backdropClass,
+                reset: 'cdk-overlay-transparent-backdrop'
+            },
+            { binding: 'kbqPopoverSize', field: 'size', value: 'large', read: (t) => t.size, reset: 'medium' },
+            {
+                binding: 'kbqPopoverClass',
+                field: 'customClass',
+                value: 'custom',
+                read: (t) => t.customClass,
+                reset: ''
+            },
+            { binding: 'kbqPopoverContent', field: 'content', value: 'Content', read: (t) => t.content, reset: '' },
+            { binding: 'kbqPopoverFooter', field: 'footer', value: 'Footer', read: (t) => t.footer, reset: '' },
+            {
+                binding: 'kbqPopoverContext',
+                field: 'context',
+                value: { a: 1 },
+                read: (t) => t.context,
+                reset: undefined
+            },
+            { binding: 'kbqPopoverOrigin', field: 'origin', value: element, read: (t) => t.popoverOrigin, reset: null },
+            {
+                binding: 'kbqPopoverPlacementPriority',
+                field: 'placementPriority',
+                value: ['bottom'],
+                read: (t) => t.popoverPlacementPriority,
+                reset: null
+            },
+            {
+                binding: 'kbqPopoverPlacement',
+                field: 'placement',
+                value: 'right',
+                read: (t) => t.popoverPlacement,
+                reset: 'top'
+            }
+        ];
+
+        for (const { binding, field, value, read, reset } of cases) {
+            it(`should reset ${binding} to its default once the binding changes to undefined`, () => {
+                Object.assign(undefinedInstance, { [field]: value });
+                undefinedFixture.detectChanges();
+
+                expect(read(undefinedInstance.popoverTrigger())).toEqual(value);
+
+                Object.assign(undefinedInstance, { [field]: undefined });
+                undefinedFixture.detectChanges();
+
+                expect(read(undefinedInstance.popoverTrigger())).toEqual(reset);
+            });
+        }
+
+        it('should drop the header once its binding changes to undefined', async () => {
+            undefinedInstance.content = 'Content';
+            undefinedInstance.header = 'Header';
+            undefinedFixture.detectChanges();
+
+            await openAndAssertPopover(undefinedFixture, undefinedInstance.trigger());
+
+            expect(overlayContainerElement.querySelector('.kbq-popover__header')?.textContent).toContain('Header');
+
+            undefinedInstance.header = undefined;
+            undefinedFixture.detectChanges();
+            await runDueTimers();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover__header')).toBeNull();
+            expect(overlayContainerElement.querySelector('.kbq-popover')!.getAttribute('aria-labelledby')).toBeNull();
+        });
+
+        it('should drop the accessible name once kbqPopoverAriaLabel changes to undefined', async () => {
+            undefinedInstance.content = 'Content';
+            undefinedInstance.ariaLabel = 'Name';
+            undefinedFixture.detectChanges();
+
+            await openAndAssertPopover(undefinedFixture, undefinedInstance.trigger());
+
+            const panel = overlayContainerElement.querySelector('.kbq-popover')!;
+
+            expect(panel.getAttribute('aria-label')).toBe('Name');
+
+            undefinedInstance.ariaLabel = undefined;
+            undefinedFixture.detectChanges();
+            await runDueTimers();
+
+            expect(panel.getAttribute('aria-label')).toBeNull();
+        });
+
+        it('should close the popover once kbqPopoverVisible changes to undefined', async () => {
+            undefinedInstance.content = 'Content';
+            undefinedInstance.visible = true;
+            undefinedFixture.detectChanges();
+            await runDueTimers();
+            undefinedFixture.detectChanges();
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeTruthy();
+
+            undefinedInstance.visible = undefined;
+            undefinedFixture.detectChanges();
+            await settleClose(undefinedFixture);
+
+            expect(overlayContainerElement.querySelector('.kbq-popover')).toBeNull();
+        });
+    });
+
+    describe('confirm texts bound to undefined', () => {
+        afterEach(() => overlayContainer.ngOnDestroy());
+
+        it('should fall back to the locale texts once the bindings change to undefined', async () => {
+            vi.useFakeTimers();
+
+            const confirmFixture = createComponent(PopoverConfirmUndefinedTexts);
+            const confirmInstance = confirmFixture.componentInstance;
+
+            readOverlayContainer();
+
+            confirmInstance.confirmText = 'Custom question';
+            confirmInstance.confirmButtonText = 'Custom button';
+            confirmFixture.detectChanges();
+            confirmInstance.confirmText = undefined;
+            confirmInstance.confirmButtonText = undefined;
+            confirmFixture.detectChanges();
+
+            await openAndAssertPopover(confirmFixture, confirmInstance.trigger());
+
+            expect(overlayContainerElement.querySelector('.kbq-popover-confirm button')!.textContent!.trim()).toBe(
+                ruRULocaleData.popoverConfirm.confirmButtonText
+            );
+            expect(
+                overlayContainerElement.querySelector('.kbq-popover-confirm .kbq-popover__content div')!.textContent
+            ).toBe(ruRULocaleData.popoverConfirm.confirmText);
+        });
+    });
+
+    describe('kbqLeaveDelay', () => {
+        it('should coerce a static attribute to a number', () => {
+            const leaveDelayFixture = createComponent(PopoverStaticLeaveDelay);
+
+            expect(leaveDelayFixture.componentInstance.popoverTrigger().leaveDelay).toBe(0);
+        });
+    });
 });
+
+@Component({
+    selector: 'popover-undefined-inputs',
+    imports: [KbqPopoverModule],
+    template: `
+        <button
+            #trigger
+            kbqPopover
+            [kbqTrigger]="triggers"
+            [kbqPopoverStickToWindow]="stickToWindow"
+            [kbqPopoverContainer]="container"
+            [kbqPopoverBackdropClass]="backdropClass"
+            [kbqPopoverSize]="size"
+            [kbqPopoverClass]="customClass"
+            [kbqPopoverHeader]="header"
+            [kbqPopoverContent]="content"
+            [kbqPopoverFooter]="footer"
+            [kbqPopoverContext]="context"
+            [kbqPopoverAriaLabel]="ariaLabel"
+            [kbqPopoverOrigin]="origin"
+            [kbqPopoverPlacementPriority]="placementPriority"
+            [kbqPopoverPlacement]="placement"
+            [kbqPopoverVisible]="visible"
+        >
+            Trigger
+        </button>
+    `
+})
+class PopoverUndefinedInputs {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+
+    triggers: string | undefined;
+    stickToWindow: KbqStickToWindowPlacementValues | undefined;
+    container: HTMLElement | undefined;
+    backdropClass: string | undefined;
+    size: 'small' | 'medium' | 'large' | undefined;
+    customClass: string | undefined;
+    header: string | undefined;
+    content: string | undefined;
+    footer: string | undefined;
+    context: object | undefined;
+    ariaLabel: string | undefined;
+    origin: KbqOverlayOrigin | undefined;
+    placementPriority: KbqPopUpPlacementValues[] | undefined;
+    placement: KbqPopUpPlacementValues | undefined;
+    visible: boolean | undefined;
+}
+
+@Component({
+    selector: 'popover-confirm-undefined-texts',
+    imports: [KbqPopoverModule],
+    template: `
+        <button
+            #trigger
+            kbqPopoverConfirm
+            [kbqPopoverConfirmText]="confirmText"
+            [kbqPopoverConfirmButtonText]="confirmButtonText"
+        >
+            Delete
+        </button>
+    `
+})
+class PopoverConfirmUndefinedTexts {
+    readonly trigger = viewChild.required<ElementRef>('trigger');
+
+    confirmText: string | undefined;
+    confirmButtonText: string | undefined;
+}
+
+@Component({
+    selector: 'popover-static-leave-delay',
+    imports: [KbqPopoverModule],
+    template: `
+        <button kbqPopover kbqTrigger="hover" kbqLeaveDelay="0" kbqPopoverContent="Content">Trigger</button>
+    `
+})
+class PopoverStaticLeaveDelay {
+    readonly popoverTrigger = viewChild.required(KbqPopoverTrigger);
+}
 
 @Component({
     selector: 'popover-simple',

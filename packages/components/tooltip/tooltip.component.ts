@@ -230,6 +230,9 @@ const FOCUS_ORIGINS_THAT_SHOW: FocusOrigin[] = ['keyboard'];
 /** Base panel class of the tooltip overlay. */
 const TOOLTIP_PANEL_CLASS = 'kbq-tooltip-panel';
 
+/** Default `kbqEnterDelay`, in milliseconds. */
+const defaultEnterDelay = 400;
+
 /** Panel class that makes the tooltip pane transparent to pointer events. */
 const IGNORE_POINTER_EVENTS_PANEL_CLASS = 'cdk-overlay-pane_ignore-pointer-events';
 
@@ -442,7 +445,7 @@ export class KbqTooltipTrigger
     private derivedDisabled: boolean | undefined;
 
     /** Input (`kbqEnterDelay`) — delay in milliseconds before the tooltip is shown. Defaults to `400`. */
-    enterDelay = 400;
+    enterDelay = defaultEnterDelay;
     /** Input (`kbqLeaveDelay`) — delay in milliseconds before the tooltip is hidden. Defaults to `0`. */
     leaveDelay = 0;
 
@@ -559,11 +562,10 @@ export class KbqTooltipTrigger
      * show/hide cycle.
      */
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, a bound `undefined` restoring the
+        // member's default; unbound, it leaves what code wrote.
         if (changes['triggerInput']) {
-            const trigger = this.triggerInput();
-
-            if (trigger !== undefined) this.trigger = trigger;
+            this.trigger = this.triggerInput() ?? '';
         }
 
         if (changes['hideWithTimeoutInput']) {
@@ -573,15 +575,11 @@ export class KbqTooltipTrigger
         }
 
         if (changes['enterDelayInput']) {
-            const enterDelay = this.enterDelayInput();
-
-            if (enterDelay !== undefined) this.enterDelay = enterDelay;
+            this.enterDelay = this.enterDelayInput() ?? defaultEnterDelay;
         }
 
         if (changes['leaveDelayInput']) {
-            const leaveDelay = this.leaveDelayInput();
-
-            if (leaveDelay !== undefined) this.leaveDelay = leaveDelay;
+            this.leaveDelay = this.leaveDelayInput() ?? 0;
         }
 
         if (changes['relativeToPointerInput']) {
@@ -597,45 +595,31 @@ export class KbqTooltipTrigger
         }
 
         if (changes['relativeToCaretVerticalInput']) {
-            const relativeToCaretVertical = this.relativeToCaretVerticalInput();
-
-            if (relativeToCaretVertical !== undefined) this.relativeToCaretVertical = relativeToCaretVertical;
+            this.relativeToCaretVertical = this.relativeToCaretVerticalInput() ?? 'auto';
         }
 
         if (changes['contentInput']) {
-            const content = this.contentInput();
-
-            if (content !== undefined) this.content = content;
+            this.content = this.contentInput() ?? '';
         }
 
         if (changes['headerInput']) {
-            const header = this.headerInput();
-
-            if (header !== undefined) this.header = header;
+            this.header = this.headerInput() ?? '';
         }
 
         if (changes['modifierInput']) {
-            const modifier = this.modifierInput();
-
-            if (modifier !== undefined) this.modifier = modifier;
+            this.modifier = this.modifierInput() ?? TooltipModifier.Default;
         }
 
         if (changes['contextInput']) {
-            const context = this.contextInput();
-
-            if (context !== undefined) this.context = context;
+            this.context = this.contextInput();
         }
 
         if (changes['customClassInput']) {
-            const customClass = this.customClassInput();
-
-            if (customClass !== undefined) this.customClass = customClass;
+            this.customClass = this.customClassInput() ?? '';
         }
 
         if (changes['colorInput']) {
-            const color = this.colorInput();
-
-            if (color !== undefined) this.color = color;
+            this.color = this.colorInput() ?? KbqComponentColors.Contrast;
         }
 
         if (changes['arrowInput']) {
@@ -657,21 +641,15 @@ export class KbqTooltipTrigger
         }
 
         if (changes['tooltipPlacementPriorityInput']) {
-            const tooltipPlacementPriority = this.tooltipPlacementPriorityInput();
-
-            if (tooltipPlacementPriority !== undefined) this.tooltipPlacementPriority = tooltipPlacementPriority;
+            this.tooltipPlacementPriority = this.tooltipPlacementPriorityInput() ?? null;
         }
 
         if (changes['tooltipPlacementInput']) {
-            const tooltipPlacement = this.tooltipPlacementInput();
-
-            if (tooltipPlacement !== undefined) this.tooltipPlacement = tooltipPlacement;
+            this.tooltipPlacement = this.tooltipPlacementInput() ?? PopUpPlacements.Top;
         }
 
         if (changes['tooltipVisibleInput']) {
-            const tooltipVisible = this.tooltipVisibleInput();
-
-            if (tooltipVisible !== undefined) this.tooltipVisible = tooltipVisible;
+            this.tooltipVisible = this.tooltipVisibleInput() ?? false;
         }
 
         if (!this.instance) return;
@@ -733,18 +711,6 @@ export class KbqTooltipTrigger
      */
     protected lastFocusOrigin: FocusOrigin = null;
 
-    /**
-     * Sets up an effect that mirrors a `forDisabledComponent`'s disabled signal: when that component is disabled it
-     * makes the host focusable (so the tooltip can still be triggered) and enables the tooltip, otherwise disables it.
-     *
-     * Also joins the "only one tooltip is visible at a time" group, mutes the tooltip while a pop-up on the
-     * same element is open, tracks the focus origin and keeps the trigger's `aria-describedby` in sync with the
-     * open tooltip. All of this wiring lives here rather than in `ngAfterViewInit`/`ngOnDestroy` because
-     * several subclasses override those hooks: `KbqTitleDirective` and `KbqEllipsisCenterDirective` skip
-     * `super.ngAfterViewInit()`, and `KbqPasswordToggle` skips `super` in both hooks entirely. `destroyRef`
-     * additionally covers a trigger destroyed while its tooltip is still visible — that path disposes the
-     * overlay without emitting `visibleChange(false)`.
-     */
     /** @docs-private */
     readonly triggerInput = input<string | undefined>(undefined, { alias: 'kbqTrigger' });
 
@@ -834,6 +800,18 @@ export class KbqTooltipTrigger
     /** @docs-private */
     readonly tooltipVisibleInput = input<boolean | undefined>(undefined, { alias: 'kbqVisible' });
 
+    /**
+     * Sets up an effect that mirrors a `forDisabledComponent`'s disabled signal: when that component is disabled it
+     * makes the host focusable (so the tooltip can still be triggered) and enables the tooltip, otherwise disables it.
+     *
+     * Also joins the "only one tooltip is visible at a time" group, mutes the tooltip while a pop-up on the
+     * same element is open, tracks the focus origin and keeps the trigger's `aria-describedby` in sync with the
+     * open tooltip. All of this wiring lives here rather than in `ngAfterViewInit`/`ngOnDestroy` because
+     * several subclasses override those hooks: `KbqTitleDirective` and `KbqEllipsisCenterDirective` skip
+     * `super.ngAfterViewInit()`, and `KbqPasswordToggle` skips `super` in both hooks entirely. `destroyRef`
+     * additionally covers a trigger destroyed while its tooltip is still visible — that path disposes the
+     * overlay without emitting `visibleChange(false)`.
+     */
     constructor() {
         super();
 

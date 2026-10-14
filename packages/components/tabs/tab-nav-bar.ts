@@ -266,8 +266,10 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
         transform: numberAttribute
     });
 
+    private readonly uniqueId = `kbq-tab-link-${nextUniqueId++}`;
+
     /** Unique id for the link. */
-    id = `kbq-tab-link-${nextUniqueId++}`;
+    id = this.uniqueId;
 
     /** Whether the link is active. */
     get active(): boolean {
@@ -342,11 +344,10 @@ export class KbqTabLink implements OnChanges, OnDestroy, AfterViewInit {
     private readonly tabNavBar = inject(KbqTabNavBar);
 
     ngOnChanges(changes: SimpleChanges): void {
-        // A bound input is handed to its member as the decorator input did; unbound, it leaves what code wrote.
+        // A bound input is handed to its member as the decorator input did, except that `undefined` resets a member
+        // typed without it to its default; unbound, it leaves what code wrote.
         if (changes['idInput']) {
-            const id = this.idInput();
-
-            if (id !== undefined) this.id = id;
+            this.id = this.idInput() ?? this.uniqueId;
         }
 
         if (changes['disabledInput']) {
