@@ -1,3 +1,18 @@
+## 20.3.3 (2026-10-14)
+
+### Cli
+
+ * bug fix  generate the docs metadata after the version bump ([#DS-5697](https://github.com/koobiq/angular-components/issues/issue/DS-5697)) ([#2152](https://github.com/koobiq/angular-components/issues/2152)) ([0b67407](https://github.com/koobiq/angular-components/commit/0b6740728e9ecc06dd9999d72f61a0d2108b084d))
+
+### Koobiq
+
+ * bug fix  **app-switcher:** open other-site flyouts with their apps and mute a tooltip on the trigger while open ([#DS-5722](https://github.com/koobiq/angular-components/issues/issue/DS-5722)) ([#2146](https://github.com/koobiq/angular-components/issues/2146)) ([45fce45](https://github.com/koobiq/angular-components/commit/45fce4556874c2ba6a0d8e1820a5786d5dd4569f))
+ * bug fix  **navbar:** default cursor on a disabled brand ([#DS-5471](https://github.com/koobiq/angular-components/issues/issue/DS-5471)) ([#2141](https://github.com/koobiq/angular-components/issues/2141)) ([556ab08](https://github.com/koobiq/angular-components/commit/556ab08759fc20d50e5f295828eac752f5e814a3))
+ * bug fix  **notification-center:** keep the title wrapping when a notification is read ([#DS-5527](https://github.com/koobiq/angular-components/issues/issue/DS-5527)) ([#2144](https://github.com/koobiq/angular-components/issues/2144)) ([16b7160](https://github.com/koobiq/angular-components/commit/16b7160cf19008b66fa9db9d0c4b99c015b1f90b))
+ * bug fix  **popover:** memory leaks in scroll subscription and pop-up visibility stream ([#DS-5735](https://github.com/koobiq/angular-components/issues/issue/DS-5735)) ([#2162](https://github.com/koobiq/angular-components/issues/2162)) ([30966d0](https://github.com/koobiq/angular-components/commit/30966d0af5d92393ed6b3fc61374b1004d031806))
+ * bug fix  **select, tree-select:** multiline trigger keeps its height on the first tag ([#DS-5734](https://github.com/koobiq/angular-components/issues/issue/DS-5734)) ([#2161](https://github.com/koobiq/angular-components/issues/2161)) ([9937584](https://github.com/koobiq/angular-components/commit/99375846cfa4297c860a90ba0e25ef05f9cac703))
+ * bug fix  **select:** update the arrow and tag colour when the error state changes outside the select ([#DS-5719](https://github.com/koobiq/angular-components/issues/issue/DS-5719)) ([#2157](https://github.com/koobiq/angular-components/issues/2157)) ([8096699](https://github.com/koobiq/angular-components/commit/80966998ba082c1f827f414b9c50fc066b7526bc))
+
 ## 20.3.2 (2026-09-30)
 
 ### Koobiq
