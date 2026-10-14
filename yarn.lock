@@ -5680,12 +5680,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/design-tokens@npm:^4.0.0":
-  version: 4.0.0
-  resolution: "@koobiq/design-tokens@npm:4.0.0"
+"@koobiq/design-tokens@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@koobiq/design-tokens@npm:4.0.1"
   bin:
     koobiq-tokens-codemod: codemod/v3-to-v4.mjs
-  checksum: 10c0/f58a9477fd8c640964ab69194f5335f4dc969188c3491ef0af038628d90b0022f18136a6d1d09a1dd02281085311940f33ceb4d20ab586872c0c34f705c31855
+  checksum: 10c0/afb1c36b309e2e79bd8312d8b57b71893c1b1dbb8605b374f3348c252532d2df51e91245229a33d48d961f6f77458d0fbf313bcdae882ce43b8127ae47e4a687
   languageName: node
   linkType: hard
 
@@ -15421,7 +15421,7 @@ __metadata:
     "@koobiq/ag-grid-angular-theme": "npm:^34.6.0"
     "@koobiq/date-adapter": "npm:^3.5.1"
     "@koobiq/date-formatter": "npm:^3.5.1"
-    "@koobiq/design-tokens": "npm:^4.0.0"
+    "@koobiq/design-tokens": "npm:^4.0.1"
     "@koobiq/icons": "npm:^12.2.1"
     "@koobiq/luxon-date-adapter": "npm:^3.5.1"
     "@koobiq/moment-date-adapter": "npm:^3.5.1"
