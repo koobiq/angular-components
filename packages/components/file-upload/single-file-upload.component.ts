@@ -354,7 +354,7 @@ export class KbqSingleFileUploadComponent
     }
 
     /** @docs-private */
-    deleteItem(event?: MouseEvent | KeyboardEvent, origin?: FocusOrigin): void {
+    deleteItem(event?: Event, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();

@@ -397,7 +397,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     /** @docs-private */
-    deleteFile(index: number, event?: MouseEvent | KeyboardEvent, origin?: FocusOrigin): void {
+    deleteFile(index: number, event?: Event, origin?: FocusOrigin): void {
         if (this.disabled) return;
 
         event?.stopPropagation();
