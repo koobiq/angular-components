@@ -154,10 +154,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         '[class.ng-dirty]': 'shouldForward("dirty")',
         '[class.ng-valid]': 'shouldForward("valid")',
         '[class.ng-invalid]': 'shouldForward("invalid")',
-        '[class.ng-pending]': 'shouldForward("pending")',
-
-        '(mouseenter)': 'onHoverChanged(true)',
-        '(mouseleave)': 'onHoverChanged(false)'
+        '[class.ng-pending]': 'shouldForward("pending")'
     },
     exportAs: 'kbqFormField'
 })
@@ -233,11 +230,6 @@ export class KbqFormField
     private readonly reactivePasswordHint = contentChildren(KbqReactivePasswordHint);
     private readonly error = contentChildren(KbqError);
     private readonly label = contentChild(KbqLabel);
-
-    /**
-     * @docs-private
-     */
-    hovered: boolean = false;
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
@@ -416,13 +408,6 @@ export class KbqFormField
         if (control?.onContainerClick) {
             control.onContainerClick(event);
         }
-    }
-
-    /**
-     * @docs-private
-     */
-    onHoverChanged(isHovered: boolean): void {
-        this.hovered = isHovered;
     }
 
     /**

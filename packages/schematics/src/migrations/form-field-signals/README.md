@@ -28,6 +28,7 @@ and template-reference reads break.
 | `value` / `id` / `placeholder` / `focused` / `empty` / `required` / `disabled` / `errorState` of the controls | property or getter      | `Signal`                                 | ✅ read → call, write → `.set()` |
 | `KbqTagInput.id` / `placeholder` / `focused` / `empty`                                                        | input, field or getter  | read-only `Signal`                       | ✅ read → call                   |
 | `KbqFormFieldControl.stateChanges`                                                                            | `Observable<void>`      | removed                                  | ⚠️ warn                          |
+| `KbqFormField.hovered` / `onHoverChanged()`                                                                   | `boolean` / method      | removed                                  | ⚠️ warn                          |
 
 `control`, `stepper` and `connectionContainerRef` were already signals before this release and are deliberately
 left alone — appending `()` to them would be a double call.
@@ -86,6 +87,7 @@ These changes can't be rewritten safely and are surfaced as warnings (in both `f
 | `<kbq-error role="…">` / `<kbq-cleaner role="button">`                    | `kbq-error` renders `role="alert"` + `aria-atomic` and `kbq-cleaner` renders `role="button"` themselves. Drop the hand-rolled attributes.                                                          |
 | `implements KbqFormFieldControl`                                          | Expose the state as signals and drop `stateChanges`: the form field derives its state from the signals.                                                                                            |
 | `formField.control().stateChanges`                                        | Removed. Read the state signals in `computed()` / `effect()`, or turn one into a stream with `toObservable()`.                                                                                     |
+| `formField.hovered` / `.onHoverChanged(…)`, also through a `#ref`         | Removed: nothing read them; their pointer listeners ran change detection on every hover. Bind `(mouseenter)` / `(mouseleave)` on `<kbq-form-field>` yourself, or style with `:hover`.              |
 | A write to a read-only control member (`select.placeholder = …`)          | Bind it in the template, or set the value through a form control. Also reported for `+=`, `++`, `delete` and a destructuring target, and through a template ref, in an event or a two-way binding. |
 | `input.value += …` / `++` / `delete` / destructuring on a writable member | Only a plain `=` becomes `.set()`. Write the rest with `.set()` / `.update()`. Also reported for `+=`, `??=`, `++` and the rest through a template ref in an event binding.                        |
 | `KbqErrorStateTracker` / `CanUpdateErrorState`                            | The tracker takes no `stateChanges` subject; `errorState` is a `Signal<boolean>`; the interface no longer declares `errorStateMatcher`.                                                            |

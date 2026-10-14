@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import {
     Binding,
     classifyAccess,
@@ -23,6 +24,7 @@ import {
     QUERY_LIST_ONLY_API,
     READ_ONLY_INPUT_MEMBERS,
     READ_ONLY_QUERY_MEMBERS,
+    REMOVED_MEMBERS_MESSAGE,
     styleRewrites,
     Target,
     TARGETS,
@@ -106,6 +108,8 @@ interface ReceiverWarnings {
     readOnlyQueryWrites: Set<string>;
     /** Writable members written in a form other than a plain `=`, which has no `.set()` translation. */
     writableWrites: Set<string>;
+    /** Removed members, reached in any form. */
+    removed: Set<string>;
 }
 
 const emptyWarnings = (): ReceiverWarnings => ({
@@ -113,7 +117,8 @@ const emptyWarnings = (): ReceiverWarnings => ({
     nullability: new Set<string>(),
     readOnlyInputWrites: new Set<string>(),
     readOnlyQueryWrites: new Set<string>(),
-    writableWrites: new Set<string>()
+    writableWrites: new Set<string>(),
+    removed: new Set<string>()
 });
 
 /** Collects the members that the auto-fix can't fully migrate for one target. */
@@ -127,6 +132,10 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, scop
 
             if (reachesReceiver && NULLABILITY_CHANGED_MEMBERS.includes(name)) {
                 warnings.nullability.add(name);
+            }
+
+            if (reachesReceiver && target.removedMembers?.includes(name)) {
+                warnings.removed.add(name);
             }
 
             // `target.signalMembers` scopes the flat name lists to the members this receiver actually owns.
@@ -178,40 +187,63 @@ function collectFileWarnings(filePath: string, content: string): ReceiverWarning
         warnings.readOnlyInputWrites.forEach((value) => merged.readOnlyInputWrites.add(value));
         warnings.readOnlyQueryWrites.forEach((value) => merged.readOnlyQueryWrites.add(value));
         warnings.writableWrites.forEach((value) => merged.writableWrites.add(value));
+        warnings.removed.forEach((value) => merged.removed.add(value));
     }
 
     return merged;
 }
 
-/** Members a template writes through a reference variable and the rewrite leaves as they are. */
-interface TemplateWrites {
+/** Members a template reaches through a reference variable and the rewrite leaves as they are. */
+interface TemplateFindings {
     /** Read-only members, written in any form. */
     readOnlyWrites: Set<string>;
     /** Writable members, written by a compound assignment or an increment. */
     compoundWrites: Set<string>;
+    /** Removed members, reached in any form. */
+    removed: Set<string>;
 }
 
-const emptyTemplateWrites = (): TemplateWrites => ({
+const emptyTemplateFindings = (): TemplateFindings => ({
     readOnlyWrites: new Set<string>(),
-    compoundWrites: new Set<string>()
+    compoundWrites: new Set<string>(),
+    removed: new Set<string>()
 });
 
-/** Merges the writes of one template into `into`. */
-function mergeTemplateWrites(into: TemplateWrites, from: TemplateWrites): void {
+/** Merges the findings of one template into `into`. */
+function mergeTemplateFindings(into: TemplateFindings, from: TemplateFindings): void {
     from.readOnlyWrites.forEach((member) => into.readOnlyWrites.add(member));
     from.compoundWrites.forEach((member) => into.compoundWrites.add(member));
+    from.removed.forEach((member) => into.removed.add(member));
 }
 
-/** Adds the members a template writes through a reference variable to the warnings. */
-function addTemplateWrites(warnings: ReceiverWarnings, writes: TemplateWrites): ReceiverWarnings {
-    for (const name of writes.readOnlyWrites) {
+/** Adds the members a template reaches through a reference variable to the warnings. */
+function addTemplateFindings(warnings: ReceiverWarnings, findings: TemplateFindings): ReceiverWarnings {
+    for (const name of findings.readOnlyWrites) {
         if (READ_ONLY_INPUT_MEMBERS.includes(name)) warnings.readOnlyInputWrites.add(name);
         else if (READ_ONLY_QUERY_MEMBERS.includes(name)) warnings.readOnlyQueryWrites.add(name);
     }
 
-    writes.compoundWrites.forEach((member) => warnings.writableWrites.add(member));
+    findings.compoundWrites.forEach((member) => warnings.writableWrites.add(member));
+    findings.removed.forEach((member) => warnings.removed.add(member));
 
     return warnings;
+}
+
+/** The removed members of `target` that `template` reaches through one of `refs`. */
+function collectRefRemovedMembers(template: string, target: Target, refs: Iterable<string>): Set<string> {
+    const found = new Set<string>();
+
+    if (!target.removedMembers?.length) return found;
+
+    const members = target.removedMembers.map(escapeRegExp).join('|');
+
+    for (const ref of refs) {
+        const pattern = new RegExp(`(?<![\\w$.])${escapeRegExp(ref)}\\s*\\??\\.\\s*(${members})\\b`, 'g');
+
+        for (const [, member] of template.matchAll(pattern)) found.add(member);
+    }
+
+    return found;
 }
 
 /** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
@@ -250,6 +282,10 @@ function logReceiverWarnings(context: SchematicContext, filePath: string, merged
             `  signal content queries now. Project the content into the form field instead — code that assigned a`,
             `  query result (usually a test faking the projected content) has to render the real component.`
         ]);
+    }
+
+    if (merged.removed.size > 0) {
+        logMessage(context.logger, [`[${MIGRATION}] ${filePath}`, `  ${REMOVED_MEMBERS_MESSAGE}`]);
     }
 
     if (merged.writableWrites.size > 0) {
@@ -353,15 +389,18 @@ function rewriteAttributes(template: string): string {
     return content;
 }
 
-interface TemplateResult extends TemplateWrites {
+interface TemplateResult extends TemplateFindings {
     content: string;
     changed: boolean;
 }
 
-/** Pass B (core) — parse a template, discover target refs, rewrite their reads, writes and renamed attributes. */
+/**
+ * Pass B (core) — parse a template, discover target refs, rewrite their reads, writes and renamed attributes, and
+ * find the removed members they reach.
+ */
 async function migrateTemplate(template: string): Promise<TemplateResult> {
     let content = rewriteAttributes(template);
-    const writes = emptyTemplateWrites();
+    const findings = emptyTemplateFindings();
 
     const relevant = TARGETS.filter(
         (target) =>
@@ -384,16 +423,21 @@ async function migrateTemplate(template: string): Promise<TemplateResult> {
                 for (const name of collector.refs) {
                     refs.push({ name, members: target.signalMembers, writable: target.writableMembers });
                 }
+
+                for (const member of collectRefRemovedMembers(content, target, collector.refs)) {
+                    findings.removed.add(member);
+                }
             }
 
             const result = rewriteRefAccesses(content, rootNodes, refs);
 
             content = result.content;
-            mergeTemplateWrites(writes, result);
+            result.readOnlyWrites.forEach((member) => findings.readOnlyWrites.add(member));
+            result.compoundWrites.forEach((member) => findings.compoundWrites.add(member));
         }
     }
 
-    return { content, changed: content !== template, ...writes };
+    return { content, changed: content !== template, ...findings };
 }
 
 /** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
@@ -437,23 +481,23 @@ function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: 
 async function migrateInlineTemplates(
     content: string,
     fileName: string
-): Promise<TemplateWrites & { content: string }> {
+): Promise<TemplateFindings & { content: string }> {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
-    const writes = emptyTemplateWrites();
+    const findings = emptyTemplateFindings();
     let result = content;
 
     for (const { start, end } of ranges) {
         const outcome = await migrateTemplate(result.slice(start, end));
 
-        mergeTemplateWrites(writes, outcome);
+        mergeTemplateFindings(findings, outcome);
 
         if (outcome.changed) {
             result = result.slice(0, start) + outcome.content + result.slice(end);
         }
     }
 
-    return { content: result, ...writes };
+    return { content: result, ...findings };
 }
 
 /** Pass C — the misspelled `_fiedset-theme.scss` was renamed. */
@@ -513,9 +557,7 @@ export default function formFieldSignals(options: Schema): Rule {
         const htmlPaths: string[] = [];
         const stylePaths: string[] = [];
 
-        rootDir.visit((filePath) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath) => {
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
             else if (filePath.endsWith(HTML_EXT)) htmlPaths.push(filePath);
             else if (STYLE_EXTS.some((ext) => filePath.endsWith(ext))) stylePaths.push(filePath);
@@ -545,7 +587,7 @@ export default function formFieldSignals(options: Schema): Rule {
             const warnings = collectFileWarnings(filePath, original);
             const inline = await migrateInlineTemplates(migrateTsExpressions(original, filePath), filePath);
 
-            logReceiverWarnings(context, filePath, addTemplateWrites(warnings, inline));
+            logReceiverWarnings(context, filePath, addTemplateFindings(warnings, inline));
             commit(filePath, original, inline.content);
         }
 
@@ -558,7 +600,7 @@ export default function formFieldSignals(options: Schema): Rule {
 
             const outcome = await migrateTemplate(original);
 
-            logReceiverWarnings(context, filePath, addTemplateWrites(emptyWarnings(), outcome));
+            logReceiverWarnings(context, filePath, addTemplateFindings(emptyWarnings(), outcome));
 
             if (outcome.changed) commit(filePath, original, outcome.content);
         }

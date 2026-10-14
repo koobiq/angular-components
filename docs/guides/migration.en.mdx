@@ -1291,6 +1291,8 @@ A receiver is matched by its explicit type annotation (`KbqFormField`, `KbqHint`
 
 **Assignments to the `KbqFormField` content queries no longer compile either** — `cleaner`, `passwordToggle`, `hint`, `prefix` and `suffix` are read-only signals. `cleaner` was writable only because of an internal workaround, which is gone; the rest were a `QueryList`, which test code used to reassign to fake the projected content. Project the content into the form field instead.
 
+**`hovered` and `onHoverChanged()` were removed.** Nothing read them, and their pointer listeners ran change detection on every hover. Bind `(mouseenter)` / `(mouseleave)` on `<kbq-form-field>` yourself, or style with `:hover`. Each use is reported with its file.
+
 **`KBQ_FORM_FIELD_REF.control` is typed.** It used to be `any`, so `formField.control.placeholder` compiled and was silently `undefined` — the library had exactly that bug. Call the signal first: `formField.control().placeholder()` — the control's state is a signal as well.
 
 **A custom form field control has to expose signals.** Implement each state member as a `Signal` — an `input()`, a `computed()` or a `signal()` the control writes — and drop `stateChanges`: the form field no longer subscribes to anything. Code that subscribed to `control.stateChanges` reads the signals in a `computed()` or an `effect()` instead.

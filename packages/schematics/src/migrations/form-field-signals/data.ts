@@ -30,6 +30,8 @@ export interface Target {
     signalMembers: readonly string[];
     /** Subset of `signalMembers` that is writable, so `x.m = v` becomes `x.m.set(v)`. Auto-fixed. */
     writableMembers: ReadonlySet<string>;
+    /** Members that were removed, reported with `REMOVED_MEMBERS_MESSAGE`. Never rewritten. */
+    removedMembers?: readonly string[];
 }
 
 /**
@@ -55,8 +57,15 @@ export const FORM_FIELD_TARGET: Target = {
         'hasStepper',
         'hasSuffix'
     ],
-    writableMembers: new Set<string>()
+    writableMembers: new Set<string>(),
+    removedMembers: ['hovered', 'onHoverChanged']
 };
+
+/** Reported where a `KbqFormField` receiver or a reference variable reaches one of its `removedMembers`. */
+export const REMOVED_MEMBERS_MESSAGE =
+    '`KbqFormField.hovered` and `onHoverChanged()` were removed — nothing read them, and their pointer listeners ' +
+    'ran change detection on every hover. Bind `(mouseenter)` / `(mouseleave)` on `<kbq-form-field>` yourself, ' +
+    'or style with `:hover`.';
 
 /** `fillTextOff` and `compact` became signal inputs on the whole hint family. */
 export const HINT_TARGET: Target = {
