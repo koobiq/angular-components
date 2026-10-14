@@ -1,5 +1,5 @@
 import { provideHttpClient, withFetch } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -10,7 +10,6 @@ import { devTimezoneBrowserProviders } from './timezone';
 
 export default {
     providers: [
-        provideZonelessChangeDetection(),
         kbqLocaleServiceProvider(),
         devTimezoneBrowserProviders(),
         provideRouter(devSsrRoutes),

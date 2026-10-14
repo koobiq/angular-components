@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Injectable, provideZonelessChangeDetection } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { kbqLocaleServiceProvider } from '@koobiq/components/core';
@@ -8,19 +8,16 @@ import { DevApp, devPageRoutes } from './module';
 @Injectable()
 export class DevCustomOverlayContainer extends OverlayContainer {
     getContainerElement(): HTMLElement {
-        if (!this._containerElement) {
-            this._createContainer();
-        }
+        const container = super.getContainerElement();
 
-        this._containerElement.classList.add('DEV_CUSTOM_OVERLAY_CONTAINER');
+        container.classList.add('DEV_CUSTOM_OVERLAY_CONTAINER');
 
-        return this._containerElement;
+        return container;
     }
 }
 
 bootstrapApplication(DevApp, {
     providers: [
-        provideZonelessChangeDetection(),
         provideRouter(devPageRoutes),
         kbqLocaleServiceProvider(),
         { provide: OverlayContainer, useClass: DevCustomOverlayContainer }
