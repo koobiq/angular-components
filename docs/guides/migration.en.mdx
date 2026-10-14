@@ -500,7 +500,7 @@ The state that components and services expose for reading is a signal, where it 
 - **`KbqNotificationCenterService.changes`** no longer emits on subscription: a handler that relied on that runs once on its own before subscribing.
 - **`KbqFilters.filteredOptions`** now follows a change of the `filters` input too.
 - **A pop-up trigger no longer marks its host view for check** when it opens or closes: an OnPush view that renders a field of its own, written from a `visibleChange` subscription made in code, calls `markForCheck()` itself or keeps the field in a signal. An output bound in the template needs nothing.
-- **A getter backed by a signal is a tracked read.** `isOpen` of the pop-up triggers, `opened` of `KbqDropdownTrigger`, `KbqDatepicker` and `KbqSidebar`, `panelOpen` of `KbqSelect`, `KbqTreeSelect` and `KbqAutocompleteTrigger`, `expanded` of `KbqAccordionItem`, `isOpened` of `KbqSearchExpandable`, `selected` of the options and `selectedIndex` of `KbqTabGroup` keep their type, but reading one inside an `effect()` or a `computed()` makes it follow that state: an effect that opens or closes a component depending on one reads it with `untracked()`. The commands of the components — `open()`, `close()`, `toggle()`, `select()`, `writeValue()` and the like — read nothing an effect calling them would follow.
+- **A getter backed by a signal is a tracked read.** `isOpen` of the pop-up triggers, `opened` of `KbqDropdownTrigger`, `KbqDatepicker` and `KbqSidebar`, `panelOpen` of `KbqSelect`, `KbqTreeSelect` and `KbqAutocompleteTrigger`, `expanded` of `KbqAccordionItem`, `isOpened` of `KbqSearchExpandable`, `selected` of the options, `selectedIndex` of `KbqTabGroup` and `isActive` of `KbqTab` keep their type, but reading one inside an `effect()` or a `computed()` makes it follow that state: an effect that opens or closes a component depending on one reads it with `untracked()`. The commands of the components — `open()`, `close()`, `toggle()`, `select()`, `writeValue()` and the like — read nothing an effect calling them would follow.
 - **A subclass** of `KbqToastComponent`, `KbqPopUp` or `KbqPopUpTrigger` sets its hover state with the protected `setHovered()`; one of `KbqPipeSelectComponent` drops its `super.ngOnInit()` call, and one of `KbqDatepickerToggleIconComponent` its `super.ngAfterContentInit()` and `super.ngOnDestroy()` calls, since the classes no longer implement them. The protected `isListMode`, `showStartCalendar` and `showEndCalendar` of the date pipes are signals.
 - **`KbqFileItem`** keeps its `loading` and `progress` subjects, which the application updates.
 
@@ -1205,6 +1205,8 @@ group.emitChangeEvent(toggle);
 It follows that `value` can name a toggle `selected` does not hold — `selected` only ever reports toggles that exist, so it stays `null` (or `[]`) while the value waits. Code that read `group.value` as proof of a selection has to check `group.selected` instead. A user interaction replaces the waiting value, and so does the toggle holding it leaving the selection.
 
 **`valueChange` no longer echoes a value that was just assigned.** It fires when the group's value actually changes, not for every write: assigning what the group already reports, or what it answers with unchanged, emits nothing. That is what stops a two-way binding from being written back over. Code that used `(valueChange)` as an "assignment happened" signal, or a test counting emissions during init, needs re-checking — `(change)` still fires per interaction.
+
+**Changing the `value` of the selected toggle changes the value of the group.** The group follows it and reports it through `valueChange`, so `[(value)]` stays in step; a form control keeps its value until the user picks a toggle, as for any change made from code.
 
 **The group implements `OnDestroy` and no longer emits after teardown.** A selected toggle schedules its own removal from the selection on a microtask, which used to outlive the group and reach it with a `valueChange` once the whole group had already been destroyed. The group ignores that late sync now. A test asserting the old emission, or code that relied on it to clean up after a destroyed group, needs re-checking.
 
@@ -1951,6 +1953,7 @@ Changes with no call site to match on:
 - <kbd>Home</kbd> and <kbd>End</kbd> move the highlight in a dropdown without a search field, where they used to scroll
   the page.
 - Clicking a control inside `kbqDropdownFooter` no longer closes the panel.
+- An <kbd>Escape</kbd> that a pop-up inside the panel already handled, such as the tooltip of a truncated item, closes that pop-up alone; the next <kbd>Escape</kbd> closes the dropdown.
 - Disabled items publish `aria-disabled`.
 - A sibling the pointer crosses on the way to a submenu keeps its default background. The rule was already there, but its selector never matched anything.
 - `<kbq-dropdown>` keeps the classes it did not transfer to the panel: the `class` input used to clear the host element outright, taking a `[class.x]` binding from another directive with it.
@@ -2545,7 +2548,7 @@ The container is a dialog to assistive technology at last: `role="dialog"`, `ari
 
 Four smaller fixes with nothing to migrate: a component-provided `KbqSidepanelService` closes the panels it opened when it is destroyed, instead of leaving an orphaned overlay behind; `closeAll()` no longer reverses the live stack in place; the indent strip belongs to the top panel of a stack alone, where a stack three deep used to draw one strip per level and closing a lower panel left the one above exposing a panel that was no longer there; a second `close('B')` before the animation finishes no longer overwrites the `'A'` the first call promised; and a click inside a sidepanel at another edge no longer closes an unrelated panel. `KbqSidepanelService` is `providedIn: 'root'`.
 
-**<kbd>Escape</kbd> closes one layer at a time.** A sidepanel, the actions panel and the notification center no longer close on an Escape that a layer above them or a control inside them already handled — a tooltip, a popover, a confirm dialog opened over the panel, a control closing a popup of its own. The notification center now marks the Escape it closes on as handled (`preventDefault()`), so a sidepanel underneath stays open. A handler of your own that calls `preventDefault()` on Escape keeps these panels open too.
+**<kbd>Escape</kbd> closes one layer at a time.** A sidepanel, the actions panel, the notification center and the dropdown no longer close on an Escape that a layer above them or a control inside them already handled — a tooltip, a popover, a confirm dialog opened over the panel, a control closing a popup of its own. The notification center now marks the Escape it closes on as handled (`preventDefault()`), so a sidepanel underneath stays open. A handler of your own that calls `preventDefault()` on Escape keeps these panels open too.
 
 **The sidepanel reports its transitions after the render that applies them.** `beforeClosed()` and `afterOpened()` no longer fire synchronously inside `open()` or `close()`: a subscription made right after `close()` is notified, and a sidepanel opened from `afterOpened()` of a lower one lands on top of the stack. Code that relied on `beforeClosed()` having fired by the time `close()` returned waits for the emission.
 
@@ -2894,6 +2897,8 @@ Two of the six are silent rather than loud. `KbqTreeBase` is exported and is the
 
 The inputs of `KbqTreeSelection` and `KbqTreeOption` followed: `treeControl`, `dataSource`, `disabled`, `tabIndex` and `selectAllHandler` of the tree, `disabled` and `showCheckbox` of the option are signal inputs read through a getter. A read is unchanged, a programmatic write no longer compiles: bind them. `multiple` is an input now too, and its getter never had a setter: set the selection mode through `multipleMode`, which stays writable. `autoSelect`, `noUnselectLast`, `typeAhead` and `selectAll` stay writable, since `KbqTreeSelect` writes them.
 
+A `[dataSource]` bound back to `undefined` clears the tree as `null` does, and `dataSource` reports `null` rather than `undefined` while no source is set.
+
 Reported by `tree-signals`. A project that renders a tree at all also gets a summary of all six members, because five of them are only visible at a call site that writes them — a consumer that merely reads one gets a value whose type changed under it and no diagnostic at all.
 
 #### Tree select
@@ -2924,6 +2929,10 @@ The review typed the surface and dropped the members that only existed to feed t
 Three fixes with nothing to migrate: the embedded tree is set up through `KbqTreeSelection.initializeForEmbedding()` instead of a second manual `ngAfterContentInit()`, which used to leave duplicate subscriptions on query lists that are never re-created — so every options change was handled several times, on the search-filtering hot path; the dead `{ provide: KbqTree, useExisting: KbqTreeSelect }` provider is gone, since `KbqTreeSelect` never satisfied `KbqTree` structurally and anything injecting `KbqTree` from inside a tree-select was getting an object that only looked right; and the component renders a host `id` and carries combobox ARIA, so the form field label's `[attr.for]` resolves instead of dangling.
 
 `hasBackdrop` and `searchMinOptionsThreshold` are signals like on `KbqSelect`, and `multiple`, `autoSelect`, `tabIndex` and `selectAllHandler` are signal inputs read through a getter. None of them can be assigned any more: bind them in the template.
+
+**A `multiple` value is ordered by the panel now.** `sortValues()` compared the selected data nodes against the rendered options, so it never matched anything and the selection kept the order the values were written in. The default is now each node's place in the tree, collapsed branches included; a node missing from the data sorts last. The order shows in `value()` and in the trigger tags. `[sortComparator]` gets what it always received — two selected data nodes — and its third argument is now every data node of the tree in panel order (`treeControl.dataNodes`) instead of the rendered `KbqTreeOption[]`. A comparator typed with `KbqTreeOption` has to take your node type instead; `() => 0` keeps the write order.
+
+Three more fixes with nothing to migrate: a value the form writes before the tree data arrives (over HTTP, say) is applied once the nodes arrive, in `KbqTreeSelect` and in `KbqTreeSelection` alike, until the user changes the selection; replacing `dataSource.data` with equal new nodes no longer marks the control dirty or emits `valueChanges` and `(selectionChange)`; and a node value of `0` or `''` is selected instead of clearing the selection.
 
 Reported by `tree-select-signals`.
 
