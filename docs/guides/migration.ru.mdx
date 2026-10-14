@@ -362,7 +362,7 @@ ng g @koobiq/components:angular-animations-removal --project "<your project>"
 
 - **Чтение — вызов, запись — `.set()`**: `icon.color()`, `button.color.set(KbqComponentColors.Theme)`. Цвет, заданный в коде, держится, пока не изменится привязка `[color]` или цвет компонента по умолчанию, а у кнопки — еще и цвет ее группы или `kbqStyle`.
 - **Незаданный или пустой `[color]` дает цвет компонента по умолчанию**, `kbq-empty`, если его нет, а не отсутствие класса цвета.
-- **Наследник больше не может переопределить геттер и сеттер `color`.** Задавайте цвет по умолчанию через `setDefaultColor()`, а не присваиванием `color` в конструкторе. `_color` удален, `defaultColor` и `CanColor.color` стали сигналами, а `KbqColorDirective` принимает тип цвета параметром: у кнопок это `KbqColorDirective<KbqButtonColor>`.
+- **Наследник больше не может переопределить геттер и сеттер `color`.** Задавайте цвет по умолчанию через `setDefaultColor()`, а не присваиванием `color` в конструкторе. `_color` удален, `defaultColor` стал сигналом, а `KbqColorDirective` принимает тип цвета параметром: у кнопок это `KbqColorDirective<KbqButtonColor>`. `CanColor` удален: типизируйте член как `Signal<KbqComponentColors | string>` или используйте `KbqColorDirective`.
 
 Схематик `color-signals` переписывает чтения и записи и сообщает о наследниках:
 
@@ -410,7 +410,7 @@ ng g @koobiq/components:list-signals --project "<your project>"
 
 #### Чекбокс, переключатель, радиокнопки, группа кнопок, кнопки, иконки, поиск и всплывающие элементы
 
-Их инпуты стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `checkbox.checked`, `button.disabled`, `icon.iconName` или `tooltip.content` работают как раньше. То же относится к триггерам тултипа, поповера, поповера подтверждения, переключателя приложений и центра уведомлений, к переключателю видимости пароля и к сокращению текста посередине, а также к тегам, загрузке файлов, элементу аккордеона, пункту панели навигации, уведомлению и боковой панели.
+Их инпуты стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `checkbox.checked`, `button.disabled`, `icon.iconName` или `tooltip.content` работают как раньше. То же относится к триггерам тултипа, поповера, поповера подтверждения, переключателя приложений и центра уведомлений, к переключателю видимости пароля и к сокращению текста посередине, а также к тегам, загрузке файлов, элементу аккордеона, пункту панели навигации, уведомлению и боковой панели. Исключение — член, который другая миграция перевела на сигнал, например `color` (см. «Цвет как сигнал») или члены тегов и состояние поля формы у списка тегов (см. «Tags»).
 
 - **Наследник**, реализующий `ngOnChanges`, вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `iconNameInput`.
 - **Булев инпут** принимает в шаблоне `boolean | string | null | undefined`, а не любое значение.
@@ -424,7 +424,7 @@ ng g @koobiq/components:signal-inputs-subclasses --project "<your project>"
 
 #### Поле с датой
 
-Инпуты `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`, `KbqCalendarHeader` и `KbqMonthView` стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `datepicker.opened`, `datepicker.startAt`, `input.min` или `calendar.minDate` работают как раньше.
+Инпуты `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`, `KbqCalendarHeader` и `KbqMonthView` стали сигналами `input()` с именем `<член>Input`, а `ngOnChanges` передает значение в прежний член: чтение и запись `datepicker.opened`, `datepicker.startAt`, `input.min` или `calendar.minDate` работают как раньше. Исключение — состояние поля формы у `KbqDatepickerInput`: `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` и `errorState` стали сигналами, их мигрирует `form-field-signals` (см. «Ревью поля формы (21.0.0)»).
 
 - **Наследник**, реализующий `ngOnChanges`, помечает его `override` и вызывает `super.ngOnChanges(changes)`, а наследник, который объявлял свой `@Input()`, переопределяет сигнал `<член>Input`, например `minInput`.
 - **`SimpleChanges`, переданный в `ngOnChanges` вручную**, использует ключи `<член>Input`: `minDateInput`, а не `minDate`.
@@ -1311,7 +1311,7 @@ export class ColorInput implements KbqFormFieldControl<string> {
 
 **Остальное состояние контрола доступно только для чтения.** Не компилируются присваивания в `placeholder`, `required` и `id`, а также в `disabled` у контролов на нативном элементе и в `value` у `KbqSelect`, `KbqTreeSelect`, `KbqTimepicker` и `KbqDatepickerInput`: задавайте их привязкой в шаблоне, а значение — через контрол формы. Каждое присваивание выводится с именем файла.
 
-**Вместе с этим изменились помощники состояния ошибки.** `KbqErrorStateTracker` больше не принимает субъект `stateChanges`, а его `errorState` — как и `CanUpdateErrorState.errorState` — стал `Signal<boolean>`; `CanUpdateErrorState` больше не объявляет `errorStateMatcher`. Устаревшие `mixinErrorState` и `CanUpdateErrorStateCtor` удалены. `KbqTagTextControl` и `KbqIconErrorStateContext` тоже перешли на сигналы.
+**Вместе с этим изменились помощники состояния ошибки.** `KbqErrorStateTracker` больше не принимает субъект `stateChanges`, а его `errorState` — как и `CanUpdateErrorState.errorState` — стал `Signal<boolean>`; `CanUpdateErrorState` больше не объявляет `errorStateMatcher`. Устаревшие `mixinErrorState` и `CanUpdateErrorStateCtor` удалены. `KbqIconErrorStateContext` тоже перешёл на сигналы, как и `id`, `placeholder`, `focused` и `empty` у `KbqTagInput`: их чтения становятся вызовами, о записи сообщается.
 
 **`KbqDatepicker` больше не контрол поля формы.** Он предоставлял контракт, не реализуя его; теперь поле формы всегда находит поле ввода `kbqDatepicker`. Поле ввода теперь рендерит свой `id`, поэтому метка поля формы связана с ним.
 
@@ -2625,7 +2625,9 @@ if (splitButton.disabled === false) {
 
 {/* migration-subsection-components(tag, tag-list, tag-input, tag-autocomplete) */}
 
-То, что осталось геттером и сеттером, осталось по причине, которую задаёт код, а не из-за трансформации: backing-вход несёт `booleanAttribute`, а сигнал поверх него и читается как сигнал. `KbqTagList` реализует `KbqFormFieldControl`, а `KbqTagInput` — `KbqTagTextControl`; они объявляют `value`, `id`, `placeholder`, `required` и `disabled` обычными свойствами. `KbqTag.disabled` остался обычным `boolean`, потому что менеджер фокуса пропускает элементы, читая его как значение, а сигнал — это функция, она всегда истинна. `disabled`, `tabindex` и `value` у тега и `draggable`, `tabIndex` у списка подмешивают состояние, которое сигнал отследить не может: form control списка, чей `disabled` — обычное свойство, и проецированный текст. У них синтаксис чтения и записи не изменился.
+То, что осталось геттером и сеттером, осталось по причине, которую задаёт код, а не из-за трансформации: backing-вход несёт `booleanAttribute`, а сигнал поверх него и читается как сигнал. `KbqTag.disabled` остался обычным `boolean`, потому что менеджер фокуса пропускает элементы, читая его как значение, а сигнал — это функция, она всегда истинна. `disabled`, `tabindex` и `value` у тега, `draggable`, `tabIndex` у списка и `disabled` у поля ввода тегов сохранили сеттеры; `KbqTag.value` по умолчанию берёт проецированный текст. У них синтаксис чтения и записи не изменился.
+
+Состояние поля формы переехало. `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` и `errorState` у `KbqTagList` стали сигналами: `form-field-signals` переписывает чтения в вызовы, а запись в `disabled` или `value` — в `.set()`, и сообщает о записи в остальные (см. «Ревью поля формы (21.0.0)»). `id`, `placeholder`, `focused` и `empty` у `KbqTagInput` стали сигналами только для чтения: `form-field-signals` переписывает в вызовы и их чтения, а о записи сообщает.
 
 Всё остальное переехало:
 
@@ -2648,7 +2650,7 @@ if (splitButton.disabled === false) {
 
 #### Textarea
 
-`KbqTextarea` реализует `KbqFormFieldControl`, который объявляет `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` и `errorState` обычными членами — именно через этот интерфейс их читает form-field, поэтому они остались обычными геттерами и сеттерами. Переехали те четыре входа, которые принадлежат самому textarea.
+Члены `KbqFormFieldControl` у `KbqTextarea` — `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` и `errorState` — стали сигналами: `form-field-signals` в TypeScript переписывает чтения в вызовы, а запись в `value` — в `.set()`, и сообщает о записи в остальные (см. «Ревью поля формы (21.0.0)»). Переехали и четыре входа, которые принадлежат самому textarea.
 
 Особый случай — `canGrow`: его геттер возвращал `!maxRowLimitReached && привязанное значение`, поэтому он сообщал `false`, как только textarea упирался в `maxRows`, — хотя потребитель просил рост. Свёрнутое значение стало внутренним computed `growing`, а `canGrow()` возвращает то, что было привязано. На пределе строк элемент остаётся со своей полосой прокрутки, а нативная ручка не появляется: `kbq-textarea_max-row-limit-reached` ставит `resize: unset`, и это правило идёт в стилях после `kbq-textarea-resizable`, побеждая по порядку.
 
@@ -2709,7 +2711,7 @@ if (splitButton.disabled === false) {
 
 #### Timepicker
 
-`KbqTimepicker` реализует `KbqFormFieldControl`, который объявляет `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` и `errorState` обычными членами — они остались обычными геттерами и сеттерами. Переехали четыре входа, которые принадлежат самому `KbqTimepicker`.
+Члены `KbqFormFieldControl` у `KbqTimepicker` — `value`, `id`, `placeholder`, `required`, `disabled`, `focused`, `empty` и `errorState` — стали сигналами: `form-field-signals` в TypeScript переписывает чтения в вызовы, а запись в `disabled` — в `.set()`, и сообщает о записи в остальные (см. «Ревью поля формы (21.0.0)»). Переехали и четыре входа, которые принадлежат самому `KbqTimepicker`.
 
 `min` и `max` разбирали значение в сеттерах и возвращали результат разбора, поэтому значение, которое адаптер дат прочитать не смог, читалось обратно как `null`. Теперь они возвращают то, что было привязано; разобранные значения остались внутренними и по-прежнему питают валидаторы.
 

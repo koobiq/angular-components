@@ -3,7 +3,8 @@
  *
  * The decorator inputs of the checkbox, toggle, radio, button toggle, buttons, icons, search-expandable and the
  * pop-up triggers are signal inputs named `<member>Input` now, handed to the unchanged member from `ngOnChanges`.
- * Reads and writes of the members are unchanged; a subclass is not. Warn-only.
+ * Reads and writes of the members are unchanged; a subclass is not. Warn-only. A member another migration moved to
+ * a signal, such as `color` or the `KbqFormFieldControl` members of the tag list, is migrated there.
  */
 
 export interface WarnPattern {
@@ -70,6 +71,7 @@ export const warnPatterns: WarnPattern[] = [
 ];
 
 export const SUMMARY = [
-    'Reads and writes of the members of these components are unchanged. A boolean input accepts',
-    'boolean | string | null | undefined in a template now, rather than anything.'
+    'Reads and writes of the members of these components are unchanged. A member another migration moved to a',
+    'signal, such as color or the KbqFormFieldControl members of the tag list, is migrated there. A boolean input',
+    'accepts boolean | string | null | undefined in a template now, rather than anything.'
 ];

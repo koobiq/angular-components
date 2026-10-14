@@ -103,7 +103,7 @@
         },
         "color-signals": {
             "version": "21.0.0-0",
-            "description": "Migrates the signal-based color of KbqColorDirective. On every component built on it (button, button group, split button, checkbox, pseudo checkbox, toggle, radio, icon, form field, hint, error, password hints, cleaner, progress bar and spinner, tag), a read of color becomes a call and a write becomes .set(), in code and through template references. Warns on subclasses, which can no longer override the color accessor, and on CanColor.",
+            "description": "Migrates the signal-based color of KbqColorDirective. On every component built on it (button, button group, split button, checkbox, pseudo checkbox, toggle, radio, icon, form field, hint, error, password hints, cleaner, progress bar and spinner, tag), a read of color becomes a call and a write becomes .set(), in code and through template references. Warns on subclasses, which can no longer override the color accessor, and on the removed CanColor.",
             "factory": "./migrations/color-signals/index"
         },
         "core-mixins-removal": {

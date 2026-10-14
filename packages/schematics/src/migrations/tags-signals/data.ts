@@ -4,11 +4,12 @@
  * What stays an accessor stays for a reason the code enforces, not for want of a transform - a backing input
  * carries `booleanAttribute`, and a `computed` or `linkedSignal` over it reads back as a signal:
  *
- * - `KbqTagList` implements `KbqFormFieldControl` and `KbqTagInput` implements `KbqTagTextControl`, which
- *   declare `value`, `id`, `placeholder`, `required` and `disabled` as plain properties;
  * - `KbqTag.disabled` is read by the focus key manager as a value, and a signal would always be truthy;
- * - `disabled`, `draggable` and `tabindex` fold in the tag list's form control, a plain property a `computed`
- *   would not see change; `KbqTag.value` falls back to the projected text content, which is DOM state.
+ * - `disabled`, `draggable`, `tabindex` and `tabIndex` keep their setters; `KbqTag.value` falls back to the
+ *   projected text content, which is DOM state.
+ *
+ * The `KbqFormFieldControl` members of `KbqTagList` and `id`, `placeholder`, `focused` and `empty` of
+ * `KbqTagInput` are signals too; this migration leaves them to `form-field-signals`.
  *
  * Everything else moved:
  *
@@ -116,8 +117,9 @@ export const SUMMARY = [
         'that sets `APP_ID` explicitly sees it in the id, right before the counter and with no separator. ' +
         'The tag list reports the id of its input when it has one, so both surface through the form field.',
     '  A change of the `[selected]` binding still emits `selectionChange`, the way the old setter did.',
-    '  What the interfaces name - `value`, `id`, `placeholder`, `required`, `disabled` on the tag list, and ' +
-        '`id`, `placeholder` on the tag input - keeps its accessor shape. So do `disabled`, `tabindex` and ' +
-        '`value` on the tag and `draggable`, `tabIndex` on the tag list, which fold in state a signal cannot ' +
-        'track: the form control, and the projected text.'
+    '  `disabled`, `tabindex` and `value` on the tag, `draggable`, `tabIndex` on the tag list and `disabled` ' +
+        'on the tag input keep their accessors, so their reads and writes are unchanged.',
+    '  The form-field state is signals and is left to `form-field-signals`: `value`, `id`, `placeholder`, ' +
+        '`focused`, `empty`, `required`, `disabled` and `errorState` of the tag list, and `id`, ' +
+        '`placeholder`, `focused` and `empty` of the tag input.'
 ];

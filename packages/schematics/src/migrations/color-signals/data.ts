@@ -103,7 +103,8 @@ export const warnPatterns: readonly WarnPattern[] = [
     {
         anchor: '\\bCanColor\\b',
         pattern: '\\bCanColor\\b',
-        message: 'CanColor.color is a Signal now.'
+        message:
+            '`CanColor` was removed. Type the member `Signal<KbqComponentColors | string>`, or use `KbqColorDirective`.'
     }
 ];
 

@@ -7,7 +7,9 @@ Reports subclasses of the datepicker classes and direct calls of their `ngOnChan
 
 The decorator inputs of `KbqDatepicker`, `KbqDatepickerInput`, `KbqDatepickerToggleIconComponent`, `KbqCalendar`,
 `KbqCalendarHeader` and `KbqMonthView` are signal inputs named `<member>Input`, handed to the unchanged member from
-`ngOnChanges`. Reading and writing the members works as before.
+`ngOnChanges`. Reading and writing the members works as before, except the `KbqFormFieldControl` members of
+`KbqDatepickerInput` - `value`, `id`, `placeholder`, `focused`, `empty`, `required`, `disabled` and `errorState` - which
+are signals, migrated by `form-field-signals`.
 
 | Use                                         | What to do                                                            |
 | ------------------------------------------- | --------------------------------------------------------------------- |

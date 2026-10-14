@@ -3,7 +3,8 @@
  *
  * The decorator inputs of the datepicker, its input, toggle and calendar are signal inputs named `<member>Input` now,
  * handed to the unchanged member from `ngOnChanges`. Reads and writes of the members are unchanged; a subclass and a
- * hand-made `SimpleChanges` are not. Warn-only.
+ * hand-made `SimpleChanges` are not. Warn-only. The `KbqFormFieldControl` members of the datepicker input are
+ * signals, migrated by `form-field-signals`.
  */
 
 export interface WarnPattern {
@@ -48,6 +49,8 @@ export const warnPatterns: WarnPattern[] = [
 ];
 
 export const SUMMARY = [
-    'Reads and writes of the datepicker members are unchanged. A boolean input (hasBackdrop, disabled, opened)',
-    'accepts boolean | string | null | undefined in a template now.'
+    'Reads and writes of the datepicker members are unchanged, except the KbqFormFieldControl members of the',
+    'datepicker input (value, id, placeholder, focused, empty, required, disabled, errorState): they are signals,',
+    'migrated by form-field-signals.',
+    'A boolean input (hasBackdrop, disabled, opened) accepts boolean | string | null | undefined in a template now.'
 ];

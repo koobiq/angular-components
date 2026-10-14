@@ -1,9 +1,9 @@
 /**
  * Data for the `timepicker-signals` migration.
  *
- * `KbqTimepicker` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`,
- * `required`, `disabled`, `focused`, `empty` and `errorState` as plain members — so those stay plain
- * accessors. The four inputs the timepicker owns are signals now.
+ * The `KbqFormFieldControl` members of `KbqTimepicker` (`value`, `id`, `placeholder`, `required`, `disabled`,
+ * `focused`, `empty`, `errorState`) are signals too, but `form-field-signals` migrates them. This migration
+ * covers the four inputs the timepicker owns.
  *
  * - `timepicker.format` → `timepicker.format()` (value unchanged — auto-fixed)
  * - `timepicker.min` / `max` → signals whose value changed: the getters returned the parsed date (reported)
