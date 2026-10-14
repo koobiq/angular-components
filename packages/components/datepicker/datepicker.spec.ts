@@ -977,6 +977,16 @@ describe('KbqDatepicker', () => {
 
                 expect(testComponent.datepickerToggle().disabled).toBe(true);
             });
+
+            it('should report a parse error while the browser rejects the input as bad', () => {
+                const inputEl: HTMLInputElement = fixture.debugElement.query(By.css('input')).nativeElement;
+
+                // What a native date input reports for text it cannot parse: no value, but bad input.
+                Object.defineProperty(inputEl, 'validity', { value: { badInput: true } });
+                dispatchFakeEvent(inputEl, 'blur');
+
+                expect(testComponent.formControl.hasError('kbqDatepickerParse')).toBe(true);
+            });
         });
 
         describe('ErrorStateMatcher', () => {

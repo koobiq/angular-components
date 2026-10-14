@@ -707,7 +707,7 @@ export class KbqDatepickerInput<D>
         }
 
         // The rendered text changes without notice: through the keyboard handlers, which write the element.
-        this.emptyValue.set(!this.viewValue && !this.isBadInput());
+        this.emptyValue.set(this.isEmpty());
     }
 
     onContainerClick() {
@@ -1518,13 +1518,18 @@ export class KbqDatepickerInput<D>
         return validity && validity.badInput;
     }
 
+    /** Whether the input renders no text, read from the element rather than from the last change detection. */
+    private isEmpty(): boolean {
+        return !this.viewValue && !this.isBadInput();
+    }
+
     private cvaOnChange: (value: any) => void = () => {};
 
     private validatorOnChange = () => {};
 
     /** The form control validator for whether the input parses. */
     private parseValidator: ValidatorFn = (): ValidationErrors | null => {
-        return this.focused() || !this.viewValue || this.isBadInput() || this.lastValueValid
+        return this.focused() || this.isEmpty() || this.lastValueValid
             ? null
             : { kbqDatepickerParse: { text: this.elementRef.nativeElement.value } };
     };
