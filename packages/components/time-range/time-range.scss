@@ -1,3 +1,7 @@
+// Layout only: the package paints nothing of its own, so it intentionally ships no
+// `time-range-tokens.scss` and no `_time-range-theme.scss`. Every colour on screen comes from the
+// composed components - link, radio, form-field, datepicker, timepicker, popover and button.
+
 .kbq-time-range {
     .kbq-time-range__trigger {
         display: block;
@@ -15,7 +19,12 @@
 .kbq-time-range__editor {
     display: block;
 
+    // The radiogroup holds only radios, so the from/to block is a sibling of it rather than a child.
+    // The gap reproduces the spacing the range block used to get from its own flex column.
     .kbq-time-range-editor__container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--kbq-size-s);
         width: 100%;
     }
 

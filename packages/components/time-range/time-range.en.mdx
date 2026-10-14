@@ -8,6 +8,14 @@ The component allows you to customize the trigger element. For example, it can b
 
 <Example id="time-range-custom-trigger" />
 
+#### Trigger inside a field
+
+`kbq-time-range-title-as-control` puts the trigger inside a `kbq-form-field`, so the range gets a label,
+a hint and the error styling of a regular field. `kbqTimeRangeTitlePlaceholder` styles the text shown
+while there is no value — set `[nonNullable]="false"` for that state to be reachable at all.
+
+<Example id="time-range-as-form-field" />
+
 ### Custom presets
 
 When there are no preset values, only the start and end of the period remain in the window.
@@ -29,3 +37,37 @@ The bounds are shown in the picker: next to the "Period" option, or under the "t
 The component allows you to set custom time range options.
 
 <Example id="time-range-custom-range-types" />
+
+### Providing presets through DI
+
+The list of options and the options themselves are data, so both can be replaced without touching the
+template:
+
+- `KBQ_DEFAULT_TIME_RANGE_TYPES` replaces the default list of options (`defaultTimeRangeTypes`) for
+  every `kbq-time-range` below the provider. `[availableTimeRangeTypes]` overrides it per component.
+- `KBQ_CUSTOM_TIME_RANGE_TYPES` registers options the built-in list does not have. Each entry carries
+  its identifier, its duration (`units`) and the unit its label is formatted in (`translationType`),
+  or a fixed `range` instead of a duration.
+
+```ts
+providers: [
+    {
+        provide: KBQ_CUSTOM_TIME_RANGE_TYPES,
+        useValue: [{ type: 'last3Weeks', units: { weeks: -3 }, translationType: 'weeks' }]
+    },
+    { provide: KBQ_DEFAULT_TIME_RANGE_TYPES, useValue: ['lastHour', 'last3Weeks', 'range'] }
+];
+```
+
+### Empty value and value correction
+
+`nonNullable` (default `true`) decides what a `null` written through the form control means. While it
+is `true`, `null` is replaced with the first available option and the trigger always shows a range;
+set it to `false` to let the component hold no value and render the placeholder.
+
+`valueCorrected` fires whenever the component had to change the value it was given — a type that is
+not in `availableTimeRangeTypes`, a `range` missing one of its ends, or a `null` under `nonNullable`.
+It emits the corrected value so that a host can write it back, and it stays silent when the value is
+already the one the component would produce.
+
+The inputs, the output and the defaults they carry are listed on the API tab.

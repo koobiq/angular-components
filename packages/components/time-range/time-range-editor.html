@@ -1,40 +1,50 @@
 <form [formGroup]="form">
-    <kbq-radio-group class="kbq-time-range-editor__container" [formControl]="form.controls.type">
-        @let types = timeRangeTypesWithoutRange();
+    @let localeConfig = localeConfiguration();
+    @let types = timeRangeTypesWithoutRange();
+    @let bounds = boundsHint();
 
+    <!-- The radiogroup holds only radios: the from/to block is its sibling rather than its child, so the
+         text fields and the calendar button are not announced as part of the group. -->
+    <div class="kbq-time-range-editor__container">
         @if (types.length) {
-            <div class="kbq-time-range-editor__predefined">
-                @for (type of types; track type) {
-                    <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type.type">
-                        <ng-container
-                            *ngTemplateOutlet="optionTemplate() || defaultOptionTemplate; context: { $implicit: type }"
-                        />
-                    </kbq-radio-button>
-                }
-            </div>
-        }
+            <kbq-radio-group [formControl]="form.controls.type">
+                <div class="kbq-time-range-editor__predefined">
+                    @for (type of types; track type) {
+                        <kbq-radio-button class="kbq-time-range-editor__predefined-option" [value]="type.type">
+                            <ng-container
+                                *ngTemplateOutlet="
+                                    optionTemplate() || defaultOptionTemplate;
+                                    context: { $implicit: type }
+                                "
+                            />
+                        </kbq-radio-button>
+                    }
+                </div>
 
-        @if (isRangeVisible()) {
-            @let localeConfig = localeConfiguration();
-
-            <div class="kbq-time-range-editor__range" role="group" (focusout)="onRangeFocusOut($event)">
-                @let bounds = boundsHint();
-
-                @if (types.length) {
-                    <kbq-radio-button [value]="'range'">
+                @if (isRangeVisible()) {
+                    <kbq-radio-button class="kbq-time-range-editor__range-option" [value]="'range'">
                         {{ localeConfig.editor.rangeLabel }}
                         @if (bounds) {
                             <kbq-hint>{{ bounds }}</kbq-hint>
                         }
                     </kbq-radio-button>
                 }
+            </kbq-radio-group>
+        }
 
+        @if (isRangeVisible()) {
+            <div
+                class="kbq-time-range-editor__range"
+                role="group"
+                [attr.aria-label]="localeConfig.editor.rangeLabel"
+                (focusout)="onRangeFocusOut($event)"
+            >
                 <div
                     class="kbq-time-range-editor__date-time"
                     (input)="onBorderInput('from')"
                     (focusout)="onBorderFocusOut('from', $event)"
                 >
-                    <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.editor.from">
+                    <span class="kbq-time-range-editor__date-time-prefix" [id]="fromLabelId">
                         {{ localeConfig.editor.from }}
                     </span>
                     <kbq-fieldset>
@@ -43,6 +53,7 @@
                             <input
                                 kbqTimepicker
                                 data-time-range-field="fromTime"
+                                [attr.aria-labelledby]="fromLabelId"
                                 [format]="timepickerFormat"
                                 [formControl]="form.controls.fromTime"
                                 [errorStateMatcher]="rangeStateMatcher"
@@ -52,6 +63,7 @@
                         <kbq-form-field>
                             <input
                                 data-time-range-field="fromDate"
+                                [attr.aria-labelledby]="fromLabelId"
                                 [kbqDatepicker]="datepickerFrom"
                                 [formControl]="form.controls.fromDate"
                                 [errorStateMatcher]="rangeStateMatcher"
@@ -67,7 +79,7 @@
                     (input)="onBorderInput('to')"
                     (focusout)="onBorderFocusOut('to', $event)"
                 >
-                    <span class="kbq-time-range-editor__date-time-prefix" [attr.aria-label]="localeConfig.editor.to">
+                    <span class="kbq-time-range-editor__date-time-prefix" [id]="toLabelId">
                         {{ localeConfig.editor.to }}
                     </span>
                     <kbq-fieldset>
@@ -76,6 +88,7 @@
                             <input
                                 kbqTimepicker
                                 data-time-range-field="toTime"
+                                [attr.aria-labelledby]="toLabelId"
                                 [format]="timepickerFormat"
                                 [formControl]="form.controls.toTime"
                                 [errorStateMatcher]="rangeStateMatcher"
@@ -85,6 +98,7 @@
                         <kbq-form-field>
                             <input
                                 data-time-range-field="toDate"
+                                [attr.aria-labelledby]="toLabelId"
                                 [kbqDatepicker]="datepickerTo"
                                 [formControl]="form.controls.toDate"
                                 [errorStateMatcher]="rangeStateMatcher"
@@ -106,7 +120,7 @@
                 </div>
             </div>
         }
-    </kbq-radio-group>
+    </div>
 </form>
 
 <ng-template #defaultOptionTemplate let-context>

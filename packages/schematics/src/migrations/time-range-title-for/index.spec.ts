@@ -30,7 +30,7 @@ describe(SCHEMATIC_NAME, () => {
         const ts = appTree.exists(`${root}/app.ts`) ? `${root}/app.ts` : `${root}/app.component.ts`;
         const html = appTree.exists(`${root}/app.html`) ? `${root}/app.html` : `${root}/app.component.html`;
 
-        return { ts, html };
+        return { ts, html, scss: `${root}/app.scss` };
     }
 
     function run(project: string, fix = true) {
@@ -174,6 +174,88 @@ describe(SCHEMATIC_NAME, () => {
 
             expect(note).toContain('no longer prepends `title.for`');
             expect(note.split('Time-range title behaviour changed').length).toBe(2);
+        });
+    });
+
+    describe('forms contract', () => {
+        it('reports a read of the removed timepicker query', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                ts,
+                "import { KbqTimeRangeEditor } from '@koobiq/components/time-range';\n" +
+                    'export class App { count(e: KbqTimeRangeEditor<Date>) { return e.timepickerList().length; } }\n'
+            );
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('timepickerList was removed');
+        });
+
+        it('reports a write to a form-field adapter member that became derived', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(
+                ts,
+                "import { KbqTimeRangeTitleAsControl } from '@koobiq/components/time-range';\n" +
+                    'export class App { mark(c: KbqTimeRangeTitleAsControl) { c.errorState = true; } }\n'
+            );
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('are no longer assignable');
+        });
+
+        it('reports a valueCorrected handler, whose emissions changed', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, 'const template = `<kbq-time-range (valueCorrected)="onCorrected($event)" />`;\n');
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('fires only when the correction produced a different range');
+        });
+
+        it('reports a stylesheet keyed on the editor markup that moved', async () => {
+            const [first] = projects.keys();
+            const { scss } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(scss, '.kbq-time-range .kbq-radio-group .kbq-time-range-editor__range { gap: 0; }\n');
+
+            await run(first);
+
+            expect(messages.join('\n')).toContain('The editor markup changed');
+        });
+
+        it('does not report the range option class the moved markup introduces', async () => {
+            const [first] = projects.keys();
+            const { scss } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(scss, '.kbq-time-range .kbq-time-range-editor__range-option { gap: 0; }\n');
+
+            await run(first);
+
+            expect(messages.join('\n')).not.toContain('The editor markup changed');
+        });
+
+        it('says nothing about the component when the project does not use it', async () => {
+            const [first] = projects.keys();
+            const { ts } = paths(projects.get(first)!);
+            const messages = collectLogs();
+
+            appTree.overwrite(ts, 'export class App { count(e: any) { return e.timepickerList().length; } }\n');
+
+            await run(first);
+
+            expect(messages.join('\n')).not.toContain('timepickerList was removed');
         });
     });
 

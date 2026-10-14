@@ -67,6 +67,8 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
     }
 }
 
+let nextUniqueId = 0;
+
 /** @docs-private */
 @Component({
     selector: 'kbq-time-range-editor',
@@ -98,7 +100,10 @@ class RangeErrorStateMatcher implements ErrorStateMatcher {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-time-range__editor'
+        class: 'kbq-time-range__editor',
+        // The editor is a composite control: no single field's blur means the user is done with it,
+        // so touched is driven by focus leaving the editor as a whole.
+        '(focusout)': 'onEditorFocusOut($event)'
     }
 })
 export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, OnInit {
@@ -179,6 +184,17 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     /** Raised by the first "apply", after which a border left wholly empty counts as an error too. */
     private applyAttempted = false;
 
+    /**
+     * Ids of the `from`/`to` prefixes, so both fields of a pair take the prefix as part of their
+     * accessible name. `aria-label` on the prefix itself is inert - a bare `<span>` has no role that
+     * supports naming.
+     *
+     * @docs-private
+     */
+    protected readonly fromLabelId = `kbq-time-range-editor-from-${nextUniqueId}`;
+    /** @docs-private */
+    protected readonly toLabelId = `kbq-time-range-editor-to-${nextUniqueId++}`;
+
     constructor() {
         const defaultRangeValue = this.rangeValue();
 
@@ -214,17 +230,7 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
                 distinctUntilChanged(),
                 takeUntilDestroyed()
             )
-            .subscribe((type) => {
-                const isDisabled = type !== 'range';
-
-                this.rangeControls.forEach((control) => {
-                    if (isDisabled) {
-                        control.disable({ emitEvent: false });
-                    } else {
-                        control.enable({ emitEvent: false });
-                    }
-                });
-            });
+            .subscribe((type) => this.syncRangeControlsDisabledState(type));
 
         this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe((formValue) => {
             // Each half is checked against its sibling, so editing one has to re-run the other. Silent,
@@ -293,6 +299,18 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
     /** Implemented as part of ControlValueAccessor */
     registerOnTouched(fn: () => void): void {
         this.onTouch = fn;
+    }
+
+    /**
+     * The editor counts as left only once focus is out of it entirely. Moving between its own fields -
+     * the two halves of a border, or from a border to the radio that drives it - is still editing, and
+     * a `focusout` fires for each of those moves.
+     * @docs-private
+     */
+    protected onEditorFocusOut({ currentTarget, relatedTarget }: FocusEvent): void {
+        if (this.staysWithin(currentTarget as HTMLElement, relatedTarget as HTMLElement | null)) return;
+
+        this.onTouch();
     }
 
     /**
@@ -515,6 +533,30 @@ export class KbqTimeRangeEditor<T> implements ControlValueAccessor, Validator, O
 
             return this.borderErrors(border)[half];
         };
+    }
+
+    /** Implemented as part of ControlValueAccessor */
+    setDisabledState(isDisabled: boolean): void {
+        if (isDisabled) {
+            this.form.disable({ emitEvent: false });
+        } else {
+            this.form.enable({ emitEvent: false });
+            // `enable()` reaches every control, including the from/to pair a preset type keeps disabled.
+            this.syncRangeControlsDisabledState(this.form.controls.type.value);
+        }
+    }
+
+    /** The from/to pair is only editable while the `range` type is selected. */
+    private syncRangeControlsDisabledState(type: KbqTimeRangeType | undefined): void {
+        const isDisabled = type !== 'range';
+
+        this.rangeControls.forEach((control) => {
+            if (isDisabled) {
+                control.disable({ emitEvent: false });
+            } else {
+                control.enable({ emitEvent: false });
+            }
+        });
     }
 
     private mapTimeRange({ type }: Partial<KbqTimeRangeTypeContext> & KbqRangeValue<T>): KbqTimeRangeRange | undefined {

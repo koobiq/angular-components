@@ -355,7 +355,7 @@
             "schema": "./migrations/modal-dialog-semantics/schema.json"
         },
         "time-range-title-for": {
-            "description": "Removes `title.for` from time-range locale configurations and reports its reads: the time-range title shows the selected period without a prefix",
+            "description": "Removes `title.for` from time-range locale configurations, reports its reads and the rest of the time-range review: the removed timepickerList, the KbqTimeRangeTitleAsControl members that stopped being plain fields, valueCorrected handlers whose emission count changed, and stylesheets keyed on the editor markup that moved the from/to block out of the radiogroup",
             "factory": "./migrations/time-range-title-for/index",
             "schema": "./migrations/time-range-title-for/schema.json"
         },

@@ -1,7 +1,7 @@
 import { TitleCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DebugElement, inject, Provider, signal, Type } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -20,8 +20,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqPopoverComponent } from '@koobiq/components/popover';
 import { KbqRadioButton } from '@koobiq/components/radio';
+import { axe } from 'jest-axe';
 import { KBQ_CUSTOM_TIME_RANGE_TYPES, KBQ_DEFAULT_TIME_RANGE_TYPES } from './constants';
-import { KbqTimeRangeModule } from './module';
 import {
     KBQ_TIME_RANGE_LOCALE_CONFIGURATION,
     KbqTimeRange,
@@ -29,7 +29,12 @@ import {
 } from './time-range';
 import { KbqTimeRangeEditor } from './time-range-editor';
 import { KbqTimeRangeTitle } from './time-range-title';
+import { KbqTimeRangeTitleAsControl } from './time-range-title-as-form-field';
+import { KbqTimeRangeModule } from './time-range.module';
 import { KbqCustomTimeRangeType, KbqTimeRangeRange, KbqTimeRangeType } from './types';
+
+/** Jest's own `testTimeout` is 2000 ms, which an axe run does not fit into. */
+const axeTimeout = 15000;
 
 const setup = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({
@@ -53,6 +58,15 @@ const getPopoverDebugElement = (debugElement: DebugElement): DebugElement => {
 
 const getEditorInstance = (debugElement: DebugElement): KbqTimeRangeEditor<unknown> => {
     return debugElement.query(By.directive(KbqTimeRangeEditor)).componentInstance;
+};
+
+/** The control the popover binds its editor to, which is what the editor's `onTouch` reaches. */
+const getEditorControl = (debugElement: DebugElement): FormControl => {
+    return (
+        debugElement.query(By.directive(KbqTimeRange)).componentInstance as unknown as {
+            rangeEditorControl: FormControl;
+        }
+    ).rangeEditorControl;
 };
 
 const getEditorForm = (debugElement: DebugElement): FormGroup => {
@@ -81,10 +95,16 @@ const dispatchFocusOut = (element: HTMLElement, relatedTarget: HTMLElement | nul
     element.dispatchEvent(new FocusEvent('focusout', { bubbles: true, relatedTarget }));
 };
 
+/** The "Period" option, which the radiogroup holds while the borders sit outside it. */
+const getRangeOption = (debugElement: DebugElement): HTMLElement => {
+    return getPopoverDebugElement(debugElement).nativeElement.querySelector('.kbq-time-range-editor__range-option');
+};
+
 const getRangeOptionHint = (debugElement: DebugElement): string | null => {
     // By element rather than by class: `kbq-error` inherits the hint's host class, so `.kbq-hint` would
-    // match an error message too.
-    return getRangeElement(debugElement).querySelector('kbq-hint')?.textContent?.trim() ?? null;
+    // match an error message too. The caption hangs off the range option while there are presets, and
+    // moves into the "to" fieldset when there are none.
+    return getPopoverDebugElement(debugElement).nativeElement.querySelector('kbq-hint')?.textContent?.trim() ?? null;
 };
 
 /** The messages currently reported under the ends of the range, in the order they appear. */
@@ -132,6 +152,18 @@ const revealBorders = (fixture: ComponentFixture<unknown>): void => {
     getBorderElements(fixture.debugElement).forEach((border) =>
         dispatchFocusOut(border, getTriggerNativeElement(fixture.debugElement))
     );
+    fixture.detectChanges();
+};
+
+/** The popover footer's buttons, in the order they are painted. */
+const getFooterButtons = (): HTMLButtonElement[] => {
+    return Array.from(document.querySelectorAll<HTMLButtonElement>('.kbq-time-range__buttons button'));
+};
+
+/** Opens the popover and settles the overlay. Must be called inside `fakeAsync`. */
+const openPopover = (fixture: ComponentFixture<unknown>): void => {
+    getTriggerNativeElement(fixture.debugElement).click();
+    tick();
     fixture.detectChanges();
 };
 
@@ -918,7 +950,7 @@ describe('KbqTimeRange', () => {
             fixture.detectChanges();
 
             // Hung off the option itself while there is one to hang it off.
-            expect(getRangeElement(debugElement).querySelector('kbq-radio-button .kbq-hint')).toBeTruthy();
+            expect(getRangeOption(debugElement).querySelector('.kbq-hint')).toBeTruthy();
             expect(getRangeOptionHint(debugElement)).toMatchSnapshot();
         }));
 
@@ -1038,6 +1070,247 @@ describe('KbqTimeRange', () => {
                 captions.map(({ id }) => id)
             );
         });
+
+        it('should hand the form field its error state', fakeAsync(() => {
+            const fixture = setup(TestComponentAsFormField);
+            const { componentInstance, debugElement } = fixture;
+            const formField = debugElement.query(By.css('kbq-form-field'));
+
+            expect(formField.classes['kbq-form-field_invalid']).toBeFalsy();
+
+            componentInstance.control.setValue(null);
+            componentInstance.control.markAsTouched();
+            // A single pass: becoming `touched` alone changes no value, so the error state has to reach
+            // the form field through something reactive rather than through a following pass.
+            fixture.detectChanges();
+
+            expect(formField.classes['kbq-form-field_invalid']).toBe(true);
+        }));
+
+        it('should report emptiness and requiredness from the bound control', () => {
+            const fixture = setup(TestComponentAsFormField);
+            const { componentInstance, debugElement } = fixture;
+            const control = debugElement.query(By.directive(KbqTimeRangeTitleAsControl))
+                .componentInstance as KbqTimeRangeTitleAsControl;
+
+            expect(control.required).toBe(true);
+            expect(control.empty).toBe(false);
+            // The suffix comes from the CDK `_IdGenerator`, so only the prefix is ours to guarantee —
+            // what matters is that the host exposes the very id the control reports.
+            expect(control.id).toMatch(/^kbq-time-range-title-as-control-/);
+            expect(debugElement.query(By.directive(KbqTimeRangeTitleAsControl)).nativeElement.getAttribute('id')).toBe(
+                control.id
+            );
+
+            componentInstance.control.setValue(null);
+            fixture.detectChanges();
+
+            expect(control.empty).toBe(true);
+        });
+    });
+
+    describe('ControlValueAccessor', () => {
+        it('should mark the control touched once the popover closes', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { componentInstance } = fixture;
+
+            openPopover(fixture);
+
+            expect(componentInstance.control.touched).toBe(false);
+
+            getFooterButtons()[1].click();
+            flush();
+            fixture.detectChanges();
+
+            expect(componentInstance.control.touched).toBe(true);
+        }));
+
+        it('should drop the trigger out of the tab order when the control is disabled', () => {
+            const fixture = setup(TestComponentWithRange);
+            const { componentInstance, debugElement } = fixture;
+
+            expect(getTriggerNativeElement(debugElement).querySelector('a')!.getAttribute('tabindex')).toBe('0');
+
+            componentInstance.control.disable();
+            fixture.detectChanges();
+
+            expect(getTriggerNativeElement(debugElement).querySelector('a')!.getAttribute('tabindex')).toBe('-1');
+            expect(debugElement.query(By.directive(KbqTimeRange)).classes['kbq-disabled']).toBe(true);
+        });
+
+        it('should not open the popover while the control is disabled', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { componentInstance, debugElement } = fixture;
+
+            componentInstance.control.disable();
+            fixture.detectChanges();
+
+            openPopover(fixture);
+
+            expect(getPopoverDebugElement(debugElement)).toBeNull();
+        }));
+
+        it('should disable the editor form together with the control', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { componentInstance, debugElement } = fixture;
+
+            openPopover(fixture);
+
+            expect(getEditorForm(debugElement).disabled).toBe(false);
+
+            componentInstance.control.disable();
+            fixture.detectChanges();
+
+            expect(getEditorForm(debugElement).disabled).toBe(true);
+        }));
+
+        it('should keep the preset-driven disabling after the control is re-enabled', fakeAsync(() => {
+            const fixture = setup(TestComponentWithPresets);
+            const { componentInstance, debugElement } = fixture;
+
+            openPopover(fixture);
+
+            componentInstance.control.disable();
+            fixture.detectChanges();
+            componentInstance.control.enable();
+            fixture.detectChanges();
+
+            const form = getEditorForm(debugElement);
+
+            expect(form.controls['type'].enabled).toBe(true);
+            // `lastHour` is selected, so the from/to pair must stay disabled after a blanket enable().
+            expect(form.controls['fromDate'].disabled).toBe(true);
+            expect(form.controls['toDate'].disabled).toBe(true);
+        }));
+
+        it('should not mark the editor touched while focus moves between its own fields', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { debugElement } = fixture;
+            const editorControl = getEditorControl(debugElement);
+
+            openPopover(fixture);
+
+            expect(editorControl.touched).toBe(false);
+
+            const [fromBorder] = getBorderElements(debugElement);
+
+            // From the "from" time field to its own date field: still editing, so the editor is not left.
+            dispatchFocusOut(fromBorder, fromBorder.querySelector<HTMLElement>('input'));
+
+            expect(editorControl.touched).toBe(false);
+        }));
+
+        it('should mark the editor touched once focus leaves it entirely', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { debugElement } = fixture;
+            const editorControl = getEditorControl(debugElement);
+
+            openPopover(fixture);
+
+            const [fromBorder] = getBorderElements(debugElement);
+
+            dispatchFocusOut(fromBorder, getTriggerNativeElement(debugElement));
+
+            expect(editorControl.touched).toBe(true);
+        }));
+    });
+
+    describe('valueCorrected', () => {
+        it('should stay silent when the same allTime value is written twice', () => {
+            const fixture = setup(TestComponentWithValueCorrection);
+            const { componentInstance } = fixture;
+
+            componentInstance.availableTimeRangeTypes.set(['allTime', 'lastHour']);
+            fixture.detectChanges();
+
+            componentInstance.corrections.set(0);
+            componentInstance.control.setValue({ type: 'allTime' });
+            fixture.detectChanges();
+            componentInstance.control.setValue({ type: 'allTime' });
+            fixture.detectChanges();
+
+            expect(componentInstance.corrections()).toBe(0);
+        });
+
+        it('should emit exactly once for a type outside the available list', () => {
+            const fixture = setup(TestComponentWithValueCorrection);
+            const { componentInstance } = fixture;
+
+            componentInstance.corrections.set(0);
+            componentInstance.control.setValue({ type: 'currentYear' });
+            fixture.detectChanges();
+
+            expect(componentInstance.corrections()).toBe(1);
+        });
+    });
+
+    describe('Accessibility', () => {
+        it('should keep the radiogroup free of anything but radios', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { debugElement } = fixture;
+
+            openPopover(fixture);
+
+            // The borders are a sibling of the radiogroup, not a descendant of it.
+            const container = getRangeElement(debugElement).parentElement!;
+            const radioGroup = container.querySelector('kbq-radio-group')!;
+
+            expect(radioGroup).toBeTruthy();
+            expect(radioGroup.querySelectorAll('input:not(.kbq-radio-input)').length).toBe(0);
+            expect(radioGroup.querySelectorAll('kbq-form-field').length).toBe(0);
+        }));
+
+        it('should name each date and time field with its from/to prefix', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { debugElement } = fixture;
+
+            openPopover(fixture);
+
+            const range = getRangeElement(debugElement);
+            const prefixes = Array.from(range.querySelectorAll('.kbq-time-range-editor__date-time-prefix'));
+            const inputs = Array.from(range.querySelectorAll<HTMLInputElement>('input'));
+
+            expect(prefixes.map((prefix) => prefix.id)).toEqual([
+                expect.stringMatching(/^kbq-time-range-editor-from-\d+$/),
+                expect.stringMatching(/^kbq-time-range-editor-to-\d+$/)
+            ]);
+            // Both fields of a pair take the prefix as part of their accessible name.
+            expect(inputs.map((input) => input.getAttribute('aria-labelledby'))).toEqual([
+                prefixes[0].id,
+                prefixes[0].id,
+                prefixes[1].id,
+                prefixes[1].id
+            ]);
+            expect(range.getAttribute('aria-label')).toBe(ruRULocaleData.timeRange.editor.rangeLabel);
+        }));
+
+        it('should not wrap the popover actions in an unnamed group', fakeAsync(() => {
+            const fixture = setup(TestComponentWithRange);
+            const { debugElement } = fixture;
+
+            openPopover(fixture);
+
+            expect(
+                debugElement.query(By.css('.kbq-time-range__buttons')).nativeElement.getAttribute('role')
+            ).toBeNull();
+        }));
+
+        it(
+            'should have no axe violations with the editor open',
+            async () => {
+                const fixture = setup(TestComponentWithRange);
+                const { debugElement } = fixture;
+
+                getTriggerNativeElement(debugElement).click();
+                await fixture.whenStable();
+                fixture.detectChanges();
+
+                const editor = debugElement.query(By.directive(KbqTimeRangeEditor)).nativeElement;
+
+                expect(await axe(editor)).toHaveNoViolations();
+            },
+            axeTimeout
+        );
     });
 });
 
@@ -1188,7 +1461,7 @@ export class TestComponentWithInputs {
             [availableTimeRangeTypes]="availableTimeRangeTypes()"
             [nonNullable]="nonNullable()"
             [formControl]="control"
-            (valueCorrected)="valueCorrected.set($event)"
+            (valueCorrected)="onValueCorrected($event)"
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -1201,6 +1474,13 @@ export class TestComponentWithValueCorrection {
         startDateTime: '2024-01-01T00:00:00.000Z'
     });
     valueCorrected = signal<KbqTimeRangeRange | undefined>(undefined);
+    /** Every emission is counted: "did it fire at all" and "did it fire twice" are different bugs. */
+    corrections = signal(0);
+
+    onValueCorrected(value: KbqTimeRangeRange): void {
+        this.valueCorrected.set(value);
+        this.corrections.update((count) => count + 1);
+    }
 }
 
 @Component({
@@ -1226,6 +1506,35 @@ export class TestComponentWithValueCorrection {
     }
 })
 export class TestTimeRangeCustomOption {}
+
+@Component({
+    imports: [KbqTimeRange, ReactiveFormsModule],
+    template: `
+        <kbq-time-range [availableTimeRangeTypes]="['lastHour', 'last24Hours', 'range']" [formControl]="control" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentWithPresets {
+    control = new FormControl<KbqTimeRangeRange>({ type: 'lastHour' }, { nonNullable: true });
+}
+
+@Component({
+    imports: [KbqTimeRangeModule, ReactiveFormsModule, KbqFormFieldModule],
+    template: `
+        <ng-template #titleAsFormField let-context>
+            <kbq-form-field>
+                <kbq-label>Period</kbq-label>
+                <kbq-time-range-title-as-control>{{ context.formattedDate }}</kbq-time-range-title-as-control>
+            </kbq-form-field>
+        </ng-template>
+
+        <kbq-time-range [titleTemplate]="titleAsFormField" [nonNullable]="false" [formControl]="control" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestComponentAsFormField {
+    control = new FormControl<KbqTimeRangeRange | null>({ type: 'lastHour' }, [Validators.required]);
+}
 
 @Component({
     imports: [KbqTimeRangeModule, KbqFormFieldModule],
