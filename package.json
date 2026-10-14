@@ -326,6 +326,7 @@
         "stylelint:fix": "yarn run stylelint --fix",
         "cspell": "cspell '**/*.{md,mdx}' --unique",
         "check-e2e-types": "tsc -p tsconfig.playwright-spec.json --noEmit",
+        "check-spec-types": "tsc -p tsconfig.spec.json --noEmit",
         "prettier": "prettier --check . --ignore-unknown",
         "prettier:fix": "yarn run prettier --write"
     },

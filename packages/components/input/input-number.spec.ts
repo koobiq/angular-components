@@ -29,18 +29,16 @@ import {
     dispatchKeyboardEvent,
     ruRUFormattersData
 } from '@koobiq/components/core';
-import {
-    KBQ_STEPPER_INITIAL_TIMEOUT,
-    KBQ_STEPPER_INTERVAL_DELAY,
-    KbqFormField,
-    KbqFormFieldModule,
-    getKbqFormFieldYouCanNotUseCleanerInNumberInputError
-} from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { axe } from 'jest-axe';
 import { BIG_STEP, KbqInput, KbqInputModule, KbqNumberInput, SMALL_STEP, add, getPrecision } from './index';
 
 import type { Mock } from 'vitest';
 const defaultLocaleGroupSep = ruRUFormattersData.input.number.viewGroupSeparator;
+
+// The stepper's long-press timings, which are internal to the form-field entry point.
+const KBQ_STEPPER_INITIAL_TIMEOUT = 300;
+const KBQ_STEPPER_INTERVAL_DELAY = 75;
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -467,7 +465,7 @@ describe('KbqNumberInput', () => {
 
         const fixture = TestBed.createComponent(NumberInputWithCleaner);
 
-        expect(() => fixture.detectChanges()).toThrow(getKbqFormFieldYouCanNotUseCleanerInNumberInputError());
+        expect(() => fixture.detectChanges()).toThrow(`You can't use kbq-cleaner with input that have type="number"`);
     });
 
     it('should throw an exception with kbq-cleaner', async () => {

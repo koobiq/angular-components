@@ -118,6 +118,7 @@ yarn run unit:schematics # Run schematics tests
 yarn run unit:cli
 yarn run unit:koobiq-docs            # Docs app specs
 yarn run unit:tools                  # Specs under tools/
+yarn run check-spec-types            # Type-check the specs, which Vitest compiles unchecked (part of the lint gate)
 npx vitest run "<TEST_PATH_PATTERN>" # Run specific tests (e.g., npx vitest run packages/components/button/button.component.spec.ts)
 npx vitest run "<TEST_PATH_PATTERN>" -t "<test name pattern>"
 
@@ -198,15 +199,15 @@ The guard reads `dist/components/<name>/index.d.ts`, so build the package first;
 
 Every pull request runs these workflows:
 
-| Workflow                          | What it runs                                                                                                                             |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-tokens-data` |
-| Unit tests                        | `styles:build-all`, then every `unit:*` script except `unit:all`                                                                         |
-| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                         |
-| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`         |
-| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`          |
-| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                   |
-| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                               |
+| Workflow                          | What it runs                                                                                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data` |
+| Unit tests                        | `styles:build-all`, then every `unit:*` script except `unit:all`                                                                                             |
+| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`                             |
+| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`                              |
+| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                       |
+| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                   |
 
 A docs preview is deployed to Firebase for pull requests opened from this repository.
 
