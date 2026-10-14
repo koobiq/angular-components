@@ -1414,7 +1414,7 @@ class SelectWithOwnAriaLabelledby {}
         <kbq-form-field>
             <kbq-select>
                 <kbq-option [value]="'value1'">Not long text</kbq-option>
-                <kbq-option style="max-width: 200px;" [value]="'value2'">
+                <kbq-option style="max-width: 200px;" [value]="'value2'" [kbqTooltipDisabled]="tooltipDisabled">
                     Long long long long Long long long long Long long long long Long long long long Long long long long
                     Long long long long text
                 </kbq-option>
@@ -1441,6 +1441,7 @@ class SelectWithLongOptionText {
     changingLabel: string =
         'Changed Long long long long Long long long long Long long long long Long long long long Long long long long Long long long long text';
     counter: number = 0;
+    tooltipDisabled: boolean | undefined;
 
     changeLabel(): void {
         this.changingLabel = this.changingLabel.concat((this.counter++).toString());
@@ -6073,6 +6074,31 @@ describe('KbqSelect', () => {
 
             expect(directive.disabled).toBe(false);
 
+            flush();
+        }));
+
+        it('should keep kbqTooltipDisabled over an option whose text is clipped', fakeAsync(() => {
+            fixture.componentInstance.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+            const directive = getDebugNode(options[1])!.injector.get(KbqOptionTooltip);
+
+            mockOverflow(options[1]);
+            window.dispatchEvent(new Event('resize'));
+            dispatchMouseEvent(options[1], 'mouseenter');
+            fixture.detectChanges();
+            tick(500);
+            fixture.detectChanges();
+
+            expect(directive.disabled).toBe(true);
+            expect(document.querySelectorAll('.kbq-tooltip__content').length).toBe(0);
+
+            discardPeriodicTasks();
             flush();
         }));
 

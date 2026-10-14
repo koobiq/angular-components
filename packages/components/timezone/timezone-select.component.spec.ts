@@ -106,6 +106,7 @@ const groupedZones: KbqTimezoneGroup[] = [
                                 [value]="zone.id"
                                 [timezone]="zone"
                                 [disabled]="zone.id === disabledFor"
+                                [kbqTooltipDisabled]="tooltipDisabled"
                             />
                         }
                     </kbq-optgroup>
@@ -120,6 +121,7 @@ class BasicTimezoneSelect {
     tabIndexOverride: number = 0;
     panelClass = ['custom-one', 'custom-two'];
     disabledFor = 'Europe/city7';
+    tooltipDisabled: boolean | undefined;
 
     @ViewChild(KbqTimezoneSelect, { static: true }) select: KbqSelect;
     @ViewChildren(KbqTimezoneOption) options: QueryList<KbqTimezoneOption>;
@@ -865,6 +867,33 @@ describe('KbqTimezoneSelect', () => {
             expect(directive.disabled).toBe(false);
 
             flush();
+        }));
+
+        it('should keep kbqTooltipDisabled over an option that wraps beyond the visible rows', fakeAsync(() => {
+            fixture.componentInstance.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            trigger.click();
+            fixture.detectChanges();
+            flush();
+
+            const tooltipContentEl = fixture.componentInstance.options.toArray()[2].tooltipContent.nativeElement;
+            const optionEls = overlayContainerElement.querySelectorAll<HTMLElement>('kbq-timezone-option');
+            const directive = getDebugNode(optionEls[2])!.injector.get(KbqTimezoneOptionTooltip);
+
+            jest.spyOn(tooltipContentEl, 'getClientRects').mockReturnValue(
+                new Array(TOOLTIP_VISIBLE_ROWS_COUNT + 1).fill({}) as unknown as DOMRectList
+            );
+            window.dispatchEvent(new Event('resize'));
+            dispatchMouseEvent(optionEls[2], 'mouseenter');
+            fixture.detectChanges();
+            tick(500);
+            fixture.detectChanges();
+
+            expect(directive.disabled).toBe(true);
+            expect(document.querySelectorAll('.kbq-tooltip__content').length).toBe(0);
+
+            discardPeriodicTasks();
         }));
     });
 

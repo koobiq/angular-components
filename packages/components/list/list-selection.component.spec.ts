@@ -17,10 +17,24 @@ import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { A, C, DOWN_ARROW, END, ENTER, HOME, PAGE_DOWN, PAGE_UP, SPACE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
+import {
+    A,
+    C,
+    DOWN_ARROW,
+    END,
+    ENTER,
+    ESCAPE,
+    HOME,
+    PAGE_DOWN,
+    PAGE_UP,
+    SPACE,
+    TAB,
+    UP_ARROW
+} from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, createMouseEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { KbqOptionActionComponent, KbqOptionModule } from '@koobiq/components/core';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import {
     KbqListCopyEvent,
     KbqListModule,
@@ -1166,6 +1180,54 @@ describe('KbqListSelection onCopy event', () => {
     }));
 });
 
+describe('KbqListSelection option action with a tooltip', () => {
+    let fixture: ComponentFixture<SelectionListWithActionButtonTooltip>;
+    let actionElement: HTMLElement;
+    let dropdownTrigger: KbqDropdownTrigger;
+    let tooltip: KbqTooltipTrigger;
+
+    const closeDropdownWithEscape = () => {
+        dropdownTrigger.openedBy = 'keyboard';
+        dropdownTrigger.open();
+        fixture.detectChanges();
+        flush();
+
+        dispatchKeyboardEvent(document.querySelector('.kbq-dropdown__panel')!, 'keydown', ESCAPE);
+        fixture.detectChanges();
+        flush();
+        fixture.detectChanges();
+    };
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({ imports: [SelectionListWithActionButtonTooltip, NoopAnimationsModule] });
+
+        fixture = TestBed.createComponent(SelectionListWithActionButtonTooltip);
+        fixture.detectChanges();
+
+        const action = fixture.debugElement.query(By.directive(KbqOptionActionComponent));
+
+        actionElement = action.nativeElement;
+        dropdownTrigger = action.injector.get(KbqDropdownTrigger);
+        tooltip = action.injector.get(KbqTooltipTrigger);
+    });
+
+    it('should not show the tooltip when keyboard focus returns from the dropdown', fakeAsync(() => {
+        closeDropdownWithEscape();
+
+        expect(document.activeElement).toBe(actionElement);
+        expect(document.querySelector('.kbq-tooltip__content')).toBeNull();
+    }));
+
+    it('should keep kbqTooltipDisabled after the dropdown closes', fakeAsync(() => {
+        fixture.componentInstance.tooltipDisabled = true;
+        fixture.detectChanges();
+
+        closeDropdownWithEscape();
+
+        expect(tooltip.disabled).toBe(true);
+    }));
+});
+
 @Component({
     imports: [
         KbqListModule,
@@ -1314,6 +1376,34 @@ class SelectionListFocusStates {
     `
 })
 class SelectionListWithActionButton {}
+
+@Component({
+    imports: [
+        KbqListModule,
+        KbqOptionModule,
+        KbqDropdownModule,
+        KbqToolTipModule
+    ],
+    template: `
+        <kbq-list-selection>
+            <kbq-list-option [value]="'option_1'">
+                Option 1
+                <kbq-option-action
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [kbqTooltip]="'Tooltip text'"
+                    [kbqTooltipDisabled]="tooltipDisabled"
+                />
+            </kbq-list-option>
+        </kbq-list-selection>
+
+        <kbq-dropdown #dropdown>
+            <button kbq-dropdown-item>action</button>
+        </kbq-dropdown>
+    `
+})
+class SelectionListWithActionButtonTooltip {
+    tooltipDisabled: boolean | undefined;
+}
 
 @Component({
     imports: [

@@ -30,6 +30,12 @@ import { debounceTime } from 'rxjs/operators';
     }
 })
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
+    /**
+     * The hint spells out what the split hid, so `kbqTooltipDisabled="false"` cannot conjure one for a name
+     * that fits.
+     * @docs-private */
+    protected override readonly derivedDisabledWins = true;
+
     private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     /**
@@ -185,7 +191,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
             dataTextStart.innerText = start;
             dataTextEnd.innerText = end;
 
-            this.disabled = !truncated;
+            this.setDerivedDisabled(!truncated);
             this.cdr.markForCheck();
         });
 

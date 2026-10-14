@@ -348,6 +348,35 @@ describe('KbqTooltip', () => {
             expect(triggerElement.getAttribute('tabindex')).toBe('0');
             expect(component.linkTooltip().disabled).toBe(false);
         }));
+
+        it('should keep [kbqTooltipDisabled] when the wrapped control changes', () => {
+            component.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            component.disableState = true;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(true);
+        });
+
+        it('should leave the decision to the wrapped control while [kbqTooltipDisabled] is undefined', () => {
+            expect(component.boundTooltip().disabled).toBe(true);
+
+            component.disableState = true;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(false);
+
+            component.tooltipDisabled = true;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(true);
+
+            component.tooltipDisabled = undefined;
+            fixture.detectChanges();
+
+            expect(component.boundTooltip().disabled).toBe(false);
+        });
     });
 });
 
@@ -435,6 +464,15 @@ class KbqTooltipWithTemplateRefContent {
                 kbq-link
             </a>
         </div>
+
+        <div
+            #boundTooltip="kbqTooltip"
+            kbqTooltip="BOUND"
+            [forDisabledComponent]="boundButton"
+            [kbqTooltipDisabled]="tooltipDisabled"
+        >
+            <button #boundButton kbq-button [disabled]="disableState">Bound</button>
+        </div>
     `
 })
 class KbqTooltipForDisabledComponent {
@@ -444,6 +482,8 @@ class KbqTooltipForDisabledComponent {
     readonly iconButtonTooltip = viewChild.required<KbqTooltipTrigger>('iconButtonTooltip');
     readonly link = viewChild.required(KbqLink);
     readonly linkTooltip = viewChild.required<KbqTooltipTrigger>('linkTooltip');
+    readonly boundTooltip = viewChild.required<KbqTooltipTrigger>('boundTooltip');
 
     disableState: boolean = false;
+    tooltipDisabled: boolean | undefined;
 }

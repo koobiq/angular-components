@@ -426,6 +426,29 @@ describe('KbqTitleDirective', () => {
 
             expect(directive.disabled).toBe(true);
         });
+
+        it('should keep kbqTooltipDisabled when content is overflown', () => {
+            const { debugElement } = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(debugElement);
+            const el = debugElement.query(By.directive(KbqTitleDirective)).nativeElement;
+
+            directive.disabled = true;
+            jest.spyOn(el, 'offsetWidth', 'get').mockReturnValue(100);
+            jest.spyOn(el, 'scrollWidth', 'get').mockReturnValue(200);
+            directive.handleElementEnter();
+
+            expect(directive.disabled).toBe(true);
+        });
+
+        it('should not enable the tooltip through kbqTooltipDisabled when content fits', () => {
+            const { debugElement } = createComponent(SimpleTitleComponent);
+            const directive = getTitleDirective(debugElement);
+
+            directive.disabled = false;
+            directive.handleElementEnter();
+
+            expect(directive.disabled).toBe(true);
+        });
     });
 
     describe('hideTooltip()', () => {

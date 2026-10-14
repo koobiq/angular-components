@@ -18,6 +18,12 @@ export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
     }
 })
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+    /**
+     * The hint shows rows the option had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for an
+     * option that fits.
+     * @docs-private */
+    protected override readonly derivedDisabledWins = true;
+
     private readonly option = inject(KbqTimezoneOption);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
@@ -75,7 +81,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     }
 
     handleElementLeave(): void {
-        this.disabled = true;
+        this.setDerivedDisabled(true);
     }
 
     private checkTooltipDisabled = () => {
@@ -83,7 +89,7 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
 
         const count: number = this.option.tooltipContent.nativeElement.getClientRects().length;
 
-        this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;
+        this.setDerivedDisabled(count <= TOOLTIP_VISIBLE_ROWS_COUNT);
 
         this.changeDetectorRef.detectChanges();
     };

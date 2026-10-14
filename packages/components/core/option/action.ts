@@ -139,13 +139,17 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     }
 
     private preventShowingTooltip() {
-        if (!this.option.tooltipTrigger) {
+        const tooltipTrigger = this.option.tooltipTrigger;
+
+        // A tooltip that is disabled already has nothing to suppress, and re-enabling it afterwards would
+        // overwrite the consumer's `kbqTooltipDisabled`.
+        if (!tooltipTrigger || tooltipTrigger.disabled) {
             return;
         }
 
-        this.option.tooltipTrigger.disabled = true;
+        tooltipTrigger.disabled = true;
 
-        setTimeout(() => (this.option.tooltipTrigger.disabled = false));
+        setTimeout(() => (tooltipTrigger.disabled = false));
     }
 }
 

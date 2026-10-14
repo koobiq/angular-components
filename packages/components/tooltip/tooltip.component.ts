@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Point } from '@angular/cdk/drag-drop';
 import { Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
@@ -211,18 +211,36 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         this.updateData();
     }
 
+    /**
+     * Input (`kbqTooltipDisabled`) controlling whether the tooltip is disabled; setting it to `true` hides it.
+     * `undefined` leaves the decision to the trigger, like an unset input.
+     *
+     * Reads back the *effective* state, which for triggers that derive one of their own (see
+     * `derivedDisabledWins`) is not necessarily the value that was written.
+     */
     @Input('kbqTooltipDisabled')
     get disabled(): boolean {
         return this._disabled;
     }
 
-    set disabled(value) {
-        this._disabled = coerceBooleanProperty(value);
+    set disabled(value: BooleanInput) {
+        this.explicitlyDisabled = value === undefined ? undefined : coerceBooleanProperty(value);
 
-        if (this._disabled) {
-            this.hide();
-        }
+        this.applyDisabled();
     }
+
+    /**
+     * Whether the state this trigger derives means *there is nothing to show*, so an explicit
+     * `kbqTooltipDisabled="false"` cannot override it, as for a hint that repeats text the host never clipped.
+     * Otherwise the explicit value wins in both directions, so `false` on a wrapped control that is not disabled
+     * still asks for a tooltip.
+     * @docs-private */
+    protected readonly derivedDisabledWins: boolean = false;
+
+    // Kept apart so the consumer's binding and the state the trigger derives cannot overwrite each other,
+    // whichever order they are written in; `foldDisabled()` combines them.
+    private explicitlyDisabled: boolean | undefined;
+    private derivedDisabled: boolean | undefined;
 
     @Input('kbqEnterDelay') enterDelay = 400;
     @Input('kbqLeaveDelay') leaveDelay = 0;
@@ -316,7 +334,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
                 this.renderer.setAttribute(this.getNativeElement(), 'tabindex', '-1');
             }
 
-            this.disabled = !disabled;
+            this.setDerivedDisabled(!disabled);
         });
     }
 
@@ -434,6 +452,38 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
 
         this.strategy.setOrigin(point);
+    }
+
+    /**
+     * Records the state this trigger derives from what it renders — the wrapped control being disabled, text
+     * overflow in `KbqTitleDirective` and the option tooltips — without overwriting `kbqTooltipDisabled`.
+     * @docs-private */
+    protected setDerivedDisabled(value: boolean): void {
+        this.derivedDisabled = value;
+
+        this.applyDisabled();
+    }
+
+    private applyDisabled(): void {
+        const next = this.foldDisabled();
+
+        // Derived states are re-stated on every resize, content mutation and pointer sweep, and most of those
+        // repeat the previous answer, which must not reach `hide()` again.
+        if (next === this._disabled) return;
+
+        this._disabled = next;
+
+        if (this._disabled) {
+            this.hide();
+        }
+    }
+
+    private foldDisabled(): boolean {
+        if (this.derivedDisabledWins) {
+            return this.explicitlyDisabled === true || (this.derivedDisabled ?? false);
+        }
+
+        return this.explicitlyDisabled ?? this.derivedDisabled ?? false;
     }
 }
 

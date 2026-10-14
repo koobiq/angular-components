@@ -32,6 +32,12 @@ import { debounceTime } from 'rxjs/operators';
     }
 })
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+    /**
+     * The hint repeats text the host had to clip, so `kbqTooltipDisabled="false"` cannot conjure one for a
+     * fully visible title.
+     * @docs-private */
+    protected override readonly derivedDisabledWins = true;
+
     private readonly nativeElement = kbqInjectNativeElement();
 
     /** SSR-safe window reference used for `getComputedStyle` reads. */
@@ -170,13 +176,13 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
 
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.debounceInterval))
-            .subscribe(() => (this.disabled = !this.isOverflown));
+            .subscribe(() => this.setDerivedDisabled(!this.isOverflown));
 
         this.contentObserverSubscription = this.contentObserver
             .observe(this.parent)
             .pipe(throttleTime(this.debounceInterval))
             .subscribe(() => {
-                this.disabled = !this.isOverflown;
+                this.setDerivedDisabled(!this.isOverflown);
                 this.content = this.viewValue;
             });
 
@@ -195,10 +201,10 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     }
 
     handleElementEnter() {
-        this.disabled = !this.isOverflown;
+        this.setDerivedDisabled(!this.isOverflown);
     }
 
     hideTooltip() {
-        this.disabled = true;
+        this.setDerivedDisabled(true);
     }
 }
