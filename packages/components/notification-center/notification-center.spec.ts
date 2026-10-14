@@ -2,30 +2,40 @@ import { CdkTrapFocus, InputModalityDetector } from '@angular/cdk/a11y';
 import { ENTER, ESCAPE } from '@angular/cdk/keycodes';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/scrolling';
-import { Component, DebugElement, ElementRef, Provider, TemplateRef, Type, viewChild } from '@angular/core';
+import {
+    Component,
+    DebugElement,
+    effect,
+    ElementRef,
+    Provider,
+    signal,
+    TemplateRef,
+    Type,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqMomentDateModule } from '@koobiq/angular-moment-adapter/adapter';
 import {
+    dispatchFakeEvent,
+    dispatchKeyboardEvent,
+    enUSLocaleData,
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
     KbqLocaleService,
     KbqPopUpPlacementValues,
     KbqStickToWindowPlacementValues,
     PopUpPlacements,
-    dispatchFakeEvent,
-    dispatchKeyboardEvent,
-    enUSLocaleData,
     ruRULocaleData
 } from '@koobiq/components/core';
 import {
+    kbqNotificationCenterLocaleConfigurationProvider,
     KbqNotificationCenterModule,
     KbqNotificationCenterService,
     KbqNotificationCenterTrigger,
     KbqNotificationItem,
-    KbqNotificationsGroup,
-    kbqNotificationCenterLocaleConfigurationProvider
+    KbqNotificationsGroup
 } from '@koobiq/components/notification-center';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -1417,6 +1427,67 @@ describe('KbqNotificationCenter', () => {
             expect(item.read).toBe(true);
             // The correctly typed item must be emitted, not the toast payload it was matched by.
             expect(onReadSpy).toHaveBeenCalledWith(item);
+        });
+    });
+
+    describe('reactive contexts', () => {
+        beforeEach(() => setUpDefaultFixture());
+
+        it('lets an effect read and reassign items without running again on its own write', () => {
+            const service = getService();
+            const title = signal('a');
+            let runs = 0;
+
+            TestBed.runInInjectionContext(() =>
+                effect(() => {
+                    const current = title();
+
+                    // A guard against a loop, which would hang the test otherwise.
+                    if (++runs > 10) return;
+
+                    const items = service.items;
+
+                    if (!items.length) return;
+
+                    service.items = items.map((item) => ({ ...item, title: current }));
+                })
+            );
+            TestBed.tick();
+
+            service.items = [createItem('x')];
+            TestBed.tick();
+            title.set('b');
+            TestBed.tick();
+
+            expect(runs).toBe(2);
+            expect(service.items.map((item) => item.title)).toEqual(['b']);
+        });
+
+        it('does not make an effect that calls a command depend on what the open panel reads', () => {
+            vi.useFakeTimers();
+
+            const service = getService();
+            const load = signal(0);
+            let runs = 0;
+
+            openCenter();
+
+            TestBed.runInInjectionContext(() =>
+                effect(() => {
+                    load();
+
+                    if (++runs > 10) return;
+
+                    service.setLoadingMore(true);
+                })
+            );
+            TestBed.tick();
+
+            service.setLoadingMore(false);
+            TestBed.tick();
+
+            expect(runs).toBe(1);
+            expect(service.loadingMore()).toBe(false);
         });
     });
 

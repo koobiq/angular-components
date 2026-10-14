@@ -241,7 +241,7 @@ export class KbqNotificationCenterComponent extends KbqPopUp implements AfterVie
             return this.localeConfiguration().failedToLoadNotifications;
         }
 
-        return this.service.isEmpty ? this.localeConfiguration().noNotifications : '';
+        return this.service.empty() ? this.localeConfiguration().noNotifications : '';
     }
 
     /** @docs-private */

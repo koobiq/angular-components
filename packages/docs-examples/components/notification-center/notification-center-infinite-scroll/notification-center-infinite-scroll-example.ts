@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, untracked } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -116,8 +116,7 @@ export class NotificationCenterInfiniteScrollExample {
         // The loaded notifications follow a locale switch; their ids are their positions in the list.
         effect(() => {
             const text = this.text();
-            // Untracked: `items` is a signal this effect writes.
-            const items = untracked(() => this.notificationService.items);
+            const items = this.notificationService.items;
 
             if (!items.length) return;
 

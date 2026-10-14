@@ -1,14 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    computed,
-    effect,
-    inject,
-    TemplateRef,
-    untracked,
-    viewChild
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, TemplateRef, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -126,8 +117,7 @@ export class NotificationCenterOverviewExample {
             this.notificationService.items = createNotifications(
                 this.text(),
                 { actions, caption: this.captionTemplate() },
-                // Untracked: `items` is a signal this effect writes.
-                untracked(() => this.notificationService.items)
+                this.notificationService.items
             );
         });
     }

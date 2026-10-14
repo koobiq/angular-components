@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, TemplateRef, untracked, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, TemplateRef, viewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqFormattersModule } from '@koobiq/components/core';
@@ -51,8 +51,7 @@ export class NotificationCenterPopoverExample {
             this.notificationService.items = createNotifications(
                 this.text(),
                 { actions },
-                // Untracked: `items` is a signal this effect writes.
-                untracked(() => this.notificationService.items)
+                this.notificationService.items
             );
         });
     }
