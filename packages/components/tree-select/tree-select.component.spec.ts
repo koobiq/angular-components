@@ -3417,6 +3417,32 @@ describe('KbqTreeSelect', () => {
                 expect(control.value).toBe('rootNode_1');
                 expect(control.pristine).toBe(true);
             });
+
+            it('should keep the control pristine when a value is written while another one is applied', async () => {
+                const { control } = fixture.componentInstance;
+                const select = fixture.componentInstance.select();
+
+                control.setValue('rootNode_1');
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                let written = false;
+                // Writes on the first change of the next write, before that write has selected its own node.
+                const subscription = select.selectionModel.changed.subscribe(() => {
+                    if (written) return;
+
+                    written = true;
+                    select.writeValue('Downloads');
+                });
+
+                control.setValue('Pictures');
+                subscription.unsubscribe();
+                fixture.detectChanges();
+                await vi.runOnlyPendingTimersAsync();
+
+                expect(written).toBe(true);
+                expect(control.pristine).toBe(true);
+            });
         });
 
         describe('Clear value', () => {

@@ -1785,6 +1785,9 @@ export class KbqTreeSelect
      * found with the designated value, the select trigger is cleared.
      */
     private setSelectionByValue(value: any | any[]) {
+        // Restored rather than cleared: a value written while this one is applied must not end the outer write.
+        const wasWritingValue = this.writingValue;
+
         this.writingValue = true;
 
         try {
@@ -1800,7 +1803,7 @@ export class KbqTreeSelect
                 this.tree()!.setOptionsFromValues([value]);
             }
         } finally {
-            this.writingValue = false;
+            this.writingValue = wasWritingValue;
         }
 
         this.changeDetectorRef.detectChanges();
