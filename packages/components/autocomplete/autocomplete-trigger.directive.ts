@@ -73,8 +73,8 @@ import {
     UP_ARROW
 } from '@koobiq/components/core';
 import { KBQ_FORM_FIELD } from '@koobiq/components/form-field';
-import { defer, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
-import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { EMPTY, fromEvent, merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { delay, filter, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import { KbqAutocomplete } from './autocomplete.component';
 
@@ -173,21 +173,6 @@ export class KbqAutocompleteTrigger
 
     protected readonly document = inject<Document>(DOCUMENT);
 
-    readonly optionSelections: Observable<KbqOptionSelectionChange> = defer(() => {
-        const autocomplete = this.autocomplete();
-
-        // The key manager is created over the options in `ngAfterContentInit`, before which they are not settled.
-        if (autocomplete?.keyManager) {
-            return merge(...autocomplete.options.map((option) => option.onSelectionChange));
-        }
-
-        // If there are any subscribers before `ngAfterViewInit`, the `autocomplete` will be undefined.
-        // Return a stream that we'll replace with the real one once everything is in place.
-        return this.viewInitialized.pipe(switchMap(() => this.optionSelections));
-    });
-
-    private readonly viewInitialized = new Subject<void>();
-
     /** The currently active option, coerced to MatOption type. */
     get activeOption(): KbqOption | null {
         return this.autocomplete()?.keyManager?.activeItem;
@@ -205,6 +190,9 @@ export class KbqAutocompleteTrigger
         return this.overlayAttached();
     }
 
+    /** The bound panel, replayed to every subscriber: it may be bound, or rendered, after they subscribe. */
+    private readonly autocompleteChanges = toObservable(this.autocomplete);
+
     /**
      * Emits `true` when the panel opens and `false` when it closes. Part of the `KbqSiblingPopup`
      * contract.
@@ -212,7 +200,7 @@ export class KbqAutocompleteTrigger
      * Built on top of the `autocomplete` signal rather than read once: the panel is bound after the consumers
      * of this stream are created (a tooltip on the same element subscribes in its constructor).
      */
-    readonly openedChange: Observable<boolean> = toObservable(this.autocomplete).pipe(
+    readonly openedChange: Observable<boolean> = this.autocompleteChanges.pipe(
         filter(Boolean),
         switchMap((autocomplete) =>
             merge(
@@ -220,6 +208,20 @@ export class KbqAutocompleteTrigger
                 outputToObservable(autocomplete.closed).pipe(map(() => false))
             )
         )
+    );
+
+    // Follows the bound panel and its options rather than reading them once: either may arrive after a subscriber.
+    readonly optionSelections: Observable<KbqOptionSelectionChange> = this.autocompleteChanges.pipe(
+        switchMap((autocomplete) => {
+            if (!autocomplete) return EMPTY;
+
+            const { options } = autocomplete;
+
+            return options.changes.pipe(
+                startWith(options),
+                switchMap(() => merge(...options.map((option) => option.onSelectionChange)))
+            );
+        })
     );
 
     /**
@@ -387,9 +389,6 @@ export class KbqAutocompleteTrigger
     }
 
     ngAfterViewInit(): void {
-        this.viewInitialized.next();
-        this.viewInitialized.complete();
-
         const autocomplete = this.autocomplete();
 
         if (autocomplete) {

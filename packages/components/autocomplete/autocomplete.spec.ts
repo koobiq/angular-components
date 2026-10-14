@@ -1599,6 +1599,28 @@ describe('KbqAutocomplete', () => {
         });
     });
 
+    describe('with the panel rendered after the trigger', () => {
+        it('should report selections to a subscriber that arrived before the panel', async () => {
+            const fixture = createComponent(AutocompleteRenderedLater);
+
+            fixture.detectChanges();
+
+            const selections: KbqOptionSelectionChange[] = [];
+            const subscription = fixture.componentInstance
+                .trigger()
+                .optionSelections.subscribe((selection) => selections.push(selection));
+
+            fixture.componentInstance.panelShown.set(true);
+            await fixture.whenStable();
+
+            fixture.componentInstance.autocomplete()!.options.first.selectViaInteraction();
+
+            expect(selections).toEqual([expect.any(KbqOptionSelectionChange)]);
+
+            subscription.unsubscribe();
+        });
+    });
+
     describe('misc', () => {
         it('should allow basic use without any forms directives', () => {
             expect(() => {
@@ -3809,6 +3831,24 @@ class AutocompleteWithNativeInput {
 class AutocompleteWithoutPanel {
     readonly trigger = viewChild.required(KbqAutocompleteTrigger);
     control = new UntypedFormControl();
+}
+
+@Component({
+    imports: [KbqAutocompleteModule],
+    template: `
+        <input placeholder="Choose" [kbqAutocomplete]="autocomplete()!" />
+
+        @if (panelShown()) {
+            <kbq-autocomplete>
+                <kbq-option value="One">One</kbq-option>
+            </kbq-autocomplete>
+        }
+    `
+})
+class AutocompleteRenderedLater {
+    readonly panelShown = signal(false);
+    readonly trigger = viewChild.required(KbqAutocompleteTrigger);
+    readonly autocomplete = viewChild(KbqAutocomplete);
 }
 
 @Component({
