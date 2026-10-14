@@ -583,6 +583,9 @@ export class KbqListSelection<T = any>
     /** Whether a value report is already queued for the end of the current tick. */
     private pendingValueReport = false;
 
+    /** The `multiple` binding the mode was last set from, see `applyMultipleInput`. */
+    private appliedMultipleInput: KbqMultipleInput | undefined;
+
     private destroyed = false;
 
     constructor() {
@@ -611,14 +614,14 @@ export class KbqListSelection<T = any>
 
         this.setupDropListInitialProperties();
 
-        // The inputs below stay `undefined` until a template binds them, so an unbound one does not override
-        // what the `ControlValueAccessor` or the roving focus wrote.
         effect(() => {
-            const multiple = this.multipleInput();
+            this.multipleInput();
 
-            if (multiple !== undefined) untracked(() => this.setMultipleMode(resolveMultipleMode(multiple)));
+            untracked(() => this.applyMultipleInput());
         });
 
+        // The inputs below stay `undefined` until a template binds them, so an unbound one does not override
+        // what the `ControlValueAccessor` or the roving focus wrote.
         effect(() => {
             const tabIndex = this.tabIndexInput();
 
@@ -702,6 +705,22 @@ export class KbqListSelection<T = any>
      */
     private get allowSelectAllDeselect(): boolean {
         return this.showSelectAll || this.selectAllToggle();
+    }
+
+    /**
+     * Sets the mode from the `multiple` binding, once per bound value: an unbound input leaves what the
+     * {@link multipleMode} setter wrote, and a value bound back to `undefined` means single selection.
+     *
+     * Called by an effect, and by `writeValue` ahead of it: a forms directive on this element writes the
+     * value from its own `ngOnChanges`, which runs before any effect of the view.
+     */
+    private applyMultipleInput(): void {
+        const multiple = this.multipleInput();
+
+        if (multiple === this.appliedMultipleInput) return;
+
+        this.appliedMultipleInput = multiple;
+        this.setMultipleMode(resolveMultipleMode(multiple));
     }
 
     /**
@@ -1000,6 +1019,7 @@ export class KbqListSelection<T = any>
 
     // Implemented as part of ControlValueAccessor.
     writeValue(values: T[] | T | null): void {
+        this.applyMultipleInput();
         this.hasWrittenValue = true;
 
         // A form control may push a bare value instead of an array; normalize it here so that
