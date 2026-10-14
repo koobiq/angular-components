@@ -412,14 +412,11 @@ export class KbqTag
      * This is the affordance, not the channel: `remove()` stays open so the list can still clear a
      * disabled tag when `clearPredicate` asks for it.
      */
-    // Stays an accessor for the same reason `disabled` is one: it folds in the tag list's form control.
     get canRemove(): boolean {
         return this.removable() && !this.disabled;
     }
 
     /** Tab order of the tag. */
-    // Stays an accessor: it folds in `disabled`, which reads the tag list's form control - a plain property
-    // a `computed` would not see change.
     get tabindex() {
         if (this.disabled) return null;
         if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;

@@ -200,9 +200,6 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges, DoCheck {
     });
 
     /** Whether the input is disabled. */
-    // Stays an accessor: it folds in the tag list's state, which comes from the list's form control when
-    // there is one. That is a plain property rather than a signal, so a `computed` would cache it and
-    // miss `control.disable()`.
     get disabled(): boolean {
         return this._disabled() || (this._tagList && this._tagList.disabled());
     }

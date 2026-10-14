@@ -517,6 +517,25 @@ describe(KbqTagList.name, () => {
 
                     expect(tagListInstance.keyManager.activeItemIndex).toBe(tags.length - 1);
                 });
+
+                // A focused element taken out of the DOM fires no blur, so focus quietly falls to the body.
+                it('should stop reporting focus once the focused last tag is destroyed', async () => {
+                    vi.useFakeTimers();
+
+                    testComponent.tags = [0];
+                    fixture.detectChanges();
+
+                    tags.first.focus();
+                    await vi.advanceTimersByTimeAsync(0);
+
+                    expect(tagListInstance.focused()).toBe(true);
+
+                    testComponent.tags = [];
+                    fixture.detectChanges();
+
+                    expect(document.activeElement).toBe(document.body);
+                    expect(tagListInstance.focused()).toBe(false);
+                });
             });
         });
 
@@ -843,13 +862,13 @@ describe(KbqTagList.name, () => {
                 nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
             });
 
-            // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
+            // KbqTagList.writeValue only stores the value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
             it.skip('should set the view value from the form', () => {
                 const tagList = fixture.componentInstance.tagList();
                 const array = fixture.componentInstance.tags();
 
-                expect(tagList.value).toBeFalsy();
+                expect(tagList.value()).toBeFalsy();
 
                 fixture.componentInstance.control.setValue('pizza-1');
                 fixture.detectChanges();
@@ -857,7 +876,7 @@ describe(KbqTagList.name, () => {
                 expect(array[1].selected()).toBeTruthy();
             });
 
-            // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
+            // KbqTagList.writeValue only stores the value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
             it.skip('should update the form value when the view changes', () => {
                 expect(fixture.componentInstance.control.value).toEqual(null);
@@ -908,7 +927,7 @@ describe(KbqTagList.name, () => {
                 expect(fixture.componentInstance.control.touched).toBe(false);
             });
 
-            // KbqTagList.writeValue only assigns _value, and the control value is derived from the rendered
+            // KbqTagList.writeValue only stores the value, and the control value is derived from the rendered
             // tags, so neither direction of this binding is implemented.
             it.skip("should set the control to dirty when the tag list's value changes in the DOM", () => {
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
@@ -1038,6 +1057,30 @@ describe(KbqTagList.name, () => {
             await vi.advanceTimersByTimeAsync(100);
 
             expect(fixture.componentInstance.control.dirty).toEqual(true);
+        });
+
+        // The removed tag fires no blur, so only the list can tell that it no longer holds the focus.
+        it('should set the control to touched when the input loses the focus a removed last tag handed it', async () => {
+            vi.useFakeTimers();
+
+            fixture.componentInstance.foods = [{ value: 'steak-0', viewValue: 'Steak' }];
+            fixture.detectChanges();
+
+            const tag = fixture.componentInstance.tagList().tags.first;
+            const nativeInput: HTMLInputElement = fixture.nativeElement.querySelector('input');
+
+            tag.focus();
+            await vi.advanceTimersByTimeAsync(0);
+
+            dispatchKeyboardEvent(tag.elementRef.nativeElement, 'keydown', BACKSPACE);
+            fixture.detectChanges();
+
+            expect(document.activeElement).toBe(nativeInput);
+
+            nativeInput.blur();
+            await vi.advanceTimersByTimeAsync(0);
+
+            expect(fixture.componentInstance.control.touched).toBe(true);
         });
 
         it('should set the control to dirty when a tag is added via input', async () => {
@@ -2467,6 +2510,21 @@ describe(KbqTagList.name, () => {
             fixture.detectChanges();
 
             expect(tags().every((tag) => tag.classList.contains('kbq-disabled'))).toBe(true);
+        });
+
+        it('should mark the tag list disabled only while it is disabled', () => {
+            const fixture = createComponent(StandardTagList);
+
+            fixture.detectChanges();
+
+            const tagList = getTagListElement(fixture.debugElement);
+
+            expect(tagList.classList).not.toContain('kbq-disabled');
+
+            fixture.componentInstance.disabled = true;
+            fixture.detectChanges();
+
+            expect(tagList.classList).toContain('kbq-disabled');
         });
     });
 
