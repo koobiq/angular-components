@@ -2,11 +2,15 @@
  * Replacement data for the v20.0.0 deprecated API removal migration.
  *
  * Each entry uses a RegExp source string in `from` and a literal `to`. The
- * RegExp is compiled with the `g` flag inside the migration driver.
+ * RegExp is compiled with the `g` flag inside the migration driver. An entry
+ * that deletes an element of a list takes one of its commas with it
+ * (`listItemPattern`): nothing tidies the file afterwards.
  *
  * Three buckets are emitted so the schematic can apply each to the right
  * file kind (.ts, .html / inline-template strings, .scss).
  */
+
+import { listItemPattern } from '../../utils/list-item-pattern';
 
 export interface Replacement {
     from: string;
@@ -82,22 +86,22 @@ export const tsReplacements: Replacement[] = [
     { from: '\\bKbqDatepickerToggle\\b(?!Icon)', to: 'KbqDatepickerToggleIconComponent' },
     { from: '\\bKbqFilterBarSearch\\b', to: 'KbqSearchExpandable' },
     {
-        from: '\\bKbqInputFileLabel\\b',
+        from: listItemPattern('\\bKbqInputFileLabel\\b'),
         to: '',
         removeImport: { symbol: 'KbqInputFileLabel', from: '@koobiq/components/file-upload' }
     },
     {
-        from: '\\bKbqInputFile\\b',
+        from: listItemPattern('\\bKbqInputFile\\b'),
         to: '',
         removeImport: { symbol: 'KbqInputFile', from: '@koobiq/components/file-upload' }
     },
     {
-        from: '\\bKbqFileValidatorFn\\b',
+        from: listItemPattern('\\bKbqFileValidatorFn\\b'),
         to: '',
         removeImport: { symbol: 'KbqFileValidatorFn', from: '@koobiq/components/file-upload' }
     },
     {
-        from: '\\bKbqValidationOptions\\b',
+        from: listItemPattern('\\bKbqValidationOptions\\b'),
         to: '',
         removeImport: { symbol: 'KbqValidationOptions', from: '@koobiq/components/core' }
     },
@@ -111,36 +115,35 @@ export const tsReplacements: Replacement[] = [
 
     // ─── Tokens / function renames ────────────────────────────────────────
     {
-        from: '\\bKBQ_VALIDATION\\b',
+        from: listItemPattern('\\bKBQ_VALIDATION\\b'),
         to: '',
         removeImport: { symbol: 'KBQ_VALIDATION', from: '@koobiq/components/core' }
     },
     {
-        from: '\\bKBQ_SANITY_CHECKS\\b',
+        from: listItemPattern('\\bKBQ_SANITY_CHECKS\\b'),
         to: '',
         removeImport: { symbol: 'KBQ_SANITY_CHECKS', from: '@koobiq/components/core' }
     },
     {
-        from: '\\bKBQ_SIDEPANEL_WITH_SHADOW\\b',
+        from: listItemPattern('\\bKBQ_SIDEPANEL_WITH_SHADOW\\b'),
         to: '',
         removeImport: { symbol: 'KBQ_SIDEPANEL_WITH_SHADOW', from: '@koobiq/components/sidepanel' }
     },
     {
-        from: '\\bmcSanityChecksFactory\\b',
+        from: listItemPattern('\\bmcSanityChecksFactory\\b'),
         to: '',
         removeImport: { symbol: 'mcSanityChecksFactory', from: '@koobiq/components/core' }
     },
     {
-        from: '\\bKbqCommonModule\\b',
+        from: listItemPattern('\\bKbqCommonModule\\b'),
         to: '',
         removeImport: { symbol: 'KbqCommonModule', from: '@koobiq/components/core' }
     },
     {
         // No-op shim kept after the KbqValidateDirective removal in v20.0.0 is
-        // gone in this release. Strip the call, its trailing comma, and the
-        // import; the array/empty-providers cleanup happens via the extended
-        // `[ , … ]` / `[ … , ]` normalize pass in the driver.
-        from: '\\bkbqDisableLegacyValidationDirectiveProvider\\(\\s*\\),?\\s*',
+        // gone in this release. Strip the call with one of its commas, and the
+        // import.
+        from: listItemPattern('\\bkbqDisableLegacyValidationDirectiveProvider\\(\\s*\\)'),
         to: '',
         note:
             'kbqDisableLegacyValidationDirectiveProvider was a no-op shim kept after the ' +

@@ -458,6 +458,40 @@ describe(SCHEMATIC_NAME, () => {
         );
     });
 
+    it('extends an import clause that ends in a comma without doubling it', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            [
+                'import {',
+                '    Component,',
+                '    Input,',
+                "} from '@angular/core';",
+                "import { toBoolean } from '@koobiq/components/core';",
+                "const v = toBoolean('x');",
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                'import {',
+                '    Component,',
+                "    Input, booleanAttribute } from '@angular/core';",
+                "const v = booleanAttribute('x');",
+                ''
+            ].join('\n')
+        );
+    });
+
     it('rewrites selectors in @Component inline templates inside .ts files', async () => {
         const [first] = projects.keys();
         const { ts } = paths(projects.get(first)!);
@@ -793,7 +827,7 @@ describe(SCHEMATIC_NAME, () => {
 
         // Three call-site positions in a single array (first, middle, last) plus a
         // sole-occupant case, all paired with an import that contains the symbol
-        // alongside others — the cleanup must leave the array, the sibling
+        // alongside others — the removal must leave the array, the sibling
         // providers, and the import clause healthy.
         appTree.overwrite(
             ts,
@@ -825,6 +859,102 @@ describe(SCHEMATIC_NAME, () => {
         expect(updated).toMatch(/providers:\s*\[\s*\]/);
         // Sibling imports kept; symbol gone.
         expect(updated).toMatch(/import\s*\{[^}]*\bkbqErrorStateMatcherProvider\b[^}]*\bKbqColorDirective\b[^}]*\}/);
+    });
+
+    it('removes a symbol with one of its commas from any place in a list', async () => {
+        const [first] = projects.keys();
+        const { ts } = paths(projects.get(first)!);
+
+        appTree.overwrite(
+            ts,
+            [
+                'import {',
+                '    KbqCommonModule,',
+                '    KbqColorDirective,',
+                '    type KbqValidationOptions,',
+                '    kbqErrorStateMatcherProvider,',
+                "} from '@koobiq/components/core';",
+                "import type { KbqFileUploadModule, KbqInputFile } from '@koobiq/components/file-upload';",
+                "import { KBQ_SIDEPANEL_WITH_SHADOW } from '@koobiq/components/sidepanel';",
+                'export const first = [KbqCommonModule, KbqColorDirective];',
+                'export const middle = [KbqColorDirective, KbqCommonModule, kbqErrorStateMatcherProvider];',
+                'export const last = [KbqColorDirective, KbqCommonModule];',
+                'export const only = [KbqCommonModule];',
+                'export const lines = [',
+                '    KbqColorDirective,',
+                '    KbqCommonModule,',
+                '];',
+                'export type Upload = KbqFileUploadModule;',
+                ''
+            ].join('\n')
+        );
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            [
+                'import {',
+                '    KbqColorDirective,',
+                '    kbqErrorStateMatcherProvider,',
+                "} from '@koobiq/components/core';",
+                "import type { KbqFileUploadModule } from '@koobiq/components/file-upload';",
+                'export const first = [KbqColorDirective];',
+                'export const middle = [KbqColorDirective, kbqErrorStateMatcherProvider];',
+                'export const last = [KbqColorDirective];',
+                'export const only = [];',
+                'export const lines = [',
+                '    KbqColorDirective,',
+                '];',
+                'export type Upload = KbqFileUploadModule;',
+                ''
+            ].join('\n')
+        );
+    });
+
+    it('leaves the commas of the rest of a file alone when it removes a symbol', async () => {
+        const [first] = projects.keys();
+        const { ts, html } = paths(projects.get(first)!);
+        const rest = [
+            'const pair = [1, 2];',
+            'export const [, second] = pair;',
+            'export const values = (m: Record<string, number>) => Object.entries(m).map(([, v]) => v);',
+            'export const words = (s: string) => s.split(/[\\s,]+/);',
+            'export const separator = /[,;]/;',
+            "export const doubled = 'a,,b';",
+            'export const options = {',
+            '    a: 1,',
+            '};',
+            'export const list = [',
+            '    1,',
+            '];',
+            ''
+        ].join('\n');
+        const markup = '<input pattern="[,;]+" />\n<p>a,,b</p>\n';
+
+        appTree.overwrite(
+            ts,
+            "import { KbqColorDirective, KbqCommonModule } from '@koobiq/components/core';\n" +
+                'export const imports = [KbqCommonModule, KbqColorDirective];\n' +
+                rest
+        );
+        appTree.overwrite(html, `<kbq-divider [inset]="true"></kbq-divider>\n${markup}`);
+
+        const result = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: first, fix: true } satisfies Schema,
+            appTree
+        );
+
+        expect(result.readText(ts)).toBe(
+            "import { KbqColorDirective } from '@koobiq/components/core';\n" +
+                'export const imports = [KbqColorDirective];\n' +
+                rest
+        );
+        expect(result.readText(html)).toBe(`<kbq-divider></kbq-divider>\n${markup}`);
     });
 
     it('applies the migration when `fix` is absent, as it is under `ng update`', async () => {

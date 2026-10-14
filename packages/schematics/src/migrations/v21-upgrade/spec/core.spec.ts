@@ -188,6 +188,58 @@ describe('v21-upgrade: core', () => {
         );
     });
 
+    it('removes the ThemePalette specifier from any place in its clause', async () => {
+        const from = " from '@koobiq/components/core';\n";
+        const cases: [string, string][] = [
+            ['import { ThemePalette, KbqDefaultSizes }', 'import { KbqDefaultSizes }'],
+            [
+                'import { KbqDefaultSizes, ThemePalette, kbqThemeProvider }',
+                'import { KbqDefaultSizes, kbqThemeProvider }'
+            ],
+            ['import { KbqDefaultSizes, ThemePalette }', 'import { KbqDefaultSizes }'],
+            ['import type { ThemePalette, KbqDefaultSizes }', 'import type { KbqDefaultSizes }'],
+            ['import { type ThemePalette, KbqDefaultSizes }', 'import { KbqDefaultSizes }'],
+            ['import { KbqDefaultSizes, type ThemePalette }', 'import { KbqDefaultSizes }'],
+            ['import {\n    ThemePalette,\n    KbqDefaultSizes,\n}', 'import {\n    KbqDefaultSizes,\n}'],
+            ['import {\n    KbqDefaultSizes,\n    ThemePalette,\n}', 'import {\n    KbqDefaultSizes,\n}'],
+            ['import {\n    KbqDefaultSizes,\n    ThemePalette\n}', 'import {\n    KbqDefaultSizes\n}']
+        ];
+        const files = Object.fromEntries(
+            cases.map(([clause], i) => [`clause-${i}.ts`, `${clause}${from}export type Size = KbqDefaultSizes;\n`])
+        );
+        const run = await runV21Upgrade({
+            ...files,
+            'only.ts': "import type { ThemePalette } from '@koobiq/components/core';\nexport type Size = 'small';\n"
+        });
+
+        cases.forEach(([, clause], i) =>
+            expect(run.read(`clause-${i}.ts`)).toBe(`${clause}${from}export type Size = KbqDefaultSizes;\n`)
+        );
+        expect(run.read('only.ts')).toBe("export type Size = 'small';\n");
+    });
+
+    it('adds KbqComponentColors to a clause that ended in a comma', async () => {
+        const run = await runV21Upgrade({
+            'trailing.ts': [
+                'import {',
+                '    KbqDefaultSizes,',
+                '    ThemePalette,',
+                "} from '@koobiq/components/core';",
+                'export const color = ThemePalette.Error;',
+                ''
+            ].join('\n')
+        });
+
+        expect(run.read('trailing.ts')).toBe(
+            [
+                'import {',
+                "    KbqDefaultSizes, KbqComponentColors } from '@koobiq/components/core';",
+                'export const color = KbqComponentColors.Error;',
+                ''
+            ].join('\n')
+        );
+    });
+
     it('keeps ThemePalette and reports the uses it cannot rewrite', async () => {
         const run = await runV21Upgrade({
             'palette.ts': [
