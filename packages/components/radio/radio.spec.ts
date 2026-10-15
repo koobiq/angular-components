@@ -498,6 +498,23 @@ describe('KbqRadio', () => {
             expect(group.classList).toContain('kbq-error');
         });
 
+        it('should give the buttons the big size of the group', () => {
+            const fixture = TestBed.createComponent(RadiosInsideRadioGroup);
+
+            fixture.detectChanges();
+
+            const buttons: HTMLElement[] = fixture.debugElement
+                .queryAll(By.directive(KbqRadioButton))
+                .map(({ nativeElement }) => nativeElement);
+
+            expect(buttons.some((button) => button.classList.contains('kbq-radio-button_big'))).toBe(false);
+
+            fixture.componentInstance.isGroupBig = true;
+            fixture.detectChanges();
+
+            expect(buttons.every((button) => button.classList.contains('kbq-radio-button_big'))).toBe(true);
+        });
+
         it('should name a radio button by its option text alone and describe it with the hint', () => {
             const fixture = TestBed.createComponent(RadioButtonWithHint);
 
@@ -908,6 +925,7 @@ class RadioGroupDrivenByEffect {
     imports: [KbqRadioModule, FormsModule, ReactiveFormsModule],
     template: `
         <kbq-radio-group
+            [big]="isGroupBig"
             [color]="groupColor"
             [disabled]="isGroupDisabled"
             [labelPosition]="labelPos"
@@ -924,6 +942,7 @@ class RadioGroupDrivenByEffect {
     `
 })
 class RadiosInsideRadioGroup {
+    isGroupBig: boolean = false;
     labelPos: 'before' | 'after' = 'after';
     isFirstDisabled: boolean = false;
     isGroupDisabled: unknown = false;

@@ -2,6 +2,7 @@ import { Platform } from '@angular/cdk/platform';
 import {
     afterNextRender,
     AfterViewInit,
+    computed,
     Directive,
     DoCheck,
     inject,
@@ -30,7 +31,10 @@ const CONTENT_HEIGHT = '--kbq-accordion-content-height';
         '[attr.inert]': 'hidden() ? "" : null',
         '[attr.aria-labelledby]': 'triggerId',
 
-        '[attr.data-state]': 'item.dataState',
+        // Signals of this directive's own: the item and its other parts read the same state, and the host bindings of
+        // every item in a view run in that view's reactive consumer, where a signal read again after others costs a
+        // scan of all it has read so far.
+        '[attr.data-state]': 'dataState()',
         '[attr.data-disabled]': 'item.disabled',
         '[attr.data-orientation]': 'item.orientation',
 
@@ -48,6 +52,12 @@ export class KbqAccordionContentDirective implements OnInit, DoCheck, AfterViewI
     protected readonly nativeElement = kbqInjectNativeElement();
     /** @docs-private */
     protected readonly item = inject(KbqAccordionItem);
+
+    /**
+     * Value of `data-state`.
+     * @internal
+     */
+    protected readonly dataState = computed(() => this.item.dataState);
 
     /** @docs-private */
     get contentId(): string {

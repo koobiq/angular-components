@@ -228,8 +228,11 @@ export class KbqTagEditInput {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-tag',
+        // No signal is read by two of these bindings, and none of the tag list's: the host bindings of every tag in a
+        // view run in that view's reactive consumer, where a signal read again after others costs a scan of all it has
+        // read so far, O(N²) per check across N tags. Each value that folds in `disabled` has a signal of its own.
         '[attr.tabindex]': 'tabindex',
-        '[attr.disabled]': 'disabled || null',
+        '[attr.disabled]': 'disabledAttribute()',
         '[class.kbq-selected]': 'selected()',
         '[class.kbq-tag-with-avatar]': 'avatar()',
         '[class.kbq-tag-with-icon]': 'contentChildren()',
@@ -421,10 +424,7 @@ export class KbqTag
 
     /** Tab order of the tag. */
     get tabindex() {
-        if (this.disabled) return null;
-        if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
-
-        return this._tabindex();
+        return this.tabindexState();
     }
 
     set tabindex(value: any) {
@@ -433,11 +433,18 @@ export class KbqTag
 
     private readonly _tabindex = signal<any>(-1);
 
+    private readonly tabindexState = computed(() => {
+        if (this.disabled) return null;
+        if (this._tabindex() === -1 && this.selectable() && !this.tagList) return 0;
+
+        return this._tabindex();
+    });
+
     /** Whether the tag is disabled. */
     // Stays a plain boolean: the focus key manager skips items by reading `item.disabled` as a value, so a
     // signal - a function, always truthy - would skip every tag. It also folds in the tag list's form control.
     get disabled(): boolean {
-        return this._disabled() || (this.tagList?.disabled() ?? false);
+        return this.disabledState();
     }
 
     set disabled(value: boolean) {
@@ -446,14 +453,24 @@ export class KbqTag
 
     private readonly _disabled = signal(false);
 
+    private readonly disabledState = computed(() => this._disabled() || (this.tagList?.disabled() ?? false));
+
+    /**
+     * Value of the `disabled` attribute.
+     * @internal
+     */
+    protected readonly disabledAttribute = computed(() => this.disabled || null);
+
     /**
      * Whether the tag is draggable.
      *
      * @docs-private
      */
     protected get draggable(): boolean {
-        return (this.tagList?.draggable ?? false) && !this.disabled;
+        return this.draggableState();
     }
+
+    private readonly draggableState = computed(() => (this.tagList?.draggable ?? false) && !this.disabled);
 
     /**
      * Whether the tag moves into place without motion while the list is reordered.

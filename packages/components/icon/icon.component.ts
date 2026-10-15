@@ -108,8 +108,13 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
      * @docs-private
      */
     protected get autoColorError(): boolean {
-        return this.autoColor && !!this.errorStateContext?.errorState();
+        return this.autoColor && this.hostErrorState();
     }
+
+    // The host's error state through a signal of the icon's own: the host's control reads it in its host bindings, in
+    // the same reactive consumer as the icon's, where a signal read again after others costs a scan of all it has read
+    // so far.
+    private readonly hostErrorState = computed(() => !!this.errorStateContext?.errorState());
 
     /**
      * Whether `color` is the error color. A signal of its own because the color class binding already reads

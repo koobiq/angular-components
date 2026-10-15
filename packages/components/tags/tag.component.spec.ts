@@ -1150,6 +1150,34 @@ describe(KbqTag.name, () => {
 
         expect(getTagElement(debugElement).getAttribute('tabindex')).toBe('2');
     });
+
+    it('should reflect its own and the tag list disabled state in its host bindings', () => {
+        const fixture = createComponent(TagInDisableableList);
+        const tag = getTagElement(fixture.debugElement);
+        const expectDisabled = (disabled: boolean) => {
+            expect(tag.getAttribute('disabled')).toBe(disabled ? 'true' : null);
+            expect(tag.classList.contains('kbq-disabled')).toBe(disabled);
+            expect(tag.getAttribute('tabindex')).toBe(disabled ? null : '-1');
+            expect(tag.classList.contains('kbq-tag_draggable')).toBe(!disabled);
+        };
+
+        expectDisabled(false);
+
+        fixture.componentInstance.listDisabled.set(true);
+        fixture.detectChanges();
+
+        expectDisabled(true);
+
+        fixture.componentInstance.listDisabled.set(false);
+        fixture.detectChanges();
+
+        expectDisabled(false);
+
+        fixture.componentInstance.tagDisabled.set(true);
+        fixture.detectChanges();
+
+        expectDisabled(true);
+    });
 });
 
 describe('Tag content slots', () => {
@@ -1227,6 +1255,20 @@ class SingleTag {
     tagDestroy: (event?: KbqTagEvent) => void = () => {};
     tagSelectionChange: (event?: KbqTagSelectionChange) => void = () => {};
     tagRemove: (event?: KbqTagEvent) => void = () => {};
+}
+
+@Component({
+    imports: [KbqTagsModule],
+    template: `
+        <kbq-tag-list draggable [disabled]="listDisabled()">
+            <kbq-tag [disabled]="tagDisabled()">Tag</kbq-tag>
+        </kbq-tag-list>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class TagInDisableableList {
+    readonly listDisabled = signal(false);
+    readonly tagDisabled = signal(false);
 }
 
 @Component({

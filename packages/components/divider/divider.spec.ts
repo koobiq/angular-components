@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { axe } from 'jest-axe';
@@ -84,6 +84,23 @@ describe('KbqDivider', () => {
 
         it('should keep an explicit zero', () => {
             expect(dividerOf(createFixture(ZeroLengthDivider)).style.height).toBe('0px');
+        });
+
+        it('should move the length and the orientation along with the vertical input', () => {
+            const fixture = createFixture(SwitchableDivider);
+            const divider = dividerOf(fixture);
+
+            expect(divider.style.width).toBe('16px');
+            expect(divider.style.height).toBe('');
+            expect(divider.hasAttribute('aria-orientation')).toBe(false);
+
+            fixture.componentInstance.vertical.set(true);
+            fixture.detectChanges();
+
+            expect(divider.style.height).toBe('16px');
+            expect(divider.style.width).toBe('');
+            expect(divider.getAttribute('aria-orientation')).toBe('vertical');
+            expect(divider.classList).toContain('kbq-divider_vertical');
         });
     });
 
@@ -211,6 +228,17 @@ class ShortVerticalDivider {}
     `
 })
 class ShortHorizontalDivider {}
+
+@Component({
+    imports: [KbqDivider],
+    template: `
+        <kbq-divider [length]="16" [vertical]="vertical()" />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SwitchableDivider {
+    readonly vertical = signal(false);
+}
 
 @Component({
     imports: [KbqDivider],
