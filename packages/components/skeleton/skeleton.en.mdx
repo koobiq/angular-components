@@ -1,80 +1,82 @@
-A skeleton is a temporary placeholder that reserves space for content while it loads and previews its structure. Use a skeleton when you know how the content is structured. It shows what to expect and helps prevent layout shifts.
+A skeleton is a temporary placeholder that previews the approximate shape of content while it loads. Use one when you know where the elements will appear.
 
 ### Basic block
 
-The `<kbq-skeleton>` element displays a rectangular placeholder. Use styles to set its size. Choose the basic block when no preset fits your content or when you need to build a custom placeholder from simple blocks.
+The `<kbq-skeleton>` element is a simple rectangular placeholder. Set its width and height with CSS. Combine several blocks to create a custom placeholder when no preset fits.
 
 <Example id="skeleton-basic" />
 
 ### Presets
 
-Presets are ready-made placeholders for common elements and components. Use a preset in place of a component that hasn't rendered yet, or combine several presets to show the structure of a loading block. Preset inputs let you set the number of items and adjust some layout details.
-
-#### Elements
-
-Separate presets are available for a [button](en/components/button), [badge](en/components/badge), [tag](en/components/tag), [icon](en/components/icon), and [link](en/components/link). Each placeholder matches the typical size of its component. For example, the badge placeholder is 56 × 24 pixels. To make it wider, set its width with styles.
-
-<Example id="skeleton-elements" />
+Presets are ready-made placeholders for Koobiq components. Combine them to create a placeholder for an entire page.
 
 #### Typography
 
-The preset matches the line height of the selected [Koobiq typography style](en/main/typography/overview). Set the style with `level` and the number of lines with `lines`. By default, the preset shows one line.
+`KbqSkeletonTypography` creates a placeholder with line heights that match the selected [Koobiq typography style](en/main/typography/overview). When there are several lines, their widths alternate in a set pattern. The uneven right edge makes the placeholder look like a paragraph.
 
 <Example id="skeleton-typography" />
 
-#### Description list
+#### Separate elements
 
-The [description list](en/components/dl) preset shows pairs of placeholder terms and values. Use `rows` to set the number of pairs.
+Placeholders for [buttons](en/components/button), [badges](en/components/badge), [tags](en/components/tag), [icons](en/components/icon), and [links](en/components/link) match the height of their components. You can set their width with styles.
+
+<Example id="skeleton-elements" />
+
+#### Element groups
+
+`KbqSkeletonGroup` displays a row of the same placeholders: buttons, badges, tags, icons, or links.
+
+<Example id="skeleton-group" />
+
+#### Parameter block
+
+`KbqSkeletonDl` displays placeholders for a set of parameters and their values.
 
 <Example id="skeleton-dl" />
 
 #### Table
 
-By default, the [table](en/components/table) preset shows a header row, three data rows, and three columns. Use `rows` to set the number of rows. Use `columns` to set the number of columns or each column's width. Set `header` to hide the header row, or set `selectable` to add a selection column with checkbox placeholders.
+While a [table](en/components/table) or [AG Grid](en/components/ag-grid/overview) is loading, `KbqSkeletonTable` imitates its structure. You can set:
 
-For [AG Grid](en/components/ag-grid/overview), the preset also supports pinned columns. Use `pinnedColumns` to set their number.
+- the number of columns and the width of each column;
+- the number of rows;
+- whether to show checkboxes for selecting rows.
 
 <Example id="skeleton-grid" />
 
-#### Element groups
-
-The `kbq-skeleton-group` preset displays a row of identical placeholders. Use it for a [tag list](en/components/tag-list) or a row of [badges](en/components/badge), for example. Set `preset` to choose the placeholder type and `count` to set the number of items. You can also use buttons, icons, and links.
-
-<Example id="skeleton-group" />
-
 #### Form field
 
-The [form field](en/components/form-field) preset shows placeholders for the label, control, and hint. Set `control` to `input` or `textarea`. Use `label` and `hint` to show or hide each one. Set `horizontal` to place the label beside the control.
+`KbqSkeletonFormField` shows the label, field, and hint below it as one placeholder. The preset supports a multiline field and a label placed to its left.
 
 <Example id="skeleton-form-field" />
 
-#### Accordion
+#### Expandable section
 
-The [accordion](en/components/accordion) preset shows placeholders for the titles and icons of collapsed items. Use `rows` to set the number of items.
+`KbqSkeletonAccordion` displays a placeholder for the [accordion](en/components/accordion) component. Its items are shown collapsed.
 
 <Example id="skeleton-accordion" />
 
-#### Checkbox, radio button and toggle
+#### Checkbox, radio button, and toggle
 
-The [checkbox](en/components/checkbox), [radio button](en/components/radio), or [toggle](en/components/toggle) preset shows placeholders for the control and its label. Set the control type with `control` and the number of controls with `rows`. Use `label` and `hint` to show or hide each one.
+`KbqSkeletonCheckable` displays simplified placeholders for the label and a [checkbox](en/components/checkbox), [radio button](en/components/radio), or [toggle](en/components/toggle). You can also show a hint.
 
 <Example id="skeleton-checkable" />
 
 #### Tabs
 
-The [tabs](en/components/tabs) preset shows placeholders for tabs and their content. Use `count` to set the number of tabs. Set `vertical` for a vertical layout and `contentLines` to set the number of content lines. You can also place other presets in the tab content instead of text lines.
+`KbqSkeletonTabs` creates a placeholder for tabs. You can customize the tab content; by default, it contains lines of text.
 
 <Example id="skeleton-tabs" />
 
-#### Tree
+#### Hierarchical list
 
-The [tree](en/components/tree) preset shows placeholders for nodes and their labels. Use `rows` to set the number of top-level nodes and `children` to set the number of child nodes under the expanded item.
+`KbqSkeletonTree` displays a placeholder for a hierarchical list. The second node is expanded to show the nested structure.
 
 <Example id="skeleton-tree" />
 
 #### Global configuration
 
-Use `kbqSkeletonPresetsConfigurationProvider` to set default values for skeleton presets across your application or any part of it. Any value you omit comes from the nearest parent provider. If no parent provider is configured, Koobiq uses the default.
+Use the `kbqSkeletonPresetsConfigurationProvider` provider to configure presets for the entire application or parts of it.
 
 ```ts
 import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skeleton';
@@ -98,11 +100,9 @@ import { kbqSkeletonPresetsConfigurationProvider } from '@koobiq/components/skel
 })
 ```
 
-### The `kbqSkeleton` directive
+### Skeleton for a rendered element
 
-The `kbqSkeleton` directive turns an existing element and its content into a placeholder while preserving the element's shape and size. Use it when content is loading or refreshing but the element is already in the markup. You don't need to load the data first: the directive uses the existing element to determine the placeholder's shape and size. For example, enable it on text, a badge, or a button while the associated content loads. You can't interact with the element while the directive is enabled.
-
-If you can't render the element yet, use the basic block or a suitable preset. These options create placeholders without an existing element.
+The `kbqSkeleton` directive turns an already rendered element and its content into a placeholder while preserving the element's size.
 
 <Example id="skeleton-directive" />
 
@@ -110,27 +110,27 @@ If you can't render the element yet, use the basic block or a suitable preset. T
 
 #### Code block
 
-While code loads, a fixed-height skeleton reserves space for the code block.
+While code loads, a fixed-height skeleton appears in place of the [code block](en/components/code-block).
 
 <Example id="skeleton-code-block" />
 
-#### Loading a side panel in parts
+#### Loading in parts
 
-When content in a [side panel](en/components/sidepanel) loads in parts, show the sections that are ready and use a suitable preset for each section that is still loading.
+Data loads in parts. As each part loads, its placeholder is replaced with content.
 
 <Example id="skeleton-in-sidepanel" />
 
 ### Guidelines
 
-Match the skeleton to the content structure so that loaded content appears in the same places.
-
 Use a skeleton when:
 
-- You need to preview the page structure while content loads and reduce layout shifts.
-- The page takes 2 to 10 seconds to load.
+- The page or section structure is known in advance, and the data is loading for the first time.
+- Loading takes a few seconds.
 
-Avoid skeletons when:
+Do not use a skeleton in these cases:
 
-- Loading takes less than 1 second; no loading indicator is needed.
-- Only one element is loading, such as a video. Use a [progress spinner](en/components/progress-spinner) instead.
-- A long-running task is in progress, such as file conversion, uploading files, or downloading files. Use a [progress bar](en/components/progress-bar) or [progress spinner](en/components/progress-spinner) to show activity or progress.
+- Loading takes less than 1 second; the skeleton can appear briefly and cause the interface to flicker.
+- You need to show a user action in progress, such as saving, deleting, or submitting a form. Use a [progress spinner](en/components/progress-spinner) instead.
+- A long-running task is in progress, such as file conversion or data transfer. Use a [progress bar](en/components/progress-bar) or a [progress spinner](en/components/progress-spinner).
+- You can keep the previous content on screen during an update. Show the update state separately.
+- Another indicator already shows that content is loading.
