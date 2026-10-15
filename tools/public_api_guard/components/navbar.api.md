@@ -68,6 +68,7 @@ export class KbqFocusableComponent implements AfterContentChecked, AfterContentI
     ngOnDestroy(): void;
     get optionBlurChanges(): Observable<KbqNavbarFocusableItemEvent>;
     get optionFocusChanges(): Observable<KbqNavbarFocusableItemEvent>;
+    protected readonly renderedTabIndex: i0.Signal<number>;
     protected resetOptions(): void;
     readonly tabIndex: i0.ModelSignal<number>;
     // (undocumented)

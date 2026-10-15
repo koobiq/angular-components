@@ -208,7 +208,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // (undocumented)
     ngOnInit(): void;
     offset: number | null;
-    readonly offsetInput: _angular_core.InputSignalWithTransform<number | null | undefined, string | number | null | undefined>;
+    readonly offsetInput: _angular_core.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     // (undocumented)
     protected originSelector: string;
     // (undocumented)

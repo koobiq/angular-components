@@ -3334,6 +3334,9 @@ export const kbqIsElementOrigin: (origin: KbqOverlayOrigin) => boolean;
 export const kbqIsTextLaidOutFromStart: (computedStyle: CSSStyleDeclaration) => boolean;
 
 // @public
+export function kbqLeaveTabOrderOnTabOut(tabOut: Observable<void>, host: HTMLElement, renderedTabIndex: () => number | null, destroyRef: DestroyRef): void;
+
+// @public
 export class KbqLine {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLine, "[kbq-line]", never, {}, {}, never, never, true, never>;
@@ -4262,6 +4265,9 @@ export class KbqSelectAllEvent<T, S = unknown> {
     readonly selected: boolean;
     readonly source: S;
 }
+
+// @public
+export function kbqSelectAllHandlerTransform<S>(handler: ((event: KeyboardEvent, source: S) => void) | undefined): ((event: KeyboardEvent, source: S) => void) | undefined;
 
 // @public (undocumented)
 export class KbqSelectFooter {

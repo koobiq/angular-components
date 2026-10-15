@@ -111,8 +111,6 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     // (undocumented)
     sidepanelConfig: KbqSidepanelConfig<any>;
     get size(): string;
-    protected get stateOpacity(): number | null;
-    protected get stateTransform(): string | null;
     get trapFocus(): boolean;
     get trapFocusAutoCapture(): boolean;
     get withIndent(): boolean;

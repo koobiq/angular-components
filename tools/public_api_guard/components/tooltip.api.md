@@ -175,7 +175,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     offset: number | null;
-    readonly offsetInput: i0.InputSignalWithTransform<number | null | undefined, string | number | null | undefined>;
+    readonly offsetInput: i0.InputSignalWithTransform<number | undefined, string | number | null | undefined>;
     protected originSelector: string;
     protected overlayConfig: OverlayConfig;
     protected parentPopup: KbqParentPopup | null;
