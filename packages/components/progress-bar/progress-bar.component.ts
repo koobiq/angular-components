@@ -67,8 +67,11 @@ export class KbqProgressBarCaption {
         '[attr.id]': 'id()',
         class: 'kbq-progress-bar',
         role: 'progressbar',
-        '[class.kbq-progress-bar_determinate]': '!indeterminate()',
-        '[class.kbq-progress-bar_indeterminate]': 'indeterminate()',
+        // The classes read `mode` rather than `indeterminate`, which the attributes read: the host bindings of every
+        // bar in a view run in that view's reactive consumer, where a signal read again after others costs a scan of
+        // all it has read so far.
+        '[class.kbq-progress-bar_determinate]': "mode() !== 'indeterminate'",
+        '[class.kbq-progress-bar_indeterminate]': "mode() === 'indeterminate'",
         // An indeterminate `progressbar` is expressed by the absence of `aria-valuenow`, so the whole
         // range stays off the element rather than being pinned to zero.
         '[attr.aria-valuemin]': 'indeterminate() ? null : 0',

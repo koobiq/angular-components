@@ -1049,6 +1049,23 @@ describe('KbqAccordion', () => {
             expect(accordionItemDebugElement.nativeElement.getAttribute('data-state')).toBe('open');
         });
 
+        it('data-state on header and content should match item state', () => {
+            fixture = TestBed.createComponent(TestApp);
+            fixture.detectChanges();
+
+            const header: HTMLElement = fixture.debugElement.query(By.directive(KbqAccordionHeader)).nativeElement;
+            const content: HTMLElement = fixture.debugElement.query(By.directive(KbqAccordionContent)).nativeElement;
+
+            expect(header.getAttribute('data-state')).toBe('closed');
+            expect(content.getAttribute('data-state')).toBe('closed');
+
+            fixture.debugElement.query(By.directive(KbqAccordionTrigger)).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(header.getAttribute('data-state')).toBe('open');
+            expect(content.getAttribute('data-state')).toBe('open');
+        });
+
         it('should set aria-disabled on trigger when item is disabled', () => {
             fixture = TestBed.createComponent(AccordionDisabledItem);
             fixture.debugElement.componentInstance.disabledItem = true;

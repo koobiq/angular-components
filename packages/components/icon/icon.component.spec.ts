@@ -1,6 +1,6 @@
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By, DomSanitizer } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -566,6 +566,30 @@ describe('KbqIcon', () => {
             fixture.detectChanges();
 
             expect(hasErrorClass(fixture)).toBe(false);
+        });
+
+        it('should follow the error state of a control the host replaces', () => {
+            const current = signal<Signal<boolean>>(errorState);
+
+            // The form field resolves the error state through its current control.
+            TestBed.overrideProvider(KBQ_ICON_ERROR_STATE_CONTEXT, {
+                useValue: {
+                    get errorState() {
+                        return current();
+                    }
+                }
+            });
+
+            const fixture = TestBed.createComponent(AutoColorIcon);
+
+            fixture.componentInstance.autoColor.set(true);
+            fixture.detectChanges();
+            expect(hasErrorClass(fixture)).toBe(false);
+
+            current.set(signal(true));
+            fixture.detectChanges();
+
+            expect(hasErrorClass(fixture)).toBe(true);
         });
 
         it('should stop taking the error color once the bound autoColor turns undefined', () => {

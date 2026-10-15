@@ -74,7 +74,10 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
         '[class.kbq-radio-group_normal]': '!big()',
         '[class.kbq-radio-group_big]': 'big()',
         '[attr.aria-required]': "required() ? 'true' : null",
-        '[attr.aria-invalid]': "color() === 'error' ? 'true' : null"
+        // A signal of its own: the color class binding reads `color` first, and the host bindings of every group in a
+        // view run in that view's reactive consumer, where a signal read again after others costs a scan of all it has
+        // read so far.
+        '[attr.aria-invalid]': 'ariaInvalid()'
     },
     exportAs: 'kbqRadioGroup'
 })
@@ -176,6 +179,12 @@ export class KbqRadioGroup
 
     /** Whether the radio group is required */
     readonly required = input(false, { transform: booleanAttribute });
+
+    /**
+     * Value of `aria-invalid`.
+     * @internal
+     */
+    protected readonly ariaInvalid = computed(() => (this.color() === 'error' ? 'true' : null));
 
     /**
      * Event emitted when the group value changes.
@@ -351,7 +360,9 @@ export class KbqRadioGroup
     host: {
         class: 'kbq-radio-button',
         '[attr.id]': 'id()',
-        '[class.kbq-radio-button_big]': 'radioGroup?.big()',
+        // The group's `big` through a signal of the button's own: the group's host bindings read `big`, and they run in
+        // the same reactive consumer, where a signal read again after others costs a scan of all it has read so far.
+        '[class.kbq-radio-button_big]': 'big()',
         '[class.kbq-selected]': 'checked',
         '[class.kbq-disabled]': 'disabled'
     },
@@ -487,6 +498,12 @@ export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnIn
 
     /** The parent radio group. `null` when the button is used outside one. */
     radioGroup: KbqRadioGroup | null = inject(KbqRadioGroup, { optional: true });
+
+    /**
+     * Whether the button takes the big size of its group.
+     * @internal
+     */
+    protected readonly big = computed(() => !!this.radioGroup?.big());
 
     private readonly uniqueId: string = `kbq-radio-${++nextUniqueId}`;
 

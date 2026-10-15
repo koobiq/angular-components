@@ -213,6 +213,8 @@ describe('KbqPasswordInput', () => {
         await vi.advanceTimersByTimeAsync(1000);
 
         expect(kbqPasswordToggle.styles.visibility).toEqual('hidden');
+        expect(kbqPasswordToggle.classes['cdk-visually-hidden']).toBe(true);
+        expect(kbqPasswordToggle.attributes['aria-hidden']).toBe('true');
 
         fixture.componentInstance.disabled = false;
         fixture.componentInstance.value = '123';
@@ -220,6 +222,8 @@ describe('KbqPasswordInput', () => {
         await vi.advanceTimersByTimeAsync(1000);
 
         expect(kbqPasswordToggle.styles.visibility).toEqual('visible');
+        expect(kbqPasswordToggle.classes['cdk-visually-hidden']).toBeFalsy();
+        expect(kbqPasswordToggle.attributes['aria-hidden']).toBe('false');
     });
 
     it('toggle should change input type', () => {

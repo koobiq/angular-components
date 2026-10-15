@@ -39,7 +39,7 @@ import { KbqAppSwitcherSite } from './app-switcher';
         class: 'kbq-app-switcher-dropdown-site',
         role: 'menuitem',
         '[class.kbq-dropdown-item]': 'false',
-        '[attr.tabindex]': 'getTabIndex()',
+        // `tabindex` comes from `KbqDropdownItem`: a second binding here would read its signal again after the others.
         '[attr.aria-haspopup]': "isNested ? 'menu' : null"
     },
     exportAs: 'kbqAppSwitcherDropdownSite'

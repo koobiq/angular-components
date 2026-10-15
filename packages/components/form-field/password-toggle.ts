@@ -83,6 +83,9 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         class: 'kbq-password-toggle',
         // `visibility` is what takes the disabled toggle out of the tab order and the accessibility tree;
         // `cdk-visually-hidden` and `aria-hidden` are kept for backward compatibility with consumer styles.
+        // The three bindings read one signal of the toggle's own, back to back: the host bindings of every toggle in a
+        // view run in that view's reactive consumer, where a signal read again after others costs a scan of all it has
+        // read so far, and the form field and the input read the control's signals there too.
         '[style.visibility]': 'visibility',
         '[class.cdk-visually-hidden]': 'visibility === "hidden"',
         '[attr.aria-hidden]': 'visibility === "hidden"',
@@ -168,8 +171,12 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
      * @docs-private
      */
     get visibility(): 'hidden' | 'visible' {
-        return this.control.disabled() ? 'hidden' : 'visible';
+        return this.visibilityState();
     }
+
+    private readonly visibilityState = computed<'hidden' | 'visible'>(() =>
+        this.control.disabled() ? 'hidden' : 'visible'
+    );
 
     /**
      * Accessible name of the icon-only toggle, describing the action it performs.

@@ -1,4 +1,11 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, input, ViewEncapsulation } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    input,
+    ViewEncapsulation
+} from '@angular/core';
 import { kbqOptionalNumberAttribute } from '@koobiq/components/core';
 
 /**
@@ -18,6 +25,9 @@ import { kbqOptionalNumberAttribute } from '@koobiq/components/core';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-divider',
+        // Only the classes, which run last and back to back, read `vertical`; the attributes and styles that depend on
+        // it read signals of their own. The host bindings of every divider in a view run in that view's reactive
+        // consumer, where a signal read again after others costs a scan of all it has read so far.
         '[class.kbq-divider_vertical]': 'vertical()',
         '[class.kbq-divider_horizontal]': '!vertical()',
         '[class.kbq-divider_paddings]': 'paddings()',
@@ -26,11 +36,11 @@ import { kbqOptionalNumberAttribute } from '@koobiq/components/core';
         // that still has to announce itself elsewhere.
         '[attr.role]': `decorative() ? 'presentation' : 'separator'`,
         // `horizontal` is the ARIA default for a separator, so only the vertical case is emitted.
-        '[attr.aria-orientation]': `!decorative() && vertical() ? 'vertical' : null`,
+        '[attr.aria-orientation]': 'ariaOrientation()',
         // `length` runs along the line. The other axis is the divider's thickness and belongs to the
         // stylesheet, so only one of the two is ever written.
-        '[style.height.px]': 'vertical() ? length() : null',
-        '[style.width.px]': 'vertical() ? null : length()'
+        '[style.height.px]': 'heightStyle()',
+        '[style.width.px]': 'widthStyle()'
     }
 })
 export class KbqDivider {
@@ -59,4 +69,22 @@ export class KbqDivider {
     readonly length = input<number | null, unknown>(null, {
         transform: (value: unknown) => kbqOptionalNumberAttribute(value) ?? null
     });
+
+    /**
+     * Value of `aria-orientation`.
+     * @internal
+     */
+    protected readonly ariaOrientation = computed(() => (!this.decorative() && this.vertical() ? 'vertical' : null));
+
+    /**
+     * Value of the `height` style.
+     * @internal
+     */
+    protected readonly heightStyle = computed(() => (this.vertical() ? this.length() : null));
+
+    /**
+     * Value of the `width` style.
+     * @internal
+     */
+    protected readonly widthStyle = computed(() => (this.vertical() ? null : this.length()));
 }

@@ -4,6 +4,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     contentChild,
     effect,
     ElementRef,
@@ -59,15 +60,19 @@ const SELF_ACTIVATING_HOST_SELECTOR = 'button, a[href], [role="menuitem"]';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-dropdown-item',
+        // Only the class reads `disabled`, and the three attributes, which run back to back before every class
+        // binding, read `disabledAttribute`: the host bindings of every item in a view run in that view's reactive
+        // consumer, where a signal read again after others costs a scan of all it has read so far. A signal read twice
+        // in a row costs none.
         '[class.kbq-dropdown-item_highlighted]': 'highlighted',
         '[class.kbq-dropdown-item_active]': 'active()',
         '[class.kbq-disabled]': 'disabled()',
         '[class.kbq-progress]': 'progress()',
         '[class.kbq-dropdown-item_has-action]': '!!itemAction()',
 
-        '[attr.disabled]': 'disabled() || null',
+        '[attr.disabled]': 'disabledAttribute()',
         // `disabled` is inert on `<div>`/`<a>` hosts.
-        '[attr.aria-disabled]': 'disabled() || null',
+        '[attr.aria-disabled]': 'disabledAttribute()',
         '[attr.tabindex]': 'getTabIndex()',
 
         '(click)': 'checkDisabled($event)',
@@ -99,6 +104,12 @@ export class KbqDropdownItem
 
     /** Whether the dropdown item is in a loading state. */
     readonly progress = input(false, { transform: booleanAttribute });
+
+    /**
+     * Value of the `disabled` and `aria-disabled` attributes.
+     * @internal
+     */
+    protected readonly disabledAttribute = computed(() => this.disabled() || null);
 
     /** Stream that emits when the dropdown item is hovered. */
     readonly hovered = new Subject<KbqDropdownItem>();
@@ -212,7 +223,8 @@ export class KbqDropdownItem
 
     /** Used to set the `tabindex`. */
     getTabIndex(): string {
-        return this.disabled() ? '-1' : '0';
+        // The attributes' signal rather than `disabled`: the binding runs right after theirs.
+        return this.disabledAttribute() ? '-1' : '0';
     }
 
     /** Prevents the default element actions if it is disabled. Bound via `host` metadata. */
