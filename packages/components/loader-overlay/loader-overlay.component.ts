@@ -109,10 +109,14 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.parent = this.elementRef.nativeElement.parentElement;
 
-        this.renderer.addClass(this.parent, kbqLoaderOverlayParent);
+        if (this.parent) {
+            this.renderer.addClass(this.parent, kbqLoaderOverlayParent);
+        }
     }
 
     ngOnDestroy(): void {
-        this.renderer.removeClass(this.parent, kbqLoaderOverlayParent);
+        if (this.parent) {
+            this.renderer.removeClass(this.parent, kbqLoaderOverlayParent);
+        }
     }
 }
