@@ -83,6 +83,14 @@ describe('KbqLoaderOverlay', () => {
 
         expect(fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes).toMatchSnapshot();
     });
+
+    it('should not throw when destroyed before ngOnInit runs', () => {
+        const fixture = TestBed.createComponent(OverlayNoParams);
+        const overlay = fixture.debugElement.query(By.directive(KbqLoaderOverlay))
+            .componentInstance as KbqLoaderOverlay;
+
+        expect(() => overlay.ngOnDestroy()).not.toThrow();
+    });
 });
 
 @Component({
