@@ -253,7 +253,7 @@ export const DOCS_SEO_DESCRIPTIONS = {
     },
     "skeleton": {
         "en": "A skeleton is a temporary placeholder that previews the approximate shape of content while it loads. Use one when you know where the elements will appear.",
-        "ru": "Скелетон — временная заглушка, которая показывает примерную форму содержимого во время загрузки. Он подходит, если заранее известно расположение элементов."
+        "ru": "Скелетон — временная заглушка, которая показывает примерную форму содержимого при загрузке. Подходит, если заранее известно расположение элементов."
     },
     "split-button": {
         "en": "A split button combines several related actions into a single control. The primary action is immediately accessible, while additional options are hidden in a dropdown menu.",
