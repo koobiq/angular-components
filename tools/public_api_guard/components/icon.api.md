@@ -63,7 +63,7 @@ export class KbqIcon extends KbqColorDirective implements AfterContentInit, OnCh
     protected readonly resolvedAriaHidden: _angular_core.Signal<string | null>;
     protected setIconName(name: string): void;
     protected readonly svgIcon: _angular_core.WritableSignal<boolean>;
-    protected readonly svgIconName: _angular_core.WritableSignal<string | undefined>;
+    protected get svgIconName(): string | undefined;
     updateMaxHeight(): void;
     // (undocumented)
     static ɵcmp: _angular_core.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "ariaHidden": { "alias": "aria-hidden"; "required": false; "isSignal": true; }; "iconSize": { "alias": "iconSize"; "required": false; "isSignal": true; }; "autoColorInput": { "alias": "autoColor"; "required": false; "isSignal": true; }; "iconNameInput": { "alias": "kbq-icon"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
