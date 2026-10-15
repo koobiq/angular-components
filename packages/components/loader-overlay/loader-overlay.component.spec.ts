@@ -353,6 +353,14 @@ describe('KbqLoaderOverlay', () => {
         expect(classes).toEqual(expect.objectContaining({ 'kbq-loader-overlay_surface_bg-tertiary': true }));
         expect(classes).not.toHaveProperty('kbq-loader-overlay_card');
     });
+
+    it('should not throw when destroyed before ngOnInit runs', () => {
+        const fixture = TestBed.createComponent(OverlayNoParams);
+        const overlay = fixture.debugElement.query(By.directive(KbqLoaderOverlay))
+            .componentInstance as KbqLoaderOverlay;
+
+        expect(() => overlay.ngOnDestroy()).not.toThrow();
+    });
 });
 
 @Component({
