@@ -194,8 +194,8 @@ updates:
       interval: 'cron'
       cronjob: '0 9 1,15 * *'
       timezone: 'Europe/Moscow'
-    # The same cooldown as the root entry, so the ranges here never point at a release that the
-    # root devDependencies mirroring them could not install yet.
+    # The same cooldown as the root entry, so these ranges move in step with the root
+    # devDependencies that mirror them.
     cooldown:
       default-days: 7
       exclude:
