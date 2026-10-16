@@ -49,13 +49,8 @@ const OPTIONAL_PACKAGE_JSON_DEPENDENCIES = {
         'jspdf-autotable': '^5'
     },
     // Used by packages/docs-examples/components/ag-grid/ag-grid-export/ag-grid-export-example.ts
-    //
-    // Deliberately not the version this repository uses. SheetJS stopped publishing to npm
-    // after 0.18.5, so the repository installs 0.20.3 from the vendor CDN, which StackBlitz
-    // cannot resolve. 0.18 is the newest npm can serve. The example only calls `utils` and
-    // `writeFile`, whose API is unchanged between the two, so the sandbox still works.
-    xlsx: {
-        xlsx: '^0.18'
+    'write-excel-file': {
+        'write-excel-file': '^4'
     },
     '@koobiq/components/scrollbar/deprecated': {
         overlayscrollbars: '2.7.3'

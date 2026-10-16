@@ -12676,7 +12676,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fflate@npm:^0.8.1":
+"fflate@npm:^0.8.1, fflate@npm:^0.8.2":
   version: 0.8.3
   resolution: "fflate@npm:0.8.3"
   checksum: 10c0/eab181ca37f5348ae76d4b6f840e0026e30220e33153289ac942222d8b9638237d486507dbcc09878d724095bd354993a2ee48bbee99c8f2c6440d4448719aa7
@@ -15326,7 +15326,7 @@ __metadata:
     typescript: "npm:5.8.3"
     typescript-eslint: "npm:^8.60.1"
     unified: "npm:^11.0.5"
-    xlsx: "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+    write-excel-file: "npm:^4.1.1"
     zone.js: "npm:~0.16.3"
   languageName: unknown
   linkType: soft
@@ -21744,6 +21744,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"write-excel-file@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "write-excel-file@npm:4.1.1"
+  dependencies:
+    fflate: "npm:^0.8.2"
+  checksum: 10c0/6c301bdd99af643687aadc3dd3697ea9e647dd8f6fe3df8a43d61924cda8c21bdff08aa0c79b44e09160d84485dab69d8dcb3deec5317f5593154c88c3042bfa
+  languageName: node
+  linkType: hard
+
 "write-file-atomic@npm:^5.0.1":
   version: 5.0.1
   resolution: "write-file-atomic@npm:5.0.1"
@@ -21798,15 +21807,6 @@ __metadata:
   version: 0.2.1
   resolution: "xhr2@npm:0.2.1"
   checksum: 10c0/eebe95bd0ae9087da9b4dda636abee1f30cf9b424fbe8ebd0c7dcfd9be5db3e4aa634cf1837fa3e82b486aace9396a2dbf6be2dc8084862c8239dccec4e16dca
-  languageName: node
-  linkType: hard
-
-"xlsx@https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz":
-  version: 0.20.3
-  resolution: "xlsx@https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
-  bin:
-    xlsx: ./bin/xlsx.njs
-  checksum: 10c0/eb20749e56ffa23ffc4a5a6fd983524e0406308e53992e24112424de9f30ec64d7dd80e8e56363e39c3853687f7b4151f97a6f5373050b23c0c2758796803b6b
   languageName: node
   linkType: hard
 
