@@ -31,6 +31,16 @@ Do not use single-word "Loading" text with an enlarged spinner.
 
 The system prevents focusing on form elements covered by the overlay.
 
+#### Display delay
+
+If a request completes quickly, the spinner only flashes, which looks like a glitch. Show the overlay after 500 ms: a fast request completes earlier, and the overlay never appears. Once the overlay has appeared, keep it on screen for at least 300 ms.
+
+Delay only the indicator: block a repeated action immediately, for example by disabling the button. Use the `kbqDelayLoadingIndicator` operator for the delay.
+
+The delay does not prevent content from jumping. To keep content in place, keep the previous data until the new data arrives, reserve space for the block, or show a [skeleton](en/components/skeleton): it appears immediately, without a delay.
+
+<Example id="loader-overlay-delay" />
+
 ### Design and animation
 
 #### Color and transparency
