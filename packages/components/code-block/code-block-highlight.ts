@@ -1,3 +1,4 @@
+import { isPlatformServer } from '@angular/common';
 import {
     booleanAttribute,
     Directive,
@@ -8,6 +9,7 @@ import {
     isDevMode,
     numberAttribute,
     PendingTasks,
+    PLATFORM_ID,
     Provider,
     Renderer2,
     SecurityContext,
@@ -95,6 +97,7 @@ export class KbqCodeBlockHighlight {
     private readonly renderer = inject(Renderer2);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly pendingTasks = inject(PendingTasks);
+    private readonly isServer = isPlatformServer(inject(PLATFORM_ID));
     private readonly loader = inject(KbqCodeBlockHighlightJsLoader);
     private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
     // Read here and handed to the loader: a component or a route may provide a configuration of its own.
@@ -144,9 +147,10 @@ export class KbqCodeBlockHighlight {
             onCleanup(() => (cancelled = true));
 
             // `pending` holds the code block, the pending task holds server rendering: both last until the load
-            // settles, failed or not.
+            // settles, failed or not. The task is the server's only: in the browser it would keep the application
+            // unstable, and Angular replays what a reader did before hydration only once it is stable.
             this._pending.set(true);
-            const removeTask = this.pendingTasks.add();
+            const removeTask = this.isServer ? this.pendingTasks.add() : null;
 
             this.loader
                 .load(this.config)
@@ -157,7 +161,7 @@ export class KbqCodeBlockHighlight {
                     // A run cancelled by a newer file leaves `pending` to that one.
                     if (!cancelled) this._pending.set(false);
 
-                    removeTask();
+                    removeTask?.();
                 });
         });
     }

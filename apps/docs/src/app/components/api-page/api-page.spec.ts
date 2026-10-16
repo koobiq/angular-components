@@ -84,11 +84,25 @@ const ENTRY_POINT: DocsApiEntryPoint = {
     ]
 };
 
+/**
+ * The code blocks are `@defer` blocks with a `hydrate` trigger, and a test renders without the incremental hydration
+ * the app enables: Angular warns about it, which says nothing about the page. Every other warning still fails the test.
+ */
+const passWarningsButHydrateTriggers = (): jest.SpyInstance => {
+    const warn = console.warn;
+
+    return jest.spyOn(console, 'warn').mockImplementation((message?: unknown, ...rest: unknown[]) => {
+        if (!String(message).includes('NG0508')) warn.call(console, message, ...rest);
+    });
+};
+
 describe(DocsApiPage.name, () => {
     let copyWithToast: jest.Mock;
+    let warn: jest.SpyInstance;
 
     beforeEach(() => {
         copyWithToast = jest.fn();
+        warn = passWarningsButHydrateTriggers();
 
         TestBed.configureTestingModule({
             providers: [
@@ -99,11 +113,26 @@ describe(DocsApiPage.name, () => {
         });
     });
 
-    const render = (entryPoint = ENTRY_POINT, selectedMember: string | null = null): HTMLElement => {
+    afterEach(() => warn.mockRestore());
+
+    const createFixture = (entryPoint = ENTRY_POINT, selectedMember: string | null = null) => {
         const fixture = TestBed.createComponent(DocsApiPage);
 
         fixture.componentRef.setInput('entryPoint', entryPoint);
         fixture.componentRef.setInput('selectedMember', selectedMember);
+        fixture.detectChanges();
+
+        return fixture;
+    };
+
+    const render = (entryPoint = ENTRY_POINT, selectedMember: string | null = null): HTMLElement =>
+        createFixture(entryPoint, selectedMember).nativeElement;
+
+    // The code blocks are `@defer` blocks: they render once their dependencies have loaded.
+    const renderCodeBlocks = async (): Promise<HTMLElement> => {
+        const fixture = createFixture();
+
+        await fixture.whenStable();
         fixture.detectChanges();
 
         return fixture.nativeElement;
@@ -112,8 +141,8 @@ describe(DocsApiPage.name, () => {
     const getTexts = (element: Element, selector: string): string[] =>
         Array.from(element.querySelectorAll(selector), (node) => node.textContent!.trim());
 
-    it('renders the import of the module, then each entry anchored by its name, with its kind', () => {
-        const page = render();
+    it('renders the import of the module, then each entry anchored by its name, with its kind', async () => {
+        const page = await renderCodeBlocks();
 
         expect(page.querySelector('.docs-api__import')?.textContent).toContain(
             "import { KbqAlertModule } from '@koobiq/components/alert';"
@@ -151,8 +180,8 @@ describe(DocsApiPage.name, () => {
         expect(render({ ...ENTRY_POINT, primaryExport: undefined }).querySelector('.docs-api__import')).toBeNull();
     });
 
-    it('renders the HTML of a text as it is, and its code in a code block', () => {
-        const description = render().querySelector('.docs-api__entry-description')!;
+    it('renders the HTML of a text as it is, and its code in a code block', async () => {
+        const description = (await renderCodeBlocks()).querySelector('.docs-api__entry-description')!;
 
         expect(getTexts(description, '.kbq-markdown__p')).toEqual(['Shows important information.']);
         expect(description.querySelector('kbq-code-block')?.textContent).toContain('<kbq-alert alertColor="error" />');

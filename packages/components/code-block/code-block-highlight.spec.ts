@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, Provider, signal, Type } from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, PLATFORM_ID, Provider, signal, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { HLJSApi } from 'highlight.js';
+import { firstValueFrom } from 'rxjs';
 import {
     KbqCodeBlockHighlight,
     KbqCodeBlockHighlightJsConfig,
@@ -48,6 +49,13 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
     fixture.autoDetectChanges();
 
     return fixture;
+};
+
+// The browser holds no pending task for the load of highlight.js, so `whenStable()` does not wait for it: a macrotask
+// starts once every promise of the load has settled.
+const settle = async (fixture: ComponentFixture<unknown>): Promise<void> => {
+    await new Promise((resolve) => setTimeout(resolve));
+    await fixture.whenStable();
 };
 
 const getCodeElements = (fixture: ComponentFixture<unknown>): HTMLElement[] =>
@@ -166,7 +174,7 @@ describe(KbqCodeBlockHighlight.name, () => {
             const load = coreLoader(core);
             const fixture = createComponent(ThreeBlocks, [kbqCodeBlockHighlightJsConfigProvider({ core: load })]);
 
-            await fixture.whenStable();
+            await settle(fixture);
 
             expect(load).toHaveBeenCalledTimes(1);
             expect(core.highlight).toHaveBeenCalledTimes(3);
@@ -189,7 +197,7 @@ describe(KbqCodeBlockHighlight.name, () => {
             kbqCodeBlockHighlightJsConfigProvider({ core: rootLoad })
         ]);
 
-        await fixture.whenStable();
+        await settle(fixture);
 
         expect(rootLoad).toHaveBeenCalledTimes(1);
         expect(scopedConfig.core).toHaveBeenCalled();
@@ -208,14 +216,14 @@ describe(KbqCodeBlockHighlight.name, () => {
             const fixture = createComponent(SingleBlock, [kbqCodeBlockHighlightJsConfigProvider({ core: load })]);
             const [code] = getCodeElements(fixture);
 
-            await fixture.whenStable();
+            await settle(fixture);
 
             expect(getHighlight(fixture).pending()).toBe(false);
             expect(code.textContent).toBe('one');
             expect(warn).toHaveBeenCalledWith('[KbqCodeBlock] Failed to load highlight.js.', expect.any(Error));
 
             fixture.componentInstance.file.set({ content: 'two', language: 'css' });
-            await fixture.whenStable();
+            await settle(fixture);
 
             expect(load).toHaveBeenCalledTimes(2);
             expect(code.getAttribute('data-language')).toBe('css');
@@ -238,7 +246,7 @@ describe(KbqCodeBlockHighlight.name, () => {
         expect(getHighlight(fixture).pending()).toBe(true);
 
         resolve();
-        await fixture.whenStable();
+        await settle(fixture);
 
         expect(core.highlight).toHaveBeenCalledWith('one', { language: 'typescript' });
         expect(code.querySelector('.server-markup')).toBeNull();
@@ -269,11 +277,38 @@ describe(KbqCodeBlockHighlight.name, () => {
         expect(code.hasAttribute('data-language')).toBe(false);
 
         resolve();
-        await fixture.whenStable();
+        await settle(fixture);
 
         expect(core.highlight).toHaveBeenCalledTimes(1);
         expect(core.highlight).toHaveBeenCalledWith('two', { language: 'css' });
         expect(code.getAttribute('data-language')).toBe('css');
+    });
+
+    it('should hold server rendering until the code is highlighted', async () => {
+        const core = buildMockCore();
+        const { load, resolve } = deferredCoreLoader(core);
+        const fixture = createComponent(SingleBlock, [
+            { provide: PLATFORM_ID, useValue: 'server' },
+            kbqCodeBlockHighlightJsConfigProvider({ core: load })
+        ]);
+
+        expect(await firstValueFrom(TestBed.inject(ApplicationRef).isStable)).toBe(false);
+
+        resolve();
+        await fixture.whenStable();
+
+        expect(core.highlight).toHaveBeenCalledWith('one', { language: 'typescript' });
+    });
+
+    // Angular replays what a reader did before hydration only once the application is stable.
+    it('should leave the application stable in the browser while highlight.js loads', async () => {
+        const { load } = deferredCoreLoader(buildMockCore());
+        const fixture = createComponent(SingleBlock, [kbqCodeBlockHighlightJsConfigProvider({ core: load })]);
+
+        await fixture.whenStable();
+
+        expect(await firstValueFrom(TestBed.inject(ApplicationRef).isStable)).toBe(true);
+        expect(getHighlight(fixture).pending()).toBe(true);
     });
 
     it('should keep the markup rendered on the server when highlight.js fails to load', async () => {
@@ -286,7 +321,7 @@ describe(KbqCodeBlockHighlight.name, () => {
             ]);
             const [code] = getCodeElements(fixture);
 
-            await fixture.whenStable();
+            await settle(fixture);
 
             expect(code.querySelector('.server-markup')).toBeInstanceOf(HTMLSpanElement);
             expect(getHighlight(fixture).pending()).toBe(false);

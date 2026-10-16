@@ -202,7 +202,21 @@ const ALERT_API: DocsApiEntryPoint = {
     ]
 };
 
+/**
+ * The code blocks of the tab are `@defer` blocks with a `hydrate` trigger, and a test renders without the incremental
+ * hydration the app enables: Angular warns about it, which says nothing about the tab. Every other warning still fails
+ * the test.
+ */
+const passWarningsButHydrateTriggers = (): jest.SpyInstance => {
+    const warn = console.warn;
+
+    return jest.spyOn(console, 'warn').mockImplementation((message?: unknown, ...rest: unknown[]) => {
+        if (!String(message).includes('NG0508')) warn.call(console, message, ...rest);
+    });
+};
+
 describe(DocsComponentApiPageComponent.name, () => {
+    let warn: jest.SpyInstance;
     let setScrollPosition: jest.SpyInstance;
     let scrollToElement: jest.SpyInstance;
 
@@ -236,11 +250,13 @@ describe(DocsComponentApiPageComponent.name, () => {
     };
 
     beforeEach(() => {
+        warn = passWarningsButHydrateTriggers();
         setScrollPosition = jest.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation();
         scrollToElement = jest.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation();
     });
 
     afterEach(() => {
+        warn.mockRestore();
         setScrollPosition.mockRestore();
         scrollToElement.mockRestore();
     });
