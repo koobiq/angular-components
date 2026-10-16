@@ -44,9 +44,12 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                 <kbq-skeleton-icon />
                 <kbq-skeleton-link />
             } @else {
-                <button kbq-button>Start</button>
+                <button kbq-button color="contrast">Start</button>
                 <kbq-badge [badgeColor]="badgeColors.FadeSuccess">Active</kbq-badge>
-                <kbq-tag>LDAP</kbq-tag>
+                <kbq-tag>
+                    LDAP
+                    <i kbqTagRemove kbq-icon-button="kbq-xmark-s_16"></i>
+                </kbq-tag>
                 <i aria-label="Edit" kbq-icon-button="kbq-pencil_16"></i>
                 <a kbq-link pseudo>History</a>
             }
