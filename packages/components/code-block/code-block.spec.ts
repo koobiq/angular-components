@@ -652,6 +652,27 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
     }));
 
+    it('should show actionbar for a block that comes to life under the pointer', () => {
+        const originalMatches = Element.prototype.matches;
+        // jsdom keeps no pointer: `:hover` stands for one resting over the code block, which sees no `mouseenter`.
+        const matches = jest.spyOn(Element.prototype, 'matches').mockImplementation(function (
+            this: Element,
+            selectors: string
+        ) {
+            return selectors === ':hover'
+                ? this.classList.contains('kbq-code-block')
+                : originalMatches.call(this, selectors);
+        });
+
+        try {
+            const { debugElement } = createComponent(CodeBlockWithDefaultOptions);
+
+            expect(geCodeBlockDebugElement(debugElement).classes['kbq-code-block_show-actionbar']).toBeTruthy();
+        } finally {
+            matches.mockRestore();
+        }
+    });
+
     it('should always show actionbar when alwaysShowActionbar is enabled', fakeAsync(() => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;

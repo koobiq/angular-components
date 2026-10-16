@@ -126,9 +126,6 @@ export class KbqCodeBlockTabLinkContent {}
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-code-block',
-        // highlight.js rewrites the <code> subtree on the client (and builds a <table> for line numbers),
-        // which never matches the server-rendered DOM — skip hydration for this component to avoid NG0500.
-        ngSkipHydration: 'true',
         '[class.kbq-code-block_filled]': 'filled()',
         '[class.kbq-code-block_outline]': '!filled()',
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers()',
@@ -533,6 +530,10 @@ export class KbqCodeBlock implements AfterViewInit {
                 this.actionbarHovered.set(false);
 
                 if (!hideTabs || alwaysShowActionbar || this.platform.IOS || this.platform.ANDROID) return;
+
+                // A block that comes to life under the pointer, as one hydrated on hover does, gets no `mouseenter`
+                // until the pointer has left it.
+                this.actionbarHovered.set(this.platform.isBrowser && this.elementRef.nativeElement.matches(':hover'));
 
                 const subscription = merge(
                     fromEvent<MouseEvent>(this.elementRef.nativeElement, 'mouseenter').pipe(map(() => true)),
