@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { By, provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { axe } from 'jest-axe';
@@ -84,36 +84,26 @@ const ENTRY_POINT: DocsApiEntryPoint = {
     ]
 };
 
-/**
- * The code blocks are `@defer` blocks with a `hydrate` trigger, and a test renders without the incremental hydration
- * the app enables: Angular warns about it, which says nothing about the page. Every other warning still fails the test.
- */
-const passWarningsButHydrateTriggers = (): jest.SpyInstance => {
-    const warn = console.warn;
-
-    return jest.spyOn(console, 'warn').mockImplementation((message?: unknown, ...rest: unknown[]) => {
-        if (!String(message).includes('NG0508')) warn.call(console, message, ...rest);
-    });
-};
-
 describe(DocsApiPage.name, () => {
     let copyWithToast: jest.Mock;
-    let warn: jest.SpyInstance;
 
     beforeEach(() => {
         copyWithToast = jest.fn();
-        warn = passWarningsButHydrateTriggers();
+        // Rendered in the browser alone, as a route of `RenderMode.Client` is: the flag the server sets for one.
+        document.body.setAttribute('ngcm', '');
 
         TestBed.configureTestingModule({
             providers: [
                 provideRouter([]),
                 provideDocsLocale(DocsLocale.Ru),
-                { provide: DocsClipboardService, useValue: { copyWithToast } }
+                { provide: DocsClipboardService, useValue: { copyWithToast } },
+                // As the app has it: the code blocks are `@defer` blocks with a `hydrate` trigger.
+                provideClientHydration(withIncrementalHydration())
             ]
         });
     });
 
-    afterEach(() => warn.mockRestore());
+    afterEach(() => document.body.removeAttribute('ngcm'));
 
     const createFixture = (entryPoint = ENTRY_POINT, selectedMember: string | null = null) => {
         const fixture = TestBed.createComponent(DocsApiPage);

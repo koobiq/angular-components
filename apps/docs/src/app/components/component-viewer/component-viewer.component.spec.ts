@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideClientHydration, withIncrementalHydration } from '@angular/platform-browser';
 import {
     ActivatedRoute,
     convertToParamMap,
@@ -202,21 +203,7 @@ const ALERT_API: DocsApiEntryPoint = {
     ]
 };
 
-/**
- * The code blocks of the tab are `@defer` blocks with a `hydrate` trigger, and a test renders without the incremental
- * hydration the app enables: Angular warns about it, which says nothing about the tab. Every other warning still fails
- * the test.
- */
-const passWarningsButHydrateTriggers = (): jest.SpyInstance => {
-    const warn = console.warn;
-
-    return jest.spyOn(console, 'warn').mockImplementation((message?: unknown, ...rest: unknown[]) => {
-        if (!String(message).includes('NG0508')) warn.call(console, message, ...rest);
-    });
-};
-
 describe(DocsComponentApiPageComponent.name, () => {
-    let warn: jest.SpyInstance;
     let setScrollPosition: jest.SpyInstance;
     let scrollToElement: jest.SpyInstance;
 
@@ -238,7 +225,9 @@ describe(DocsComponentApiPageComponent.name, () => {
                         data: of({ page: ALERT_API }),
                         queryParamMap: queryParamMap.asObservable()
                     }
-                }
+                },
+                // As the app has it: the code blocks of the tab are `@defer` blocks with a `hydrate` trigger.
+                provideClientHydration(withIncrementalHydration())
             ]
         });
 
@@ -250,13 +239,14 @@ describe(DocsComponentApiPageComponent.name, () => {
     };
 
     beforeEach(() => {
-        warn = passWarningsButHydrateTriggers();
+        // Rendered in the browser alone, as a route of `RenderMode.Client` is: the flag the server sets for one.
+        document.body.setAttribute('ngcm', '');
         setScrollPosition = jest.spyOn(DocsAnchorsComponent.prototype, 'setScrollPosition').mockImplementation();
         scrollToElement = jest.spyOn(DocsAnchorsComponent.prototype, 'scrollToElement').mockImplementation();
     });
 
     afterEach(() => {
-        warn.mockRestore();
+        document.body.removeAttribute('ngcm');
         setScrollPosition.mockRestore();
         scrollToElement.mockRestore();
     });
