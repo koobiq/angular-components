@@ -625,6 +625,8 @@ export async function loadExampleComponent(id: string): Promise<Type<unknown> | 
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayBackgroundExample);
         case 'loader-overlay-default':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDefaultExample);
+        case 'loader-overlay-delay':
+            return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayDelayExample);
         case 'loader-overlay-fixed-top':
             return import('@koobiq/docs-examples/components/loader-overlay').then((m) => m.LoaderOverlayFixedTopExample);
         case 'loader-overlay-large':
