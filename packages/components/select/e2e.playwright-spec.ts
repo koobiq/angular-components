@@ -10,7 +10,7 @@ import {
 /*  Helpers for layout-dependent positioning tests.                           */
 /*                                                                            */
 /*  These tests were originally `xit` in select.component.spec.ts because     */
-/*  Jest/JSDOM does not compute layout. They assert on real bounding boxes    */
+/*  jsdom does not compute layout. They assert on real bounding boxes         */
 /*  and CDK overlay positioning, so they must run in a real browser.          */
 /* -------------------------------------------------------------------------- */
 
@@ -387,7 +387,7 @@ test.describe('KbqSelectModule', () => {
 
             await row.waitFor();
 
-            // Real layout, unlike Jest/JSDOM: PAGE_DOWN's page size is derived from actual measured
+            // Real layout, unlike jsdom: PAGE_DOWN's page size is derived from actual measured
             // option/container heights, so this is the only environment that can exercise it for real.
             await page.keyboard.press('PageDown');
             await expect(options.last()).toHaveClass(/kbq-active/);
@@ -452,7 +452,7 @@ test.describe('KbqSelectModule', () => {
     /*  Behaviour-only tests ported from `xit` blocks in                      */
     /*  select.component.spec.ts. They rely on real layout (bounding boxes,   */
     /*  scroll position, focus, ellipsis detection) and therefore cannot run  */
-    /*  under Jest/JSDOM.                                                     */
+    /*  under jsdom.                                                          */
     /* ---------------------------------------------------------------------- */
 
     test.describe('multi-select option click', () => {

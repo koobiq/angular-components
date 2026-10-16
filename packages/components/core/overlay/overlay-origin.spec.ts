@@ -20,7 +20,7 @@ describe('overlay origin', () => {
         document.body.appendChild(element);
 
         // JSDOM does not lay out, so the element's box has to be supplied.
-        jest.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 200, height: 24 } as DOMRect);
+        vi.spyOn(element, 'getBoundingClientRect').mockReturnValue({ width: 200, height: 24 } as DOMRect);
 
         caret = { x: 10, y: 20, width: 0, height: 16 };
     });

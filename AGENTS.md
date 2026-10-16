@@ -28,7 +28,7 @@ The hooks run `lint-staged` before each commit (prettier, stylelint and eslint w
 packages/
 ├── components/                # @koobiq/components — every subdirectory is a secondary entry point (@koobiq/components/<name>)
 ├── components/core/           # @koobiq/components/core — shared code: a11y, behaviors, locales, overlay, test helpers, KBQ_WINDOW
-├── components-experimental/   # @koobiq/components-experimental — empty barrel in v20, kept so sub-packages can land later
+├── components-experimental/   # @koobiq/components-experimental — empty barrel, kept so sub-packages can land later
 ├── docs-examples/             # Live examples rendered by the docs site and reused by the dev apps
 ├── components-dev/            # Dev app per component (yarn run dev:<component-name>)
 ├── e2e/                       # App that mounts every component's e2e.ts scenarios for Playwright
@@ -49,7 +49,7 @@ Each component follows this structure, for example:
 packages/components/<component-name>/
 ├── <component-name>.ts                   # Main component (older components: <component-name>.component.ts)
 ├── <component-name>.module.ts            # Kbq<Name>Module — NgModule re-exporting the standalone pieces (legacy support; newer dirs name it module.ts)
-├── <component-name>.spec.ts              # Unit tests (Jest)
+├── <component-name>.spec.ts              # Unit tests (Vitest)
 ├── e2e.ts                                # E2e<Name><Scenario> components mounted by the e2e app
 ├── e2e.playwright-spec.ts                # Visual regression tests (Playwright)
 ├── __screenshots__/                      # Playwright baselines (Linux, threshold 0) — regenerate only via Docker or /approve-snapshots
@@ -85,6 +85,8 @@ yarn run docs:build                    # Build docs app for production (prerende
 
 Libraries are built by the custom `@koobiq/builders:packager` builder around ng-packagr. It replaces the `{{VERSION}}` and `{{NG_VERSION}}` placeholders in the package manifests and in `packages/components/core/version.ts`; `{{NG_VERSION}}` comes from `requiredAngularVersion` in the root `package.json`. Never hardcode a version in those files.
 
+`@angular/build` is installed through a yarn `patch:` from `.yarn/patches/` that ports angular/angular-cli@6d9b360e5: without it a one-shot build never disposes its esbuild contexts and `ng build` never exits. The patch is cut for one version and Dependabot ignores the package, so bump it by hand with the rest of `@angular/*` and re-cut the patch for the new version (`yarn patch @angular/build`, then `yarn patch-commit -s`). Drop the patch and its entry in `.github/dependabot.yml` once the 21.x line ships the fix; 21.2.26 does not.
+
 The docs app resolves `@koobiq/*` from `dist/` (see `apps/docs/tsconfig.app.json`), so rebuild the libraries before `docs:build`, and again after changing a component you want to see on the site. `yarn run docs` runs the whole chain in the right order.
 
 ### Development
@@ -103,23 +105,24 @@ A dev app lives in `packages/components-dev/<name>/` (`main.ts`, `module.ts`, `t
 
 There are two types of test files per component:
 
-- `*.spec.ts` — Jest unit tests
+- `*.spec.ts` — Vitest unit tests
 - `*.playwright-spec.ts` — Playwright E2E / visual regression tests
 
 ```bash
-# Unit tests (Jest)
+# Unit tests (Vitest)
 yarn run styles:build-all # CI does this before the unit suites; do the same before a full local run
-yarn run unit:all         # Every suite in one Jest process at --maxWorkers=100%
+yarn run unit:all         # Every suite in one Vitest run: the `angular` and `node` projects of vitest.config.mts
 yarn run unit:components  # Run component unit tests
 yarn run unit:components-experimental
 yarn run unit:angular-luxon-adapter
 yarn run unit:angular-moment-adapter
 yarn run unit:schematics # Run schematics tests
 yarn run unit:cli
-yarn run unit:koobiq-docs      # Docs app specs
-yarn run unit:tools            # Specs under tools/
-npx jest "<TEST_PATH_PATTERN>" # Run specific Jest tests (e.g., npx jest packages/components/button/button.component.spec.ts)
-npx jest "<TEST_PATH_PATTERN>" -t "<test name pattern>"
+yarn run unit:koobiq-docs            # Docs app specs
+yarn run unit:tools                  # Specs under tools/
+yarn run check-spec-types            # Type-check the specs, which Vitest compiles unchecked (part of the lint gate)
+npx vitest run "<TEST_PATH_PATTERN>" # Run specific tests (e.g., npx vitest run packages/components/button/button.component.spec.ts)
+npx vitest run "<TEST_PATH_PATTERN>" -t "<test name pattern>"
 
 # E2E tests (Playwright)
 yarn run e2e:setup                        # Install Playwright browsers (run once)
@@ -144,12 +147,17 @@ absorb a known flake and `PLAYWRIGHT_WORKERS=<n>` to change the worker cap. `@pl
 pinned exactly because a patch release can change the bundled Chromium and invalidate every
 baseline — upgrade it on its own branch and refresh the baselines in the same PR.
 
-Jest setup (`jest.config.js`, `tools/jest/setup.ts`) that shapes how specs are written:
+Vitest setup (`vitest.config.mts`, `tools/vitest/`) that shapes how specs are written:
 
-- `jest-fail-on-console` is on: any `console.error` or `console.warn` during a test fails it.
-- `jest-axe` is registered, so `expect(element).toHaveNoViolations()` is available in every spec.
-- `testTimeout` is 2 seconds; `clearMocks` and `resetModules` are on.
+- The `angular` project compiles specs with `@analogjs/vite-plugin-angular` and runs each file in a jsdom VM context (`vmForks`); the `node` project runs schematics, the CLI and `tools/`. Globals (`describe`, `it`, `expect`, `vi`) are on.
+- `tools/vitest/fail-on-console.ts`: any `console.error` or `console.warn` during a test fails it.
+- `jest-axe` is registered (it has no runtime dependency on Jest), so `expect(element).toHaveNoViolations()` is available in every spec.
+- `testTimeout` is 2 seconds; `clearMocks` is on. Vitest also fails the run on an error thrown after a test, such as a listener left behind by a destroyed injector.
+- TestBed is zoneless, with the exhaustive `checkNoChanges`: a binding that changed without notifying change detection fails the spec, OnPush views included. State a view reads that is written while change detection runs has to be a signal — a `markForCheck()` made then does not reach a view already checked.
+- Without zone.js nothing renders on its own: a check made right after an event needs `fixture.detectChanges()` or `await fixture.whenStable()`, and `whenStable()` does not wait for a bare `setTimeout` (use `PendingTasks` for library work worth waiting for). `fixture.detectChanges()` also marks the test host for check, so plain fields of a test wrapper still render.
+- zone.js is not loaded, and ESLint bans `fakeAsync`, `tick`, `flush` and `waitForAsync`. Time is driven with `vi.useFakeTimers()` (`await vi.advanceTimersByTimeAsync(ms)`, `await vi.runOnlyPendingTimersAsync()`). With all timers faked, `whenStable()` hangs once a render is scheduled, because the zoneless scheduler waits on a faked timer: advance the timers and call `fixture.detectChanges()`, or fake only `setTimeout`/`clearTimeout`. A zero-delay timer set from inside another timer fires 1 ms later on the fake clock. axe-core needs real timers.
 - Event and typing helpers (`dispatchFakeEvent`, `dispatchKeyboardEvent`, `dispatchMouseEvent`, `typeInElement`, ...) are exported from `@koobiq/components/core`.
+- jsdom has no Web Animations API, so what a component waits for with `kbqAfterAnimations` ends right after the next render. A spec that has to hold an animation open stubs `element.getAnimations` with an animation whose `finished` it resolves (see `toast.spec.ts`).
 - Test host components carry no `Kbq` prefix (`TestApp`, `BasicSelect`); lint does not check this.
 
 Playwright specifics (`playwright.config.ts`, `docs/guides/06-testing.md`): the per-test timeout is 15 seconds, and screenshot flakes almost always come from shooting before the state has settled — assert the settled state first. `docs/e2e-flakiness.md` records the mechanisms found so far and `docs/e2e-performance.md` where the time of a test goes; the helpers in `packages/e2e/utils` (for example `e2eWaitForSettledScrollbars`) exist for that.
@@ -187,21 +195,21 @@ yarn run check-llms                      # Fail on a stale llms.txt or on Markdo
 yarn run check-typings                   # Type-check the typings of every published package in dist/ with skipLibCheck off (CI)
 ```
 
-The guard reads `dist/components/<name>/index.d.ts`, so build the package first; a stale `dist/` produces a wrong golden file. Only the entry points listed in `tools/api-extractor/config.json` are guarded. Adding a JSDoc comment to a public member also changes its golden file (the `(undocumented)` marker goes away).
+The guard reads the flattened typings ng-packagr writes to `dist/components/types/koobiq-components-<name>.d.ts` (a nested entry point such as `scrollbar/deprecated` becomes `koobiq-components-scrollbar-deprecated.d.ts`), so build the package first; a stale `dist/` produces a wrong golden file. Only the entry points listed in `tools/api-extractor/config.json` are guarded. Adding a JSDoc comment to a public member also changes its golden file (the `(undocumented)` marker goes away).
 
 ## CI Gates
 
 Every pull request runs these workflows:
 
-| Workflow                          | What it runs                                                                                                                             |
-| --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-tokens-data` |
-| Unit tests                        | `styles:build-all`, then every `unit:*` script except `unit:all`                                                                         |
-| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                         |
-| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`         |
-| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`          |
-| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                   |
-| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                               |
+| Workflow                          | What it runs                                                                                                                                                 |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Linters                           | `cspell`, `prettier`, `stylelint --max-warnings=0`, `eslint --max-warnings=0`, `check-peer-deps`, `check-e2e-types`, `check-spec-types`, `check-tokens-data` |
+| Unit tests                        | `styles:build-all`, then `unit:all` (one Vitest run of the `angular` and `node` projects)                                                                    |
+| E2E tests                         | `e2e:docker` (component screenshots) and `e2e:docs` (docs smoke)                                                                                             |
+| API                               | build the packages, then `check-typings`, `check-api`, `check-public-api-any`, `docs:api-gen`, `check-api-docs` and `check-llms`                             |
+| Build                             | build the packages, `check-npm-resolution` (npm rejects peer conflicts that Yarn only warns about), build the docs, `ssr:build`                              |
+| Commitlint                        | the PR **title** must be a valid conventional commit — it becomes the squash commit and drives the release-notes label                                       |
+| License validation, Audit, CodeQL | `validate:license`, `yarn npm audit` (exceptions live in `.yarnrc.yml`, each with a justification), CodeQL                                                   |
 
 A docs preview is deployed to Firebase for pull requests opened from this repository.
 
@@ -215,13 +223,14 @@ A docs preview is deployed to Firebase for pull requests opened from this reposi
 - Entry points are compiled against each other's typings, so an `@internal` declaration may be used only inside its own entry point: using or overriding it from another one, or referencing it from a public signature, breaks the build or leaves invalid typings, which `check-typings` catches. A member has to stay in the typings when it implements an interface (`ngOnInit`, `writeValue`, `stateChanges`) or when a type requires it structurally without an `implements` clause (`KbqOption.setActiveStyles` for the CDK `ActiveDescendantKeyManager` in autocomplete). A declaration re-exported by name (`export { X } from './x'`) cannot be stripped either: the typings bundler fails on the dangling export, while `export *` is fine.
 - `@docs-private` only hides a declaration from the API tab of the docs site and keeps it in the typings. It is the tag for what consumers can reach but should not rely on, including everything the previous rule keeps out of `@internal`.
 - Published packages depend only on `tslib` at runtime; everything else is a peer dependency. `check-peer-deps` and `check-npm-resolution` guard the ranges because Yarn tolerates peer conflicts that npm rejects for consumers.
-- Supported release lines: `main` is `20.x`; `19.x` and `18.x` have their own branches and receive backports. Releases are cut by maintainers with `yarn run release:stage:commit`; the tag push publishes the packages listed under `release.packages` in the root `package.json` (see `docs/guides/05-releasing-packages.md`).
+- Supported release lines: `main` is `21.x`; `20.4.x` (the 20 line), `19.x` and `18.x` have their own branches and receive backports. Releases are cut by maintainers with `yarn run release:stage:commit`; the tag push publishes the packages listed under `release.packages` in the root `package.json` (see `docs/guides/05-releasing-packages.md`).
 
 ### Styling and theming
 
 - Components use `ViewEncapsulation.None` with `kbq-`-prefixed classes. Stylelint enforces the prefix (`dev-`, `e2e-`, `example-`, `docs-` in the other packages; `cdk-` and `ng-` always allowed) and kebab-case mixin names.
 - `<name>-tokens.scss` declares the component's `--kbq-<name>-*` custom properties in terms of the global `--kbq-*` tokens from `@koobiq/design-tokens`; `_<name>-theme.scss` consumes them. A component-specific look is expressed by redefining that component's tokens, not by editing the shared theme mixins.
-- `packages/components/_index.scss` forwards `core`, the theming API and `_koobiq-theme.scss`, whose `koobiq-theme()` and `koobiq-typography()` mixins aggregate the global (directive-level) themes. `styles:build-all` compiles every SCSS file to `dist/scss-compiled` and copies the prebuilt light, dark and combined themes into `dist/components/prebuilt-themes`, which is what the package `exports` expose.
+- `packages/components/_index.scss` forwards `core`, the theming API and `_koobiq-theme.scss`, whose `koobiq-theme()` and `koobiq-typography()` mixins aggregate the global (directive-level) themes. `styles:build-all` compiles every SCSS file to `dist/scss-compiled` and copies the prebuilt theme (`theme.css`, light and dark in one file) into `dist/components/prebuilt-themes`, which is what the package `exports` expose.
+- Motion is CSS: `@angular/animations` is deprecated and banned by ESLint. A component that has to act once an animation ends (a panel detaching after its exit) waits with `kbqAfterAnimations` from `core`, which ends at once when nothing animates; a template element uses `animate.enter` / `animate.leave`. Every animated element binds `[class.kbq-animations-disabled]` to `kbqAnimationsDisabled()` and includes the `kbq-animations-off()` mixin in its most specific animated rule, which also covers `prefers-reduced-motion: reduce`.
 
 ### Localization and accessibility text
 

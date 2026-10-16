@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import {
@@ -196,7 +196,7 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
 
     modelValue: any = ['docs'];
 
-    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
+    readonly tree = viewChild.required(KbqTreeSelection);
 
     constructor() {
         super();
@@ -206,7 +206,7 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
         const option: KbqTreeOption = $event.option;
 
         if (option.isExpandable) {
-            this.tree.setStateChildren(option, !option.selected);
+            this.tree().setStateChildren(option, !option.selected);
         }
 
         this.toggleParents(($event.option.data as any)?.parent);
@@ -218,13 +218,13 @@ export class TreeDescendantsSubcategoriesExample extends TreeParams {
         }
 
         const descendants = this.treeControl.getDescendants(parent);
-        const isParentSelected = this.tree.selectionModel.selected.includes(parent);
+        const isParentSelected = this.tree().selectionModel.selected.includes(parent);
 
-        if (!isParentSelected && descendants.every((d: any) => this.tree.selectionModel.selected.includes(d))) {
-            this.tree.selectionModel.select(parent);
+        if (!isParentSelected && descendants.every((d: any) => this.tree().selectionModel.selected.includes(d))) {
+            this.tree().selectionModel.select(parent);
             this.toggleParents(parent.parent);
         } else if (isParentSelected) {
-            this.tree.selectionModel.deselect(parent);
+            this.tree().selectionModel.deselect(parent);
             this.toggleParents(parent.parent);
         }
     }

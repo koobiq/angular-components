@@ -19,7 +19,8 @@ export class MomentDateModule {}
     imports: [MomentDateModule, KbqLocaleServiceModule],
     providers: [
         {
-            // todo после добавления McLocaleServiceModule возможно уже неактуально
+            // Resets the date formats of a parent injector: the date input then reads its pattern from the
+            // adapter, whose configuration follows the locale of `KbqLocaleService`.
             provide: KBQ_DATE_FORMATS,
             useValue: null
         }

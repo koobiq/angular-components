@@ -3,14 +3,13 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
     contentChild,
     inject,
-    Input,
     input,
     OnChanges,
     OnDestroy,
     OnInit,
+    signal,
     SimpleChanges,
     TemplateRef,
     viewChild,
@@ -51,9 +50,11 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
         return this.contentPortal;
     }
 
-    @ContentChild(KBQ_TAB_LABEL)
+    private readonly templateLabelQuery = contentChild(KBQ_TAB_LABEL);
+
+    /** The label template of the tab: the `kbqTabLabel` in its content, or else the one assigned in code. */
     get templateLabel(): KbqTabLabel {
-        return this._templateLabel;
+        return this.templateLabelQuery() ?? this._templateLabel;
     }
 
     set templateLabel(value: KbqTabLabel) {
@@ -70,9 +71,15 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /** Template inside the KbqTab view that contains an `<ng-content>`. */
     readonly implicitContent = viewChild.required(TemplateRef);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /** @docs-private */
+    readonly tooltipTitleInput = input<string | undefined>(undefined, { alias: 'tooltipTitle' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
     get tooltipTitle(): string {
         return this.overflowTooltipTitle + this._tooltipTitle;
     }
@@ -84,7 +91,17 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     private _tooltipTitle = '';
 
     /** Whether the tab is disabled: it cannot be selected and has no interactive states. */
-    readonly disabled = input<boolean, unknown>(false, { transform: booleanAttribute });
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
 
     /** Placement of the tooltip shown for a truncated or empty label. */
     readonly tooltipPlacement = input<KbqPopUpPlacementValues>(PopUpPlacements.Right);
@@ -116,10 +133,16 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
      */
     origin: number | null = null;
 
-    /**
-     * Whether the tab is currently active.
-     */
-    isActive = false;
+    /** Whether the tab is currently active. A template that reads it is updated when it changes. */
+    get isActive(): boolean {
+        return this.activeState();
+    }
+
+    set isActive(value: boolean) {
+        this.activeState.set(value);
+    }
+
+    private readonly activeState = signal(false);
 
     get isOverflown(): boolean {
         return !!this._overflowTooltipTitle;
@@ -143,7 +166,19 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     private contentPortal: TemplatePortal | null = null;
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {
+        // A bound input is handed to its member, except that `undefined` resets a member
+        // typed without it to its default; unbound, it leaves what code wrote.
+        if (changes['tooltipTitleInput']) {
+            this.tooltipTitle = this.tooltipTitleInput() ?? '';
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['textLabel'] || changes['disabledInput'] || changes['tooltipTitleInput']) {
             this.stateChanges.next();
         }
     }
@@ -160,16 +195,11 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * This has been extracted to a util because of TS 4 and VE.
-     * View Engine doesn't support property rename inheritance.
-     * TS 4.0 doesn't allow properties to override accessors or vice-versa.
+     * Keeps a label template assigned in code, used while the content of the tab has none. A falsy value is
+     * ignored.
      * @docs-private
      */
     protected setTemplateLabelInput(value: KbqTabLabel) {
-        // Only update the templateLabel via query if there is actually
-        // a KbqTabLabel found. This works around an issue where a user may have
-        // manually set `templateLabel` during creation mode, which would then get clobbered
-        // by `undefined` when this query resolves.
         if (value) {
             this._templateLabel = value;
         }

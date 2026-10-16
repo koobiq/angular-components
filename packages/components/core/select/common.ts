@@ -8,6 +8,7 @@ import {
     EventEmitter,
     inject,
     input,
+    isWritableSignal,
     Signal,
     viewChild
 } from '@angular/core';
@@ -96,16 +97,20 @@ export class KbqSelectSearch implements AfterContentInit {
     }
 
     constructor() {
-        this.formField.canCleanerClearByEsc = false;
         this.formField.inOverlay.set(true);
     }
 
     setPlaceholder(value: string): void {
-        this.formField.control().placeholder = value;
+        const placeholder = this.formField.control().placeholder;
+
+        // The search control is `KbqInput` (see `ngAfterContentInit`), whose placeholder can be written.
+        if (isWritableSignal(placeholder)) {
+            placeholder.set(value);
+        }
     }
 
     hasPlaceholder(): boolean {
-        return !!this.formField?.control().placeholder;
+        return !!this.formField?.control().placeholder();
     }
 
     focus(): void {
@@ -117,7 +122,7 @@ export class KbqSelectSearch implements AfterContentInit {
     }
 
     value() {
-        return this.formField.control().value;
+        return this.formField.control().value();
     }
 
     ngAfterContentInit(): void {
@@ -253,6 +258,7 @@ export abstract class KbqAbstractSelect {
 
         if (measuredPanelWidth) {
             this.overlayWidth = measuredPanelWidth;
+            this.changeDetectorRef.markForCheck();
         }
     }
 

@@ -24,7 +24,7 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     /** Emits when the actions panel starts opening, before its entrance animation plays. */
     readonly beforeOpened: Observable<void> = this.beforeOpenedSubject;
 
-    /** Emits when the actions panel has opened and appeared. */
+    /** Emits when the actions panel has opened and appeared, or once closing cuts its entrance short. */
     readonly afterOpened: Observable<void> = this.afterOpenedSubject;
 
     /** Emits when the actions panel starts closing, before its exit animation plays. */
@@ -49,9 +49,6 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
 
     /** Result to be passed down to the `afterClosed` stream. */
     private result: R | undefined;
-
-    /** Handle to the timeout that's running as a fallback in case the close animation doesn't fire. */
-    private closeAnimationFallbackTimeout?: ReturnType<typeof setTimeout>;
 
     constructor(
         private readonly dialogRef: DialogRef<R, I>,
@@ -79,33 +76,25 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
 
     /** Closes the actions panel. */
     close(result?: R): void {
-        if (!this.containerInstance) {
+        const container = this.containerInstance;
+
+        if (!container) {
             return;
         }
 
-        this.containerInstance.animationStateChanged
-            .pipe(
-                filter((event) => event.phaseName === 'start'),
-                take(1)
-            )
-            .subscribe(({ totalTime }) => {
-                this.closeAnimationFallbackTimeout = setTimeout(
-                    () => this.dialogRef.close(this.result),
-                    totalTime + 100
-                );
-            });
-
+        // The exit ends an entrance still in progress, so it starts ahead of `beforeClosed` for `afterOpened` to
+        // come first — and the container is let go before that, since an `afterOpened` subscriber may close again.
+        this.containerInstance = null!;
         this.result = result;
+        container.startCloseAnimation();
         this.beforeClosedSubject.next(result);
         this.beforeClosedSubject.complete();
-        this.containerInstance.startCloseAnimation();
-        this.containerInstance = null!;
     }
 
     private handleAnimation(): void {
-        this.containerInstance.animationStateChanged
+        this.containerInstance.animationDone
             .pipe(
-                filter((event) => event.phaseName === 'done' && event.toState === 'visible'),
+                filter((state) => state === 'visible'),
                 take(1)
             )
             .subscribe(() => {
@@ -113,15 +102,12 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
                 this.afterOpenedSubject.complete();
             });
 
-        this.containerInstance.animationStateChanged
+        this.containerInstance.animationDone
             .pipe(
-                filter((event) => event.phaseName === 'done' && event.toState === 'hidden'),
+                filter((state) => state === 'hidden'),
                 take(1)
             )
-            .subscribe(() => {
-                clearTimeout(this.closeAnimationFallbackTimeout);
-                this.dialogRef.close(this.result);
-            });
+            .subscribe(() => this.dialogRef.close(this.result));
     }
 
     private handleOverlayDetachments(): void {

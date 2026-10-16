@@ -8,22 +8,22 @@ import { KbqModalComponent } from './modal.component';
 class MockModalRef extends KbqModalRef {
     // `handleMultipleMasks` reaches past the ref into the component to read these, so a ref that
     // does not carry them cannot be registered at all.
-    kbqVisible = signal(false);
-    kbqMask = signal(false);
+    readonly kbqVisible = signal(false);
+    readonly kbqMask = signal(false);
 
     afterOpen = new Subject<void>();
     beforeClose = new Subject<void>();
     afterClose = new Subject<void>();
 
-    open = jest.fn();
-    close = jest.fn();
-    destroy = jest.fn();
-    triggerOk = jest.fn();
-    triggerCancel = jest.fn();
-    getContentComponent = jest.fn();
-    getElement = jest.fn();
-    getInstance = jest.fn().mockReturnValue({} as KbqModalComponent);
-    markForCheck = jest.fn();
+    open = vi.fn();
+    close = vi.fn();
+    destroy = vi.fn();
+    triggerOk = vi.fn();
+    triggerCancel = vi.fn();
+    getContentComponent = vi.fn();
+    getElement = vi.fn();
+    getInstance = vi.fn().mockReturnValue({} as KbqModalComponent);
+    markForCheck = vi.fn();
 }
 
 describe(KbqModalControlService.name, () => {
@@ -98,7 +98,7 @@ describe(KbqModalControlService.name, () => {
 
     it('should not emit afterAllClose when a modal that never opened is deregistered', () => {
         const ref = new MockModalRef();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         service.afterAllClose.subscribe(spy);
         service.registerModal(ref);
@@ -109,7 +109,7 @@ describe(KbqModalControlService.name, () => {
 
     it('should emit afterAllClose when the last open modal closes', () => {
         const ref = new MockModalRef();
-        const spy = jest.fn();
+        const spy = vi.fn();
 
         service.afterAllClose.subscribe(spy);
         service.registerModal(ref);

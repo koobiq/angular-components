@@ -9,7 +9,6 @@
     ],
     "license": "MIT",
     "peerDependencies": {
-        "@angular/animations": "{{NG_VERSION}}",
         "@angular/cdk": "{{NG_VERSION}}",
         "@angular/core": "{{NG_VERSION}}",
         "@angular/common": "{{NG_VERSION}}",

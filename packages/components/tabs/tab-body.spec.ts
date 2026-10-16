@@ -1,8 +1,15 @@
 import { Direction, Directionality } from '@angular/cdk/bidi';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
-import { AfterContentInit, Component, TemplateRef, ViewContainerRef, inject, viewChild } from '@angular/core';
+import {
+    AfterContentInit,
+    Component,
+    MAX_ANIMATION_TIMEOUT,
+    TemplateRef,
+    ViewContainerRef,
+    inject,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { KbqTabBody, KbqTabBodyPortal } from './tab-body.component';
 import { KbqTabsModule } from './tabs.module';
@@ -15,10 +22,14 @@ describe('KbqTabBody', () => {
         dirChange = new Subject<Direction>();
     });
 
+    afterEach(() => {
+        vi.useRealTimers();
+    });
+
     beforeEach(() => {
         dir = 'ltr';
         TestBed.configureTestingModule({
-            imports: [PortalModule, NoopAnimationsModule, KbqTabBody, KbqTabBodyPortal, SimpleTabBodyApp],
+            imports: [PortalModule, KbqTabBody, KbqTabBodyPortal, SimpleTabBodyApp],
             providers: [
                 { provide: Directionality, useFactory: () => ({ value: dir, change: dirChange }) }
             ]
@@ -171,6 +182,37 @@ describe('KbqTabBody', () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance.tabBody().bodyPosition).toBe('left');
+    });
+
+    it('should stop waiting for a translation that never finishes after MAX_ANIMATION_TIMEOUT', async () => {
+        vi.useFakeTimers();
+
+        const fixture = TestBed.createComponent(SimpleTabBodyApp);
+        const centered = vi.fn();
+        const timeout = TestBed.inject(MAX_ANIMATION_TIMEOUT);
+
+        fixture.componentInstance.position = 1;
+        fixture.detectChanges();
+        await vi.advanceTimersByTimeAsync(0);
+
+        fixture.componentInstance.tabBody().onCentered.subscribe(centered);
+
+        // A paused translation: a finite end, but `finished` never settles.
+        fixture.nativeElement.querySelector('.kbq-tab-body__content').getAnimations = () => [
+            {
+                effect: { getComputedTiming: () => ({ endTime: 500 }) },
+                finished: new Promise(() => {})
+            } as unknown as Animation
+        ];
+
+        fixture.componentInstance.position = 0;
+        fixture.detectChanges();
+
+        await vi.advanceTimersByTimeAsync(timeout - 1);
+        expect(centered).not.toHaveBeenCalled();
+
+        await vi.advanceTimersByTimeAsync(1);
+        expect(centered).toHaveBeenCalledTimes(1);
     });
 });
 

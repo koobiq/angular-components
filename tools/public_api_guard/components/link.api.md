@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_core from '@angular/core';
 import * as i1 from '@angular/cdk/a11y';
@@ -11,7 +12,7 @@ import { OnDestroy } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 
 // @public
-export class KbqLink implements AfterViewInit, OnDestroy {
+export class KbqLink implements AfterViewInit, AfterViewChecked, OnDestroy {
     constructor();
     protected readonly ariaDisabledAttribute: _angular_core.Signal<true | null>;
     readonly big: _angular_core.InputSignalWithTransform<boolean, unknown>;
@@ -24,6 +25,7 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     protected readonly hostTabIndex: _angular_core.Signal<number>;
     readonly multiline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     protected readonly nativeDisabledAttribute: _angular_core.Signal<true | null>;
+    ngAfterViewChecked(): void;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -31,7 +33,6 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     readonly noUnderline: _angular_core.InputSignalWithTransform<boolean, unknown>;
     readonly print: _angular_core.InputSignal<string | null | undefined>;
     protected readonly printMode: _angular_core.Signal<boolean>;
-    protected printUrl(): string | undefined;
     readonly pseudo: _angular_core.InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly renderer: Renderer2;

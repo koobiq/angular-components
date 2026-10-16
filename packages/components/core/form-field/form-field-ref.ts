@@ -1,6 +1,5 @@
 import { ElementRef, InjectionToken, ModelSignal, Signal } from '@angular/core';
 import { NgControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 
 /**
  * The part of `KbqFormFieldControl` that code outside `@koobiq/components/form-field` relies on.
@@ -13,52 +12,46 @@ import { Observable } from 'rxjs';
  */
 export interface KbqFormFieldControlRef<T = unknown> {
     /** The value of the control. */
-    value: T | null;
-    /** Stream that emits whenever the state of the control changes. */
-    readonly stateChanges: Observable<void>;
+    readonly value: Signal<T | null>;
     /** The element ID for this control. */
-    readonly id: string;
+    readonly id: Signal<string>;
     /** The placeholder for this control. */
-    placeholder: string;
+    readonly placeholder: Signal<string | null | undefined>;
     /** Gets the NgControl for this control. */
     readonly ngControl: NgControl | null;
     /** Whether the control is focused. */
-    readonly focused: boolean;
+    readonly focused: Signal<boolean>;
     /** Whether the control is empty. */
-    readonly empty: boolean;
+    readonly empty: Signal<boolean>;
     /** Whether the control is required. */
-    readonly required: boolean;
+    readonly required: Signal<boolean>;
     /** Whether the control is disabled. */
-    readonly disabled: boolean;
+    readonly disabled: Signal<boolean>;
     /** Whether the control is in an error state. */
-    readonly errorState: boolean;
+    readonly errorState: Signal<boolean>;
     /** Name of the control type, used to build the `kbq-form-field-type-{{controlType}}` class. */
     readonly controlType?: string;
 }
 
 /**
- * Internal contract for `KbqFormField` used by code that cannot import the form-field
- * class directly because of a circular dependency (e.g. `core/select/common.ts`).
- *
- * @deprecated Use KbqFormField from `@koobiq/components/form-field`.
+ * Internal contract between `core` and `KbqFormField`, for code that cannot import the form field because of a
+ * circular dependency (e.g. `core/select/common.ts`). Application code injects `KBQ_FORM_FIELD` from
+ * `@koobiq/components/form-field` instead.
  *
  * @docs-private
  */
 export interface KbqFormFieldRef {
     /** @see KbqFormField.control */
     readonly control: Signal<KbqFormFieldControlRef>;
-    canCleanerClearByEsc: boolean;
     /** Use when KbqFormField is in an overlay container. */
     inOverlay: ModelSignal<boolean>;
     focus(): void;
 }
 
 /**
- * Injection token that can be used to inject an instances of `KbqFormField`. It serves
- * as alternative token to the actual `KbqFormField` class which would cause unnecessary
- * retention of the `KbqFormField` class and its component metadata.
- *
- * @deprecated Use `KBQ_FORM_FIELD` from `@koobiq/components/form-field`.
+ * Injects the `KbqFormField` as a `KbqFormFieldRef` where `@koobiq/components/form-field` cannot be imported: an
+ * internal contract between `core` and the form field. Application code injects `KBQ_FORM_FIELD` from
+ * `@koobiq/components/form-field` instead.
  *
  * @docs-private
  */

@@ -182,16 +182,6 @@ describe('reading members from source', () => {
         });
     });
 
-    it('reads the default of a decorated input', () => {
-        expect(
-            readSourceFile('packages/components/tabs/tab-group.component.ts').classes.KbqTabGroup.members.headerPosition
-        ).toEqual({
-            declaredType: 'KbqTabHeaderPosition',
-            defaultValue: "'above'",
-            binding: { input: 'headerPosition', required: false }
-        });
-    });
-
     // A default is written in full, however long: a placeholder would leave a reader guessing.
     it('reads a default spanning lines in full, indented from the line it starts on', () => {
         expect(
@@ -220,11 +210,34 @@ describe('reading members from source', () => {
         ]);
     });
 
-    it('reads the alias of a decorated input', () => {
-        expect(
-            readSourceFile('packages/components/tooltip/tooltip.component.ts').classes.KbqTooltipTrigger.members
-                .relativeToPointer.binding
-        ).toEqual({ input: 'kbqRelativeToPointer', required: false });
+    // The library declares no decorated input any more, so the source is written here.
+    it('reads the alias and the default of a decorated input', () => {
+        const dir = mkdtempSync(join(tmpdir(), 'api-gen-'));
+        const file = join(dir, 'decorated.ts');
+
+        writeFileSync(
+            file,
+            "import { Directive, Input } from '@angular/core';\n" +
+                "type Position = 'above' | 'below';\n" +
+                "@Directive({ selector: '[decorated]' })\n" +
+                'export class Decorated {\n' +
+                "    @Input('kbqRelativeToPointer') relativeToPointer: boolean;\n" +
+                "    @Input() headerPosition: Position = 'above';\n" +
+                '}\n'
+        );
+
+        try {
+            const { members } = readSourceFile(file).classes.Decorated;
+
+            expect(members.relativeToPointer.binding).toEqual({ input: 'kbqRelativeToPointer', required: false });
+            expect(members.headerPosition).toEqual({
+                declaredType: 'Position',
+                defaultValue: "'above'",
+                binding: { input: 'headerPosition', required: false }
+            });
+        } finally {
+            rmSync(dir, { recursive: true, force: true });
+        }
     });
 
     // Angular's extractor reports none: without these, the interface would read as empty.
@@ -592,6 +605,43 @@ describe('member source metadata', () => {
             declaredType: 'boolean',
             defaultValue: 'false'
         });
+    });
+
+    // An accessor kept writable for code: the bound input feeds its setter, and all three are one member.
+    it('folds the setter of a public accessor into the merged member', () => {
+        const members = membersOf(
+            updateEntries(
+                [
+                    classEntry('KbqCheckbox', [
+                        member({
+                            name: 'checkedInput',
+                            memberTags: [MemberTags.Input],
+                            inputAlias: 'checked',
+                            jsdocTags: [{ name: 'docs-private', comment: '' }]
+                        }),
+                        member({ name: 'checked', memberType: MemberType.Getter }),
+                        member({
+                            name: 'checked',
+                            memberType: MemberType.Setter,
+                            description: 'Whether it is checked.'
+                        })
+                    ])
+                ],
+                {
+                    KbqCheckbox: classMetadata({
+                        members: { checkedInput: { signalApi: 'input' }, checked: { declaredType: 'boolean' } }
+                    })
+                }
+            )
+        );
+
+        expect(members.filter(({ name }) => name === 'checked')).toEqual([
+            expect.objectContaining({
+                memberType: MemberType.Property,
+                memberTags: [MemberTags.Input],
+                description: 'Whether it is checked.'
+            })
+        ]);
     });
 });
 

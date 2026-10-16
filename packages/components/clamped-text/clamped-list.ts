@@ -80,8 +80,8 @@ export class KbqClampedList<T> implements KbqClamped {
         '[attr.aria-expanded]': 'expanded()',
         '[attr.aria-controls]': 'root?.contentId ?? null',
         '(click)': 'root?.toggle($event)',
-        '(keydown.enter)': 'onKeydown($event)',
-        '(keydown.space)': 'onKeydown($event)'
+        '(keydown.enter)': 'onKeydown($any($event))',
+        '(keydown.space)': 'onKeydown($any($event))'
     },
     exportAs: 'kbqClampedListTrigger'
 })

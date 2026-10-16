@@ -1,4 +1,4 @@
-import { Component, Type } from '@angular/core';
+import { Component, effect, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { KbqFileList, KbqFileLoader, KbqFileUploadContext } from '@koobiq/components/file-upload';
@@ -77,7 +77,6 @@ class TestFileLoader {
 
 @Component({
     imports: [KbqFileLoader, KbqFileUploadContext],
-    standalone: true,
     template: `
         <div
             kbqFileUploadContext
@@ -650,3 +649,45 @@ describe('KbqFileList', () => {
         });
     });
 });
+
+describe('KbqFileList called from an effect', () => {
+    it('should not loop when an effect removes the first item', async () => {
+        const fixture = createComponent(TestFileListDrivenByEffect);
+        const host = fixture.componentInstance;
+        const files: TestFile[] = [
+            { name: 'file1.txt', size: 100 },
+            { name: 'file2.txt', size: 200 },
+            { name: 'file3.txt', size: 300 }
+        ];
+
+        host.fileList().list.set(files);
+        host.remove.set(true);
+        await fixture.whenStable();
+
+        expect(host.fileList().list()).toEqual(files.slice(1));
+        expect(host.runs).toBe(1);
+    });
+});
+
+@Component({
+    selector: '',
+    imports: [KbqFileList],
+    template: `
+        <div kbqFileList></div>
+    `
+})
+class TestFileListDrivenByEffect {
+    readonly fileList = viewChild.required<KbqFileList<TestFile>>(KbqFileList);
+    readonly remove = signal(false);
+    runs = 0;
+
+    constructor() {
+        effect(() => {
+            // Capped, so that a regression fails instead of hanging.
+            if (!this.remove() || this.runs === 10) return;
+
+            this.runs++;
+            this.fileList().removeAt(0);
+        });
+    }
+}

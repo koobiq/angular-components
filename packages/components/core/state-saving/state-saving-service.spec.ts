@@ -175,7 +175,7 @@ describe('KbqStateSavingService', () => {
             store.setState('settings', ['a']);
             saving.read(normalizeStringArray);
 
-            // Mapped to plain data on purpose: deep-comparing a live directive makes jest serialize it,
+            // Mapped to plain data on purpose: deep-comparing a live directive makes the runner serialize it,
             // which throws while building the diff and hides the real failure.
             expect(
                 service.components().map(({ name, key, enabled, state }) => ({ name, key, enabled, state }))

@@ -13,7 +13,7 @@
     <kbq-vertical-navbar #verticalNavbar>
         <!--
             Declare every <ng-template> right where its item appears. The navbar derives its
-            keyboard-focus order from @ContentChildren(KbqNavbarFocusableItem), and that query lists
+            keyboard-focus order from its contentChildren(KbqNavbarFocusableItem) query, which lists
             matches in TEMPLATE DECLARATION order — NOT in *ngTemplateOutlet insertion order. Keeping
             each template next to its outlet, and NOT sharing one template across the two containers,
             keeps focus order aligned with visual order. Templates must also stay INSIDE the navbar so

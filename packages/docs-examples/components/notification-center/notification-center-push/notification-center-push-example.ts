@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, inject, TemplateRef, viewChild } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -37,7 +36,6 @@ enum NavbarIcItems {
         KbqIconModule,
         KbqButtonModule,
         KbqDropdownModule,
-        AsyncPipe,
         KbqLinkModule,
         LuxonDateModule,
         KbqFormattersModule

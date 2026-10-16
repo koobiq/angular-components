@@ -38,14 +38,11 @@
             [popoverHeight]="'430px'"
         >
             <i
-                kbq-icon="{{ notificationService.silentMode.value ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
+                kbq-icon="{{ notificationService.silentMode() ? 'kbq-bell-slash_16' : 'kbq-bell_16' }}"
                 color="contrast"
             ></i>
-            @if (trigger.unreadItemsCounter | async; as unreadItems) {
-                <kbq-badge
-                    [badgeColor]="notificationService.silentMode.value ? 'fade-contrast' : 'error'"
-                    [compact]="true"
-                >
+            @if (trigger.unreadItemsCounter(); as unreadItems) {
+                <kbq-badge [badgeColor]="notificationService.silentMode() ? 'fade-contrast' : 'error'" [compact]="true">
                     {{ unreadItems }}
                 </kbq-badge>
             }

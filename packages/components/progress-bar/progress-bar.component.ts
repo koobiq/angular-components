@@ -1,13 +1,18 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    Directive,
-    ViewEncapsulation,
     computed,
     contentChild,
-    input
+    Directive,
+    input,
+    ViewEncapsulation
 } from '@angular/core';
-import { KbqColorDirective, KbqComponentColors, kbqInjectA11yLocaleConfiguration } from '@koobiq/components/core';
+import {
+    kbqAnimationsDisabled,
+    KbqColorDirective,
+    KbqComponentColors,
+    kbqInjectA11yLocaleConfiguration
+} from '@koobiq/components/core';
 
 /** Whether the bar reports a known share of the work, or an operation whose duration is unknown. */
 export type ProgressBarMode = 'determinate' | 'indeterminate';
@@ -62,8 +67,11 @@ export class KbqProgressBarCaption {
         '[attr.id]': 'id()',
         class: 'kbq-progress-bar',
         role: 'progressbar',
-        '[class.kbq-progress-bar_determinate]': '!indeterminate()',
-        '[class.kbq-progress-bar_indeterminate]': 'indeterminate()',
+        // The classes read `mode` rather than `indeterminate`, which the attributes read: the host bindings of every
+        // bar in a view run in that view's reactive consumer, where a signal read again after others costs a scan of
+        // all it has read so far.
+        '[class.kbq-progress-bar_determinate]': "mode() !== 'indeterminate'",
+        '[class.kbq-progress-bar_indeterminate]': "mode() === 'indeterminate'",
         // An indeterminate `progressbar` is expressed by the absence of `aria-valuenow`, so the whole
         // range stays off the element rather than being pinned to zero.
         '[attr.aria-valuemin]': 'indeterminate() ? null : 0',
@@ -96,6 +104,13 @@ export class KbqProgressBar extends KbqColorDirective {
      */
     readonly ariaLabel = input<string | null>(null, { alias: 'aria-label' });
 
+    /**
+     * Whether the fill follows a new value without a transition, and the indeterminate fill pulses in place instead
+     * of sliding, as under reduced motion.
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
     /** Anything other than `indeterminate` reports a value, matching the branch the template renders. */
     protected readonly indeterminate = computed(() => this.mode() === 'indeterminate');
 
@@ -115,7 +130,6 @@ export class KbqProgressBar extends KbqColorDirective {
     constructor() {
         super();
 
-        this.color = KbqComponentColors.Theme;
         this.setDefaultColor(KbqComponentColors.Theme);
     }
 }

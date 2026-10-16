@@ -12,7 +12,6 @@ export class KbqFormElement implements AfterContentInit {
 
     margin = false;
 
-    isRow = false;
     isFieldSet = false;
     hasLegend = false;
     isHorizontal = false;
@@ -22,7 +21,6 @@ export class KbqFormElement implements AfterContentInit {
     ngAfterContentInit(): void {
         const classList = this.element.nativeElement.classList;
 
-        this.isRow = classList.contains('kbq-form__row');
         this.isHorizontal = classList.contains('kbq-horizontal');
 
         this.isFieldSet = classList.contains('kbq-form__fieldset');

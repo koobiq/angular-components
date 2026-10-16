@@ -162,7 +162,7 @@ describe('KbqLink', () => {
     });
 
     it('should not observe content on a link with no icons', () => {
-        const observe = jest.spyOn(ContentObserver.prototype, 'observe');
+        const observe = vi.spyOn(ContentObserver.prototype, 'observe');
 
         TestBed.createComponent(KbqLinkBaseTestApp).detectChanges();
 
@@ -170,7 +170,7 @@ describe('KbqLink', () => {
     });
 
     it('should observe content once an icon is projected', () => {
-        const observe = jest.spyOn(ContentObserver.prototype, 'observe');
+        const observe = vi.spyOn(ContentObserver.prototype, 'observe');
 
         TestBed.createComponent(KbqLinkIconTestApp).detectChanges();
 

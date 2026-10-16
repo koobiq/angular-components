@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqDefaultSizes, ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import {
     KbqLoaderOverlay,
@@ -434,11 +434,7 @@ class OverlayNoParams {}
             text text text text text text text text text text text text text text text text text text text text
 
             <kbq-loader-overlay>
-                <kbq-progress-spinner
-                    kbq-loader-overlay-indicator
-                    [mode]="'indeterminate'"
-                    [color]="themePalette.Error"
-                />
+                <kbq-progress-spinner kbq-loader-overlay-indicator [mode]="'indeterminate'" [color]="colors.Error" />
 
                 <div kbq-loader-overlay-text>Создание отчета</div>
                 <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
@@ -447,7 +443,7 @@ class OverlayNoParams {}
     `
 })
 class OverlayWithExternalParams {
-    themePalette = ThemePalette;
+    colors = KbqComponentColors;
 }
 
 @Component({

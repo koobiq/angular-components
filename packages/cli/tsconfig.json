@@ -15,7 +15,9 @@
         "strict": true,
         "sourceMap": false,
         "composite": true,
-        "outDir": "./dist"
+        "outDir": "./dist",
+        // The rollup build type-checks every included file, specs too, and they use Vitest's globals.
+        "types": ["node", "vitest/globals"]
     },
     "include": [
         "**/*.ts"

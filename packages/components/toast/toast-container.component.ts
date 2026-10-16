@@ -2,7 +2,6 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ComponentRef,
     EmbeddedViewRef,
@@ -39,7 +38,6 @@ import { KBQ_TOAST_STACK, KbqToastData, KbqToastTemplateContext } from './toast.
 })
 export class KbqToastContainerComponent extends CdkScrollable {
     private readonly injector = inject(Injector);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected readonly a11yLocaleConfiguration = kbqInjectA11yLocaleConfiguration();
 
@@ -73,9 +71,6 @@ export class KbqToastContainerComponent extends CdkScrollable {
         const injector = this.getInjector(data);
         const index = onTop ? 0 : undefined;
 
-        // `show()` may be called from outside change detection, e.g. from a timer or an HTTP callback.
-        this.changeDetectorRef.markForCheck();
-
         return this.viewContainer().createComponent(componentType, { injector, index });
     }
 
@@ -85,9 +80,6 @@ export class KbqToastContainerComponent extends CdkScrollable {
         onTop: boolean
     ): EmbeddedViewRef<KbqToastTemplateContext> {
         const index = onTop ? 0 : undefined;
-
-        this.changeDetectorRef.markForCheck();
-
         const viewRef = this.viewContainer().createEmbeddedView<KbqToastTemplateContext>(
             template,
             { $implicit: data },
@@ -115,19 +107,6 @@ export class KbqToastContainerComponent extends CdkScrollable {
             parent: this.injector
         });
     }
-
-    /**
-     * Fakes a scroll on the container so that overlays anchored inside a toast are repositioned by their
-     * `RepositionScrollStrategy` when the stack shifts.
-     *
-     * @deprecated The container reports its own reflow through `elementScrolled()`, so nothing calls this. Driving
-     * it from the animation events of the stack notified the application-wide `ScrollDispatcher` on every toast
-     * that merely appeared, which closed unrelated overlays using a close-on-scroll strategy. Kept only for callers
-     * that already hold a container reference — the instance `KbqToastService` creates is not exposed.
-     */
-    dispatchScrollEvent = () => {
-        this.elementRef.nativeElement.dispatchEvent(new Event('scroll'));
-    };
 
     /**
      * A template toast has no component host of its own, so its first element becomes the live region — screen

@@ -5,10 +5,10 @@ Migration schematic invoked automatically by `ng update @koobiq/components@21` (
 
 ## Background
 
-`KbqTextarea` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`,
-`required`, `disabled`, `focused`, `empty` and `errorState` as plain members. Those stay plain
-accessors — the interface is the contract the form field reads them through. What moved are the four
-inputs the textarea owns.
+The `KbqFormFieldControl` members of `KbqTextarea` — `value`, `id`, `placeholder`, `required`,
+`disabled`, `focused`, `empty` and `errorState` — are signals, migrated by `form-field-signals`: reads
+become calls, a write to `value` becomes `.set()`, a write to the rest is reported. This schematic
+covers the four inputs the textarea owns.
 
 `canGrow` was the odd one:
 
@@ -37,13 +37,13 @@ a reference variable is not tied to an element name the schematic can match.
 
 ## What it does _not_ do
 
-| Pattern                                                 | Manual migration                                                                      |
-| ------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                 |
-| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound                               |
-| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them; the inputs are read-only                                                   |
-| `.grow()` / a detached `.grow`                          | Protected now; emit `stateChanges.next()` for a layout change the textarea cannot see |
-| `viewChild(KbqTextarea)`                                | The query returns the instance, so a read is a double call                            |
+| Pattern                                                 | Manual migration                                                                           |
+| ------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `.canGrow`                                              | `canGrow()`, and expect what was bound — not `false` at the row limit                      |
+| `.freeRowsHeight`                                       | `freeRowsHeight()`, and expect `undefined` when unbound                                    |
+| `.canGrow = …` / `.maxRows = …` / `.freeRowsHeight = …` | Bind them; the inputs are read-only                                                        |
+| `.grow()` / a detached `.grow`                          | Protected now; a layout change it cannot see is measured at the next value or input change |
+| `viewChild(KbqTextarea)`                                | The query returns the instance, so a read is a double call                                 |
 
 ## Notes with no call site to point at
 

@@ -24,6 +24,7 @@
             <div
                 aria-hidden="true"
                 class="kbq-tab-list__active-tab-underline"
+                [class.kbq-animations-disabled]="animationsDisabled"
                 [class.kbq-disabled]="activeTabDisabled"
                 [style.left.px]="activeTabOffsetLeft"
                 [style.width.px]="activeTabOffsetWidth"

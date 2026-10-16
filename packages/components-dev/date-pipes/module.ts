@@ -141,7 +141,7 @@ export class DevApp {
 
     /** Switches between the two locales so the difference between the pipe families is visible. */
     toggleLocale() {
-        this.localeService.setLocale(this.localeService.id === 'ru-RU' ? 'en-US' : 'ru-RU');
+        this.localeService.setLocale(this.localeService.localeId() === 'ru-RU' ? 'en-US' : 'ru-RU');
     }
 
     /** Cycles through a few time zones, which the pipe families react to the same way they do to a locale. */

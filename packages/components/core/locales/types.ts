@@ -143,8 +143,9 @@ export type KbqDatepickerLocaleConfiguration = {
      * Parsing/formatting pattern for the date input.
      *
      * Never read: the input format is resolved from `KBQ_DATE_FORMATS` and the date adapter's own config,
-     * not from the locale data. Optional because `es-LA` and `pt-BR` never declared it. Scheduled for
-     * removal in a future major version — do not start depending on it.
+     * not from the locale data. Optional because `es-LA` and `pt-BR` never declared it.
+     *
+     * @deprecated Set the input format through `KBQ_DATE_FORMATS`. Will be removed in 22.0.0.
      */
     dateInput?: string;
 };

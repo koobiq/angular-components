@@ -7,7 +7,6 @@ import {
     Directive,
     ElementRef,
     EmbeddedViewRef,
-    Input,
     IterableChangeRecord,
     IterableDiffer,
     IterableDiffers,
@@ -15,12 +14,14 @@ import {
     OnInit,
     Signal,
     TrackByFunction,
-    ViewChild,
     ViewContainerRef,
     contentChildren,
+    effect,
     inject,
     input,
-    isDevMode
+    isDevMode,
+    untracked,
+    viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption, KbqStateSaving } from '@koobiq/components/core';
@@ -62,9 +63,13 @@ const normalizeTreeState = (parsed: unknown): KbqTreeState | null => {
  * contract, the option-based selection model and the filtering pipeline have all diverged, so
  * `@angular/cdk/tree` is deliberately not a dependency of this package and upstream fixes have to be
  * ported by hand.
+ *
+ * `C` narrows the tree control a concrete tree accepts, and so the type its `treeControl` binding is checked against.
  */
 @Directive()
-export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit {
+export class KbqTreeBase<T, C extends TreeControl<T> = TreeControl<T>>
+    implements AfterContentChecked, AfterContentInit, CollectionViewer, OnDestroy, OnInit
+{
     protected differs = inject(IterableDiffers);
     protected changeDetectorRef = inject(ChangeDetectorRef);
 
@@ -74,11 +79,20 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
      */
     private readonly stateSaving = inject(KbqStateSaving, { optional: true });
 
-    // TODO: Skipped for migration because:
-    //  Subclass KbqTreeSelection overrides this input with a narrower type
-    //  (FlatTreeControl<any>) via `@Input() declare`, which is incompatible
-    //  with InputSignal<TreeControl<T>>. Migrate together as a follow-up.
-    @Input() treeControl: TreeControl<T>;
+    /** @docs-private */
+    readonly treeControlInput = input<C>(undefined!, { alias: 'treeControl' });
+
+    /** Controls the expanded state and holds the data nodes of the tree. */
+    get treeControl(): C {
+        return this.treeControlInput();
+    }
+
+    /** {@link treeControl} as state saving reads it: by node value, which only a `FlatTreeControl` has. */
+    private get flatTreeControl(): FlatTreeControl<T> {
+        const treeControl: TreeControl<T> = this.treeControl;
+
+        return treeControl as FlatTreeControl<T>;
+    }
 
     /**
      * Tracking function that will be used to check the differences in data changes. Used similarly
@@ -91,8 +105,12 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
      */
     readonly trackBy = input<TrackByFunction<T>>(undefined!);
 
-    // Outlets within the tree's template where the dataNodes will be inserted.
-    @ViewChild(KbqTreeNodeOutlet, { static: true }) nodeOutlet: KbqTreeNodeOutlet;
+    private readonly nodeOutletQuery = viewChild(KbqTreeNodeOutlet);
+
+    /** Outlet within the tree's template where the data nodes are inserted. */
+    get nodeOutlet(): KbqTreeNodeOutlet {
+        return this.nodeOutletQuery()!;
+    }
 
     /** The tree node template for the tree */
     readonly nodeDefs: Signal<readonly KbqTreeNodeDef<T>[]> = contentChildren(KbqTreeNodeDef);
@@ -144,30 +162,38 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
     private warnedAboutTreeControl = false;
     private warnedAboutValues = false;
 
+    /** @docs-private */
+    readonly dataSourceInput = input<DataSource<T> | Observable<T[]> | T[] | null | undefined>(undefined, {
+        alias: 'dataSource'
+    });
+
     /**
      * Provides a stream containing the latest data array to render. Influenced by the tree's
      * stream of view window (what dataNodes are currently on screen).
      * Data source can be an observable of data array, or a data array to render.
      */
-    // TODO: Skipped for migration because:
-    //  The setter switches the data subscription, which an `input()` cannot express on its own.
-    @Input()
     get dataSource(): DataSource<T> | Observable<T[]> | T[] | null {
         return this._dataSource;
     }
 
-    set dataSource(dataSource: DataSource<T> | Observable<T[]> | T[] | null) {
-        if (this._dataSource !== dataSource) {
-            this.switchDataSource(dataSource);
-        }
-    }
+    private _dataSource: DataSource<T> | Observable<T[]> | T[] | null = null;
 
-    private _dataSource: DataSource<T> | Observable<T[]> | T[] | null;
+    constructor() {
+        // Switching the source drops the rendered nodes and resubscribes, which a bound value alone does not do. A
+        // binding back to `undefined` clears the tree as `null` does; an unbound input equals the initial `null`.
+        effect(() => {
+            const dataSource = this.dataSourceInput() ?? null;
+
+            untracked(() => {
+                if (dataSource !== this._dataSource) this.switchDataSource(dataSource);
+            });
+        });
+    }
 
     protected readonly destroyRef = inject(DestroyRef);
 
-    /** Whether `ngOnInit` has run, i.e. every initial input binding has been applied. */
-    private initialized = false;
+    /** Whether `ngAfterContentChecked` has run, i.e. the node definitions the first render needs are resolved. */
+    private contentChecked = false;
 
     ngOnInit() {
         this.dataDiffer = this.createDataDiffer();
@@ -175,8 +201,6 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
         if (!this.treeControl) {
             throw getTreeControlMissingError();
         }
-
-        this.initialized = true;
     }
 
     ngAfterContentInit(): void {
@@ -228,6 +252,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
         }
 
         this.defaultNodeDef = defaultNodeDefs[0];
+        this.contentChecked = true;
 
         if (this.dataSource && this.nodeDefs().length && !this.dataSubscription) {
             this.observeRenderChanges();
@@ -243,9 +268,13 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
      * A no-op while a filter is active: what is expanded then is the result set, not a chosen state.
      */
     saveState(): void {
-        if (!this.persists || this.treeControl.filterValue.value?.length) return;
+        // Untracked, as in `clearSavedState()`: called from a consumer's `effect()`, the inputs read on the way would
+        // make the effect run again whenever they change.
+        untracked(() => {
+            if (!this.persists || this.treeControl.filterValue.value?.length) return;
 
-        this.stateSaving!.write(this.expandedValues());
+            this.stateSaving!.write(this.expandedValues());
+        });
     }
 
     /**
@@ -254,7 +283,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
      * Persistence itself stays on — the next expansion is written again.
      */
     clearSavedState(): void {
-        this.stateSaving?.clear();
+        untracked(() => this.stateSaving?.clear());
     }
 
     /**
@@ -423,7 +452,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
         // a setting worth carrying to the next visit.
         if (!this.stateSaving.host?.isConnected) return false;
 
-        if (typeof (this.treeControl as FlatTreeControl<T>).getValue !== 'function') {
+        if (typeof this.flatTreeControl.getValue !== 'function') {
             if (isDevMode() && !this.warnedAboutTreeControl) {
                 this.warnedAboutTreeControl = true;
 
@@ -459,7 +488,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
 
         this.lastRestoredDataNodes = currentNodes;
 
-        const treeControl = this.treeControl as FlatTreeControl<T>;
+        const treeControl = this.flatTreeControl;
         const found: T[] = [];
 
         for (const value of this.pendingValues) {
@@ -480,7 +509,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
 
     /** The values of the nodes that are currently expanded, plus the ones still waiting to appear. */
     private expandedValues(): KbqTreeState {
-        const treeControl = this.treeControl as FlatTreeControl<T>;
+        const treeControl = this.flatTreeControl;
         const expanded: string[] = [];
         let skipped = false;
 
@@ -570,12 +599,11 @@ export class KbqTreeBase<T> implements AfterContentChecked, AfterContentInit, Co
         // reused for unrelated nodes or dropped entirely.
         this.dataDiffer = this.createDataDiffer();
 
-        // Not before `ngOnInit`: inputs are set one by one, and a template binding `dataSource` ahead of
-        // `treeControl` would have this subscribe — and render — while `treeControl` is still undefined.
-        // The first emission would then throw inside the node directives and take the subscription down
-        // with it, leaving the tree permanently empty. The initial render is picked up by
-        // `ngAfterContentChecked`; a later source swap is observed here right away.
-        if (dataSource && this.initialized && this.nodeDefs().length) {
+        // Not before the first `ngAfterContentChecked`: that is where the default node definition is resolved,
+        // and a render ahead of it finds no definition for the nodes and throws, taking the subscription down
+        // with it and leaving the tree permanently empty. The initial render is picked up there; a later
+        // source swap is observed here right away.
+        if (dataSource && this.contentChecked && this.nodeDefs().length) {
             this.observeRenderChanges();
         }
     }
@@ -605,8 +633,7 @@ export class KbqTreeNode<T> implements IFocusableOption, OnDestroy {
      * The most recently created `KbqTreeNode`, across every tree on the page.
      *
      * @deprecated Kept for backwards compatibility only — the tree hands a node its data through
-     * `KbqTreeBase.registerNode`, which is scoped to the tree that owns the node. Will be removed in
-     * version 20.
+     * `KbqTreeBase.registerNode`, which is scoped to the tree that owns the node. Will be removed in 22.0.0.
      */
     static mostRecentTreeNode: KbqTreeNode<any> | null = null;
 

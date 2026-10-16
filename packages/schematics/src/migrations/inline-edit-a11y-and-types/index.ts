@@ -2,6 +2,7 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import {
     A11Y_LOCALE_TYPE,
     INLINE_EDIT_PACKAGE,
@@ -62,8 +63,7 @@ export default function inlineEditA11yAndTypes(options: Schema): Rule {
         /** Collected during the walk and applied after it, so the tree is not mutated while iterating. */
         const renames: Array<{ filePath: Path; content: string }> = [];
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
             const originalContent = entry?.content.toString();

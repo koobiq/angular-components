@@ -11,25 +11,32 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChildren,
+    contentChildren,
     DestroyRef,
     Directive,
     ElementRef,
     forwardRef,
     inject,
     InjectionToken,
-    Input,
     input,
     isDevMode,
-    numberAttribute,
+    OnChanges,
     OnDestroy,
     output,
     QueryList,
+    signal,
+    SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_PARENT_ANIMATION_COMPONENT, KbqStateSaving } from '@koobiq/components/core';
+import {
+    KBQ_PARENT_ANIMATION_COMPONENT,
+    kbqOptionalNumberAttribute,
+    kbqQueryListFrom,
+    KbqStateSaving
+} from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -150,7 +157,7 @@ const normalizeTabsState = (parsed: unknown): KbqTabsState | null => {
     ],
     exportAs: 'kbqTabGroup'
 })
-export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
+export class KbqTabGroup implements OnChanges, AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
@@ -162,7 +169,13 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      */
     private readonly stateSaving = inject(KbqStateSaving);
 
-    @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
+    private readonly tabsQuery = contentChildren(KbqTab);
+    private readonly tabsList = kbqQueryListFrom(this.tabsQuery);
+
+    /** The tabs of the group. */
+    get tabs(): QueryList<KbqTab> {
+        return this.tabsList();
+    }
 
     readonly tabBodyWrapper = viewChild.required<ElementRef>('tabBodyWrapper');
 
@@ -183,23 +196,32 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     /** Whether the tab group should grow to the size of the active tab. */
     readonly dynamicHeight = input<boolean, unknown>(false, { transform: booleanAttribute });
 
+    /** @docs-private */
+    readonly selectedIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'selectedIndex',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly activeTabInput = input<KbqTabSelectBy | null | undefined>(undefined, { alias: 'activeTab' });
+
+    /** @docs-private */
+    readonly headerPositionInput = input<KbqTabHeaderPosition | undefined>(undefined, { alias: 'headerPosition' });
+
+    /** @docs-private */
+    readonly animationDurationInput = input<string | undefined>(undefined, { alias: 'animationDuration' });
+
     /** The index of the active tab. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get selectedIndex(): number {
-        return this._selectedIndex;
+        return this.selectedIndexState()!;
     }
 
     set selectedIndex(value: number) {
         this.activeTab = value;
     }
 
-    private _selectedIndex: number;
+    private readonly selectedIndexState = signal<number | undefined>(undefined);
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
     get activeTab(): KbqTab | null {
         switch (typeof this.attributeToSelectBy) {
             case 'number':
@@ -229,14 +251,10 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     /** Position of the tab header. */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() headerPosition: KbqTabHeaderPosition = 'above';
+    headerPosition: KbqTabHeaderPosition = 'above';
 
     /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input() animationDuration: string;
+    animationDuration: string;
 
     /** Output to enable support for two-way binding on `[(selectedIndex)]` */
     readonly selectedIndexChange = output<number>();
@@ -278,11 +296,12 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     private readonly groupId: number;
 
-    constructor() {
-        const defaultConfig = inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true });
+    private readonly defaultAnimationDuration =
+        inject<KbqTabsConfig>(KBQ_TABS_CONFIG, { optional: true })?.animationDuration || '0ms';
 
+    constructor() {
         this.groupId = nextId++;
-        this.animationDuration = defaultConfig?.animationDuration || '0ms';
+        this.animationDuration = this.defaultAnimationDuration;
 
         // The state lives under the new key now, so restore from it.
         this.stateSaving.keyChanges.subscribe(() => this.applySavedState());
@@ -293,6 +312,28 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
             this.checkOverflow();
             this.changeDetectorRef.markForCheck();
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member, except that `undefined` resets a member
+        // typed without it to its default; unbound, it leaves what code wrote.
+        // Assigned through `activeTab`, because the `selectedIndex` setter takes no `null` — the default, which selects
+        // the first enabled tab.
+        if (changes['selectedIndexInput']) this.activeTab = this.selectedIndexInput() ?? null;
+
+        // A bound `undefined` is handed over too: binding `activeTab` at all lets the application drive the
+        // selection, which turns the state saving off.
+        if (changes['activeTabInput']) {
+            this.activeTab = this.activeTabInput() ?? null;
+        }
+
+        if (changes['headerPositionInput']) {
+            this.headerPosition = this.headerPositionInput() ?? 'above';
+        }
+
+        if (changes['animationDurationInput']) {
+            this.animationDuration = this.animationDurationInput() ?? this.defaultAnimationDuration;
+        }
     }
 
     ngAfterContentInit() {
@@ -307,15 +348,15 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
             // Maintain the previously-selected tab if a new tab is added or removed and there is no
             // explicit change that selects a different tab.
-            if (indexToSelect === this._selectedIndex) {
+            if (indexToSelect === this.selectedIndexState()) {
                 const tabs = this.tabs.toArray();
 
                 for (let i = 0; i < tabs.length; i++) {
                     if (tabs[i].isActive) {
-                        // Assign both to the `activeTab` and `_selectedIndex` so we don't fire a changed
+                        // Assign both to the `activeTab` and the selected index so we don't fire a changed
                         // event, otherwise the consumer may end up in an infinite loop in some edge cases like
                         // adding a tab within the `selectedIndexChange` event.
-                        this._selectedIndex = i;
+                        this.selectedIndexState.set(i);
                         this.onSelectFocusedIndex(i);
                         break;
                     }
@@ -323,6 +364,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
             }
 
             this.subscribeToTabLabels();
+            // Also marks the ancestors, whose check runs `ngAfterContentChecked` and positions the tabs.
             this.changeDetectorRef.markForCheck();
         });
     }
@@ -334,14 +376,18 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      * a new selected tab should transition in (from the left or right).
      */
     ngAfterContentChecked() {
+        // Brings `tabs` up to date first, so that its `changes` subscribers, which keep the selected tab when tabs are
+        // added or removed, run before the selection is computed.
+        this.tabsList();
+
         // Don't clamp the `indexToSelect` immediately in the setter because it can happen that
         // the amount of tabs changes before the actual change detection runs.
         const indexToSelect = this.getTabIndexToSelect();
 
         // If there is a change in selected index, emit a change event. Should not trigger if
         // the selected index has not yet been initialized.
-        if (this._selectedIndex !== indexToSelect) {
-            const isFirstRun = this._selectedIndex == null;
+        if (this.selectedIndexState() !== indexToSelect) {
+            const isFirstRun = this.selectedIndexState() == null;
 
             if (!isFirstRun) {
                 this.selectedTabChange.emit(this.createChangeEvent(indexToSelect));
@@ -365,6 +411,8 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
             });
         }
 
+        const selectedIndex = this.selectedIndexState();
+
         // Setup the position for each tab and optionally setup an origin on the next selected tab.
         this.tabs.forEach((tab: KbqTab, index: number) => {
             tab.position = index - indexToSelect;
@@ -372,15 +420,12 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
             // If there is already a selected tab, then set up an origin for the next selected tab
             // if it doesn't have one already.
 
-            if (this._selectedIndex != null && tab.position === 0 && !tab.origin) {
-                tab.origin = indexToSelect - this._selectedIndex;
+            if (selectedIndex != null && tab.position === 0 && !tab.origin) {
+                tab.origin = indexToSelect - selectedIndex;
             }
         });
 
-        if (this._selectedIndex !== indexToSelect) {
-            this._selectedIndex = indexToSelect;
-            this.changeDetectorRef.markForCheck();
-        }
+        this.selectedIndexState.set(indexToSelect);
     }
 
     ngAfterViewInit(): void {
@@ -442,18 +487,22 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     removeTabBodyWrapperHeight(): void {
         this.tabBodyWrapperHeight = this.tabBodyWrapper().nativeElement.clientHeight;
         this.tabBodyWrapper().nativeElement.style.height = '';
-        // TODO: The 'emit' function requires a mandatory void argument
         this.animationDone.emit();
     }
 
     /** Handle click events, setting new selected index if appropriate. */
     handleClick(tab: KbqTab, tabHeader: KbqTabHeader, index: number) {
-        if (tab.disabled()) {
-            return;
-        }
+        // Untracked, as `onSelectFocusedIndex()`, `saveState()` and `clearSavedState()`: called from a consumer's
+        // `effect()`, the state read on the way — the tabs and their inputs, the selection, the state saving inputs —
+        // would make the effect run again whenever it changes.
+        untracked(() => {
+            if (tab.disabled) {
+                return;
+            }
 
-        this.onSelectFocusedIndex(index);
-        tabHeader.focusIndex = index;
+            this.onSelectFocusedIndex(index);
+            tabHeader.focusIndex = index;
+        });
     }
 
     /**
@@ -462,7 +511,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      * order — a disabled tab is `-1`, never absent, so it stays a roving-tabindex participant.
      */
     getTabIndex(tab: KbqTab, tabHeader: KbqTabHeader, index: number): number {
-        if (tab.disabled()) {
+        if (tab.disabled) {
             return -1;
         }
 
@@ -470,13 +519,15 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     }
 
     onSelectFocusedIndex($event: number): void {
-        if (typeof this.attributeToSelectBy === 'string') {
-            this.activeTab = this.tabs.get($event)?.tabId() || null;
-        } else {
-            this.activeTab = $event;
-        }
+        untracked(() => {
+            if (typeof this.attributeToSelectBy === 'string') {
+                this.activeTab = this.tabs.get($event)?.tabId() || null;
+            } else {
+                this.activeTab = $event;
+            }
 
-        this.saveState();
+            this.saveState();
+        });
     }
 
     /**
@@ -487,9 +538,11 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      * when the tabs carry none.
      */
     saveState(): void {
-        if (!this.persists) return;
+        untracked(() => {
+            if (!this.persists) return;
 
-        this.stateSaving.write(this.snapshot());
+            this.stateSaving.write(this.snapshot());
+        });
     }
 
     /**
@@ -499,7 +552,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      * it.
      */
     clearSavedState(): void {
-        this.stateSaving.clear();
+        untracked(() => this.stateSaving.clear());
     }
 
     /**
@@ -606,21 +659,18 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
      * disabled one.
      *
      * The template calls this once per tab, so the common path stays allocation-free: `QueryList.get`
-     * indexes the backing array, where `toArray()` would copy the whole thing N times per check and
-     * make rendering the strip quadratic in the number of tabs.
+     * indexes the backing array, where `toArray()` would copy it N times per check.
      */
     private getRovingTabIndex(tabHeader: KbqTabHeader): number {
         const { focusIndex } = tabHeader;
-        const focused = this.tabs?.get(focusIndex);
+        const focused = this.tabs.get(focusIndex);
 
-        if (focused && !focused.disabled()) {
+        if (focused && !focused.disabled) {
             return focusIndex;
         }
 
-        const length = this.tabs?.length ?? 0;
-
-        for (let index = 0; index < length; index++) {
-            if (!this.tabs.get(index)!.disabled()) {
+        for (let index = 0; index < this.tabs.length; index++) {
+            if (!this.tabs.get(index)!.disabled) {
                 return index;
             }
         }
@@ -630,7 +680,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     /** First tab that can actually be selected, so that a leading disabled tab is not the default. */
     private getDefaultTab(): KbqTab | null {
-        return this.tabs?.find((tab) => !tab.disabled()) || this.tabs?.get(0) || null;
+        return this.tabs.find((tab) => !tab.disabled) || this.tabs.get(0) || null;
     }
 
     /** Clamps the given index to the bounds of 0 and the tabs length. */

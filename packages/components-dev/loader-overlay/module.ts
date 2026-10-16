@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { LoaderOverlayExamplesModule } from '../../docs-examples/components/loader-overlay';
@@ -41,7 +41,7 @@ export class DevDocsExamples {}
     encapsulation: ViewEncapsulation.None
 })
 export class DevApp {
-    themePalette = ThemePalette;
+    colors = KbqComponentColors;
 
     text = 'text text text text text text text text text text text text text text ';
     caption = 'caption caption caption caption caption caption caption caption ';

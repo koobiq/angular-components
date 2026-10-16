@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
@@ -20,12 +20,12 @@ import { DateTime } from 'luxon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DateFormatterSpecialUseExample {
+    private readonly adapter = inject<DateAdapter<DateTime>>(DateAdapter);
+    private readonly dateFormatter = inject<DateFormatter<DateTime>>(DateFormatter);
+
     date: string;
 
-    constructor(
-        private adapter: DateAdapter<DateTime>,
-        private dateFormatter: DateFormatter<DateTime>
-    ) {
+    constructor() {
         this.dateFormatter.setLocale('en-US');
         this.dateFormatter.setLocale('ru-RU');
 

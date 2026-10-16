@@ -1,32 +1,22 @@
-import {
-    animate,
-    animateChild,
-    AnimationEvent,
-    group,
-    query,
-    state,
-    style,
-    transition,
-    trigger
-} from '@angular/animations';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import {
     ChangeDetectionStrategy,
     Component,
-    EventEmitter,
     inject,
     InjectionToken,
+    Injector,
     OnDestroy,
     Provider,
     Renderer2,
+    signal,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqActionsPanelLocaleConfiguration,
-    KbqAnimationCurves,
-    KbqAnimationDurations,
+    kbqAfterAnimations,
+    kbqAnimationsDisabled,
     KbqDeepPartial,
     kbqLocaleConfigurationOverrideProvider,
     KbqLocaleOverridesDirective,
@@ -35,6 +25,7 @@ import {
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { Subject } from 'rxjs';
 import { KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig } from './actions-panel-config';
 
@@ -51,28 +42,6 @@ export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION = new InjectionToken<KbqActi
 export const kbqActionsPanelLocaleConfigurationProvider = (
     configuration: KbqDeepPartial<KbqActionsPanelLocaleConfiguration>
 ): Provider => kbqLocaleConfigurationOverrideProvider('actionsPanel', configuration);
-
-/**
- * Animation that shows and hides the actions panel.
- */
-const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
-    state('void, hidden', style({ transform: 'translateY(100%)' })),
-    state('visible', style({ transform: 'translateY(0%)' })),
-    transition(
-        'visible => void, visible => hidden',
-        group([
-            animate(`${KbqAnimationDurations.Entering} ${KbqAnimationCurves.StandardCurve}`),
-            query('@*', animateChild(), { optional: true })
-        ])
-    ),
-    transition(
-        'void => visible',
-        group([
-            animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.StandardCurve}`),
-            query('@*', animateChild(), { optional: true })
-        ])
-    )
-]);
 
 /**
  * Internal component that wraps user-provided actions panel content.
@@ -111,25 +80,24 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         './actions-panel-tokens.scss',
         './actions-panel-container.scss'
     ],
-    // Uses the `Default` change detection strategy as parent `CdkDialogContainer`:
-    // https://github.com/angular/components/blob/18.2.14/src/cdk/dialog/dialog-container.ts#L60
-    changeDetection: ChangeDetectionStrategy.Default,
+    // As the parent `CdkDialogContainer`: component content is attached into this view, so on zone.js, where a tick
+    // checks the whole application, content on the eager strategy is refreshed only if this view is checked as well.
+    // eslint-disable-next-line @angular-eslint/prefer-on-push-component-change-detection
+    changeDetection: ChangeDetectionStrategy.Eager,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-actions-panel-container',
         '[class.kbq-actions-panel-container_rtl]': 'config.direction === "rtl"',
-        '[@state]': 'animationState',
-        '(@state.start)': 'onAnimationStart($event)',
-        '(@state.done)': 'onAnimationDone($event)',
-        '(keydown.escape)': 'handleEscape($event)'
+        '[class.kbq-actions-panel-container_visible]': "animationState() === 'visible'",
+        '[class.kbq-animations-disabled]': 'animationsDisabled',
+        '(keydown.escape)': 'handleEscape($any($event))'
     },
     // Carrier only: the container is created through the overlay, so there is no element for a consumer to
     // bind on, and it lets the container read its strings through `read()`. Unlike the pop-up panels it
     // reaches no ancestor carrier: `KbqActionsPanel` is provided in root, so the container's injector is
     // parented on the root injector unless the caller passes `config.injector` — pass one to scope an
     // override to the panel.
-    hostDirectives: [KbqLocaleOverridesDirective],
-    animations: [KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION]
+    hostDirectives: [KbqLocaleOverridesDirective]
 })
 export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
     /**
@@ -137,14 +105,26 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      *
      * @docs-private
      */
-    protected animationState: 'void' | 'visible' | 'hidden' = 'void';
+    protected readonly animationState = signal<'void' | 'visible' | 'hidden'>('void');
 
     /**
-     * Emits whenever the state of the animation changes.
+     * Emits the state the actions panel has finished moving to.
      *
      * @docs-private
      */
-    readonly animationStateChanged = new EventEmitter<AnimationEvent>();
+    readonly animationDone = new Subject<'visible' | 'hidden'>();
+
+    /**
+     * Whether the actions panel moves without motion.
+     *
+     * @docs-private
+     */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
+    private readonly injector = inject(Injector);
+
+    /** The transition in progress, ended early by the next one. */
+    private pendingTransition?: { state: 'visible' | 'hidden'; wait: { destroy(): void } };
 
     /** Whether the actions panel container has been destroyed. */
     private destroyed: boolean;
@@ -189,11 +169,9 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      */
     startOpenAnimation(): void {
         if (!this.destroyed) {
-            this.animationState = 'visible';
-            // animationState lives in host bindings and `detectChanges` does not refresh host bindings  so we have to
-            // call `markForCheck` to ensure the host view is refreshed eventually.
-            this._changeDetectorRef.markForCheck();
+            this.animationState.set('visible');
             this._changeDetectorRef.detectChanges();
+            this.waitForAnimation('visible');
         }
     }
 
@@ -204,31 +182,9 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      */
     startCloseAnimation(): void {
         if (!this.destroyed) {
-            this.animationState = 'hidden';
-            this._changeDetectorRef.markForCheck();
+            this.animationState.set('hidden');
+            this.waitForAnimation('hidden');
         }
-    }
-
-    /**
-     * Handles animation done events.
-     *
-     * @docs-private
-     */
-    protected onAnimationDone(event: AnimationEvent): void {
-        if (event.toState === 'visible') {
-            this._trapFocus();
-        }
-
-        this.animationStateChanged.emit(event);
-    }
-
-    /**
-     * Handles animation start events.
-     *
-     * @docs-private
-     */
-    protected onAnimationStart(event: AnimationEvent): void {
-        this.animationStateChanged.emit(event);
     }
 
     /**
@@ -237,10 +193,11 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      * @docs-private
      */
     protected handleEscape(event: KeyboardEvent): void {
-        if (!this.config.disableClose) {
-            event.preventDefault();
-            this.close();
-        }
+        // A control inside the panel spent the key closing a popup of its own, such as a tooltip.
+        if (event.defaultPrevented || this.config.disableClose) return;
+
+        event.preventDefault();
+        this.close();
     }
 
     /**
@@ -248,6 +205,36 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      */
     protected override _contentAttached(): void {
         this.applyContainerClass();
+    }
+
+    private waitForAnimation(state: 'visible' | 'hidden'): void {
+        const pending = this.pendingTransition;
+
+        // An entrance cut short by closing still ends, or the panel would never report having opened.
+        if (pending) {
+            pending.wait.destroy();
+            this.pendingTransition = undefined;
+            this.animationDone.next(pending.state);
+        }
+
+        // A subscriber may have disposed of the panel by now.
+        if (this.destroyed) return;
+
+        const wait = kbqAfterAnimations(
+            () => this._elementRef.nativeElement,
+            () => {
+                this.pendingTransition = undefined;
+
+                if (state === 'visible') {
+                    this._trapFocus();
+                }
+
+                this.animationDone.next(state);
+            },
+            this.injector
+        );
+
+        this.pendingTransition = { state, wait };
     }
 
     private applyContainerClass(): void {

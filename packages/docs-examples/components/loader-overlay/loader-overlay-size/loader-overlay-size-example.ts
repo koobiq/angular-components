@@ -32,5 +32,5 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoaderOverlaySizeExample {
-    size = model<KbqDefaultSizes>('compact');
+    readonly size = model<KbqDefaultSizes>('compact');
 }

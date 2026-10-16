@@ -1,10 +1,11 @@
-<div class="kbq-progress-spinner__inner">
+<div class="kbq-progress-spinner__inner" [class.kbq-animations-disabled]="animationsDisabled">
     <svg focusable="false" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100">
         <circle
             cx="50%"
             cy="50%"
             stroke-linecap="round"
             class="kbq-progress-spinner__circle"
+            [class.kbq-animations-disabled]="animationsDisabled"
             [attr.r]="svgCircleRadius()"
             [style]="{ 'stroke-dashoffset': mode() === 'determinate' ? dashOffsetPercent() : null }"
         />

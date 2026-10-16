@@ -7,7 +7,8 @@ import {
     InjectionToken,
     input,
     isDevMode,
-    output
+    output,
+    untracked
 } from '@angular/core';
 import { kbqInjectNativeElement } from '../utils';
 import { KBQ_STATE_SAVING_KEY_RESOLVER } from './state-saving-key';
@@ -189,6 +190,11 @@ export class KbqStateSaving implements KbqStateSavingRef {
      * Pass the whole state, not a change to it: a full snapshot drops values that no longer exist.
      */
     write(state: unknown): void {
+        // Untracked, like `clear()`: a caller's `effect()` must not start following `useStateSaving` and the key.
+        untracked(() => this.writeState(state));
+    }
+
+    private writeState(state: unknown): void {
         if (!this.persists || this.applyingDepth > 0) return;
 
         const key = this.storageKey;
@@ -219,6 +225,10 @@ export class KbqStateSaving implements KbqStateSavingRef {
      * means "stop remembering", and removing what was remembered carries it out.
      */
     clear(): void {
+        untracked(() => this.clearState());
+    }
+
+    private clearState(): void {
         if (!this.useStateSaving()) return;
 
         this._state = null;

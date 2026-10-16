@@ -2,7 +2,6 @@
 import { Component, ElementRef, Provider, Type, viewChild, viewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, RouterLink } from '@angular/router';
 import {
     dispatchFakeEvent,
@@ -34,11 +33,11 @@ describe('KbqButton', () => {
             imports: [
                 KbqButtonModule,
                 KbqDropdownModule,
-                NoopAnimationsModule,
                 TestApp,
                 AnchorWithoutHrefTestApp,
                 DynamicHrefTestApp,
-                ButtonDropdownTrigger
+                ButtonDropdownTrigger,
+                BoundStyleTestApp
             ]
         }).compileComponents();
     });
@@ -253,6 +252,22 @@ describe('KbqButton', () => {
             fixture.detectChanges();
             expect(button.nativeElement.classList.contains('kbq-button_filled')).toBe(true);
         });
+
+        it('should fall back to the filled style when the bound style turns undefined', () => {
+            const fixture = TestBed.createComponent(BoundStyleTestApp);
+
+            fixture.detectChanges();
+
+            const button: HTMLElement = fixture.nativeElement.querySelector('button');
+
+            expect(button.classList).toContain('kbq-button_outline');
+
+            fixture.componentInstance.style = undefined;
+            fixture.detectChanges();
+
+            expect(button.classList).toContain('kbq-button_filled');
+            expect(button.classList).not.toContain('kbq-button_outline');
+        });
     });
 
     describe('default color', () => {
@@ -314,6 +329,21 @@ describe('KbqButton', () => {
 
             expect(element.classList.contains('kbq-theme-fade')).toBe(true);
             expect(element.classList.contains('kbq-contrast')).toBe(false);
+        });
+
+        it('should keep a color set in code when the style changes', () => {
+            const fixture = TestBed.createComponent(TestApp);
+
+            fixture.detectChanges();
+
+            const button: KbqButton = fixture.debugElement.query(By.directive(KbqButton)).componentInstance;
+
+            button.color.set(KbqComponentColors.Theme);
+
+            const element = setStyle(fixture, KbqButtonStyles.Transparent);
+
+            expect(button.color()).toBe(KbqComponentColors.Theme);
+            expect(element.classList.contains('kbq-theme')).toBe(true);
         });
 
         it('should fall back to the style default when the color is cleared', () => {
@@ -386,6 +416,22 @@ describe('KbqButton', () => {
 
             expect(button.componentInstance.tabIndex).toBe(0);
             expect(button.nativeElement.getAttribute('tabindex')).not.toBe('NaN');
+        });
+
+        it.each([undefined, null])('a bound %s should restore the default tabIndex', (value) => {
+            const fixture = TestBed.createComponent(TestApp);
+            const testComponent = fixture.debugElement.componentInstance;
+
+            testComponent.tabIndex = 3;
+            fixture.detectChanges();
+
+            testComponent.tabIndex = value;
+            fixture.detectChanges();
+
+            const button = fixture.debugElement.query(By.css('button'));
+
+            expect(button.componentInstance.tabIndex).toBe(0);
+            expect(button.nativeElement.hasAttribute('tabindex')).toBe(false);
         });
     });
 
@@ -470,8 +516,8 @@ describe('KbqButton', () => {
             fixture.detectChanges();
 
             const anchor: HTMLAnchorElement = fixture.debugElement.query(By.css(selector)).nativeElement;
-            const setAttribute = jest.spyOn(anchor, 'setAttribute');
-            const removeAttribute = jest.spyOn(anchor, 'removeAttribute');
+            const setAttribute = vi.spyOn(anchor, 'setAttribute');
+            const removeAttribute = vi.spyOn(anchor, 'removeAttribute');
 
             fixture.detectChanges();
             fixture.detectChanges();
@@ -544,7 +590,7 @@ describe('KbqButton', () => {
         it('should monitor the host element and stop monitoring on destroy', () => {
             const fixture = TestBed.createComponent(TestApp);
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const stopMonitoring = jest.spyOn(focusMonitor, 'stopMonitoring');
+            const stopMonitoring = vi.spyOn(focusMonitor, 'stopMonitoring');
 
             fixture.detectChanges();
 
@@ -573,7 +619,7 @@ describe('KbqButton', () => {
         it('should focus via the FocusMonitor with the keyboard origin', () => {
             const fixture = TestBed.createComponent(TestApp);
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const focusVia = jest.spyOn(focusMonitor, 'focusVia');
+            const focusVia = vi.spyOn(focusMonitor, 'focusVia');
 
             fixture.detectChanges();
 
@@ -587,7 +633,7 @@ describe('KbqButton', () => {
         it('should not move focus while disabled', () => {
             const fixture = TestBed.createComponent(TestApp);
             const focusMonitor = TestBed.inject(FocusMonitor);
-            const focusVia = jest.spyOn(focusMonitor, 'focusVia');
+            const focusVia = vi.spyOn(focusMonitor, 'focusVia');
             const testComponent = fixture.debugElement.componentInstance;
 
             testComponent.isDisabled = true;
@@ -738,9 +784,9 @@ describe('Button with icon', () => {
         expect(fixture.debugElement.query(By.css(`.${buttonRightIconClassName}`))).toBeFalsy();
     });
 
-    it('should toggle host button class type on icon removal/reveal', (done) => {
+    it('should toggle host button class type on icon removal/reveal', async () => {
         // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
@@ -753,14 +799,13 @@ describe('Button with icon', () => {
         fixture.debugElement.componentInstance.visible = false;
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalsy();
-            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeFalsy();
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
     });
 
-    it('should toggle the left icon class on icon removal/reveal', (done) => {
+    it('should toggle the left icon class on icon removal/reveal', async () => {
         const fixture = TestBed.createComponent(KbqButtonTextIconLeftNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
@@ -771,13 +816,12 @@ describe('Button with icon', () => {
         fixture.debugElement.componentInstance.visible = false;
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains(buttonLeftIconClassName)).toBeFalsy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+
+        expect(debugElement.nativeElement.classList.contains(buttonLeftIconClassName)).toBeFalsy();
     });
 
-    it('should toggle the right icon class on icon removal/reveal', (done) => {
+    it('should toggle the right icon class on icon removal/reveal', async () => {
         const fixture = TestBed.createComponent(KbqButtonTextIconRightNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
 
@@ -788,15 +832,14 @@ describe('Button with icon', () => {
         fixture.debugElement.componentInstance.visible = false;
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains(buttonRightIconClassName)).toBeFalsy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+
+        expect(debugElement.nativeElement.classList.contains(buttonRightIconClassName)).toBeFalsy();
     });
 
-    it('should switch to kbq-button-icon via the effect when an icon is revealed while the content observer is disabled', (done) => {
+    it('should switch to kbq-button-icon via the effect when an icon is revealed while the content observer is disabled', async () => {
         // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
@@ -812,11 +855,10 @@ describe('Button with icon', () => {
         fixture.componentInstance.visible = true;
         fixture.detectChanges();
 
-        setTimeout(() => {
-            expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTruthy();
-            expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
-            done();
-        });
+        await new Promise<void>((resolve) => setTimeout(resolve));
+
+        expect(debugElement.nativeElement.classList.contains('kbq-button-icon')).toBeTruthy();
+        expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeFalsy();
     });
 
     it('should detect an icon-only button when whitespace is preserved', () => {
@@ -830,7 +872,7 @@ describe('Button with icon', () => {
     });
 
     it('should warn in dev mode when an icon-only button has no accessible name', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         try {
             TestBed.createComponent(KbqButtonIconNgIfCaseTestApp).detectChanges();
@@ -842,7 +884,7 @@ describe('Button with icon', () => {
     });
 
     it('should not warn when an icon-only button is labelled', () => {
-        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         try {
             TestBed.createComponent(KbqButtonLabelledIconTestApp).detectChanges();
@@ -1019,7 +1061,7 @@ describe('Button text container', () => {
  * The label box has to be a block container for `text-overflow: ellipsis` to be painted, but only a
  * flex context centres non-text content exactly. A selector cannot tell those cases apart, because it
  * cannot see text nodes — so the styler marks the text-free case and CSS keys off that class.
- * Asserted on the class rather than on a computed style: jest-preset-angular strips component styles,
+ * Asserted on the class rather than on a computed style: the unit tests load no component styles,
  * so `getComputedStyle` reports nothing either way.
  */
 describe('Button without a label', () => {
@@ -1041,7 +1083,7 @@ describe('Button without a label', () => {
 
     it('should mark a button whose only content is an icon', () => {
         // The fixture is an unnamed icon-only button on purpose: the accessible-name warning test uses it.
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
+        vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = TestBed.createComponent(KbqButtonIconNgIfCaseTestApp);
 
@@ -1085,7 +1127,7 @@ describe('KbqButtonCssStyler without KbqButton', () => {
     });
 
     it('should warn in dev mode when there is no .kbq-button-wrapper (styler used without KbqButton)', () => {
-        const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
         const fixture = TestBed.createComponent(StylerOnlyTestApp);
 
@@ -1138,6 +1180,22 @@ describe(KbqButtonGroupRoot.name, () => {
         expect(componentInstance.groupRoot().kbqStyle).toBe(`kbq-button-group-root_${KbqButtonStyles.Filled}`);
     });
 
+    it('should fall back to Filled when the bound style turns undefined', () => {
+        const fixture = createComponent(BasicButtonGroupRootTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.style = KbqButtonStyles.Outline;
+        fixture.detectChanges();
+
+        componentInstance.style = undefined;
+        fixture.detectChanges();
+
+        const buttons: HTMLElement[] = Array.from(fixture.nativeElement.querySelectorAll('[kbq-button]'));
+
+        expect(componentInstance.groupRoot().kbqStyle).toBe(`kbq-button-group-root_${KbqButtonStyles.Filled}`);
+        buttons.forEach((btn) => expect(btn.classList).toContain(`kbq-button_${KbqButtonStyles.Filled}`));
+    });
+
     it('should propagate color to all child buttons', () => {
         const fixture = createComponent(BasicButtonGroupRootTestComponent);
         const { componentInstance } = fixture;
@@ -1173,6 +1231,23 @@ describe(KbqButtonGroupRoot.name, () => {
         Array.from<HTMLElement>(fixture.nativeElement.querySelectorAll('[kbq-button]')).forEach((btn) =>
             expect(btn.classList.contains('kbq-theme')).toBe(true)
         );
+    });
+
+    it('should keep a color set in code on a child when the group color changes', () => {
+        const fixture = createComponent(UnboundColorGroupTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.color = KbqComponentColors.Theme;
+        fixture.detectChanges();
+
+        const button: KbqButton = fixture.debugElement.query(By.directive(KbqButton)).componentInstance;
+
+        button.color.set(KbqComponentColors.Contrast);
+        componentInstance.color = KbqComponentColors.ThemeFade;
+        fixture.detectChanges();
+
+        expect(button.color()).toBe(KbqComponentColors.Contrast);
+        expect(fixture.nativeElement.querySelector('[kbq-button]').classList).toContain('kbq-contrast');
     });
 
     it('should revert to its own default color when the group color is unbound at runtime', () => {
@@ -1305,6 +1380,23 @@ describe(KbqButtonGroupRoot.name, () => {
         expect(inherited.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Outline}`);
     });
 
+    it('should style a button again once the style bound on the button turns undefined', () => {
+        const fixture = createComponent(OverriddenChildTestComponent);
+        const { componentInstance } = fixture;
+
+        componentInstance.ownStyle = undefined;
+        fixture.detectChanges();
+
+        const [released] = componentInstance.buttons();
+
+        expect(released.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Filled}`);
+
+        componentInstance.groupStyle = KbqButtonStyles.Outline;
+        fixture.detectChanges();
+
+        expect(released.kbqStyle).toBe(`kbq-button_${KbqButtonStyles.Outline}`);
+    });
+
     it("should preserve an individual button's color when the group color changes", () => {
         const fixture = createComponent(OverriddenChildTestComponent);
         const { componentInstance } = fixture;
@@ -1314,8 +1406,8 @@ describe(KbqButtonGroupRoot.name, () => {
 
         const [overridden, inherited] = componentInstance.buttons();
 
-        expect(overridden.color).toBe(KbqComponentColors.Theme);
-        expect(inherited.color).toBe(KbqComponentColors.ThemeFade);
+        expect(overridden.color()).toBe(KbqComponentColors.Theme);
+        expect(inherited.color()).toBe(KbqComponentColors.ThemeFade);
     });
 
     it('should preserve overrides when a button is added to the group', () => {
@@ -1390,11 +1482,21 @@ class TestApp {
     clickCount: number = 0;
     isDisabled: boolean = false;
     buttonColor: KbqButtonColor | null = null;
-    tabIndex: number | string = 0;
+    tabIndex: number | string | null | undefined = 0;
 
     increment() {
         this.clickCount++;
     }
+}
+
+@Component({
+    imports: [KbqButtonModule],
+    template: `
+        <button kbq-button [kbqStyle]="style">Button</button>
+    `
+})
+class BoundStyleTestApp {
+    style: KbqButtonStyleInput | undefined = KbqButtonStyles.Outline;
 }
 
 @Component({
@@ -1674,7 +1776,7 @@ class DisabledButtonDropdownTrigger {
 class BasicButtonGroupRootTestComponent {
     readonly groupRoot = viewChild.required(KbqButtonGroupRoot);
 
-    style: KbqButtonStyleInput = KbqButtonStyles.Filled;
+    style: KbqButtonStyleInput | undefined = KbqButtonStyles.Filled;
     color: KbqButtonColor = KbqComponentColors.ContrastFade;
     disabled = false;
 }
@@ -1812,7 +1914,7 @@ class OverriddenChildTestComponent {
     groupColor: KbqButtonColor = KbqComponentColors.ContrastFade;
     groupDisabled = false;
 
-    readonly ownStyle = KbqButtonStyles.Transparent;
+    ownStyle: KbqButtonStyleInput | undefined = KbqButtonStyles.Transparent;
     readonly ownColor = KbqComponentColors.Theme;
 
     showExtra = false;

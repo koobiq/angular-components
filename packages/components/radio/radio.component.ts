@@ -1,6 +1,7 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 import {
+    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     booleanAttribute,
@@ -9,25 +10,26 @@ import {
     Component,
     computed,
     contentChild,
-    ContentChildren,
+    contentChildren,
     Directive,
     ElementRef,
     forwardRef,
     inject,
-    Input,
     input,
-    numberAttribute,
+    OnChanges,
     OnDestroy,
     OnInit,
     output,
     Provider,
     QueryList,
     signal,
+    SimpleChanges,
+    untracked,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqColorDirective, kbqOptionalNumberAttribute, kbqQueryListFrom } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 
 // Increasing integer for generating unique ids for radio components.
@@ -57,15 +59,6 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
 /**
  * Selection group for `KbqRadioButton`.
  *
- * `name`, `labelPosition` and `required` are `input()`s; the rest of the state lives in signals
- * behind accessor inputs, the split `KbqCheckbox` settled on in its own review. `value`, `selected`
- * and `disabled` stay accessors because they are written from outside the template — `writeValue`
- * and `setDisabledState` for the first and last, the buttons writing their selection back for
- * `selected`. `disabled` could not be a `model()` either, since a `model()` carries no `transform`
- * and it coerces with `booleanAttribute`; `value` could be one, but `writeValue` has to resolve the
- * checked button synchronously before the first render, and a `model()` would also publish a
- * `valueChange` output that duplicates `change`.
- *
  * The host is a `radiogroup`, which is not a name-from-content role, so it reaches assistive
  * technology unnamed unless the consumer names it. Name it with a plain `aria-label` /
  * `aria-labelledby` attribute pointing at the visible group label: the host is the very element the
@@ -81,13 +74,17 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: Provider = {
         '[class.kbq-radio-group_normal]': '!big()',
         '[class.kbq-radio-group_big]': 'big()',
         '[attr.aria-required]': "required() ? 'true' : null",
-        '[attr.aria-invalid]': "color === 'error' ? 'true' : null"
+        // A signal of its own: the color class binding reads `color` first, and the host bindings of every group in a
+        // view run in that view's reactive consumer, where a signal read again after others costs a scan of all it has
+        // read so far.
+        '[attr.aria-invalid]': 'ariaInvalid()'
     },
     exportAs: 'kbqRadioGroup'
 })
-export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit, ControlValueAccessor {
-    private readonly changeDetector = inject(ChangeDetectorRef);
-
+export class KbqRadioGroup
+    extends KbqColorDirective
+    implements AfterContentChecked, OnChanges, AfterContentInit, ControlValueAccessor
+{
     readonly big = input<boolean>(false);
 
     /**
@@ -102,48 +99,92 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     });
 
     /** Value of the radio button. */
-    @Input()
+    // `value`, `selected` and `disabled` are accessors over signals, fed by aliased inputs, because code outside the
+    // template writes them too: `writeValue` and `setDisabledState` the first and last, the buttons their selection
+    // back into `selected`. `disabled` is no `model()` because it coerces with `booleanAttribute`, which a `model()`
+    // cannot carry; `value` is none because `writeValue` has to resolve the checked button synchronously before the
+    // first render, and a `model()` would also publish a `valueChange` output that duplicates `change`.
     get value(): any {
         return this._value();
     }
 
     set value(newValue: any) {
-        if (this._value() !== newValue) {
-            // Set this before proceeding to ensure no circular loop occurs with selection.
-            this._value.set(newValue);
+        // Untracked, as the other setters and methods that select: called from a consumer's `effect()`, the selection
+        // read on the way — the group's and its buttons' — would make the effect run again whenever the user picks
+        // another button.
+        untracked(() => {
+            if (this._value() !== newValue) {
+                // Set this before proceeding to ensure no circular loop occurs with selection.
+                this._value.set(newValue);
 
-            this.updateSelectedRadioFromValue();
-            this.checkSelectedRadioButton();
-        }
+                this.updateSelectedRadioFromValue();
+                this.checkSelectedRadioButton();
+            }
+        });
     }
 
     /** Whether the radio button is selected. */
-    @Input()
     get selected() {
         return this._selected();
     }
 
     set selected(selected: KbqRadioButton | null) {
-        this._selected.set(selected);
-        this.value = selected ? selected.value : null;
-        this.checkSelectedRadioButton();
+        untracked(() => {
+            this._selected.set(selected);
+            this.value = selected ? selected.value : null;
+            this.checkSelectedRadioButton();
+        });
     }
 
     /** Whether the radio group is disabled */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled();
     }
 
     set disabled(value: boolean) {
         this._disabled.set(value);
-        this.markRadiosForCheck();
     }
 
     private readonly _disabled = signal(false);
 
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly selectedInput = input<KbqRadioButton | null | undefined>(undefined, { alias: 'selected' });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member, a bound `undefined` included;
+        // unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            this.value = this.valueInput();
+        }
+
+        if (changes['selectedInput']) {
+            this.selected = this.selectedInput() ?? null;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+    }
+
     /** Whether the radio group is required */
     readonly required = input(false, { transform: booleanAttribute });
+
+    /**
+     * Value of `aria-invalid`.
+     * @internal
+     */
+    protected readonly ariaInvalid = computed(() => (this.color() === 'error' ? 'true' : null));
 
     /**
      * Event emitted when the group value changes.
@@ -152,9 +193,16 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
      */
     readonly change = output<KbqRadioChange>();
 
+    private readonly radiosQuery = contentChildren<KbqRadioButton>(
+        forwardRef(() => KbqRadioButton),
+        { descendants: true }
+    );
+    private readonly radiosList = kbqQueryListFrom(this.radiosQuery);
+
     /** Child radio buttons. */
-    @ContentChildren(forwardRef(() => KbqRadioButton), { descendants: true })
-    radios: QueryList<KbqRadioButton>;
+    get radios(): QueryList<KbqRadioButton> {
+        return this.radiosList();
+    }
 
     /**
      * Selected value for group. Should equal the value of the selected radio button if there *is*
@@ -183,17 +231,24 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     onTouched: () => any = () => {};
 
     checkSelectedRadioButton() {
-        const selected = this._selected();
+        untracked(() => {
+            const selected = this._selected();
 
-        if (selected && !selected.checked) {
-            selected.checked = true;
-        }
+            if (selected && !selected.checked) {
+                selected.checked = true;
+            }
+        });
     }
 
     /**
      * Initialize properties once content children are available.
      * This allows us to propagate relevant attributes to associated buttons.
      */
+    ngAfterContentChecked(): void {
+        // Syncs the list here so `changes` emits after the projected items are bound and before the host bindings.
+        this.radiosList();
+    }
+
     ngAfterContentInit() {
         // Mark this component as initialized in AfterContentInit because the initial value can
         // possibly be set by NgModel on KbqRadioGroup, and it is possible that the OnInit of the
@@ -206,9 +261,11 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
      * the same rule the browser follows when the group is reached with <kbd>Tab</kbd>.
      */
     focus(origin: FocusOrigin = 'program'): void {
-        const target = this._selected() ?? this.radios?.find((radio) => !radio.disabled);
+        untracked(() => {
+            const target = this._selected() ?? this.radios?.find((radio) => !radio.disabled);
 
-        target?.focus(origin);
+            target?.focus(origin);
+        });
     }
 
     /**
@@ -224,10 +281,16 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     /** Dispatch change event with current selection and group value. */
     emitChangeEvent(): void {
         if (this.isInitialized) {
-            this.change.emit(new KbqRadioChange(this._selected()!, this._value()));
+            this.change.emit(new KbqRadioChange(untracked(this._selected)!, untracked(this._value)));
         }
     }
 
+    /**
+     * Marks every radio button of the group for a change-detection check.
+     *
+     * Kept for back-compatibility. A button derives `checked` and `disabled` from signals, its own and its
+     * group's, so it re-renders on its own and nothing in the library calls this any more.
+     */
     markRadiosForCheck() {
         if (this.radios) {
             this.radios.forEach((radio) => radio.markForCheck());
@@ -239,7 +302,6 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
      */
     writeValue(value: any) {
         this.value = value;
-        this.changeDetector.markForCheck();
     }
 
     /**
@@ -266,7 +328,6 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
      */
     setDisabledState(isDisabled: boolean) {
         this.disabled = isDisabled;
-        this.changeDetector.markForCheck();
     }
 
     /** Updates the `selected` radio button from the internal _value state. */
@@ -275,7 +336,8 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
         const selected = this._selected();
         const isAlreadySelected = selected !== null && selected.value === this._value();
 
-        if (this.radios != null && !isAlreadySelected) {
+        // Before the content is initialized the buttons are not bound yet; each one reads the group value itself.
+        if (this.isInitialized && !isAlreadySelected) {
             this._selected.set(null);
 
             this.radios.forEach((radio) => {
@@ -298,84 +360,84 @@ export class KbqRadioGroup extends KbqColorDirective implements AfterContentInit
     host: {
         class: 'kbq-radio-button',
         '[attr.id]': 'id()',
-        '[class.kbq-radio-button_big]': 'radioGroup?.big()',
+        // The group's `big` through a signal of the button's own: the group's host bindings read `big`, and they run in
+        // the same reactive consumer, where a signal read again after others costs a scan of all it has read so far.
+        '[class.kbq-radio-button_big]': 'big()',
         '[class.kbq-selected]': 'checked',
         '[class.kbq-disabled]': 'disabled'
     },
     exportAs: 'kbqRadioButton'
 })
-export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
+export class KbqRadioButton extends KbqColorDirective implements OnChanges, OnInit, AfterViewInit, OnDestroy {
     private readonly changeDetector = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly radioDispatcher = inject(UniqueSelectionDispatcher);
 
     /** Whether this radio button is checked. */
-    @Input({ transform: booleanAttribute })
     get checked(): boolean {
         return this._checked();
     }
 
     set checked(value: boolean) {
-        if (this._checked() !== value) {
-            this._checked.set(value);
+        // Untracked, as the `value` setter: called from a consumer's `effect()`, the selection read on the way — the
+        // button's, its group's and its siblings' — would make the effect run again whenever the user picks another
+        // button.
+        untracked(() => {
+            if (this._checked() !== value) {
+                this._checked.set(value);
 
-            if (value && this.radioGroup && this.radioGroup.value !== this.value) {
-                this.radioGroup.selected = this;
-            } else if (!value && this.radioGroup && this.radioGroup.value === this.value) {
-                // When unchecking the selected radio button, update the selected radio
-                // property on the group.
-                this.radioGroup.selected = null;
+                if (value && this.radioGroup && this.radioGroup.value !== this.value) {
+                    this.radioGroup.selected = this;
+                } else if (!value && this.radioGroup && this.radioGroup.value === this.value) {
+                    // When unchecking the selected radio button, update the selected radio
+                    // property on the group.
+                    this.radioGroup.selected = null;
+                }
+
+                if (value) {
+                    // Notify all radio buttons with the same name to un-check.
+                    this.radioDispatcher.notify(this.id(), this.name);
+                }
             }
-
-            if (value) {
-                // Notify all radio buttons with the same name to un-check.
-                this.radioDispatcher.notify(this.id(), this.name);
-            }
-
-            this.changeDetector.markForCheck();
-        }
+        });
     }
 
     /** The value of this radio button. */
-    @Input()
     get value(): any {
         return this._value();
     }
 
     set value(value: any) {
-        if (this._value() !== value) {
-            this._value.set(value);
+        untracked(() => {
+            if (this._value() !== value) {
+                this._value.set(value);
 
-            if (this.radioGroup) {
-                if (!this.checked) {
-                    // Update checked when the value changed to match the radio group's value
-                    this.checked = this.radioGroup.value === value;
-                }
+                if (this.radioGroup) {
+                    if (!this.checked) {
+                        // Update checked when the value changed to match the radio group's value
+                        this.checked = this.radioGroup.value === value;
+                    }
 
-                if (this.checked) {
-                    this.radioGroup.selected = this;
+                    if (this.checked) {
+                        this.radioGroup.selected = this;
+                    }
                 }
             }
-        }
+        });
     }
 
     /** Whether the radio button is disabled. A button inside a disabled group is disabled as well. */
-    @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled() || !!this.radioGroup?.disabled;
     }
 
     set disabled(value: boolean) {
-        if (this._disabled() !== value) {
-            this._disabled.set(value);
-            this.changeDetector.markForCheck();
-        }
+        this._disabled.set(value);
     }
 
     private readonly _disabled = signal(false);
 
     /** Tabindex of the native input. A disabled button is taken out of the tab order. */
-    @Input({ transform: numberAttribute })
     get tabIndex(): number {
         return this.disabled ? -1 : this._tabIndex();
     }
@@ -387,7 +449,6 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     private readonly _tabIndex = signal(0);
 
     /** Whether the radio button is required. A button inside a required group is required as well. */
-    @Input({ transform: booleanAttribute })
     get required(): boolean {
         return this._required() || !!this.radioGroup?.required();
     }
@@ -400,12 +461,11 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     private readonly _required = signal(false);
 
     /** Whether the label should appear after or before the radio button. Defaults to 'after' */
-    @Input()
     get labelPosition(): 'before' | 'after' {
         return this._labelPosition() || this.radioGroup?.labelPosition() || 'after';
     }
     /** @docs-private */
-    set labelPosition(value) {
+    set labelPosition(value: 'before' | 'after' | undefined) {
         this._labelPosition.set(value);
     }
 
@@ -417,12 +477,11 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     // listeners by name alone, so a button that resolved to `undefined` would share one selection
     // group with every other unnamed radio button in the application. Resolving the group's name here
     // rather than copying it in `ngOnInit` is also what keeps an explicitly bound `[name]` alive.
-    @Input()
     get name(): string {
         return this._name() ?? this.radioGroup?.name() ?? this.uniqueId;
     }
 
-    set name(value: string) {
+    set name(value: string | undefined) {
         this._name.set(value);
     }
 
@@ -439,6 +498,12 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
 
     /** The parent radio group. `null` when the button is used outside one. */
     radioGroup: KbqRadioGroup | null = inject(KbqRadioGroup, { optional: true });
+
+    /**
+     * Whether the button takes the big size of its group.
+     * @internal
+     */
+    protected readonly big = computed(() => !!this.radioGroup?.big());
 
     private readonly uniqueId: string = `kbq-radio-${++nextUniqueId}`;
 
@@ -476,6 +541,75 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
     private readonly _labelPosition = signal<'before' | 'after' | undefined>(undefined);
 
     private readonly _name = signal<string | undefined>(undefined);
+
+    /** @docs-private */
+    readonly valueInput = input<NonNullable<unknown> | null | undefined>(undefined, { alias: 'value' });
+
+    /** @docs-private */
+    readonly checkedInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'checked',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly tabIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'tabIndex',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly requiredInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'required',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly labelPositionInput = input<'before' | 'after' | undefined>(undefined, { alias: 'labelPosition' });
+
+    /** @docs-private */
+    readonly nameInput = input<string | undefined>(undefined, { alias: 'name' });
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member, a bound `undefined` included;
+        // unbound, it leaves what code wrote.
+        if (changes['valueInput']) {
+            this.value = this.valueInput();
+        }
+
+        if (changes['checkedInput']) {
+            const checked = this.checkedInput();
+
+            if (checked !== undefined) this.checked = checked;
+        }
+
+        if (changes['disabledInput']) {
+            const disabled = this.disabledInput();
+
+            if (disabled !== undefined) this.disabled = disabled;
+        }
+
+        if (changes['tabIndexInput']) this.tabIndex = this.tabIndexInput() ?? 0;
+
+        if (changes['requiredInput']) {
+            const required = this.requiredInput();
+
+            if (required !== undefined) this.required = required;
+        }
+
+        if (changes['labelPositionInput']) {
+            this.labelPosition = this.labelPositionInput();
+        }
+
+        if (changes['nameInput']) {
+            this.name = this.nameInput();
+        }
+    }
 
     /** Whether this radio is checked. */
     private readonly _checked = signal(false);
@@ -525,12 +659,11 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
 
     /**
      * Marks the radio button as needing checking for change detection.
-     * This method is exposed because the parent radio group will directly
-     * update bound properties of the radio button.
+     *
+     * Kept for back-compatibility. A button derives its state from signals, its own and its group's, so it
+     * re-renders on its own and nothing in the library calls this any more.
      */
     markForCheck() {
-        // When group value changes, the button will not be notified. Use `markForCheck` to explicit
-        // update radio button's status
         this.changeDetector.markForCheck();
     }
 

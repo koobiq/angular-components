@@ -103,8 +103,8 @@ export class E2eFilterBarPipeTruncation {
                 removable: false,
                 disabled: false
             },
-            // A name far under the old 20-character threshold, in a pipe type that never carried
-            // `kbqPipeMinWidth`: this is the combination that used to collapse to one glyph.
+            // A name far under 20 characters in a multi-select pipe: the combination that used to collapse to
+            // one glyph.
             {
                 name: 'Тип',
                 id: 'E2ELongValue',

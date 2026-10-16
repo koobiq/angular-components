@@ -11,16 +11,17 @@ several members that never did anything were dropped. Template _bindings_ keep w
 `[(selectedSite)]` and `(selectedAppChange)` are unchanged — so only programmatic access and reads through a
 `#ref="kbqAppSwitcher"` template reference variable break.
 
-| Member                               | Before                       | After                                         | Auto-fix                         |
-| ------------------------------------ | ---------------------------- | --------------------------------------------- | -------------------------------- |
-| `selectedApp`                        | `@Input()` property          | `ModelSignal<KbqAppSwitcherApp \| undefined>` | ✅ read → call, write → `.set()` |
-| `selectedAppChange`                  | `output()`                   | implicit output of the `selectedApp` model    | ✅ `.subscribe` renamed          |
-| `selectedSite`                       | `get`/`set` accessor input   | `ModelSignal`, **value changed**              | ⚠️ warn                          |
-| `selectedSiteChange`                 | `output()`                   | implicit output, **value changed**            | ⚠️ warn                          |
-| `header` / `footer`                  | properties                   | removed                                       | ⚠️ warn                          |
-| `isTrapFocus` / `updateTrapFocus()`  | `KbqAppSwitcherComponent`    | removed                                       | ⚠️ warn                          |
-| `getIcon()`                          | `KbqAppSwitcherDropdownApp`  | removed                                       | ⚠️ warn                          |
-| `collapsed`, `app`, `site`, `toggle` | properties / optional inputs | model / `input.required`                      | ⚠️ warn                          |
+| Member                                 | Before                       | After                                         | Auto-fix                         |
+| -------------------------------------- | ---------------------------- | --------------------------------------------- | -------------------------------- |
+| `selectedApp`                          | `@Input()` property          | `ModelSignal<KbqAppSwitcherApp \| undefined>` | ✅ read → call, write → `.set()` |
+| `selectedAppChange`                    | `output()`                   | implicit output of the `selectedApp` model    | ✅ `.subscribe` renamed          |
+| `selectedSite`                         | `get`/`set` accessor input   | `ModelSignal`, **value changed**              | ⚠️ warn                          |
+| `selectedSiteChange`                   | `output()`                   | implicit output, **value changed**            | ⚠️ warn                          |
+| `header` / `footer`                    | properties                   | removed                                       | ⚠️ warn                          |
+| `isTrapFocus` / `updateTrapFocus()`    | `KbqAppSwitcherComponent`    | removed                                       | ⚠️ warn                          |
+| `activeSite` / `activeApp` (protected) | `KbqAppSwitcherComponent`    | removed: the flyout template context          | ⚠️ warn                          |
+| `getIcon()`                            | `KbqAppSwitcherDropdownApp`  | removed                                       | ⚠️ warn                          |
+| `collapsed`, `app`, `site`, `toggle`   | properties / optional inputs | model / `input.required`                      | ⚠️ warn                          |
 
 ## What it does (auto-fix)
 

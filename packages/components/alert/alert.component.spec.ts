@@ -145,7 +145,7 @@ describe(KbqAlert.name, () => {
         });
 
         it('should warn in dev mode when both an icon and an icon-item are projected', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
             try {
                 createComponent(DoubleIconTestApp);
@@ -157,7 +157,7 @@ describe(KbqAlert.name, () => {
         });
 
         it('should warn about the double icon only once per instance', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
             try {
                 const fixture = createComponent(DoubleIconTestApp);
@@ -175,7 +175,7 @@ describe(KbqAlert.name, () => {
         });
 
         it('should not warn when a single icon is projected', () => {
-            const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+            const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
             try {
                 const fixture = createComponent(ConfigurableTestApp);

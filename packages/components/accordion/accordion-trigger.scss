@@ -1,3 +1,5 @@
+@use '../core/styles/common/animation';
+
 .kbq-accordion-trigger {
     display: flex;
     flex-direction: row;
@@ -12,22 +14,13 @@
 
         transition: transform 300ms ease-out;
 
-        @media (prefers-reduced-motion: reduce) {
-            transition: none;
-        }
+        @include animation.kbq-animations-off();
     }
 
     & .kbq-accordion-trigger__badge,
     & .kbq-accordion-trigger__caption {
         margin-top: var(--kbq-size-xxs);
         margin-right: var(--kbq-size-s);
-    }
-
-    // @deprecated Actions nested inside the trigger are focusable elements inside a `role="button"`.
-    // Put them in a `.kbq-accordion-header__actions` sibling of the trigger instead.
-    & .kbq-accordion-trigger__action {
-        padding: var(--kbq-size-xxs) var(--kbq-size-xxs) var(--kbq-size-3xs);
-        margin-bottom: calc(-1 * #{var(--kbq-size-3xs)});
     }
 
     &.kbq-accordion-trigger_fill {

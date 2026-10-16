@@ -1,26 +1,29 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
-import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import {
     AfterContentInit,
+    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ContentChild,
     contentChild,
     DestroyRef,
+    DoCheck,
     ElementRef,
+    EnvironmentInjector,
     EventEmitter,
     inject,
     InjectionToken,
-    Input,
     input,
-    NgZone,
+    linkedSignal,
     output,
     QueryList,
     signal,
-    ViewChild,
+    untracked,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import {
@@ -39,7 +42,6 @@ import {
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { FlatTreeControl } from './control/flat-tree-control';
 import { KbqTreeNodeToggleBaseDirective, KbqTreeNodeToggleComponent, KbqTreeNodeToggleDirective } from './toggle';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
@@ -78,26 +80,25 @@ export const KBQ_TREE_OPTION_PARENT_COMPONENT = new InjectionToken<KbqTreeOption
     'KBQ_TREE_OPTION_PARENT_COMPONENT'
 );
 
-/**
- * Represents a change event for a tree option.
- *
- * @param source - The tree option that has been modified or selected.
- * @param isUserInput - DEPRECATED Will be removed in version 20.
- */
+/** Represents a change event for a tree option. */
 export class KbqTreeOptionChange {
-    /** @deprecated Will be removed in version 20. */
-    isUserInput: boolean;
-
     constructor(
-        public source: KbqTreeOption,
-        /** @deprecated Will be removed in version 20. */
-        isUserInput = false
-    ) {
-        this.isUserInput = isUserInput;
-    }
+        /** The tree option that has been modified or selected. */
+        public source: KbqTreeOption
+    ) {}
 }
 
 let uniqueIdCounter: number = 0;
+
+/** What the tree control's predicates say about a row, as its host bindings show it. */
+interface TreeOptionPredicates {
+    disabled: boolean;
+    /** `aria-expanded`: whether a branch is expanded, `null` on a leaf. */
+    expanded: boolean | null;
+}
+
+const samePredicates = (a: TreeOptionPredicates, b: TreeOptionPredicates): boolean =>
+    a.disabled === b.disabled && a.expanded === b.expanded;
 
 @Component({
     selector: 'kbq-tree-option',
@@ -122,13 +123,13 @@ let uniqueIdCounter: number = 0;
         '[class.kbq-tree-option_multiple]': 'tree.multiple',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-focused]': 'hasFocus',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'checkedDisabled',
         '[class.kbq-action-button-focused]': 'actionButton()?.active',
         '[attr.id]': 'id',
         '[attr.tabindex]': '-1',
-        '[attr.aria-disabled]': 'disabled || null',
+        '[attr.aria-disabled]': 'checkedDisabled || null',
         '[attr.aria-expanded]': 'ariaExpanded',
-        '[attr.aria-level]': 'level + 1',
+        // `aria-level` comes from `KbqTreeNode`: a second binding here would read `level` twice.
         '[attr.aria-checked]': 'ariaChecked',
         '[attr.aria-selected]': 'ariaSelected',
         '(focusin)': 'focus()',
@@ -139,9 +140,9 @@ let uniqueIdCounter: number = 0;
     },
     exportAs: 'kbqTreeOption'
 })
-export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
+export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, DoCheck, KbqTitleTextRef {
     private changeDetectorRef = inject(ChangeDetectorRef);
-    private ngZone = inject(NgZone);
+    private readonly environmentInjector = inject(EnvironmentInjector);
     private readonly destroyRef = inject(DestroyRef);
     // Intersected with the rendering base because `KbqTreeNode` resolves its level and expansion state
     // through it; the option itself only ever touches the `KbqTreeOptionParent` half.
@@ -159,10 +160,15 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     preventBlur: boolean = false;
 
-    @ViewChild('kbqTitleContainer') parentTextElement: ElementRef;
+    private readonly titleContainer = viewChild<ElementRef<HTMLElement>>('kbqTitleContainer');
+
+    /** Container of the option text, measured by `kbq-title`. */
+    get parentTextElement(): ElementRef<HTMLElement> | undefined {
+        return this.titleContainer();
+    }
 
     // Same element as `parentTextElement` — `.kbq-option-text` clips the text, so it is measured against itself.
-    get textElement(): ElementRef {
+    get textElement(): ElementRef<HTMLElement> | undefined {
         return this.parentTextElement;
     }
 
@@ -171,12 +177,21 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     readonly pseudoCheckbox = contentChild(KbqPseudoCheckbox);
     readonly actionButton = contentChild(KbqOptionActionComponent);
 
-    // `KbqOptionActionComponent` reads these as directive instances through KBQ_OPTION_ACTION_PARENT,
-    // so they must stay decorator queries. A signal `contentChild` would expose the query function
-    // instead of the trigger, making `dropdownTrigger.dropdownClosed` undefined and throwing on `.pipe`
-    // when an action button is rendered (e.g. on tree node expansion) — see #DS-5079.
-    @ContentChild(KbqTooltipTrigger) tooltipTrigger?: KbqTooltipTrigger;
-    @ContentChild(KbqDropdownTrigger) dropdownTrigger?: KbqDropdownTrigger;
+    private readonly tooltipTriggerQuery = contentChild(KbqTooltipTrigger);
+    private readonly dropdownTriggerQuery = contentChild(KbqDropdownTrigger);
+
+    // Getters rather than the signal queries themselves: `KbqOptionActionComponent` reads the triggers as
+    // directive instances through KBQ_OPTION_ACTION_PARENT — see #DS-5079.
+
+    /** Tooltip trigger projected into the option. */
+    get tooltipTrigger(): KbqTooltipTrigger | undefined {
+        return this.tooltipTriggerQuery();
+    }
+
+    /** Dropdown trigger projected into the option. */
+    get dropdownTrigger(): KbqDropdownTrigger | undefined {
+        return this.dropdownTriggerQuery();
+    }
 
     readonly checkboxThirdState = input<boolean>(false);
 
@@ -194,26 +209,38 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     private _value: any;
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** Whether the option is disabled: through its own input, the tree, or the tree control's `isDisabled`. */
     get disabled(): boolean {
         if (this.selectAllRow()) {
-            return this._disabled || this.tree.disabled;
+            return this.disabledInput() || this.tree.disabled;
         }
 
-        return this._disabled || this.tree.disabled || this.tree.treeControl.isDisabled(this.data);
+        return this.disabledInput() || this.tree.disabled || this.tree.treeControl.isDisabled(this.data);
     }
 
-    set disabled(value: BooleanInput) {
-        const newValue = coerceBooleanProperty(value);
+    /**
+     * `disabled` as of the last check, which the host bindings read: the tree control's `isDisabled` predicate gives
+     * no notice of a change and may be costly, so a check asks it once.
+     */
+    protected checkedDisabled = false;
 
-        if (newValue !== this._disabled) {
-            this._disabled = newValue;
-        }
-    }
+    /**
+     * What the tree control's `isDisabled` and `isExpandable` say about the row. Derived, so a predicate reading a
+     * signal brings the row back once that signal changes; `ngDoCheck` sets it on every check for one reading plain
+     * state. Read by a single host binding, see `ariaExpanded`.
+     */
+    private readonly predicates = linkedSignal(() => this.resolvePredicates(), { equal: samePredicates });
 
-    private _disabled: boolean = false;
+    // Values of the ARIA host bindings as of the last check, resolved by `ngDoCheck`.
+    private checkedAriaSelected: boolean | null = null;
+    private checkedSelectAllState: string | null = null;
+    private checkedCheckboxRow = false;
 
     /**
      * Whether the option can be selected by user interaction (click, keyboard, select all).
@@ -234,23 +261,21 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
      */
     readonly selectAllRow = input<boolean, unknown>(false, { transform: booleanAttribute });
 
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
+    /** @docs-private */
+    readonly showCheckboxInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'showCheckbox',
+        transform: booleanAttribute
+    });
+
+    /** Whether the option renders a pseudo-checkbox. Falls back to the tree's own mode until bound. */
     get showCheckbox(): boolean {
-        return this._showCheckbox !== undefined ? this._showCheckbox : this.tree.showCheckbox;
+        return this.showCheckboxInput() ?? this.tree.showCheckbox;
     }
-
-    set showCheckbox(value: BooleanInput) {
-        this._showCheckbox = coerceBooleanProperty(value);
-    }
-
-    private _showCheckbox: boolean;
 
     /** Emits whenever the selected state of the option changes. */
     readonly selectionChange = output<KbqTreeOptionChange>();
 
-    /** @deprecated Use `selectionChange` instead. Will be removed in version 20. */
+    /** @deprecated Use `selectionChange` instead. Will be removed in 22.0.0. */
     readonly onSelectionChange = output<KbqTreeOptionChange>({ alias: 'onSelectionChange' });
 
     // Not an `output()`: `KbqTreeSelect` merges this stream with rxjs, which an `OutputEmitterRef`
@@ -258,18 +283,18 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     readonly userInteraction = new EventEmitter<void>();
 
     get selected(): boolean {
-        return this._selected;
+        return this.selectedState();
     }
 
     set selected(value: boolean) {
         const isSelected = coerceBooleanProperty(value);
 
-        if (isSelected !== this._selected) {
+        if (isSelected !== this.selectedState()) {
             this.setSelected(isSelected);
         }
     }
 
-    private _selected: boolean = false;
+    private readonly selectedState = signal(false);
 
     get id(): string {
         return this._id;
@@ -324,18 +349,17 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     private readonly checkbox = signal<KbqPseudoCheckboxState>('unchecked');
 
     /**
-     * `aria-expanded` of the row, reported for every branch and omitted on a leaf.
+     * `aria-expanded` of the row as of the last check, reported for every branch and omitted on a leaf.
      *
      * Deliberately not `isExpandable`, which also asks whether the toggle is operable: filtering
      * disables every toggle while leaving the matched branches expanded, and a branch that stops
      * reporting `aria-expanded` is announced as a leaf while its children are on screen.
      */
     protected get ariaExpanded(): boolean | null {
-        if (this.selectAllRow()) {
-            return null;
-        }
-
-        return this.tree.treeControl.isExpandable(this.data) ? this.isExpanded : null;
+        // The one tracked read of `predicates`, which subscribes the row to the signals the predicates read: the
+        // other bindings read the snapshot `ngDoCheck` takes along with it, as a second read of this row's own signal
+        // would walk the producers of every row checked before it.
+        return this.predicates().expanded;
     }
 
     /**
@@ -343,16 +367,14 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
      * row that drives it. `null` for a plain option, which reports `aria-selected` instead.
      */
     protected get ariaChecked(): string | null {
-        if (this.selectAllRow()) {
-            return this.toAriaChecked(this.tree.selectAllState);
-        }
-
-        return this.showCheckbox ? this.toAriaChecked(this.checkboxState) : null;
+        // The checkbox state is read here rather than in `ngDoCheck`: this read is what brings the row back once the
+        // state changes.
+        return this.checkedCheckboxRow ? this.toAriaChecked(this.checkboxState) : this.checkedSelectAllState;
     }
 
-    /** `aria-selected` of the row. Options with a checkbox report `aria-checked` instead. */
+    /** `aria-selected` of the row as of the last check. Options with a checkbox report `aria-checked` instead. */
     protected get ariaSelected(): boolean | null {
-        return this.selectAllRow() || this.showCheckbox ? null : this.selected;
+        return this.checkedAriaSelected;
     }
 
     constructor() {
@@ -361,6 +383,34 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         super();
 
         this.tree = tree;
+    }
+
+    ngDoCheck(): void {
+        // Asked once per check, for a predicate reading plain state; a set to an equal value does nothing.
+        const predicates = this.resolvePredicates();
+
+        this.predicates.set(predicates);
+
+        if (predicates.disabled !== this.checkedDisabled) {
+            this.checkedDisabled = predicates.disabled;
+            this.changeDetectorRef.markForCheck();
+        }
+
+        // Resolved here, untracked: a tree checks its rows under the one reactive consumer of its view, where a signal
+        // read again costs a walk over every signal read before it. The host bindings read each signal of the row once
+        // (`selected`, `checkboxState`, `predicates`, the mode through `tree.multiple`), which brings the row back here
+        // on a change.
+        if (this.selectAllRow()) {
+            this.checkedAriaSelected = null;
+            this.checkedCheckboxRow = false;
+            this.checkedSelectAllState = this.toAriaChecked(this.tree.selectAllState);
+        } else {
+            const showCheckbox = this.showCheckbox;
+
+            this.checkedAriaSelected = showCheckbox ? null : this.selected;
+            this.checkedCheckboxRow = showCheckbox;
+            this.checkedSelectAllState = null;
+        }
     }
 
     ngAfterContentInit(): void {
@@ -431,44 +481,48 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     };
 
     toggle(): void {
-        this.selected = !this.selected;
+        // Untracked, like the other imperative methods: called from a consumer's `effect()`, the state read on the
+        // way — `selected`, focus, `disabled`, the inputs — would make the effect run again whenever it changes.
+        untracked(() => (this.selected = !this.selected));
     }
 
     setSelected(selected: boolean): void {
-        if (this.selectAllRow() || this._selected === selected || !this.tree.selectionModel) {
-            return;
-        }
+        untracked(() => {
+            if (this.selectAllRow() || this.selectedState() === selected || !this.tree.selectionModel) {
+                return;
+            }
 
-        this._selected = selected;
+            this.selectedState.set(selected);
 
-        if (selected) {
-            this.tree.selectionModel.select(this.data);
-        } else {
-            this.tree.selectionModel.deselect(this.data);
-        }
+            if (selected) {
+                this.tree.selectionModel.select(this.data);
+            } else {
+                this.tree.selectionModel.deselect(this.data);
+            }
 
-        if (this.showCheckbox) {
-            this.updateCheckboxState();
-        }
-
-        this.markForCheck();
+            if (this.showCheckbox) {
+                this.updateCheckboxState();
+            }
+        });
     }
 
     focus(focusOrigin?: FocusOrigin) {
-        if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
+        untracked(() => {
+            if (focusOrigin === 'program' || this.disabled || this.actionButton()?.hasFocus) return;
 
-        // With the pointer already on this node, revealing it would shift the tree out from under it.
-        kbqFocusAndReveal(this.elementRef.nativeElement, focusOrigin === 'mouse');
+            // With the pointer already on this node, revealing it would shift the tree out from under it.
+            kbqFocusAndReveal(this.elementRef.nativeElement, focusOrigin === 'mouse');
 
-        if (!this.hasFocus) {
-            this.focusEvents.next({ option: this });
+            if (!this.hasFocus) {
+                this.focusEvents.next({ option: this });
 
-            Promise.resolve().then(() => {
-                this.hasFocus = true;
+                Promise.resolve().then(() => {
+                    this.hasFocus = true;
 
-                this.markForCheck();
-            });
-        }
+                    this.markForCheck();
+                });
+            }
+        });
     }
 
     blur(): void {
@@ -476,24 +530,27 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
             return;
         }
 
-        // When animations are enabled, Angular may end up removing the option from the DOM a little
-        // earlier than usual, causing it to be blurred and throwing off the logic in the tree
-        // that moves focus not the next item. To work around the issue, we defer marking the option
-        // as not focused until the next time the zone stabilizes.
-        this.ngZone.onStable
-            .asObservable()
-            .pipe(take(1))
-            .subscribe(() => {
-                this.ngZone.run(() => {
-                    if (this.actionButton()?.hasFocus || this.tree.optionShouldHoldFocusOnBlur) {
-                        return;
-                    }
+        // Deferred until the focus has settled: whatever takes it — this option's action button, or another option,
+        // which marks itself focused on a microtask — records it only after this blur. Reported before that, the move
+        // reads as the focus leaving the options: the option would drop its focused state while its own action button
+        // holds the focus, and the tree its active option.
+        afterNextRender(
+            () => {
+                // Focus can be back by the time this runs (a blur and a focus in the same task): then nothing was lost.
+                if (_getFocusedElementPierceShadowDom() === this.elementRef.nativeElement) return;
 
-                    this.hasFocus = false;
+                if (this.actionButton()?.hasFocus || this.tree.optionShouldHoldFocusOnBlur) {
+                    return;
+                }
 
-                    this.blurEvents.next({ option: this });
-                });
-            });
+                this.hasFocus = false;
+
+                this.blurEvents.next({ option: this });
+            },
+            // The environment injector, not the option's: an option removed while focused is blurred as its view is
+            // destroyed, and the tree still has to hear about it to move focus.
+            { injector: this.environmentInjector }
+        );
     }
 
     /** @docs-private */
@@ -513,52 +570,53 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     select(setFocus = true): void {
-        if (this.selectAllRow() || this._selected) {
-            return;
-        }
+        untracked(() => {
+            if (this.selectAllRow() || this.selectedState()) {
+                return;
+            }
 
-        this._selected = true;
+            this.selectedState.set(true);
 
-        if (setFocus && !this.hasFocus) {
-            this.focus();
-        }
+            if (setFocus && !this.hasFocus) {
+                this.focus();
+            }
 
-        this.updateCheckboxState();
-        this.markForCheck();
-        this.emitSelectionChangeEvent();
+            this.updateCheckboxState();
+            this.emitSelectionChangeEvent();
+        });
     }
 
     deselect(): void {
-        if (this.selectAllRow() || !this._selected) {
-            return;
-        }
+        untracked(() => {
+            if (this.selectAllRow() || !this.selectedState()) {
+                return;
+            }
 
-        this._selected = false;
+            this.selectedState.set(false);
 
-        this.updateCheckboxState();
-
-        this.markForCheck();
-        this.emitSelectionChangeEvent();
+            this.updateCheckboxState();
+            this.emitSelectionChangeEvent();
+        });
     }
 
     onKeydown($event) {
         kbqFocusOptionActionOnTab($event, this.actionButton());
     }
 
-    selectViaInteraction($event?: KeyboardEvent): void {
-        if (this.disabled || !this.selectable()) {
-            return;
-        }
+    selectViaInteraction($event?: KeyboardEvent | MouseEvent): void {
+        untracked(() => {
+            if (this.disabled || !this.selectable()) {
+                return;
+            }
 
-        this.markForCheck();
+            this.userInteraction.emit();
 
-        this.userInteraction.emit();
+            const shiftKey = $event ? hasModifierKey($event, 'shiftKey') : false;
+            // ctrlKey is for Windows, metaKey is for MacOS
+            const ctrlKey = $event ? hasModifierKey($event, 'ctrlKey', 'metaKey') : false;
 
-        const shiftKey = $event ? hasModifierKey($event, 'shiftKey') : false;
-        // ctrlKey is for Windows, metaKey is for MacOS
-        const ctrlKey = $event ? hasModifierKey($event, 'ctrlKey', 'metaKey') : false;
-
-        this.tree.setSelectedOptionsByClick(this, shiftKey, ctrlKey);
+            this.tree.setSelectedOptionsByClick(this, shiftKey, ctrlKey);
+        });
     }
 
     emitSelectionChangeEvent(): void {
@@ -592,5 +650,11 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
 
     private toAriaChecked(state: KbqPseudoCheckboxState): string {
         return state === 'indeterminate' ? 'mixed' : `${state === 'checked'}`;
+    }
+
+    private resolvePredicates(): TreeOptionPredicates {
+        const branch = !this.selectAllRow() && this.tree.treeControl.isExpandable(this.data);
+
+        return { disabled: this.disabled, expanded: branch ? this.isExpanded : null };
     }
 }

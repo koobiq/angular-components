@@ -1,18 +1,31 @@
 import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
-import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { forEachClass, parseTemplate } from '../../utils/typescript';
+import { visitProjectFiles } from '../../utils/project-files';
+import {
+    Binding,
+    classifyAccess,
+    collectAllReceivers,
+    collectBindings,
+    isPlainAssignment,
+    isWriteTarget,
+    Receiver,
+    resolveReceiver
+} from '../../utils/signal-members-migration';
+import { RefAccessPolicy, rewriteRefAccesses } from '../../utils/template-ref-access';
+import { collectInlineTemplateRanges, parseTemplate } from '../../utils/typescript';
 import {
     attributeRewrites,
     NULLABILITY_CHANGED_MEMBERS,
-    PROTECTED_MEMBERS,
     QUERY_LIST_MEMBERS,
     QUERY_LIST_ONLY_API,
     READ_ONLY_INPUT_MEMBERS,
     READ_ONLY_QUERY_MEMBERS,
+    READ_ONLY_STATE_MEMBERS,
+    READ_ONLY_STATE_MESSAGE,
+    REMOVED_MEMBERS_MESSAGE,
     styleRewrites,
     Target,
     TARGETS,
@@ -32,12 +45,10 @@ interface Edit {
     text: string;
 }
 
-/** A receiver whose static type is one of a target's types, valid within `[start, end]` of the source. */
-interface Receiver {
-    /** Source text of the receiver expression, e.g. `formField` or `this.formField`. */
-    text: string;
-    start: number;
-    end: number;
+/** The receivers of one target in a file, and the bindings that decide which of them an access reaches. */
+interface TargetReceivers {
+    receivers: Receiver[];
+    bindings: Binding[];
 }
 
 function escapeRegExp(value: string): string {
@@ -56,126 +67,20 @@ function applyEdits(content: string, edits: Edit[]): string {
     return result;
 }
 
-const isFunctionLike = (node: ts.Node): boolean =>
-    ts.isFunctionDeclaration(node) ||
-    ts.isMethodDeclaration(node) ||
-    ts.isConstructorDeclaration(node) ||
-    ts.isArrowFunction(node) ||
-    ts.isFunctionExpression(node) ||
-    ts.isGetAccessorDeclaration(node) ||
-    ts.isSetAccessorDeclaration(node);
-
-/** Walks up from `node` to the nearest ancestor matching `predicate`. */
-function findAncestor(node: ts.Node, predicate: (node: ts.Node) => boolean): ts.Node | undefined {
-    let current = node.parent;
-
-    while (current) {
-        if (predicate(current)) return current;
-        current = current.parent;
-    }
-
-    return undefined;
-}
-
-/** Whether a type annotation refers to one of the target's types. */
-function isTargetType(type: ts.TypeNode | undefined, target: Target): boolean {
-    return (
-        !!type &&
-        ts.isTypeReferenceNode(type) &&
-        ts.isIdentifier(type.typeName) &&
-        target.types.includes(type.typeName.text)
-    );
-}
-
-const FIELD_MODIFIERS = new Set<ts.SyntaxKind>([
-    ts.SyntaxKind.PrivateKeyword,
-    ts.SyntaxKind.PublicKeyword,
-    ts.SyntaxKind.ProtectedKeyword,
-    ts.SyntaxKind.ReadonlyKeyword
-]);
-
 /**
- * Collects the receivers whose static type belongs to `target`, by explicit annotation only (no cross-package
- * type resolution): method/function params, class fields (incl. `@ContentChild(KbqHint) x: KbqHint` and
- * constructor parameter-properties) and typed locals.
+ * Whether a property access reads from a receiver of the target. The shared engine resolves the receiver at
+ * this exact position, so a nested declaration that shadows its name or a `function` that rebinds `this` is
+ * not followed. A signal query (`viewChild(KbqSelect)`) holds the instance behind a call of its own, which
+ * this pass does not reach.
  */
-function collectReceivers(sourceFile: ts.SourceFile, target: Target): Receiver[] {
-    const receivers: Receiver[] = [];
-    const add = (text: string, scope: ts.Node) =>
-        receivers.push({ text, start: scope.getStart(sourceFile), end: scope.getEnd() });
+function onReceiver(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, scope: TargetReceivers): boolean {
+    const receiver = resolveReceiver(node.expression, node, sourceFile, scope.receivers, scope.bindings);
 
-    const visit = (node: ts.Node): void => {
-        if (ts.isParameter(node) && ts.isIdentifier(node.name) && isTargetType(node.type, target)) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
-
-            // A constructor parameter-property is also a class field, reachable as `this.<name>`.
-            if (node.modifiers?.some((modifier) => FIELD_MODIFIERS.has(modifier.kind))) {
-                const owner = findAncestor(node, ts.isClassDeclaration);
-
-                if (owner) add(`this.${node.name.text}`, owner);
-            }
-        } else if (ts.isPropertyDeclaration(node) && ts.isIdentifier(node.name) && isTargetType(node.type, target)) {
-            const owner = findAncestor(node, ts.isClassDeclaration);
-
-            if (owner) add(`this.${node.name.text}`, owner);
-        } else if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && isTargetType(node.type, target)) {
-            add(node.name.text, findAncestor(node, isFunctionLike) ?? sourceFile);
-        }
-
-        node.forEachChild(visit);
-    };
-
-    visit(sourceFile);
-
-    return receivers;
-}
-
-/** Whether a property access on a receiver is within one of the receiver's scopes. */
-function inReceiverScope(node: ts.PropertyAccessExpression, sourceFile: ts.SourceFile, receivers: Receiver[]): boolean {
-    const receiverText = node.expression.getText(sourceFile);
-    const start = node.getStart(sourceFile);
-    const end = node.getEnd();
-
-    return receivers.some((r) => r.text === receiverText && start >= r.start && end <= r.end);
-}
-
-/** Classifies a matched property access and appends the resulting edit(s). */
-function classifyAccess(
-    node: ts.PropertyAccessExpression,
-    sourceFile: ts.SourceFile,
-    target: Target,
-    edits: Edit[]
-): void {
-    const parent = node.parent;
-
-    // Already migrated: `x.hint()` (call) or `x.regex.set(...)` — leave alone (idempotent).
-    if (ts.isCallExpression(parent) && parent.expression === node) return;
-    if (ts.isPropertyAccessExpression(parent) && parent.expression === node && parent.name.text === 'set') return;
-
-    // Write target: `x.regex = RHS`.
-    if (
-        ts.isBinaryExpression(parent) &&
-        parent.left === node &&
-        parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
-    ) {
-        if (target.writableMembers.has(node.name.text)) {
-            const rhs = parent.right;
-
-            edits.push({ start: node.getEnd(), end: rhs.getStart(sourceFile), text: '.set(' });
-            edits.push({ start: rhs.getEnd(), end: rhs.getEnd(), text: ')' });
-        }
-
-        // A read-only member keeps its assignment: it becomes a compile error the consumer fixes by hand,
-        // and the warning below explains why.
-        return;
-    }
-
-    // Read (incl. optional chain `x?.hint`): append `()`.
-    edits.push({ start: node.getEnd(), end: node.getEnd(), text: '()' });
+    return !!receiver && !receiver.signalQuery;
 }
 
 /** Collects edits for every read/write of a migrated member on a known receiver of `target`. */
-function collectAccessEdits(sourceFile: ts.SourceFile, target: Target, receivers: Receiver[]): Edit[] {
+function collectAccessEdits(sourceFile: ts.SourceFile, target: Target, scope: TargetReceivers): Edit[] {
     const edits: Edit[] = [];
 
     const visit = (node: ts.Node): void => {
@@ -183,9 +88,9 @@ function collectAccessEdits(sourceFile: ts.SourceFile, target: Target, receivers
             ts.isPropertyAccessExpression(node) &&
             ts.isIdentifier(node.name) &&
             target.signalMembers.includes(node.name.text) &&
-            inReceiverScope(node, sourceFile, receivers)
+            onReceiver(node, sourceFile, scope)
         ) {
-            classifyAccess(node, sourceFile, target, edits);
+            classifyAccess(node, sourceFile, target.writableMembers, edits);
         }
 
         node.forEachChild(visit);
@@ -200,54 +105,53 @@ function collectAccessEdits(sourceFile: ts.SourceFile, target: Target, receivers
 interface ReceiverWarnings {
     queryListApi: Set<string>;
     nullability: Set<string>;
-    protectedAccess: Set<string>;
     readOnlyInputWrites: Set<string>;
     readOnlyQueryWrites: Set<string>;
+    readOnlyStateWrites: Set<string>;
+    /** Writable members written in a form other than a plain `=`, which has no `.set()` translation. */
+    writableWrites: Set<string>;
+    /** Removed members, reached in any form. */
+    removed: Set<string>;
 }
 
 const emptyWarnings = (): ReceiverWarnings => ({
     queryListApi: new Set<string>(),
     nullability: new Set<string>(),
-    protectedAccess: new Set<string>(),
     readOnlyInputWrites: new Set<string>(),
-    readOnlyQueryWrites: new Set<string>()
+    readOnlyQueryWrites: new Set<string>(),
+    readOnlyStateWrites: new Set<string>(),
+    writableWrites: new Set<string>(),
+    removed: new Set<string>()
 });
 
-/** Whether the node is the left-hand side of an assignment, i.e. a write to a now read-only member. */
-function isAssignmentTarget(node: ts.PropertyAccessExpression): boolean {
-    return (
-        ts.isBinaryExpression(node.parent) &&
-        node.parent.left === node &&
-        node.parent.operatorToken.kind === ts.SyntaxKind.EqualsToken
-    );
-}
-
 /** Collects the members that the auto-fix can't fully migrate for one target. */
-function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, receivers: Receiver[]): ReceiverWarnings {
+function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, scope: TargetReceivers): ReceiverWarnings {
     const warnings = emptyWarnings();
 
     const visit = (node: ts.Node): void => {
         if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.name)) {
             const name = node.name.text;
-            const onReceiver = inReceiverScope(node, sourceFile, receivers);
+            const reachesReceiver = onReceiver(node, sourceFile, scope);
 
-            if (onReceiver && PROTECTED_MEMBERS.includes(name)) {
-                warnings.protectedAccess.add(name);
-            }
-
-            if (onReceiver && NULLABILITY_CHANGED_MEMBERS.includes(name)) {
+            if (reachesReceiver && NULLABILITY_CHANGED_MEMBERS.includes(name)) {
                 warnings.nullability.add(name);
             }
 
+            if (reachesReceiver && target.removedMembers?.includes(name)) {
+                warnings.removed.add(name);
+            }
+
             // `target.signalMembers` scopes the flat name lists to the members this receiver actually owns.
-            if (
-                onReceiver &&
-                target.signalMembers.includes(name) &&
-                !target.writableMembers.has(name) &&
-                isAssignmentTarget(node)
-            ) {
-                if (READ_ONLY_INPUT_MEMBERS.includes(name)) warnings.readOnlyInputWrites.add(name);
-                else if (READ_ONLY_QUERY_MEMBERS.includes(name)) warnings.readOnlyQueryWrites.add(name);
+            if (reachesReceiver && target.signalMembers.includes(name) && isWriteTarget(node)) {
+                if (target.writableMembers.has(name)) {
+                    if (!isPlainAssignment(node)) warnings.writableWrites.add(name);
+                } else if (READ_ONLY_INPUT_MEMBERS.includes(name)) {
+                    warnings.readOnlyInputWrites.add(name);
+                } else if (READ_ONLY_QUERY_MEMBERS.includes(name)) {
+                    warnings.readOnlyQueryWrites.add(name);
+                } else if (READ_ONLY_STATE_MEMBERS.includes(name)) {
+                    warnings.readOnlyStateWrites.add(name);
+                }
             }
 
             // `formField.hint.changes` — the query member is migrated, the QueryList API below it is not.
@@ -256,7 +160,7 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, rece
                 ts.isPropertyAccessExpression(node.expression) &&
                 ts.isIdentifier(node.expression.name) &&
                 QUERY_LIST_MEMBERS.includes(node.expression.name.text) &&
-                inReceiverScope(node.expression, sourceFile, receivers)
+                onReceiver(node.expression, sourceFile, scope)
             ) {
                 warnings.queryListApi.add(`${node.expression.name.text}.${name}`);
             }
@@ -270,25 +174,70 @@ function collectReceiverWarnings(sourceFile: ts.SourceFile, target: Target, rece
     return warnings;
 }
 
-/** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
-function warnReceiverMembers(context: SchematicContext, filePath: string, content: string): void {
+/** The members of a file's receivers that can't be auto-fixed, across every target. */
+function collectFileWarnings(filePath: string, content: string): ReceiverWarnings {
     const sourceFile = ts.createSourceFile(filePath, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+    const bindings = collectBindings(sourceFile);
     const merged = emptyWarnings();
 
     for (const target of TARGETS) {
-        const receivers = collectReceivers(sourceFile, target);
+        const receivers = collectAllReceivers(sourceFile, target.types);
 
         if (receivers.length === 0) continue;
 
-        const warnings = collectReceiverWarnings(sourceFile, target, receivers);
+        const warnings = collectReceiverWarnings(sourceFile, target, { receivers, bindings });
 
         warnings.queryListApi.forEach((value) => merged.queryListApi.add(value));
         warnings.nullability.forEach((value) => merged.nullability.add(value));
-        warnings.protectedAccess.forEach((value) => merged.protectedAccess.add(value));
         warnings.readOnlyInputWrites.forEach((value) => merged.readOnlyInputWrites.add(value));
         warnings.readOnlyQueryWrites.forEach((value) => merged.readOnlyQueryWrites.add(value));
+        warnings.readOnlyStateWrites.forEach((value) => merged.readOnlyStateWrites.add(value));
+        warnings.writableWrites.forEach((value) => merged.writableWrites.add(value));
+        warnings.removed.forEach((value) => merged.removed.add(value));
     }
 
+    return merged;
+}
+
+/** Members a template reaches through a reference variable and the rewrite leaves as they are. */
+interface TemplateFindings {
+    /** Read-only members, written in any form. */
+    readOnlyWrites: Set<string>;
+    /** Writable members, written by a compound assignment or an increment. */
+    compoundWrites: Set<string>;
+    /** Removed members, reached in any form. */
+    removed: Set<string>;
+}
+
+const emptyTemplateFindings = (): TemplateFindings => ({
+    readOnlyWrites: new Set<string>(),
+    compoundWrites: new Set<string>(),
+    removed: new Set<string>()
+});
+
+/** Merges the findings of one template into `into`. */
+function mergeTemplateFindings(into: TemplateFindings, from: TemplateFindings): void {
+    from.readOnlyWrites.forEach((member) => into.readOnlyWrites.add(member));
+    from.compoundWrites.forEach((member) => into.compoundWrites.add(member));
+    from.removed.forEach((member) => into.removed.add(member));
+}
+
+/** Adds the members a template reaches through a reference variable to the warnings. */
+function addTemplateFindings(warnings: ReceiverWarnings, findings: TemplateFindings): ReceiverWarnings {
+    for (const name of findings.readOnlyWrites) {
+        if (READ_ONLY_INPUT_MEMBERS.includes(name)) warnings.readOnlyInputWrites.add(name);
+        else if (READ_ONLY_QUERY_MEMBERS.includes(name)) warnings.readOnlyQueryWrites.add(name);
+        else if (READ_ONLY_STATE_MEMBERS.includes(name)) warnings.readOnlyStateWrites.add(name);
+    }
+
+    findings.compoundWrites.forEach((member) => warnings.writableWrites.add(member));
+    findings.removed.forEach((member) => warnings.removed.add(member));
+
+    return warnings;
+}
+
+/** Emits precise, receiver-scoped warnings for the members that can't be auto-fixed. */
+function logReceiverWarnings(context: SchematicContext, filePath: string, merged: ReceiverWarnings): void {
     if (merged.queryListApi.size > 0) {
         logMessage(context.logger, [
             `[${MIGRATION}] ${filePath}`,
@@ -304,14 +253,6 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
             `[${MIGRATION}] ${filePath}`,
             `  \`${[...merged.nullability].join('`, `')}\` now returns \`undefined\` instead of \`null\` when absent.`,
             `  Strict comparisons against \`null\` no longer match — use a truthiness check or \`== null\`.`
-        ]);
-    }
-
-    if (merged.protectedAccess.size > 0) {
-        logMessage(context.logger, [
-            `[${MIGRATION}] ${filePath}`,
-            `  These members are now \`protected\` and can't be read from outside the component: ` +
-                `${[...merged.protectedAccess].join(', ')}. Refactor to avoid reading them.`
         ]);
     }
 
@@ -332,6 +273,23 @@ function warnReceiverMembers(context: SchematicContext, filePath: string, conten
             `  query result (usually a test faking the projected content) has to render the real component.`
         ]);
     }
+
+    if (merged.readOnlyStateWrites.size > 0) {
+        logMessage(context.logger, [`[${MIGRATION}] ${filePath}`, `  ${READ_ONLY_STATE_MESSAGE}`]);
+    }
+
+    if (merged.removed.size > 0) {
+        logMessage(context.logger, [`[${MIGRATION}] ${filePath}`, `  ${REMOVED_MEMBERS_MESSAGE}`]);
+    }
+
+    if (merged.writableWrites.size > 0) {
+        logMessage(context.logger, [
+            `[${MIGRATION}] ${filePath}`,
+            `  \`${[...merged.writableWrites].join('`, `')}\` are writable signals now, but only a plain \`=\` is`,
+            `  rewritten to \`.set()\`: a compound assignment, an increment, \`delete\` or a destructuring target`,
+            `  was left as it is. Write it with \`.set()\` or \`.update()\`.`
+        ]);
+    }
 }
 
 /** Pass A — rewrite value-safe programmatic reads of migrated members in TypeScript code. */
@@ -341,69 +299,16 @@ function migrateTsExpressions(content: string, fileName: string): string {
     // One target at a time, re-parsing in between, so the edit offsets of each pass stay valid.
     for (const target of TARGETS) {
         const sourceFile = ts.createSourceFile(fileName, result, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-        const receivers = collectReceivers(sourceFile, target);
+        const receivers = collectAllReceivers(sourceFile, target.types);
 
         if (receivers.length === 0) continue;
 
-        const edits = collectAccessEdits(sourceFile, target, receivers);
+        const edits = collectAccessEdits(sourceFile, target, { receivers, bindings: collectBindings(sourceFile) });
 
         if (edits.length > 0) result = applyEdits(result, edits);
     }
 
     return result;
-}
-
-/** Collects template reference variable names bound to one of the target's elements. */
-class RefCollector implements Visitor {
-    readonly refs = new Set<string>();
-
-    constructor(private readonly elements: readonly string[]) {}
-
-    visitElement(element: any): void {
-        if (this.elements.includes(element.name)) {
-            for (const attr of element.attrs ?? []) {
-                if (typeof attr.name !== 'string') continue;
-
-                if (attr.name.startsWith('#')) this.refs.add(attr.name.slice(1));
-                else if (attr.name.startsWith('ref-')) this.refs.add(attr.name.slice(4));
-            }
-        }
-
-        this.visitChildren(element);
-    }
-
-    visitBlock(block: any): void {
-        this.visitChildren(block);
-    }
-
-    private visitChildren(node: any): void {
-        for (const child of node.children ?? []) {
-            child.visit(this);
-        }
-    }
-
-    visitAttribute(): void {}
-    visitText(): void {}
-    visitComment(): void {}
-    visitExpansion(): void {}
-    visitExpansionCase(): void {}
-    visitBlockParameter(): void {}
-    visitLetDeclaration(): void {}
-}
-
-/** Rewrites `ref.member` reads to `ref.member()` for the given refs, scoped to those exact identifiers. */
-function rewriteRefReads(template: string, refs: string[], members: readonly string[]): string {
-    const joined = members.join('|');
-    let content = template;
-
-    for (const ref of refs) {
-        // `\bref\.(member)\b(?!\s*\()` — skip anything already invoked, so the rewrite is idempotent.
-        const pattern = new RegExp(`\\b(${escapeRegExp(ref)})\\.(${joined})\\b(?!\\s*\\()`, 'g');
-
-        content = content.replace(pattern, '$1.$2()');
-    }
-
-    return content;
 }
 
 /** Rewrites renamed attributes inside the opening tag of the elements that own them. */
@@ -423,83 +328,87 @@ function rewriteAttributes(template: string): string {
     return content;
 }
 
-/** Pass B (core) — parse a template, discover target refs, rewrite their reads and renamed attributes. */
-async function migrateTemplate(template: string): Promise<{ content: string; changed: boolean }> {
-    let content = rewriteAttributes(template);
+/**
+ * Whether a `#ref` with `value` on an `element` names `target`: bare or naming the `exportAs` on one of its elements,
+ * or naming one of its directive `exportAs` names on any element.
+ */
+function refersTo({ elements, exportAs = [] }: Target, element: string, value: string): boolean {
+    if (Object.hasOwn(elements, element) && (!value || value === elements[element])) return true;
 
-    const relevant = TARGETS.filter((target) => target.elements.some((element) => template.includes(element)));
+    return !!value && exportAs.includes(value);
+}
+
+interface TemplateResult extends TemplateFindings {
+    content: string;
+    changed: boolean;
+}
+
+/**
+ * Pass B (core) — parse a template, discover target refs, rewrite their reads, writes and renamed attributes, and
+ * find the removed members they reach.
+ */
+async function migrateTemplate(template: string): Promise<TemplateResult> {
+    let content = rewriteAttributes(template);
+    const findings = emptyTemplateFindings();
+
+    const relevant = TARGETS.filter(
+        (target) =>
+            Object.keys(target.elements).some((element) => template.includes(element)) ||
+            target.exportAs?.some((exportAs) => template.includes(exportAs))
+    );
 
     if (relevant.length > 0) {
         const parsed = await parseTemplate(content);
 
         if (parsed.tree) {
-            for (const target of relevant) {
-                const collector = new RefCollector(target.elements);
+            const { rootNodes } = parsed.tree as { rootNodes: unknown[] };
+            const policies = new Map<Target, RefAccessPolicy>(
+                relevant.map((target) => [
+                    target,
+                    {
+                        members: target.signalMembers,
+                        writable: target.writableMembers,
+                        reported: target.removedMembers
+                    }
+                ])
+            );
+            const result = rewriteRefAccesses(content, rootNodes, (element, value) => {
+                const target = relevant.find((candidate) => refersTo(candidate, element.name, value));
 
-                visitAll(collector, (parsed.tree as { rootNodes: unknown[] }).rootNodes);
+                return target && policies.get(target);
+            });
 
-                if (collector.refs.size > 0) {
-                    content = rewriteRefReads(content, [...collector.refs], target.signalMembers);
-                }
-            }
+            content = result.content;
+            result.readOnlyWrites.forEach((member) => findings.readOnlyWrites.add(member));
+            result.compoundWrites.forEach((member) => findings.compoundWrites.add(member));
+            result.reported.forEach((member) => findings.removed.add(member));
         }
     }
 
-    return { content, changed: content !== template };
+    return { content, changed: content !== template, ...findings };
 }
 
-/** Interior `[start, end]` ranges of inline `@Component({ template: '…' })` string literals. */
-function collectInlineTemplateRanges(sourceFile: ts.SourceFile): Array<{ start: number; end: number }> {
-    const ranges: Array<{ start: number; end: number }> = [];
-
-    forEachClass(sourceFile, (node) => {
-        const decorator = ts
-            .getDecorators(node)
-            ?.find(
-                (dec) =>
-                    ts.isCallExpression(dec.expression) &&
-                    ts.isIdentifier(dec.expression.expression) &&
-                    dec.expression.expression.text === 'Component'
-            );
-
-        if (!decorator || !ts.isCallExpression(decorator.expression)) return;
-
-        const [arg] = decorator.expression.arguments;
-
-        if (!arg || !ts.isObjectLiteralExpression(arg)) return;
-
-        for (const prop of arg.properties) {
-            if (
-                ts.isPropertyAssignment(prop) &&
-                (ts.isIdentifier(prop.name) || ts.isStringLiteralLike(prop.name)) &&
-                prop.name.text === 'template' &&
-                ts.isStringLiteralLike(prop.initializer) &&
-                prop.initializer.text
-            ) {
-                // +1 / -1 to exclude the opening/closing quote characters.
-                ranges.push({ start: prop.initializer.getStart(sourceFile) + 1, end: prop.initializer.getEnd() - 1 });
-            }
-        }
-    });
-
-    return ranges;
-}
-
-/** Pass B (inline) — rewrite target ref reads inside inline component templates. */
-async function migrateInlineTemplates(content: string, fileName: string): Promise<string> {
+/** Pass B (inline) — rewrite target ref reads and writes inside inline component templates. */
+async function migrateInlineTemplates(
+    content: string,
+    fileName: string
+): Promise<TemplateFindings & { content: string }> {
     const sourceFile = ts.createSourceFile(fileName, content, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
     const ranges = collectInlineTemplateRanges(sourceFile).sort((a, b) => b.start - a.start);
+    const findings = emptyTemplateFindings();
     let result = content;
 
     for (const { start, end } of ranges) {
-        const { content: rewritten, changed } = await migrateTemplate(result.slice(start, end));
+        const outcome = await migrateTemplate(result.slice(start, end));
 
-        if (changed) {
-            result = result.slice(0, start) + rewritten + result.slice(end);
+        mergeTemplateFindings(findings, outcome);
+
+        if (outcome.changed) {
+            result = result.slice(0, start) + outcome.content + result.slice(end);
         }
     }
 
-    return result;
+    return { content: result, ...findings };
 }
 
 /** Pass C — the misspelled `_fiedset-theme.scss` was renamed. */
@@ -521,18 +430,27 @@ function logWarnings(context: SchematicContext, filePath: string, content: strin
     }
 }
 
-/** A file is a form-field consumer if it names one of the migrated symbols or imports the package. */
+/**
+ * A file is a form-field consumer if it names one of the migrated symbols, imports the package, renders a
+ * control or names the `exportAs` of a directive one: a component that imports only `KbqInputModule` names no type.
+ */
 function referencesFormField(content: string): boolean {
     return (
-        /\bKbq(FormField|Hint|Error|PasswordHint|ReactivePasswordHint|Cleaner|PasswordToggle|Stepper|Trim|A11yLocaleConfiguration)\b/.test(
+        TARGETS.some((target) => target.exportAs?.some((name) => content.includes(name))) ||
+        /\bKbq(FormField|Hint|Error|ReactivePasswordHint|Cleaner|PasswordToggle|Stepper|Trim|A11yLocaleConfiguration)\b/.test(
             content
         ) ||
-        /\b(mixinColor|CanColorCtor|PasswordRules|KBQ_FORM_FIELD_REF|regExpPasswordValidator|hasPasswordStrengthError|kbqA11yLocaleConfigurationProvider)\b/.test(
+        /\b(mixinColor|CanColorCtor|KBQ_FORM_FIELD_REF|kbqA11yLocaleConfigurationProvider)\b/.test(content) ||
+        /\bKbq(Select|TreeSelect|TimezoneSelect|TagList|TagInput|Input|InputPassword|Textarea|Timepicker|DatepickerInput|FormFieldControl|ErrorStateTracker|IconErrorStateContext)\b/.test(
+            content
+        ) ||
+        /\b(mixinErrorState|CanUpdateErrorState|CanUpdateErrorStateCtor|kbqIconErrorStateContextFactoryProvider)\b/.test(
             content
         ) ||
         content.includes('@koobiq/components/form-field') ||
         content.includes('kbq-form-field') ||
-        content.includes('kbq-cleaner')
+        content.includes('kbq-cleaner') ||
+        /<kbq-(select|tree-select|timezone-select|tag-list)\b/.test(content)
     );
 }
 
@@ -550,9 +468,7 @@ export default function formFieldSignals(options: Schema): Rule {
         const htmlPaths: string[] = [];
         const stylePaths: string[] = [];
 
-        rootDir.visit((filePath) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath) => {
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
             else if (filePath.endsWith(HTML_EXT)) htmlPaths.push(filePath);
             else if (STYLE_EXTS.some((ext) => filePath.endsWith(ext))) stylePaths.push(filePath);
@@ -578,13 +494,12 @@ export default function formFieldSignals(options: Schema): Rule {
             if (!original || !referencesFormField(original)) continue;
 
             logWarnings(context, filePath, original);
-            warnReceiverMembers(context, filePath, original);
 
-            let content = migrateTsExpressions(original, filePath);
+            const warnings = collectFileWarnings(filePath, original);
+            const inline = await migrateInlineTemplates(migrateTsExpressions(original, filePath), filePath);
 
-            content = await migrateInlineTemplates(content, filePath);
-
-            commit(filePath, original, content);
+            logReceiverWarnings(context, filePath, addTemplateFindings(warnings, inline));
+            commit(filePath, original, inline.content);
         }
 
         for (const filePath of htmlPaths) {
@@ -594,9 +509,11 @@ export default function formFieldSignals(options: Schema): Rule {
 
             logWarnings(context, filePath, original);
 
-            const { content, changed } = await migrateTemplate(original);
+            const outcome = await migrateTemplate(original);
 
-            if (changed) commit(filePath, original, content);
+            logReceiverWarnings(context, filePath, addTemplateFindings(emptyWarnings(), outcome));
+
+            if (outcome.changed) commit(filePath, original, outcome.content);
         }
 
         for (const filePath of stylePaths) {

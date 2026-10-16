@@ -69,19 +69,13 @@ const resolvePlaceholders = (range: string): string =>
  * Ranges that `ng add @koobiq/components` writes into the consumer's `package.json`.
  * Mirrors `packages/schematics/rollup.config.js`, which injects them from the root manifest at
  * build time — which is why a root bump silently desynchronizes from the peer ranges here.
- *
- * `null` marks a dependency whose range the schematic derives from the application it is run in
- * rather than from this repository, so there is no fixed range to cross-check.
  */
 const caret = (range: string): string => (range.startsWith('^') ? range : `^${range}`);
 
 const ngAddPath = join(projectRoot, 'packages', 'schematics', 'src', 'ng-add', 'index.ts');
 const rollupConfigPath = join(projectRoot, 'packages', 'schematics', 'rollup.config.js');
 
-const schematicInjectedRanges: Record<string, string | null> = {
-    // Derived from the consumer's own `@angular/core`, because every `@angular/animations` release
-    // pins `@angular/core` exactly. See packages/schematics/src/ng-add/index.ts.
-    '@angular/animations': null,
+const schematicInjectedRanges: Record<string, string> = {
     '@angular/cdk': caret(rootPackageJson.dependencies!['@angular/cdk']),
     '@koobiq/angular-luxon-adapter': caret(rootPackageJson.version!),
     '@koobiq/luxon-date-adapter': caret(rootPackageJson.devDependencies!['@koobiq/luxon-date-adapter']),

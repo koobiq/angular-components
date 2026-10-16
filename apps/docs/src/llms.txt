@@ -2,7 +2,7 @@
 
 > Koobiq is an open-source design system for designers and developers, focused on designing products related to **information security**.
 
-`@koobiq/components` 20.x for Angular 20. Every link below leads to one item of the documentation as Markdown, in English, in the order of its tabs: the overview with the full source of its examples, the API, the extra examples. Without `.md`, the address opens the page itself.
+`@koobiq/components` 21.x for Angular 21. Every link below leads to one item of the documentation as Markdown, in English, in the order of its tabs: the overview with the full source of its examples, the API, the extra examples. Without `.md`, the address opens the page itself.
 
 Rules for code that uses Koobiq:
 

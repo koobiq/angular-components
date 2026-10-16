@@ -5,9 +5,10 @@ Migration schematic invoked automatically by `ng update @koobiq/components@21` (
 
 ## Background
 
-`KbqTimepicker` implements `KbqFormFieldControl`, which declares `value`, `id`, `placeholder`,
-`required`, `disabled`, `focused`, `empty` and `errorState` as plain members. Those stay plain
-accessors. The four inputs the timepicker owns moved.
+The `KbqFormFieldControl` members of `KbqTimepicker` - `value`, `id`, `placeholder`, `required`,
+`disabled`, `focused`, `empty` and `errorState` - are signals, migrated by `form-field-signals`: reads
+become calls, a write to `disabled` becomes `.set()`, a write to the rest is reported. This schematic
+covers the four inputs the timepicker owns.
 
 `min` and `max` parsed in their setters and reported the parsed result:
 

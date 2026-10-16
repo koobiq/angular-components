@@ -1,10 +1,29 @@
 import { _IdGenerator } from '@angular/cdk/a11y';
-import { booleanAttribute, Directive, DoCheck, ElementRef, inject, Input, OnChanges, OnDestroy } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, kbqInjectAutofilled } from '@koobiq/components/core';
+import {
+    booleanAttribute,
+    computed,
+    Directive,
+    DoCheck,
+    effect,
+    ElementRef,
+    inject,
+    input,
+    linkedSignal,
+    signal,
+    untracked,
+    WritableSignal
+} from '@angular/core';
+import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
+    KbqErrorStateTracker,
+    kbqInjectAutofilled
+} from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Subject } from 'rxjs';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
+
+const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
 
 @Directive({
     selector: `input[kbqInputPassword]`,
@@ -18,41 +37,45 @@ import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
         class: 'kbq-input kbq-input-password',
         // Native input properties that are overwritten by Angular inputs need to be synced with
         // the native input element. Otherwise property bindings for those don't work.
-        '[attr.id]': 'id',
-        '[attr.type]': 'elementType',
-        '[attr.placeholder]': 'placeholder',
-        '[attr.disabled]': 'disabled || null',
-        '[attr.aria-invalid]': 'errorState',
-        '[required]': 'required',
+        '[attr.id]': 'id()',
+        '[attr.type]': 'elementType()',
+        '[attr.placeholder]': 'placeholder()',
+        '[attr.disabled]': 'disabled() || null',
+        '[attr.aria-invalid]': 'errorState()',
+        '[required]': 'required()',
         '(blur)': 'onBlur()',
         '(focus)': 'focusChanged(true)',
-        '(input)': 'onInput()'
+        '(input)': 'dirtyCheckNativeValue()'
     },
     exportAs: 'kbqInputPassword'
 })
-export class KbqInputPassword
-    implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
-{
+export class KbqInputPassword implements KbqFormFieldControl<any>, DoCheck, CanUpdateErrorState {
     protected elementRef = inject<ElementRef<HTMLInputElement>>(ElementRef);
     ngControl = inject(NgControl, { optional: true, self: true });
     parentForm = inject(NgForm, { optional: true });
     parentFormGroup = inject(FormGroupDirective, { optional: true });
     defaultErrorStateMatcher = inject(ErrorStateMatcher);
 
+    private readonly errorStateTracker = new KbqErrorStateTracker(
+        this.defaultErrorStateMatcher,
+        this.ngControl,
+        this.parentFormGroup,
+        this.parentForm
+    );
+
     /** Whether the component is in an error state. */
-    errorState: boolean = false;
+    readonly errorState = this.errorStateTracker.errorState;
 
     /** An object used to control when error messages are shown. */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() errorStateMatcher: ErrorStateMatcher;
+    readonly errorStateMatcher = input<ErrorStateMatcher>();
+
+    private readonly focusedValue = signal(false);
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    focused: boolean = false;
+    readonly focused = this.focusedValue.asReadonly();
 
     /**
      * Implemented as part of KbqFormFieldControl.
@@ -64,145 +87,130 @@ export class KbqInputPassword
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    readonly stateChanges = new Subject<any>();
-
-    /** Emits when the password hints are asked to re-run their rules. */
-    readonly checkRule = new Subject<void>();
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     * @docs-private
-     */
     controlType: string = 'input-password';
 
-    elementType: string = 'password';
+    private readonly elementTypeValue = signal<'text' | 'password'>('password');
+
+    /** Type of the native input: `password` while the password is hidden, `text` while it is shown. */
+    readonly elementType = this.elementTypeValue.asReadonly();
+
+    /** @docs-private */
+    readonly placeholderInput = input<string | undefined>(undefined, { alias: 'placeholder' });
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  This input overrides a field from a superclass, while the superclass field
-    //  is not migrated.
-    @Input() placeholder: string;
+    readonly placeholder = linkedSignal(() => this.placeholderInput());
 
     // Own namespace: sharing `kbq-input-` with `KbqInput` produced duplicate ids on any page holding both
     // controls, and the form field's `<label for>` then resolved to the wrong control.
     protected uid = inject(_IdGenerator).getId('kbq-input-password-');
-    protected previousNativeValue: any;
+
+    /** @docs-private */
+    readonly disabledInput = input<boolean, boolean | string | null | undefined>(false, {
+        alias: 'disabled',
+        transform: booleanAttribute
+    });
+
+    /** `disabled` of the bound form control, which takes precedence over the input. */
+    private readonly formDisabled = signal<boolean | null>(null);
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get disabled(): boolean {
-        if (this.ngControl && this.ngControl.disabled !== null) {
-            return this.ngControl.disabled;
-        }
+    readonly disabled = computed(() => this.formDisabled() ?? this.disabledInput());
 
-        return this._disabled;
-    }
-
-    set disabled(value: boolean) {
-        this._disabled = value;
-
-        // Browsers may not fire the blur event if the input is disabled too quickly.
-        // Reset from here to ensure that the element doesn't become stuck.
-        if (this.focused) {
-            this.focused = false;
-            this.stateChanges.next(null);
-        }
-    }
-
-    private _disabled = false;
+    /** @docs-private */
+    readonly idInput = input<string | undefined>(undefined, { alias: 'id' });
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get id(): string {
-        return this._id;
-    }
-
-    set id(value: string) {
-        this._id = value || this.uid;
-    }
-
-    private _id: string;
+    readonly id = computed(() => this.idInput() || this.uid);
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
-    get required(): boolean {
-        return this._required;
-    }
+    readonly required = input<boolean, boolean | string | null | undefined>(false, { transform: booleanAttribute });
 
-    set required(value: boolean) {
-        this._required = value;
-    }
+    private inputValueAccessor: { value: any };
 
-    private _required = false;
+    /** @docs-private */
+    readonly valueInput = input<string | undefined>(undefined, { alias: 'value' });
+
+    /**
+     * Implemented as part of KbqFormFieldControl. Follows what the user types; a value bound with `[value]` or set
+     * here is written to the element.
+     * @docs-private
+     */
+    readonly value: WritableSignal<string>;
+
+    private readonly emptyValue = signal(true);
+
+    /** The value the element and `value` last agreed on, and the text the element showed then. */
+    private syncedValue: unknown;
+    private syncedText: string;
 
     /**
      * Implemented as part of KbqFormFieldControl.
      * @docs-private
      */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input()
-    get value(): string {
-        return this._inputValueAccessor.value;
-    }
-
-    set value(value: string) {
-        if (value === this.value) {
-            return;
-        }
-
-        this._inputValueAccessor.value = value;
-        this.stateChanges.next(null);
-    }
-
-    /**
-     * Implemented as part of KbqFormFieldControl.
-     * @docs-private
-     */
-    get empty(): boolean {
-        return !this.elementRef.nativeElement.value && !this.isBadInput();
-    }
-
-    private _inputValueAccessor: { value: any };
+    readonly empty = this.emptyValue.asReadonly();
 
     constructor() {
         const inputValueAccessor = inject(KBQ_INPUT_VALUE_ACCESSOR, { optional: true, self: true });
 
         // If no input value accessor was explicitly specified, use the element as the input value
         // accessor.
-        this._inputValueAccessor = inputValueAccessor || this.elementRef.nativeElement;
+        this.inputValueAccessor = inputValueAccessor || this.elementRef.nativeElement;
 
-        this.previousNativeValue = this.value;
+        // Read once: a custom accessor may build a new value on every read.
+        const initialValue = this.inputValueAccessor.value;
 
-        // Force setter to be called in case id was not specified.
-        this.id = this.id;
-    }
+        this.value = signal(initialValue);
+        this.syncedValue = initialValue;
+        this.syncedText = this.elementRef.nativeElement.value;
 
-    ngOnChanges() {
-        this.stateChanges.next(null);
-    }
+        // A bound value replaces the current one whenever the binding changes.
+        effect(() => {
+            const value = this.valueInput();
 
-    ngOnDestroy() {
-        this.stateChanges.complete();
-        this.checkRule.complete();
+            if (value !== undefined) {
+                untracked(() => this.value.set(value));
+            }
+        });
+
+        // A value set in code is written to the element on the next change detection. The one the element last agreed
+        // on is not written back: a custom accessor that builds a new value on every read would be written on every
+        // keystroke.
+        effect(() => {
+            const value = this.value();
+
+            untracked(() => {
+                if (value !== this.syncedValue) {
+                    if (this.inputValueAccessor.value !== value) {
+                        this.inputValueAccessor.value = value;
+                    }
+
+                    this.syncedValue = value;
+                    this.syncedText = this.elementRef.nativeElement.value;
+                }
+
+                this.emptyValue.set(this.isEmpty());
+            });
+        });
+
+        // Browsers may not fire the blur event if the input is disabled too quickly.
+        // Reset from here to ensure that the element doesn't become stuck.
+        effect(() => {
+            if (this.disabled()) {
+                untracked(() => this.focusedValue.set(false));
+            }
+        });
     }
 
     ngDoCheck() {
@@ -211,6 +219,7 @@ export class KbqInputPassword
             // error triggers that we can't subscribe to (e.g. parent form submissions). This means
             // that whatever logic is in here has to be super lean or we risk destroying the performance.
             this.updateErrorState();
+            this.formDisabled.set(this.ngControl.disabled);
         }
 
         // We need to dirty-check the native element's value, because there are some cases where
@@ -220,27 +229,13 @@ export class KbqInputPassword
     }
 
     updateErrorState() {
-        const oldState = this.errorState;
-        const parent = this.parentFormGroup || this.parentForm;
-        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
-        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
-        const newState = matcher.isErrorState(control, parent);
-
-        if (newState !== oldState) {
-            this.errorState = newState;
-            this.stateChanges.next(null);
-        }
-    }
-
-    /** Asks every `kbq-password-hint` in the form field to re-run its rule against the current value. */
-    checkRules() {
-        this.checkRule.next();
+        this.errorStateTracker.errorStateMatcher = this.errorStateMatcher();
+        this.errorStateTracker.updateErrorState();
     }
 
     /** Toggles the native input type between password and text. */
     toggleType(): void {
-        this.elementType = this.elementType === 'password' ? 'text' : 'password';
-        this.stateChanges.next(null);
+        this.elementTypeValue.update((type) => (type === 'password' ? 'text' : 'password'));
     }
 
     /** Focuses the input. */
@@ -254,22 +249,7 @@ export class KbqInputPassword
 
     /** Callback for the cases where the focused state of the input changes. */
     focusChanged(isFocused: boolean) {
-        if (isFocused === this.focused) {
-            return;
-        }
-
-        this.focused = isFocused;
-        this.stateChanges.next({ focused: this.focused });
-    }
-
-    onInput() {
-        // This is a noop function and is used to let Angular know whenever the value changes.
-        // Angular will run a new change detection each time the `input` event has been dispatched.
-        // It's necessary that Angular recognizes the value change, because when floatingLabel
-        // is set to false and Angular forms aren't used, the placeholder won't recognize the
-        // value changes and will not disappear.
-        // Listening to the input event wouldn't be necessary when the input is using the
-        // FormsModule or ReactiveFormsModule, because Angular forms also listens to input events.
+        this.focusedValue.set(isFocused);
     }
 
     /**
@@ -280,17 +260,33 @@ export class KbqInputPassword
         this.focus();
     }
 
-    /** Does some manual dirty checking on the native input `value` property. */
-    protected dirtyCheckNativeValue() {
-        if (this.previousNativeValue !== this.value) {
-            this.previousNativeValue = this.value;
-            this.stateChanges.next(null);
+    /**
+     * Reads the native value back, since it changes without notice: through the forms API, which writes the
+     * element directly, or by the user typing into an input that no form listens to.
+     * @docs-private
+     */
+    dirtyCheckNativeValue() {
+        const nativeValue = this.inputValueAccessor.value;
+        const text = this.elementRef.nativeElement.value;
+
+        // Only a change of the element itself: a value set in code and not yet written must not be overwritten. An
+        // object counts as changed only with the text, as a custom accessor may build a new one on every read.
+        if (nativeValue !== this.syncedValue && (!isObject(nativeValue) || text !== this.syncedText)) {
+            this.syncedValue = nativeValue;
+            this.syncedText = text;
+            this.value.set(nativeValue);
         }
+
+        this.emptyValue.set(this.isEmpty());
     }
 
     /** Checks whether the input is invalid based on the native validation. */
     protected isBadInput() {
         // The `validity` property won't be present on platform-server.
         return (this.elementRef.nativeElement as HTMLInputElement).validity?.badInput;
+    }
+
+    private isEmpty(): boolean {
+        return !this.elementRef.nativeElement.value && !this.isBadInput();
     }
 }

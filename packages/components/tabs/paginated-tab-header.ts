@@ -18,11 +18,14 @@ import {
     EventEmitter,
     inject,
     Injector,
-    Input,
+    input,
     NgZone,
-    numberAttribute,
+    OnChanges,
     OnDestroy,
-    QueryList
+    QueryList,
+    signal,
+    SimpleChanges,
+    untracked
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -30,8 +33,10 @@ import {
     END,
     HOME,
     KBQ_WINDOW,
+    kbqAnimationsDisabled,
     kbqGetScrollOverflowTolerance,
     kbqHasScrollOverflow,
+    kbqOptionalNumberAttribute,
     LEFT_ARROW,
     RIGHT_ARROW,
     UP_ARROW
@@ -118,33 +123,50 @@ export type KbqPaginatedTabHeaderItem = FocusableOption & { elementRef: ElementR
  * @docs-private
  */
 @Directive()
-export abstract class KbqPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
+export abstract class KbqPaginatedTabHeader
+    implements OnChanges, AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy
+{
+    /** @docs-private */
+    readonly selectedIndexInput = input<number | undefined, number | string | null | undefined>(undefined, {
+        alias: 'selectedIndex',
+        transform: kbqOptionalNumberAttribute
+    });
+
+    /** @docs-private */
+    readonly disablePaginationInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'disablePagination',
+        transform: booleanAttribute
+    });
+
+    /** @docs-private */
+    readonly verticalInput = input<boolean | undefined, boolean | string | null | undefined>(undefined, {
+        alias: 'vertical',
+        transform: booleanAttribute
+    });
+
     /** The index of the active tab. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: numberAttribute })
     get selectedIndex(): number {
-        return this._selectedIndex;
+        return this.selectedIndexState();
     }
 
     set selectedIndex(value: number) {
         const coercedValue = coerceNumberProperty(value);
 
-        this.selectedIndexChanged = this._selectedIndex !== coercedValue;
-        this._selectedIndex = coercedValue;
+        this.selectedIndexChanged = untracked(this.selectedIndexState) !== coercedValue;
+        this.selectedIndexState.set(coercedValue);
 
         this.keyManager?.updateActiveItem(coercedValue);
     }
 
-    private _selectedIndex = 0;
+    private readonly selectedIndexState = signal(0);
 
     /** Tracks which element has focus; used for keyboard navigation */
     get focusIndex(): number {
         // Before `ngAfterContentInit` builds the key manager the selection is where focus would land —
-        // `updateActiveItem(this._selectedIndex)` is the first thing that runs once it exists. Falling
+        // `updateActiveItem(this.selectedIndex)` is the first thing that runs once it exists. Falling
         // back to `0` instead would hand the roving `tabindex="0"` to the first tab on the very first
         // render of any group that does not open on it.
-        return this.keyManager ? this.keyManager.activeItemIndex! : this._selectedIndex;
+        return this.keyManager ? this.keyManager.activeItemIndex! : this.selectedIndex;
     }
 
     /** When the focus index is set, we must manually send focus to the correct label */
@@ -156,13 +178,13 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         this.keyManager.setActiveItem(value);
     }
 
-    abstract readonly items: QueryList<KbqPaginatedTabHeaderItem>;
-    abstract readonly tabListContainer: ElementRef<HTMLElement>;
+    abstract get items(): QueryList<KbqPaginatedTabHeaderItem>;
+    abstract get tabListContainer(): ElementRef<HTMLElement>;
     /** The strip's scroll viewport — the same element as {@link tabListContainer}. */
-    protected abstract readonly scrollbarViewport: KbqScrollbarViewport;
-    abstract readonly tabList: ElementRef<HTMLElement>;
-    abstract readonly nextPaginator: ElementRef<HTMLElement>;
-    abstract readonly previousPaginator: ElementRef<HTMLElement>;
+    protected abstract get scrollbarViewport(): KbqScrollbarViewport;
+    abstract get tabList(): ElementRef<HTMLElement>;
+    abstract get nextPaginator(): ElementRef<HTMLElement>;
+    abstract get previousPaginator(): ElementRef<HTMLElement>;
 
     /** Event emitted when the option is selected. */
     readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
@@ -186,9 +208,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * A vertical header never paginates, so `vertical` forces this on without overwriting the value
      * the consumer set — turning `vertical` back off restores it.
      */
-    // TODO: Skipped for migration because:
-    //  Your application code writes to the input. This prevents migration.
-    @Input({ transform: booleanAttribute })
     get disablePagination(): boolean {
         return this._disablePagination || this._vertical;
     }
@@ -200,9 +219,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     private _disablePagination = false;
 
     /** Whether the tabs should be displayed vertically. */
-    // TODO: Skipped for migration because:
-    //  Accessor inputs cannot be migrated as they are too complex.
-    @Input({ transform: booleanAttribute })
     set vertical(value: boolean) {
         this._vertical = value;
     }
@@ -289,29 +305,21 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     private readonly scrollbarOptions = inject(KBQ_SCROLLBAR_OPTIONS);
     private readonly injector = inject(Injector);
 
+    /** Whether the underline of the active tab moves without motion. */
+    protected readonly animationsDisabled = kbqAnimationsDisabled();
+
     /**
      * Scrollbar mode for the tab strip. Only a vertical header scrolls in a direction the user is meant
      * to see, so a horizontal one asks for `hidden`: the native scrollbar stays suppressed and no custom
      * track is built for a strip that is paginated and dragged instead of scrolled by hand.
+     *
+     * Follows `vertical` itself: the `kbq-tab-group_vertical` class the stylesheet keys `overflow-y: auto`
+     * on is bound to the same value. The class of a nav bar is its own host binding, applied only after
+     * its content hooks, so reading the class from here would miss it on the first check.
      */
     protected get scrollbarMode(): KbqScrollbarMode {
-        return this.verticallyScrolled ? this.scrollbarOptions.mode : 'hidden';
+        return this.vertical ? this.scrollbarOptions.mode : 'hidden';
     }
-
-    /**
-     * Whether the strip is laid out as a vertical scrollport — read off the class rather than the
-     * `vertical` input, because that class is what the stylesheet keys `overflow-y: auto` on and
-     * `KbqVerticalTabsCssStyler` matches on attribute *presence*: `[vertical]="false"` still gets it.
-     * Deriving the mode from the input alone would let the two disagree and leave such a strip
-     * scrollable with no scrollbar of any kind.
-     */
-    private get verticallyScrolled(): boolean {
-        // Read once: `KbqVerticalTabsCssStyler` sets the class as a static host class, so the answer is
-        // fixed from creation, and this getter sits on a change-detection path.
-        return (this.verticallyScrolledState ??= !!this.elementRef.nativeElement.closest('.kbq-tab-group_vertical'));
-    }
-
-    private verticallyScrolledState?: boolean;
 
     constructor() {
         const nativeElement = this.elementRef.nativeElement;
@@ -339,6 +347,23 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
                     }
                 });
         });
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        // A bound input is handed to its member; unbound, it leaves what code wrote.
+        if (changes['selectedIndexInput']) this.selectedIndex = this.selectedIndexInput() ?? 0;
+
+        if (changes['disablePaginationInput']) {
+            const disablePagination = this.disablePaginationInput();
+
+            if (disablePagination !== undefined) this.disablePagination = disablePagination;
+        }
+
+        if (changes['verticalInput']) {
+            const vertical = this.verticalInput();
+
+            if (vertical !== undefined) this.vertical = vertical;
+        }
     }
 
     /** Called when the user has selected an item via the keyboard. */
@@ -437,7 +462,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             this.getLayoutDirection()
         );
 
-        this.keyManager.updateActiveItem(this._selectedIndex);
+        this.keyManager.updateActiveItem(this.selectedIndex);
 
         // Defer the first call in order to allow for slower browsers to lay out the elements.
         // This helps in cases where the user lands directly on a page with paginated tabs.
@@ -493,7 +518,6 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
             this.updatePagination();
             this.tabLabelCount = this.items.length;
-            this.changeDetectorRef.markForCheck();
 
             // Briefly reveals the scrollbar when the strip arrives or gains tabs, so whether it scrolls
             // is answered on sight rather than only once the pointer enters it. Vertical only: a
@@ -503,7 +527,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
             // Deferred to after the render: the viewport builds its track from an effect, and effects
             // flush after this hook, so flashing here directly would push into a subject nothing is
             // listening to yet and the very first reveal — the one that matters — would be dropped.
-            if (gainedTabs && this.verticallyScrolled && this.platform.isBrowser) {
+            if (gainedTabs && this.vertical && this.platform.isBrowser) {
                 afterNextRender(() => this.scrollbarViewport.flashScrollIndicators(), {
                     injector: this.injector
                 });
@@ -513,8 +537,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         // If the selected index has changed, scroll to the label.
         if (this.selectedIndexChanged) {
             this.selectedIndexChanged = false;
-            this.scrollCorrectionRequest.next({ index: this._selectedIndex, behavior: 'smooth' });
-            this.changeDetectorRef.markForCheck();
+            this.scrollCorrectionRequest.next({ index: this.selectedIndex, behavior: 'smooth' });
         }
     }
 
@@ -572,10 +595,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
             // The content observer runs outside the `NgZone` by default, which
             // means that we need to bring the callback back in ourselves.
-            this.ngZone.run(() => {
-                this.updatePagination();
-                this.changeDetectorRef.markForCheck();
-            });
+            this.ngZone.run(() => this.updatePagination());
         }
     }
 

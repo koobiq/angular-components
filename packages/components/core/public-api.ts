@@ -10,7 +10,6 @@ export * from './highlight/index';
 export * from './keycodes/index';
 export * from './line/line';
 export * from './locales/index';
-export * from './navbar/index';
 export * from './option/index';
 export * from './overflow-shadow/index';
 export * from './overlay/auto-hide-scroll-strategy';

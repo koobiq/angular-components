@@ -23,6 +23,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     isHtmlElementOrNull,
     KBQ_WINDOW,
+    kbqAnimationsDisabled,
     KbqDefaultSizes,
     kbqInjectNativeElement,
     KbqLocaleOverridesDirective
@@ -93,6 +94,7 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     private readonly window = inject(KBQ_WINDOW);
     private readonly injector = inject(Injector);
     private readonly ngZone = inject(NgZone);
+    private readonly animationsDisabled = kbqAnimationsDisabled();
     private overlayRef?: OverlayRef;
 
     constructor() {
@@ -199,7 +201,11 @@ export class KbqFullScreenDropzoneService extends KbqDrop implements OnDestroy {
     protected createOverlay(): OverlayRef {
         return this.overlay.create({
             hasBackdrop: false,
-            panelClass: ['kbq-dropzone-overlay', 'kbq-fullscreen-dropzone'],
+            panelClass: [
+                'kbq-dropzone-overlay',
+                'kbq-fullscreen-dropzone',
+                ...(this.animationsDisabled ? ['kbq-animations-disabled'] : [])
+            ],
             width: '100%',
             height: '100%',
             positionStrategy: this.overlay.position().global().centerHorizontally().centerVertically()
@@ -251,6 +257,7 @@ export class KbqLocalDropzone extends KbqDrop {
     private readonly injector = inject(Injector);
     private readonly ngZone = inject(NgZone);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly animationsDisabled = kbqAnimationsDisabled();
     private overlayRef?: OverlayRef;
 
     constructor() {
@@ -347,7 +354,11 @@ export class KbqLocalDropzone extends KbqDrop {
     protected createOverlay(): OverlayRef {
         return this.overlay.create({
             hasBackdrop: false,
-            panelClass: ['kbq-dropzone-overlay', 'kbq-local-dropzone'],
+            panelClass: [
+                'kbq-dropzone-overlay',
+                'kbq-local-dropzone',
+                ...(this.animationsDisabled ? ['kbq-animations-disabled'] : [])
+            ],
             width: this.elementRef.offsetWidth,
             height: this.elementRef.offsetHeight,
             positionStrategy: this.overlay

@@ -9,6 +9,7 @@ import {
     input,
     model,
     output,
+    untracked,
     viewChild
 } from '@angular/core';
 
@@ -145,7 +146,9 @@ export class KbqFileList<T> {
 
     /** Removes the first occurrence of the specified item. Returns removed items and emits event. */
     remove(item: T): T[] {
-        const index = this.list().indexOf(item);
+        // Untracked, as in `removeAt()`: called from a consumer's `effect()`, the list read here would make the effect
+        // run again on every change it makes — and remove the next item.
+        const index = untracked(this.list).indexOf(item);
 
         return index === -1 ? [] : this.removeAt(index);
     }
@@ -158,7 +161,7 @@ export class KbqFileList<T> {
         // `splice` silently does nothing for an index past either end. Without this guard the list
         // was still rewritten with a fresh array — waking every `list()` consumer for a no-op — and
         // `itemRemoved` fired carrying `undefined` in a tuple typed `[T, number]`.
-        if (index < 0 || index >= this.list().length) return [];
+        if (index < 0 || index >= untracked(this.list).length) return [];
 
         const removed: T[] = [];
 

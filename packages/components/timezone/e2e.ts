@@ -231,7 +231,7 @@ export class E2eTimezonePanelStates extends BaseTimezoneStates {}
     }
 })
 export class E2eTimezoneWithSearch extends BaseTimezoneStates {
-    control = model('');
+    readonly control = model('');
 
     /** Narrows the list the way a consumer does, so the option's own city filter and highlight have something to show. */
     protected readonly filteredData = computed(() => {

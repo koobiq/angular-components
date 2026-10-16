@@ -1,0 +1,96 @@
+diff --git a/src/builders/application/setup-bundling.js b/src/builders/application/setup-bundling.js
+index c5a2548e97709e4af6fb66adaa67c921154d122f..964a623c6d4a2a49bb177a491fee13268b7a7b40 100644
+--- a/src/builders/application/setup-bundling.js
++++ b/src/builders/application/setup-bundling.js
+@@ -28,11 +28,11 @@ function setupBundlerContexts(options, target, codeBundleCache, stylesheetBundle
+     const typescriptContexts = [];
+     const otherContexts = [];
+     // Browser application code
+-    typescriptContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, (0, application_code_bundle_1.createBrowserCodeBundleOptions)(options, target, codeBundleCache, stylesheetBundler, angularCompilation, templateUpdates)));
++    typescriptContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, (0, application_code_bundle_1.createBrowserCodeBundleOptions)(options, target, codeBundleCache, stylesheetBundler, angularCompilation, templateUpdates), true));
+     // Browser polyfills code
+     const browserPolyfillBundleOptions = (0, application_code_bundle_1.createBrowserPolyfillBundleOptions)(options, target, codeBundleCache, stylesheetBundler);
+     if (browserPolyfillBundleOptions) {
+-        const browserPolyfillContext = new bundler_context_1.BundlerContext(workspaceRoot, watch, browserPolyfillBundleOptions);
++        const browserPolyfillContext = new bundler_context_1.BundlerContext(workspaceRoot, watch, browserPolyfillBundleOptions, true);
+         if (typeof browserPolyfillBundleOptions === 'function') {
+             otherContexts.push(browserPolyfillContext);
+         }
+@@ -45,7 +45,7 @@ function setupBundlerContexts(options, target, codeBundleCache, stylesheetBundle
+         for (const initial of [true, false]) {
+             const bundleOptions = (0, global_styles_1.createGlobalStylesBundleOptions)(options, target, initial);
+             if (bundleOptions) {
+-                otherContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, bundleOptions, () => initial));
++                otherContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, bundleOptions, true, () => initial));
+             }
+         }
+     }
+@@ -54,22 +54,22 @@ function setupBundlerContexts(options, target, codeBundleCache, stylesheetBundle
+         for (const initial of [true, false]) {
+             const bundleOptions = (0, global_scripts_1.createGlobalScriptsBundleOptions)(options, target, initial);
+             if (bundleOptions) {
+-                otherContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, bundleOptions, () => initial));
++                otherContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, bundleOptions, true, () => initial));
+             }
+         }
+     }
+     // Skip server build when none of the features are enabled.
+     if (serverEntryPoint && (outputMode || prerenderOptions || appShellOptions || ssrOptions)) {
+         const nodeTargets = [...target, ...(0, utils_1.getSupportedNodeTargets)()];
+-        typescriptContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, (0, application_code_bundle_1.createServerMainCodeBundleOptions)(options, nodeTargets, codeBundleCache, stylesheetBundler)));
++        typescriptContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, (0, application_code_bundle_1.createServerMainCodeBundleOptions)(options, nodeTargets, codeBundleCache, stylesheetBundler), true));
+         if (outputMode && ssrOptions?.entry) {
+             // New behavior introduced: 'server.ts' is now bundled separately from 'main.server.ts'.
+-            typescriptContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, (0, application_code_bundle_1.createSsrEntryCodeBundleOptions)(options, nodeTargets, codeBundleCache, stylesheetBundler)));
++            typescriptContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, (0, application_code_bundle_1.createSsrEntryCodeBundleOptions)(options, nodeTargets, codeBundleCache, stylesheetBundler), true));
+         }
+         // Server polyfills code
+         const serverPolyfillBundleOptions = (0, application_code_bundle_1.createServerPolyfillBundleOptions)(options, nodeTargets, codeBundleCache.loadResultCache);
+         if (serverPolyfillBundleOptions) {
+-            otherContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, serverPolyfillBundleOptions));
++            otherContexts.push(new bundler_context_1.BundlerContext(workspaceRoot, watch, serverPolyfillBundleOptions, true));
+         }
+     }
+     return { typescriptContexts, otherContexts };
+diff --git a/src/tools/esbuild/bundler-context.js b/src/tools/esbuild/bundler-context.js
+index 8363f55ae15cabba5d42f5495b34f589401d3e2f..647b39a2106d0a9680d044a4f2546d6abbd0f624 100644
+--- a/src/tools/esbuild/bundler-context.js
++++ b/src/tools/esbuild/bundler-context.js
+@@ -35,6 +35,7 @@ function isEsBuildFailure(value) {
+ class BundlerContext {
+     workspaceRoot;
+     incremental;
++    alwaysUseContext;
+     initialFilter;
+     #esbuildContext;
+     #esbuildOptions;
+@@ -43,9 +44,10 @@ class BundlerContext {
+     #shouldCacheResult;
+     #loadCache;
+     watchFiles = new Set();
+-    constructor(workspaceRoot, incremental, options, initialFilter) {
++    constructor(workspaceRoot, incremental, options, alwaysUseContext = false, initialFilter) {
+         this.workspaceRoot = workspaceRoot;
+         this.incremental = incremental;
++        this.alwaysUseContext = alwaysUseContext;
+         this.initialFilter = initialFilter;
+         // To cache the results an option factory is needed to capture the full set of dependencies
+         this.#shouldCacheResult = incremental && typeof options === 'function';
+@@ -158,12 +160,16 @@ class BundlerContext {
+                 // Rebuild using the existing incremental build context
+                 result = await this.#esbuildContext.rebuild();
+             }
+-            else {
++            else if (this.incremental || this.alwaysUseContext) {
+                 // Create a build context and perform the build.
+                 // Context creation does not perform a build.
+                 this.#esbuildContext = await (0, esbuild_1.context)(this.#esbuildOptions);
+                 result = await this.#esbuildContext.rebuild();
+             }
++            else {
++                // For non-incremental builds, perform a single build
++                result = await (0, esbuild_1.build)(this.#esbuildOptions);
++            }
+         }
+         catch (failure) {
+             // Build failures will throw an exception which contains errors/warnings

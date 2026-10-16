@@ -2,6 +2,7 @@ import { Path } from '@angular-devkit/core';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { SUMMARY, USERNAME_PACKAGE, USERNAME_TYPE, warnPatterns } from './data';
 import { Schema } from './schema';
 
@@ -31,8 +32,7 @@ export default function usernamePipeInjection(options: Schema): Rule {
         let consumers = 0;
         let reported = 0;
 
-        rootDir.visit((filePath: Path, entry) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path, entry) => {
             if (!EXTENSIONS.some((extension) => filePath.endsWith(extension))) return;
 
             const content = entry?.content.toString();

@@ -19,13 +19,16 @@ layer and what it did. The published form-field adapter turned from a set of
 declarations into a real implementation, and the manual `errorState` plumbing
 went away with it.
 
-| Member                                                                                | Before                | After                             |
-| ------------------------------------------------------------------------------------- | --------------------- | --------------------------------- |
-| `KbqTimeRangeEditor.timepickerList`                                                   | view query            | removed                           |
-| `KbqTimeRangeTitleAsControl.value` / `empty` / `required` / `disabled` / `errorState` | writable, never set   | getters over the host and control |
-| `KbqTimeRangeTitleAsControl.id` / `placeholder` / `controlType` / `stateChanges`      | writable, `undefined` | readonly, generated and emitting  |
-| `KbqTimeRange.setDisabledState` / `KbqTimeRangeEditor.setDisabledState`               | absent                | implemented                       |
-| `KbqTimeRangeTitle.disabled`                                                          | absent                | signal input                      |
+| Member                                                                                | Before                | After                                       |
+| ------------------------------------------------------------------------------------- | --------------------- | ------------------------------------------- |
+| `KbqTimeRangeEditor.timepickerList`                                                   | view query            | removed                                     |
+| `KbqTimeRangeTitleAsControl.value` / `empty` / `required` / `disabled` / `errorState` | writable, never set   | read-only signals over the host and control |
+| `KbqTimeRangeTitleAsControl.id` / `placeholder` / `focused`                           | writable, `undefined` | read-only signals, `id` generated           |
+| `KbqTimeRangeTitleAsControl.controlType`                                              | writable              | readonly                                    |
+| `KbqTimeRangeTitleAsControl.stateChanges`                                             | never emitted         | removed                                     |
+| `KbqTimeRange.value` / `KbqTimeRange.disabled`                                        | absent                | read-only signals                           |
+| `KbqTimeRange.setDisabledState` / `KbqTimeRangeEditor.setDisabledState`               | absent                | implemented                                 |
+| `KbqTimeRangeTitle.disabled`                                                          | absent                | signal input                                |
 
 The one-line defect behind the review is worth naming. `mapTimeRange` assembled
 its argument as `toDate: this.form.controls.toTime.value` — the _time_ control
@@ -72,7 +75,8 @@ keeps its shape and nothing else in the file is reformatted.
 | A read of `title.for`                                     | Drop it — the title shows the period alone                                       |
 | A `for` key left in a `title` literal or template binding | Remove it, or ignore the report for an unrelated object                          |
 | `.timepickerList`                                         | Provide an `ErrorStateMatcher`; the editor no longer writes `errorState` by hand |
-| `.errorState = …` and friends on the adapter              | Drive the state through the bound form control                                   |
+| `.errorState = …` and friends on the adapter              | Drive the state through the bound form control; read it with a call              |
+| `.stateChanges` on the adapter                            | Read its signals in a `computed()` or an `effect()`                              |
 | `(valueCorrected)`                                        | Still emits, but only for values it actually corrected                           |
 | `.kbq-radio-group .kbq-time-range-editor__range`          | The from/to block is a sibling of the radiogroup now, not a descendant           |
 
@@ -85,7 +89,8 @@ mentions `kbq-time-range`, so an unrelated `.timepickerList` of your own is not
 reported. The gate is per file rather than per receiver: where a member name is
 common (`.value`, `.disabled`), a report can point at an assignment to an
 unrelated object in a file that happens to use the control. Read the report
-before changing anything — it is a pointer, not a diagnosis.
+before changing anything — it is a pointer, not a diagnosis. A
+`control().stateChanges` read off a form field is left to `form-field-signals`.
 
 ### Notes with no call site to point at
 

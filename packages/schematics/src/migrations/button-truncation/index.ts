@@ -4,6 +4,7 @@ import ts from 'typescript';
 import { visitAll, Visitor } from '../../utils/ast';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { forEachClass, parseTemplate } from '../../utils/typescript';
 import {
     BUTTON_ATTR,
@@ -292,9 +293,7 @@ export default function buttonTruncation(options: Schema): Rule {
         const htmlPaths: string[] = [];
         const stylePaths: string[] = [];
 
-        rootDir.visit((filePath) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
-
+        visitProjectFiles(rootDir, (filePath) => {
             if (filePath.endsWith(TS_EXT)) tsPaths.push(filePath);
             else if (filePath.endsWith(HTML_EXT)) htmlPaths.push(filePath);
             else if (STYLE_EXTS.some((ext) => filePath.endsWith(ext))) stylePaths.push(filePath);

@@ -14,7 +14,7 @@ import { KBQ_WINDOW, kbqThemeProvider } from '@koobiq/components/core';
 
 | Статья                                             | Тема                                                                                                                                               |
 | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Highlight](/ru/components/highlight)              | Пайпы `kbqHighlightBackground` и `mcHighlight` для подсветки совпадений в тексте                                                                   |
+| [Highlight](/ru/components/highlight)              | Пайпы `kbqHighlightBackground` и `kbqHighlightBold` для подсветки совпадений в тексте                                                              |
 | [Layout flex](/ru/components/layout-flex)          | Классы и миксины для построения flex-раскладки                                                                                                     |
 | [Валидация](/ru/other/validation)                  | `ErrorStateMatcher` и правила перехода поля в состояние ошибки                                                                                     |
 | [Дизайн-токены](/ru/main/design-tokens/colors)     | Глобальные переменные цвета и оформления                                                                                                           |
@@ -325,15 +325,16 @@ const masterCheckboxState = getSelectAllState(adapter);
 
 В пакете есть числовые константы клавиш: `ENTER`, `ESCAPE`, `TAB`, `UP_ARROW`, `HOME`, `NUMPAD_ZERO` и другие.
 
-| Предикат                                     | Что проверяет                                                             |
-| -------------------------------------------- | ------------------------------------------------------------------------- |
-| `hasModifierKey(event, ...modifiers)`        | Нажат хотя бы один из перечисленных модификаторов; без аргументов — любой |
-| `isControl(event)`                           | Нажата служебная клавиша: `Shift`, `Ctrl`, `Alt`, `Cmd`                   |
-| `isLetterKey`, `isNumberKey`, `isDigit`      | Буква, цифра основного ряда                                               |
-| `isNumpadKey`, `isFunctionKey`               | Цифра дополнительной клавиатуры, функциональная клавиша `F1`–`F12`        |
-| `isVerticalMovement`, `isHorizontalMovement` | Перемещение по вертикали и горизонтали                                    |
-| `isSelectAll(event)`, `isCopy(event)`        | Сочетания «выделить все» и «копировать» с учетом macOS                    |
-| `isInput(event)`                             | Событие пришло из `input` или `textarea`                                  |
+| Предикат                                     | Что проверяет                                                                |
+| -------------------------------------------- | ---------------------------------------------------------------------------- |
+| `hasModifierKey(event, ...modifiers)`        | Нажат хотя бы один из перечисленных модификаторов; без аргументов — любой    |
+| `isControl(event)`                           | Нажата служебная клавиша: `Shift`, `Ctrl`, `Alt`, `Cmd`                      |
+| `isLetterKey`, `isNumberKey`                 | Буква, цифра основного ряда                                                  |
+| `isDigit`                                    | Цифра основного ряда. Устарел, удаляется в 22.0.0: используйте `isNumberKey` |
+| `isNumpadKey`, `isFunctionKey`               | Цифра дополнительной клавиатуры, функциональная клавиша `F1`–`F12`           |
+| `isVerticalMovement`, `isHorizontalMovement` | Перемещение по вертикали и горизонтали                                       |
+| `isSelectAll(event)`, `isCopy(event)`        | Сочетания «выделить все» и «копировать» с учетом macOS                       |
+| `isInput(event)`                             | Событие пришло из `input` или `textarea`                                     |
 
 #### Навигация по списку
 
@@ -352,7 +353,7 @@ this.keyManager = new FocusKeyManager(this.items)
     .skipPredicate((item) => item.disabled);
 ```
 
-Реализации Koobiq дополняют одноименные классы CDK:
+Классы Koobiq — отдельные реализации одноименных классов CDK с дополнениями:
 
 - `withScrollSize()`, `setNextPageItemActive()` и `setPreviousPageItemActive()` добавляют постраничное перемещение;
 - `previousActiveItemIndex` хранит предыдущий активный индекс для выделения диапазона с `Shift`.
@@ -393,7 +394,6 @@ this.keyManager = new FocusKeyManager(this.items)
 | ------------------------------------------------ | ------------------------------------------------------------------------------------------ |
 | `KbqDefaultSizes`                                | `compact`, `normal`, `big`                                                                 |
 | `KbqComponentColors`                             | `theme`, `theme-fade`, `contrast`, `contrast-fade`, `error`, `warning`, `success`, `empty` |
-| `ThemePalette`                                   | `primary`, `secondary`, `error`, `info`, `warning`, `success`                              |
 | `KbqOrientation`                                 | `horizontal`, `vertical`                                                                   |
 | `KbqFlexDirection`, `KbqFlexWrap`                | `row` / `column`, `nowrap` / `wrap`                                                        |
 | `PopUpPlacements`, `PopUpTriggers`, `PopUpSizes` | Положение, способ открытия и размер всплывающих элементов                                  |
@@ -420,20 +420,21 @@ this.keyManager = new FocusKeyManager(this.items)
 
 ### Утилиты
 
-| Утилита                                                            | Назначение                                                              |
-| ------------------------------------------------------------------ | ----------------------------------------------------------------------- |
-| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`                   | Рекурсивное объединение конфигураций                                    |
-| `kbqInjectNativeElement<T>()`                                      | Получение `nativeElement` из внедренного `ElementRef`                   |
-| `isHtmlElement`, `isElement`, `isNull`, `isUndefined`, `isBoolean` | Проверка и сужение типов                                                |
-| `getNodesWithoutComments(nodes)`                                   | Получение списка узлов без комментариев                                 |
-| `getContentNodes(element)`                                         | Дочерние узлы с содержимым: комментарии и пробельный текст игнорируются |
-| `supportsNativeDisabled(element)`                                  | Поддерживает ли тег хоста нативный атрибут `disabled`                   |
-| `escapeRegExp(value)`                                              | Экранирование строки для регулярного выражения                          |
-| `isMac()`                                                          | Определение платформы для подписей сочетаний клавиш                     |
-| `KbqMeasureScrollbarService`                                       | Измерение ширины системной полосы прокрутки                             |
-| `kbqInjectAutofilled()`                                            | Сигнал о заполнении поля браузером                                      |
-| `KbqNormalizeWhitespace`                                           | Замена тонкого пробела обычным при копировании                          |
-| `kbqRevealSelection`, `kbqSetSelectionRange`                       | Выделение текста и прокрутка поля к выделенному фрагменту               |
+| Утилита                                               | Назначение                                                                                             |
+| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `kbqDeepMerge(base, patch)`, `KbqDeepPartial<T>`      | Рекурсивное объединение конфигураций                                                                   |
+| `kbqInjectNativeElement<T>()`                         | Получение `nativeElement` из внедренного `ElementRef`                                                  |
+| `isHtmlElement`, `isElement`, `isNull`, `isUndefined` | Проверка и сужение типов                                                                               |
+| `isBoolean`                                           | Проверка и сужение до `boolean`. Устарел, удаляется в 22.0.0: используйте `typeof value === 'boolean'` |
+| `getNodesWithoutComments(nodes)`                      | Получение списка узлов без комментариев                                                                |
+| `getContentNodes(element)`                            | Дочерние узлы с содержимым: комментарии и пробельный текст игнорируются                                |
+| `supportsNativeDisabled(element)`                     | Поддерживает ли тег хоста нативный атрибут `disabled`                                                  |
+| `escapeRegExp(value)`                                 | Экранирование строки для регулярного выражения                                                         |
+| `isMac()`                                             | Определение платформы для подписей сочетаний клавиш                                                    |
+| `KbqMeasureScrollbarService`                          | Измерение ширины системной полосы прокрутки. Устарел, удаляется в 22.0.0                               |
+| `kbqInjectAutofilled()`                               | Сигнал о заполнении поля браузером                                                                     |
+| `KbqNormalizeWhitespace`                              | Замена тонкого пробела обычным при копировании                                                         |
+| `kbqRevealSelection`, `kbqSetSelectionRange`          | Выделение текста и прокрутка поля к выделенному фрагменту                                              |
 
 `KbqMeasureScrollbarService` возвращает `0` при серверном рендеринге.
 
@@ -451,7 +452,6 @@ this.keyManager = new FocusKeyManager(this.items)
 | `createFakeEvent`, `createKeyboardEvent`, `createMouseEvent`, `createTouchEvent`         | Создают событие без отправки                           |
 | `typeInElement(value, element)`                                                          | Вводит текст с полным набором событий                  |
 | `patchElementFocus(element)`                                                             | Управляет получением и потерей фокуса в тестовой среде |
-| `MockNgZone`                                                                             | Позволяет проверять работу вне Angular                 |
 | `wrappedErrorMessage(error)`                                                             | Создает регулярное выражение для текста ошибки         |
 
 ### Стили

@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, NgZone, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -312,7 +312,6 @@ export class SelectFacade {
 })
 export class SelectPagingErrorExample implements OnDestroy {
     protected readonly facade = inject(SelectFacade);
-    private readonly ngZone = inject(NgZone);
 
     protected selectedOption: Option = { id: 0, label: `Option #0` };
 
@@ -328,14 +327,12 @@ export class SelectPagingErrorExample implements OnDestroy {
 
         if (!scrollContainer) return;
 
-        this.ngZone.runOutsideAngular(() => {
-            this.scrollSub = fromEvent(scrollContainer, 'scroll').subscribe(() => {
-                const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+        this.scrollSub = fromEvent(scrollContainer, 'scroll').subscribe(() => {
+            const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
 
-                if (scrollTop + clientHeight >= scrollHeight - 30) {
-                    this.ngZone.run(() => this.facade.loadMore());
-                }
-            });
+            if (scrollTop + clientHeight >= scrollHeight - 30) {
+                this.facade.loadMore();
+            }
         });
     }
 

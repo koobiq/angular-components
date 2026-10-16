@@ -8,7 +8,7 @@
     #trigger
     cdkOverlayOrigin
     class="kbq-select__trigger"
-    [class.kbq-select__trigger_empty]="empty"
+    [class.kbq-select__trigger_empty]="empty()"
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
@@ -16,9 +16,9 @@
         <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
     } @else {
         <div class="kbq-select__matcher">
-            @if (empty) {
+            @if (empty()) {
                 <span class="kbq-select__placeholder">
-                    {{ placeholder || '\u00A0' }}
+                    {{ placeholder() || '\u00A0' }}
                 </span>
             } @else {
                 <span>
@@ -49,7 +49,7 @@
     cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
     [cdkConnectedOverlayBackdropClass]="backdropClass()"
-    [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
+    [cdkConnectedOverlayHasBackdrop]="hasBackdrop()"
     [cdkConnectedOverlayMinWidth]="overlayMinWidth"
     [cdkConnectedOverlayOpen]="panelOpen"
     [cdkConnectedOverlayOrigin]="overlayOrigin || fallbackOverlayOrigin"
@@ -66,7 +66,6 @@
         #panel
         class="kbq-timezone-select__panel"
         cdkMonitorSubtreeFocus
-        [@.disabled]="animationsDisabled()"
         [class]="getPanelClasses()"
         [style.--kbq-select-panel-size-max-height]="panelMaxHeightToken()"
         [style.font-size.px]="triggerFontSize"
@@ -91,8 +90,6 @@
             [attr.aria-label]="resolvedAriaLabel"
             [attr.aria-labelledby]="ariaLabelledby"
             [attr.aria-busy]="isOptionsListBusy || null"
-            [@fadeInContent]="'showing'"
-            (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >
             @if (isEmptySearchResult) {
                 <ng-content select="[kbq-select-search-empty-result]" />

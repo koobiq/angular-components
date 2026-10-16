@@ -155,7 +155,7 @@ compile error fails there with the compiler's message instead of as a webServer 
 
 Verified at 32 workers: 696 passed in 52 s of tests and 1:43 overall on the run that built the layer
 (25 s of it), then 696 passed in 45 s and 1:06 overall with the layer cached — against 2.2 min of
-tests and 4.0 min overall before. Editing a Jest spec or an MDX page leaves both the copy and the
+tests and 4.0 min overall before. Editing a unit spec or an MDX page leaves both the copy and the
 build `CACHED`; changing a baseline puts the failing test’s trace and PNGs under `test-results` on
 the host, at the path the run printed; the `update-snapshots` overlay still writes baselines into the
 working tree.

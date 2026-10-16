@@ -3,6 +3,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import ts from 'typescript';
 import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
+import { visitProjectFiles } from '../../utils/project-files';
 import { DIRECTIVE_TYPE, RENAMES, TIMESTAMP_MESSAGE, WARN_MEMBERS, warnPatterns } from './data';
 import { Schema } from './schema';
 
@@ -241,8 +242,7 @@ export default function readStateDwellHandlers(options: Schema): Rule {
         const rootDir = root ? tree.getDir(root as Path) : tree.root;
         const filePaths: string[] = [];
 
-        rootDir.visit((filePath: Path) => {
-            if (filePath.includes('node_modules') || filePath.includes('/dist/')) return;
+        visitProjectFiles(rootDir, (filePath: Path) => {
             // Declarations carry no call sites and `.ngtypecheck.ts` is regenerated on every build, so
             // neither can hold a call worth rewriting — and an edit to either would be noise at best.
             if (isMigratableTs(filePath)) filePaths.push(filePath);

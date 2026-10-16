@@ -1,15 +1,14 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ng add '@koobiq/components' should add missing dependencies to 'package.json': after running schematics 1`] = `
+exports[`ng add '@koobiq/components' > should add missing dependencies to 'package.json' > after running schematics 1`] = `
 {
-  "@angular/animations": "^20.3.0",
   "@angular/cdk": "^0.0.0",
-  "@angular/common": "^20.3.0",
-  "@angular/compiler": "^20.3.0",
-  "@angular/core": "^20.3.0",
-  "@angular/forms": "^20.3.0",
-  "@angular/platform-browser": "^20.3.0",
-  "@angular/router": "^20.3.0",
+  "@angular/common": "^21.2.0",
+  "@angular/compiler": "^21.2.0",
+  "@angular/core": "^21.2.0",
+  "@angular/forms": "^21.2.0",
+  "@angular/platform-browser": "^21.2.0",
+  "@angular/router": "^21.2.0",
   "@koobiq/angular-luxon-adapter": "^0.0.0",
   "@koobiq/date-adapter": "^0.0.0",
   "@koobiq/date-formatter": "^0.0.0",
@@ -20,20 +19,18 @@ exports[`ng add '@koobiq/components' should add missing dependencies to 'package
   "overlayscrollbars": "^0.0.0",
   "rxjs": "~7.8.0",
   "tslib": "^2.3.0",
-  "zone.js": "~0.15.0",
 }
 `;
 
-exports[`ng add '@koobiq/components' should add missing dependencies to 'package.json': before running schematics 1`] = `
+exports[`ng add '@koobiq/components' > should add missing dependencies to 'package.json' > before running schematics 1`] = `
 {
-  "@angular/common": "^20.3.0",
-  "@angular/compiler": "^20.3.0",
-  "@angular/core": "^20.3.0",
-  "@angular/forms": "^20.3.0",
-  "@angular/platform-browser": "^20.3.0",
-  "@angular/router": "^20.3.0",
+  "@angular/common": "^21.2.0",
+  "@angular/compiler": "^21.2.0",
+  "@angular/core": "^21.2.0",
+  "@angular/forms": "^21.2.0",
+  "@angular/platform-browser": "^21.2.0",
+  "@angular/router": "^21.2.0",
   "rxjs": "~7.8.0",
   "tslib": "^2.3.0",
-  "zone.js": "~0.15.0",
 }
 `;
