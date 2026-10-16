@@ -435,7 +435,9 @@ test.describe('docs app', () => {
         await page.goto('/en/components/ag-grid/overview');
         await waitForHydration(page);
 
-        await expect(page.locator('docs-live-example-viewer ag-grid-angular').first()).toBeVisible();
+        // AG Grid arrives in a chunk of its own once the page is hydrated, and on CI it renders close to the end of
+        // the default 5 seconds of an assertion: the whole test takes 7-8 seconds on main.
+        await expect(page.locator('docs-live-example-viewer ag-grid-angular').first()).toBeVisible({ timeout: 15000 });
         await expect(page.locator('docs-live-example-viewer kbq-skeleton')).toHaveCount(0);
         expect(errors).toEqual([]);
     });
