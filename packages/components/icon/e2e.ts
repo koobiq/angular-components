@@ -443,3 +443,25 @@ export class E2eIconSvg {
     }
 })
 export class E2eIconSvgDropdown {}
+
+/**
+ * An icon name that never resolves (unregistered, no `KbqIconRegistry` provided) next to a literal
+ * `<svg>` passed as projected content — the GitHub-link pattern the docs navbar uses. The font-icon
+ * fallback path used to remove whatever `<svg>` it found in the host, including this one, though it
+ * never injected it.
+ */
+@Component({
+    selector: 'e2e-icon-unresolved-name',
+    imports: [KbqIcon],
+    template: `
+        <i kbq-icon="kbq-unregistered-name_16" data-testid="e2eIconUnresolvedName">
+            <svg data-testid="e2eIconProjectedSvg" viewBox="0 0 16 16"><path d="M0 0h16v16H0z" /></svg>
+        </i>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-margin-top-l layout-margin-bottom-l',
+        'data-testid': 'e2eIconUnresolvedNameHost'
+    }
+})
+export class E2eIconUnresolvedName {}
